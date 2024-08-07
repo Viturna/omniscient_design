@@ -1,0 +1,253 @@
+<style>
+  .logo-log {
+    position: absolute;
+    left: 35px;
+    top: 35px;
+  }
+
+  .log {
+    position: relative;
+    background-image: url('/assets/bg-presentation2.png');
+    background-repeat: no-repeat;
+    height: 1400px;
+  }
+
+  .box-log {
+    position: absolute;
+    top: 270px;
+    padding: 0px 8vw
+  }
+
+  .form {
+    margin-top: 32px;
+    width: 60vw;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 30px 0;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  form {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+  }
+
+  .sign-up-in,
+  .forgot-password {
+    color: #fff;
+  }
+  .sign-up-in:hover,
+  .forgot-password:hover{
+    text-decoration: underline;
+  }
+   .forgot-password{
+    text-align: right;
+   }
+   .sign-up-in{
+    text-align: center;
+   }
+  .btn-login {
+    margin-top: 16px;
+    width: 22vw;
+    height: 65px;
+  }
+
+  .actions {
+    margin-left: auto; /* Pour aligner à droite */
+  }
+
+  .password-container {
+    position: relative;
+  }
+
+  .password-container .toggle-password {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    fill:#202020;
+  }
+
+  @media screen and (min-width:0px) and (max-width:349px) {
+    form p {
+      width: 60vw;
+      font-size: 15px;
+    }
+      .logo-log {
+      width: 115px;
+      left: 15px;
+    }
+
+    .box-log {
+      padding: 100px 5vw;
+    }
+
+    form{
+      width: 80vw;
+    }
+    .form {
+      margin-top: 32px;
+      width: 90vw;
+      padding: 20px 0;
+    }
+
+    .btn-login {
+      width: 80vw;
+      height: 65px;
+    }
+    input[type=text],
+    input[type=date],
+    input[type=email],
+    input[type=password],
+    select {
+      width: 65vw;
+      height: 50px;
+    }
+    .remember-me{
+      margin-top:0px;
+    }
+    .sign-up-in, .forgot-password{
+      font-size: 14px;
+    }
+    .actions {
+      margin-left: 0; /* Pour aligner à droite */
+    }
+  }
+  @media screen and (min-width:350px) and (max-width:800px) {
+      .logo-log {
+      width: 145px;
+    }
+
+    .box-log {
+      padding: 200px 6vw;
+    }
+
+    .form {
+      margin-top: 32px;
+      width: 84vw;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 30px 0;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .btn-login {
+      width: 72vw;
+      height: 65px;
+    }
+    input[type=text],
+    input[type=date],
+    input[type=email],
+    input[type=password],
+    select {
+      width: 65vw;
+      height: 60px;
+    }
+    .remember-me{
+      margin-top:0px;
+    }
+    .sign-up-in, .forgot-password{
+      font-size: 14px;
+    }
+  }
+</style>
+<div class="main-div log" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
+  <section class="box-log">
+    <h1>S’inscrire</h1>
+    <div class="form">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= render "users/shared/error_messages", resource: resource %>
+        <div class="field">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email" %>
+        </div>
+        <div class="field password-container">
+          <%= f.password_field :password, autocomplete: "current-password", placeholder: "Mot de passe", id: "password-field-1" %>
+          <button type="button" class="toggle-password" data-target="#password-field-1">
+            <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="hide-password-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off">
+              <path d="M17.94 17.94a10.97 10.97 0 0 1-5.94 1.94C6 20 2 12 2 12s1.5-3.34 4.94-5.94M1 1l22 22"></path>
+              <path d="M12 5a7 7 0 0 1 7 7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="field password-container">
+          <%= f.password_field :password_confirmation, autocomplete: "current-password", placeholder: "Confirmer le mot de passe", id: "password-field-2" %>
+          <button type="button" class="toggle-password" data-target="#password-field-2">
+            <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="hide-password-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off">
+              <path d="M17.94 17.94a10.97 10.97 0 0 1-5.94 1.94C6 20 2 12 2 12s1.5-3.34 4.94-5.94M1 1l22 22"></path>
+              <path d="M12 5a7 7 0 0 1 7 7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="field">
+          <p>Informations supplémentaires</p>
+        </div>
+        <div class="field">
+          <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
+        </div>
+        <div class="field">
+          <%= f.text_field :lastname, autocomplete: "lastname", placeholder: "Nom de famille" %>
+        </div>
+        <div class="field">
+          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: "Pseudo" %>
+        </div>
+        <div class="field">
+          <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut" }, { class: "form-control" } %>
+        </div>
+        <div class="field">
+          <%= f.collection_select :etablissement_id, Etablissement.order(:city), :id, :all_info, { prompt: "Choisissez un établissement" }, { class: "form-control" } %>
+        </div>
+        <div class="field">
+          <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
+        </div>
+        <div class="actions">
+          <%= f.submit "S’inscrire ⏩️", class:"button dark btn-login" %>
+        </div>
+        <%= link_to "Vous avez déjà un compte ? Se connecter", new_user_session_path, class: "sign-up-in" %>
+      <% end %>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function() {
+    $('.toggle-password').on('click', function() {
+      const target = $(this).data('target');
+      const $passwordField = $(target);
+      const $showPasswordIcon = $(this).find('.show-password-icon');
+      const $hidePasswordIcon = $(this).find('.hide-password-icon');
+
+      if ($passwordField.attr('type') === 'password') {
+        $passwordField.attr('type', 'text');
+        $showPasswordIcon.hide();
+        $hidePasswordIcon.show();
+      } else {
+        $passwordField.attr('type', 'password');
+        $showPasswordIcon.show();
+        $hidePasswordIcon.hide();
+      }
+    });
+  });
+</script>

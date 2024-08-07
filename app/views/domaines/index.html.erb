@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Domaines</h1>
+
+<div id="domaines">
+  <% @domaines.each do |domaine| %>
+    <%= render domaine %>
+    <p>
+      <%= link_to "Show this domaine", domaine %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New domaine", new_domaine_path %>

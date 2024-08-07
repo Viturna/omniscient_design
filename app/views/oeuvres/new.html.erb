@@ -1,0 +1,13 @@
+<div class="main-div grid" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <section class="add-elements">
+    <%= link_to add_elements_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    <% end %>
+    <p class="subtitle-top">Votre contribution</p>
+    <h1 class="title-add-elements">Ajouter une référence</h1>
+    <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
+    <%= render "form", oeuvre: @oeuvre %>
+  </section>
+</div>

@@ -1,0 +1,9 @@
+<div class="main-div grid" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <h1 class="title-add-elements">Modifier une référence</h1>
+  <%= render "form", designer: @designer %>
+  <br>
+  <div>
+    <%= link_to "Show this designer", @designer %> |
+    <%= link_to "Retourner aux validations", validation_path %>
+  </div>
+</div>

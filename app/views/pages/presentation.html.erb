@@ -1,0 +1,331 @@
+<style>
+  .top-presentation {
+    background-image: url('/assets/bg-presentation.png');
+    background-repeat: no-repeat;
+    height: 100vh;
+    min-height:650px;
+    position: relative;
+  }
+  .logo-top{
+    width: 180px;
+    margin-top: 64px;
+  }
+  h1{
+    color: #FFF;
+    width: 40%;
+    font-size: 68px;
+    font-weight: 400;
+    margin-top: 64px;
+    line-height:140%;
+  }
+  .btn-section-top{
+    position: absolute;
+    bottom: 65px;
+    width: fit-content;
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+    margin-top: 64px;
+    color:#FFF
+  }
+  .button-signup{
+    background-color: #FFF;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #202020;
+    padding: 30px 125px;
+    border-radius: 5px;
+    transition: ease .2s;
+  }
+  .button-signup:hover{
+     background-color: #202020;
+     color: #FFF;
+    }
+  .link-login{
+    color:#FFF;
+    font-size: 18px;
+  }
+   .link-login:hover{
+    opacity: 0.8;
+   }
+   .grid1{
+     padding: 0 8vw;
+   }
+  .grid2{
+    padding: 0 15vw;
+  }
+  .about{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 120px;
+    margin-top: 128px;
+  }
+   .about:nth-child(2){
+    flex-direction:row-reverse;
+   }
+  h2{
+    font-size: 28px;
+    color: #202020;
+    font-weight: 500;
+  }
+  .about p{
+    margin-top: 48px;
+    color: #8D9299;
+    font-size:18px;
+    line-height:130%;
+    width: 30vw;
+  }
+  .partner, .contact {
+    margin-top: 128px;
+  }
+  .flex-partner{
+    margin-top: 64px;
+    display: flex;
+    gap: 48px;
+  }
+  .flex-partner img{
+    width: 15vw;
+  }
+  .flex-contact{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 64px;
+  }
+  .box-contact{
+    margin-top: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 18px;
+  }
+   @media screen and (min-width:0px) and (max-width:349px){
+    .top-presentation {
+      background-image: url('/assets/bg-presentation2.png');
+      background-size:cover;
+    }
+    .logo-top{
+      width: 140px;
+      margin-top: 32px;
+    }
+    h1{
+      font-size: clamp(1.125rem, 1.125rem + 7.4499vw, 2.75rem);
+      margin-top: 64px;
+      width: 80%;
+    }
+    .btn-section-top{
+      margin: 0;
+      bottom: 45px;
+    }
+    .button-signup{
+      width: 80vw;
+      font-size: 17px;
+      padding: 22px 15px;
+    }
+    .link-login{
+      font-size: 16px;
+      text-align:center;
+    }
+    .grid1{
+      padding: 0 5vw;
+    }
+    .grid2{
+      padding: 0 5vw;
+    }
+    .about{
+      flex-direction:column;
+      gap: 60px;
+      margin-top: 64px;
+    }
+    .about:nth-child(2) {
+      flex-direction:column;
+    }
+    .about img{
+      width: 90vw;
+    }
+    h2{
+      font-size: 20px;
+      text-align:center;
+      padding: 0 5vw;
+    }
+    .about p{
+      margin-top: 48px;
+      font-size:16px;
+      width: 90vw;
+      text-align:center;
+    }
+    .partner, .contact {
+      margin-top: 94px;
+    }
+    .flex-partner{
+      flex-direction:column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 48px;
+      gap: 32px;
+    }
+    .flex-partner img{
+      width: 80vw;
+    }
+    .flex-contact{
+      flex-direction:column;
+      padding-bottom: 48px;
+    }
+    .box-contact{
+      flex-direction:column;
+      margin-top: 42px;
+      font-size: 16px;
+      padding: 16px;
+    }
+
+    .box-contact svg{
+      scale: 0.8;
+    }
+  }
+  @media screen and (min-width:350px) and (max-width:800px){
+    .top-presentation {
+      background-image: url('/assets/bg-presentation2.png');
+      background-size:cover;
+    }
+    .logo-top{
+      width: 140px;
+      margin-top: 32px;
+    }
+    h1{
+    font-size: clamp(2.75rem, 2.2153rem + 2.4444vw, 3.4375rem);
+      margin-top: 64px;
+      width: 80%;
+      max-width: 350px;
+    }
+    .btn-section-top{
+      margin: 0;
+      bottom: 45px;
+    }
+    .button-signup{
+      width: 80vw;
+      font-size: 17px;
+      padding: 22px 15px;
+    }
+    .link-login{
+      font-size: 16px;
+      text-align:center;
+    }
+    .grid1{
+      padding: 0 5vw;
+    }
+    .grid2{
+      padding: 0 5vw;
+    }
+    .about{
+      flex-direction:column;
+      gap: 60px;
+      margin-top: 64px;
+    }
+    .about:nth-child(2) {
+      flex-direction:column;
+    }
+    .about img{
+      width: 90vw;
+    }
+    h2{
+      font-size: 24px;
+      text-align:center;
+      padding: 0 5vw;
+    }
+    .about p{
+      margin-top: 48px;
+      font-size:16px;
+      width: 90vw;
+      text-align:center;
+    }
+    .partner, .contact {
+      margin-top: 94px;
+    }
+    .flex-partner{
+      flex-direction:column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 48px;
+      gap: 32px;
+    }
+    .flex-partner img{
+      width: 80vw;
+    }
+    .flex-contact{
+      flex-direction:column;
+      padding-bottom: 48px;
+    }
+    .box-contact{
+      margin-top: 42px;
+      font-size: 16px;
+    }
+    .box-contact svg{
+      scale: 0.8;
+    }
+  }
+</style>
+<div>
+  <section class="top-presentation grid1">
+    <%= image_tag "white-logo.svg", alt: "", class: "logo-top" %>
+    <h1>Explorez nos centaines de références </h1>
+    <div class="btn-section-top">
+      <%= link_to "Démarrer l’exploration !🚪", new_user_registration_path, class: "button-signup"%>
+      <%= link_to new_user_session_path do%>
+        <p class="link-login">J’ai déjà un <span class="semi-bold">compte</span></p>
+      <%end%>
+    </div>
+  </section>
+  <section class="about grid2">
+    <div>
+      <h2>Quel est le but de l’application</h2>
+      <p>OmniDesign est un répertoire des références en design, couvrant un large éventail de disciplines. Son contenu englobe les travaux de designers dans six domaines principaux : l'architecture, les objets, le stylisme, le graphisme, l'art et les métiers d'art. L'objectif est de rassembler une diversité de créations et d'inspirations pour servir de ressource précieuse aux professionnels du design, aux étudiants et à tous les passionnés de créativité. </p>
+    </div>
+    <%= image_tag "rect.jpg", alt: "" %>
+  </section>
+  <section class="about grid2">
+    <div>
+      <h2>Découvrez notre histoire</h2>
+      <p>En 2023, à l'occasion d'un "projet personnel", Edgar Quéméré décida de créer un "Carnet de référence numérique".
+        <br>
+        <br>
+        Un carnet de référence est un outil dans lequel tout bon étudiant en design répertorie des "Références".
+      </p>
+      <%= link_to "En savoir plus", root_path %>
+    </div>
+    <%= image_tag "rect.jpg", alt: "" %>
+  </section>
+  <section class="partner grid2">
+    <h2>Nos partenaires</h2>
+    <div class="flex-partner">
+      <%= image_tag "rect.jpg", alt: "" %>
+      <%= image_tag "rect.jpg", alt: "" %>
+      <%= image_tag "rect.jpg", alt: "" %>
+      <%= image_tag "rect.jpg", alt: "" %>
+    </div>
+  </section>
+  <section class="contact grid2">
+    <h2>Nous contacter</h2>
+    <div class="flex-contact">
+      <div class="box-contact">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16.2498 4.16699H33.7498C40.4165 4.16699 45.8332 9.58366 45.8332 16.2503V33.7503C45.8332 36.955 44.5601 40.0285 42.294 42.2945C40.028 44.5606 36.9545 45.8337 33.7498 45.8337H16.2498C9.58317 45.8337 4.1665 40.417 4.1665 33.7503V16.2503C4.1665 13.0456 5.43957 9.97218 7.70563 7.70612C9.97169 5.44005 13.0451 4.16699 16.2498 4.16699ZM15.8332 8.33366C13.844 8.33366 11.9364 9.12384 10.5299 10.5304C9.12335 11.9369 8.33317 13.8445 8.33317 15.8337V34.167C8.33317 38.3128 11.6873 41.667 15.8332 41.667H34.1665C36.1556 41.667 38.0633 40.8768 39.4698 39.4703C40.8763 38.0638 41.6665 36.1561 41.6665 34.167V15.8337C41.6665 11.6878 38.3123 8.33366 34.1665 8.33366H15.8332ZM35.9373 11.4587C36.628 11.4587 37.2904 11.733 37.7788 12.2214C38.2671 12.7098 38.5415 13.3722 38.5415 14.0628C38.5415 14.7535 38.2671 15.4159 37.7788 15.9042C37.2904 16.3926 36.628 16.667 35.9373 16.667C35.2467 16.667 34.5843 16.3926 34.0959 15.9042C33.6075 15.4159 33.3332 14.7535 33.3332 14.0628C33.3332 13.3722 33.6075 12.7098 34.0959 12.2214C34.5843 11.733 35.2467 11.4587 35.9373 11.4587ZM24.9998 14.5837C27.7625 14.5837 30.412 15.6811 32.3655 17.6346C34.319 19.5881 35.4165 22.2377 35.4165 25.0003C35.4165 27.763 34.319 30.4125 32.3655 32.366C30.412 34.3195 27.7625 35.417 24.9998 35.417C22.2372 35.417 19.5876 34.3195 17.6341 32.366C15.6806 30.4125 14.5832 27.763 14.5832 25.0003C14.5832 22.2377 15.6806 19.5881 17.6341 17.6346C19.5876 15.6811 22.2372 14.5837 24.9998 14.5837ZM24.9998 18.7503C23.3422 18.7503 21.7525 19.4088 20.5804 20.5809C19.4083 21.753 18.7498 23.3427 18.7498 25.0003C18.7498 26.6579 19.4083 28.2476 20.5804 29.4197C21.7525 30.5918 23.3422 31.2503 24.9998 31.2503C26.6574 31.2503 28.2472 30.5918 29.4193 29.4197C30.5914 28.2476 31.2498 26.6579 31.2498 25.0003C31.2498 23.3427 30.5914 21.753 29.4193 20.5809C28.2472 19.4088 26.6574 18.7503 24.9998 18.7503Z" fill="#202020"/>
+        </svg>
+        <p>@omnidesign</p>
+      </div>
+      <div class="box-contact">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M34.5832 12.125C33.1591 10.4992 32.3742 8.41132 32.3748 6.25H25.9373V32.0833C25.8877 33.4813 25.2975 34.8055 24.291 35.777C23.2845 36.7484 21.9404 37.2915 20.5415 37.2917C17.5832 37.2917 15.1248 34.875 15.1248 31.875C15.1248 28.2917 18.5832 25.6042 22.1457 26.7083V20.125C14.9582 19.1667 8.6665 24.75 8.6665 31.875C8.6665 38.8125 14.4165 43.75 20.5207 43.75C27.0623 43.75 32.3748 38.4375 32.3748 31.875V18.7708C34.9853 20.6455 38.1193 21.6513 41.3332 21.6458V15.2083C41.3332 15.2083 37.4165 15.3958 34.5832 12.125Z" fill="#202020"/>
+        </svg>
+        <p>@omnidesign</p>
+      </div>
+      <div class="box-contact">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.33317 41.6663C7.18734 41.6663 6.20678 41.2587 5.3915 40.4434C4.57623 39.6281 4.16789 38.6469 4.1665 37.4997V12.4997C4.1665 11.3538 4.57484 10.3733 5.3915 9.55801C6.20817 8.74273 7.18873 8.3344 8.33317 8.33301H41.6665C42.8123 8.33301 43.7936 8.74134 44.6103 9.55801C45.4269 10.3747 45.8346 11.3552 45.8332 12.4997V37.4997C45.8332 38.6455 45.4255 39.6268 44.6103 40.4434C43.795 41.2601 42.8137 41.6677 41.6665 41.6663H8.33317ZM24.9998 27.083L41.6665 16.6663V12.4997L24.9998 22.9163L8.33317 12.4997V16.6663L24.9998 27.083Z" fill="#202020"/>
+        </svg>
+        <p>omniscientdesign.co@gmail.com</p>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,456 @@
+<style>
+  .top-header{
+    padding: 64px 10vw;
+    height: 150px;
+    background-color: #202020;
+    color:#FFF;
+    position: relative;
+  }
+  .subtitle{
+    width: 50vw;
+  }
+
+  .flex-title{
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .flex-title-list{
+    margin-top: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h2{
+    color: #202020;
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .list-show{
+    padding: 0 10vw;
+  }
+  .flex-card-list{
+    margin-top: 32px;
+    display: flex;
+    flex-wrap:wrap;
+    gap: 2.3vw;
+  }
+  .card-list{
+    overflow: hidden;
+    width: 18vw;
+    height: 18vw;
+    display: flex;
+    align-items: end;
+    border: 1px solid #E9E9E9;
+    border-radius:5px;
+    position: relative;
+  }
+  .overlay {
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .overlay svg {
+    scale: 1.5;
+  }
+  .default-overlay {
+    border-radius:5px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5); /* Opacité par défaut */
+  }
+  .card-title{
+    position: relative;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 0.85rem + 0.8vw, 1.75rem);
+    width: 60%;
+    color:#FFF;
+    padding: 20px;
+  }
+  .delete{
+    margin-top: 48px;
+    width: 80vw;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius:5px;
+    color: #202020;
+    font-weight: 500;
+    font-size: 18px;
+    justify-content: center;
+    color: #E61818;
+    height: 70px;
+    border:none;
+    cursor: pointer;
+    margin-bottom: 50px;
+  }
+  .delete:hover{
+    background-color: #E9E9E9;
+  }
+   #editButtonForm:hover{
+    opacity: 0.8;
+    cursor: pointer;
+  }
+    /* Modal */
+    /* Style de la popup */
+  /* Style de la fenêtre contextuelle */
+  #popup-designers, #popup-oeuvres  {
+    display: none; /* Par défaut, la fenêtre contextuelle est cachée */
+    position: fixed; /* Position fixe pour s'assurer qu'elle reste au-dessus du contenu */
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    z-index: 1000; /* Assure que la fenêtre contextuelle est au-dessus du contenu */
+    overflow: auto; /* Permet le défilement si le contenu est trop long */
+  }
+
+  /* Style du contenu de la fenêtre contextuelle */
+  .modal-content {
+    background-color: #F7F7F7;
+    margin: 0 auto;
+    padding: 0 20px;
+    padding-bottom: 24px;
+    border-radius: 5px;
+    max-width: 850px; /* Largeur maximale de la fenêtre contextuelle */
+  }
+
+  input[type="submit"] {
+    background-color: #202020;
+    color: white;
+    padding: 20px 35px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top:32px;
+    font-size: 16px;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #2B2B2B;
+  }
+
+  /* Add */
+  .flex-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  .card-list-add {
+    width: 13vw;
+    height: 13vw;
+    display: flex;
+    align-items: end;
+    border: 1px solid #E9E9E9;
+    border-radius: 5px;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+  }
+  .card-title-add {
+    position: relative;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 0.85rem + 0.8vw, 1.75rem);
+    width: 60%;
+    color: #FFF;
+    padding: 10px;
+    font-size: 18px;
+  }
+  .card-checked {
+    opacity: 0.6;
+  }
+  .hidden {
+    display: none;
+  }
+  .hidden-check {
+    visibility: hidden;
+  }
+
+  .search-container {
+    position: relative;
+    width: 30vw;
+    height: 70px;
+    margin-top: 30px;
+  }
+  .search-container input[type="search"] {
+    margin-left: 20px;
+    width: 100%;
+    height: 60px;
+    padding-left: 50px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #202020;
+    background-color: #FFF;
+    margin-top: 20px;
+    position: relative;
+  }
+  .search-container input[type="search"]::placeholder {
+    color: #202020;
+  }
+  .search-container .search-icon {
+    position: absolute;
+    top: 70%;
+    left: 35px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+  }
+</style>
+<section class="top-header">
+  <%= link_to lists_path do%>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <%end%>
+  <div class="flex-title">
+    <h1><%= @list.name %></h1>
+    <%= link_to edit_list_path do %>
+      <svg id="editButtonForm" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.37478 17.864L2 20.3215L4.45864 12.9479M9.37478 17.864L18.9842 7.93406C19.4696 7.44758 19.7999 6.82819 19.9336 6.1541C20.0672 5.48 19.9982 4.78142 19.7351 4.14654C19.4721 3.51166 19.0268 2.96894 18.4556 2.58691C17.8844 2.20487 17.2127 2.00064 16.5255 2C15.6035 2.00032 14.7193 2.36641 14.0669 3.01792L4.45864 12.9479M9.37478 17.864L4.45864 12.9479M6.91614 15.4065L14.0542 7.93406M11.6393 5.52597L16.5221 10.3973" stroke="white" stroke-width="2.2978" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    <%end%>
+  </div>
+  <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> références</p>
+</section>
+<section class="list-show">
+  <div class="flex-title-list">
+    <h2>Les designers </h2>
+    <%= link_to 'Ajouter des designers', '#', id: 'openPopupDesigners', class:"button dark" %>
+  </div>
+  <div class="flex-card-list">
+    <% @list.designers.each do |designer| %>
+      <div class="card-list" id="designer_<%= designer.id %>" style="background-image: url('<%= designer.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+        <div class="default-overlay"></div>
+        <p class="card-title"><%= designer.nom_designer %></p>
+        <div class="overlay" style="display: none;">
+          <%= link_to designer_path(designer.id), class: "delete-flex" do %>
+            <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 6.13636C16.085 6.13636 17.1255 6.56737 17.8927 7.33456C18.6599 8.10176 19.0909 9.1423 19.0909 10.2273C19.0909 11.3122 18.6599 12.3528 17.8927 13.12C17.1255 13.8872 16.085 14.3182 15 14.3182C13.915 14.3182 12.8745 13.8872 12.1073 13.12C11.3401 12.3528 10.9091 11.3122 10.9091 10.2273C10.9091 9.1423 11.3401 8.10176 12.1073 7.33456C12.8745 6.56737 13.915 6.13636 15 6.13636ZM15 0C21.8182 0 27.6409 4.24091 30 10.2273C27.6409 16.2136 21.8182 20.4545 15 20.4545C8.18182 20.4545 2.35909 16.2136 0 10.2273C2.35909 4.24091 8.18182 0 15 0ZM2.97273 10.2273C4.07489 12.4777 5.78633 14.3737 7.91247 15.6999C10.0386 17.026 12.4942 17.7291 15 17.7291C17.5058 17.7291 19.9614 17.026 22.0875 15.6999C24.2137 14.3737 25.9251 12.4777 27.0273 10.2273C25.9251 7.97685 24.2137 6.0808 22.0875 4.75465C19.9614 3.42851 17.5058 2.72547 15 2.72547C12.4942 2.72547 10.0386 3.42851 7.91247 4.75465C5.78633 6.0808 4.07489 7.97685 2.97273 10.2273Z" fill="white"/>
+            </svg>
+          <% end %>
+          <%= link_to remove_designer_list_url(@list, designer_id: designer.id), method: :delete, class: "btn btn-danger delete-flex" do %>
+            <svg width="23" height="26" viewBox="0 0 23 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.94444 20.4444C9.28333 20.4444 9.60834 20.3098 9.84797 20.0702C10.0876 19.8306 10.2222 19.5056 10.2222 19.1667V11.5C10.2222 11.1611 10.0876 10.8361 9.84797 10.5965C9.60834 10.3568 9.28333 10.2222 8.94444 10.2222C8.60556 10.2222 8.28055 10.3568 8.04092 10.5965C7.80129 10.8361 7.66667 11.1611 7.66667 11.5V19.1667C7.66667 19.5056 7.80129 19.8306 8.04092 20.0702C8.28055 20.3098 8.60556 20.4444 8.94444 20.4444ZM21.7222 5.11111H16.6111V3.83333C16.6111 2.81667 16.2072 1.84165 15.4884 1.12276C14.7695 0.403868 13.7944 0 12.7778 0H10.2222C9.20556 0 8.23054 0.403868 7.51165 1.12276C6.79276 1.84165 6.38889 2.81667 6.38889 3.83333V5.11111H1.27778C0.93889 5.11111 0.613882 5.24573 0.374252 5.48536C0.134623 5.72499 0 6.05 0 6.38889C0 6.72778 0.134623 7.05278 0.374252 7.29241C0.613882 7.53204 0.93889 7.66667 1.27778 7.66667H2.55556V21.7222C2.55556 22.7389 2.95942 23.7139 3.67831 24.4328C4.3972 25.1517 5.37223 25.5556 6.38889 25.5556H16.6111C17.6278 25.5556 18.6028 25.1517 19.3217 24.4328C20.0406 23.7139 20.4444 22.7389 20.4444 21.7222V7.66667H21.7222C22.0611 7.66667 22.3861 7.53204 22.6257 7.29241C22.8654 7.05278 23 6.72778 23 6.38889C23 6.05 22.8654 5.72499 22.6257 5.48536C22.3861 5.24573 22.0611 5.11111 21.7222 5.11111ZM8.94444 3.83333C8.94444 3.49445 9.07907 3.16944 9.3187 2.92981C9.55833 2.69018 9.88333 2.55556 10.2222 2.55556H12.7778C13.1167 2.55556 13.4417 2.69018 13.6813 2.92981C13.9209 3.16944 14.0556 3.49445 14.0556 3.83333V5.11111H8.94444V3.83333ZM17.8889 21.7222C17.8889 22.0611 17.7543 22.3861 17.5146 22.6257C17.275 22.8654 16.95 23 16.6111 23H6.38889C6.05 23 5.72499 22.8654 5.48536 22.6257C5.24573 22.3861 5.11111 22.0611 5.11111 21.7222V7.66667H17.8889V21.7222ZM14.0556 20.4444C14.3944 20.4444 14.7195 20.3098 14.9591 20.0702C15.1987 19.8306 15.3333 19.5056 15.3333 19.1667V11.5C15.3333 11.1611 15.1987 10.8361 14.9591 10.5965C14.7195 10.3568 14.3944 10.2222 14.0556 10.2222C13.7167 10.2222 13.3917 10.3568 13.152 10.5965C12.9124 10.8361 12.7778 11.1611 12.7778 11.5V19.1667C12.7778 19.5056 12.9124 19.8306 13.152 20.0702C13.3917 20.3098 13.7167 20.4444 14.0556 20.4444Z" fill="white"/>
+            </svg>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="flex-title-list">
+    <h2>Les oeuvres </h2>
+    <%= link_to 'Ajouter des œuvres', '#', id: 'openPopupOeuvres', class:"button dark" %>
+  </div>
+  <div class="flex-card-list">
+    <% @list.oeuvres.each do |oeuvre| %>
+      <div class="card-list" id="oeuvre_<%= oeuvre.id %>" style="background-image: url('<%= oeuvre.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+        <div class="default-overlay"></div>
+        <p class="card-title"><%= oeuvre.nom_oeuvre %></p>
+        <div class="overlay" style="display: none;">
+          <%= link_to oeuvre_path(oeuvre.id), class: "delete-flex" do %>
+            <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 6.13636C16.085 6.13636 17.1255 6.56737 17.8927 7.33456C18.6599 8.10176 19.0909 9.1423 19.0909 10.2273C19.0909 11.3122 18.6599 12.3528 17.8927 13.12C17.1255 13.8872 16.085 14.3182 15 14.3182C13.915 14.3182 12.8745 13.8872 12.1073 13.12C11.3401 12.3528 10.9091 11.3122 10.9091 10.2273C10.9091 9.1423 11.3401 8.10176 12.1073 7.33456C12.8745 6.56737 13.915 6.13636 15 6.13636ZM15 0C21.8182 0 27.6409 4.24091 30 10.2273C27.6409 16.2136 21.8182 20.4545 15 20.4545C8.18182 20.4545 2.35909 16.2136 0 10.2273C2.35909 4.24091 8.18182 0 15 0ZM2.97273 10.2273C4.07489 12.4777 5.78633 14.3737 7.91247 15.6999C10.0386 17.026 12.4942 17.7291 15 17.7291C17.5058 17.7291 19.9614 17.026 22.0875 15.6999C24.2137 14.3737 25.9251 12.4777 27.0273 10.2273C25.9251 7.97685 24.2137 6.0808 22.0875 4.75465C19.9614 3.42851 17.5058 2.72547 15 2.72547C12.4942 2.72547 10.0386 3.42851 7.91247 4.75465C5.78633 6.0808 4.07489 7.97685 2.97273 10.2273Z" fill="white"/>
+            </svg>
+          <% end %>
+          <%= link_to remove_oeuvre_list_url(@list, oeuvre_id: oeuvre.id), method: :delete, class: "btn btn-danger delete-flex" do %>
+            <svg width="23" height="26" viewBox="0 0 23 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.94444 20.4444C9.28333 20.4444 9.60834 20.3098 9.84797 20.0702C10.0876 19.8306 10.2222 19.5056 10.2222 19.1667V11.5C10.2222 11.1611 10.0876 10.8361 9.84797 10.5965C9.60834 10.3568 9.28333 10.2222 8.94444 10.2222C8.60556 10.2222 8.28055 10.3568 8.04092 10.5965C7.80129 10.8361 7.66667 11.1611 7.66667 11.5V19.1667C7.66667 19.5056 7.80129 19.8306 8.04092 20.0702C8.28055 20.3098 8.60556 20.4444 8.94444 20.4444ZM21.7222 5.11111H16.6111V3.83333C16.6111 2.81667 16.2072 1.84165 15.4884 1.12276C14.7695 0.403868 13.7944 0 12.7778 0H10.2222C9.20556 0 8.23054 0.403868 7.51165 1.12276C6.79276 1.84165 6.38889 2.81667 6.38889 3.83333V5.11111H1.27778C0.93889 5.11111 0.613882 5.24573 0.374252 5.48536C0.134623 5.72499 0 6.05 0 6.38889C0 6.72778 0.134623 7.05278 0.374252 7.29241C0.613882 7.53204 0.93889 7.66667 1.27778 7.66667H2.55556V21.7222C2.55556 22.7389 2.95942 23.7139 3.67831 24.4328C4.3972 25.1517 5.37223 25.5556 6.38889 25.5556H16.6111C17.6278 25.5556 18.6028 25.1517 19.3217 24.4328C20.0406 23.7139 20.4444 22.7389 20.4444 21.7222V7.66667H21.7222C22.0611 7.66667 22.3861 7.53204 22.6257 7.29241C22.8654 7.05278 23 6.72778 23 6.38889C23 6.05 22.8654 5.72499 22.6257 5.48536C22.3861 5.24573 22.0611 5.11111 21.7222 5.11111ZM8.94444 3.83333C8.94444 3.49445 9.07907 3.16944 9.3187 2.92981C9.55833 2.69018 9.88333 2.55556 10.2222 2.55556H12.7778C13.1167 2.55556 13.4417 2.69018 13.6813 2.92981C13.9209 3.16944 14.0556 3.49445 14.0556 3.83333V5.11111H8.94444V3.83333ZM17.8889 21.7222C17.8889 22.0611 17.7543 22.3861 17.5146 22.6257C17.275 22.8654 16.95 23 16.6111 23H6.38889C6.05 23 5.72499 22.8654 5.48536 22.6257C5.24573 22.3861 5.11111 22.0611 5.11111 21.7222V7.66667H17.8889V21.7222ZM14.0556 20.4444C14.3944 20.4444 14.7195 20.3098 14.9591 20.0702C15.1987 19.8306 15.3333 19.5056 15.3333 19.1667V11.5C15.3333 11.1611 15.1987 10.8361 14.9591 10.5965C14.7195 10.3568 14.3944 10.2222 14.0556 10.2222C13.7167 10.2222 13.3917 10.3568 13.152 10.5965C12.9124 10.8361 12.7778 11.1611 12.7778 11.5V19.1667C12.7778 19.5056 12.9124 19.8306 13.152 20.0702C13.3917 20.3098 13.7167 20.4444 14.0556 20.4444Z" fill="white"/>
+            </svg>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <%= button_to 'Supprimer la liste', list_path(@list), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" }, class: "delete" %>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cardList = document.querySelectorAll('.card-list');
+
+    cardList.forEach(function(card) {
+      card.addEventListener('click', function() {
+        // Cacher tous les overlays
+        const allOverlays = document.querySelectorAll('.overlay');
+        allOverlays.forEach(function(overlay) {
+          overlay.style.display = 'none';
+        });
+
+        // Afficher l'overlay de la carte cliquée
+        const overlay = this.querySelector('.overlay');
+        overlay.style.display = 'flex';
+      });
+    });
+  });
+</script>
+<div id="popup-designers" class="modal">
+  <div class="modal-content">
+    <div class="top-popup">
+      <div class="search-container">
+        <input type="search" id="designer-search" placeholder="Rechercher des designers" />
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none" style="fill: #202020;">
+          <path d="M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z" fill="%23202020"/>
+        </svg>
+      </div>
+      <svg class="close-popup" id="closePopupDesigners" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+      </svg>
+    </div>
+    <%= form_with(model: @list, local: true) do |form| %>
+      <div class="modal-content">
+        <div id="designers-list" class="flex-card">
+          <%= form.collection_check_boxes :designer_ids, Designer.where(validation: true).order(:nom_designer), :id, :nom_designer do |b| %>
+            <div class="check-box-wrapper">
+              <%= b.check_box(class: 'hidden-check', id: "designer_#{b.object.id}") %>
+              <%= b.label for: "designer_#{b.object.id}" do %>
+                <div class="card-list-add" style="background: url('<%= b.object.image %>'); background-size: cover; background-position: center;">
+                  <div class="default-overlay"></div>
+                  <p class="card-title-add"><%= b.object.nom_designer %></p>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <%= form.submit "Modifier la liste", class: "button"  %>
+      </div>
+    </div>
+  <% end %>
+</div>
+</div>
+<div id="popup-oeuvres" class="modal">
+  <div class="modal-content">
+    <div class="top-popup">
+      <div class="search-container">
+        <input type="search" id="oeuvre-search" placeholder="Rechercher des œuvres" />
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none" style="fill: #202020;">
+          <path d="M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z" fill="%23202020"/>
+        </svg>
+      </div>
+      <svg class="close-popup" id="closePopupOeuvres" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+      </svg>
+    </div>
+    <%= form_with(model: @list, local: true) do |form| %>
+      <div class="modal-content">
+        <div id="oeuvres-list" class="flex-card">
+          <%= form.collection_check_boxes :oeuvre_ids, Oeuvre.where(validation: true).order(:nom_oeuvre), :id, :nom_oeuvre do |b| %>
+            <div class="check-box-wrapper">
+              <%= b.check_box(class: 'hidden-check', id: "oeuvre_#{b.object.id}") %>
+              <%= b.label for: "oeuvre_#{b.object.id}" do %>
+                <div class="card-list-add" style="background: url('<%= b.object.image %>'); background-size: cover; background-position: center;">
+                  <div class="default-overlay"></div>
+                  <p class="card-title-add"><%= b.object.nom_oeuvre %></p>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <%= form.submit "Modifier la liste" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+</div>
+<script>
+  // Obtenez les éléments des popups et des boutons d'ouverture
+  var popupDesigners = document.getElementById('popup-designers');
+  var popupOeuvres = document.getElementById('popup-oeuvres');
+  var btnOpenDesigners = document.getElementById('openPopupDesigners');
+  var btnOpenOeuvres = document.getElementById('openPopupOeuvres');
+  var btnCloseDesigners = document.getElementById('closePopupDesigners');
+  var btnCloseOeuvres = document.getElementById('closePopupOeuvres');
+
+  // Ouvrir la popup des designers lorsque le bouton est cliqué
+  btnOpenDesigners.onclick = function() {
+  popupDesigners.style.display = "block";
+  }
+
+  // Ouvrir la popup des œuvres lorsque le bouton est cliqué
+  btnOpenOeuvres.onclick = function() {
+  popupOeuvres.style.display = "block";
+  }
+
+  // Fermer la popup des designers lorsque le bouton de fermeture est cliqué
+  btnCloseDesigners.onclick = function() {
+  popupDesigners.style.display = "none";
+  }
+
+  // Fermer la popup des œuvres lorsque le bouton de fermeture est cliqué
+  btnCloseOeuvres.onclick = function() {
+  popupOeuvres.style.display = "none";
+  }
+
+  // Fermer la popup lorsque l'utilisateur clique en dehors de la zone de la popup
+  window.onclick = function(event) {
+  if (event.target == popupDesigners) {
+    popupDesigners.style.display = "none";
+  }
+  if (event.target == popupOeuvres) {
+    popupOeuvres.style.display = "none";
+  }
+  }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const checkboxes = document.querySelectorAll('.hidden-check');
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const card = checkbox.closest('.check-box-wrapper').querySelector('.card-list-add');
+        if (checkbox.checked) {
+          card.classList.add('card-checked');
+        } else {
+          card.classList.remove('card-checked');
+        }
+      });
+
+      // Initialize the card-checked class based on initial checkbox state
+      if (checkbox.checked) {
+        const card = checkbox.closest('.check-box-wrapper').querySelector('.card-list-add');
+        card.classList.add('card-checked');
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const designerSearch = document.getElementById('designer-search');
+    const oeuvreSearch = document.getElementById('oeuvre-search');
+
+    designerSearch.addEventListener('input', () => {
+      filterCards('designers-list', designerSearch.value.toLowerCase());
+    });
+
+    oeuvreSearch.addEventListener('input', () => {
+      filterCards('oeuvres-list', oeuvreSearch.value.toLowerCase());
+    });
+
+    function filterCards(containerId, query) {
+      const container = document.getElementById(containerId);
+      const cards = container.querySelectorAll('.check-box-wrapper');
+
+      cards.forEach(card => {
+        const title = card.querySelector('.card-title-add').textContent.toLowerCase();
+        if (title.includes(query)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>

@@ -1,0 +1,76 @@
+<%= form_with(model: oeuvre) do |form| %>
+  <% if oeuvre.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(oeuvre.errors.count, "error") %> prohibited this oeuvre from being saved:</h2>
+      <ul>
+        <% oeuvre.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="flex-form">
+    <div>
+      <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
+    </div>
+    <div>
+      <%= form.collection_select :designer_id, Designer.order(:nom_designer), :id, :nom_designer, prompt: "Sélectionner un designer" %>
+    </div>
+    <div style="display:flex">
+      <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
+    </div>
+    <div>
+      <%= form.text_field :nom_oeuvre, placeholder: "Nom de l'oeuvre" %>
+    </div>
+    <div>
+      <%= form.text_field :date_oeuvre, placeholder: "Date de l'oeuvre", id: "date-oeuvre-input" %>
+      <div id="date-oeuvre-error"></div>
+    </div>
+    <div>
+      <%= form.text_area :description, placeholder: "Description (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_field :image, placeholder: "Url de l'image" %>
+    </div>
+    <div>
+      <%= form.submit "Continuer ⏩️", class: "button-large" %>
+    </div>
+  </div>
+<% end %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var oeuvreYearInput = document.getElementById("date-oeuvre-input");
+    var oeuvreYearError = document.getElementById("date-oeuvre-error");
+
+    var currentYear = new Date().getFullYear();
+
+    function validateYear(year, minYear, maxYear) {
+      return !isNaN(year) && year >= minYear && year <= maxYear;
+    }
+
+    oeuvreYearInput.addEventListener("input", function() {
+      var oeuvreYear = oeuvreYearInput.value;
+
+      if (!validateYear(oeuvreYear, 0, currentYear)) {
+        oeuvreYearError.textContent = "Veuillez entrer une année de naissance valide entre 0 et " + currentYear;
+      } else {
+        oeuvreYearError.textContent = "";
+      }
+    });
+
+    var form = document.querySelector("form");
+    form.addEventListener("submit", function(event) {
+      var oeuvreYear = oeuvreYearInput.value;
+      var errors = [];
+
+      if (!validateYear(oeuvreYear, 0, currentYear)) {
+        oeuvreYearError.textContent = "Veuillez entrer une année de naissance valide entre 0 et " + currentYear;
+        errors.push("oeuvreYearError");
+      }
+
+      if (errors.length > 0) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>

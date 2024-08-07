@@ -1,0 +1,234 @@
+<style>
+  label {
+    font-weight: 500;
+    display: block;
+    width: 60%;
+    font-size: 18px;
+    padding: 24px 0px;
+    line-height: 130%;
+  }
+  form {
+    margin-top: 64px;
+  }
+  .star-rating {
+    width: 60vw;
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-direction:row-reverse;
+  }
+  .star-rating input[type="radio"] {
+    display: none;
+  }
+  .star-rating label {
+    width: 10vw;
+    width: fit-content;
+    display: flex;
+    text-align:center;
+    gap: 8px;
+    justify-content: start;
+    align-items: center;
+    flex-direction:column;
+    font-size: 48px;
+    color: #ddd;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .star-rating input[type="radio"]:checked ~ label,
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    color: #f5c518;
+  }
+  .label-number{
+    font-size: 18px;
+    line-height:130%;
+  }
+  .label-text{
+    font-weight: 400;
+    font-size: 18px;
+    line-height:130%;
+  }
+  .flex-label{
+    display: flex;
+    gap: 0;
+    align-items: center;
+    flex-direction: column;
+  }
+  .button{
+   margin-top: 32px;
+   width: 20vw;
+  }
+   @media screen and (min-width:0px) and (max-width:600px) {
+    .star-rating{
+      width: 85vw;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column-reverse;
+    }
+    .question{
+      width: 80vw;
+    }
+    .star-rating label {
+      font-size: 32px;
+    }
+    .main-div {
+      padding-bottom: 100px;
+    }
+    .form-feedback,.box-title{
+      margin-left:5vw;
+    }
+      .label-number,.label-text,.question{
+    font-size: 16px;
+    }
+    .button{
+      width: 85vw;
+    }
+    textarea{
+      width: 75vw;
+    }
+  }
+  @media screen and (min-width:600px) and (max-width:800px) {
+    .star-rating{
+      width: 85vw;
+    }
+    .star-rating label {
+      font-size: 38px;
+    }
+    .main-div {
+      padding-bottom: 200px;
+    }
+    .form-feedback,.box-title{
+      margin-left:5vw;
+    }
+      .label-number,.label-text{
+    font-size: 16px;
+    }
+    .button{
+      width: 85vw;
+    }
+  }
+</style>
+<div class="main-div grid" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <div class="box-title">
+    <p class="subtitle-top">Votre contribution</p>
+    <h1 class="title-add-elements">Exprimer votre avis</h1>
+    <p class="subtitle">En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+  </div>
+  <section class="form-feedback">
+    <%= form_with(model: @feedback) do |f| %>
+      <% if @feedback.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@feedback.errors.count, "erreur") %> ont empêché ce feedback d'être enregistré :</h2>
+          <ul>
+            <% @feedback.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <% [
+        [:question_1, "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?"],
+        [:question_2, "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?"],
+        [:question_3, "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?"],
+        [:question_4, "Sur une échelle de 1 à 5, comment évalueriez-vous l’efficacité du quiz ?"],
+        [:question_5, "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?"],
+        [:question_6, "Sur une échelle de 1 à 5, comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)"],
+        [:question_7, "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?"]
+      ].each do |question, label_text| %>
+        <div>
+          <%= f.label question, label_text, class: "question" %>
+          <div class="star-rating">
+            <%= f.hidden_field question, value: 0 %>
+            <label data-value="5">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">5</p>
+                <p class="label-text">Très bonne</p>
+              </div>
+            </label>
+            <label data-value="4">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">4</p>
+                <p class="label-text">Bonne</p>
+              </div>
+            </label>
+            <label data-value="3">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">3</p>
+                <p class="label-text">Moyenne</p>
+              </div>
+            </label>
+            <label data-value="2">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">2</p>
+                <p class="label-text">Mauvaise</p>
+              </div>
+            </label>
+            <label data-value="1">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">1</p>
+                <p class="label-text">Très mauvaise</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      <% end %>
+      <div>
+        <%= f.label :question_8, "Quels sont, selon vous, les points forts de notre site ?", class: "question" %>
+        <%= f.text_area :question_8, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_9, "Quels sont les aspects que vous aimeriez voir améliorés ?", class: "question" %>
+        <%= f.text_area :question_9, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_10, "Avez-vous des suggestions pour améliorer l'expérience utilisateur ?", class: "question" %>
+        <%= f.text_area :question_10, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_11, "Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?", class: "question" %>
+        <%= f.text_area :question_11, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_12, "Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?", class: "question" %>
+        <%= f.text_area :question_12, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.submit "Envoyer", class: "button" %>
+      </div>
+    <% end %>
+  </section>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const starRatings = document.querySelectorAll('.star-rating');
+
+    starRatings.forEach(starRating => {
+      const stars = starRating.querySelectorAll('label');
+      const input = starRating.querySelector('input[type="hidden"]');
+
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const value = this.getAttribute('data-value');
+          input.value = value;
+          updateStars(stars, value);
+        });
+      });
+    });
+
+    function updateStars(stars, value) {
+      stars.forEach(star => {
+        if (star.getAttribute('data-value') <= value) {
+          star.style.color = '#f5c518';
+        } else {
+          star.style.color = '#ddd';
+        }
+      });
+    }
+  });
+</script>

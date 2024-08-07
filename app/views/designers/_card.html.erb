@@ -1,0 +1,20 @@
+<%= link_to designer_path(card) do %>
+  <div class="card" data-card-id="<%= card.id %>">
+    <div class="bg-card">
+      <% image_path = "designers/#{remove_accents_and_special_chars(card.nom_designer)}.webp" %>
+      <% if file_exists?(image_path) %>
+        <div class="img-card" style="background-image: url('/assets/<%= image_path %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
+        </div>
+      <% else %>
+      <% end %>
+    </div>
+    <div class="text-card">
+      <% if card.country.present? %>
+        <p class="designer-card"><%= card.country.country %></p>
+      <% end %>
+      <h2 class="title-card"><%= card.nom_designer %></h2>
+      <h3 class="title-description-card">Description</h3>
+      <p class="description-card description-card-home"><%= card.description %></p>
+    </div>
+  </div>
+<%end%>

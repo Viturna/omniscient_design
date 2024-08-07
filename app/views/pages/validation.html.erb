@@ -1,0 +1,307 @@
+<style>
+  .grid-1{
+    padding: 0 10vw;
+  }
+  .top-profil{
+    display: flex;
+    align-items: center;
+    height: 15vh;
+    padding: 0 5vw;
+    gap: 50px;
+    background-color: #202020;
+  }
+  h1{
+    color: #FFF;
+  }
+
+  h2{
+    margin-top: 64px;
+    color: #202020;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  table {
+    margin-top: 32px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ddd; /* Bordure de 1 pixel solide avec couleur grise */
+    padding: 8px; /* Espacement intérieur */
+    text-align: left; /* Alignement du texte à gauche */
+  }
+
+  th {
+    background-color: #f2f2f2; /* Couleur de fond pour les cellules d'en-tête */
+  }
+
+  tr:hover {
+    background-color: #f5f5f5; /* Couleur de fond lorsque survolé */
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  .btn-green {
+    background-color: #3EBC68;
+  }
+
+  .btn-green:hover {
+    background-color: #1A843E;
+  }
+  .btn-orange{
+    background-color: #F2AD22;
+  }
+  .btn-orange:hover{
+    background-color: #D49A26;
+  }
+</style>
+<div class="main-div">
+  <section class="top-profil">
+    <%= link_to profil_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    <% end %>
+    <h1>Gestions des contenus</h1>
+    <p style="color:#FFF">Total <%= @oeuvres_count +@designers_count %> références</p>
+  </section>
+  <section class="grid-1">
+    <h2>Oeuvres en attente de validation</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Date d'ajout</th>
+          <th>Ajouté par</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @oeuvres.each do |oeuvre| %>
+          <% if !oeuvre.validation %>
+            <tr>
+              <td><%= oeuvre.nom_oeuvre %></td>
+              <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
+              <td>
+                <% if oeuvre.user_id.present? %>
+                  <% user = User.find_by(id: oeuvre.user_id) %>
+                  <%= user.present? ? user.email : "Omniscient Design" %>
+                <% else %>
+                  Omniscient Design
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
+                <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
+                <%= link_to "Valider", validate_oeuvre_path(oeuvre), method: :patch, class: "btn btn-green" %>
+                <%= link_to 'Supprimer', oeuvre_path(oeuvre), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <div id="load-more-button-oeuvres">
+      <button class="btn">Voir plus d'oeuvres</button>
+    </div>
+  </section>
+  <section class="grid-1">
+    <h2>Oeuvres validées</h2>
+    <p>Il y a actuellement <%= @oeuvres_count %> œuvres validées</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Date d'ajout</th>
+          <th>Ajouté par</th>
+          <th>Validé par</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @oeuvres.each do |oeuvre| %>
+          <% if oeuvre.validation %>
+            <tr>
+              <td><%= oeuvre.nom_oeuvre %></td>
+              <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
+              <td>
+                <% if oeuvre.user_id.present? %>
+                  <% user = User.find_by(id: oeuvre.user_id) %>
+                  <%= user.present? ? user.email : "Omniscient Design" %>
+                <% else %>
+                  Omniscient Design
+                <% end %>
+              </td>
+              <td>
+                <% if oeuvre.validated_by_user_id.present? %>
+                  <%= User.find(oeuvre.validated_by_user_id).email %>
+                <% else %>
+                  Utilisateur inconnu
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
+                <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
+                <%= link_to "Supprimer", oeuvre_path(oeuvre), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <div id="load-more-button-oeuvres-validated">
+      <button class="btn">Voir plus d'oeuvres validées</button>
+    </div>
+  </section>
+  <section class="grid-1">
+    <h2>Designers en attente de validation</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Date d'ajout</th>
+          <th>Ajouté par</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @designers.each do |designer| %>
+          <% if !designer.validation %>
+            <tr>
+              <td><%= designer.nom_designer %></td>
+              <td><%= I18n.l(designer.created_at, format: :long) %></td>
+              <td>
+                <% if designer.user_id.present? %>
+                  <% user = User.find_by(id: designer.user_id) %>
+                  <%= user.present? ? user.email : "Omniscient Design" %>
+                <% else %>
+                  Omniscient Design
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "Voir", designer_path(designer), class: "btn" %>
+                <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
+                <%= link_to "Valider", validate_designer_path(designer), method: :patch, class: "btn btn-green" %>
+                <%= link_to "Supprimer", designer_path(designer), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <div id="load-more-button-designers">
+      <button class="btn">Voir plus de designers</button>
+    </div>
+  </section>
+  <section class="grid-1">
+    <h2>Designers validés</h2>
+    <p>Il y a actuellement <%= @designers_count %> designers validés</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Date d'ajout</th>
+          <th>Ajouté par</th>
+          <th>Validé par</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @designers.each do |designer| %>
+          <% if designer.validation %>
+            <tr>
+              <td><%= designer.nom_designer %></td>
+              <td><%= I18n.l(designer.created_at, format: :long) %></td>
+              <td>
+                <% if designer.user_id.present? %>
+                  <% user = User.find_by(id: designer.user_id) %>
+                  <%= user.present? ? user.email : "Omniscient Design" %>
+                <% else %>
+                  Omniscient Design
+                <% end %>
+              </td>
+              <td>
+                <% if designer.validated_by_user_id.present? %>
+                  <%= User.find(designer.validated_by_user_id).email %>
+                <% else %>
+                  Utilisateur inconnu
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "Voir", designer_path(designer), class: "btn" %>
+                <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
+                <%= link_to "Supprimer", designer_path(designer), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <div id="load-more-button-designers-validated">
+      <button class="btn">Voir plus de designers validés</button>
+    </div>
+  </section>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Fonction pour afficher plus de lignes pour un tableau spécifique
+    function showMoreRows(rows, loadMoreButton) {
+      const initialRowsToShow = 10;
+      let rowsToShow = initialRowsToShow;
+
+      // Cacher les lignes supplémentaires initialement
+      rows.forEach((row, index) => {
+        if (index >= rowsToShow) {
+          row.style.display = 'none';
+        }
+      });
+
+      loadMoreButton.addEventListener('click', function() {
+        for (let i = rowsToShow; i < rowsToShow + initialRowsToShow; i++) {
+          if (i >= rows.length) {
+            loadMoreButton.disabled = true;
+            loadMoreButton.textContent = "Toutes les lignes chargées";
+            break;
+          }
+          rows[i].style.display = '';
+        }
+        rowsToShow += initialRowsToShow;
+      });
+    }
+
+    // Récupérer tous les tableaux et les boutons "Voir plus"
+    const tables = document.querySelectorAll('.grid-1 table');
+    const loadMoreButtons = document.querySelectorAll('[id^="load-more-button"]');
+
+    // Pour chaque tableau, appliquer la fonction showMoreRows
+    tables.forEach((table, index) => {
+      const rows = table.querySelectorAll('tbody tr');
+      const loadMoreButton = loadMoreButtons[index];
+      showMoreRows(rows, loadMoreButton);
+    });
+  });
+</script>

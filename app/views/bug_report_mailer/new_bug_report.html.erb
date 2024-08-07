@@ -1,0 +1,17 @@
+<h1>Nouveau Rapport de Bug</h1>
+<p>
+  <strong>Utilisateur:</strong>
+  <%= @bug_report.user.email %>
+</p>
+<p>
+  <strong>Description:</strong>
+  <%= @bug_report.description %>
+</p>
+<p>
+  <strong>URL:</strong>
+  <%= link_to @bug_report.url, @bug_report.url %>
+</p>
+<p>
+  <strong>Status:</strong>
+  <%= @bug_report.status %>
+</p>

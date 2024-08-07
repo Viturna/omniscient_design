@@ -1,0 +1,138 @@
+<style>
+  .grid-1{
+    padding: 0 10vw;
+    padding-bottom: 45px;
+    margin-top: 64px;
+  }
+  .top-profil{
+    display: flex;
+    align-items: center;
+    height: 100px;
+    padding: 0 5vw;
+    gap: 50px;
+    background-color: #202020;
+  }
+  h1{
+    color: #FFF;
+  }
+
+  h2{
+    margin-top: 64px;
+    color: #202020;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .grid-1 p{
+    color:#8D9299;
+    font-size: 18px;
+    line-height:130%;
+  }
+  .black{
+    color:#202020;
+  }
+  .date{
+    font-weight: 300;
+    margin-top: 16px;
+  }
+   .black{
+    color:#202020;
+  }
+    @media screen and (min-width:0px) and (max-width:349px) {
+    .grid-1{
+      padding: 0 5vw;
+      padding-bottom: 45px;
+    }
+   .top-profil{
+      gap: 16px;
+      height: 80px;
+    }
+    .top-profil svg{
+      scale: 0.8;
+    }
+    h2{
+      margin-top: 48px;
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+    .grid-1 p{
+      font-size: 14px;
+    }
+  }
+  @media screen and (min-width:350px) and (max-width:800px) {
+    .grid-1{
+      padding: 0 5vw;
+      padding-bottom: 45px;
+    }
+    .top-profil{
+      gap: 25px;
+      height: 80px;
+    }
+
+    h2{
+      margin-top: 48px;
+      font-size: 18px;
+      margin-bottom: 18px;
+    }
+    .grid-1 p{
+      font-size: 16px;
+    }
+
+  }
+  @media screen and (min-width:801px) and (max-width:1200px) {
+   .grid-1{
+    padding: 0 5vw;
+    }
+    .top-profil{
+      gap: 40px;
+    }
+
+    h2{
+      margin-top: 52px;
+      font-size: 20px;
+    }
+    .grid-1 p{
+      font-size: 17px;
+      line-height:130%;
+    }
+  }
+</style>
+<div class="main-div">
+  <section class="top-profil">
+    <%= link_to root_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    <% end %>
+    <h1>Cookies</h1>
+  </section>
+  <section class="grid-1">
+    <h2>1 - Utilisation des Cookies </h2>
+    <p>Ce site web utilise des cookies pour améliorer votre expérience de navigation. Les cookies sont de petits fichiers texte stockés sur votre ordinateur lorsque vous visitez un site web. Ils sont largement utilisés pour aider les sites à fonctionner correctement, à améliorer leur performance et à fournir des informations aux propriétaires du site.</p>
+    <h2>2 - Types de Cookies Utilisés</h2>
+    <p><span class="black">1. Cookies Essentiels :</span> Ces cookies sont nécessaires au bon fonctionnement du site et ne peuvent pas être désactivés dans nos systèmes. Ils sont généralement définis en réponse à des actions que vous effectuez, comme la demande de services, telles que la connexion ou le remplissage de formulaires.<br>
+      <br>
+      <span class="black">2. Cookies Analytiques :</span> Ces cookies nous permettent de suivre les performances de notre site web, de comprendre comment les visiteurs interagissent avec le site et d'améliorer ses fonctionnalités. Les informations collectées sont anonymes et servent à améliorer notre site.<br>
+      <br>
+      <span class="black"> 3. Cookies de Personnalisation :</span> Ces cookies permettent au site de se souvenir de vos choix et préférences, tels que la langue préférée ou la région dans laquelle vous vous trouvez. Ces informations peuvent être utilisées pour vous offrir une expérience plus personnalisée.</p>
+    <h2>3 - Sécurité</h2>
+    <p>Nous prenons des mesures pour protéger vos informations personnelles contre tout accès non autorisé, utilisation abusive ou divulgation. Cependant, veuillez noter qu'aucune méthode de transmission de données sur Internet ou de stockage électronique n'est totalement sécurisée. Nous ne pouvons donc pas garantir une sécurité absolue.<br>
+      Notre site internet possède bien entendu un Certificat SSL (Secure Socket Layer).
+    </p>
+    <h2>4 - Droit d'Accès, de Modification et de Suppression</h2>
+    <p>Vous avez le droit d'accéder, de modifier ou de supprimer les informations personnelles que vous nous avez fournies. Pour cela, veuillez nous contacter à l'adresse suivante : support@viturna.fr. Nous nous efforcerons de répondre à votre demande dans les plus brefs délais.</p>
+    <h2>5 - Politique de l'hébergeur</h2>
+    <p>Notre hébergeur possède sa propre politique de confidentialité concernant l'utilisation de vos données que vous pouvez consulter en tout temps https://www.hostinger.fr/politique-de-confidentialite.</p>
+    <h2>6 - Consentement a notre politique</h2>
+    <p>En utilisant notre site, vous consentez à notre politique de confidentialité et que celle-ci puisse être modifiée en tout temps par l'éditeur.</p>
+    <h2>Modification  de la Politique de Confidentialité</h2>
+    <p>Nous nous réservons le droit de modifier cette politique de confidentialité à tout moment. Toute modification prendra effet dès sa publication sur ce site.</p>
+    <% file_path = __FILE__ %>
+    <% if File.exist?(file_path) %>
+      <% last_update = File.mtime(file_path) %>
+      <% formatted_date = last_update.strftime("%d/%m/%Y") %>
+      <p class="date" >Dernière mise à jour : <%= formatted_date %></p>
+    <% else %>
+      <p>Dernière mise à jour : ??/??/????</p>
+    <% end %>
+  </section>

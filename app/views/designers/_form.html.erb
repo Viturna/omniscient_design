@@ -1,0 +1,92 @@
+<%= form_with(model: @designer, local: true) do |form| %>
+  <% if @designer.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@designer.errors.count, "erreur") %> interdit à ce designer d'être enregistré :</h2>
+      <ul>
+        <% @designer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="flex-form">
+    <div>
+      <%= form.text_field :nom_designer, placeholder: "Nom du designer" %>
+    </div>
+    <div>
+      <%= form.text_field :date_naissance, placeholder: "Année de naissance", class: "year-input", id: "birth-year-input" %>
+      <div class="error-message" id="birth-year-error"></div>
+    </div>
+    <div>
+      <%= form.text_field :date_deces, placeholder: "Année de décès (optionnel)", class: "year-input", id: "death-year-input" %>
+      <div class="error-message" id="death-year-error"></div>
+    </div>
+    <div>
+      <%= form.collection_select :country_id, Country.order(:country), :id, :country, prompt: "Sélectionner un pays" %>
+    </div>
+    <div>
+      <%= form.text_field :image, placeholder: "Url de l'image"%>
+    </div>
+    <div>
+      <%= form.text_area :description, placeholder: "Description (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.submit "Continuer ⏩️", class: "button-large" %>
+    </div>
+  </div>
+<% end %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var birthYearInput = document.getElementById("birth-year-input");
+    var deathYearInput = document.getElementById("death-year-input");
+    var birthYearError = document.getElementById("birth-year-error");
+    var deathYearError = document.getElementById("death-year-error");
+
+    var currentYear = new Date().getFullYear();
+
+    function validateYear(year, minYear, maxYear) {
+      return !isNaN(year) && year >= minYear && year <= maxYear;
+    }
+
+    birthYearInput.addEventListener("input", function() {
+      var birthYear = birthYearInput.value;
+
+      if (!validateYear(birthYear, 0, currentYear)) {
+        birthYearError.textContent = "Veuillez entrer une année de naissance valide entre 0 et " + currentYear;
+      } else {
+        birthYearError.textContent = "";
+      }
+    });
+
+    deathYearInput.addEventListener("input", function() {
+      var deathYear = deathYearInput.value;
+
+      if (deathYear && !validateYear(deathYear, 0, currentYear)) {
+        deathYearError.textContent = "Veuillez entrer une année de décès valide entre 0 et " + currentYear;
+      } else {
+        deathYearError.textContent = "";
+      }
+    });
+
+    var form = document.querySelector("form");
+    form.addEventListener("submit", function(event) {
+      var birthYear = birthYearInput.value;
+      var deathYear = deathYearInput.value;
+      var errors = [];
+
+      if (!validateYear(birthYear, 0, currentYear)) {
+        birthYearError.textContent = "Veuillez entrer une année de naissance valide entre 0 et " + currentYear;
+        errors.push("birthYearError");
+      }
+
+      if (deathYear && !validateYear(deathYear, 0, currentYear)) {
+        deathYearError.textContent = "Veuillez entrer une année de décès valide entre 0 et " + currentYear;
+        errors.push("deathYearError");
+      }
+
+      if (errors.length > 0) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>

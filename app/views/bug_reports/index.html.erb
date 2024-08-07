@@ -1,0 +1,283 @@
+<style>
+  .grid-1 {
+    padding: 0 10vw;
+  }
+
+  .top-profil {
+    display: flex;
+    align-items: center;
+    height: 15vh;
+    padding: 0 5vw;
+    gap: 50px;
+    background-color: #202020;
+  }
+
+  h1 {
+    color: #FFF;
+  }
+
+  h2 {
+    margin-top: 64px;
+    color: #202020;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  table {
+    margin-top: 32px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-green {
+    background-color: #3EBC68;
+  }
+
+  .btn-green:hover {
+    background-color: #1A843E;
+  }
+
+  .btn-orange {
+    background-color: #F2AD22;
+  }
+
+  .btn-orange:hover {
+    background-color: #D49A26;
+  }
+   .status-select {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  form select{
+    width: fit-content;
+  }
+</style>
+<div class="main-div">
+  <section class="top-profil">
+    <%= link_to profil_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    <% end %>
+    <h1>Signalements de bugs</h1>
+  </section>
+  <section class="grid-1">
+    <h2>À faire</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_todo.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+  <section class="grid-1">
+    <h2>En cours</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_in_progress.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+  <section class="grid-1">
+    <h2>Corrigé</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_resolved.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+  <section class="grid-1">
+    <h2>Tous les reports</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_all.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Fonction pour afficher plus de lignes pour un tableau spécifique
+    function showMoreRows(rows, loadMoreButton) {
+      const initialRowsToShow = 10;
+      let rowsToShow = initialRowsToShow;
+
+      // Cacher les lignes supplémentaires initialement
+      rows.forEach((row, index) => {
+        if (index >= rowsToShow) {
+          row.style.display = 'none';
+        }
+      });
+
+      loadMoreButton.addEventListener('click', function () {
+        for (let i = rowsToShow; i < rowsToShow + initialRowsToShow; i++) {
+          if (i >= rows.length) {
+            loadMoreButton.disabled = true;
+            loadMoreButton.textContent = "Toutes les lignes chargées";
+            break;
+          }
+          rows[i].style.display = '';
+        }
+        rowsToShow += initialRowsToShow;
+      });
+    }
+
+    // Récupérer tous les tableaux et les boutons "Voir plus"
+    const tables = document.querySelectorAll('.grid-1 table');
+    const loadMoreButtons = document.querySelectorAll('[id^="load-more-button"]');
+
+    // Pour chaque tableau, appliquer la fonction showMoreRows
+    tables.forEach((table, index) => {
+      const rows = table.querySelectorAll('tbody tr');
+      const loadMoreButton = loadMoreButtons[index];
+      showMoreRows(rows, loadMoreButton);
+    });
+  });
+</script>

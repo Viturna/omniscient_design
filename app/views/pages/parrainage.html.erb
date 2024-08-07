@@ -1,0 +1,38 @@
+<style>
+  .top-header{
+    padding: 64px 10vw;
+    height: 200px;
+    background-color: #202020;
+    color:#FFF;
+    position: relative;
+  }
+</style>
+<div class="main-div">
+  <section class="top-header">
+    <%= link_to profil_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    <% end %>
+    <p class="subtitle-top">Parrainage </p>
+    <h1>Apprenez à plusieurs</h1>
+    <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus.est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus.</p>
+  </section>
+  <h2>Vos avantages au parrainage f</h2>
+  <p>Partagez ce code avec vos amis pour les parrainer :</p>
+  <div>
+    <input type="text" value="<%= @user.referral_code %>" id="referral-code" readonly>
+    <button onclick="copyReferralCode()">Copier</button>
+  </div>
+  <script>
+    function copyReferralCode() {
+      var copyText = document.getElementById("referral-code");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // Pour les mobiles
+
+      document.execCommand("copy");
+
+      alert("Code de parrainage copié : " + copyText.value);
+    }
+  </script>
+</div>

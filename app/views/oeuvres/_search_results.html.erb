@@ -1,0 +1,22 @@
+<% if oeuvre_results.any? || designer_results.any? %>
+  <div class="search-results">
+    <% if oeuvre_results.any? %>
+      <h3>Oeuvres</h3>
+      <ul>
+        <% oeuvre_results.each do |oeuvre| %>
+          <li><%= link_to oeuvre.nom_oeuvre, oeuvre %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if designer_results.any? %>
+      <h3>Designers</h3>
+      <ul>
+        <% designer_results.each do |designer| %>
+          <li><%= link_to designer.nom_designer, designer %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% else %>
+  <p>Aucun résultat trouvé pour "<%= search_term %>"</p>
+<% end %>

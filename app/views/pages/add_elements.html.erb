@@ -1,0 +1,102 @@
+<style>
+  /* Add Element */
+  .button-add {
+    font-weight: 500;
+    font-size: 22px;
+    color: #202020;
+    border-radius: 10px;
+    background-color: #FFF;
+    padding: 90px 150px;
+  }
+
+  .button-add:hover {
+    opacity: 0.8;
+  }
+
+  .add-flex {
+    margin-top: 100px;
+    display: flex;
+    gap: 80px;
+  }
+
+
+  @media screen and (min-width:0px) and (max-width:349px) {
+    .button-add {
+      width: 82vw;
+      height: 120px;
+      font-size: 16px;
+      padding: 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .add-flex {
+      margin-top: 32px;
+      flex-direction:column;
+      gap:24px;
+    }
+    .add-elements{
+      padding: 0 8vw 150px 8vw;
+    }
+  }
+  @media screen and (min-width:350px) and (max-width:800px) {
+    .button-add {
+      width: 82vw;
+      height: 140px;
+      font-size: 18px;
+      padding: 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .add-flex {
+      margin-top: 32px;
+      flex-direction:column;
+      gap:24px;
+    }
+    .add-elements{
+      padding: 0 8vw 150px 8vw;
+    }
+  }
+  @media screen and (min-width:801px) and (max-width:1050px){
+    .button-add {
+      width: 62vw;
+      height: 140px;
+      font-size: 18px;
+      padding: 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .add-flex {
+      margin-top: 32px;
+      flex-direction:column;
+      gap:24px;
+    }
+    .add-elements{
+      padding: 0 4vw 0px 4vw;
+    }
+  }
+</style>
+<div class="main-div grid" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <section class="add-elements">
+    <p class="subtitle-top">Votre contribution</p>
+    <h1 class="title-add-elements">Ajouter une référence</h1>
+    <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
+    <div class="add-flex">
+      <%= link_to new_designer_path do %>
+        <div class="button-add">
+          <p>Designers</p>
+        </div>
+      <%end%>
+      <%= link_to new_oeuvre_path do %>
+        <div class="button-add">
+          <p>Oeuvres</p>
+        </div>
+      <%end%>
+    </div>
+  </section>
+</div>

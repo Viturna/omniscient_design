@@ -1,0 +1,172 @@
+<style>
+  .grid-1{
+        padding: 0 10vw;
+  }
+  .top-profil{
+    display: flex;
+    align-items: center;
+    height: 15vh;
+    padding: 0 5vw;
+    gap: 50px;
+    background-color: #202020;
+  }
+  h1{
+    color: #FFF;
+  }
+
+  h2{
+    margin-top: 64px;
+    color: #202020;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+
+   table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ddd; /* Bordure de 1 pixel solide avec couleur grise */
+    padding: 8px; /* Espacement intérieur */
+    text-align: left; /* Alignement du texte à gauche */
+  }
+
+  th {
+    background-color: #f2f2f2; /* Couleur de fond pour les cellules d'en-tête */
+  }
+
+  tr:hover {
+    background-color: #f5f5f5; /* Couleur de fond lorsque survolé */
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Styles pour les boutons de suppression */
+  .btn-danger {
+    background-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  .btn-green {
+    background-color: #3EBC68;
+  }
+
+  .btn-green:hover {
+    background-color: #1A843E;
+  }
+  .btn-orange{
+    background-color: #F2AD22;
+  }
+   .btn-orange:hover{
+    background-color: #D49A26;
+  }
+
+  #map{
+    margin-bottom: 80px;
+  }
+</style>
+<!-- app/views/users/index.html.erb -->
+<div class="main-div">
+  <section class="top-profil">
+    <%= link_to profil_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+      </svg>
+    <% end %>
+    <h1>Liste des membres</h1>
+  </section>
+  <section class="grid-1">
+    <h2>Membres inscrits sur le site</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom de famille</th>
+          <th>Email</th>
+          <th>Pseudo</th>
+          <th>Statut</th>
+          <th>Établissement</th>
+          <th>BAN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.firstname %></td>
+            <td><%= user.lastname %></td>
+            <td><%= user.email %></td>
+            <td><%= user.pseudo %></td>
+            <td><%= user.statut %></td>
+            <td><%= user.etablissement&.name %></td>
+            <td>
+              <% if current_user.admin? %>
+                <% if user.banned? %>
+                  <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
+                <% else %>
+                  <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <h2>Carte des membres par géolocalisation</h2>
+    <div id="map" style="height: 400px;"></div>
+  </section>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Coordonnées des utilisateurs à charger dynamiquement depuis Rails
+    const userLocations = [
+      <% @users.each do |user| %>
+        <% if user.etablissement&.latitude && user.etablissement&.longitude %>
+          {
+            name: '<%= j user.firstname %> <%= j user.lastname %>',
+            latlng: [<%= user.etablissement.latitude %>, <%= user.etablissement.longitude %>]
+          },
+        <% end %>
+      <% end %>
+    ];
+
+    // Initialisation de la carte Leaflet
+    var map = L.map('map').setView([46.603354, 1.888334], 5); // Centré sur la France
+
+    // Chargement de la carte OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Cluster de marqueurs pour regrouper les utilisateurs à proximité
+    var markers = L.markerClusterGroup();
+
+    // Ajout des marqueurs pour chaque utilisateur
+    userLocations.forEach(function(user) {
+      var marker = L.marker(user.latlng)
+        .bindPopup(user.name);
+      markers.addLayer(marker);
+    });
+
+    // Ajout des marqueurs clusterisés à la carte
+    map.addLayer(markers);
+  });
+</script>

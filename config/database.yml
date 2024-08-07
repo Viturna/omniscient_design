@@ -23,3 +23,6 @@ test:
 production:
   <<: *default
   database: omniscient_design_production
+  username: deploy
+  password: ZD34pm
+  host: 127.0.0.1

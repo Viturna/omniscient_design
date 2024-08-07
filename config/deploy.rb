@@ -2,7 +2,7 @@
 lock "~> 3.19.1"
 
 set :application, "omniscient_design"
-set :repo_url, "git@github.com:username/myapp.git"
+set :repo_url, "git@github.com:Viturna/omniscient_design.git"
 
 # Deploy to the user's home directory
 set :deploy_to, "/home/deploy/#{fetch :application}"

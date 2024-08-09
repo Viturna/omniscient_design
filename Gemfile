@@ -89,4 +89,4 @@ gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
 gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'net-ssh', '~> 7.2'
-gem 'passenger'
+gem "passenger", ">= 5.3.2", require: "phusion_passenger/rack_handler"

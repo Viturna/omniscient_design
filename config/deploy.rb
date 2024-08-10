@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.19.1"
+lock "~> 3.17"
 
 set :application, "omniscient_design"
 set :repo_url, "git@github.com:Viturna/omniscient_design.git"
@@ -45,3 +45,4 @@ set :keep_releases, 5
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
+set :passenger_restart_with_touch, true

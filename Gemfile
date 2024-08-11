@@ -85,7 +85,7 @@ gem 'capistrano-rails', '~> 1.6'
 gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
 gem 'capistrano-puma', '~> 0.2.3'
 
-
+gem 'capistrano3-puma', github: "seuros/capistrano-puma"
 gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'net-ssh', '~> 7.2'

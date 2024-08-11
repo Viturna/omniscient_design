@@ -37,6 +37,8 @@ require 'capistrano/rails'
 require 'capistrano/rbenv'
 require 'capistrano/puma'
 require 'capistrano/puma/nginx'
+install_plugin Capistrano::Puma  # Default puma tasks
+install_plugin Capistrano::Puma::Systemd
 set :rbenv_type, :user
 set :rbenv_ruby, '3.3.4'
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined

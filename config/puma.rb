@@ -1,11 +1,11 @@
-workers 4
+# config/puma.rb
 
-# Min and Max threads per worker
+workers 4
 threads 1, 6
-app_dir    = File.expand_path('../..', __FILE__)
+
+app_dir = File.expand_path('../..', __FILE__)
 shared_dir = "#{app_dir}/shared"
 
-# Default to production
 rails_env = ENV['RAILS_ENV'] || 'production'
 environment rails_env
 

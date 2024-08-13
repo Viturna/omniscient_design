@@ -9,12 +9,12 @@ gem "rails", "~> 7.1.3", ">= 7.1.3.4"
 gem "sprockets-rails"
 gem 'jquery-rails'
 gem 'htmlbeautifier'
+
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.2"
 
-
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem "puma", "~> 6.4"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -79,13 +79,9 @@ gem 'iso_country_codes'
 
 gem 'dotenv-rails', groups: [:development, :test, :production]
 
-
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6'
 gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
-gem 'capistrano-puma'
-
-
 gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'net-ssh', '~> 7.2'

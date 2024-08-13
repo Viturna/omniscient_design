@@ -30,4 +30,3 @@ state_path ENV.fetch("STATE_PATH") { "tmp/pids/puma.state" }
 
 # Allow puma to be restarted by `bin/rails restart`
 plugin :tmp_restart
-s

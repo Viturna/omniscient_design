@@ -15,7 +15,7 @@ stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.std
 # Set master PID and state locations
 pidfile "/home/deploy/omniscient_design/shared/tmp/pids/puma.pid"
 state_path "/home/deploy/omniscient_design/shared/tmp/sockets/puma.state"
-bind "unix:///home/deploy/omniscient_design/shared/sockets/puma.sock"
+bind "unix:///home/deploy/omniscient_design/shared/tmp/sockets/puma.sock"
 
 activate_control_app
 

@@ -44,10 +44,10 @@ set :keep_releases, 5
 # set :keep_releases, 5
 set :nginx_config_name, 'omniscient_design'
 set :nginx_server_name, 'omniscientdesign.fr'
-set :ssh_options, {
-  forward_agent: true,
-  user: 'deploy'
-}
+# set :ssh_options, {
+#   forward_agent: true,
+#   user: 'deploy'
+# }
 # config/deploy.rb
 namespace :deploy do
   desc 'Start Puma'

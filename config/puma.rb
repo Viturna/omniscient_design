@@ -27,6 +27,6 @@ state_path ENV.fetch("STATE_PATH") { "tmp/pids/puma.state" }
 
 # Daemonize (optional, if you want Puma to run as a background process)
 # daemonize ENV.fetch("DAEMONIZE") { true }
-
+state_path "/home/deploy/omniscient_design/shared/tmp/pids/puma.state"
 # Allow puma to be restarted by `bin/rails restart`
 plugin :tmp_restart

@@ -48,6 +48,24 @@ set :ssh_options, {
   forward_agent: true,
   user: 'deploy'
 }
+# config/deploy.rb
+namespace :deploy do
+  desc 'Start Puma'
+  task :start_puma do
+    on roles(:app) do
+      execute "cd #{release_path} && bundle exec puma -C config/puma.rb -e #{fetch(:rails_env)} -d"
+    end
+  end
+
+  desc 'Stop Puma'
+  task :stop_puma do
+    on roles(:app) do
+      execute "pkill -f puma"
+    end
+  end
+
+  after :publishing, :restart
+end
+
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
-set :passenger_restart_with_touch, false

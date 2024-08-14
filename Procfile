@@ -1,1 +1,2 @@
-web: bin/rails server -p 5000
+web: bin/rails server
+release: rails db:migrate

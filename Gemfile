@@ -82,6 +82,10 @@ gem 'dotenv-rails', groups: [:development, :test, :production]
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6'
 gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+gem 'capistrano-bundler'
+gem 'capistrano3-puma'
+
+
 gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'net-ssh', '~> 7.2'

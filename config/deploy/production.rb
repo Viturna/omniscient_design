@@ -8,7 +8,7 @@
 # server "db.example.com", user: "deploy", roles: %w{db}
 
 
-server 'omniscientdesign.fr', user: 'deploy', roles: %w{app db web}, ssh_options: { forward_agent: true }
+server 'omniscientdesign.fr', port: 22, user: 'deploy', roles: %w{app db web}, ssh_options: { forward_agent: true }
 # role-based syntax
 # ==================
 

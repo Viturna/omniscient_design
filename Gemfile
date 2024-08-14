@@ -84,7 +84,7 @@ gem 'capistrano-rails', '~> 1.6'
 gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
 gem 'capistrano-bundler'
 gem 'capistrano-puma', require: false
-
+gem 'foreman'
 
 
 gem 'ed25519', '~> 1.2'

@@ -1,2 +1,2 @@
 web: bin/rails server
-release: rails db:migrate
+release: bundle exec rails db:migrate && bundle exec rails db:seed

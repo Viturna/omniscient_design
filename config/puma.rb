@@ -3,9 +3,12 @@
 workers 2
 threads 1, 6
 
+# Define directories
 app_dir = File.expand_path('../..', __FILE__)
 shared_dir = "#{app_dir}/shared"
+current_dir = "#{app_dir}/current"
 
+# Define environment
 rails_env = ENV['RAILS_ENV'] || 'production'
 environment rails_env
 
@@ -13,13 +16,11 @@ environment rails_env
 stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
 
 # Set master PID and state locations
-directory '/home/deploy/omniscient_design/current'
-rackup "/home/deploy/omniscient_design/current/config.ru"
-environment 'production'
-
-pidfile '/home/deploy/omniscient_design/shared/tmp/pids/puma.pid'
-state_path '/home/deploy/omniscient_design/shared/tmp/sockets/puma.state'
-bind "unix:///home/deploy/omniscient_design/shared/tmp/sockets/puma.sock"
+directory current_dir
+rackup "#{current_dir}/config.ru"
+pidfile "#{shared_dir}/tmp/pids/puma.pid"
+state_path "#{shared_dir}/tmp/pids/puma.state"
+bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
 
 activate_control_app
 

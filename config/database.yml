@@ -22,6 +22,5 @@ test:
 
 production:
   <<: *default
-  database: omniscientdesigndb
-  username: omniscientdesigndb
-  password: <%= ENV["DATABASE_URL"] %>
+  database: omniscient_design_production
+  username: dokku

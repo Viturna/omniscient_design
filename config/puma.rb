@@ -19,7 +19,7 @@ stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.std
 directory current_dir
 rackup "#{current_dir}/config.ru"
 pidfile "#{shared_dir}/tmp/pids/puma.pid"
-state_path "#{shared_dir}/tmp/pids/puma.state"
+state_path '/home/deploy/omniscient_design/shared/tmp/pids/puma.state'
 bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
 
 activate_control_app

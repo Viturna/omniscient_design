@@ -7,7 +7,7 @@
         </svg>
         <%= card.date_oeuvre %>
       </p>
-      <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
+      <% image_path = "/oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
       <% if file_exists?(image_path) %>
         <div class="img-card" style="background-image: url('/assets/<%= image_path %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
         </div>

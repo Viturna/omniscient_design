@@ -1,16 +1,87 @@
-<h2>Forgot your password?</h2>
+<style>
+  .logo-log {
+    position: absolute;
+    left: 35px;
+    top: 35px;
+  }
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  .log {
+    position: relative;
+    background-image: url('/assets/bg-presentation.png');
+    background-repeat: no-repeat;
+    height: 100vh;
+  }
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+  .box-log {
+    position: absolute;
+    bottom: 35px;
+    padding: 0px 8vw
+  }
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+  .form {
+    margin-top: 32px;
+    width: 60vw;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 30px 0;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
 
-<%= render "devise/shared/links" %>
+  form {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+  }
+
+
+   .sign-up-in{
+    text-align: center;
+   }
+  .btn-login {
+    margin-top: 16px;
+    width: 22vw;
+    height: 65px;
+  }
+
+  .actions {
+    margin-left: auto; /* Pour aligner à droite */
+  }
+
+
+  .password-container {
+    position: relative;
+  }
+
+  .password-container .toggle-password {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    fill:#202020;
+  }
+</style>
+<div class="main-div log" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <section class="box-log">
+    <h1>Mot de passe oublié ?</h1>
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <div class="field">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      </div>
+      <div class="actions">
+        <%= f.submit "Send me reset password instructions" %>
+      </div>
+    <% end %>
+    <%= render "devise/shared/links" %>
+  </section>
+</div>

@@ -49,7 +49,7 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
 
     create_table "designers", force: :cascade do |t|
       t.text "nom_designer"
-      t.text "date_naissance"
+      t.integer "date_naissance"
       t.text "image"
       t.text "description"
       t.datetime "created_at", null: false
@@ -58,7 +58,7 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
       t.bigint "country_id", null: false
       t.bigint "user_id"
       t.bigint "validated_by_user_id"
-      t.datetime "date_deces"
+      t.integer "date_deces"
       t.index ["country_id"], name: "index_designers_on_country_id"
       t.index ["user_id"], name: "index_designers_on_user_id"
     end
@@ -152,10 +152,10 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
     create_table "oeuvres", force: :cascade do |t|
       t.text "domaine"
       t.text "nom_designer"
-      t.date "date_naissance"
+      t.integer "date_naissance"
       t.text "pays"
       t.text "nom_oeuvre"
-      t.date "date_oeuvre"
+      t.integer "date_oeuvre"
       t.text "description"
       t.text "image"
       t.datetime "created_at", null: false

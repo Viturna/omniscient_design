@@ -139,22 +139,26 @@
   .add-to-list-btn:hover + .hover-btn{
     display: block;
   }
+  #back-btn{
+    background: none;
+    border: none;
+  }
 </style>
 <div class="body-show" id="<%= dom_id oeuvre %>">
-  <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
+  <% image_path = "/oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
   <div class="header-show"
    <% if file_exists?(image_path) %>
    style="background-image: url('/assets/<%= image_path %>');"
   <% else %>
     style="background-image: url('<%= oeuvre.image%>');"
   <% end %>>
-    <%= link_to '#', id: "back-button" do %>
+    <button id="back-btn">
       <div class="circle-back">
         <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
         </svg>
       </div>
-    <% end %>
+    </button>
     <% unless !user_signed_in? %>
       <button id="openPopup" style="border:none; background:none;">
         <div class="circle-save">
@@ -675,4 +679,15 @@
 
   // Ajouter un écouteur d'événement pour détecter le défilement de la page
   window.addEventListener('scroll', seenValidation);
+</script>
+<script>
+  document.getElementById('back-btn').addEventListener('click', function() {
+    const referrer = document.referrer;
+
+    if (referrer && referrer.includes(window.location.hostname)) {
+      window.history.back();
+    } else {
+      window.location.href = 'https://omniscientdesign.fr';
+    }
+  });
 </script>

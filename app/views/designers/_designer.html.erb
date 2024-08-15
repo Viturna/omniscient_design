@@ -1,175 +1,178 @@
 <style>
-  <style>
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
-    .validation{
-      background-color: rgba(0, 0, 0, 0.5);
-      top: 0;
-      left: 0;
-      position: fixed;
-      z-index: 9999;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      color:#FFF;
-      gap: 32px;
-    }
-    .validation-title{
-      font-size: 22px;
-      font-weight: 500;
-    }
-    .validation-text{
-      font-size: 18px;
-      color:#D9D9D9;
-      width: 40vw;
-      text-align:center;
-    }
-    .overlay-bottom{
-      display: none;
-      position: fixed;
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  .validation{
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color:#FFF;
+    gap: 32px;
+  }
+  .validation-title{
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .validation-text{
+    font-size: 18px;
+    color:#D9D9D9;
+    width: 40vw;
+    text-align:center;
+  }
+  .overlay-bottom{
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background-color: rgba(0, 0, 0, 0.5); /* couleur semi-transparente */
+    z-index: 999; /* assurez-vous que l'overlay est au-dessus de tous les autres éléments */
+  }
+  .naviguation{
       bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 30%;
-      background-color: rgba(0, 0, 0, 0.5); /* couleur semi-transparente */
-      z-index: 999; /* assurez-vous que l'overlay est au-dessus de tous les autres éléments */
-    }
-    .naviguation{
-        bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 30%;
-      position: fixed;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      color:#FFF;
-      gap: 64px;
-    }
-    .logo-overlay{
-      position: absolute;
-      left: 35px;
-      top: 35px;
-    }
-    .popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #ffffff;
-      border-radius:10px;
-      z-index: 1000;
-      width: 600px;
-      padding-bottom:45px
-    }
-     .popup form{
-      padding: 0 50px;
-     }
-    .top-popup{
-      border-radius:10px 10px 0 0;
-      height: 80px;
-      width: 100%;
-      background-color: #F7F7F7;
-      position: relative;
-    }
-    .close-popup{
-      position: absolute;
-      right: 25px;
-      top:35%;
-      scale:0.7;
-      cursor: pointer;
-    }
-    .close-popup:hover{
-      opacity: 0.6;
-    }
-    .box-list{
-      align-items: center;
-      margin-top: 24px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .box-list-left{
-      display: flex;
-      align-items: center;
-    }
-    .box-list svg{
-      scale: 0.9;
-      cursor: pointer;
-    }
+    left: 0;
+    width: 100%;
+    height: 30%;
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color:#FFF;
+    gap: 64px;
+  }
+  .logo-overlay{
+    position: absolute;
+    left: 35px;
+    top: 35px;
+  }
+  .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius:10px;
+    z-index: 1000;
+    width: 600px;
+    padding-bottom:45px
+  }
+   .popup form{
+    padding: 0 50px;
+   }
+  .top-popup{
+    border-radius:10px 10px 0 0;
+    height: 80px;
+    width: 100%;
+    background-color: #F7F7F7;
+    position: relative;
+  }
+  .close-popup{
+    position: absolute;
+    right: 25px;
+    top:35%;
+    scale:0.7;
+    cursor: pointer;
+  }
+  .close-popup:hover{
+    opacity: 0.6;
+  }
+  .box-list{
+    align-items: center;
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .box-list-left{
+    display: flex;
+    align-items: center;
+  }
+  .box-list svg{
+    scale: 0.9;
+    cursor: pointer;
+  }
 
-    .box-list svg:hover{
-      opacity: 0.8;
-    }
-    .img-list{
-      width: 80px;
-      height: 80px;
-      background-color: #D9D9D9;
-      border-radius:5px;
-      margin-right: 16px;
-    }
-    .title-list{
-      font-size: 20px;
-      color:#202020;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-    .nb-list{
-      font-size: 16px;
-      color:#8D9299;
-    }
-    .flex-title-popup{
-      margin-top: 32px;
-      padding: 0 50px;
-      display: flex;
-      justify-content:space-between;
-    }
-    .title-popup{
-      color:#202020;
-      font-weight: 500;
-      font-size: 20px;
-    }
-    .popup-link-add{
-      font-size: 18px;
-      color: #202020;
-      text-decoration:underline;
-    }
-    .hover-btn{
-      display: none;
-    }
+  .box-list svg:hover{
+    opacity: 0.8;
+  }
+  .img-list{
+    width: 80px;
+    height: 80px;
+    background-color: #D9D9D9;
+    border-radius:5px;
+    margin-right: 16px;
+  }
+  .title-list{
+    font-size: 20px;
+    color:#202020;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .nb-list{
+    font-size: 16px;
+    color:#8D9299;
+  }
+  .flex-title-popup{
+    margin-top: 32px;
+    padding: 0 50px;
+    display: flex;
+    justify-content:space-between;
+  }
+  .title-popup{
+    color:#202020;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  .popup-link-add{
+    font-size: 18px;
+    color: #202020;
+    text-decoration:underline;
+  }
+  .hover-btn{
+    display: none;
+  }
 
-    /* Afficher l'élément svg lorsqu'on survole le bouton */
-    .add-to-list-btn:hover + .hover-btn{
-      display: block;
-    }
+  /* Afficher l'élément svg lorsqu'on survole le bouton */
+  .add-to-list-btn:hover + .hover-btn{
+    display: block;
+  }
+  #back-btn{
+    background: none;
+    border: none;
+  }
 </style>
 <div class="body-show" id="<%= dom_id designer %>">
-  <% image_path = "designers/#{designer.nom_designer.gsub(' ', '_')}.png" %>
+  <% image_path = "/designers/#{designer.nom_designer.gsub(' ', '_')}.png" %>
   <div class="header-show"
    <% if file_exists?(image_path) %>
    style="background-image: url('/assets/<%= image_path %>');"
   <% else %>
     style="background-image: url('<%= designer.image%>');"
   <% end %>>
-    <%= link_to 'javascript:void(0)', id: "back-button" do %>
+    <button id="back-btn">
       <div class="circle-back">
         <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
         </svg>
       </div>
-    <% end %>
+    </button>
     <% unless !user_signed_in? %>
       <button id="openPopup" style="border:none; background:none;">
         <div class="circle-save">
@@ -475,5 +478,16 @@
       alert("Enregistrer l'œuvre dans la liste : " + selectedList);
       // You can now use 'selectedList' to save the artwork to the chosen list
       $('#popup').hide();
+  });
+</script>
+<script>
+  document.getElementById('back-btn').addEventListener('click', function() {
+    const referrer = document.referrer;
+
+    if (referrer && referrer.includes(window.location.hostname)) {
+      window.history.back();
+    } else {
+      window.location.href = 'https://omniscientdesign.fr';
+    }
   });
 </script>

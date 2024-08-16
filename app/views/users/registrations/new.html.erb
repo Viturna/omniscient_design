@@ -226,6 +226,7 @@
           <%= f.submit "S’inscrire ⏩️", class:"button dark btn-login" %>
         </div>
         <%= link_to "Vous avez déjà un compte ? Se connecter", new_user_session_path, class: "sign-up-in" %>
+        <p>Déjà inscrit mais pas encore confirmé ? <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path,  class: "sign-up-in" %></p>
       <% end %>
     </div>
   </section>

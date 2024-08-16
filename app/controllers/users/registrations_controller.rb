@@ -16,7 +16,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
     end
   end
-
+  def edit
+    @current_page = 'profil'
+  end
   protected
 
   def configure_permitted_parameters

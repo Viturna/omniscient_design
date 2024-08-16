@@ -1,25 +1,128 @@
-<h2>Change your password</h2>
+<style>
+  .logo-log {
+    position: absolute;
+    left: 35px;
+    top: 35px;
+  }
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
+  .log {
+    position: relative;
+    background-image: url('/assets/bg-presentation.png');
+    background-repeat: no-repeat;
+    height: 100vh;
+  }
 
-  <div class="field">
-    <%= f.label :password, "New password" %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-    <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
-  </div>
+  .box-log {
+    position: absolute;
+    bottom: 35px;
+    padding: 0px 8vw
+  }
 
-  <div class="field">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+  .form {
+    margin-top: 32px;
+    width: 60vw;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 30px 0;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
 
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
+  form {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+  }
 
-<%= render "devise/shared/links" %>
+
+   .sign-up-in{
+    text-align: center;
+   }
+  .btn-login {
+    margin-top: 16px;
+    width: 22vw;
+    height: 65px;
+  }
+
+  .actions {
+    margin-left: auto; /* Pour aligner à droite */
+  }
+    .password-container {
+    position: relative;
+  }
+
+  .password-container .toggle-password {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    fill:#202020;
+  }
+</style>
+<div class="main-div log" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <section class="box-log">
+    <h1>Changer votre mot de passe</h1>
+    <div class="form">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+        <%= f.hidden_field :reset_password_token %>
+        <div class="field password-container">
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password",  placeholder: "Mot de passe", id: "password-field-1" %>
+          <button type="button" class="toggle-password" data-target="#password-field-1">
+            <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="hide-password-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off">
+              <path d="M17.94 17.94a10.97 10.97 0 0 1-5.94 1.94C6 20 2 12 2 12s1.5-3.34 4.94-5.94M1 1l22 22"></path>
+              <path d="M12 5a7 7 0 0 1 7 7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="field password-container">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmer le mot de passe", id: "password-field-2" %>
+          <button type="button" class="toggle-password" data-target="#password-field-2">
+            <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="hide-password-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off">
+              <path d="M17.94 17.94a10.97 10.97 0 0 1-5.94 1.94C6 20 2 12 2 12s1.5-3.34 4.94-5.94M1 1l22 22"></path>
+              <path d="M12 5a7 7 0 0 1 7 7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="actions">
+          <%= f.submit "Confirmer", class:"button dark btn-login"  %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function() {
+    $('.toggle-password').on('click', function() {
+      const target = $(this).data('target');
+      const $passwordField = $(target);
+      const $showPasswordIcon = $(this).find('.show-password-icon');
+      const $hidePasswordIcon = $(this).find('.hide-password-icon');
+
+      if ($passwordField.attr('type') === 'password') {
+        $passwordField.attr('type', 'text');
+        $showPasswordIcon.hide();
+        $hidePasswordIcon.show();
+      } else {
+        $passwordField.attr('type', 'password');
+        $showPasswordIcon.show();
+        $hidePasswordIcon.hide();
+      }
+    });
+  });
+</script>

@@ -25,14 +25,6 @@
 <% end %>
 </div>
 <div id="oeuvres">
-  <%= image_tag "loader.gif", alt: "", id: "loader" %>
-  <script>
-    window.addEventListener('load', function() {
-      var loader = document.getElementById('loader');
-      loader.style.display = 'none';
-      document.querySelector('main').style.visibility = 'visible';
-    });
-  </script>
   <div class="home-flex" id="cardContainer">
     <div class="nav-home-mobile">
       <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>

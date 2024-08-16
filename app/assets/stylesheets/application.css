@@ -202,7 +202,9 @@ h1 {
 .semi-bold {
   font-weight: 600;
 }
-
+.medium {
+  font-weight: 500;
+}
 .subtitle-top {
   font-size: 20px;
   font-weight: 500;
@@ -278,17 +280,7 @@ a {
 }
 /* Loader */
 
-#loader {
-  width: 145px;
-  height: 145px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  z-index: 999;
-}
+
 
 .home-flex {
   margin-left: 350px;
@@ -500,6 +492,7 @@ input[type=search]{
   text-transform: uppercase;
   font-size: 20px;
   margin-top: 32px;
+  display: flex;
 }
 
 .designer-card a {
@@ -795,6 +788,16 @@ input[type=search]{
   align-items: center;
   justify-content: center;
   transition: background-color 1s ease;
+}
+.medium-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size:cover;
+  background-position: center center;
 }
 .circle {
   background-color: #202020;

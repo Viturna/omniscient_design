@@ -45,8 +45,9 @@ class DesignersController < ApplicationController
 
     respond_to do |format|
       if @designer.save
+        update_suivi_references_emises(current_user)
         create_notification(@designer)
-        format.html { redirect_to designer_url(@designer), notice: "Designer was successfully created." }
+        format.html { redirect_to designer_url(@designer), notice: "Designer ajouté(e)" }
         format.json { render :show, status: :created, location: @designer }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -59,7 +60,7 @@ class DesignersController < ApplicationController
   def update
     respond_to do |format|
       if @designer.update(designer_params)
-        format.html { redirect_to designer_url(@designer), notice: "Designer was successfully updated." }
+        format.html { redirect_to designer_url(@designer), notice: "Référence mise à jour" }
         format.json { render :show, status: :ok, location: @designer }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -73,6 +74,7 @@ class DesignersController < ApplicationController
     @designer.destroy!
 
     respond_to do |format|
+      update_suivi_references_refusees(@designer.user)
       format.html { redirect_to validation_path, notice: "Le designer " + @designer.nom_designer + " a été supprimée avec succès." }
       format.json { head :no_content }
     end
@@ -80,6 +82,7 @@ class DesignersController < ApplicationController
   def cancel
     if user_signed_in?
       if current_user.admin? || @designer.user_id == current_user.id
+        update_suivi_references_refusees(@designer.user)
         @designer.destroy!
         flash[:notice] = "La soumission du designer a été annulée avec succès."
         redirect_to designers_path
@@ -93,6 +96,7 @@ class DesignersController < ApplicationController
   def validate
     if @designer.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@designer)
+      update_suivi_references_validees(@designer.user)
       redirect_to validation_path, notice: "Le/La designer " + @designer.nom_designer + " a été validée avec succès."
     else
       redirect_to validation_path, alert: "Une erreur s'est produite lors de la validation du designer."
@@ -100,6 +104,26 @@ class DesignersController < ApplicationController
   end
 
   private
+
+  def update_suivi_references_emises(user)
+    suivi = user.suivis.first_or_create
+    suivi.increment(:nb_references_emises)
+    suivi.save
+  end
+
+  def update_suivi_references_validees(user)
+    return unless user
+
+    suivi = user.suivis.first_or_create
+    suivi.increment(:nb_references_validees)
+    suivi.save
+  end
+
+  def update_suivi_references_refusees(user)
+    suivi = user.suivis.first_or_create
+    suivi.increment(:nb_references_refusees)  # Correction de l'attribut
+    suivi.save
+  end
 
   def create_notification(designer)
     message = "Un nouveau designer est à valider : #{designer.nom_designer}"

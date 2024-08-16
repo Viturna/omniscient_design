@@ -1,8 +1,8 @@
 class BugReportMailer < ApplicationMailer
-  default to: -> { User.where(role: 'admin').pluck(:email) }
+  default from: 'omniscientdesign.co@gmail.com'
 
   def new_bug_report(bug_report)
     @bug_report = bug_report
-    mail(subject: 'Nouveau Rapport de Bug')
+    mail(subject: 'Nouveau Rapport de Bug - Omniscient Design')
   end
 end

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:ban,  :unban]
   def index
+    @current_page = 'profil'
     @users = User.all
   end
   def ban

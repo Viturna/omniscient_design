@@ -6,11 +6,12 @@ Rails.application.routes.draw do
   # Routes Devise
   devise_for :users, controllers: {
     sessions: 'users/sessions',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
   }
 
   devise_scope :user do
-    get 'users/sign_out', to: 'devise/sessions#destroy'
+    get 'users/sign_out', to: 'users/sessions#destroy'
   end
 
   # Resources

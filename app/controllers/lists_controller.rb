@@ -4,13 +4,15 @@ class ListsController < ApplicationController
 
   def index
     @lists = current_user.lists
-   @current_page = 'listes'
+    @current_page = 'listes'
   end
 
   def show
+    @current_page = 'listes'
   end
 
   def new
+    @current_page = 'listes'
     @list = current_user.lists.build
   end
 
@@ -25,6 +27,7 @@ class ListsController < ApplicationController
   end
 
   def edit
+    @current_page = 'listes'
     # Afficher le formulaire de modification de la liste
   end
 

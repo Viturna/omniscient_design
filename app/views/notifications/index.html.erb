@@ -41,6 +41,12 @@
     color:#202020;
     font-size: 20px;
   }
+  #back-btn{
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
   @media screen and (min-width:0px) and (max-width:349px){
     .top-profil{
       gap: 16px;
@@ -102,11 +108,11 @@
 </style>
 <div class="main-div">
   <section class="top-profil">
-    <%= link_to root_path do%>
+    <button id="back-btn">
       <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
       </svg>
-    <%end%>
+    </button>
     <h1>Vos notifications</h1>
   </section>
   <section class="notification">
@@ -168,3 +174,14 @@
     <% end %>
   </section>
 </div>
+<script>
+  document.getElementById('back-btn').addEventListener('click', function() {
+    const referrer = document.referrer;
+
+    if (referrer && referrer.includes(window.location.hostname)) {
+      window.history.back();
+    } else {
+      window.location.href = 'https://omniscientdesign.fr';
+    }
+  });
+</script>

@@ -96,7 +96,7 @@
               <td><%= suivi.user.email %></td>
               <td><%= suivi.nb_references_emises %></td>
               <td><%= suivi.nb_references_validees %></td>
-              <td><%= suivi.nb_references_emises - (suivi.nb_references_validees + suivi.nb_references_refusees) %></td>
+              <td><%= suivi.nb_references_non_validees %></td>
               <td><%= suivi.nb_references_refusees %></td>
             </tr>
           <% end %>

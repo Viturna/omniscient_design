@@ -20,22 +20,6 @@ class OeuvresController < ApplicationController
 
   def search
     @current_page = 'recherche'
-    @search_term = params[:search_term]&.strip
-
-    if @search_term.present?
-      # Rechercher dans la table Oeuvre
-      @oeuvre_results = Oeuvre.where('nom_oeuvre ILIKE ?', "%#{@search_term}%")
-
-      # Rechercher dans la table Designer
-      @designer_results = Designer.where('nom_designer ILIKE ?', "%#{@search_term}%")
-    else
-      @oeuvre_results = []
-      @designer_results = []
-    end
-
-    respond_to do |format|
-      format.html { render partial: 'search_results', locals: { oeuvre_results: @oeuvre_results, designer_results: @designer_results, search_term: @search_term } }
-    end
 
 
     # Date oeuvres
@@ -101,7 +85,7 @@ class OeuvresController < ApplicationController
   def update
     respond_to do |format|
       if @oeuvre.update(oeuvre_params)
-        format.html { redirect_to oeuvre_url(@oeuvre), notice: "Oeuvre was successfully updated." }
+        format.html { redirect_to oeuvre_url(@oeuvre), notice: "Référence mise à jour" }
         format.json { render :show, status: :ok, location: @oeuvre }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -123,6 +107,7 @@ class OeuvresController < ApplicationController
   def cancel
     if user_signed_in?
       if current_user.admin? || @oeuvre.user_id == current_user.id
+        update_suivi_references_refusees(@oeuvre.user)
         @oeuvre.destroy!
         flash[:notice] = "La soumission de l'œuvre a été annulée avec succès."
         redirect_to oeuvres_path

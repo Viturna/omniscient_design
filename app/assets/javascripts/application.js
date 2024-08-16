@@ -1,10 +1,8 @@
-// app/javascript/packs/application.js
-require("@rails/ujs").start()
-require("turbolinks").start()
-require("@rails/activestorage").start()
-require("channels")
-require("nested_forms")
 // app/assets/javascripts/application.js
+//= require jquery
+//= require rails-ujs
+//= require turbolinks
+//= require_tree .
 
 document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener('click', function(event) {

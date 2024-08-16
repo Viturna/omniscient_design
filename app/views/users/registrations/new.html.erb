@@ -172,7 +172,6 @@
     <h1>S’inscrire</h1>
     <div class="form">
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-        <%= render "users/shared/error_messages", resource: resource %>
         <div class="field">
           <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email" %>
         </div>

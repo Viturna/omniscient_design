@@ -1,3 +1,16 @@
+<style>
+  #loader-main {
+     position: fixed;
+     left: 50%;
+     top: 50%;
+     transform: translate(-50%, -50%);
+     z-index: 9999;
+   }
+
+   .loader-hidden {
+     display: none;
+   }
+</style>
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,7 +30,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'rails-ujs', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_importmap_tags %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Exemple de script CDN pour Leaflet.markercluster -->
@@ -41,18 +54,17 @@
     <% unless controller_name == 'lists' && action_name == 'edit' || action_name.in?(['presentation', 'show', 'sign_in']) %>
       <%= render 'layouts/header' %>
     <% end %>
-    <main>
-      <% if notice.present? %>
-        <div class="alert" id="alert">
-          <p><%= notice %></p>
-          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-          <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-          </div>
+    <% if notice.present? %>
+      <div class="alert" id="alert">
+        <p><%= notice %></p>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
         </div>
-      <% end %>
+      </div>
+    <% elsif flash.any? %>
       <% flash.each do |key, message| %>
-        <div class="flash <%= key %>" id="alert">
+        <div class="alert <%= key %>" id="alert">
           <%= message %>
           <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
           <div class="progress-container">
@@ -60,8 +72,32 @@
           </div>
         </div>
       <% end %>
+    <% end %>
+    <%# <%= image_tag "loader.gif", alt: "", id: "loader-main" %>
+    <main>
       <%= yield %>
     </main>
+    <script>
+      document.addEventListener("turbo:load", function() {
+              // Sélection du loader
+              var loader = document.getElementById("loader-main");
+
+              // Montrer le loader pendant que la page se charge
+              if (loader) {
+             loader.classList.remove("loader-hidden");
+
+             // Masquer le loader une fois que la page est complètement chargée
+             window.addEventListener("load", function() {
+                 loader.classList.add("loader-hidden");
+             });
+
+             // S'assurer que le loader se cache même si "window.load" ne s'exécute pas
+             setTimeout(function() {
+                 loader.classList.add("loader-hidden");
+             }, 5000); // Masquer le loader après 5 secondes, même si la page n'est pas complètement chargée
+              }
+          });
+    </script>
   </body>
 </html>
 <script>

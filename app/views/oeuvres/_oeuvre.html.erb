@@ -142,6 +142,7 @@
   #back-btn{
     background: none;
     border: none;
+    cursor: pointer;
   }
 </style>
 <div class="body-show" id="<%= dom_id oeuvre %>">
@@ -235,6 +236,7 @@
       <div class="title-box-oeuvre hidden">
         <p class="designer-card">
           <%= link_to oeuvre.designer.nom_designer, designer_path(oeuvre.designer) %>
+          <div class="medium-circle" style="background-image: url('<%= oeuvre.designer.image%>');"></div>
         </p>
         <h2 class="title-card"><%= oeuvre.nom_oeuvre %></h2>
       </div>

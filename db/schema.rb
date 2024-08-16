@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_16_072934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,15 +42,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "answers", force: :cascade do |t|
-    t.text "content"
-    t.boolean "correct"
-    t.bigint "question_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["question_id"], name: "index_answers_on_question_id"
-  end
-
   create_table "bug_reports", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.text "description"
@@ -70,7 +61,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
 
   create_table "designers", force: :cascade do |t|
     t.text "nom_designer"
-    t.text "date_naissance"
+    t.integer "date_naissance"
     t.text "image"
     t.text "description"
     t.datetime "created_at", null: false
@@ -79,7 +70,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
     t.bigint "country_id", null: false
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
-    t.datetime "date_deces"
+    t.integer "date_deces"
     t.index ["country_id"], name: "index_designers_on_country_id"
     t.index ["user_id"], name: "index_designers_on_user_id"
   end
@@ -173,10 +164,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
   create_table "oeuvres", force: :cascade do |t|
     t.text "domaine"
     t.text "nom_designer"
-    t.date "date_naissance"
+    t.integer "date_naissance"
     t.text "pays"
     t.text "nom_oeuvre"
-    t.date "date_oeuvre"
+    t.integer "date_oeuvre"
     t.text "description"
     t.text "image"
     t.datetime "created_at", null: false
@@ -191,31 +182,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
     t.index ["user_id"], name: "index_oeuvres_on_user_id"
   end
 
-  create_table "questions", force: :cascade do |t|
-    t.text "content"
-    t.bigint "quiz_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["quiz_id"], name: "index_questions_on_quiz_id"
-  end
-
-  create_table "quiz_results", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "quiz_id", null: false
-    t.integer "score"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["quiz_id"], name: "index_quiz_results_on_quiz_id"
-    t.index ["user_id"], name: "index_quiz_results_on_user_id"
-  end
-
-  create_table "quizzes", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "referrals", force: :cascade do |t|
     t.integer "referrer_id"
     t.integer "referee_id"
@@ -228,6 +194,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
     t.string "presentation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "suivis", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "nb_references_emises", default: 0, null: false
+    t.integer "nb_references_validees", default: 0, null: false
+    t.integer "nb_references_refusees", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_suivis_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -260,7 +236,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "answers", "questions"
   add_foreign_key "bug_reports", "users"
   add_foreign_key "designers", "countries"
   add_foreign_key "designers", "users"
@@ -271,6 +246,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_072936) do
   add_foreign_key "oeuvres", "designers"
   add_foreign_key "oeuvres", "domaines"
   add_foreign_key "oeuvres", "users"
-  add_foreign_key "questions", "quizzes"
-  add_foreign_key "quiz_results", "quizzes"
+  add_foreign_key "suivis", "users"
 end

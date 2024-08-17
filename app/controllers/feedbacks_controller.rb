@@ -5,6 +5,7 @@ class FeedbacksController < ApplicationController
   before_action :check_admin_role, only: [:index]
 
   def index
+    @current_page = 'profil'
     @feedbacks = Feedback.all
 
     respond_to do |format|

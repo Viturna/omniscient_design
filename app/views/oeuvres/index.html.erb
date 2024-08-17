@@ -181,3 +181,29 @@
     observer.observe(loadMoreTrigger);
   });
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let startX;
+    let endX;
+    const swipeThreshold = 50; // Sensibilité du swipe (distance minimum en pixels pour être considérée comme un swipe)
+
+    document.addEventListener('touchstart', function(event) {
+      startX = event.touches[0].clientX; // Enregistrer la position de départ du touch
+    });
+
+    document.addEventListener('touchend', function(event) {
+      endX = event.changedTouches[0].clientX; // Enregistrer la position de fin du touch
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const deltaX = startX - endX;
+
+      // Vérifier si c'est un swipe vers la gauche
+      if (deltaX > swipeThreshold) {
+        // Rediriger vers la page des designers
+        window.location.href = "<%= designers_path %>";
+      }
+    }
+  });
+</script>

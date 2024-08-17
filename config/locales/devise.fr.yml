@@ -43,6 +43,7 @@ fr:
       update_needs_confirmation: "Votre compte a été mis à jour avec succès, mais nous devons vérifier votre nouvelle adresse email. Veuillez vérifier votre email et suivre le lien de confirmation pour confirmer votre nouvelle adresse email."
       updated: "Votre compte a été mis à jour avec succès."
       updated_but_not_signed_in: "Votre compte a été mis à jour avec succès, mais comme votre mot de passe a été changé, vous devez vous reconnecter."
+      rgpd_consent_required: "Vous devez accepter la politique de confidentialité pour créer un compte."
     sessions:
       signed_in: "Connexion réussie."
       signed_out: "Déconnexion réussie."
@@ -58,6 +59,7 @@ fr:
       expired: "a expiré, veuillez en demander un nouveau"
       not_found: "introuvable"
       not_locked: "n'a pas été verrouillé(e)"
+      rgpd_consent: "Vous devez accepter la politique de confidentialité pour créer un compte."
       not_saved:
         one: "1 erreur a empêché ce %{resource} d'être enregistré(e) :"
         other: "%{count} erreurs ont empêché ce %{resource} d'être enregistré(e) :"

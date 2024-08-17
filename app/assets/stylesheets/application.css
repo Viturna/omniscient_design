@@ -735,7 +735,7 @@ input[type=search]{
   left: 5vw;
   width: 100%;
   padding: 10px;
-  z-index: 999;
+  z-index: 99;
 }
 
 .header-top p,
@@ -841,6 +841,7 @@ input[type=search]{
 
 .circle-back {
   position: absolute;
+  z-index: 100;
   top: 50px;
   left: 5vw;
   background-color: rgba(32, 32, 32, 0.4);

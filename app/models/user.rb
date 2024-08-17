@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   before_create :generate_referral_code
+  validates :rgpd_consent, acceptance: true
   validates :pseudo, presence: true
   attribute :banned, :boolean, default: false
   def admin?
@@ -23,7 +24,7 @@ class User < ApplicationRecord
   has_many :oeuvres
   has_many :designers
   has_many :notifications
-  belongs_to :etablissement
+  belongs_to :etablissement, optional: true
   has_one_attached :profile_image
   has_many :feedbacks
   has_many :suivis, dependent: :destroy

@@ -31,7 +31,7 @@ class PagesController < ApplicationController
   def cookies
   end
   def search_category
-    @current_page = 'search'
+    @current_page = 'recherche'
     if params[:id].present?
       @oeuvre = Oeuvre.find(params[:id])
     else
@@ -39,7 +39,7 @@ class PagesController < ApplicationController
     end
   end
   def search_frise
-    @current_page = 'search'
+    @current_page = 'recherche'
     @oeuvres = Oeuvre.where(validation: true).shuffle
     @designers = Designer.where(validation: true).shuffle
 
@@ -80,8 +80,11 @@ class PagesController < ApplicationController
     @user = current_user
   end
   def suivi_references
+    @current_page = 'profil'
     @suivis = Suivi.includes(:user).all
   end
-
+  def changelog
+    @current_page = 'profil'
+  end
 
 end

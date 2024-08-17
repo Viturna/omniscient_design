@@ -22,24 +22,29 @@
     margin-bottom: 18px;
   }
 
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
 
-   table {
+  table {
     border-collapse: collapse;
     width: 100%;
+    min-width: 800px; /* Assure une largeur minimum pour éviter que les colonnes ne soient trop compressées */
   }
 
   th, td {
-    border: 1px solid #ddd; /* Bordure de 1 pixel solide avec couleur grise */
-    padding: 8px; /* Espacement intérieur */
-    text-align: left; /* Alignement du texte à gauche */
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
   }
 
   th {
-    background-color: #f2f2f2; /* Couleur de fond pour les cellules d'en-tête */
+    background-color: #f2f2f2;
   }
 
   tr:hover {
-    background-color: #f5f5f5; /* Couleur de fond lorsque survolé */
+    background-color: #f5f5f5;
   }
 
   .btn {
@@ -58,7 +63,6 @@
     background-color: #0056b3;
   }
 
-  /* Styles pour les boutons de suppression */
   .btn-danger {
     background-color: #dc3545;
   }
@@ -66,6 +70,7 @@
   .btn-danger:hover {
     background-color: #c82333;
   }
+
   .btn-green {
     background-color: #3EBC68;
   }
@@ -73,18 +78,20 @@
   .btn-green:hover {
     background-color: #1A843E;
   }
-  .btn-orange{
+
+  .btn-orange {
     background-color: #F2AD22;
   }
-   .btn-orange:hover{
+
+  .btn-orange:hover {
     background-color: #D49A26;
   }
 
-  #map{
+  #map {
     margin-bottom: 80px;
   }
 </style>
-<!-- app/views/users/index.html.erb -->
+
 <div class="main-div">
   <section class="top-profil">
     <%= link_to profil_path do %>
@@ -94,46 +101,55 @@
     <% end %>
     <h1>Liste des membres</h1>
   </section>
+
   <section class="grid-1">
     <h2>Membres inscrits sur le site</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Prénom</th>
-          <th>Nom de famille</th>
-          <th>Email</th>
-          <th>Pseudo</th>
-          <th>Statut</th>
-          <th>Établissement</th>
-          <th>BAN</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
+    <div class="table-wrapper">
+      <table>
+        <thead>
           <tr>
-            <td><%= user.firstname %></td>
-            <td><%= user.lastname %></td>
-            <td><%= user.email %></td>
-            <td><%= user.pseudo %></td>
-            <td><%= user.statut %></td>
-            <td><%= user.etablissement&.name %></td>
-            <td>
-              <% if current_user.admin? %>
-                <% if user.banned? %>
-                  <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
-                <% else %>
-                  <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
-                <% end %>
-              <% end %>
-            </td>
+            <th>Prénom</th>
+            <th>Nom de famille</th>
+            <th>Email</th>
+            <th>Pseudo</th>
+            <th>Statut</th>
+            <th>Établissement</th>
+            <th>BAN</th>
+            <th>Confirmé</th>
+            <th>Date de création</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= user.firstname %></td>
+              <td><%= user.lastname %></td>
+              <td><%= user.email %></td>
+              <td><%= user.pseudo %></td>
+              <td><%= user.statut %></td>
+              <td><%= user.etablissement&.name %></td>
+              <td>
+                <% if current_user.admin? %>
+                  <% if user.banned? %>
+                    <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
+                  <% else %>
+                    <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
+                  <% end %>
+                <% end %>
+              </td>
+              <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
+              <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
     <h2>Carte des membres par géolocalisation</h2>
     <div id="map" style="height: 400px;"></div>
   </section>
 </div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     // Coordonnées des utilisateurs à charger dynamiquement depuis Rails

@@ -20,7 +20,10 @@ class OeuvresController < ApplicationController
 
   def search
     @current_page = 'recherche'
+    @works = Oeuvre.pluck(:nom_oeuvre) # Utilisez Oeuvre à la place de Work
 
+    # Date oeuvres
+    @oeuvres = Oeuvre.where(validation: true).shuffle
 
     # Date oeuvres
     @oeuvres = Oeuvre.where(validation: true).shuffle

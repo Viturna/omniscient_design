@@ -1,10 +1,6 @@
 // app/javascript/application.js
-import { Turbo } from "@hotwired/turbo-rails"
-import { Rails } from "@rails/ujs"
-import { ActiveStorage } from "@rails/activestorage"
-import "channels"
-import "nested_forms"
-
+import { Turbo } from "@hotwired/turbo-rails";
+import Rails from "@rails/ujs";
 // Initialisation
 Rails.start()
 Turbo.start()

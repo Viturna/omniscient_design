@@ -9,7 +9,7 @@
     position: relative;
     background-image: url('/assets/bg-presentation2.png');
     background-repeat: no-repeat;
-    height: 1400px;
+    height: 1450px;
   }
 
   .box-log {
@@ -30,6 +30,7 @@
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
+    overflow: hidden;
   }
 
   form {
@@ -49,7 +50,7 @@
    .forgot-password{
     text-align: right;
    }
-   .sign-up-in{
+   .sign-up-in, .email-confirmation{
     text-align: center;
    }
   .btn-login {
@@ -77,9 +78,13 @@
     padding: 0;
     fill:#202020;
   }
-  .rgpd{
-    display: flex;
-    width: 80%;
+
+  .rgpd {
+    width: 50vw;
+  }
+  .rgpd a {
+    color:#FFF;
+    font-weight: 500;
   }
   @media screen and (min-width:0px) and (max-width:349px) {
     form p {
@@ -226,16 +231,16 @@
         <div class="field">
           <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
         </div>
-        <!-- Case à cocher pour le consentement RGPD -->
         <div class="field rgpd">
           <%= f.check_box :rgpd_consent, required: true %>
-          <%= f.label :rgpd_consent, "J'accepte que mes données personnelles soient collectées et traitées conformément à la" %>  <%= link_to 'Politique de confidentialité', politiquedeconfidentialite_path, target: "_blank" %>
+          <%= f.label :rgpd_consent, ("J'accepte que mes données personnelles soient collectées et traitées conformément à la " + link_to('Politique de confidentialité', politiquedeconfidentialite_path, target: "_blank")).html_safe, class: "rgpd-label" %>
         </div>
+
         <div class="actions">
           <%= f.submit "S’inscrire ⏩️", class:"button dark btn-login" %>
         </div>
         <%= link_to "Vous avez déjà un compte ? Se connecter", new_user_session_path, class: "sign-up-in" %>
-        <p class="sign-up-in">Déjà inscrit mais pas encore confirmé ? <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path%></p>
+        <p class="email-confirmation">Déjà inscrit mais pas encore confirmé ? <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path, class: "sign-up-in"%></p>
       <% end %>
     </div>
   </section>

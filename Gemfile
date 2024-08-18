@@ -79,11 +79,6 @@ gem 'iso_country_codes'
 
 gem 'dotenv-rails', groups: [:development, :test, :production]
 
-gem 'capistrano', '~> 3.17'
-gem 'capistrano-rails', '~> 1.6'
-gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
-gem 'capistrano-bundler'
-gem 'capistrano-puma', require: false
 gem 'foreman'
 
 

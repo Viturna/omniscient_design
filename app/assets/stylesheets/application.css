@@ -864,6 +864,7 @@ input[type=search]{
   justify-content: center;
   transition: background-color 1s ease;
   cursor: pointer;
+  z-index: 999;
 }
 .circle-back:hover, .circle-save:hover {
   opacity: 0.8;

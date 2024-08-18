@@ -520,29 +520,7 @@
    }
   });
 </script>
-<script>
-  $(document).ready(function() {
-      var initialHeight = $('.header-show').outerHeight(); // Stocker la hauteur initiale du header
 
-      $(window).scroll(function() { // Ajouter un écouteur d'événements de défilement
-          var currentScroll = $(window).scrollTop(); // Obtenir la position actuelle de défilement
-
-          if (currentScroll > 30) { // Vérifier si vous avez fait défiler vers le bas (position de défilement actuelle est supérieure à 0)
-              $('.header-show').addClass('small-height'); // Ajouter la classe pour la hauteur réduit
-              $('.header-top').addClass('show-header-top'); // Ajouter la classe pour afficher le header top
-              $('.hidden').addClass('hidden');
-              $('.info-header-show').addClass('hidden');
-              $('.content-show').css('margin-top', '50vh'); // Appliquer la nouvelle marge supérieure
-          } else { // Si vous êtes en haut de la page (position de défilement actuelle est 0), restaurer la hauteur initiale
-              $('.header-show').removeClass('small-height'); // Supprimer la classe pour restaurer la hauteur initiale
-              $('.header-top').removeClass('show-header-top'); // Supprimer la classe pour cacher le header top
-              $('.hidden').removeClass('hidden');
-              $('.info-header-show').removeClass('hidden');
-              $('.content-show').css('margin-top', '20px'); // Réinitialiser la marge supérieure à sa valeur initiale
-          }
-      });
-  });
-</script>
 <% if !oeuvre.validation %>
   <div class="overlay-bottom" id="overlay-bottom">
     <div class="naviguation">
@@ -692,4 +670,27 @@
       window.location.href = 'https://omniscientdesign.fr';
     }
   });
+</script>
+<script>
+  $(document).ready(function() {
+  var initialHeight = $('.header-show').outerHeight(); // Stocker la hauteur initiale du header
+
+  $(window).scroll(function() { // Ajouter un écouteur d'événements de défilement
+      var currentScroll = $(window).scrollTop(); // Obtenir la position actuelle de défilement
+
+      if (currentScroll > 30) { // Vérifier si vous avez fait défiler vers le bas (position de défilement actuelle est supérieure à 0)
+          $('.header-show').addClass('small-height'); // Ajouter la classe pour la hauteur réduit
+          $('.header-top').addClass('show-header-top'); // Ajouter la classe pour afficher le header top
+          $('.hidden').addClass('hidden');
+          $('.info-header-show').addClass('hidden');
+          $('.content-show').css('margin-top', '50vh'); // Appliquer la nouvelle marge supérieure
+      } else { // Si vous êtes en haut de la page (position de défilement actuelle est 0), restaurer la hauteur initiale
+          $('.header-show').removeClass('small-height'); // Supprimer la classe pour restaurer la hauteur initiale
+          $('.header-top').removeClass('show-header-top'); // Supprimer la classe pour cacher le header top
+          $('.hidden').removeClass('hidden');
+          $('.info-header-show').removeClass('hidden');
+          $('.content-show').css('margin-top', '20px'); // Réinitialiser la marge supérieure à sa valeur initiale
+      }
+  });
+});
 </script>

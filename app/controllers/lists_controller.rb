@@ -96,18 +96,14 @@ class ListsController < ApplicationController
     if @list && @designer
       if @list.designers.exists?(@designer.id)
         @list.designers.delete(@designer)
-        redirect_to request.referer, notice: "Le/La designer a été retiré(e) de la liste."
+        redirect_to request.referer, notice: "Le designer a été retiré(e) de la liste."
       else
-        redirect_to request.referer, notice: "Le/La designer n'est pas dans la liste."
+        redirect_to request.referer, notice: "Le designer n'est pas dans la liste."
       end
     else
-      redirect_to request.referer, notice: "Impossible de retirer le/la designer de la liste."
+      redirect_to request.referer, notice: "Impossible de retirer le designer de la liste."
     end
   end
-
-
-
-
 
   private
 

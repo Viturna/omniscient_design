@@ -23,6 +23,8 @@ class PagesController < ApplicationController
     @designers = Designer.all
     @oeuvres_count = Oeuvre.where(validation: true).count
     @designers_count = Designer.where(validation: true).count
+    @oeuvres_count_val_false = Oeuvre.where(validation: false).count
+    @designers_count_val_false = Designer.where(validation: false).count
   end
   def mentionslegales
   end

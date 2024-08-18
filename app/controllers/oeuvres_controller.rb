@@ -140,6 +140,7 @@ class OeuvresController < ApplicationController
 
 
   private
+
   def create_notification(oeuvre)
     message = "Une nouvelle oeuvre est à valider : #{oeuvre.nom_oeuvre}"
     admins = User.where(role: 'admin')

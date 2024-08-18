@@ -11,8 +11,14 @@
   .logo-header {
     padding: 8vh 0px;
     display: flex;
+    align-items: center;
   }
-
+  .beta{
+    font-weight: 600;
+    color:#202020;
+    margin-left: 30px;
+    text-align: center;
+  }
   .name-header {
     font-weight: 500;
     color: #202020;
@@ -191,6 +197,7 @@
   <%= link_to(root_path, class: "logo-header") do %>
     <%= image_tag "logo.svg", alt: "", class: "home-index" %>
     <p class="name-header">Omniscient Design</p>
+    <p class="beta">Version Alpha</p>
   <% end %>
   <nav class="nav-header">
     <ul>

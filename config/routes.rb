@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   resources :notifications, only: [:index, :show, :destroy]
   resources :countries
   resources :domaines
+
   resources :lists do
     delete 'remove_oeuvre', on: :member
     delete 'remove_designer', on: :member

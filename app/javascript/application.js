@@ -1,11 +1,22 @@
 // app/javascript/application.js
+
+// Importation des modules nécessaires
 import { Turbo } from "@hotwired/turbo-rails";
 import Rails from "@rails/ujs";
-// Initialisation
-Rails.start()
-Turbo.start()
-ActiveStorage.start()
+import "controllers";
+import $ from 'jquery';
 
+// Assurez-vous que jQuery est accessible globalement
+window.$ = $;
+
+// Initialisation des modules
+Rails.start();
+Turbo.start();
+
+// Si vous utilisez ActiveStorage, assurez-vous qu'il est importé et initialisé correctement
+// ActiveStorage.start(); // Assurez-vous que ActiveStorage est importé correctement, sinon commentez cette ligne
+
+// Code pour la gestion des champs dynamiques
 document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener('click', function(event) {
     if (event.target.matches('.add_fields')) {

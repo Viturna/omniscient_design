@@ -1,53 +1,61 @@
 <!DOCTYPE html>
 <html>
  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-    <meta name="bingbot" content="index, follow">
-    <title><%= @page_title || "Omniscient Design" %></title>
-    <meta name="description" content="<%= @meta_description %>">
-    <%= favicon_link_tag 'favicon.svg' %>
-    <meta name="theme-color" content="#ffffff">
-    <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_importmap_tags %>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.0/dist/leaflet.markercluster.js" defer></script>
-    <meta property="og:locale" content="fr_FR">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="<%= @page_title || "Omniscient Design" %>">
-    <meta property="og:site_name" content="Omniscient Design">
-    <meta property="og:url" content="<%= @current_page_url %>">
-    <meta property="og:description" content="<%= @meta_description %>">
-    <meta name="twitter:title" content="<%= @page_title || "Omniscient Design" %>">
-    <meta name="twitter:description" content="<%= @meta_description %>">
-    <meta name="twitter:url" content="<%= @current_page_url %>">
-    <style>
-      #loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 9999;
-      }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  <title><%= @page_title || "Omniscient Design" %></title>
+  <meta name="description" content="<%= @meta_description %>">
+  <%= favicon_link_tag 'favicon.svg' %>
+  <meta name="theme-color" content="#ffffff">
+  <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-      #loading img {
-        width: 250px;
-        height: 250px;
-      }
+  <!-- Stylesheets -->
+  <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all' %>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
 
-      #content {
-        display: none;
-      }
-    </style>
-  </head>
+  <!-- JavaScript -->
+  <%= javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js' %>
+  <%= javascript_importmap_tags %> <!-- Pour Importmaps -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.0/dist/leaflet.markercluster.js" defer></script>
+
+
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= @page_title || "Omniscient Design" %>">
+  <meta property="og:site_name" content="Omniscient Design">
+  <meta property="og:url" content="<%= @current_page_url %>">
+  <meta property="og:description" content="<%= @meta_description %>">
+  <meta name="twitter:title" content="<%= @page_title || "Omniscient Design" %>">
+  <meta name="twitter:description" content="<%= @meta_description %>">
+  <meta name="twitter:url" content="<%= @current_page_url %>">
+
+  <style>
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    #loading img {
+      width: 250px;
+      height: 250px;
+    }
+
+    #content {
+      display: none;
+    }
+  </style>
+</head>
+
 
   <body class="<%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>

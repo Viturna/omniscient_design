@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   before_action :set_unread_notifications_count
   before_action :check_if_banned
+  protect_from_forgery with: :exception
+
   private
 
   def set_unread_notifications_count

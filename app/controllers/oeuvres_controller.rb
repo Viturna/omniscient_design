@@ -125,7 +125,7 @@ class OeuvresController < ApplicationController
     @oeuvre = Oeuvre.find(params[:id])
 
     if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
-      create_validation_notification(@oeuvre)
+      # create_validation_notification(@oeuvre)
       if @oeuvre.user.present?
         update_suivi_references_validees(@oeuvre.user)
         redirect_to validation_path, notice: "L'oeuvre " + @oeuvre.nom_oeuvre + " a été validée avec succès."

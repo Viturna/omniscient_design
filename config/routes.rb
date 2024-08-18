@@ -44,7 +44,7 @@ Rails.application.routes.draw do
     end
     member do
       delete :destroy
-      patch :validate
+      get :validate
       delete 'cancel'
     end
   end

@@ -205,7 +205,7 @@
               <td>
                 <%= link_to "Voir", designer_path(designer), class: "btn" %>
                 <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
-                <%= link_to "Valider", validate_designer_path(designer), method: :patch, class: "btn btn-green" %>
+                <%= link_to "Valider", validate_designer_path(designer), class: "btn btn-green" %>
                 <%= link_to "Supprimer", designer_path(designer), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>
               </td>
             </tr>

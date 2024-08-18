@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       get 'load_more'
     end
     member do
-      patch :validate
+      get :validate
       delete 'cancel'
       delete :destroy
     end

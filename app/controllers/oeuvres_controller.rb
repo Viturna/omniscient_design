@@ -121,7 +121,9 @@ class OeuvresController < ApplicationController
     end
   end
   def validate
+    Rails.logger.info("Validation method called for oeuvre ID: #{params[:id]}")
     @oeuvre = Oeuvre.find(params[:id])
+
     if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@oeuvre)
       if @oeuvre.user.present?
@@ -131,9 +133,11 @@ class OeuvresController < ApplicationController
         redirect_to validation_path, alert: "Utilisateur associé à l'œuvre non trouvé."
       end
     else
+      Rails.logger.error("Failed to update oeuvre ID: #{params[:id]}")
       redirect_to validation_path, alert: "Une erreur s'est produite lors de la validation de l'oeuvre."
     end
   end
+
 
   private
   def create_notification(oeuvre)

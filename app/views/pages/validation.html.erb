@@ -117,7 +117,9 @@
               <td>
                 <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
                 <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
-                <%= link_to "Valider", validate_oeuvre_path(oeuvre), method: :patch, class: "btn btn-green" %>
+                <%= form_with(model: @oeuvre, url: validate_oeuvre_path(@oeuvre), method: :patch, local: true) do |form| %>
+                  <%= form.submit "Valider", class: "btn btn-green" %>
+                <% end %>
                 <%= link_to 'Supprimer', oeuvre_path(oeuvre), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
               </td>
             </tr>

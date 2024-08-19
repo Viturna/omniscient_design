@@ -524,7 +524,7 @@ input[type=search]{
   font-size: 18px;
   color: #8D9299;
   line-height: 125%;
-
+  overflow-wrap: break-word;
 }
 
 .description-card-home {

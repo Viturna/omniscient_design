@@ -3,6 +3,7 @@
 //= require_tree .
 //= require rails-ujs
 //= require turbolinks
+//= require @rails/ujs
 
 document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener('click', function(event) {

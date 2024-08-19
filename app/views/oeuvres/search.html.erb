@@ -26,14 +26,34 @@
     font-weight: 500;
   }
 
-  .flex-category, .flex-designer, .flex-oeuvre {
+  .flex-category, .flex-designer {
     display: flex;
     flex-wrap: wrap;
-    gap: 64px;
+    gap: 32px;
     margin-top: 32px;
   }
-  .flex-designer, .flex-oeuvre  {
-    gap: 32px;
+  .flex-category  {
+    gap: 64px;
+  }
+
+  .flex-oeuvre {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px; /* Cet espacement sera entre les cartes uniquement */
+    margin-top: 32px;
+    margin-bottom: 0; /* Assurez-vous qu'il n'y a pas de marge en bas du flex */
+    padding-bottom: 0; /* Si padding est utilisé, retirez-le également */
+  }
+
+  /* Si nécessaire, ajustez les marges individuelles des cartes pour éviter les problèmes */
+  .card-oeuvre {
+    margin-bottom: 0; /* Assurez-vous que les cartes n'ajoutent pas de marge en bas */
+  }
+
+  #load-more-button-oeuvres {
+    margin-top: 32px; /* Cet espacement est géré indépendamment du flexbox */
+    display: flex;
+    justify-content: flex-start; /* Ajuste la position du bouton */
   }
 
   .card-category {
@@ -211,7 +231,7 @@
       cursor: auto;
       opacity: 1;
      }
-     .oeuvre-frise{
+    .oeuvre-frise{
      margin-top: 32px;
      }
   @media screen and (min-width:0px) and (max-width:349px){
@@ -436,22 +456,26 @@
       <button class="load-more-btn button dark" >Charger plus de designers</button>
     </div>
     <h2 class="title">Oeuvres</h2>
-    <div class="flex-oeuvre" id="oeuvre-cards">
-      <% @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre) %>
-      <% @oeuvres.each do |oeuvre| %>
-        <%= link_to oeuvre do %>
-          <div class="card-oeuvre" style="background: url('<%= oeuvre.image %>'); background-size: cover; background-position:center;">
-            <div class="inner-card-oeuvre">
-              <p class="domaine-card-oeuvre"><%= oeuvre.domaine.domaine %></p>
-              <p class="title-card-oeuvre"><%= oeuvre.nom_oeuvre %></p>
+    <div class="container-oeuvres">
+      <div class="flex-oeuvre" id="oeuvre-cards">
+        <% @oeuvres.each do |oeuvre| %>
+          <%= link_to oeuvre do %>
+            <div class="card-oeuvre" style="background: url('<%= oeuvre.image %>'); background-size: cover; background-position:center;">
+              <div class="inner-card-oeuvre">
+                <p class="domaine-card-oeuvre"><%= oeuvre.domaine.domaine %></p>
+                <p class="title-card-oeuvre"><%= oeuvre.nom_oeuvre %></p>
+              </div>
             </div>
-          </div>
-        <%end%>
-      <% end %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <!-- Bouton en dehors de la flexbox -->
+      <div id="load-more-button-oeuvres">
+        <button class="load-more-btn button dark">Charger plus d'oeuvres</button>
+      </div>
     </div>
-    <div id="load-more-button-oeuvres">
-      <button class="load-more-btn button dark">Charger plus d'oeuvres</button>
-    </div>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const designerCards = document.querySelectorAll('.card-designer');

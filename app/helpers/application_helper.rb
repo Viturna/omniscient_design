@@ -1,12 +1,12 @@
 module ApplicationHelper
-  def file_exists?(path)
-    full_path = Rails.root.join('app', 'assets', 'images', path)
-
-    unless File.exist?(full_path)
-      Rails.logger.error "L'image #{full_path} n'existe pas."
-      return false
+  def asset_exists?(path)
+    if Rails.application.assets.find_asset(path).present?
+      true
+    else
+      false
     end
-    true
+  rescue Sprockets::FileNotFound
+    false
   end
   def link_to_add_fields(name, f, association)
     new_object = f.object.send(association).klass.new

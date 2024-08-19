@@ -4,7 +4,6 @@
 //= require rails-ujs
 //= require turbolinks
 
-
 document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener('click', function(event) {
     if (event.target.matches('.add_fields')) {

@@ -182,10 +182,10 @@
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
         <div class="field">
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email*" %>
         </div>
         <div class="field password-container">
-          <%= f.password_field :password, autocomplete: "current-password", placeholder: "Mot de passe", id: "password-field-1" %>
+          <%= f.password_field :password, autocomplete: "current-password", placeholder: "Mot de passe*", id: "password-field-1" %>
           <button type="button" class="toggle-password" data-target="#password-field-1">
             <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -198,7 +198,7 @@
           </button>
         </div>
         <div class="field password-container">
-          <%= f.password_field :password_confirmation, autocomplete: "current-password", placeholder: "Confirmer le mot de passe", id: "password-field-2" %>
+          <%= f.password_field :password_confirmation, autocomplete: "current-password", placeholder: "Confirmer le mot de passe*", id: "password-field-2" %>
           <button type="button" class="toggle-password" data-target="#password-field-2">
             <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -220,10 +220,10 @@
           <%= f.text_field :lastname, autocomplete: "lastname", placeholder: "Nom de famille" %>
         </div>
         <div class="field">
-          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: "Pseudo" %>
+          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: "Pseudo*" %>
         </div>
         <div class="field">
-          <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut" }, { class: "form-control" } %>
+          <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut*" }, { class: "form-control" } %>
         </div>
         <div class="field">
           <%= f.collection_select :etablissement_id, Etablissement.order(:city), :id, :all_info, { include_blank: "Aucun établissement" }, { class: "form-control" } %>

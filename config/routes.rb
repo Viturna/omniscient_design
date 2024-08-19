@@ -30,11 +30,11 @@ Rails.application.routes.draw do
   resources :domaines
 
   resources :lists do
-    delete 'remove_oeuvre', on: :member
-    delete 'remove_designer', on: :member
     member do
       post 'add_oeuvre'
       post 'add_designer'
+      delete 'remove_designer', to: 'lists#remove_designer'
+      delete 'remove_oeuvre', to: 'lists#remove_oeuvre'
     end
   end
 

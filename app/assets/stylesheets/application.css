@@ -787,16 +787,6 @@ input[type=search]{
   justify-content: center;
   transition: background-color 1s ease;
 }
-.medium-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size:cover;
-  background-position: center center;
-}
 .circle {
   background-color: #202020;
   width: 75px;
@@ -1089,7 +1079,7 @@ input[type=password] {
 }
 
 select{
-  width: calc(55vw);
+  width: calc(55vw + 30px);
   border: none;
   stroke: none;
   padding-left: 25px;

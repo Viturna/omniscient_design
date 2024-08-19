@@ -160,10 +160,10 @@
   }
 </style>
 <div class="body-show" id="<%= dom_id designer %>">
-  <% image_path = "/designers/#{designer.nom_designer.gsub(' ', '_')}.png" %>
+  <% image_path = "designers/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
   <div class="header-show"
-   <% if file_exists?(image_path) %>
-   style="background-image: url('/assets/<%= image_path %>');"
+   <% if asset_exists?(image_path) %>
+   style="background-image: url('<%= asset_path(image_path) %>');"
   <% else %>
     style="background-image: url('<%= designer.image%>');"
   <% end %>>

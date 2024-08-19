@@ -146,10 +146,10 @@
   }
 </style>
 <div class="body-show" id="<%= dom_id oeuvre %>">
-  <% image_path = "/oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
+<% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
   <div class="header-show"
-   <% if file_exists?(image_path) %>
-   style="background-image: url('/assets/<%= image_path %>');"
+   <% if asset_exists?(image_path) %>
+   style="background-image: url('<%= asset_path(image_path) %>');"
   <% else %>
     style="background-image: url('<%= oeuvre.image%>');"
   <% end %>>
@@ -236,7 +236,6 @@
       <div class="title-box-oeuvre hidden">
         <p class="designer-card">
           <%= link_to oeuvre.designer.nom_designer, designer_path(oeuvre.designer) %>
-          <div class="medium-circle" style="background-image: url('<%= oeuvre.designer.image%>');"></div>
         </p>
         <h2 class="title-card"><%= oeuvre.nom_oeuvre %></h2>
       </div>

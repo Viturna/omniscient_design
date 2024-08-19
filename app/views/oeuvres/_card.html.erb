@@ -7,14 +7,12 @@
         </svg>
         <%= card.date_oeuvre %>
       </p>
-      <% image_path = "/oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
-      <p><%= image_path %></p>
-      <% if file_exists?(image_path) %>
-        <div class="img-card" style="background-image: url('/assets/<%= image_path %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
-        </div>
-      <% else %>
-
-      <% end %>
+     <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
+    <% if asset_exists?(image_path) %>
+      <div class="img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+    <% else %>
+      <div class="img-card" style="background-image: url('<%= asset_path(card.image) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+    <% end %>
     </div>
     <div class="text-card">
       <p class="designer-card"><%= card.designer.nom_designer %></p>

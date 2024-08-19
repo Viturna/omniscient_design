@@ -4,4 +4,3 @@
 //= link_tree ../../../vendor/javascript .js
 //= link rails-ujs.js
 //= link jquery.min.js
-//= link references_overlay.js

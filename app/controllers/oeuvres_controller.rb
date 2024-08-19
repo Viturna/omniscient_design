@@ -22,15 +22,23 @@ class OeuvresController < ApplicationController
     @current_page = 'recherche'
     @works = Oeuvre.pluck(:nom_oeuvre) # Utilisez Oeuvre à la place de Work
 
-    # Date oeuvres
-    @oeuvres = Oeuvre.where(validation: true).shuffle
+    query = params[:query].to_s.strip
+    @work = nil
+
+    if query.present?
+      @work = Oeuvre.find_by(nom_oeuvre: query)
+      if @work.nil?
+        flash.now[:alert] = "Œuvre non trouvée"
+      end
+    else
+      flash.now[:alert] = "Veuillez entrer un terme de recherche"
+    end
 
     # Date oeuvres
     @oeuvres = Oeuvre.where(validation: true).shuffle
     @designers = Designer.where(validation: true).shuffle
     @start_year_oeuvre = params[:start_year_oeuvre].to_i.positive? ? params[:start_year_oeuvre].to_i : 1880
     @end_year_oeuvre = params[:end_year_oeuvre].to_i.positive? ? params[:end_year_oeuvre].to_i : 1889
-
 
     @timeline_years = (@start_year_oeuvre..@end_year_oeuvre).to_a
     @oeuvres_filtered = @oeuvres.select do |oeuvre|

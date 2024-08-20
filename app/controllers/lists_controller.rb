@@ -49,13 +49,13 @@ class ListsController < ApplicationController
 
     if @list && @oeuvre
       if @list.oeuvres.exists?(@oeuvre.id)
-        redirect_to @oeuvre, notice: "L'oeuvre est déjà dans la liste."
+        redirect_to @oeuvre, notice: "La référence est déjà dans la liste."
       else
         @list.oeuvres << @oeuvre
-        redirect_to @oeuvre, notice: "L'oeuvre a été ajoutée à la liste."
+        redirect_to @oeuvre, notice: "La référence a été ajoutée à la liste."
       end
     else
-      redirect_to @oeuvre, notice: "Impossible d'ajouter l'oeuvre à la liste."
+      redirect_to @oeuvre, notice: "Impossible d'ajouter la référence à la liste."
     end
   end
   def remove_oeuvre
@@ -65,12 +65,12 @@ class ListsController < ApplicationController
     if @list && @oeuvre
       if @list.oeuvres.exists?(@oeuvre.id)
         @list.oeuvres.delete(@oeuvre)
-        redirect_to request.referer, notice: "L'oeuvre a été retiré(e) de la liste."
+        redirect_to request.referer, notice: "La référence a été retirée de la liste."
       else
-        redirect_to request.referer, notice: "L'oeuvre n'est pas dans la liste."
+        redirect_to request.referer, notice: "La référence n'est pas dans la liste."
       end
     else
-      redirect_to request.referer, notice: "Impossible de retirer l'oeuvre de la liste."
+      redirect_to request.referer, notice: "Impossible de retirer la référence de la liste."
     end
   end
 
@@ -80,13 +80,13 @@ class ListsController < ApplicationController
 
     if @list && @designer
       if @list.designers.exists?(@designer.id)
-        redirect_to @designer, notice: "Le/La designer est déjà dans la liste."
+        redirect_to @designer, notice: "La référence est déjà dans la liste."
       else
         @list.designers << @designer
-        redirect_to @designer, notice: "Le/La designer a été ajoutée à la liste."
+        redirect_to @designer, notice: "La référence a été ajoutée à la liste."
       end
     else
-      redirect_to @designer, notice: "Impossible d'ajouter le/la designer à la liste."
+      redirect_to @designer, notice: "Impossible d'ajouter la référence à la liste."
     end
   end
   def remove_designer
@@ -96,12 +96,12 @@ class ListsController < ApplicationController
     if @list && @designer
       if @list.designers.exists?(@designer.id)
         @list.designers.delete(@designer)
-        redirect_to request.referer, notice: "Le designer a été retiré(e) de la liste."
+        redirect_to request.referer, notice: "La référence a été retirée de la liste."
       else
-        redirect_to request.referer, notice: "Le designer n'est pas dans la liste."
+        redirect_to request.referer, notice: "La référence n'est pas dans la liste."
       end
     else
-      redirect_to request.referer, notice: "Impossible de retirer le designer de la liste."
+      redirect_to request.referer, notice: "Impossible de retirer la référence de la liste."
     end
   end
 

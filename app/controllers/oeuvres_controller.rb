@@ -179,17 +179,18 @@ class OeuvresController < ApplicationController
 
   def update_suivi_references_validees(user)
     return unless user
-
     suivi = user.suivis.first_or_create
     suivi.increment(:nb_references_validees)
     suivi.save
   end
 
   def update_suivi_references_refusees(user)
+    return unless user
     suivi = user.suivis.first_or_create
-    suivi.increment(:nb_references_refusees)  # Correction de l'attribut
+    suivi.increment(:nb_references_refusees)
     suivi.save
   end
+
 
   def set_oeuvre
     @oeuvre = Oeuvre.find(params[:id])

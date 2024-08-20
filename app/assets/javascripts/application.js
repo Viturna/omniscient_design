@@ -18,3 +18,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
+import "@rails/request.js"

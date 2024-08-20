@@ -410,7 +410,7 @@
       </div>
     <% end %>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("turbo:load", function() {
         const submitFormButton = document.getElementById('submitFormButton');
         const form = document.querySelector('form');
 
@@ -474,7 +474,7 @@
   <%= button_to 'Supprimer la liste', list_path(@list), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" }, class: "delete" %>
 </section>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("turbo:load", function() {
     const cardList = document.querySelectorAll('.card-list');
 
     cardList.forEach(function(card) {

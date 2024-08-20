@@ -168,6 +168,8 @@
                 <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
                 <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
                 <%= link_to "Supprimer", oeuvre_path(oeuvre), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>
+
+
               </td>
             </tr>
           <% end %>
@@ -269,7 +271,7 @@
   </section>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("turbo:load", function() {
     // Fonction pour afficher plus de lignes pour un tableau spécifique
     function showMoreRows(rows, loadMoreButton) {
       const initialRowsToShow = 10;

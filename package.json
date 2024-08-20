@@ -6,7 +6,7 @@
   "author": "Viturna <viturnapro@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@rails/ujs": "^7.1.3-4",
+    "@rails/ujs": "^7.0.0",
     "jquery": "^3.7.1"
   }
 }

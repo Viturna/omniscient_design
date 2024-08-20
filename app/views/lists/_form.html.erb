@@ -130,7 +130,7 @@
   </div>
 <% end %>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("turbo:load", function() {
     const checkboxes = document.querySelectorAll('.hidden-check');
 
     checkboxes.forEach(checkbox => {
@@ -152,7 +152,7 @@
   });
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("turbo:load", function() {
     const designerSearch = document.getElementById('designer-search');
     const oeuvreSearch = document.getElementById('oeuvre-search');
 

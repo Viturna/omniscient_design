@@ -1,66 +1,63 @@
 <!DOCTYPE html>
 <html>
- <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="index, follow">
-  <meta name="googlebot" content="index, follow">
-  <meta name="bingbot" content="index, follow">
-  <title><%= @page_title || "Omniscient Design" %></title>
-  <meta name="description" content="<%= @meta_description %>">
-  <%= favicon_link_tag 'favicon.svg' %>
-  <meta name="theme-color" content="#ffffff">
-  <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <title><%= @page_title || "Omniscient Design" %></title>
+    <meta name="description" content="<%= @meta_description %>">
+    <%= favicon_link_tag 'favicon.svg' %>
+    <meta name="theme-color" content="#ffffff">
+    <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <!-- Stylesheets -->
-  <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all' %>
+    <!-- Stylesheets -->
+    <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all' %>
 
-  <!-- JavaScript -->
-  <%= javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js' %>
-  <%= javascript_importmap_tags %> <!-- Pour Importmaps -->
-  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <!-- JavaScript -->
+    <%= javascript_importmap_tags %> <!-- Pour Importmaps -->
 
-  <!-- Stylesheets pour Leaflet et le clustering de marqueurs -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <!-- Stylesheets pour Leaflet et le clustering de marqueurs -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-  <!-- Scripts JavaScript pour Leaflet et le clustering de marqueurs -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <!-- Scripts JavaScript pour Leaflet et le clustering de marqueurs -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-  <meta property="og:locale" content="fr_FR">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="<%= @page_title || "Omniscient Design" %>">
-  <meta property="og:site_name" content="Omniscient Design">
-  <meta property="og:url" content="<%= @current_page_url %>">
-  <meta property="og:description" content="<%= @meta_description %>">
-  <meta name="twitter:title" content="<%= @page_title || "Omniscient Design" %>">
-  <meta name="twitter:description" content="<%= @meta_description %>">
-  <meta name="twitter:url" content="<%= @current_page_url %>">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<%= @page_title || "Omniscient Design" %>">
+    <meta property="og:site_name" content="Omniscient Design">
+    <meta property="og:url" content="<%= @current_page_url %>">
+    <meta property="og:description" content="<%= @meta_description %>">
+    <meta name="twitter:title" content="<%= @page_title || "Omniscient Design" %>">
+    <meta name="twitter:description" content="<%= @meta_description %>">
+    <meta name="twitter:url" content="<%= @current_page_url %>">
 
-  <style>
-    #loading {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-    }
+    <style>
+      #loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+      }
 
-    #loading img {
-      width: 250px;
-      height: 250px;
-    }
+      #loading img {
+        width: 250px;
+        height: 250px;
+      }
 
-    #content {
-      display: none;
-    }
-  </style>
-</head>
-
+      #content {
+        display: none;
+      }
+    </style>
+  </head>
 
   <body class="<%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>
@@ -95,39 +92,9 @@
     </main>
   </body>
 </html>
+
 <script>
-  var alertDiv = document.getElementById("alert");
-
-    var countdownDuration = 5000;
-
-    function closeAlert() {
-      alertDiv.style.opacity = "0";
-      setTimeout(function(){ alertDiv.style.display = "none"; }, 600);
-    }
-
-    if (alertDiv) {
-      var progressBar = document.getElementById("progress-bar");
-      var width = 0;
-      var interval = setInterval(function() {
-        width += 100 / (countdownDuration / 100);
-        progressBar.style.width = width + '%';
-        if (width >= 100) {
-          clearInterval(interval);
-          closeAlert();
-        }
-      }, 100);
-
-      var close = document.getElementsByClassName("closebtn");
-      for (var i = 0; i < close.length; i++) {
-        close[i].onclick = function() {
-          clearInterval(interval);
-          closeAlert();
-        }
-      }
-    }
-</script>
-<script>
-  document.addEventListener("turbolinks:load", function() {
+  document.addEventListener("turbo:load", function() { // Changement de turbolinks:load à turbo:load
     document.getElementById("loading").style.display = "none"; // Masquer le loader
     document.getElementById("content").style.display = "block"; // Afficher le contenu
   });
@@ -137,4 +104,33 @@
     document.getElementById("content").style.display = "block"; // Afficher le contenu
   });
 
+  var alertDiv = document.getElementById("alert");
+
+  var countdownDuration = 5000;
+
+  function closeAlert() {
+    alertDiv.style.opacity = "0";
+    setTimeout(function(){ alertDiv.style.display = "none"; }, 600);
+  }
+
+  if (alertDiv) {
+    var progressBar = document.getElementById("progress-bar");
+    var width = 0;
+    var interval = setInterval(function() {
+      width += 100 / (countdownDuration / 100);
+      progressBar.style.width = width + '%';
+      if (width >= 100) {
+        clearInterval(interval);
+        closeAlert();
+      }
+    }, 100);
+
+    var close = document.getElementsByClassName("closebtn");
+    for (var i = 0; i < close.length; i++) {
+      close[i].onclick = function() {
+        clearInterval(interval);
+        closeAlert();
+      }
+    }
+  }
 </script>

@@ -477,7 +477,7 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("turbo:load", function() {
         const designerCards = document.querySelectorAll('.card-designer');
         const oeuvreCards = document.querySelectorAll('.card-oeuvre');
         const loadMoreButtonDesigners = document.getElementById('load-more-button-designers');
@@ -607,7 +607,7 @@
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("turbo:load", function() {
   // Remplacez cette liste par vos noms d'œuvres extraits du backend
   var works = ["Œuvre 1", "Œuvre 2", "Œuvre 3", "Œuvre 4"];
 
@@ -617,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("turbo:load", function() {
     var works = <%= raw @works.to_json %>; // Injecter les œuvres dans le JavaScript
     autocomplete(document.getElementById("workSearch"), works);
   });

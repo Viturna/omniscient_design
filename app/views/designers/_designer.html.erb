@@ -212,7 +212,7 @@
       <%= country_flag(designer.country.country_numeric) %>
     <% end %>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("turbo:load", function() {
         document.getElementById('back-button').addEventListener('click', function() {
           if (history.length > 1) {
             history.back();
@@ -568,7 +568,7 @@
   <input type="text" id="shareLink" value="" hidden readonly>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("turbo:load", function() {
    // Sélecteurs mis à jour
    const shareModal = document.getElementById('shareModal');
    const closeModal = document.getElementById('closePopup'); // Utilisez ID au lieu de classe
@@ -649,7 +649,7 @@
      });
    }
   });
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("turbo:load", function() {
    // Sélecteurs mis à jour
    const shareModal = document.getElementById('shareModal');
    const closeModal = document.getElementById('closePopup'); // Utilisez ID au lieu de classe

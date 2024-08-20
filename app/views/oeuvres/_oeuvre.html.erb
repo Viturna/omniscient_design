@@ -199,7 +199,7 @@
       <div class="small-circle" style="background-color: <%= oeuvre.domaine.couleur %>;"></div>
     </div>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("turbo:load", function() {
         document.getElementById('back-button').addEventListener('click', function(event) {
           event.preventDefault(); // Prevent default link behavior
 
@@ -404,7 +404,7 @@
   <input type="text" id="shareLink" value="" hidden readonly>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("turbo:load", function() {
    // Sélecteurs mis à jour
    const shareModal = document.getElementById('shareModal');
    const closeModal = document.getElementById('closePopup'); // Utilisez ID au lieu de classe
@@ -485,7 +485,7 @@
      });
    }
   });
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("turbo:load", function() {
    // Sélecteurs mis à jour
    const shareModal = document.getElementById('shareModal');
    const closeModal = document.getElementById('closePopup'); // Utilisez ID au lieu de classe

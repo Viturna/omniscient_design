@@ -13,12 +13,6 @@
     display: flex;
     align-items: center;
   }
-  .beta{
-    font-weight: 600;
-    color:#202020;
-    margin-left: 30px;
-    text-align: center;
-  }
   .name-header {
     font-weight: 500;
     color: #202020;
@@ -195,9 +189,8 @@
 </style>
 <header>
   <%= link_to(root_path, class: "logo-header") do %>
-    <%= image_tag "logo.svg", alt: "", class: "home-index" %>
+    <%= image_tag "logo-alpha.svg", alt: "", class: "home-index" %>
     <p class="name-header">Omniscient Design</p>
-    <p class="beta">Version Alpha</p>
   <% end %>
   <nav class="nav-header">
     <ul>
@@ -217,7 +210,7 @@
           <p>Rechercher</p>
         <% end %>
       </li>
-      <li class="disabled">
+      <%# <li class="disabled">
         <a>
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path opacity="0.4" d="M21.7222 9.42977V9.73291C20.9095 9.71695 20.0969 9.71695 19.2843 9.71695V9.44572C19.2843 8.34484 18.3579 7.45138 17.2527 7.45138H15.6438C13.8072 7.45138 12.312 5.98354 12.312 4.19661C12.312 3.54246 12.8646 3 13.5309 3C14.2135 3 14.7499 3.54246 14.7499 4.19661C14.7499 4.67525 15.1562 5.05816 15.6438 5.05816H17.2527C19.7069 5.07412 21.7059 7.03655 21.7222 9.42977Z" fill="#8D9299"/>
@@ -225,7 +218,7 @@
           </svg>
           <p>Jeux</p>
         </a>
-      </li>
+      </li> %>
       <li>
         <%= link_to lists_path, class: (@current_page == 'listes' ? 'active' : '') do %>
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">

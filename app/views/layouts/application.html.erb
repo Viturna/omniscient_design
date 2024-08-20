@@ -16,16 +16,20 @@
 
   <!-- Stylesheets -->
   <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all' %>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
 
   <!-- JavaScript -->
   <%= javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js' %>
   <%= javascript_importmap_tags %> <!-- Pour Importmaps -->
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.0/dist/leaflet.markercluster.js" defer></script>
 
+  <!-- Stylesheets pour Leaflet et le clustering de marqueurs -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+  <!-- Scripts JavaScript pour Leaflet et le clustering de marqueurs -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
   <meta property="og:locale" content="fr_FR">
   <meta property="og:type" content="website">

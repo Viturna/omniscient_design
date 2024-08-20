@@ -17,6 +17,8 @@ class BugReportsController < ApplicationController
     else
       render :new
     end
+
+
   end
 
   def index

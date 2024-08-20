@@ -10,15 +10,13 @@ class BugReportsController < ApplicationController
 
   def create
     @current_page = 'profil'
-    @bug_report = current_user.bug_reports.build(bug_report_params)
+    @bug_report = BugReport.new(bug_report_params)
     if @bug_report.save
       BugReportMailer.new_bug_report(@bug_report).deliver_now
       redirect_to profil_path, notice: 'Votre signalement a été soumis avec succès.'
     else
       render :new
     end
-
-
   end
 
   def index

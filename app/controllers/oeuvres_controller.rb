@@ -68,6 +68,19 @@ class OeuvresController < ApplicationController
   def new
     @oeuvre = Oeuvre.new
     @current_page = 'add_elements'
+    @works = Designer.where(validation: true).pluck(:nom_designer)
+
+    query = params[:query].to_s.strip
+    @work = nil
+
+    if query.present?
+      @work = Designer.find_by(nom_designer: query)
+      if @work.nil?
+        flash.now[:alert] = "Œuvre non trouvée"
+      end
+    else
+      flash.now[:alert] = "Veuillez entrer un terme de recherche"
+    end
   end
 
   # GET /oeuvres/1/edit

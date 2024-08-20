@@ -83,7 +83,7 @@
     justify-content: flex-end;
   }
 </style>
-<%= form_with(model: @list, local: true) do |form| %>
+<%= form_with(model: @list, local: true, data: { turbo: false }) do |form| %>
   <%= form.text_field :name, placeholder: "Nom de la liste" %>
   <h2 class="title">Designers</h2>
   <div class="search-container">

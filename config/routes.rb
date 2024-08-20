@@ -26,8 +26,6 @@ Rails.application.routes.draw do
     end
   end
   resources :notifications, only: [:index, :show, :destroy]
-  resources :countries
-  resources :domaines
 
   resources :lists do
     member do

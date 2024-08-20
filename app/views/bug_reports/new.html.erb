@@ -30,7 +30,7 @@
     <h1>Signaler un problème</h1>
     <p class="subtitle">Yorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
   </section>
-  <%= form_with(model: @bug_report, local: true) do |form| %>
+  <%= form_with(model: @bug_report, local: true, data: { turbo: false }) do |form| %>
     <% if @bug_report.errors.any? %>
       <div id="error_explanation">
         <h2><%= pluralize(@bug_report.errors.count, "error") %> prohibited this bug report from being saved:</h2>

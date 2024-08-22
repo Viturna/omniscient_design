@@ -1,0 +1,79 @@
+@import 'variables';
+
+header {
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  padding: 0px 50px;
+  background-color: $secondary-color;
+  overflow-y: scroll;
+}
+
+.logo-header {
+  padding: 8vh 0px;
+  display: flex;
+  align-items: center;
+}
+.name-header {
+  font-weight: 500;
+  color: $primary-color;
+  font-size: 24px;
+  margin-left: 16px;
+}
+
+.nav-header {
+  margin-top: 16px;
+}
+
+header ul {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+header li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 500;
+  font-size: 20px;
+  color: $text-color;
+  &:hover{
+    opacity: 0.8;
+  }
+}
+
+header li a svg {
+  scale: 0.9;
+}
+
+header li .active {
+  color: $primary-color;
+}
+
+header li .active svg path {
+  fill: $primary-color;
+}
+.flex-btn-login {
+  margin-top: 5vh;
+}
+
+.button-login {
+  width: 160px;
+}
+.link-header {
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom:60px;
+}
+
+.link-header a {
+  font-size: 16px;
+  cursor: pointer;
+  color: $text-color;
+  &:hover{
+    opacity: 0.8;
+  }
+}

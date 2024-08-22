@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       get 'search'
       get 'load_more'
     end
+
     member do
       delete :destroy
       get :validate

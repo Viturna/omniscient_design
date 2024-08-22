@@ -1,10 +1,10 @@
 <%= form_with(model: oeuvre) do |form| %>
-  <% if oeuvre.errors.any? %>
+  <% if @oeuvre.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(oeuvre.errors.count, "error") %> prohibited this oeuvre from being saved:</h2>
+      <h2><%= pluralize(@oeuvre.errors.count, "erreur") %> ont empêché cette œuvre d'être sauvegardée :</h2>
       <ul>
-        <% oeuvre.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% @oeuvre.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
@@ -14,11 +14,10 @@
       <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
     </div>
     <div>
-      <div class="autocomplete">
-        <input id="designer_id" name="query" type="text" placeholder="Rechercher un designer" style="background-image: url('data:image/svg+xml...'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
+       <div class="autocomplete">
+        <%= form.hidden_field :designer_id %>
+        <%= form.text_field :designer_name, placeholder: "Rechercher un designer", autocomplete: "off" %>
       </div>
-
-      <%# <%= form.collection_select :designer_id, Designer.order(:nom_designer), :id, :nom_designer, prompt: "Sélectionner un designer" %>
     </div>
     <div style="display:flex">
       <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
@@ -37,7 +36,7 @@
       <%= form.text_field :image, placeholder: "Url de l'image" %>
     </div>
     <div>
-      <%= form.submit "Continuer ⏩️", class: "button-large" %>
+      <%= form.submit "Continuer ⏩️", class: "button large" %>
     </div>
   </div>
 <% end %>
@@ -149,17 +148,10 @@
             closeAllLists(e.target);
         });
         }
-
-        document.addEventListener("turbo:load", function() {
-
-          // Initialisez l'autocomplétion avec les données des œuvres
-          autocomplete(document.getElementById("designer_id"), works);
-        });
-
-      </script>
-      <script>
+        var designerIdField = document.getElementById("designer_id_field");
         document.addEventListener("turbo:load", function() {
           var works = <%= raw @works.to_json %>; // Injecter les œuvres dans le JavaScript
-          autocomplete(document.getElementById("designer_id"), works);
+          autocomplete(document.getElementById("oeuvre_designer_name"), works);
+          designerIdField.value = designer.id;
         });
-      </script>
+  </script>

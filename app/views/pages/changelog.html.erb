@@ -1,27 +1,6 @@
 <style>
-  .grid-1{
-    padding: 0 10vw;
-    margin-top: 64px;
-    padding-bottom: 45px;
-  }
-  .top-profil{
-    display: flex;
-    align-items: center;
-    height: 100px;
-    padding: 0 5vw;
-    gap: 50px;
-    background-color: #202020;
-  }
-  h1{
-    color: #FFF;
-  }
-
   h2{
     margin-top: 64px;
-    color: #202020;
-    font-size: 22px;
-    font-weight: 500;
-    margin-bottom: 18px;
   }
   h3{
     margin-top: 32px;
@@ -43,11 +22,7 @@
       padding: 0 5vw;
       padding-bottom: 45px;
     }
-    .top-profil{
-      gap: 16px;
-      height: 80px;
-    }
-    .top-profil svg{
+    .top-default-page svg{
       scale: 0.8;
     }
     h2{
@@ -64,11 +39,6 @@
       padding: 0 5vw;
       padding-bottom: 45px;
     }
-    .top-profil{
-      gap: 25px;
-      height: 80px;
-    }
-
     h2{
       margin-top: 48px;
       font-size: 18px;
@@ -82,10 +52,6 @@
    .grid-1{
     padding: 0 5vw;
     }
-    .top-profil{
-      gap: 40px;
-    }
-
     h2{
       margin-top: 52px;
       font-size: 20px;
@@ -97,7 +63,7 @@
   }
 </style>
 <div class="main-div">
-  <section class="top-profil">
+  <section class="top-default-page">
     <%= link_to profil_path do %>
       <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>

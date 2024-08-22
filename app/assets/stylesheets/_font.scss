@@ -1,0 +1,60 @@
+@import 'variables';
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('IBMPlexSans-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('IBMPlexSans-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('IBMPlexSans-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('IBMPlexSans-Light.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Color Emoji';
+  font-style: normal;
+  font-weight: 400;
+  src: url('NotoColorEmoji-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+h1 {
+  font-weight: 500;
+  font-size: 32px;
+  padding: 10px 0;
+}
+
+h2 {
+  margin-top: 0;
+  color: $primary-color;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.semi-bold {
+  font-weight: 600;
+}
+.medium {
+  font-weight: 500;
+}

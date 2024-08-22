@@ -1,0 +1,963 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+@import 'reset';
+@import 'variables'; // Importe app/assets/stylesheets/partials/_variables.scss
+@import 'header';
+@import 'font';      // Importe app/assets/stylesheets/partials/_font.scss
+@import 'alert';     // Importe app/assets/stylesheets/partials/_alert.scss
+@import 'default-page';
+
+
+body {
+  font-family: "IBM Plex Sans";
+  background-color: #F7F7F7;
+  overflow-x: hidden;
+}
+// Notification
+.notification-badge-profil {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+/* Home Page */
+
+.subtitle-top {
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 24px;
+}
+
+.home-flex {
+  margin-left: 350px;
+  width: calc(100vw - 350px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.main-div {
+  margin-left: 350px;
+  width: calc(100vw - 350px);
+}
+.top-bar {
+  background-color: #F7F7F7;
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  width: calc(100vw - 350px);
+  height: 100px;
+  margin-left: 350px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  justify-content: center;
+  border-bottom: 1px solid #E9E9E9;
+}
+input.search-top-bar {
+  border-radius: 50px;
+  background-color: #FFF;
+  color: $primary-color;
+  font-size: 17px;
+  padding: 5px 10px;
+  padding-left: 50px;
+  width: 540px;
+  height: 55px;
+  border: none;
+  position: relative;
+}
+input[type=search]{
+  margin-right: 16px;
+}
+@media screen and (min-width:0px) and (max-width:800px) {
+  .home-flex {
+    margin-left: 0px;
+    width: 100vw;
+    padding-bottom: 100px;
+  }
+  .main-div {
+    margin-left: 0px;
+    width: 100vw;
+    padding-bottom: 100px;
+  }
+  .top-bar {
+   display: none;
+  }
+
+  input.search-top-bar {
+    font-size: 16px;
+    width: 70vw;
+    height: 50px;
+  }
+
+}
+@media screen and (min-width:801px) and (max-width:1050px){
+  .main-div {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
+  }
+  .top-bar {
+    width: calc(100vw - 260px);
+    margin-left: 260px;
+  }
+
+  input.search-top-bar {
+    font-size: 16px;
+    width: 45vw;
+    height: 50px;
+  }
+}
+
+
+
+.nav-home-mobile {
+  display: none;
+}
+.nav-home {
+  position: fixed;
+  z-index: 9999;
+  margin-top: 132px;
+}
+
+.nav-home a {
+  font-size: 20px;
+  color: $primary-color;
+}
+
+.nav-home a:hover {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.nav-home .active {
+  font-weight: 500;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.button-nav {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  right: 3vw;
+  bottom: 45px;
+  gap: 24px;
+}
+
+.arrow-button {
+  width: 80px;
+  height: 80px;
+  background-color: $primary-color;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.arrow-button:hover {
+  opacity: 0.8;
+}
+.img-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 5px;
+  z-index: 0; /* Placez-le en arrière-plan */
+  opacity: 1; /* Opacité totale */
+  transform: rotate(-6deg);
+  z-index: -1;
+
+}
+
+.bg-card {
+  transform: rotate(6deg);
+  border-radius: 5px;
+  width: 50vw;
+  height: 350px;
+  position: relative;
+}
+
+.card {
+  padding-top: 190px;
+  width: 50vw;
+}
+.bg-card .date-main{
+  top: 48px;
+  position: absolute;
+  transform: rotate(-6deg);
+  background-color: rgba(32, 32, 32, 0.4);
+  color: #FFF;
+  font-size: 20px;
+}
+.bg-card .date-main{
+  scale: 0.9;
+}
+.designer-card {
+  color: $primary-color;
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-top: 32px;
+  display: flex;
+}
+
+.designer-card a {
+  color: $primary-color;
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-top: 32px;
+}
+
+.text-card {
+  padding: 0 36px;
+}
+
+.title-card {
+  margin-top: 8px;
+  color: $primary-color;
+  font-size: 36px;
+  letter-spacing: -1%;
+  font-weight: 500;
+}
+
+.title-description-card {
+  margin-top: 48px;
+  font-size: 24px;
+  color: $primary-color;
+  font-weight: 500;
+}
+
+.description-card {
+  margin-top: 16px;
+  font-size: 18px;
+  color: #8D9299;
+  line-height: 125%;
+  overflow-wrap: break-word;
+}
+
+.description-card-home {
+  overflow: hidden;
+  height: 150px;
+}
+.flex-contributor{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 48px;
+}
+.box-contributor{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20vw;
+}
+.vertical-divider {
+  width: 3px;
+  height: 40px;
+  background-color: $primary-color; /* Vous pouvez changer la couleur ici */
+}
+.contributor{
+  font-size: 22px;
+  text-transform:uppercase;
+  font-weight: 500;
+   text-align:center;
+}
+.text-contributor{
+  margin-top: 8px;
+  line-height:130%;
+  font-size: 18px;
+  color:#8D9299;
+  text-align:center;
+}
+@media screen and (max-width:349px) {
+  .button {
+    font-size: 14px;
+    text-align: center;
+    padding: 18px 30px;
+  }
+}
+@media screen and (min-width:350px) and (max-width:800px){
+  .nav-home-mobile{
+    background-color: #F7F7F7;
+    margin-top: 16px;
+    display: flex;
+    width: 100vw;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+  }
+  .logo-img{
+    width: 35px;
+    height: 35px;
+  }
+  .nav-home-mobile a {
+    font-size: 18px;
+    color: $primary-color;
+  }
+
+  .nav-home-mobile a:hover {
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .nav-home-mobile .active {
+    font-weight: 500;
+  }
+  .nav-home-mobile svg{
+    scale: 1.4;
+  }
+
+  .nav-home {
+    display: none;
+  }
+  .arrow-button {
+   display: none;
+  }
+
+  .img-card {
+    transform: rotate(-4deg);
+  }
+
+  .bg-card {
+    transform: rotate(4deg);
+    width: 80vw;
+    height: 60vh;
+  }
+
+  .card {
+    padding-top: 80px;
+    width: 80vw;
+  }
+
+  .designer-card {
+    font-size: 16px;
+  }
+
+  .designer-card a {
+    font-size: 16px;
+    margin-top: 24px;
+  }
+
+  .text-card {
+    padding: 0px;
+  }
+
+  .title-card {
+    font-size: 28px;
+  }
+
+  .title-description-card {
+    display: none;
+  }
+
+  .description-card {
+    display: none;
+  }
+  .button {
+    padding: 18px 35px;
+  }
+
+}
+
+/* Show */
+.body-show{
+  padding-bottom: 50px;
+}
+/* Ajout du CSS pour le header-show */
+.header-show {
+  background-size:cover;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 80vh;
+  position: relative;
+}
+
+.header-show::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit; /* Récupère l'image de fond de l'élément parent */
+  z-index: -2;
+}
+.date-header{
+  position: absolute;
+  bottom: 50px;
+  left: 5vw;
+}
+.domaine-header{
+  position: absolute;
+  bottom: 50px;
+  right: 5vw;
+}
+.small-height {
+
+  height: 320px !important;
+  /* Modifier la hauteur à 40vh */
+  position: fixed !important;
+  /* Fixer le header en position fixe */
+  top: 0 !important;
+  /* Aligner le header en haut de la fenêtre */
+  left: 0 !important;
+  /* Aligner le header à gauche de la fenêtre */
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+}
+
+.small-height::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.content-show {
+  margin-top: 20px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.header-top {
+  display: none;
+  position: absolute;
+  bottom: 40px;
+  left: 5vw;
+  width: 100%;
+  padding: 10px;
+  z-index: 99;
+}
+
+.header-top p,
+.header-top a {
+  color: #FFF;
+}
+
+.header-top.show-header-top {
+  display: block;
+}
+
+.flex-info {
+  margin-top: 16px;
+  display: flex;
+  gap: 24px;
+}
+
+.info-card {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 12px 25px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 20px;
+}
+.info-card-dark {
+  height: fit-content;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(32, 32, 32, 0.4);
+  color: #FFF;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.text-show {
+  width: 60vw;
+}
+.small-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+}
+.circle {
+  background-color: $primary-color;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+}
+.circle-notif{
+  background-color: $primary-color;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+  position: relative;
+}
+.circle-notif:hover{
+  background-color: $primary-color;
+  opacity: 0.8;
+}
+.notification-counter {
+  position: absolute;
+  right: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -10px;
+  background-color: #FFF;
+  color: $primary-color;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 30px;
+  height: 30px;
+}
+
+.circle-back {
+  position: absolute;
+  z-index: 100;
+  top: 50px;
+  left: 5vw;
+  background-color: rgba(32, 32, 32, 0.4);
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+}
+.circle-save {
+  position: absolute;
+  top: 50px;
+  right: 5vw;
+  background-color: $primary-color;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+  cursor: pointer;
+  z-index: 999;
+}
+.circle-back:hover, .circle-save:hover {
+  opacity: 0.8;
+}
+
+.flex-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 32px;
+}
+
+.button-circle {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.button-circle p {
+  color: $primary-color;
+  font-size: 20px;
+}
+
+.button-circle:hover {
+  opacity: 0.6;
+}
+
+.button-circle:hover .circle {
+  background-color: #FFF;
+}
+
+.button-circle:hover svg path {
+  fill: $primary-color;
+}
+
+.next-card {
+  margin-left: 20vw;
+}
+
+.oeuvres-same {
+  overflow-x: scroll;
+  display: flex;
+  justify-content: start;
+  /* Espacez les cartes également */
+  margin-top: 32px;
+  gap: 24px;
+}
+
+.oeuvre-card {
+  width: 380px;
+  height: 240px;
+  border: 1px solid #ccc;
+  /* Ajoutez une bordure pour la séparation */
+  border-radius: 10px;
+}
+
+.oeuvre-card:hover {
+  opacity: 0.8;
+}
+
+.oeuvre-card-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.oeuvre-card-image::before {
+  content: '';
+  /* Ajouter un contenu vide au pseudo-élément */
+  position: absolute;
+  /* Positionner de manière absolue par rapport à l'élément parent */
+  top: 0;
+  /* Aligner le pseudo-élément en haut de l'élément parent */
+  left: 0;
+  /* Aligner le pseudo-élément à gauche de l'élément parent */
+  width: 100%;
+  /* Définir la largeur sur 100% */
+  height: 100%;
+  /* Définir la hauteur sur 100% */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Couleur de fond noir avec une opacité de 50% */
+  z-index: 1;
+  /* Assurer que l'overlay soit en arrière-plan par rapport au contenu */
+}
+
+.oeuvre-card-content {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  padding: 20px;
+}
+
+.oeuvre-designer {
+  color: #F7F7F7;
+  text-transform: uppercase;
+  font-size: 16px;
+  margin: 0;
+}
+
+.oeuvre-title {
+  color: #FFF;
+  font-size: 30px;
+  margin: 5px 0;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #f00;
+}
+
+
+
+.share-options {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.share-button {
+  background: $primary-color;
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.share-button svg {
+  fill: #fff;
+}
+
+#copyLink {
+background: none;
+border: none;
+}
+
+
+/* Search */
+/* Conteneur du menu d'autocomplétion */
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  z-index: 99;
+  background-color: #fff;
+  width: 39vw;
+  margin-top: 2px;
+  max-height: 250px; /* Limite la hauteur pour éviter les débordements */
+  overflow-y: auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Élément de suggestion */
+.autocomplete-items div {
+  padding: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+/* Dernier élément sans bordure */
+.autocomplete-items div:last-child {
+  border-bottom: none;
+}
+
+/* Élément de suggestion survolé ou actif */
+.autocomplete-items div:hover,
+.autocomplete-active {
+  background-color: #f1f1f1;
+  color: $primary-color;
+}
+
+/* Pour masquer temporairement l'autocomplétion */
+.autocomplete-hidden {
+  display: none;
+}
+
+/* Barre de défilement personnalisée pour l'autocomplétion */
+.autocomplete-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.autocomplete-items::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.autocomplete-items::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.autocomplete-items::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.subtitle {
+  width: 60vw;
+  color: #E9E9E9;
+  font-size: 17px;
+  line-height: 125%;
+}
+
+
+.grid {
+  padding: 8vw;
+}
+@media screen and (min-width:0px) and (max-width:800px) {
+  .circle-notif{
+    width: 50px;
+    height: 50px;
+  }
+  .circle-notif svg{
+   scale: 0.8;
+  }
+  .subtitle {
+    width: 82vw;
+    font-size: 14px;
+  }
+  .grid {
+    padding: 0vw;
+  }
+}
+@media screen and (min-width:801px) and (max-width:1050px){
+  .circle-notif{
+    width: 50px;
+    height: 50px;
+  }
+  .circle-notif svg{
+   scale: 0.8;
+  }
+  .grid {
+    padding: 4vw;
+  }
+}
+
+
+/* Add elements */
+
+.flex-form {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+input[type=text],
+input[type=date],
+input[type=email],
+input[type=password] {
+  border: none;
+  stroke: none;
+  padding-left: 25px;
+  width: 55vw;
+  height: 70px;
+  background-color: #FFF;
+  border-radius: 5px;
+  border: 2px solid #E9E9E9;
+  font-weight: 500;
+  color: $primary-color;
+}
+
+select{
+  width: calc(55vw + 30px);
+  border: none;
+  stroke: none;
+  padding-left: 25px;
+  height: 70px;
+  background-color: #FFF;
+  border-radius: 5px;
+  border: 2px solid #E9E9E9;
+  font-weight: 500;
+  color: $primary-color;
+}
+input::placeholder,
+select::placeholder {
+  color: #8D9299;
+}
+
+textarea {
+  border: none;
+  stroke: none;
+  padding-top: 25px;
+  padding-left: 25px;
+  width: 55vw;
+  height: 120px;
+  resize: none;
+  background-color: #FFF;
+  border: 2px solid #E9E9E9;
+  border-radius: 5px;
+}
+
+@media screen and (min-width:350px) and (max-width:800px) {
+  .flex-form {
+    gap: 28px;
+  }
+
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password],
+  select {
+    width: 80vw;
+    height: 70px;
+  }
+
+  textarea {
+    width: 80vw;
+    height: 120px;
+  }
+}
+
+@media screen and (min-width:0px) and (max-width:349px) {
+  .title-add-elements{
+    margin-top: 32px;
+    font-size: 20px;
+  }
+  .add-elements{
+    padding: 0 8vw;
+    padding-bottom: 100px;
+  }
+  .subtitle-top{
+    font-size: 16px;
+    padding-top: 32px;
+    text-align:center;
+  }
+
+}
+@media screen and (min-width:350px) and (max-width:800px) {
+  .title-add-elements{
+    margin-top: 42px;
+  }
+  .add-elements{
+    padding: 0 8vw;
+    padding-bottom: 100px;
+  }
+  .subtitle-top{
+    padding-top: 32px;
+    text-align:center;
+  }
+}
+
+
+
+.top-popup{
+  border-radius:10px 10px 0 0;
+  height: 80px;
+  width: 100%;
+  background-color: #F7F7F7;
+  position: relative;
+}
+.close-popup{
+  position: absolute;
+  right: 25px;
+  top:35%;
+  scale:0.7;
+  cursor: pointer;
+}
+.close-popup:hover{
+  opacity: 0.6;
+}

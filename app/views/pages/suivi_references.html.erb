@@ -15,57 +15,6 @@
   }
   h2 {
     margin-top: 64px;
-    color: #202020;
-    font-size: 22px;
-    font-weight: 500;
-    margin-bottom: 18px;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  th {
-    background-color: #f2f2f2;
-  }
-  tr:hover {
-    background-color: #f5f5f5;
-  }
-  .btn {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-  .btn:hover {
-    background-color: #0056b3;
-  }
-  .btn-danger {
-    background-color: #dc3545;
-  }
-  .btn-danger:hover {
-    background-color: #c82333;
-  }
-  .btn-green {
-    background-color: #3EBC68;
-  }
-  .btn-green:hover {
-    background-color: #1A843E;
-  }
-  .btn-orange {
-    background-color: #F2AD22;
-  }
-  .btn-orange:hover {
-    background-color: #D49A26;
   }
 </style>
 <div class="main-div">
@@ -79,33 +28,35 @@
   </section>
   <section class="grid-1">
     <h2>Listes de suivi des références</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Utilisateur</th>
-          <th>Nb de références émises</th>
-          <th>Nb de références validées</th>
-          <th>Nb de références en attente</th>
-          <th>Nb de références refusées</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if @suivis.present? %>
-          <% @suivis.each do |suivi| %>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Nb de références émises</th>
+            <th>Nb de références validées</th>
+            <th>Nb de références en attente</th>
+            <th>Nb de références refusées</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @suivis.present? %>
+            <% @suivis.each do |suivi| %>
+              <tr>
+                <td><%= suivi.user.email %></td>
+                <td><%= suivi.nb_references_emises %></td>
+                <td><%= suivi.nb_references_validees %></td>
+                <td><%= suivi.nb_references_non_validees %></td>
+                <td><%= suivi.nb_references_refusees %></td>
+              </tr>
+            <% end %>
+          <% else %>
             <tr>
-              <td><%= suivi.user.email %></td>
-              <td><%= suivi.nb_references_emises %></td>
-              <td><%= suivi.nb_references_validees %></td>
-              <td><%= suivi.nb_references_non_validees %></td>
-              <td><%= suivi.nb_references_refusees %></td>
+              <td colspan="5">Aucun suivi trouvé.</td>
             </tr>
           <% end %>
-        <% else %>
-          <tr>
-            <td colspan="5">Aucun suivi trouvé.</td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </section>
 </div>

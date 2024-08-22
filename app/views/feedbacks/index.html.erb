@@ -2,97 +2,13 @@
   body{
     overflow-x:scroll;
   }
-  table{
-    margin-top: 48px;
-  }
-  .grid-1{
-    padding: 0 10vw;
-  }
-  .top-profil{
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    height: 15vh;
-    padding: 0 5vw;
-    gap: 50px;
-    background-color: #202020;
-  }
-  h1{
-    color: #FFF;
-  }
 
   h2{
     margin-top: 64px;
-    color: #202020;
-    font-size: 22px;
-    font-weight: 500;
-    margin-bottom: 18px;
-  }
-  .table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  th, td {
-    border: 1px solid #ddd; /* Bordure de 1 pixel solide avec couleur grise */
-    padding: 8px; /* Espacement intérieur */
-    text-align: left; /* Alignement du texte à gauche */
-  }
-
-  th {
-    background-color: #f2f2f2; /* Couleur de fond pour les cellules d'en-tête */
-  }
-
-  tr:hover {
-    background-color: #f5f5f5; /* Couleur de fond lorsque survolé */
-  }
-
-  .btn {
-    margin-top: 24px;
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-
-  .btn:hover {
-    background-color: #0056b3;
-  }
-
-  /* Styles pour les boutons de suppression */
-  .btn-danger {
-    background-color: #dc3545;
-  }
-
-  .btn-danger:hover {
-    background-color: #c82333;
-  }
-  .btn-green {
-    background-color: #3EBC68;
-  }
-
-  .btn-green:hover {
-    background-color: #1A843E;
-  }
-  .btn-orange{
-    background-color: #F2AD22;
-  }
-   .btn-orange:hover{
-    background-color: #D49A26;
   }
 </style>
 <div class="main-div">
-  <section class="top-profil">
+  <section class="top-default-page">
     <%= link_to profil_path do %>
       <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>

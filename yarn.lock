@@ -3,11 +3,16 @@
 
 
 "@rails/ujs@^7.0.0":
-  "integrity" "sha512-VU/tKKEj0+4QvhxkWBUwINCimtxYjy702ecvUpNUtDukilAsv4fmc/vTH5b/gSNuT5wVRf3h7o27W+JssTu4nQ=="
-  "resolved" "https://registry.npmjs.org/@rails/ujs/-/ujs-7.0.0.tgz"
-  "version" "7.0.0"
+  "integrity" "sha512-FxtgKNvvIonoBE1TK7U10VMf6CYvzq8SIZ1XZ1Q8zcn/BEXzPzid3zC9qFiojuI5WXVwWhO8GFqApq0stD+OqQ=="
+  "resolved" "https://registry.npmjs.org/@rails/ujs/-/ujs-7.1.3.tgz"
+  "version" "7.1.3"
 
 "jquery@^3.7.1":
   "integrity" "sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg=="
   "resolved" "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz"
   "version" "3.7.1"
+
+"leaflet@^1.9.4":
+  "integrity" "sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA=="
+  "resolved" "https://registry.npmjs.org/leaflet/-/leaflet-1.9.4.tgz"
+  "version" "1.9.4"

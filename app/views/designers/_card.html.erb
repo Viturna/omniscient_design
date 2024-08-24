@@ -5,6 +5,7 @@
       <% if asset_exists?(image_path) %>
         <div class="img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
       <% else %>
+        <% Rails.logger.debug("Image not found, using fallback: #{image_path}") %>
         <div class="img-card" style="background-image: url('<%= card.image%>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
       <% end %>
     </div>

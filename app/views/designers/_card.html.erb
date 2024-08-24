@@ -1,7 +1,7 @@
 <%= link_to designer_path(card) do %>
   <div class="card" data-card-id="<%= card.id %>">
     <div class="bg-card">
-      <% image_path = "designers/#{remove_accents_and_special_chars(card.nom_designer)}.webp" %>
+      <% image_path = "designers/desktop/#{remove_accents_and_special_chars(card.nom_designer)}.webp" %>
       <% if asset_exists?(image_path) %>
         <div class="img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
       <% else %>

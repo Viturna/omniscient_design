@@ -164,14 +164,14 @@
   }
 </style>
 <div class="body-show" id="<%= dom_id designer %>">
-  <% image_path = "designers/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
+  <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
   <div class="header-show"
    <% if asset_exists?(image_path) %>
    style="background-image: url('<%= asset_path(image_path) %>');"
   <% else %>
     style="background-image: url('<%= designer.image%>');"
   <% end %>>
-     <% if designer.validation %>
+    <% if designer.validation %>
       <button id="back-btn">
         <div class="circle-back">
           <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -188,12 +188,12 @@
           </div>
         </button>
       <% end %>
-      <%else%>
-        <div class="circle-back">
-          <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
-          </svg>
-        </div>
+    <%else%>
+      <div class="circle-back">
+        <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+        </svg>
+      </div>
       <% unless !user_signed_in? %>
         <div class="circle-save">
           <svg width="22" height="30" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,7 +269,7 @@
             <p>Signaler une erreur</p>
           <% end %>
         <% else %>
-         <div class="button-circle">
+          <div class="button-circle">
             <div class="circle">
               <svg width="33" height="36" viewBox="0 0 33 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M26.5202 23.7141C24.5681 23.7141 22.8194 24.6495 21.7214 26.0728L11.839 20.3386C12.449 18.8339 12.449 17.1665 11.839 15.6618L21.7214 9.92761C22.8194 11.351 24.5681 12.2864 26.5202 12.2864C29.8956 12.2864 32.6204 9.5616 32.6204 6.18615C32.6204 2.8107 29.8956 0.0859375 26.5202 0.0859375C23.1447 0.0859375 20.42 2.8107 20.42 6.18615C20.42 6.99951 20.5826 7.81287 20.8673 8.50423L10.985 14.2791C9.84627 12.8557 8.13822 11.9203 6.18615 11.9203C2.8107 11.9203 0.0859375 14.6451 0.0859375 18.0206C0.0859375 21.396 2.8107 24.1208 6.18615 24.1208C8.13822 24.1208 9.88694 23.1854 10.985 21.762L20.8673 27.4962C20.5826 28.1876 20.42 29.0009 20.42 29.8143C20.42 33.1897 23.1447 35.9145 26.5202 35.9145C29.8956 35.9145 32.6204 33.1897 32.6204 29.8143C32.6204 26.4388 29.8956 23.7141 26.5202 23.7141ZM26.5202 1.75333C29.0009 1.75333 30.9937 3.74606 30.9937 6.22682C30.9937 8.70757 29.0009 10.7003 26.5202 10.7003C24.0394 10.7003 22.0467 8.70757 22.0467 6.22682C22.0467 3.74606 24.0394 1.75333 26.5202 1.75333ZM6.18615 22.494C3.7054 22.494 1.71266 20.5013 1.71266 18.0206C1.71266 15.5398 3.7054 13.5471 6.18615 13.5471C8.6669 13.5471 10.6596 15.5398 10.6596 18.0206C10.6596 20.5013 8.6669 22.494 6.18615 22.494ZM26.5202 34.2878C24.0394 34.2878 22.0467 32.2951 22.0467 29.8143C22.0467 27.3335 24.0394 25.3408 26.5202 25.3408C29.0009 25.3408 30.9937 27.3335 30.9937 29.8143C30.9937 32.2951 29.0009 34.2878 26.5202 34.2878Z" fill="white"/>
@@ -532,7 +532,6 @@
     }
   });
 </script>
-
 <div id="shareModal" class="popup">
   <div class="top-popup">
     <svg class="close-popup" id="closePopup" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">

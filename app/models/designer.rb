@@ -1,4 +1,7 @@
 class Designer < ApplicationRecord
+  extend FriendlyId
+  friendly_id :nom_designer, use: :slugged
+
   validates :nom_designer, uniqueness: true
   validates :description, presence: true, length: { minimum: 200 }
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }

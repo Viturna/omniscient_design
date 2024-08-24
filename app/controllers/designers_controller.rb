@@ -145,7 +145,7 @@ class DesignersController < ApplicationController
   end
 
   def set_designer
-    @designer = Designer.find(params[:id])
+    @designer = Designer.friendly.find(params[:slug])
   end
 
   def designer_params

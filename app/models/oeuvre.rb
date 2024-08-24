@@ -1,4 +1,7 @@
 class Oeuvre < ApplicationRecord
+  extend FriendlyId
+  friendly_id :nom_oeuvre, use: :slugged
+
   validates :nom_oeuvre, uniqueness: true
   validates :description, presence: true, length: { minimum: 200 }
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }

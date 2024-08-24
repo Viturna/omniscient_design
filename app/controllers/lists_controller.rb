@@ -108,7 +108,7 @@ class ListsController < ApplicationController
   private
 
   def set_list
-    @list = current_user.lists.find_by(id: params[:id])
+    @list = current_user.lists.friendly.find(params[:slug])
     if @list.nil?
       # Gérer le cas où la liste n'est pas trouvée
       redirect_to lists_path, alert: "List not found or you don't have access to it."

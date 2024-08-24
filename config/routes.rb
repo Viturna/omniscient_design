@@ -15,9 +15,7 @@ Rails.application.routes.draw do
   end
 
   # Resources
-  resources :quizzes, only: [:index, :show, :new, :create] do
-    resources :quiz_results, only: [:create]
-  end
+
   resources :feedbacks, only: [:new, :create, :index, :destroy]
   resources :users, only: [:index] do
     member do
@@ -27,7 +25,7 @@ Rails.application.routes.draw do
   end
   resources :notifications, only: [:index, :show, :destroy]
 
-  resources :lists do
+  resources :lists, param: :slug do
     member do
       post 'add_oeuvre'
       post 'add_designer'
@@ -36,7 +34,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :oeuvres do
+  resources :oeuvres, param: :slug do
     collection do
       get 'search'
       get 'load_more'
@@ -49,7 +47,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :designers do
+  resources :designers, param: :slug do
     collection do
       get 'load_more'
     end

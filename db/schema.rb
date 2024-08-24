@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_16_131253) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -71,7 +71,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_16_131253) do
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
     t.integer "date_deces"
+    t.string "slug"
     t.index ["country_id"], name: "index_designers_on_country_id"
+    t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
   end
 
@@ -124,6 +126,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_16_131253) do
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
   create_table "list_items", force: :cascade do |t|
     t.bigint "list_id", null: false
     t.string "listable_type", null: false
@@ -139,6 +152,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_16_131253) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
+    t.index ["slug"], name: "index_lists_on_slug", unique: true
     t.index ["user_id"], name: "index_lists_on_user_id"
   end
 
@@ -177,8 +192,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_16_131253) do
     t.boolean "validation", default: false
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
+    t.string "slug"
     t.index ["designer_id"], name: "index_oeuvres_on_designer_id"
     t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
+    t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
     t.index ["user_id"], name: "index_oeuvres_on_user_id"
   end
 

@@ -219,7 +219,7 @@ class OeuvresController < ApplicationController
 
 
   def set_oeuvre
-    @oeuvre = Oeuvre.find(params[:id])
+    @oeuvre = Oeuvre.friendly.find(params[:slug])
   end
 
   def oeuvre_params

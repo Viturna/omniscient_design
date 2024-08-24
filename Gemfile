@@ -88,3 +88,7 @@ gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'net-ssh', '~> 7.2'
 gem 'rubyzip', '~> 2.3.0'
 gem 'sass-rails'
+
+gem 'friendly_id', '~> 5.5.0'
+gem 'sitemap_generator'
+gem 'whenever', require: false

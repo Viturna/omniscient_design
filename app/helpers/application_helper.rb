@@ -1,4 +1,21 @@
 module ApplicationHelper
+  def should_not_index?
+    # Liste des contrôleurs et actions que tu ne veux pas indexer
+    no_index_pages = [
+      { controller: 'lists', action: 'create' },
+      { controller: 'lists', action: 'show' },
+      { controller: 'lists', action: 'edit' },
+      { controller: 'oeuvres', action: 'edit' },
+      { controller: 'designers', action: 'edit' },
+      { controller: 'feedbacks', action: 'new' },
+      { controller: 'notifications', action: 'index' }
+    ]
+
+    # Vérifie si la page actuelle correspond à l'une des pages dans la liste
+    no_index_pages.any? do |page|
+      controller_name == page[:controller] && action_name == page[:action]
+    end
+  end
   def asset_exists?(path)
     if Rails.application.assets
       Rails.application.assets.find_asset(path).present?

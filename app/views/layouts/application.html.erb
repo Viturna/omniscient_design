@@ -1,35 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-    <meta name="bingbot" content="index, follow">
-    <title><%= @page_title || "Omniscient Design" %></title>
-    <meta name="description" content="<%= @meta_description %>">
+    <% if should_not_index? %>
+      <meta name="robots" content="noindex, nofollow">
+      <meta name="googlebot" content="noindex, nofollow">
+      <meta name="bingbot" content="noindex, nofollow">
+    <%else%>
+      <meta name="robots" content="index, follow">
+      <meta name="googlebot" content="index, follow">
+      <meta name="bingbot" content="index, follow">
+    <% end %>
+    <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Description par défaut de ton site" %>">
     <%= favicon_link_tag 'favicon.svg' %>
     <meta name="theme-color" content="#ffffff">
     <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+    <link rel="canonical" href="<%= request.original_url %>">
     <!-- Stylesheets -->
     <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all' %>
-
     <!-- JavaScript -->
     <%= javascript_importmap_tags %> <!-- Pour Importmaps -->
-
+    <!-- RS -->
+    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
+    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
+    <meta name="twitter:url" content="<%= request.original_url %>">
     <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
+    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
+    <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="<%= @page_title || "Omniscient Design" %>">
-    <meta property="og:site_name" content="Omniscient Design">
-    <meta property="og:url" content="<%= @current_page_url %>">
-    <meta property="og:description" content="<%= @meta_description %>">
-    <meta name="twitter:title" content="<%= @page_title || "Omniscient Design" %>">
-    <meta name="twitter:description" content="<%= @meta_description %>">
-    <meta name="twitter:url" content="<%= @current_page_url %>">
-
     <style>
       #loading {
         position: fixed;
@@ -49,7 +52,6 @@
       }
     </style>
   </head>
-
   <body class="<%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>
       <div class="alert" id="alert">
@@ -83,7 +85,6 @@
     </main>
   </body>
 </html>
-
 <script>
   document.addEventListener("turbo:load", function() { // Changement de turbolinks:load à turbo:load
     document.getElementById("loading").style.display = "none"; // Masquer le loader

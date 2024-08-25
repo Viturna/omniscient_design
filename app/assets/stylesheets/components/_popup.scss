@@ -1,0 +1,18 @@
+@import 'abstracts/variables';
+.top-popup{
+  border-radius:10px 10px 0 0;
+  height: 80px;
+  width: 100%;
+  background-color: #F7F7F7;
+  position: relative;
+}
+.close-popup{
+  position: absolute;
+  right: 25px;
+  top:35%;
+  scale:0.7;
+  cursor: pointer;
+}
+.close-popup:hover{
+  opacity: 0.6;
+}

@@ -1,0 +1,131 @@
+@import 'abstracts/variables';
+
+.button {
+  display: block;
+  color: $primary-color;
+  background-color: $secondary-color;
+  padding: 20px 45px;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: #EDEDED;
+  }
+}
+
+.large {
+  padding: 25px 125px;
+}
+.dark {
+  background-color: $primary-color;
+  color: #FFF;
+  &:hover{
+    background-color: $primary-color;
+    opacity: 0.8;
+  }
+}
+
+// Add Element
+.button-add {
+  font-weight: 500;
+  font-size: 22px;
+  color: $primary-color;
+  border-radius: 10px;
+  background-color: $secondary-color;
+  padding: 90px 150px;
+  &:hover {
+  opacity: 0.8;
+  }
+}
+
+// Arrow button
+.arrow-button {
+  width: 80px;
+  height: 80px;
+  background-color: $primary-color;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+
+// Circle
+.circle {
+  background-color: $primary-color;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+  cursor: pointer;
+}
+//Save
+.circle-save {
+  position: absolute;
+  top: 50px;
+  right: 5vw;
+  width: 65px;
+  height: 65px;
+  z-index: 999;
+}
+//Notif
+.circle-notif{
+  width: 60px;
+  height: 60px;
+  position: relative;
+  &:hover{
+    background-color: $primary-color;
+    opacity: 0.8;
+  }
+}
+
+.notification-counter {
+  position: absolute;
+  right: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -10px;
+  background-color: #FFF;
+  color: $primary-color;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 30px;
+  height: 30px;
+}
+.notification-badge-profil {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+
+// Retour
+.circle-back {
+  position: absolute;
+  z-index: 100;
+  top: 50px;
+  left: 5vw;
+  background-color: rgba(32, 32, 32, 0.4);
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+}
+.circle-back:hover, .circle-save:hover {
+  opacity: 0.8;
+}

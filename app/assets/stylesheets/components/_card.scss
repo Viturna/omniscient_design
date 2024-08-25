@@ -1,0 +1,77 @@
+@import 'abstracts/variables';
+
+.img-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 5px;
+  z-index: 0;
+  opacity: 1;
+  transform: rotate(-6deg);
+  z-index: -1;
+}
+
+.card {
+  padding-top: 190px;
+  width: 50vw;
+}
+
+.bg-card {
+  transform: rotate(6deg);
+  border-radius: 5px;
+  width: 50vw;
+  height: 350px;
+  position: relative;
+}
+
+.bg-card .date-main{
+  top: 48px;
+  position: absolute;
+  transform: rotate(-6deg);
+  background-color: rgba(32, 32, 32, 0.4);
+  color: #FFF;
+  font-size: 20px;
+}
+.bg-card .date-main{
+  scale: 0.9;
+}
+
+.title-card {
+  margin-top: 8px;
+  font-size: 36px;
+  letter-spacing: -1%;
+  font-weight: 500;
+}
+
+.subtitle-card {
+  color: $primary-color;
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-top: 32px;
+  display: flex;
+}
+
+.container-text-card {
+  padding: 0 36px;
+}
+
+.title-description-card {
+  margin-top: 48px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.description-card {
+  margin-top: 16px;
+  font-size: 18px;
+  color: $text-color;
+  line-height: 125%;
+  overflow-wrap: break-word;
+}
+
+.description-card-home {
+  overflow: hidden;
+  height: 150px;
+}

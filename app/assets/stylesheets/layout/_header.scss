@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'abstracts/variables';
 
 header {
   position: fixed;
@@ -75,5 +75,13 @@ header li .active svg path {
   color: $text-color;
   &:hover{
     opacity: 0.8;
+  }
+}
+
+
+
+@media screen and (max-width: 320px) {
+  header{
+    display: none;
   }
 }

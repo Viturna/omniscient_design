@@ -78,7 +78,7 @@
     <% unless controller_name == 'lists' && action_name == 'edit' || action_name.in?(['presentation', 'show', 'sign_in']) %>
       <%= render 'layouts/header' %>
     <% end %>
-    <main>
+    <main class="<%= 'main-show' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' %>">
       <div id="content">
         <%= yield %>
       </div>

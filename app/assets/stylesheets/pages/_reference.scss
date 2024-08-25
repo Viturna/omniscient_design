@@ -1,0 +1,286 @@
+@import 'abstracts/variables';
+
+.body-show{
+  padding-bottom: 50px;
+}
+
+.header-show {
+  background-size:cover;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 80vh;
+  position: relative;
+}
+
+.header-show::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit; /* Récupère l'image de fond de l'élément parent */
+  z-index: -2;
+}
+.date-header{
+  position: absolute;
+  bottom: 50px;
+  left: 5vw;
+}
+.domaine-header{
+  position: absolute;
+  bottom: 50px;
+  right: 5vw;
+}
+.small-height {
+  height: 320px !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+}
+
+.small-height::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.content-show {
+  margin-top: 20px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.header-top {
+  display: none;
+  position: absolute;
+  bottom: 40px;
+  left: 5vw;
+  width: 100%;
+  padding: 10px;
+  z-index: 99;
+}
+
+.header-top p,
+.header-top a {
+  color: #FFF;
+}
+
+.header-top.show-header-top {
+  display: block;
+}
+
+.flex-info {
+  margin-top: 16px;
+  display: flex;
+  gap: 24px;
+}
+
+.info-card {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 12px 25px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 20px;
+}
+.info-card-dark {
+  height: fit-content;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(32, 32, 32, 0.4);
+  color: #FFF;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.text-show {
+  width: 60vw;
+}
+.small-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+}
+
+
+.flex-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 32px;
+}
+
+.button-circle {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.button-circle p {
+  color: $primary-color;
+  font-size: 20px;
+}
+
+.button-circle:hover {
+  opacity: 0.6;
+}
+
+.button-circle:hover .circle {
+  background-color: #FFF;
+}
+
+.button-circle:hover svg path {
+  fill: $primary-color;
+}
+
+.next-card {
+  margin-left: 20vw;
+}
+
+.oeuvres-same {
+  overflow-x: scroll;
+  display: flex;
+  justify-content: start;
+  margin-top: 32px;
+  gap: 24px;
+}
+
+.oeuvre-card {
+  width: 380px;
+  height: 240px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+
+.oeuvre-card-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.oeuvre-card-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.oeuvre-card-content {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  padding: 20px;
+}
+
+.oeuvre-designer {
+  color: #F7F7F7;
+  text-transform: uppercase;
+  font-size: 16px;
+  margin: 0;
+}
+
+.oeuvre-title {
+  color: #FFF;
+  font-size: 30px;
+  margin: 5px 0;
+}
+
+.share-options {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.share-button {
+  background: $primary-color;
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.share-button svg {
+  fill: #fff;
+}
+
+#copyLink {
+  background: none;
+  border: none;
+}
+
+
+// Contributor
+.flex-contributor{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 48px;
+}
+.box-contributor{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20vw;
+}
+.vertical-divider {
+  width: 3px;
+  height: 40px;
+  background-color: $primary-color;
+}
+.contributor{
+  font-size: 22px;
+  text-transform:uppercase;
+  font-weight: 500;
+   text-align:center;
+}
+.text-contributor{
+  margin-top: 8px;
+  line-height:130%;
+  font-size: 18px;
+  color:$text-color;
+  text-align:center;
+}

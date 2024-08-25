@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'abstracts/variables';
 
 @font-face {
   font-family: 'IBM Plex Sans';
@@ -51,6 +51,15 @@ h2 {
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 18px;
+}
+h3{
+  color: $primary-color;
+  font-size: 20px;
+  font-weight: 500;
+}
+p{
+  color: $text-color;
+  font-size: 18px;
 }
 .semi-bold {
   font-weight: 600;

@@ -1,68 +1,64 @@
+<% content_for :title, "Profil - Omniscient Design" %>
+<% content_for :description, "Bienvenue dans ton profil, ton espace personnel. Modifie tes informations, contacte-nous ou découvre notre superbe accessibilité !" %>
 <style>
-  h2{
-    margin-top: 64px;
-  }
-
   #map {
     margin-bottom: 80px;
   }
 </style>
-<div class="main-div">
-  <section class="top-default-page">
-    <%= link_to profil_path do %>
-      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
-      </svg>
-    <% end %>
-    <h1>Liste des membres</h1>
-  </section>
-  <section class="grid-1">
-    <h2>Membres inscrits sur le site</h2>
-    <p>Il y a actuellement <%= @users.count %> membres sur le site</p>
-    <div class="table-wrapper">
-      <table>
-        <thead>
+<section class="top-default-page">
+  <%= link_to profil_path do %>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <% end %>
+  <h1>Liste des membres</h1>
+</section>
+<section class="grid-1">
+  <h2>Membres inscrits sur le site</h2>
+  <p>Il y a actuellement <%= @users.count %> membres sur le site</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom de famille</th>
+          <th>Email</th>
+          <th>Pseudo</th>
+          <th>Statut</th>
+          <th>Établissement</th>
+          <th>BAN</th>
+          <th>Confirmé</th>
+          <th>Date de création</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
           <tr>
-            <th>Prénom</th>
-            <th>Nom de famille</th>
-            <th>Email</th>
-            <th>Pseudo</th>
-            <th>Statut</th>
-            <th>Établissement</th>
-            <th>BAN</th>
-            <th>Confirmé</th>
-            <th>Date de création</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @users.each do |user| %>
-            <tr>
-              <td><%= user.firstname %></td>
-              <td><%= user.lastname %></td>
-              <td><%= user.email %></td>
-              <td><%= user.pseudo %></td>
-              <td><%= user.statut %></td>
-              <td><%= user.etablissement&.name %></td>
-              <td>
-                <% if current_user.admin? %>
-                  <% if user.banned? %>
-                    <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
-                  <% else %>
-                    <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
-                  <% end %>
+            <td><%= user.firstname %></td>
+            <td><%= user.lastname %></td>
+            <td><%= user.email %></td>
+            <td><%= user.pseudo %></td>
+            <td><%= user.statut %></td>
+            <td><%= user.etablissement&.name %></td>
+            <td>
+              <% if current_user.admin? %>
+                <% if user.banned? %>
+                  <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
+                <% else %>
+                  <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
                 <% end %>
-              </td>
-              <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
-              <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    <h2>Carte des membres par géolocalisation</h2>
-    <div id="map" style="height: 400px;"></div>
-  </section>
-</div>
+              <% end %>
+            </td>
+            <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
+            <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <h2>Carte des membres par géolocalisation</h2>
+  <div id="map" style="height: 400px;"></div>
+</section>
 <script>
   import L from 'leaflet';
   document.addEventListener("DOMContentLoaded", function() {

@@ -1,3 +1,3 @@
-<% content_for :title, "#{@oeuvre.nom_oeuvre} - Omniscient Design" %>
+<% content_for :title, "#{@oeuvre.nom_oeuvre} | #{@oeuvre.designer.nom_designer} - Omniscient Design" %>
 <% content_for :description, @oeuvre.description.truncate(160) %>
 <%= render @oeuvre %>

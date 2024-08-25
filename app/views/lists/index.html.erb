@@ -1,3 +1,5 @@
+<% content_for :title, "Crée tes propres listes de références - Omniscient Design" %>
+<% content_for :description, "Ici, tu peux retrouver les références de design qui t'ont marqué. Crée tes propres listes pour apprendre, t'inspirer ou encore personnaliser ton expérience. " %>
 <style>
   h1{
     margin-top: 32px;
@@ -104,29 +106,27 @@
     }
   }
 </style>
-<div class="main-div">
-  <section class="top-header">
-    <h1>Trier, modifier, créer vos listes</h1>
-    <p class="subtitle">Créez des listes de références pour retrouver facilement vos sources et concentrez-vous sur ce qui compte vraiment.</p>
-  </section>
-  <section class="our-list">
-    <div class="flex-title-list">
-      <h2>Vos listes</h2>
-      <%= link_to 'Créer votre liste', new_list_path, class:"button dark" %>
-    </div>
-    <ul>
-      <% @lists.each do |list| %>
-        <li>
-          <%= link_to list_path(list) do %>
-            <div class="list-card">
-              <%= list.name %>
-              <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 10.5L20.4215 10.5M20.4215 10.5L13.1384 2.2832M20.4215 10.5L13.1384 18.7168" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
-              </svg>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  </section>
-</div>
+<section class="top-header">
+  <h1>Trier, modifier, créer vos listes</h1>
+  <p class="subtitle">Créez des listes de références pour retrouver facilement vos sources et concentrez-vous sur ce qui compte vraiment.</p>
+</section>
+<section class="our-list">
+  <div class="flex-title-list">
+    <h2>Vos listes</h2>
+    <%= link_to 'Créer votre liste', new_list_path, class:"button dark" %>
+  </div>
+  <ul>
+    <% @lists.each do |list| %>
+      <li>
+        <%= link_to list_path(list) do %>
+          <div class="list-card">
+            <%= list.name %>
+            <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 10.5L20.4215 10.5M20.4215 10.5L13.1384 2.2832M20.4215 10.5L13.1384 18.7168" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
+            </svg>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</section>

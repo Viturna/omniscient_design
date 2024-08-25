@@ -1,7 +1,4 @@
 <style>
-  html{
-    overflow-x: hidden;
-  }
   .overlay {
     position: fixed;
     top: 0;
@@ -176,7 +173,7 @@
       </button>
       <% unless !user_signed_in? %>
         <button id="openPopup" style="border:none; background:none;">
-          <div class="circle-save">
+          <div class="circle circle-save">
             <svg width="22" height="30" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16.8857 0.428467H5.22861C2.75146 0.428467 0.857178 2.32275 0.857178 4.7999V28.1142C0.857178 28.4056 0.857178 28.5513 1.00289 28.8428C1.44003 29.5713 2.31432 29.717 3.04289 29.4256L11.0572 24.7628L19.0715 29.4256C19.3629 29.5713 19.5086 29.5713 19.8 29.5713C20.6743 29.5713 21.2572 28.9885 21.2572 28.1142V4.7999C21.2572 2.32275 19.3629 0.428467 16.8857 0.428467Z" fill="#F7F7F7"/>
             </svg>
@@ -225,7 +222,7 @@
       });
     </script>
     <div class="header-top">
-      <p class="designer-card">
+      <p class="subtitle-card">
         <%= link_to oeuvre.designer.nom_designer, designer_path(oeuvre.designer) %>
       </p>
       <p class="title-card"><%= oeuvre.nom_oeuvre %></p>
@@ -262,7 +259,7 @@
   <div class="content-show">
     <div class="text-show">
       <div class="title-box-oeuvre hidden">
-        <p class="designer-card">
+        <p class="subtitle-card">
           <%= link_to oeuvre.designer.nom_designer, designer_path(oeuvre.designer) %>
         </p>
         <h2 class="title-card"><%= oeuvre.nom_oeuvre %></h2>

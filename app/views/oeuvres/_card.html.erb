@@ -11,11 +11,12 @@
       <% if asset_exists?(image_path) %>
         <div class="img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
       <% else %>
+        <% Rails.logger.debug("Image not found : #{image_path}") %>
         <div class="img-card" style="background-image: url('<%= asset_path(card.image) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
       <% end %>
     </div>
-    <div class="text-card">
-      <p class="designer-card"><%= card.designer.nom_designer %></p>
+    <div class="container-text-card">
+      <p class="subtitle-card"><%= card.designer.nom_designer %></p>
       <h2 class="title-card"><%= card.nom_oeuvre %></h2>
       <h3 class="title-description-card">Description</h3>
       <p class="description-card description-card-home"><%= card.description %></p>

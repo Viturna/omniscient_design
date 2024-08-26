@@ -7,6 +7,7 @@ header {
   padding: 0px 50px;
   background-color: $secondary-color;
   overflow-y: scroll;
+  z-index: 999;
 }
 
 .logo-header {
@@ -47,7 +48,7 @@ header li a svg {
   scale: 0.9;
 }
 
-header li .active {
+header li .active a {
   color: $primary-color;
 }
 
@@ -79,9 +80,59 @@ header li .active svg path {
 }
 
 
-
 @media screen and (max-width: 320px) {
   header{
     display: none;
+  }
+}
+@media screen and (max-width: 425px) {
+
+}
+@media screen and (max-width: 600px) {
+
+}
+
+
+
+@media screen and (max-width: 768px) {
+  header{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .nav-header {
+    margin: 0;
+    height: 100%;
+
+    ul {
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-around;
+      align-items: center;
+
+      li  a{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        svg{
+          scale: 0.7;
+        }
+
+        p {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+  }
+  .logo-header, .flex-btn-login, .link-header {
+    display: none; // Cacher certains éléments non nécessaires sur mobile
   }
 }

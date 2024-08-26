@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   get 'mentionslegales', to: 'pages#mentionslegales', as: 'mentionslegales'
   get 'politiquedeconfidentialite', to: 'pages#politiquedeconfidentialite', as: 'politiquedeconfidentialite'
   get 'cookies', to: 'pages#cookies', as: 'cookies'
+  get 'cgu', to: 'pages#cgu', as: 'cgu'
   get 'changelog', to: 'pages#changelog', as: 'changelog'
 
   # Route racine

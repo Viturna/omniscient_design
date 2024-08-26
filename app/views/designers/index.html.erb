@@ -185,7 +185,7 @@
   document.addEventListener("turbo:load", function() {
     let startX;
     let endX;
-    const swipeThreshold = 50; // Distance minimum en pixels pour être considérée comme un swipe
+    const swipeThreshold = -50; // Distance minimum en pixels pour être considérée comme un swipe
 
     document.addEventListener('touchstart', function(event) {
       startX = event.touches[0].clientX; // Enregistrer la position de départ du swipe
@@ -206,7 +206,7 @@
 
         // Attendre la fin de l'animation avant de rediriger
         setTimeout(function() {
-          window.location.href = "<%= designers_path %>";
+          window.location.href = "<%= oeuvres_path %>";
         }, 500); // Correspond à la durée de l'animation (0.5s)
       }
     }

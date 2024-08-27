@@ -48,7 +48,7 @@ header li a svg {
   scale: 0.9;
 }
 
-header li .active a {
+header li .active p {
   color: $primary-color;
 }
 
@@ -81,9 +81,7 @@ header li .active svg path {
 
 
 @media screen and (max-width: 320px) {
-  header{
-    display: none;
-  }
+
 }
 @media screen and (max-width: 425px) {
 
@@ -122,7 +120,7 @@ header li .active svg path {
         justify-content: center;
 
         svg{
-          scale: 0.7;
+          scale: 0.9;
         }
 
         p {

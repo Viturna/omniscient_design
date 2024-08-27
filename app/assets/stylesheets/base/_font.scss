@@ -60,10 +60,15 @@ h3{
 p{
   color: $text-color;
   font-size: 18px;
+  line-height: 130%;
 }
 .semi-bold {
   font-weight: 600;
 }
 .medium {
   font-weight: 500;
+}
+
+.black{
+  color: $primary-color;
 }

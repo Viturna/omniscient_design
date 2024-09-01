@@ -10,6 +10,8 @@ header {
   z-index: 99;
 }
 
+// Logo
+
 .logo-header {
   padding: 8vh 0px;
   display: flex;
@@ -21,6 +23,8 @@ header {
   font-size: 24px;
   margin-left: 16px;
 }
+
+// Naviguation
 
 .nav-header {
   margin-top: 16px;
@@ -50,6 +54,7 @@ header li a svg {
 
 header li .active p {
   color: $primary-color;
+  font-size: 20px;
 }
 
 header li .active svg path {
@@ -59,9 +64,11 @@ header li .active svg path {
   margin-top: 5vh;
 }
 
+// Button et liens
 .button-login {
   width: 160px;
 }
+
 .link-header {
   margin-top: 10vh;
   display: flex;

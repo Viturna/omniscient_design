@@ -14,8 +14,8 @@ class OeuvresController < ApplicationController
   end
   def load_more
     offset = params[:offset].to_i
-    @oeuvres = Oeuvre.where(validation: true).offset(offset).limit(10).order("RANDOM()")
-    format.html { render partial: 'oeuvres/card', collection: @oeuvres, as: :card }
+    @oeuvres = Oeuvre.where(validation: true).order("RANDOM()").offset(offset).limit(10)
+    render partial: 'oeuvres/card', collection: @oeuvres, as: :card
   end
 
   def search

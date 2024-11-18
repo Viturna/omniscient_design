@@ -92,3 +92,4 @@ gem 'sass-rails'
 gem 'friendly_id', '~> 5.5.0'
 gem 'sitemap_generator'
 gem 'whenever', require: false
+gem 'sprockets-rails'

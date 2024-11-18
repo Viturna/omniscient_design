@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   resources :oeuvres, param: :slug do
     collection do
       get 'search'
-      get 'load_more'
+      get :load_more
     end
 
     member do

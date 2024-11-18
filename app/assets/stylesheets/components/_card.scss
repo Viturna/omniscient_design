@@ -70,9 +70,14 @@
 }
 
 .description-card-home {
+  max-height: 150px;
   overflow: hidden;
-  height: 150px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
+
 @media screen and (max-width: 425px) {
   .card {
     padding-top: 100px;

@@ -36,6 +36,9 @@
     cursor: pointer;
     margin: 0;
   }
+  .flex-label p {
+    color: #FFF;
+  }
 
   .star-rating input[type="radio"]:checked ~ label,
   .star-rating label:hover,
@@ -57,8 +60,9 @@
     align-items: center;
     flex-direction: column;
   }
-  .button{
+  .button-submit{
    margin-top: 32px;
+   height: 65px;
    width: 20vw;
   }
    @media screen and (min-width:0px) and (max-width:600px) {
@@ -201,7 +205,7 @@
         <%= f.text_area :question_12, placeholder: 'Répondre ici' %>
       </div>
       <div>
-        <%= f.submit "Envoyer", class: "button" %>
+        <%= f.submit "Envoyer", class: "button-submit" %>
       </div>
     <% end %>
   </section>

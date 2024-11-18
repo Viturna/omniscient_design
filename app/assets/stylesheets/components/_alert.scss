@@ -19,8 +19,11 @@
   opacity: 1;
   transition: opacity 0.6s;
   border-radius: 10px;
+  color: #FFF;
 }
-
+.alert p{
+  color: #FFF;
+}
 .closebtn {
   margin-left: 15px;
   color: $secondary-color;
@@ -37,6 +40,7 @@
 
 /* Progress Bar */
 .progress-container {
+  color: #FFF;
   position: absolute;
   bottom: 0;
   left: 0;

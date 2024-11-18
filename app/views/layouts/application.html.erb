@@ -21,9 +21,9 @@
     <%= csp_meta_tag %>
     <link rel="canonical" href="<%= request.original_url %>">
     <!-- Stylesheets -->
-    <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload', media: 'all' %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
     <!-- JavaScript -->
-    <%= javascript_importmap_tags %> <!-- Pour Importmaps -->
+    <%= javascript_importmap_tags %>
     <!-- RS -->
     <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
     <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
@@ -75,7 +75,7 @@
     <div id="loading">
       <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
     </div>
-    <% unless controller_name == 'lists' && action_name == 'edit' || action_name.in?(['presentation', 'show', 'sign_in']) %>
+    <% unless (controller_name == 'lists' && action_name == 'edit') || action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
       <%= render 'layouts/header' %>
     <% end %>
     <main class="<%= 'main-show' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' %>">

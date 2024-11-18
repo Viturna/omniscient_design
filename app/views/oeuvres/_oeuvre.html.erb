@@ -614,23 +614,30 @@
 
   // Fonction pour masquer l'élément de validation et l'overlay lorsque l'utilisateur fait défiler la page
   function hideValidation() {
-    validation.style.display = 'none';
-    overlay.style.display = 'none';
-    // Supprimer l'écouteur d'événement une fois que l'élément est masqué
-    window.removeEventListener('scroll', hideValidation);
+    // Vérifie si l'utilisateur a fait défiler la page plus de 100px
+    if (window.scrollY > 100) {
+      validation.style.display = 'none';
+      overlay.style.display = 'none';
+      // Supprimer l'écouteur d'événement une fois que l'élément est masqué
+      window.removeEventListener('scroll', hideValidation);
+    }
   }
 
   // Ajouter un écouteur d'événement pour détecter le défilement de la page
   window.addEventListener('scroll', hideValidation);
 </script>
 <script>
+  // Sélectionner l'élément overlay-bottom
   const overlaybottom = document.getElementById('overlay-bottom');
 
-  // Fonction pour masquer l'élément de validation et l'overlay lorsque l'utilisateur fait défiler la page
+  // Fonction pour afficher l'élément overlay-bottom lorsque l'utilisateur fait défiler la page
   function seenValidation() {
-    overlaybottom.style.display = 'block';
-    // Supprimer l'écouteur d'événement une fois que l'élément est masqué
-    window.removeEventListener('scroll', seenValidation);
+    // Vérifie si l'utilisateur a fait défiler la page plus de 200px
+    if (window.scrollY > 200) {
+      overlaybottom.style.display = 'block';
+      // Supprimer l'écouteur d'événement une fois que l'élément est visible
+      window.removeEventListener('scroll', seenValidation);
+    }
   }
 
   // Ajouter un écouteur d'événement pour détecter le défilement de la page

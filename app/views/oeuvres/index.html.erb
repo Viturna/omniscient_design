@@ -1,5 +1,7 @@
 <% content_for :title, "Explorer le carnet de référence d'oeuvres et de designers - Omniscient Design" %>
 <% content_for :description, "Explorez Omniscient Design, le meilleur carnet de référence numérique. Un répertoire unique avec des infos sur les travaux et la vie des designers." %>
+<%= javascript_include_tag "controllers/load_more", defer: true %>
+<%= javascript_include_tag "controllers/scroll_cards", defer: true %>
 <style>
   @media screen and (max-width: 320px) {
   .top-bar-search {
@@ -52,7 +54,7 @@
       <%= link_to "Oeuvres", oeuvres_path, class: "active" %>
     </p>
     <div class="box-card" id="boxCard">
-      <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card %>
+      <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
     </div>
     <div id="load-more-trigger"></div>
   </div>
@@ -71,153 +73,3 @@
     </button>
   </div>
 </div>
-<script>
-  document.addEventListener("turbo:load", function() {
-    let cards = document.querySelectorAll('.card');
-    let currentCardIndex = 0;
-    let scrolling = false;
-    let loadedCardIds = new Set(); // Suivi des cartes déjà chargées
-
-    function updateCards() {
-      cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        loadedCardIds.add(card.getAttribute('data-card-id'));
-      });
-    }
-
-    updateCards(); // Initialiser les cartes déjà chargées
-
-    function scrollToNextCard() {
-      if (!scrolling && currentCardIndex < cards.length - 1) {
-        scrolling = true;
-        currentCardIndex++;
-        cards[currentCardIndex].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start'
-        });
-
-        setTimeout(function() {
-          scrolling = false;
-        }, 1000);
-      }
-    }
-
-    function scrollToPreviousCard() {
-      if (!scrolling && currentCardIndex > 0) {
-        scrolling = true;
-        currentCardIndex--;
-        cards[currentCardIndex].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start'
-        });
-
-        setTimeout(function() {
-          scrolling = false;
-        }, 1000);
-      }
-    }
-
-    document.addEventListener('wheel', function(event) {
-      event.preventDefault();
-
-      const deltaY = event.deltaY;
-
-      if (deltaY > 0) {
-        scrollToNextCard();
-      } else if (deltaY < 0) {
-        scrollToPreviousCard();
-      }
-    });
-
-    document.querySelector('.arrow-button.up').addEventListener('click', function(event) {
-      scrollToPreviousCard();
-    });
-
-    document.querySelector('.arrow-button.down').addEventListener('click', function(event) {
-      scrollToNextCard();
-    });
-     function showLoader() {
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block';
-    }
-
-    function hideLoader() {
-      const loader = document.getElementById('loader');
-      loader.style.display = 'none';
-    }
-
-    function loadMoreCards() {
-      showLoader();
-      const cardContainer = document.getElementById('boxCard');
-      const offset = cardContainer.children.length; // Nombre actuel de cartes chargées
-
-      fetch(`/oeuvres/load_more?offset=${offset}`)
-        .then(response => response.text())
-        .then(data => {
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = data;
-          const newCards = tempDiv.querySelectorAll('.card');
-
-          newCards.forEach(card => {
-            const cardId = card.getAttribute('data-card-id');
-            if (!loadedCardIds.has(cardId)) {
-              loadedCardIds.add(cardId);
-              cardContainer.appendChild(card); // Ajouter chaque nouvelle carte à la fin du conteneur
-            }
-          });
-          hideLoader();
-          updateCards(); // Mettre à jour la liste des cartes chargées
-        })
-        .catch(error => {
-          hideLoader();
-          console.error('Error loading more cards:', error);
-        });
-    }
-
-    const loadMoreTrigger = document.getElementById('load-more-trigger');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          loadMoreCards(); // Charger plus de cartes lorsque l'élément est visible
-        }
-      });
-    }, {
-      rootMargin: '200px',
-    });
-
-    observer.observe(loadMoreTrigger);
-  });
-</script>
-<script>
-  document.addEventListener("turbo:load", function() {
-    let startX;
-    let endX;
-    const swipeThreshold = 50; // Distance minimum en pixels pour être considérée comme un swipe
-
-    document.addEventListener('touchstart', function(event) {
-      startX = event.touches[0].clientX; // Enregistrer la position de départ du swipe
-    });
-
-    document.addEventListener('touchend', function(event) {
-      endX = event.changedTouches[0].clientX; // Enregistrer la position de fin du swipe
-      handleSwipe();
-    });
-
-    function handleSwipe() {
-      const deltaX = endX - startX; // Inversé pour détecter un swipe vers la droite
-
-      // Vérifier si c'est un swipe vers la droite
-      if (deltaX > swipeThreshold) {
-        // Ajouter la classe d'animation
-        document.getElementById('oeuvres').classList.add('swipe-right-animation');
-
-        // Attendre la fin de l'animation avant de rediriger
-        setTimeout(function() {
-          window.location.href = "<%= designers_path %>";
-        }, 500); // Correspond à la durée de l'animation (0.5s)
-      }
-    }
-  });
-</script>

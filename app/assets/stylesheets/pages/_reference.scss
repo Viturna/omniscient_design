@@ -1,11 +1,49 @@
 @import 'abstracts/variables';
 
-.body-show{
+.body-show {
   padding-bottom: 50px;
 }
 
 .header-show {
-  background-size:cover;
+  transition: height 0.6s ease-in-out, opacity 0.6s ease-in-out;
+  height: 100px;
+  /* Hauteur initiale */
+}
+
+.header-show.small-height {
+  height: 50px;
+  /* Hauteur réduite */
+}
+
+.header-top {
+  transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+  transform: translateY(-100%);
+  /* Initialement caché */
+  opacity: 0;
+}
+
+.header-top.show-header-top {
+  transform: translateY(0);
+  /* Visible */
+  opacity: 1;
+}
+
+.info-header-show {
+  transition: opacity 0.6s ease-in-out;
+  opacity: 1;
+}
+
+.info-header-show.hidden {
+  opacity: 0;
+}
+
+.content-show {
+  transition: margin-top 0.6s ease-in-out;
+}
+
+
+.header-show {
+  background-size: cover;
   display: flex;
   justify-content: center;
   width: 100vw;
@@ -20,19 +58,23 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: inherit; /* Récupère l'image de fond de l'élément parent */
+  background-image: inherit;
+  /* Récupère l'image de fond de l'élément parent */
   z-index: -2;
 }
-.date-header{
+
+.date-header {
   position: absolute;
   bottom: 50px;
   left: 5vw;
 }
-.domaine-header{
+
+.domaine-header {
   position: absolute;
   bottom: 50px;
   right: 5vw;
 }
+
 .small-height {
   height: 320px !important;
   position: fixed !important;
@@ -102,6 +144,7 @@
   border-radius: 5px;
   font-size: 20px;
 }
+
 .info-card-dark {
   height: fit-content;
   gap: 8px;
@@ -118,6 +161,7 @@
 .text-show {
   width: 60vw;
 }
+
 .small-circle {
   width: 16px;
   height: 16px;
@@ -175,6 +219,7 @@
   height: 240px;
   border: 1px solid #ccc;
   border-radius: 10px;
+
   &:hover {
     opacity: 0.8;
   }
@@ -253,39 +298,47 @@
 
 
 // Contributor
-.flex-contributor{
+.flex-contributor {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   margin-top: 48px;
 }
-.box-contributor{
+
+.box-contributor {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 20vw;
 }
+
 .vertical-divider {
   width: 3px;
   height: 40px;
   background-color: $primary-color;
 }
-.contributor{
+
+.contributor {
   font-size: 22px;
-  text-transform:uppercase;
+  text-transform: uppercase;
   font-weight: 500;
-   text-align:center;
+  text-align: center;
 }
-.text-contributor{
+
+.text-contributor {
   margin-top: 8px;
-  line-height:130%;
+  line-height: 130%;
   font-size: 18px;
-  color:$text-color;
-  text-align:center;
+  color: $text-color;
+  text-align: center;
+}
+
+.flag {
+  font-family: "Noto Color Emoji", sans-serif;
+  vertical-align: middle;
 }
 
 
-@media screen and (max-width: 425px) {
 
-}
+@media screen and (max-width: 425px) {}

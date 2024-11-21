@@ -1,14 +1,14 @@
-import { Turbo } from "@hotwired/turbo-rails";
+import "@hotwired/turbo-rails"
 import "controllers";
-import $ from "jquery";
 import Rails from "@rails/ujs";
 import "stylesheets/application.scss";
 
 Rails.start();
-window.$ = $; // Assure la disponibilité globale de jQuery
-
-// Démarre Turbo après Rails UJS
 Turbo.start();
+
+import $ from "jquery";
+window.$ = $;
+window.jQuery = $;
 
 // Code pour la gestion des champs dynamiques
 document.addEventListener('turbo:load', () => {

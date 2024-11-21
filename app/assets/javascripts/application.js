@@ -2,7 +2,6 @@
 //= require jquery
 //= require_tree .
 //= require rails-ujs
-//= require turbolinks
 
 document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener('click', function(event) {

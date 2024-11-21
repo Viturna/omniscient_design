@@ -1,18 +1,63 @@
 @import 'abstracts/variables';
-.top-popup{
-  border-radius:10px 10px 0 0;
+
+.top-popup {
+  border-radius: 10px 10px 0 0;
   height: 80px;
   width: 100%;
   background-color: #F7F7F7;
   position: relative;
 }
-.close-popup{
+
+.popup {
+  display: none;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow: auto;
+}
+
+.popup-content {
+  background-color: #ffffff;
+  border-radius: 10px;
+  z-index: 1000;
+  width: 600px;
+  padding-bottom: 45px
+}
+
+.popup form {
+  padding: 0 50px;
+}
+
+.close-popup {
   position: absolute;
   right: 25px;
-  top:35%;
-  scale:0.7;
+  top: 35%;
+  scale: 0.7;
   cursor: pointer;
 }
-.close-popup:hover{
+
+.close-popup:hover {
   opacity: 0.6;
+}
+.flex-title-popup{
+  margin-top: 32px;
+  padding: 0 50px;
+  display: flex;
+  justify-content:space-between;
+}
+.title-popup{
+  color:#202020;
+  font-weight: 500;
+  font-size: 20px;
+}
+.popup-link-add{
+  font-size: 18px;
+  color: #202020;
+  text-decoration:underline;
 }

@@ -75,7 +75,7 @@
     width: 18px;
     height: 18px;
   }
-  .button large {
+  .button.large {
     margin-top: 32px;
   }
   .form-footer {
@@ -130,7 +130,7 @@
   </div>
 <% end %>
 <script>
-  document.addEventListener("turbo:load", function() {
+  $(document).ready(function() {
     const checkboxes = document.querySelectorAll('.hidden-check');
 
     checkboxes.forEach(checkbox => {
@@ -152,7 +152,7 @@
   });
 </script>
 <script>
-  document.addEventListener("turbo:load", function() {
+  $(document).ready(function() {
     const designerSearch = document.getElementById('designer-search');
     const oeuvreSearch = document.getElementById('oeuvre-search');
 

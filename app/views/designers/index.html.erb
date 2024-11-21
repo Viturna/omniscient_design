@@ -1,3 +1,19 @@
+<style>
+  #cardContainer {
+  position: relative;
+  height: 100vh; /* Conteneur pleine hauteur */
+  overflow-y: auto;
+  scroll-behavior: smooth; /* Support des navigateurs modernes */
+  }
+
+  .card {
+  scroll-snap-align: start; /* Pour aligner les cartes */
+  }
+
+  body {
+  overflow: hidden; /* Bloque le scroll global */
+  }
+</style>
 <div class="top-bar-search">
   <%= link_to search_oeuvres_path, class: "search-link" do %>
     <input class="search-top-bar" type="search" placeholder="Rechercher" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
@@ -62,153 +78,5 @@
     </button>
   </div>
 </div>
-<script>
-  document.addEventListener("turbo:load", function() {
-    let cards = document.querySelectorAll('.card');
-    let currentCardIndex = 0;
-    let scrolling = false;
-    let loadedCardIds = new Set(); // Suivi des cartes déjà chargées
-
-    function updateCards() {
-      cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        loadedCardIds.add(card.getAttribute('data-card-id'));
-      });
-    }
-
-    updateCards(); // Initialiser les cartes déjà chargées
-
-    function scrollToNextCard() {
-      if (!scrolling && currentCardIndex < cards.length - 1) {
-        scrolling = true;
-        currentCardIndex++;
-        cards[currentCardIndex].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start'
-        });
-
-        setTimeout(function() {
-          scrolling = false;
-        }, 1000);
-      }
-    }
-
-    function scrollToPreviousCard() {
-      if (!scrolling && currentCardIndex > 0) {
-        scrolling = true;
-        currentCardIndex--;
-        cards[currentCardIndex].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'start'
-        });
-
-        setTimeout(function() {
-          scrolling = false;
-        }, 1000);
-      }
-    }
-
-    document.addEventListener('wheel', function(event) {
-      event.preventDefault();
-
-      const deltaY = event.deltaY;
-
-      if (deltaY > 0) {
-        scrollToNextCard();
-      } else if (deltaY < 0) {
-        scrollToPreviousCard();
-      }
-    });
-
-    document.querySelector('.arrow-button.up').addEventListener('click', function(event) {
-      scrollToPreviousCard();
-    });
-
-    document.querySelector('.arrow-button.down').addEventListener('click', function(event) {
-      scrollToNextCard();
-    });
-     function showLoader() {
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block';
-    }
-
-    function hideLoader() {
-      const loader = document.getElementById('loader');
-      loader.style.display = 'none';
-    }
-
-    function loadMoreCards() {
-      showLoader();
-      const cardContainer = document.getElementById('boxCard');
-      const offset = cardContainer.children.length; // Nombre actuel de cartes chargées
-
-      fetch(`/designers/load_more?offset=${offset}`)
-        .then(response => response.text())
-        .then(data => {
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = data;
-          const newCards = tempDiv.querySelectorAll('.card');
-
-          newCards.forEach(card => {
-            const cardId = card.getAttribute('data-card-id');
-            if (!loadedCardIds.has(cardId)) {
-              loadedCardIds.add(cardId);
-              cardContainer.appendChild(card); // Ajouter chaque nouvelle carte à la fin du conteneur
-            }
-          });
-          hideLoader();
-          updateCards(); // Mettre à jour la liste des cartes chargées
-        })
-        .catch(error => {
-          hideLoader();
-          console.error('Error loading more cards:', error);
-        });
-    }
-
-    const loadMoreTrigger = document.getElementById('load-more-trigger');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          loadMoreCards(); // Charger plus de cartes lorsque l'élément est visible
-        }
-      });
-    }, {
-      rootMargin: '200px',
-    });
-
-    observer.observe(loadMoreTrigger);
-  });
-</script>
-<script>
-  document.addEventListener("turbo:load", function() {
-    let startX;
-    let endX;
-    const swipeThreshold = -50; // Distance minimum en pixels pour être considérée comme un swipe
-
-    document.addEventListener('touchstart', function(event) {
-      startX = event.touches[0].clientX; // Enregistrer la position de départ du swipe
-    });
-
-    document.addEventListener('touchend', function(event) {
-      endX = event.changedTouches[0].clientX; // Enregistrer la position de fin du swipe
-      handleSwipe();
-    });
-
-    function handleSwipe() {
-      const deltaX = endX - startX; // Inversé pour détecter un swipe vers la droite
-
-      // Vérifier si c'est un swipe vers la droite
-      if (deltaX > swipeThreshold) {
-        // Ajouter la classe d'animation
-        document.getElementById('oeuvres').classList.add('swipe-left-animation');
-
-        // Attendre la fin de l'animation avant de rediriger
-        setTimeout(function() {
-          window.location.href = "<%= oeuvres_path %>";
-        }, 500); // Correspond à la durée de l'animation (0.5s)
-      }
-    }
-  });
-</script>
+<%= javascript_include_tag "controllers/load_more", defer: true %>
+<%= javascript_include_tag "controllers/scroll_cards", defer: true %>

@@ -28,16 +28,12 @@
     flex-direction:column;
     margin-top:32px
   }
-  .form{
-    padding: 0 10vw;
+  .edit-profil{
+    padding: 0 8vw;
     gap: 32px;
   }
-  form{
-    display: flex;
-    flex-direction:column;
-    gap: 16px;
-  }
   hr{
+    margin-top: 64px;
     border: 2px solid #E9E9E9
   }
   .delete{
@@ -50,16 +46,21 @@
     border-radius:5px;
     color: #202020;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 17px;
     justify-content: center;
     color: #E61818;
-    height: 70px;
+    height: 60px;
     border:none;
     cursor: pointer;
     margin-bottom: 50px;
   }
   .delete:hover{
     background-color: rgba(230, 24,24,0.35);
+  }
+  .maj{
+    margin-top: 32px;
+    height: 70px;
+    width: 57vw;
   }
 </style>
 <section class="top-profil">
@@ -70,7 +71,7 @@
   <%end%>
   <h1>Votre compte</h1>
 </section>
-<section class="form">
+<section class="edit-profil">
   <h2>Profil public</h2>
   <p class="desc-profil">Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, veuillez vous modifier les informations ci-dessous </p>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
@@ -122,7 +123,7 @@
       <%= f.password_field :current_password, autocomplete: "current-password", required: true  %>
     </div>
     <div class="actions">
-      <%= f.submit "Mettre à jour", class: "button" %>
+      <%= f.submit "Mettre à jour", class: "button maj" %>
     </div>
   <% end %>
   <div>

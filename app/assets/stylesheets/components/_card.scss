@@ -51,6 +51,9 @@
   font-size: 20px;
   margin-top: 32px;
   display: flex;
+  a{
+    color: $primary-color;
+  }
 }
 
 .container-text-card {

@@ -8,6 +8,20 @@
     display: none;
   }
   }
+  #cardContainer {
+  position: relative;
+  height: 100vh; /* Conteneur pleine hauteur */
+  overflow-y: auto;
+  scroll-behavior: smooth; /* Support des navigateurs modernes */
+  }
+
+  .card {
+  scroll-snap-align: start; /* Pour aligner les cartes */
+  }
+
+  body {
+  overflow: hidden; /* Bloque le scroll global */
+  }
 </style>
 <div class="top-bar-search">
   <%= link_to search_oeuvres_path, class: "search-link" do %>

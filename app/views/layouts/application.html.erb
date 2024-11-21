@@ -23,6 +23,7 @@
     <!-- Stylesheets -->
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
     <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <%= javascript_importmap_tags %>
     <!-- RS -->
     <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
@@ -86,7 +87,7 @@
   </body>
 </html>
 <script>
-  document.addEventListener("turbo:load", function() { // Changement de turbolinks:load à turbo:load
+  $(document).ready(function() { // Changement de turbolinks:load à turbo:load
     document.getElementById("loading").style.display = "none"; // Masquer le loader
     document.getElementById("content").style.display = "block"; // Afficher le contenu
   });

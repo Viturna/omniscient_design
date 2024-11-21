@@ -358,7 +358,7 @@
   </div>
 </section>
 <script>
-  document.addEventListener("turbo:load", function() {
+  $(document).ready(function() {
     // Function to disable end year options based on start year selection
     function disableEndYearOptions(startYearSelect, endYearSelect) {
       const startYearValue = parseInt(startYearSelect.value);
@@ -446,7 +446,7 @@
   });
 </script>
 <script>
-  document.addEventListener("turbo:load", function() {
+  $(document).ready(function() {
     const counters = document.querySelectorAll('.oeuvres-counter');
 
     counters.forEach(counter => {

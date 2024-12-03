@@ -7,24 +7,20 @@
 .header-show {
   transition: height 0.6s ease-in-out, opacity 0.6s ease-in-out;
   height: 100px;
-  /* Hauteur initiale */
 }
 
 .header-show.small-height {
   height: 50px;
-  /* Hauteur réduite */
 }
 
 .header-top {
   transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
   transform: translateY(-100%);
-  /* Initialement caché */
   opacity: 0;
 }
 
 .header-top.show-header-top {
   transform: translateY(0);
-  /* Visible */
   opacity: 1;
 }
 
@@ -339,6 +335,229 @@
   vertical-align: middle;
 }
 
+.text-description-reference{
+  margin-top: 16px;
+  overflow-wrap: break-word;
+}
+
+.title-description-reference {
+  margin-top: 48px;
+  font-size: 24px;
+}
+
+//Validation
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.validation{
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color:#FFF;
+  gap: 32px;
+}
+.validation-title{
+  color: #fff;
+  font-size: 22px;
+  font-weight: 500;
+}
+.validation-text{
+  font-size: 18px;
+  color:#D9D9D9;
+  width: 40vw;
+  text-align:center;
+}
+.overlay-bottom{
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25vh;
+  background-color: rgba(0, 0, 0, 0.5); /* couleur semi-transparente */
+  z-index: 999; /* assurez-vous que l'overlay est au-dessus de tous les autres éléments */
+}
+.naviguation{
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25vh;
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color:#FFF;
+  gap: 32px;
+}
+.naviguation-buttons{
+  display: flex;
+  gap: 16px;
+}
+.naviguation-title{
+  color: #fff;
+}
+.logo-overlay{
+  position: absolute;
+  left: 35px;
+  top: 35px;
+}
+@media screen and (max-width: 375px) {
+  .body-show {
+    padding-bottom: 50px;
+  }
+
+  .header-show {
+    height: 100px;
+  }
+
+  .header-show.small-height {
+    height: 50px;
+  }
+
+  .header-show {
+    height: 75vh;
+  }
+
+  .date-header {
+    position: absolute;
+    bottom: 50px;
+    left: 5vw;
+  }
+
+  .domaine-header {
+    position: absolute;
+    bottom: 50px;
+    right: 5vw;
+  }
+
+  .small-height {
+    height: 320px !important;
+  }
 
 
-@media screen and (max-width: 425px) {}
+  .content-show {
+    margin-top: 20px;
+  }
+
+  .header-top {
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    left: 5vw;
+    width: 100%;
+    padding: 10px;
+    z-index: 99;
+  }
+
+
+  .flex-info {
+    margin-top: 16px;
+    gap: 24px;
+  }
+
+  .info-card {
+    padding: 12px 20px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .info-card-dark {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+  .info-card-dark svg{
+    scale: 0.8;
+  }
+  .text-show {
+    width: 90vw;
+  }
+
+  .small-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+
+  .flex-actions {
+    margin-top: 32px;
+    gap: 32px;
+    flex-direction: column;
+  }
+
+  .button-circle {
+    gap: 16px;
+  }
+
+  .button-circle p {
+    font-size: 18px;
+  }
+
+  .next-card {
+    margin-left:5vw;
+  }
+
+  .oeuvres-same {
+    margin-top: 32px;
+    gap: 24px;
+  }
+
+  .oeuvre-card {
+    width: 90vw;
+    height: 200px;
+  }
+
+  .oeuvre-designer {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .oeuvre-title {
+    font-size: 24px;
+    margin: 5px 0;
+  }
+
+  .share-options {
+    margin-top: 32px;
+    gap: 15px;
+  }
+
+
+  // Contributor
+  .flex-contributor {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .box-contributor {
+    width: 80vw;
+  }
+
+  .vertical-divider {
+    display: none;
+  }
+
+  .contributor {
+    font-size: 18px;
+  }
+  .text-contributor {
+    font-size: 16px;
+  }
+  .title-description-reference {
+    font-size: 20px;
+  }
+}

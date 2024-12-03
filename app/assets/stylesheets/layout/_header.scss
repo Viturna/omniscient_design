@@ -17,6 +17,7 @@ header {
   display: flex;
   align-items: center;
 }
+
 .name-header {
   font-weight: 500;
   color: $primary-color;
@@ -41,9 +42,10 @@ header li a {
   align-items: center;
   gap: 16px;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 19px;
   color: $text-color;
-  &:hover{
+
+  &:hover {
     opacity: 0.8;
   }
 }
@@ -52,14 +54,15 @@ header li a svg {
   scale: 0.9;
 }
 
-header li .active p {
+header li .active {
   color: $primary-color;
-  font-size: 20px;
+  font-size: 19px;
 }
 
 header li .active svg path {
   fill: $primary-color;
 }
+
 .flex-btn-login {
   margin-top: 5vh;
 }
@@ -74,70 +77,195 @@ header li .active svg path {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-bottom:60px;
+  padding-bottom: 60px;
 }
 
 .link-header a {
   font-size: 16px;
   cursor: pointer;
   color: $text-color;
-  &:hover{
+
+  &:hover {
     opacity: 0.8;
   }
 }
 
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 320px) {}
 
-}
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 425px) {}
 
-}
-@media screen and (max-width: 600px) {
-
-}
+@media screen and (max-width: 600px) {}
 
 
 
 @media screen and (max-width: 768px) {
-  header{
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 80px;
-  padding: 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  header {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 
-  .nav-header {
-    margin: 0;
-    height: 100%;
+    .nav-header {
+      margin: 0;
+      height: 100%;
 
-    ul {
-      flex-direction: row;
-      width: 100%;
-      justify-content: space-around;
-      align-items: center;
-
-      li  a{
-        display: flex;
-        flex-direction: column;
+      ul {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
         align-items: center;
-        justify-content: center;
 
-        svg{
-          scale: 0.9;
-        }
+        li a {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
 
-        p {
-          font-size: 10px;
+          svg {
+            scale: 0.9;
+          }
+
+          p {
+            font-size: 10px;
+          }
         }
       }
     }
   }
-  }
-  .logo-header, .flex-btn-login, .link-header {
+
+  .logo-header,
+  .flex-btn-login,
+  .link-header {
     display: none; // Cacher certains éléments non nécessaires sur mobile
+  }
+}
+
+
+
+@media screen and (max-width: 1024px) {
+  header {
+    width: 20vw;
+    height: 100vh;
+    padding: 0px 5vw;
+  }
+
+  // Logo
+
+  .logo-header {
+    padding: 8vh 0px;
+  }
+
+  .name-header {
+    font-size: 20px;
+    margin-left: 16px;
+  }
+
+  // Naviguation
+
+  .nav-header {
+    margin-top: 16px;
+  }
+
+  header ul {
+    gap: 20px;
+  }
+
+  header li a {
+    gap: 16px;
+    font-size: 18px;
+  }
+
+  header li a svg {
+    scale: 0.8;
+  }
+
+  header li .active p {
+    font-size: 18px;
+  }
+
+  .flex-btn-login {
+    margin-top: 5vh;
+  }
+
+  // Button et liens
+  .button-login {
+    width: fit-content;
+    font-size: 14px;
+  }
+
+  .link-header {
+    margin-top: 10vh;
+    padding-bottom: 60px;
+  }
+
+  .link-header a {
+    font-size: 16px;
+  }
+}
+
+/* Petit desktop */
+@media screen and (max-width: 1280px) {
+  header {
+    width: 20vw;
+    height: 100vh;
+    padding: 0px 5vw;
+  }
+
+  // Logo
+
+  .logo-header {
+    padding: 8vh 0px;
+  }
+
+  .name-header {
+    font-size: 20px;
+    margin-left: 16px;
+  }
+
+  // Naviguation
+
+  .nav-header {
+    margin-top: 16px;
+  }
+
+  header ul {
+    gap: 20px;
+  }
+
+  header li a {
+    gap: 16px;
+    font-size: 18px;
+  }
+
+  header li a svg {
+    scale: 0.8;
+  }
+
+  header li .active {
+    font-size: 18px;
+  }
+
+  .flex-btn-login {
+    margin-top: 5vh;
+  }
+
+  // Button et liens
+  .button-login {
+    width: fit-content;
+    font-size: 14px;
+  }
+
+  .link-header {
+    margin-top: 10vh;
+    padding-bottom: 60px;
+  }
+
+  .link-header a {
+    font-size: 16px;
   }
 }

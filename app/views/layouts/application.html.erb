@@ -34,24 +34,6 @@
     <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:type" content="website">
-    <style>
-      #loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 9999;
-      }
-
-      #loading img {
-        width: 250px;
-        height: 250px;
-      }
-
-      #content {
-        display: none;
-      }
-    </style>
   </head>
   <body class="<%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>

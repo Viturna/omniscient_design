@@ -57,6 +57,7 @@ header li a svg {
 header li .active {
   color: $primary-color;
   font-size: 19px;
+  font-weight: 600;
 }
 
 header li .active svg path {
@@ -91,62 +92,72 @@ header li .active svg path {
 }
 
 
-@media screen and (max-width: 320px) {}
-
-@media screen and (max-width: 425px) {}
-
-@media screen and (max-width: 600px) {}
 
 
 
-@media screen and (max-width: 768px) {
+
+
+/* Petit desktop */
+@media screen and (max-width: 1280px) {
   header {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 80px;
-    padding: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    .nav-header {
-      margin: 0;
-      height: 100%;
-
-      ul {
-        flex-direction: row;
-        width: 100%;
-        justify-content: space-around;
-        align-items: center;
-
-        li a {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-
-          svg {
-            scale: 0.9;
-          }
-
-          p {
-            font-size: 10px;
-          }
-        }
-      }
-    }
+    width: 20vw;
+    height: 100vh;
+    padding: 0px 5vw;
   }
 
-  .logo-header,
-  .flex-btn-login,
+  // Logo
+
+  .logo-header {
+    padding: 8vh 0px;
+  }
+
+  .name-header {
+    font-size: 20px;
+    margin-left: 16px;
+  }
+
+  // Naviguation
+
+  .nav-header {
+    margin-top: 16px;
+  }
+
+  header ul {
+    gap: 20px;
+  }
+
+  header li a {
+    gap: 16px;
+    font-size: 18px;
+  }
+
+  header li a svg {
+    scale: 0.8;
+  }
+
+  header li .active {
+    font-size: 18px;
+  }
+
+  .flex-btn-login {
+    margin-top: 5vh;
+  }
+
+  // Button et liens
+  .button-login {
+    width: fit-content;
+    font-size: 14px;
+  }
+
   .link-header {
-    display: none; // Cacher certains éléments non nécessaires sur mobile
+    margin-top: 10vh;
+    padding-bottom: 60px;
+  }
+
+  .link-header a {
+    font-size: 16px;
   }
 }
-
-
-
 @media screen and (max-width: 1024px) {
   header {
     width: 20vw;
@@ -207,23 +218,23 @@ header li .active svg path {
     font-size: 16px;
   }
 }
-
-/* Petit desktop */
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 768px) {
   header {
-    width: 20vw;
-    height: 100vh;
-    padding: 0px 5vw;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 80px;
+    padding: 0px 50px;
   }
 
   // Logo
 
   .logo-header {
-    padding: 8vh 0px;
+    display: none;
   }
 
   .name-header {
-    font-size: 20px;
+    font-size: 24px;
     margin-left: 16px;
   }
 
@@ -234,20 +245,26 @@ header li .active svg path {
   }
 
   header ul {
-    gap: 20px;
+    display:inline-block;
+  }
+  header ul li{
+    display: inline;
+
   }
 
   header li a {
+    flex-direction: column;
     gap: 16px;
-    font-size: 18px;
+    font-size: 19px;
+    width: 17vw;
   }
 
   header li a svg {
-    scale: 0.8;
+    scale: 0.9;
   }
 
   header li .active {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   .flex-btn-login {
@@ -256,12 +273,12 @@ header li .active svg path {
 
   // Button et liens
   .button-login {
-    width: fit-content;
-    font-size: 14px;
+    width: 160px;
   }
 
   .link-header {
     margin-top: 10vh;
+    gap: 16px;
     padding-bottom: 60px;
   }
 

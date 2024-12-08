@@ -423,6 +423,9 @@
 
   .header-show {
     height: 100px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: none;
   }
 
   .header-show.small-height {

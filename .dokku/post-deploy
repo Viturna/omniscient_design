@@ -1,4 +1,0 @@
-#!/bin/bash
-dokku letsencrypt:enable omniscientdesign.fr
-dokku proxy:ports-set omnisicientdesign.fr http:80:5000 https:443:5000
-

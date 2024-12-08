@@ -20,10 +20,12 @@
 .large {
   padding: 25px 125px;
 }
+
 .dark {
   background-color: $primary-color;
   color: #FFF;
-  &:hover{
+
+  &:hover {
     background-color: $primary-color;
     opacity: 0.8;
   }
@@ -37,8 +39,9 @@
   border-radius: 10px;
   background-color: $secondary-color;
   padding: 90px 150px;
+
   &:hover {
-  opacity: 0.8;
+    opacity: 0.8;
   }
 }
 
@@ -50,6 +53,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+
   &:hover {
     opacity: 0.8;
   }
@@ -68,6 +72,7 @@
   transition: background-color 1s ease;
   cursor: pointer;
 }
+
 //Save
 .circle-save {
   position: absolute;
@@ -77,12 +82,14 @@
   height: 65px;
   z-index: 999;
 }
+
 //Notif
-.circle-notif{
+.circle-notif {
   width: 60px;
   height: 60px;
   position: relative;
-  &:hover{
+
+  &:hover {
     background-color: $primary-color;
     opacity: 0.8;
   }
@@ -102,6 +109,7 @@
   width: 30px;
   height: 30px;
 }
+
 .notification-badge-profil {
   background-color: red;
   color: white;
@@ -126,11 +134,98 @@
   justify-content: center;
   transition: background-color 1s ease;
 }
-.circle-back:hover, .circle-save:hover {
+
+.circle-back:hover,
+.circle-save:hover {
   opacity: 0.8;
 }
-#back-btn{
+
+#back-btn {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+
+@media screen and (max-width: 600px) {
+  .circle {
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.85;
+    }
+  }
+
+  // BACK
+  .circle-back {
+    top: 40px;
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.85;
+    }
+  }
+  //SAVE
+  .circle-save {
+    top: 40px;
+    width: 65px;
+    height: 65px;
+  }
+}
+@media screen and (max-width: 425px) {
+  .circle {
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.85;
+    }
+  }
+
+  // BACK
+  .circle-back {
+    top: 35px;
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.85;
+    }
+  }
+  //SAVE
+  .circle-save {
+    top: 35px;
+    width: 65px;
+    height: 65px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .circle {
+    width: 60px;
+    height: 60px;
+
+    svg {
+      scale: 0.8;
+    }
+  }
+
+  // BACK
+  .circle-back {
+    top: 25px;
+    width: 60px;
+    height: 60px;
+
+    svg {
+      scale: 0.8;
+    }
+  }
+  //SAVE
+  .circle-save {
+    top: 25px;
+    width: 60px;
+    height: 60px;
+  }
 }

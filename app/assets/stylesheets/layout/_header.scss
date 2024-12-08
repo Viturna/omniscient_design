@@ -218,13 +218,13 @@ header li .active svg path {
     font-size: 16px;
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 375px) {
+
   header {
-    position: fixed;
-    bottom: 0;
     width: 100vw;
     height: 80px;
-    padding: 0px 50px;
+    padding: 0px 20px;
+    bottom: 0;
   }
 
   // Logo
@@ -234,8 +234,7 @@ header li .active svg path {
   }
 
   .name-header {
-    font-size: 24px;
-    margin-left: 16px;
+    display: none;
   }
 
   // Naviguation
@@ -245,44 +244,31 @@ header li .active svg path {
   }
 
   header ul {
-    display:inline-block;
-  }
-  header ul li{
-    display: inline;
-
+    gap: 24px;
   }
 
   header li a {
+    display: flex;
     flex-direction: column;
-    gap: 16px;
-    font-size: 19px;
-    width: 17vw;
+    font-size: 16px;
   }
 
   header li a svg {
-    scale: 0.9;
+    scale: 0.8;
   }
 
   header li .active {
-    font-size: 19px;
+    font-size: 16px;
   }
 
   .flex-btn-login {
-    margin-top: 5vh;
+    display: none;
   }
 
   // Button et liens
-  .button-login {
-    width: 160px;
-  }
 
   .link-header {
-    margin-top: 10vh;
-    gap: 16px;
-    padding-bottom: 60px;
+    display: none;
   }
 
-  .link-header a {
-    font-size: 16px;
-  }
 }

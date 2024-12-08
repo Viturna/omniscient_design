@@ -7,6 +7,9 @@
 .header-show {
   transition: height 0.6s ease-in-out, opacity 0.6s ease-in-out;
   height: 100px;
+  background-size: contain;
+  background-position: center center;
+  background-repeat: none;
 }
 
 .header-show.small-height {
@@ -32,11 +35,6 @@
 .info-header-show.hidden {
   opacity: 0;
 }
-
-.content-show {
-  transition: margin-top 0.6s ease-in-out;
-}
-
 
 .header-show {
   background-size: cover;
@@ -98,6 +96,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: margin-top 0.6s ease-in-out;
 }
 
 .hidden {
@@ -156,6 +155,7 @@
 
 .text-show {
   width: 60vw;
+  max-width: 1000px;
 }
 
 .small-circle {
@@ -325,7 +325,6 @@
 .text-contributor {
   margin-top: 8px;
   line-height: 130%;
-  font-size: 18px;
   color: $text-color;
   text-align: center;
 }
@@ -335,7 +334,7 @@
   vertical-align: middle;
 }
 
-.text-description-reference{
+.text-description-reference {
   margin-top: 16px;
   overflow-wrap: break-word;
 }
@@ -355,7 +354,8 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
-.validation{
+
+.validation {
   top: 0;
   left: 0;
   position: fixed;
@@ -366,31 +366,37 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  color:#FFF;
+  color: #FFF;
   gap: 32px;
 }
-.validation-title{
+
+.validation-title {
   color: #fff;
   font-size: 22px;
   font-weight: 500;
 }
-.validation-text{
+
+.validation-text {
   font-size: 18px;
-  color:#D9D9D9;
+  color: #D9D9D9;
   width: 40vw;
-  text-align:center;
+  text-align: center;
 }
-.overlay-bottom{
+
+.overlay-bottom {
   display: none;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 25vh;
-  background-color: rgba(0, 0, 0, 0.5); /* couleur semi-transparente */
-  z-index: 999; /* assurez-vous que l'overlay est au-dessus de tous les autres éléments */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* couleur semi-transparente */
+  z-index: 999;
+  /* assurez-vous que l'overlay est au-dessus de tous les autres éléments */
 }
-.naviguation{
+
+.naviguation {
   bottom: 0;
   left: 0;
   width: 100%;
@@ -401,31 +407,40 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  color:#FFF;
+  color: #FFF;
   gap: 32px;
 }
-.naviguation-buttons{
+
+.naviguation-buttons {
   display: flex;
   gap: 16px;
 }
-.naviguation-title{
+
+.naviguation-title {
   color: #fff;
 }
-.logo-overlay{
+
+.logo-overlay {
   position: absolute;
   left: 35px;
   top: 35px;
 }
-@media screen and (max-width: 375px) {
+@media screen and (max-width: 1300px) {
+  .text-show {
+    width: 70vw;
+  }
+  .oeuvre-card {
+    width: 380px;
+    height: 230px;
+  }
+}
+@media screen and (max-width: 1024px) {
   .body-show {
     padding-bottom: 50px;
   }
 
   .header-show {
     height: 100px;
-    background-size: contain;
-    background-position: center center;
-    background-repeat: none;
   }
 
   .header-show.small-height {
@@ -452,9 +467,138 @@
     height: 320px !important;
   }
 
+  .header-top {
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    left: 5vw;
+    width: 100%;
+    padding: 10px;
+    z-index: 99;
+  }
+
+  .flex-info {
+    margin-top: 16px;
+    gap: 24px;
+  }
+
+  .info-card-dark {
+    padding: 12px 20px;
+    font-size: 17px;
+  }
+
+  .info-card-dark svg {
+    scale: 0.8;
+  }
+
+  .text-show {
+    width: 80vw;
+  }
+
+  .small-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+
+  .flex-actions {
+    margin-top: 32px;
+    gap: 32px;
+  }
+
+  .button-circle {
+    gap: 16px;
+  }
+
+  .button-circle p {
+    font-size: 18px;
+  }
+
+  .next-card {
+    margin-left: 5vw;
+  }
+
+  .oeuvres-same {
+    margin-top: 32px;
+    gap: 24px;
+  }
+
+  .oeuvre-card {
+    width: 380px;
+    height: 220px;
+  }
+
+  .oeuvre-designer {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .oeuvre-title {
+    font-size: 26px;
+    margin: 5px 0;
+  }
+
+  .share-options {
+    margin-top: 32px;
+    gap: 15px;
+  }
+
+
+  // Contributor
+  .flex-contributor {
+    gap: 32px;
+  }
+  .box-contributor{
+    width: 40vw;
+  }
+
+  .contributor {
+    font-size: 19px;
+  }
+
+  .text-contributor {
+    font-size: 17px;
+  }
+
+  .title-description-reference {
+    font-size: 22px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .body-show {
+    padding-bottom: 50px;
+  }
+
+  .header-show {
+    height: 100px;
+  }
+
+  .header-show.small-height {
+    height: 50px;
+  }
+
+  .header-show {
+    height: 75vh;
+  }
+
+  .date-header {
+    position: absolute;
+    bottom: 50px;
+    left: 5vw;
+  }
+
+  .domaine-header {
+    position: absolute;
+    bottom: 50px;
+    right: 5vw;
+  }
+
+  .small-height {
+    height: 320px !important;
+  }
 
   .content-show {
-    margin-top: 20px;
+    margin-top: 50px;
   }
 
   .header-top {
@@ -467,6 +611,145 @@
     z-index: 99;
   }
 
+  .flex-info {
+    margin-top: 16px;
+    gap: 24px;
+  }
+
+  .info-card {
+    padding: 12px 20px;
+    height: 25px;
+    font-size: 16px;
+  }
+
+  .info-card-dark {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+
+  .info-card-dark svg {
+    scale: 0.8;
+  }
+
+  .text-show {
+    width: 85vw;
+  }
+
+  .small-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+
+  .flex-actions {
+    margin-top: 32px;
+    gap: 32px;
+  }
+
+  .button-circle {
+    gap: 16px;
+  }
+
+  .button-circle p {
+    font-size: 18px;
+  }
+
+  .next-card {
+    margin-left: 5vw;
+  }
+
+  .oeuvres-same {
+    margin-top: 32px;
+    gap: 24px;
+  }
+
+  .oeuvre-card {
+    width: 350px;
+    height: 200px;
+  }
+
+  .oeuvre-designer {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .oeuvre-title {
+    font-size: 24px;
+    margin: 5px 0;
+  }
+
+  .share-options {
+    margin-top: 32px;
+    gap: 15px;
+  }
+
+
+  // Contributor
+  .flex-contributor {
+    gap: 32px;
+  }
+  .box-contributor{
+    width: 40vw;
+  }
+
+  .contributor {
+    font-size: 18px;
+  }
+
+  .text-contributor {
+    font-size: 16px;
+  }
+
+  .title-description-reference {
+    font-size: 20px;
+  }
+}
+@media screen and (max-width: 425px) {
+  .body-show {
+    padding-bottom: 50px;
+  }
+
+  .header-show {
+    height: 100px;
+  }
+
+  .header-show.small-height {
+    height: 50px;
+  }
+
+  .header-show {
+    height: 75vh;
+  }
+
+  .date-header {
+    position: absolute;
+    bottom: 50px;
+    left: 5vw;
+  }
+
+  .domaine-header {
+    position: absolute;
+    bottom: 50px;
+    right: 5vw;
+  }
+
+  .small-height {
+    height: 320px !important;
+  }
+
+  .content-show {
+    margin-top: 50px;
+  }
+
+  .header-top {
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    left: 5vw;
+    width: 100%;
+    padding: 10px;
+    z-index: 99;
+  }
 
   .flex-info {
     margin-top: 16px;
@@ -475,7 +758,7 @@
 
   .info-card {
     padding: 12px 20px;
-    height: 30px;
+    height: 25px;
     font-size: 16px;
   }
 
@@ -483,9 +766,11 @@
     padding: 12px 20px;
     font-size: 16px;
   }
-  .info-card-dark svg{
+
+  .info-card-dark svg {
     scale: 0.8;
   }
+
   .text-show {
     width: 90vw;
   }
@@ -511,7 +796,7 @@
   }
 
   .next-card {
-    margin-left:5vw;
+    margin-left: 5vw;
   }
 
   .oeuvres-same {
@@ -557,9 +842,11 @@
   .contributor {
     font-size: 18px;
   }
+
   .text-contributor {
     font-size: 16px;
   }
+
   .title-description-reference {
     font-size: 20px;
   }

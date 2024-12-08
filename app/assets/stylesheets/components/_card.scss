@@ -80,7 +80,144 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+@media screen and (max-width: 1300px) {
+  .img-card {
+    transform: rotate(-4deg);
+  }
 
+  .bg-card {
+    transform: rotate(4deg);
+  }
+  .card {
+    padding-top: 100px;
+    width: 90vw;
+  }
+
+  .bg-card {
+    width: 90vw;
+    height: 60vh;
+  }
+
+  .bg-card .date-main{
+    transform: rotate(-4deg);
+    top: 24px;
+    scale: 0.8;
+    font-size: 16px;
+  }
+
+
+  .title-card {
+    font-size: 32px;
+  }
+
+  .container-text-card {
+    padding: 0px;
+  }
+
+  .title-description-card {
+    display: none;
+  }
+
+  .description-card {
+    display: none;
+  }
+}
+
+
+@media screen and (max-width: 1024px) {
+  .img-card {
+    transform: rotate(-4deg);
+  }
+
+  .bg-card {
+    transform: rotate(4deg);
+  }
+  .card {
+    padding-top: 100px;
+    width: 90vw;
+  }
+
+  .bg-card {
+    width: 90vw;
+    height: 60vh;
+  }
+
+  .bg-card .date-main{
+    transform: rotate(-4deg);
+    top: 24px;
+    scale: 0.8;
+    font-size: 16px;
+  }
+
+
+  .title-card {
+    font-size: 30px;
+  }
+
+  .subtitle-card {
+    font-size: 18px;
+    margin-top: 16px;
+  }
+
+  .container-text-card {
+    padding: 0px;
+  }
+
+  .title-description-card {
+    display: none;
+  }
+
+  .description-card {
+    display: none;
+  }
+}
+@media screen and (max-width: 600px) {
+  .img-card {
+    transform: rotate(-4deg);
+  }
+
+  .bg-card {
+    transform: rotate(4deg);
+  }
+  .card {
+    padding-top: 100px;
+    width: 90vw;
+  }
+
+  .bg-card {
+    width: 90vw;
+    height: 60vh;
+  }
+
+  .bg-card .date-main{
+    transform: rotate(-4deg);
+    top: 24px;
+    scale: 0.8;
+    font-size: 16px;
+  }
+
+
+  .title-card {
+    font-size: 30px;
+  }
+
+  .subtitle-card {
+    font-size: 18px;
+    margin-top: 16px;
+  }
+
+  .container-text-card {
+    padding: 0px;
+  }
+
+  .title-description-card {
+    display: none;
+  }
+
+  .description-card {
+    display: none;
+  }
+}
 @media screen and (max-width: 425px) {
   .img-card {
     transform: rotate(-4deg);

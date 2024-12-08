@@ -72,9 +72,25 @@ p{
 .black{
   color: $primary-color;
 }
-@media screen and (max-width: 375px) {
+
+@media screen and (max-width: 600px) {
   h1 {
-    font-size: 28px;
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 21px;
+  }
+  h3{
+    font-size: 19px;
+  }
+  p{
+    font-size: 17px;
+  }
+}
+@media screen and (max-width: 425px) {
+  h1 {
+    font-size: 29px;
   }
 
   h2 {
@@ -85,5 +101,20 @@ p{
   }
   p{
     font-size: 16px;
+  }
+}
+@media screen and (max-width: 375px) {
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+  h3{
+    font-size: 16px;
+  }
+  p{
+    font-size: 14px;
   }
 }

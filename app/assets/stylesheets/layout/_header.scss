@@ -218,57 +218,136 @@ header li .active svg path {
     font-size: 16px;
   }
 }
-@media screen and (max-width: 375px) {
 
+@media screen and (min-width:426px) and (max-width: 768px) {
   header {
+    position: fixed;
     width: 100vw;
     height: 80px;
-    padding: 0px 20px;
+    padding: 0 10px;
     bottom: 0;
+    left: 0;
+    background-color: $secondary-color;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 99;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
 
   // Logo
-
-  .logo-header {
-    display: none;
-  }
-
+  .logo-header,
   .name-header {
     display: none;
   }
 
-  // Naviguation
-
+  // Navigation
   .nav-header {
-    margin-top: 16px;
+    margin: 0;
   }
 
   header ul {
-    gap: 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header li {
+    flex: 1;
+    text-align: center;
+  }
+
+  header li:nth-child(2) {
+    flex: 2; /* "Ajouter" aura plus de largeur pour le centrer */
   }
 
   header li a {
     display: flex;
     flex-direction: column;
-    font-size: 16px;
+    align-items: center;
+    font-size: 14px;
+    gap: 4px;
   }
 
   header li a svg {
-    scale: 0.8;
+    scale: 0.9; /* Ajuster la taille si nécessaire */
   }
 
   header li .active {
-    font-size: 16px;
+    font-size: 14px;
   }
 
-  .flex-btn-login {
-    display: none;
-  }
-
-  // Button et liens
-
+  .flex-btn-login,
   .link-header {
     display: none;
   }
+}
+@media screen and (max-width: 425px) {
+  header {
+    position: fixed;
+    width: 100vw;
+    height: 80px;
+    padding: 0px;
+    bottom: 0;
+    left: 0;
+    background-color: $secondary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
 
+  // Logo
+  .logo-header,
+  .name-header {
+    display: none;
+  }
+
+  // Navigation
+  .nav-header {
+    margin: 0;
+  }
+
+  header ul {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header li {
+    flex: 1;
+    text-align: center;
+  }
+
+  header li:nth-child(2) {
+    flex: 2; /* "Ajouter" aura plus de largeur pour le centrer */
+  }
+
+  header li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  header li a svg {
+    scale: 0.9; /* Ajuster la taille si nécessaire */
+  }
+
+  header li .active {
+    font-size: 14px;
+  }
+
+  .flex-btn-login,
+  .link-header {
+    display: none;
+  }
 }

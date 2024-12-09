@@ -16,7 +16,16 @@ input.search-top-bar {
 input[type=search]{
   margin-right: 16px;
 }
-
+@media screen and (min-width:769px) and (max-width: 1024px) {
+  input.search-top-bar {
+    font-size: 16px;
+    width: 40vw;
+    height: 50px;
+  }
+  input[type=search]{
+    margin-right: 8px;
+  }
+}
 
 
 input[type=text],

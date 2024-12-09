@@ -12,7 +12,13 @@
   justify-content: center;
   border-bottom: 1px solid #E9E9E9;
 }
-
+@media screen and (min-width:769px) and (max-width: 1024px) {
+  .top-bar-search {
+    width: 70vw;
+    height: 100px;
+    gap: 8px;
+  }
+}
 // Autocomplete
 .autocomplete-items {
   position: absolute;

@@ -11,6 +11,7 @@
   opacity: 1;
   transform: rotate(-6deg);
   z-index: -1;
+  object-fit: cover;
 }
 
 .card {
@@ -80,73 +81,23 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
-@media screen and (max-width: 1300px) {
-  .img-card {
-    transform: rotate(-4deg);
-  }
 
-  .bg-card {
-    transform: rotate(4deg);
-  }
+
+@media screen and (min-width:769px) and (max-width: 1024px) {
+
   .card {
-    padding-top: 100px;
-    width: 90vw;
+    width: 60vw;
   }
 
   .bg-card {
-    width: 90vw;
-    height: 60vh;
+    width: 60vw;
+    height: 50vh;
   }
 
   .bg-card .date-main{
-    transform: rotate(-4deg);
     top: 24px;
     scale: 0.8;
-    font-size: 16px;
-  }
-
-
-  .title-card {
-    font-size: 32px;
-  }
-
-  .container-text-card {
-    padding: 0px;
-  }
-
-  .title-description-card {
-    display: none;
-  }
-
-  .description-card {
-    display: none;
-  }
-}
-
-
-@media screen and (max-width: 1024px) {
-  .img-card {
-    transform: rotate(-4deg);
-  }
-
-  .bg-card {
-    transform: rotate(4deg);
-  }
-  .card {
-    padding-top: 100px;
-    width: 90vw;
-  }
-
-  .bg-card {
-    width: 90vw;
-    height: 60vh;
-  }
-
-  .bg-card .date-main{
-    transform: rotate(-4deg);
-    top: 24px;
-    scale: 0.8;
-    font-size: 16px;
+    font-size: 18px;
   }
 
 
@@ -171,7 +122,55 @@
     display: none;
   }
 }
-@media screen and (max-width: 600px) {
+
+@media screen and (min-width:601px) and (max-width: 768px) {
+  .img-card {
+    transform: rotate(-4deg);
+  }
+
+  .bg-card {
+    transform: rotate(4deg);
+  }
+  .card {
+    padding-top: 140px;
+    width: 80vw;
+  }
+
+  .bg-card {
+    width: 80vw;
+    height: 50vh;
+  }
+
+  .bg-card .date-main{
+    transform: rotate(-4deg);
+    top: 20px;
+    scale: 0.8;
+    font-size: 18px;
+  }
+
+
+  .title-card {
+    font-size: 30px;
+  }
+
+  .subtitle-card {
+    font-size: 18px;
+    margin-top: 24px;
+  }
+
+  .container-text-card {
+    padding: 0px;
+  }
+
+  .title-description-card {
+    display: none;
+  }
+
+  .description-card {
+    display: none;
+  }
+}
+@media screen and (min-width:426px) and (max-width: 600px) {
   .img-card {
     transform: rotate(-4deg);
   }
@@ -193,17 +192,17 @@
     transform: rotate(-4deg);
     top: 24px;
     scale: 0.8;
-    font-size: 16px;
+    font-size: 18px;
   }
 
 
   .title-card {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .subtitle-card {
     font-size: 18px;
-    margin-top: 16px;
+    margin-top: 24px;
   }
 
   .container-text-card {
@@ -220,36 +219,36 @@
 }
 @media screen and (max-width: 425px) {
   .img-card {
-    transform: rotate(-4deg);
+    transform: rotate(0deg);
   }
 
   .bg-card {
-    transform: rotate(4deg);
+    transform: rotate(0deg);
   }
   .card {
-    padding-top: 100px;
+    padding-top: 80px;
     width: 90vw;
   }
 
   .bg-card {
     width: 90vw;
-    height: 60vh;
+    height: 62vh;
   }
 
   .bg-card .date-main{
-    transform: rotate(-4deg);
-    top: 24px;
+    transform: rotate(0deg);
+    top: 16px;
     scale: 0.8;
-    font-size: 16px;
+    font-size: 18px;
   }
 
 
   .title-card {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .subtitle-card {
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 16px;
   }
 

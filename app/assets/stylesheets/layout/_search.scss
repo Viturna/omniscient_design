@@ -12,13 +12,7 @@
   justify-content: center;
   border-bottom: 1px solid #E9E9E9;
 }
-@media screen and (min-width:769px) and (max-width: 1024px) {
-  .top-bar-search {
-    width: 70vw;
-    height: 100px;
-    gap: 8px;
-  }
-}
+
 // Autocomplete
 .autocomplete-items {
   position: absolute;
@@ -70,4 +64,21 @@
 
 .autocomplete-items::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+@media screen and (min-width:0px) and (max-width: 425px) {
+  .top-bar-search {
+    width: 100vw;
+    height: 100px;
+    gap: 8px;
+  }
+  .nav-link-profil{
+    display: none;
+  }
+  .autocomplete-items {
+    width: 80vw;
+  }
+
+  .autocomplete-items div {
+    font-size: 16px;
+  }
 }

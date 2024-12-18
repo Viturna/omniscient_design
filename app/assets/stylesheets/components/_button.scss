@@ -165,7 +165,8 @@
   .arrow-button {
     width: 70px;
     height: 70px;
-    svg{
+
+    svg {
       scale: 0.8;
     }
   }
@@ -201,6 +202,11 @@
 }
 
 @media screen and (max-width: 425px) {
+  .button {
+    width: 100%;
+    padding: 20px 15px;
+    font-size: 15px;
+  }
   .circle {
     width: 65px;
     height: 65px;
@@ -230,6 +236,12 @@
 }
 
 @media screen and (max-width: 375px) {
+  .button {
+    width: 100%;
+    padding: 20px 15px;
+    font-size: 14px;
+  }
+
   .circle {
     width: 60px;
     height: 60px;

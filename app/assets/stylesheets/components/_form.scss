@@ -13,20 +13,35 @@ input.search-top-bar {
   border: none;
   position: relative;
 }
-input[type=search]{
+
+input[type=search] {
   margin-right: 16px;
 }
+
 @media screen and (min-width:769px) and (max-width: 1024px) {
   input.search-top-bar {
     font-size: 16px;
     width: 40vw;
     height: 50px;
   }
-  input[type=search]{
+
+  input[type=search] {
     margin-right: 8px;
   }
 }
+@media screen and (min-width:0) and (max-width: 425px) {
+  input.search-top-bar {
+    font-size: 14px;
+    padding: 5px 10px;
+    padding-left: 50px;
+    width: 90vw;
+    height: 55px;
+  }
+  input[type=search] {
+    margin-right: 0px;
+  }
 
+}
 
 input[type=text],
 input[type=date],
@@ -44,7 +59,7 @@ input[type=password] {
   color: $primary-color;
 }
 
-select{
+select {
   width: calc(55vw + 30px);
   border: none;
   stroke: none;
@@ -56,6 +71,7 @@ select{
   font-weight: 500;
   color: $primary-color;
 }
+
 input::placeholder,
 select::placeholder {
   color: $text-color;
@@ -72,4 +88,114 @@ textarea {
   background-color: $secondary-color;
   border: 2px solid #E9E9E9;
   border-radius: 5px;
+}
+@media screen and (min-width:769px) and (max-width: 1024px) {
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password] {
+    width: 50vw;
+  }
+
+  select {
+    width: calc(50vw + 30px);
+  }
+
+  textarea {
+    width: 50vw;
+   }
+}
+@media screen and (max-width: 768px) {
+
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password] {
+    width: 80vw;
+    font-size: 15px;
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+
+  select {
+    width: calc(80vw + 30px);
+    font-size: 15px;
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+
+  textarea {
+    width: 80vw;
+    height: 120px;
+    font-size: 15px;
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+}
+@media screen and (max-width: 600px) {
+
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password] {
+    width: 80vw;
+    height: 60px;
+    font-size: 15px;
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+
+  select {
+    width: calc(80vw + 30px);
+    height: 60px;
+    font-size: 15px;
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+
+  textarea {
+    width: 80vw;
+    height: 120px;
+    font-size: 15px;
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+}
+@media screen and (max-width: 375px) {
+
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password] {
+    width: 75vw;
+    height: 55px;
+    font-size: 14px;
+    &::placeholder {
+      font-size: 14px;
+    }
+  }
+
+  select {
+    width: calc(75vw + 30px);
+    height: 55px;
+    font-size: 14px;
+    &::placeholder {
+      font-size: 14px;
+    }
+  }
+
+  textarea {
+    width: 75vw;
+    height: 120px;
+    font-size: 14px;
+    &::placeholder {
+      font-size: 14px;
+    }
+  }
 }

@@ -108,25 +108,6 @@
     font-size: 20px;
     font-weight: 500;
   }
-  .result{
-    top:56px;
-    left:0;
-    position: absolute;
-    border: 2px solid #E9E9E9;
-    z-index: 99;
-  }
-  .result li{
-    width: calc(540px - 50px);
-    padding: 25px;
-    background-color: #fff;
-    cursor: pointer;
-  }
-  .result li:hover{
-    background-color: #F7F7F7;
-  }
-  .result li a{
-    color: #202020;
-  }
 
 
   /* Frise */
@@ -219,33 +200,49 @@
     .oeuvre-frise{
      margin-top: 32px;
      }
-  @media screen and (min-width:0px) and (max-width:349px){
+
+
+   @media screen and (min-width: 376px) and (max-width:425px) {
+    .main-search{
+      padding-bottom: 128px;
+    }
+    .main-search h1{
+     margin-top: 24px;
+    }
     .header-search {
       width: 100vw;
       justify-content: space-around;
     }
     .title {
-      margin-top: 32px;
+      margin-top: 24px;
       font-size: 20px;
     }
 
     .flex-category, .flex-designer, .flex-oeuvre {
       justify-content: space-between;
-      gap: 24px;
+      row-gap: 24px;
+      column-gap: 0px;
       margin-top: 32px;
+      a{
+        width: 100%;
+      }
     }
 
     .card-category {
-      width: 70vw;
-      height: 140px;
+      width: 100%;
+      height: 100px;
       font-size: 16px;
-      padding: 20px;
+      padding: 20px 0;
       text-align:center;
+      img{
+        width: 80px;
+      }
     }
     .card-designer, .card-oeuvre {
-       width: 70vw;
+      background-position: center center;
+      width: 90%;
       height: 220px;
-      padding: 20px;
+      padding: 20px 5%;
     }
     .title-card-designer,   .title-card-oeuvre{
       font-size:22px;
@@ -258,44 +255,63 @@
     .text-category {
       font-size: 16px;
     }
-    .result{
-      top:53px;
+    /* Frise */
+    .timeline {
+      height: 100px;
+      margin: 24px 0
     }
-    .result li{
-      width: calc(70vw - 50px);
-      padding: 20px;
+
+    .timeline-item {
+    width: 10px;
+    }
+    .oeuvre {
+      width: 25px;
+      height: 25px;
     }
   }
-  @media screen and (min-width:350px) and (max-width:800px){
+  @media screen and (max-width: 375px) {
+    .main-search{
+      padding-bottom: 128px;
+    }
+    .main-search h1{
+     margin-top: 24px;
+    }
     .header-search {
       width: 100vw;
       justify-content: space-around;
     }
     .title {
-      margin-top: 32px;
-      font-size: 22px;
+      margin-top: 24px;
+      font-size: 20px;
     }
 
     .flex-category, .flex-designer, .flex-oeuvre {
       justify-content: space-between;
-      gap: 24px;
+      row-gap: 24px;
+      column-gap: 0px;
       margin-top: 32px;
+      a{
+        width: 100%;
+      }
     }
 
     .card-category {
-      width: calc(34vw - 15px);
+      width: 100%;
       height: 140px;
       font-size: 16px;
-      padding: 20px;
+      padding: 20px 0;
       text-align:center;
+      img{
+        width: 80px;
+      }
     }
     .card-designer, .card-oeuvre {
-      width: calc(34vw - 15px);
+      width: 90%;
       height: 220px;
-      padding: 20px;
+      padding: 20px 5%;
     }
     .title-card-designer,   .title-card-oeuvre{
-      font-size:24px;
+      font-size:22px;
       margin-top: 8px;
     }
     .card-designer .country-card-designer, .domaine-card-oeuvre{
@@ -303,62 +319,20 @@
     }
 
     .text-category {
-      font-size: 18px;
-    }
-    .result{
-      top:53px;
-    }
-    .result li{
-      width: calc(70vw - 50px);
-      padding: 20px;
-    }
-  }
-  @media screen and (min-width:801px) and (max-width:1050px){
-    .header-search {
-      width: calc(100vw - 260px);
-      justify-content: space-around;
-    }
-    .title {
-      margin-top: 24px;
-      font-size: 22px;
-    }
-
-    .flex-category, .flex-designer, .flex-oeuvre {
-      justify-content: space-between;
-      gap: 24px;
-      margin-top: 32px;
-    }
-
-    .card-category {
-      width: calc(24vw - 15px);
-      height: 140px;
       font-size: 16px;
-      padding: 20px;
-      text-align:center;
     }
-    .card-designer, .card-oeuvre {
-      width: calc(24vw - 15px);
-      height: 220px;
-      padding: 20px;
-    }
-    .title-card-designer,   .title-card-oeuvre{
-      font-size:24px;
-      padding-right: 8px;
-      margin-top: 8px;
-    }
-    .card-designer .country-card-designer, .domaine-card-oeuvre{
-      font-size:16px;
+    /* Frise */
+    .timeline {
+      height: 100px;
+      margin: 24px 0
     }
 
-    .text-category {
-      font-size: 18px;
+    .timeline-item {
+    width: 10px;
     }
-    .result{
-      top:53px;
-    }
-    .result li{
-      width: calc(70vw - 50px);
-      padding: 20px;
+    .oeuvre {
+      width: 25px;
+      height: 25px;
     }
   }
 </style>

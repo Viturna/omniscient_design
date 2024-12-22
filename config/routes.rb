@@ -15,7 +15,6 @@ Rails.application.routes.draw do
   end
 
   # Resources
-
   resources :feedbacks, only: [:new, :create, :index, :destroy]
   resources :users, only: [:index] do
     member do

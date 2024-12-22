@@ -1,4 +1,5 @@
 class DesignersController < ApplicationController
+  include RecaptchaHelper
   before_action :set_designer, only: %i[ show edit update destroy validate cancel]
   before_action :authenticate_user!, only: [:new]
 
@@ -36,7 +37,7 @@ class DesignersController < ApplicationController
 
   # GET /designers/1/edit
   def edit
-    @designer = Designer.find(params[:id])
+
   end
 
   # POST /designers or /designers.json
@@ -149,6 +150,6 @@ class DesignersController < ApplicationController
   end
 
   def designer_params
-    params.require(:designer).permit(:nom_designer, :date_naissance, :image, :description, :country_id, :date_deces)
+    params.require(:designer).permit(:nom_designer, :date_naissance, :image, :presentation_generale, :country_id, :date_deces)
   end
 end

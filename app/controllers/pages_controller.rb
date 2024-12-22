@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
   before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage]
-  before_action :check_admin_role, only: [:validation]
+  before_action :check_certified, only: [:validation]
+  before_action :check_admin_role, only: [:suivi_references]
   def presentation
   end
 
@@ -80,6 +81,24 @@ class PagesController < ApplicationController
   end
   def parrainage
     @user = current_user
+    @referred_users = @user.referred_users
+  end
+  def parrainage_filleul
+    @user = current_user
+
+    # Vérifier si un code de parrainage a été fourni
+    referral_code = params[:referral_code]
+
+    # Trouver l'utilisateur correspondant au code de parrainage
+    referrer = User.find_by(referral_code: referral_code)
+
+    if referrer
+      # Créer la relation de parrainage
+      Referral.create!(referrer: referrer, referee: @user)
+      flash[:success] = "Vous avez été lié à votre parrain : #{referrer.firstname} #{referrer.lastname}."
+    else
+      flash[:error] = "Code de parrainage invalide."
+    end
   end
   def suivi_references
     @current_page = 'profil'

@@ -3,7 +3,12 @@ class Designer < ApplicationRecord
   friendly_id :nom_designer, use: :slugged
 
   validates :nom_designer, uniqueness: true
-  validates :description, presence: true, length: { minimum: 200 }
+  validates :presentation_generale, presence: true, length: { minimum: 200 }
+  validates :formation_et_influences, presence: true, length: { minimum: 200 }
+  validates :style_ou_philosophie, presence: true, length: { minimum: 200 }
+  validates :creations_majeures, presence: true, length: { minimum: 200 }
+  validates :heritage_et_impact, presence: true, length: { minimum: 200 }
+
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year

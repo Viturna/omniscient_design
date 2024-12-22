@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -63,7 +63,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
     t.text "nom_designer"
     t.integer "date_naissance"
     t.text "image"
-    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "validation", default: false
@@ -72,6 +71,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
     t.bigint "validated_by_user_id"
     t.integer "date_deces"
     t.string "slug"
+    t.text "presentation_generale"
+    t.text "formation_et_influences"
+    t.text "style_ou_philosophie"
+    t.text "creations_majeures"
+    t.text "heritage_et_impact"
     t.index ["country_id"], name: "index_designers_on_country_id"
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
@@ -183,7 +187,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
     t.text "pays"
     t.text "nom_oeuvre"
     t.integer "date_oeuvre"
-    t.text "description"
     t.text "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -193,6 +196,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
     t.string "slug"
+    t.text "presentation_generale"
+    t.text "contexte_historique"
+    t.text "materiaux_et_innovations_techniques"
+    t.text "concept_et_inspiration"
+    t.text "dimension_esthetique"
+    t.text "impact_et_message"
     t.index ["designer_id"], name: "index_oeuvres_on_designer_id"
     t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
     t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
@@ -246,6 +255,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_172027) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.boolean "rgpd_consent"
+    t.boolean "certified"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true

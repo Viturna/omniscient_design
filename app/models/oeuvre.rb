@@ -3,7 +3,13 @@ class Oeuvre < ApplicationRecord
   friendly_id :nom_oeuvre, use: :slugged
 
   validates :nom_oeuvre, uniqueness: true
-  validates :description, presence: true, length: { minimum: 200 }
+  validates :presentation_generale, presence: true, length: { minimum: 200 }
+  validates :contexte_historique, presence: true, length: { minimum: 200 }
+  validates :materiaux_et_innovations_techniques, presence: true, length: { minimum: 200 }
+  validates :concept_et_inspiration, presence: true, length: { minimum: 200 }
+  validates :dimension_esthetique, presence: true, length: { minimum: 200 }
+  validates :impact_et_message, presence: true, length: { minimum: 200 }
+
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
   belongs_to :domaine
   belongs_to :designer

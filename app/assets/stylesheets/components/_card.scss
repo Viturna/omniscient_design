@@ -35,10 +35,18 @@
   color: #FFF;
   font-size: 20px;
 }
-.bg-card .date-main{
+.bg-card .date-main, .bg-card .domaine-main{
   scale: 0.9;
 }
-
+.bg-card .domaine-main{
+  right: 25px;
+  top: 0;
+  position: absolute;
+  transform: rotate(-6deg);
+  background-color: rgba(32, 32, 32, 0.4);
+  color: #FFF;
+  font-size: 20px;
+}
 .title-card {
   margin-top: 8px;
   font-size: 36px;
@@ -91,15 +99,19 @@
 
   .bg-card {
     width: 60vw;
-    height: 50vh;
+    height: 55vh;
   }
 
   .bg-card .date-main{
-    top: 24px;
+    top: 42px;
     scale: 0.8;
     font-size: 18px;
   }
-
+  .bg-card .domaine-main{
+    top: 0cqw;
+    scale: 0.8;
+    font-size: 18px;
+  }
 
   .title-card {
     font-size: 30px;
@@ -138,16 +150,24 @@
 
   .bg-card {
     width: 80vw;
-    height: 50vh;
+    height: calc(90vh - 280px);
+    max-height: 700px;
   }
 
   .bg-card .date-main{
     transform: rotate(-4deg);
-    top: 20px;
+    top: 26px;
     scale: 0.8;
     font-size: 18px;
   }
-
+  .bg-card .domaine-main{
+    width: fit-content;
+    transform: rotate(-4deg);
+    right: 24px;
+    top: 0;
+    scale: 0.8;
+    font-size: 18px;
+  }
 
   .title-card {
     font-size: 30px;
@@ -185,7 +205,8 @@
 
   .bg-card {
     width: 90vw;
-    height: 60vh;
+    height: calc(90vh - 200px);
+    max-height: 700px;
   }
 
   .bg-card .date-main{
@@ -194,7 +215,14 @@
     scale: 0.8;
     font-size: 18px;
   }
-
+  .bg-card .domaine-main{
+    width: fit-content;
+    transform: rotate(-4deg);
+    right: 24px;
+    top: 0;
+    scale: 0.8;
+    font-size: 18px;
+  }
 
   .title-card {
     font-size: 28px;
@@ -219,7 +247,7 @@
 }
 @media screen and (max-width: 425px) {
   .img-card {
-    transform: rotate(0deg);
+    transform: rotate(0deg)
   }
 
   .bg-card {
@@ -232,7 +260,8 @@
 
   .bg-card {
     width: 90vw;
-    height: 62vh;
+    height: calc(90vh - 180px);
+    max-height: 700px;
   }
 
   .bg-card .date-main{
@@ -241,7 +270,14 @@
     scale: 0.8;
     font-size: 18px;
   }
-
+  .bg-card .domaine-main{
+    width: fit-content;
+    transform: rotate(0deg);
+    left: -8px;
+    top: 64px;
+    scale: 0.8;
+    font-size: 18px;
+  }
 
   .title-card {
     font-size: 26px;

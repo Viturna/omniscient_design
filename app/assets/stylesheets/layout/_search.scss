@@ -65,6 +65,12 @@
 .autocomplete-items::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+@media screen and (max-width: 1024px) {
+  .top-bar-search {
+    width: 80vw;
+    padding: auto 42px;
+  }
+}
 @media screen and (min-width:0px) and (max-width: 425px) {
   .top-bar-search {
     width: 100vw;

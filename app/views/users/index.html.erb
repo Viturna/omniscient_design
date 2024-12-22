@@ -26,6 +26,7 @@
           <th>Établissement</th>
           <th>BAN</th>
           <th>Confirmé</th>
+          <th>Certifié</th>
           <th>Date de création</th>
         </tr>
       </thead>
@@ -48,6 +49,17 @@
               <% end %>
             </td>
             <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
+            <td>
+              <% if current_user.admin? %>
+                <% if user.certified? %>
+                  <%= link_to 'Retirer certification', uncertify_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir retirer la certification de cet utilisateur ?' } %>
+                <% else %>
+                  <%= link_to 'Certifier', certify_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir certifier cet utilisateur ?' } %>
+                <% end %>
+              <% else %>
+                <%= user.certified? ? 'Oui' : 'Non' %>
+              <% end %>
+            </td>
             <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
           </tr>
         <% end %>

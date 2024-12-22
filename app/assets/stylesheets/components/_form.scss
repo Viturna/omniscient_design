@@ -105,7 +105,7 @@ textarea {
     width: 50vw;
    }
 }
-@media screen and (max-width: 768px) {
+@media screen and (min-width:601px) and (max-width: 768px) {
 
   input[type=text],
   input[type=date],
@@ -135,7 +135,7 @@ textarea {
     }
   }
 }
-@media screen and (max-width: 600px) {
+@media screen and (min-width:376px) and (max-width: 600px) {
 
   input[type=text],
   input[type=date],
@@ -173,7 +173,7 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: 75vw;
+    width: 70vw;
     height: 55px;
     font-size: 14px;
     &::placeholder {
@@ -182,7 +182,7 @@ textarea {
   }
 
   select {
-    width: calc(75vw + 30px);
+    width: calc(70vw + 30px);
     height: 55px;
     font-size: 14px;
     &::placeholder {
@@ -191,7 +191,7 @@ textarea {
   }
 
   textarea {
-    width: 75vw;
+    width: 70vw;
     height: 120px;
     font-size: 14px;
     &::placeholder {

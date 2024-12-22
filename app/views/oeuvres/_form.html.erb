@@ -30,7 +30,22 @@
       <div id="date-oeuvre-error"></div>
     </div>
     <div>
-      <%= form.text_area :description, placeholder: "Description (Min. 200 caractères)" %>
+      <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :contexte_historique, placeholder: "Contexte historique (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :materiaux_et_innovations_techniques, placeholder: "Matériaux et innovations techniques (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :concept_et_inspiration, placeholder: "Concept et inspiration (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :dimension_esthetique, placeholder: "Dimension esthétique (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :impact_et_message, placeholder: "Impact et message (Min. 200 caractères)" %>
     </div>
     <div>
       <%= form.text_field :image, placeholder: "Url de l'image" %>

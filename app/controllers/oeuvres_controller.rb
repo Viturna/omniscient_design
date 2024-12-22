@@ -1,7 +1,7 @@
 class OeuvresController < ApplicationController
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel]
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :check_admin_role, only: [:destroy, :validate]
+  before_action :check_certified, only: [:validate, :destroy, :edit]
   # GET /oeuvres or /oeuvres.json
   def index
     @oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
@@ -59,7 +59,7 @@ class OeuvresController < ApplicationController
   def show
     # Ensure the user is authenticated before checking user-specific conditions
     if user_signed_in?
-      unless @oeuvre.validation || current_user.admin? || @oeuvre.user == current_user
+      unless @oeuvre.validation || current_user.admin? || @oeuvre.user == current_user || current_user.certified?
         redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
       end
       @lists = current_user.lists
@@ -89,7 +89,7 @@ class OeuvresController < ApplicationController
 
   # GET /oeuvres/1/edit
   def edit
-    @oeuvre = Oeuvre.find(params[:id])
+
   end
 
   # POST /oeuvres or /oeuvres.json
@@ -156,7 +156,6 @@ class OeuvresController < ApplicationController
   end
   def validate
     Rails.logger.info("Validation method called for oeuvre ID: #{params[:id]}")
-    @oeuvre = Oeuvre.find(params[:id])
 
     if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@oeuvre)
@@ -223,7 +222,7 @@ class OeuvresController < ApplicationController
   end
 
   def oeuvre_params
-    params.require(:oeuvre).permit(:domaine_id, :designer_id, :nom_oeuvre, :date_oeuvre, :description, :image)
+    params.require(:oeuvre).permit(:domaine_id, :designer_id, :nom_oeuvre, :date_oeuvre, :presentation_generale, :image)
   end
 
 end

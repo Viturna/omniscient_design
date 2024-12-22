@@ -3,6 +3,11 @@ class User < ApplicationRecord
   validates :rgpd_consent, acceptance: true
   validates :pseudo, presence: true
   attribute :banned, :boolean, default: false
+
+  def certified?
+    self.certified
+  end
+
   def admin?
     role == 'admin'
   end
@@ -17,8 +22,8 @@ class User < ApplicationRecord
   end
   STATUTS = ["Étudiant", "Enseignant", "Autre"]
 
-  has_many :sent_referrals, class_name: 'Referral', foreign_key: 'referrer_id'
-  has_many :received_referrals, class_name: 'Referral', foreign_key: 'referee_id'
+  has_one :referral, foreign_key: :referrer_id
+  has_many :referees, through: :referrals, source: :referee
   has_many :bug_reports
   has_many :lists
   has_many :oeuvres
@@ -35,4 +40,8 @@ class User < ApplicationRecord
 
   validates :statut, inclusion: { in: STATUTS, message: "%{value} n'est pas un statut valide" }
 
+  def referred_users
+    User.joins("INNER JOIN referrals ON referrals.referee_id = users.id")
+        .where("referrals.referrer_id = ?", id)
+  end
 end

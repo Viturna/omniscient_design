@@ -25,11 +25,25 @@
       <%= form.collection_select :country_id, Country.order(:country), :id, :country, prompt: "Sélectionner un pays" %>
     </div>
     <div>
-      <%= form.text_field :image, placeholder: "Url de l'image"%>
+      <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
     </div>
     <div>
-      <%= form.text_area :description, placeholder: "Description (Min. 200 caractères)" %>
+      <%= form.text_area :formation_et_influences, placeholder: "Formation et influences (Min. 200 caractères)" %>
     </div>
+    <div>
+      <%= form.text_area :style_ou_philosophie, placeholder: "Style ou philosophie (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :creations_majeures, placeholder: "Ses créations majeures (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_area :heritage_et_impact, placeholder: "Héritage et impact (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.text_field :image, placeholder: "Url de l'image"%>
+    </div>
+    <!-- Ajoutez le champ caché pour reCAPTCHA -->
+    <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>
     <div>
       <%= form.submit "Continuer ⏩️", class: "button large" %>
     </div>

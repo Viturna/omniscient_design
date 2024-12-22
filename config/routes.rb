@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     member do
       patch :ban
       patch :unban
+      patch :certify
+      patch :uncertify
     end
   end
   resources :notifications, only: [:index, :show, :destroy]
@@ -65,8 +67,8 @@ Rails.application.routes.draw do
   get 'search_frise', to: 'pages#search_frise', as: 'search_frise'
   get 'parrainage', to: 'pages#parrainage', as: 'parrainage'
   get 'presentation', to: 'pages#presentation', as: 'presentation'
-  get 'pages/add_elements', to: 'pages#add_elements', as: 'add_elements'
-  get 'pages/profil', to: 'pages#profil', as: 'profil'
+  get 'add_elements', to: 'pages#add_elements', as: 'add_elements'
+  get 'profil', to: 'pages#profil', as: 'profil'
   get 'validation', to: 'pages#validation', as: 'validation'
   get 'suivi_references', to: 'pages#suivi_references', as: 'suivi_references'
   get 'mentionslegales', to: 'pages#mentionslegales', as: 'mentionslegales'
@@ -74,6 +76,7 @@ Rails.application.routes.draw do
   get 'cookies', to: 'pages#cookies', as: 'cookies'
   get 'cgu', to: 'pages#cgu', as: 'cgu'
   get 'changelog', to: 'pages#changelog', as: 'changelog'
+  get 'parrainage_filleul', to: 'pages#parrainage_filleul', as: 'parrainage_filleul'
 
   # Route racine
   root 'oeuvres#index'

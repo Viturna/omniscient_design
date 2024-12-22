@@ -114,11 +114,27 @@
     <div class="text-show">
       <div class="title-box-oeuvre hidden">
         <p class="subtitle-card"><%= @designer.country.country %></p>
-        <h2 class="title-card"><%= designer.nom_designer %></h2>
+        <h1 class="title-card"><%= designer.nom_designer %></h1>
       </div>
-      <h3 class="title-description-card">Description</h3>
-      <p class="text-description-card"><%= designer.description %></p>
-      <h3 class="title-description-card">Actions</h3>
+      <h2 class="title-description-reference">Présentation générale</h2>
+      <p class="text-description-reference"><%= designer.presentation_generale %></p>
+      <% if designer.formation_et_influences.present? %>
+        <h2 class="title-description-reference">Formation et influences</h2>
+        <p class="text-description-reference"><%= designer.formation_et_influences %></p>
+      <% end %>
+      <% if designer.style_ou_philosophie.present? %>
+        <h2 class="title-description-reference">Style ou philosophie</h2>
+        <p class="text-description-reference"><%= designer.style_ou_philosophie %></p>
+      <% end %>
+      <% if designer.creations_majeures.present? %>
+        <h2 class="title-description-reference">Créations majeures</h2>
+        <p class="text-description-reference"><%= designer.creations_majeures %></p>
+      <% end %>
+      <% if designer.heritage_et_impact.present? %>
+        <h2 class="title-description-reference">Héritage et impact</h2>
+        <p class="text-description-reference"><%= designer.heritage_et_impact %></p>
+      <% end %>
+      <h2 class="title-description-reference">Actions</h2>
       <div class="flex-actions">
         <% if designer.validation %>
           <a href="#" id="shareButton" class="button-circle">
@@ -157,7 +173,7 @@
         <%end%>
       </div>
       <div class="contribution">
-        <h3 class="title-description-card">Contribution</h3>
+        <h2 class="title-description-card">Contribution</h2>
         <div class="flex-contributor">
           <div class="box-contributor">
             <% if designer.user_id.present? %>
@@ -187,7 +203,7 @@
       <% designer_oeuvres = @designer.oeuvres.where(validation: true)
                               .limit(3) %>
       <% if designer_oeuvres.any? %>
-        <h3 class="title-description-card">Œuvres du designer</h3>
+        <h2 class="title-description-card">Œuvres du designer</h2>
         <div class="oeuvres-same">
           <% designer_oeuvres.each do |oeuvre| %>
             <%= link_to oeuvre do %>
@@ -203,9 +219,10 @@
           <% end %>
         </div>
       <% end %>
-      <h3 class="title-description-card">Découvrir d'autres designers</h3>
+      <h2 class="title-description-card">Découvrir d'autres designers</h2>
       <div class="oeuvres-same">
         <% designers = Designer.all
+                            .where(validation: true)
                             .where.not(id: @designer.id)
                             .order("RANDOM()")
                             .limit(5) %>

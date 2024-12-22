@@ -105,7 +105,11 @@ csv_designers.each do |row|
     nom_designer: row['nom_designer'],
     date_naissance: row['date_naissance'],
     image: row['image'],
-    description: row['description']
+    presentation_generale: row['presentation_generale'],
+    formation_et_influences: row['formation_et_influences'],
+    style_ou_philosophie: row['style_ou_philosophie'],
+    creations_majeures: row['creations_majeures'],
+    heritage_et_impact: row['heritage_et_impact'],
   )
   country = Country.find_or_create_by(country: row['country'])
   designer.country = country
@@ -133,7 +137,7 @@ csv_oeuvres.each do |row|
   designer = Designer.find_or_create_by(nom_designer: row['nom_designer']) do |designer|
     designer.date_naissance = row['date_naissance']
     designer.image = row['image']
-    designer.description = row['description']
+    designer.presentation_generale = row['presentation_generale']
     country = Country.find_or_create_by(country: row['country'])
     designer.country = country
   end
@@ -141,7 +145,12 @@ csv_oeuvres.each do |row|
   oeuvre = designer.oeuvres.build(
     nom_oeuvre: row['nom_oeuvre'],
     date_oeuvre: row['date_oeuvre'],
-    description: row['description'],
+    presentation_generale: row['presentation_generale'],
+    contexte_historique: row['contexte_historique'],
+    materiaux_et_innovations_techniques: row['materiaux_et_innovations_techniques'],
+    concept_et_inspiration: row['concept_et_inspiration'],
+    dimension_esthetique: row['dimension_esthetique'],
+    impact_et_message: row['impact_et_message'],
     image: row['image']
   )
 

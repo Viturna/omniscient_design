@@ -1,4 +1,4 @@
-<% content_for :title, "Explorer le carnet de référence d'oeuvres et de designers - Omniscient Design" %>
+<% content_for :title, "Explorer le carnet de référence et de designers - Omniscient Design" %>
 <% content_for :description, "Explorez Omniscient Design, le meilleur carnet de référence numérique. Un répertoire unique avec des infos sur les travaux et la vie des designers." %>
 <%= javascript_include_tag "controllers/load_more", defer: true %>
 <%= javascript_include_tag "controllers/scroll_cards", defer: true %>
@@ -55,7 +55,7 @@
       <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>
       <div>
         <%= link_to "Designers", designers_path %> |
-        <%= link_to "Oeuvres", oeuvres_path, class: "active" %>
+        <%= link_to "Références", oeuvres_path, class: "active" %>
       </div>
       <%= link_to search_oeuvres_path do %>
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +65,7 @@
     </div>
     <p class="nav-home">
       <%= link_to "Designers", designers_path %> |
-      <%= link_to "Oeuvres", oeuvres_path, class: "active" %>
+      <%= link_to "Références", oeuvres_path, class: "active" %>
     </p>
     <div class="box-card" id="boxCard">
       <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>

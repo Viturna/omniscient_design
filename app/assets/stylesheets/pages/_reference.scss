@@ -39,7 +39,7 @@
   display: flex;
   justify-content: center;
   width: 100vw;
-  height: 80vh;
+  height: 80dvh;
   position: fixed;
   top: 0;
   left: 0;
@@ -59,7 +59,7 @@
 }
 
 .small-height {
-  height: 38vh !important;
+  height: 38dvh !important;
   min-height: 280px;
   z-index: 999;
 }
@@ -78,11 +78,11 @@
 .text-show {
   width: 60vw;
   max-width: 1000px;
-  margin-top: 82vh;
+  margin-top: 82dvh;
 }
 
 .margin-text-header {
-  margin-top: 44vh;
+  margin-top: 44dvh;
 }
 
 .content-show {
@@ -351,7 +351,7 @@
   position: fixed;
   z-index: 9999;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -379,7 +379,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 25vh;
+  height: 25dvh;
   background-color: rgba(0, 0, 0, 0.5);
   /* couleur semi-transparente */
   z-index: 999;
@@ -390,7 +390,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 25vh;
+  height: 25dvh;
   position: fixed;
   z-index: 9999;
   display: flex;
@@ -432,7 +432,7 @@
     padding-bottom: 50px;
   }
   .header-show {
-    height: 70vh;
+    height: 70dvh;
   }
 
   .content-show {
@@ -441,7 +441,7 @@
 
   .text-show {
     width: 70vw;
-    margin-top: 68vh;
+    margin-top: 68dvh;
   }
 
   .margin-text-header {
@@ -567,7 +567,7 @@
   }
 
   .header-show {
-    height: 75vh;
+    height: 75dvh;
   }
 
   .small-height {
@@ -580,7 +580,7 @@
 
   .text-show {
     width: 85vw;
-    margin-top: 70vh;
+    margin-top: 70dvh;
   }
 
   .margin-text-header {
@@ -693,7 +693,7 @@
   }
 
   .header-show {
-    height: 75vh;
+    height: 75dvh;
   }
 
   .small-height {
@@ -706,7 +706,7 @@
 
   .text-show {
     width: 90vw;
-    margin-top: 70vh;
+    margin-top: 70dvh;
   }
 
   .margin-text-header {

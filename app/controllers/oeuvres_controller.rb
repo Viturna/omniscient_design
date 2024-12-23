@@ -21,13 +21,14 @@ class OeuvresController < ApplicationController
   def search
     @current_page = 'recherche'
     query = params[:query].to_s.strip
-    @works = Oeuvre.pluck(:nom_oeuvre) + Designer.pluck(:nom_designer)
+    @works = Oeuvre.where(validation: true).pluck(:nom_oeuvre) + Designer.where(validation: true).pluck(:nom_designer)
     @designer = nil
+
 
     if query.present?
       # Rechercher à la fois dans les œuvres et les designers sans tenir compte des majuscules/minuscules
-      @work = Oeuvre.where('LOWER(nom_oeuvre) = ?', query.downcase).first
-      @designer = Designer.where('LOWER(nom_designer) = ?', query.downcase).first
+      @work = Oeuvre.where('LOWER(nom_oeuvre) = ? AND validation = ?', query.downcase, true).first
+      @designer = Designer.where('LOWER(nom_designer) = ? AND validation = ?', query.downcase, true).first
 
       if @work
         # Redirection vers la page de l'œuvre si trouvée
@@ -54,6 +55,7 @@ class OeuvresController < ApplicationController
       designer.date_naissance.to_i.between?(@start_year_oeuvre, @end_year_oeuvre)
     end
   end
+
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show

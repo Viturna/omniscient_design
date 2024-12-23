@@ -1,5 +1,3 @@
-// app/javascript/controllers/load_more.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const loadMoreTrigger = document.getElementById("load-more-trigger");
   let offset = 10; // On commence après les 10 premières oeuvres
@@ -20,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const boxCard = document.getElementById("boxCard");
       boxCard.insertAdjacentHTML("beforeend", html);
       offset += 10;
+
+      // Déclencher un événement personnalisé après l'insertion des nouvelles cartes
+      const event = new CustomEvent("cardsLoaded");
+      document.dispatchEvent(event);
     }
 
     loading = false;

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const $cards = $(".card");
+  let $cards = $(".card");
   const $container = $("#cardContainer");
   let currentIndex = 0; // Index de la carte visible
   let touchStartY = 0; // Position Y initiale pour le touch
@@ -14,6 +14,11 @@ $(document).ready(function () {
 
     $container.stop().animate({ scrollTop }, 300, "swing"); // Défilement fluide
     currentIndex = index;
+  }
+
+  // Fonction pour réinitialiser les références aux cartes
+  function updateCards() {
+    $cards = $(".card");
   }
 
   // Navigation avec les flèches (desktop uniquement)
@@ -54,7 +59,7 @@ $(document).ready(function () {
   $container.on("touchend", function () {
     const deltaY = touchStartY - touchEndY;
 
-    if (Math.abs(deltaY) > 50) { // Seuil pour détecter un "swipe"
+    if (Math.abs(deltaY) > 20) { // Seuil pour détecter un "swipe"
       if (deltaY > 0) {
         goToCard(currentIndex + 1); // Swipe vers le haut
       } else {
@@ -71,6 +76,9 @@ $(document).ready(function () {
   $(".arrow-button.down").on("click", function () {
     goToCard(currentIndex + 1);
   });
+
+  // Réinitialiser les cartes après un "load more"
+  document.addEventListener("cardsLoaded", updateCards);
 
   // Initialisation : aller à la première carte
   goToCard(currentIndex);

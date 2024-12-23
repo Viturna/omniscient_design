@@ -43,6 +43,10 @@
   border-radius: 10px;
   background-color: $secondary-color;
   padding: 90px 150px;
+  width: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     opacity: 0.8;
@@ -149,8 +153,16 @@
   border: none;
   cursor: pointer;
 }
+@media screen and (min-width:1025px) and (max-width:1280px) {
+  //ADD
+  .button-add {
+    font-size: 20px;
+    padding: 100px 0;
+    width: 40vw;
+  }
 
-@media screen and (min-width:769px) and (max-width: 1024px) {
+}
+@media screen and (min-width:601px) and (max-width: 1024px) {
   .circle {
     width: 55px;
     height: 55px;
@@ -183,6 +195,12 @@
     scale: 0.9;
   }
   }
+  //ADD
+  .button-add {
+    font-size: 20px;
+    padding: 110px 0;
+    width: auto;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -211,6 +229,13 @@
     top: 40px;
     width: 65px;
     height: 65px;
+  }
+
+  //ADD
+  .button-add {
+    font-size: 18px;
+    padding: 110px 0;
+    width: auto;
   }
 }
 
@@ -247,6 +272,13 @@
     width: 65px;
     height: 65px;
   }
+
+  //ADD
+  .button-add {
+    font-size: 18px;
+    padding: 80px 0;
+    width: auto;
+  }
 }
 
 @media screen and (max-width: 375px) {
@@ -281,6 +313,13 @@
     top: 25px;
     width: 60px;
     height: 60px;
+  }
+
+  //ADD
+  .button-add {
+    font-size: 16px;
+    padding: 80px 0;
+    width: auto;
   }
 
 }

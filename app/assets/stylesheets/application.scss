@@ -61,22 +61,11 @@ main{
 .no-scroll {
   overflow: hidden;
 }
-@media screen and (min-width:769px) and (max-width: 1024px) {
-  main{
-    margin-left: 30vw;
-    width: 70vw;
-  }
-}
-@media screen and (max-width: 768px) {
-  main{
-    margin-left: 0;
-    width: auto;
-  }
-}
+
 
 
 .grid {
-  padding: 8vw;
+  padding: 64px 8vw;
 }
 /* Home Page */
 
@@ -88,9 +77,8 @@ main{
 }
 
 .subtitle {
-  width: 60vw;
+  width: 50vw;
   color: #E9E9E9;
-  font-size: 17px;
   line-height: 125%;
 }
 
@@ -101,4 +89,23 @@ main{
   display: flex;
   flex-direction: column;
   gap: 36px;
+}
+@media screen and (min-width:769px) and (max-width: 1024px) {
+  main{
+    margin-left: 30vw;
+    width: 70vw;
+  }
+  .subtitle {
+    width: fit-content;
+  }
+}
+@media screen and (max-width: 768px) {
+  main{
+    margin-left: 0;
+    width: auto;
+  }
+  .subtitle {
+    width: fit-content;
+  }
+
 }

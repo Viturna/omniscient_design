@@ -4,41 +4,26 @@
   .add-flex {
     margin-top: 100px;
     display: flex;
-    gap: 80px;
+    gap: 5vw;
+    min-height: 400px;
   }
-
-  @media screen and (min-width:0px) and (max-width:349px) {
-
+  @media screen and (min-width:1025px) and (max-width:1280px){
     .add-flex {
-      margin-top: 32px;
+      margin-top: 48px;
+      flex-direction:column;
+      gap:40px;
+    }
+  }
+  @media screen and (max-width:1024px){
+    .add-flex {
+      margin-top: 48px;
       flex-direction:column;
       gap:24px;
     }
-    .add-elements{
-      padding: 0 8vw 150px 8vw;
-    }
   }
-  @media screen and (min-width:350px) and (max-width:800px) {
-
-    .add-flex {
-      margin-top: 32px;
-      flex-direction:column;
-      gap:24px;
-    }
-    .add-elements{
-      padding: 0 8vw 150px 8vw;
-    }
-  }
-  @media screen and (min-width:801px) and (max-width:1050px){
-
-    .add-flex {
-      margin-top: 32px;
-      flex-direction:column;
-      gap:24px;
-    }
-    .add-elements{
-      padding: 0 4vw 0px 4vw;
-    }
+  .grid{
+    display: flex;
+    align-items: center;
   }
 </style>
 <div class="grid" style="background-color:#202020; color:#FFF; min-height:100vh;">

@@ -134,7 +134,6 @@
     display: none;
   }
 }
-
 @media screen and (min-width:601px) and (max-width: 768px) {
   .img-card {
     transform: rotate(-4deg);
@@ -150,7 +149,7 @@
 
   .bg-card {
     width: 80vw;
-    height: calc(90vh - 280px);
+    height: calc(100vh - 280px);
     max-height: 700px;
   }
 
@@ -205,7 +204,7 @@
 
   .bg-card {
     width: 90vw;
-    height: calc(90vh - 200px);
+    height: calc(100vh - 280px);
     max-height: 700px;
   }
 
@@ -260,7 +259,7 @@
 
   .bg-card {
     width: 90vw;
-    height: calc(90vh - 180px);
+    height: calc(100vh - 260px);
     max-height: 700px;
   }
 

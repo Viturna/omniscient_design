@@ -47,14 +47,29 @@
     .our-list ul{
     margin-top: 48px;
   }
+  .no-list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 140px;
+    gap: 32px;
 
-  @media screen and (min-width:0px) and (max-width:349px) {
+  }
+  .no-list p{
+    text-align: center;
+    width: 50%;
+  }
+  @media screen and (min-width:0px) and (max-width:500px) {
     h1{
       margin-top: 24px;
     }
+    .button{
+      width: fit-content;
+    }
     .top-header{
       padding: 32px 5vw;
-      height: 200px;
+      height: fit-content;
     }
     .subtitle{
       width: 90vw;
@@ -80,7 +95,7 @@
       font-size: 18px;
     }
   }
-  @media screen and (min-width:350px) and (max-width:800px) {
+  @media screen and (min-width:501px) and (max-width:800px) {
     h1{
       margin-top: 24px;
     }
@@ -101,9 +116,7 @@
     .flex-title-list{
       margin-top: 48px;
     }
-    h2{
-      font-size: 18px;
-    }
+
   }
 </style>
 <section class="top-header">
@@ -115,18 +128,27 @@
     <h2>Vos listes</h2>
     <%= link_to 'Créer votre liste', new_list_path, class:"button dark" %>
   </div>
-  <ul>
-    <% @lists.each do |list| %>
-      <li>
-        <%= link_to list_path(list) do %>
-          <div class="list-card">
-            <%= list.name %>
-            <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 10.5L20.4215 10.5M20.4215 10.5L13.1384 2.2832M20.4215 10.5L13.1384 18.7168" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
-            </svg>
-          </div>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
+  <% if @lists.any? %>
+    <ul>
+      <% @lists.each do |list| %>
+        <li>
+          <%= link_to list_path(list) do %>
+            <div class="list-card">
+              <%= list.name %>
+              <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 10.5L20.4215 10.5M20.4215 10.5L13.1384 2.2832M20.4215 10.5L13.1384 18.7168" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
+              </svg>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <%else%>
+    <div class="no-list">
+      <svg width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M35.5 33.875V50.125M35.5 20.9075L35.5325 20.8718M35.5 68C53.4497 68 68 53.4497 68 35.5C68 17.5503 53.4497 3 35.5 3C17.5503 3 3 17.5503 3 35.5C3 53.4497 17.5503 68 35.5 68Z" stroke="#52525D" stroke-width="4.875" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>Aucune liste trouvée pour le moment. Créez-en une pour commencer !</p>
+    </div>
+  <%end%>
 </section>

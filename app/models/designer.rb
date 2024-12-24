@@ -4,16 +4,14 @@ class Designer < ApplicationRecord
 
   validates :nom_designer, uniqueness: true
   validates :presentation_generale, presence: true, length: { minimum: 200 }
-  validates :formation_et_influences, presence: true, length: { minimum: 200 }
-  validates :style_ou_philosophie, presence: true, length: { minimum: 200 }
-  validates :creations_majeures, presence: true, length: { minimum: 200 }
-  validates :heritage_et_impact, presence: true, length: { minimum: 200 }
 
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year
-  has_many :oeuvres
-  belongs_to :country
+  has_and_belongs_to_many :oeuvres
+
+  has_many :designer_countries
+  has_many :countries, through: :designer_countries
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items
   belongs_to :user, optional: true

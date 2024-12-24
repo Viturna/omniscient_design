@@ -43,4 +43,28 @@ module ApplicationHelper
     .gsub(' ', '_')
     .downcase
   end
+  def linkify_designer_names_and_oeuvres(text)
+    designers = Designer.all
+    oeuvres = Oeuvre.all
+
+    designers.each do |designer|
+      next if designer.nom_designer.nil?
+
+      # Remplacer les noms de designers par des liens
+      text = text.gsub(/\b(#{Regexp.escape(designer.nom_designer)})\b/i) do |match|
+        "<a style=\"color:#202020; font-weight:500;\" href='/designers/#{designer.id}'>#{match}</a>"
+      end
+    end
+
+    oeuvres.each do |oeuvre|
+      next if oeuvre.nom_oeuvre.nil?
+      # Remplacer les titres des œuvres par des liens
+      text = text.gsub(/\b(#{Regexp.escape(oeuvre.nom_oeuvre)})\b/i) do |match|
+        "<a style=\"color:#202020; font-weight:500;\" href='/oeuvres/#{oeuvre.id}'>#{match}</a>"
+      end
+    end
+
+    text.html_safe
+  end
+
 end

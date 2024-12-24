@@ -150,6 +150,6 @@ class DesignersController < ApplicationController
   end
 
   def designer_params
-    params.require(:designer).permit(:nom_designer, :date_naissance, :image, :presentation_generale, :country_id, :date_deces)
+    params.require(:designer).permit(:nom_designer, :date_naissance, :image, :presentation_generale, :date_deces)
   end
 end

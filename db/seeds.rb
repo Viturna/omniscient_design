@@ -109,40 +109,50 @@ csv_designers.each do |row|
     formation_et_influences: row['formation_et_influences'],
     style_ou_philosophie: row['style_ou_philosophie'],
     creations_majeures: row['creations_majeures'],
-    heritage_et_impact: row['heritage_et_impact'],
+    heritage_et_impact: row['heritage_et_impact']
   )
-  country = Country.find_or_create_by(country: row['country'])
-  designer.country = country
 
+  # Créez un tableau vide pour les pays
+  countries = []
 
-  if designer.save
-    puts "Designer importé : #{designer.nom_designer}"
-  else
-    puts "Erreur lors de l'importation du designer : #{designer.errors.full_messages}"
+  # Vérifiez si les pays dans les colonnes 'country_1', 'country_2', etc., existent et ajoutez-les
+  (1..2).each do |i| # Si vous avez trois colonnes de pays
+    country_column = row["country_#{i}"]
+    if country_column.present?
+      country = Country.find_or_create_by(country: country_column)
+      countries << country
+    end
   end
 
+  # Associer les pays au designer via la table de jointure
+  designer.countries = countries
+
+  # Sauvegarde du designer
+  designer.save!
   designers_counter += 1
 end
+
 
 puts "Nombre total de designers importés : #{designers_counter}"
 
 
 # Import des oeuvres
+
 csv_text_oeuvres = File.read(Rails.root.join('lib', 'seeds', 'oeuvres.csv'), encoding: 'utf-8')
 csv_oeuvres = CSV.parse(csv_text_oeuvres, headers: true)
 
 oeuvres_counter = 0
 
 csv_oeuvres.each do |row|
-  designer = Designer.find_or_create_by(nom_designer: row['nom_designer']) do |designer|
+  # Initialisation des designers principaux
+  main_designer = Designer.find_or_create_by(nom_designer: row['nom_designer']) do |designer|
     designer.date_naissance = row['date_naissance']
     designer.image = row['image']
     designer.presentation_generale = row['presentation_generale']
-    country = Country.find_or_create_by(country: row['country'])
-    designer.country = country
   end
 
-  oeuvre = designer.oeuvres.build(
+  # Création ou association d'une œuvre
+  oeuvre = Oeuvre.new(
     nom_oeuvre: row['nom_oeuvre'],
     date_oeuvre: row['date_oeuvre'],
     presentation_generale: row['presentation_generale'],
@@ -154,21 +164,39 @@ csv_oeuvres.each do |row|
     image: row['image']
   )
 
+  # Association du domaine
   domaine = Domaine.find_or_create_by(domaine: row['domaine'])
   if domaine.nil?
     puts "Erreur : Le domaine '#{row['domaine']}' n'existe pas."
     next
   end
-
   oeuvre.domaine = domaine
+  # Initialisation des designers supplémentaires
+  designers = []
+  (1..2).each do |i| # Ajustez ce nombre si le CSV peut contenir plus de designers
+    designer_name = row["nom_designer_#{i}"]
+    next unless designer_name.present? # Ignorer si la colonne est vide
 
-  if oeuvre.save
-    puts "Oeuvre importée : #{oeuvre.nom_oeuvre}"
-  else
-    puts "Erreur lors de l'importation de l'oeuvre : #{oeuvre.errors.full_messages}"
+    designer = Designer.find_or_create_by(nom_designer: designer_name)
+    designers << designer
   end
 
-  oeuvres_counter += 1
+  # Ajouter le designer principal uniquement s'il n'y a pas d'autres designers
+  if designers.empty?
+    designers << main_designer unless main_designer.nil?
+  end
+
+  # Associer tous les designers à l'œuvre
+  oeuvre.designers = designers
+
+
+  # Sauvegarde de l'œuvre
+  if oeuvre.save
+    puts "Oeuvre importée : #{oeuvre.nom_oeuvre}"
+    oeuvres_counter += 1
+  else
+    puts "Erreur lors de l'importation de l'œuvre : #{oeuvre.errors.full_messages.join(', ')}"
+  end
 end
 
-puts "Nombre total d'oeuvres importées : #{oeuvres_counter}"
+puts "Nombre total d'œuvres importées : #{oeuvres_counter}"

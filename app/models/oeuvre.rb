@@ -12,8 +12,8 @@ class Oeuvre < ApplicationRecord
 
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
   belongs_to :domaine
-  belongs_to :designer
-  validates :designer_id, presence: true
+  has_and_belongs_to_many :designers
+  validates :designer_ids, presence: true
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items
   belongs_to :user, optional: true

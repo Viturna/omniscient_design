@@ -224,7 +224,7 @@ class OeuvresController < ApplicationController
   end
 
   def oeuvre_params
-    params.require(:oeuvre).permit(:domaine_id, :designer_id, :nom_oeuvre, :date_oeuvre, :presentation_generale, :image)
+    params.require(:oeuvre).permit(:domaine_id, :nom_oeuvre, :date_oeuvre, :presentation_generale, :image, designer_ids: [])
   end
 
 end

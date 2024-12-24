@@ -34,7 +34,7 @@
                   Omniscient Design
                 <% end %>
               </td>
-              <td>
+              <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
                 <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
                 <%= link_to "Valider", validate_oeuvre_path(oeuvre), class: "btn btn-green" %>
@@ -85,7 +85,7 @@
                   Utilisateur inconnu
                 <% end %>
               </td>
-              <td>
+              <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
                 <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
                 <%= link_to "Supprimer", oeuvre_path(oeuvre), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>
@@ -127,7 +127,7 @@
                   Omniscient Design
                 <% end %>
               </td>
-              <td>
+              <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", designer_path(designer), class: "btn" %>
                 <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
                 <%= link_to "Valider", validate_designer_path(designer), class: "btn btn-green" %>
@@ -178,7 +178,7 @@
                   Utilisateur inconnu
                 <% end %>
               </td>
-              <td>
+              <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", designer_path(designer), class: "btn" %>
                 <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
                 <%= link_to "Supprimer", designer_path(designer), method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: "btn btn-danger" %>

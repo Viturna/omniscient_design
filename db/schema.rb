@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_23_204513) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
     t.integer "country_numeric"
   end
 
+  create_table "designer_countries", force: :cascade do |t|
+    t.bigint "designer_id", null: false
+    t.bigint "country_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country_id"], name: "index_designer_countries_on_country_id"
+    t.index ["designer_id"], name: "index_designer_countries_on_designer_id"
+  end
+
   create_table "designers", force: :cascade do |t|
     t.text "nom_designer"
     t.integer "date_naissance"
@@ -66,7 +75,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "validation", default: false
-    t.bigint "country_id", null: false
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
     t.integer "date_deces"
@@ -76,7 +84,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
     t.text "style_ou_philosophie"
     t.text "creations_majeures"
     t.text "heritage_et_impact"
-    t.index ["country_id"], name: "index_designers_on_country_id"
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
   end
@@ -86,6 +93,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
     t.bigint "designer_id", null: false
     t.index ["designer_id", "list_id"], name: "index_designers_lists_on_designer_id_and_list_id"
     t.index ["list_id", "designer_id"], name: "index_designers_lists_on_list_id_and_designer_id"
+  end
+
+  create_table "designers_oeuvres", force: :cascade do |t|
+    t.bigint "designer_id", null: false
+    t.bigint "oeuvre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["designer_id", "oeuvre_id"], name: "index_designers_oeuvres_on_designer_id_and_oeuvre_id", unique: true
+    t.index ["designer_id"], name: "index_designers_oeuvres_on_designer_id"
+    t.index ["oeuvre_id"], name: "index_designers_oeuvres_on_oeuvre_id"
   end
 
   create_table "domaines", force: :cascade do |t|
@@ -191,7 +208,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "domaine_id"
-    t.bigint "designer_id"
     t.boolean "validation", default: false
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
@@ -202,7 +218,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
     t.text "concept_et_inspiration"
     t.text "dimension_esthetique"
     t.text "impact_et_message"
-    t.index ["designer_id"], name: "index_oeuvres_on_designer_id"
     t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
     t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
     t.index ["user_id"], name: "index_oeuvres_on_user_id"
@@ -265,13 +280,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_22_102816) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bug_reports", "users"
-  add_foreign_key "designers", "countries"
+  add_foreign_key "designer_countries", "countries"
+  add_foreign_key "designer_countries", "designers"
   add_foreign_key "designers", "users"
+  add_foreign_key "designers_oeuvres", "designers"
+  add_foreign_key "designers_oeuvres", "oeuvres"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "list_items", "lists"
   add_foreign_key "lists", "users"
   add_foreign_key "notifications", "users"
-  add_foreign_key "oeuvres", "designers"
   add_foreign_key "oeuvres", "domaines"
   add_foreign_key "oeuvres", "users"
   add_foreign_key "suivis", "users"

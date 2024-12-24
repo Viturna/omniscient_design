@@ -89,10 +89,14 @@
       <%= designer.date_naissance %>
     </p>
     <%= content_tag :div, class: 'info-card-dark domaine-header info-header-show' do %>
-      <span class="flag"> <%= country_flag(designer.country.country_numeric) %></span>
+      <% designer.countries.each do |country| %>
+        <span class="flag">
+          <%= country_flag(country.country_numeric) %>
+        </span>
+      <% end %>
     <% end %>
     <div class="header-top">
-      <p class="subtitle-card"><%= @designer.country.country %> </p>
+      <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
       <p class="title-card"><%= designer.nom_designer %></p>
       <div class="flex-info">
         <%= link_to search_frise_path do %>
@@ -103,36 +107,38 @@
             <%= designer.date_naissance %>
           </p>
         <%end%>
-        <p class="info-card">
-          <span class="flag"><%= country_flag(designer.country.country_numeric) %></span>
-          <%= designer.country.country %>
-        </p>
+        <% designer.countries.each do |country| %>
+          <p class="info-card">
+            <span class="flag"><%= country_flag(country.country_numeric) %></span>
+            <%= country.country %>
+          </p>
+        <% end %>
       </div>
     </div>
   </div>
   <div class="content-show">
     <div class="text-show">
       <div class="title-box-oeuvre hidden">
-        <p class="subtitle-card"><%= @designer.country.country %></p>
+        <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
         <h1 class="title-card"><%= designer.nom_designer %></h1>
       </div>
       <h2 class="title-description-reference">Présentation générale</h2>
-      <p class="text-description-reference"><%= designer.presentation_generale %></p>
+      <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.presentation_generale) %></p>
       <% if designer.formation_et_influences.present? %>
         <h2 class="title-description-reference">Formation et influences</h2>
-        <p class="text-description-reference"><%= designer.formation_et_influences %></p>
+        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.formation_et_influences) %></p>
       <% end %>
       <% if designer.style_ou_philosophie.present? %>
         <h2 class="title-description-reference">Style ou philosophie</h2>
-        <p class="text-description-reference"><%= designer.style_ou_philosophie %></p>
+        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.style_ou_philosophie) %></p>
       <% end %>
       <% if designer.creations_majeures.present? %>
         <h2 class="title-description-reference">Créations majeures</h2>
-        <p class="text-description-reference"><%= designer.creations_majeures %></p>
+        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.creations_majeures) %></p>
       <% end %>
       <% if designer.heritage_et_impact.present? %>
         <h2 class="title-description-reference">Héritage et impact</h2>
-        <p class="text-description-reference"><%= designer.heritage_et_impact %></p>
+        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.heritage_et_impact) %></p>
       <% end %>
       <h2 class="title-description-reference">Actions</h2>
       <div class="flex-actions">

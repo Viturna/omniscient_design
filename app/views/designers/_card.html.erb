@@ -15,13 +15,14 @@
         <div class="img-card" style="background-image: url('<%= card.image%>'); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
       <% end %>
     </div>
-    <div class="container-text-card">
-      <% if card.country.present? %>
-        <p class="subtitle-card"><%= card.country.country %></p>
-      <% end %>
-      <h2 class="title-card"><%= card.nom_designer %></h2>
-      <h3 class="title-description-card">Présentation générale</h3>
-      <p class="description-card description-card-home"><%= card.presentation_generale %></p>
-    </div>
+    <% if card.countries.present? %>
+      <p class="subtitle-card">
+        <%= card.countries.map(&:name).join(' & ') %>
+      </p>
+    <% end %>
+    <h2 class="title-card"><%= card.nom_designer %></h2>
+    <h3 class="title-description-card">Présentation</h3>
+    <p class="description-card description-card-home"><%= card.presentation_generale %></p>
   </div>
+</div>
 <%end%>

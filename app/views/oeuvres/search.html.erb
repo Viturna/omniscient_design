@@ -415,9 +415,12 @@
             <div class="card-designer" style="background: url('<%= asset_path(designer.image) %>'); background-size: cover; background-position:center;">
             <% end %>
             <div class="inner-card-designer">
-              <p class="country-card-designer">
-                <span class="flag"><%= country_flag(designer.country.country_numeric) %></span>
-                <%= designer.country.country %></p>
+              <% designer.countries.each do |country| %>
+                <p class="country-card-designer">
+                  <span class="flag"><%= country_flag(country.country_numeric) %></span>
+                  <%= country.country %>
+                </p>
+              <% end %>
               <p class="title-card-designer"><%= designer.nom_designer %></p>
             </div>
           </div>

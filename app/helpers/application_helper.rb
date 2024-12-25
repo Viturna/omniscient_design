@@ -63,7 +63,6 @@ module ApplicationHelper
         "<a style=\"color:#202020; font-weight:500;\" href='/oeuvres/#{oeuvre.id}'>#{match}</a>"
       end
     end
-
     text.html_safe
   end
 

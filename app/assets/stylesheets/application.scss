@@ -26,7 +26,9 @@
 @import 'components/alert';
 @import 'components/button';
 @import 'components/card';
+@import 'components/cardref';
 @import 'components/form';
+@import 'components/listcard';
 @import 'components/loader';
 @import 'components/popup';
 
@@ -35,6 +37,7 @@
 
 @import 'pages/defaultpage';
 @import 'pages/homepage';
+@import 'pages/list';
 @import 'pages/log';
 @import 'pages/reference';
 
@@ -107,5 +110,40 @@ main{
   .subtitle {
     width: fit-content;
   }
+  .grid {
+    padding: 48px 5vw;
+  }
 
+  main{
+    padding-bottom: 80px;
+  }
+}
+
+
+.top-header{
+  padding: 0 10vw;
+  padding-top: 96px;
+  padding-bottom: 72px;
+  background-color: #202020;
+  color:#FFF;
+  position: relative;
+}
+
+@media screen and (max-width:500px) {
+  .top-header{
+    padding: 0 5vw;
+    padding-top: 64px;
+    padding-bottom: 56px;
+  }
+
+  .button{
+    width:fit-content;
+  }
+}
+@media screen and (min-width:501px) and (max-width:800px) {
+  .top-header{
+    padding: 0 8vw;
+    padding-top: 72px;
+    padding-bottom: 64px;
+  }
 }

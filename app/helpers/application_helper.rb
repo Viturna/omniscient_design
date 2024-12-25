@@ -44,8 +44,8 @@ module ApplicationHelper
     .downcase
   end
   def linkify_designer_names_and_oeuvres(text)
-    designers = Designer.all
-    oeuvres = Oeuvre.all
+    designers = Designer.where(validation: true)
+    oeuvres = Oeuvre.where(validation: true)
 
     designers.each do |designer|
       next if designer.nom_designer.nil?

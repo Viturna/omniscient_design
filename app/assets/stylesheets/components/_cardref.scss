@@ -1,0 +1,40 @@
+.card-ref{
+  overflow: hidden;
+  width: 18vw;
+  height: 18vw;
+  display: flex;
+  align-items: end;
+  border: 1px solid #E9E9E9;
+  border-radius:5px;
+  position: relative;
+}
+
+.default-overlay {
+  border-radius:5px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5); /* Opacité par défaut */
+}
+.overlay-card-ref {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  background-color: rgba(0, 0, 0, 0.5);
+  svg {
+    scale: 1.5;
+  }
+}
+.card-title{
+  position: relative;
+  font-weight: 500;
+  font-size: 24px;
+  width: 60%;
+  color:#FFF;
+  padding: 20px;
+}

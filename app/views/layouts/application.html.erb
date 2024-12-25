@@ -58,7 +58,7 @@
     <div id="loading">
       <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
     </div>
-    <% unless (controller_name == 'lists' && action_name == 'edit') || action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
+    <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
       <%= render 'layouts/header' %>
     <% end %>
     <main class="<%= 'main-show' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' %>">

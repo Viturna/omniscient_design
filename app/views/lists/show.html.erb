@@ -1,80 +1,15 @@
 <style>
-  .top-header{
-    padding: 64px 10vw;
-    height: 150px;
-    background-color: #202020;
-    color:#FFF;
-    position: relative;
-  }
-  .subtitle{
-    width: 50vw;
-  }
-
-  .flex-title{
-    margin-top: 32px;
-    display: flex;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .flex-title-list{
-    margin-top: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .list-show{
-    padding: 0 10vw;
-  }
   .flex-card-list{
     margin-top: 32px;
     display: flex;
     flex-wrap:wrap;
     gap: 2.3vw;
   }
-  .card-list{
-    overflow: hidden;
-    width: 18vw;
-    height: 18vw;
-    display: flex;
-    align-items: end;
-    border: 1px solid #E9E9E9;
-    border-radius:5px;
-    position: relative;
-  }
-  .overlay {
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 64px;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  .overlay svg {
-    scale: 1.5;
-  }
-  .default-overlay {
-    border-radius:5px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5); /* Opacité par défaut */
-  }
-  .card-title{
-    position: relative;
-    font-weight: 500;
-    font-size: clamp(1.25rem, 0.85rem + 0.8vw, 1.75rem);
-    width: 60%;
-    color:#FFF;
-    padding: 20px;
-  }
+
+
   .delete{
     margin-top: 48px;
-    width: 80vw;
+    width: 100%;
     display: flex;
     align-items: center;
     background-color: #fff;
@@ -212,7 +147,7 @@
       <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
     </svg>
   <%end%>
-  <div class="flex-title">
+  <div style="display: flex; align-items: center; gap: 8px;">
     <h1><%= @list.name %></h1>
     <%= link_to edit_list_path do %>
       <svg id="editButtonForm" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -222,17 +157,17 @@
   </div>
   <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> références</p>
 </section>
-<section class="list-show">
+<section class="grid-1">
   <div class="flex-title-list">
     <h2>Les designers </h2>
     <%= link_to 'Ajouter des designers', '#', id: 'openPopupDesigners', class:"button dark" %>
   </div>
   <div class="flex-card-list">
     <% @list.designers.each do |designer| %>
-      <div class="card-list" id="designer_<%= designer.id %>" style="background-image: url('<%= designer.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+      <div class="card-ref" id="designer_<%= designer.id %>" style="background-image: url('<%= designer.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
         <div class="default-overlay"></div>
         <p class="card-title"><%= designer.nom_designer %></p>
-        <div class="overlay" style="display: none;">
+        <div class="overlay-card-ref" style="display: none;">
           <%= link_to designer_path(designer.id), class: "delete-flex" do %>
             <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15 6.13636C16.085 6.13636 17.1255 6.56737 17.8927 7.33456C18.6599 8.10176 19.0909 9.1423 19.0909 10.2273C19.0909 11.3122 18.6599 12.3528 17.8927 13.12C17.1255 13.8872 16.085 14.3182 15 14.3182C13.915 14.3182 12.8745 13.8872 12.1073 13.12C11.3401 12.3528 10.9091 11.3122 10.9091 10.2273C10.9091 9.1423 11.3401 8.10176 12.1073 7.33456C12.8745 6.56737 13.915 6.13636 15 6.13636ZM15 0C21.8182 0 27.6409 4.24091 30 10.2273C27.6409 16.2136 21.8182 20.4545 15 20.4545C8.18182 20.4545 2.35909 16.2136 0 10.2273C2.35909 4.24091 8.18182 0 15 0ZM2.97273 10.2273C4.07489 12.4777 5.78633 14.3737 7.91247 15.6999C10.0386 17.026 12.4942 17.7291 15 17.7291C17.5058 17.7291 19.9614 17.026 22.0875 15.6999C24.2137 14.3737 25.9251 12.4777 27.0273 10.2273C25.9251 7.97685 24.2137 6.0808 22.0875 4.75465C19.9614 3.42851 17.5058 2.72547 15 2.72547C12.4942 2.72547 10.0386 3.42851 7.91247 4.75465C5.78633 6.0808 4.07489 7.97685 2.97273 10.2273Z" fill="white"/>
@@ -253,10 +188,10 @@
   </div>
   <div class="flex-card-list">
     <% @list.oeuvres.each do |oeuvre| %>
-      <div class="card-list" id="oeuvre_<%= oeuvre.id %>" style="background-image: url('<%= oeuvre.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+      <div class="card-ref" id="oeuvre_<%= oeuvre.id %>" style="background-image: url('<%= oeuvre.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
         <div class="default-overlay"></div>
         <p class="card-title"><%= oeuvre.nom_oeuvre %></p>
-        <div class="overlay" style="display: none;">
+        <div class="overlay-card-ref" style="display: none;">
           <%= link_to oeuvre_path(oeuvre.id), class: "delete-flex" do %>
             <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15 6.13636C16.085 6.13636 17.1255 6.56737 17.8927 7.33456C18.6599 8.10176 19.0909 9.1423 19.0909 10.2273C19.0909 11.3122 18.6599 12.3528 17.8927 13.12C17.1255 13.8872 16.085 14.3182 15 14.3182C13.915 14.3182 12.8745 13.8872 12.1073 13.12C11.3401 12.3528 10.9091 11.3122 10.9091 10.2273C10.9091 9.1423 11.3401 8.10176 12.1073 7.33456C12.8745 6.56737 13.915 6.13636 15 6.13636ZM15 0C21.8182 0 27.6409 4.24091 30 10.2273C27.6409 16.2136 21.8182 20.4545 15 20.4545C8.18182 20.4545 2.35909 16.2136 0 10.2273C2.35909 4.24091 8.18182 0 15 0ZM2.97273 10.2273C4.07489 12.4777 5.78633 14.3737 7.91247 15.6999C10.0386 17.026 12.4942 17.7291 15 17.7291C17.5058 17.7291 19.9614 17.026 22.0875 15.6999C24.2137 14.3737 25.9251 12.4777 27.0273 10.2273C25.9251 7.97685 24.2137 6.0808 22.0875 4.75465C19.9614 3.42851 17.5058 2.72547 15 2.72547C12.4942 2.72547 10.0386 3.42851 7.91247 4.75465C5.78633 6.0808 4.07489 7.97685 2.97273 10.2273Z" fill="white"/>
@@ -275,18 +210,18 @@
 </section>
 <script>
   $(document).ready(function() {
-    const cardList = document.querySelectorAll('.card-list');
+    const cardList = document.querySelectorAll('.card-ref');
 
     cardList.forEach(function(card) {
       card.addEventListener('click', function() {
         // Cacher tous les overlays
-        const allOverlays = document.querySelectorAll('.overlay');
+        const allOverlays = document.querySelectorAll('.overlay-card-ref');
         allOverlays.forEach(function(overlay) {
           overlay.style.display = 'none';
         });
 
         // Afficher l'overlay de la carte cliquée
-        const overlay = this.querySelector('.overlay');
+        const overlay = this.querySelector('.overlay-card-ref');
         overlay.style.display = 'flex';
       });
     });

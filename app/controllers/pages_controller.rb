@@ -80,6 +80,7 @@ class PagesController < ApplicationController
     @domaines = Domaine.all.to_a.unshift(Domaine.new(id: nil, domaine: "Tous les domaines"))
   end
   def parrainage
+    @current_page = 'profil'
     @user = current_user
     @referred_users = @user.referred_users
   end

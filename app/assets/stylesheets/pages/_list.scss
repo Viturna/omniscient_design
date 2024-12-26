@@ -32,7 +32,53 @@
   width: 50%;
 }
 
-@media screen and (min-width:0px) and (max-width:500px) {
+.flex-card-list{
+  margin-top: 32px;
+  display: flex;
+  flex-wrap:wrap;
+  gap: 0.5vw;
+}
+
+.delete{
+  margin-top: 48px;
+  width: 100%;
+  padding: 20px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #E61818;
+  height: 70px;
+  border:none;
+  margin-bottom: 50px;
+  &:hover{
+    background-color: #E9E9E9;
+  }
+}
+
+ #editButtonForm:hover{
+  opacity: 0.8;
+  cursor: pointer;
+}
+.list-edit-name{
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+@media screen and (max-width: 375px) {
+  .flex-card-list{
+    align-items: center;
+    justify-content: center;
+  }
+  .list-edit-name{
+    flex-wrap: wrap;
+    padding: 16px 0;
+  }
+}
+@media screen and (min-width:0px) and (max-width:600px) {
 
   .our-list {
     padding: 0 5vw;
@@ -52,8 +98,17 @@
     p{
       width: 80%;
     }
-
   }
+  .delete{
+    margin-top: 32px;
+    padding: 18px;
+    font-size: 16px;
+    height: 60px;
+  }
+  .flex-card-list{
+    gap: 16px;
+  }
+
 }
 
 @media screen and (min-width:501px) and (max-width:800px) {

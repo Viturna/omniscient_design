@@ -59,7 +59,7 @@ class ListsController < ApplicationController
     end
   end
   def remove_oeuvre
-    @list = List.find(params[:id])
+    @list = List.find(params[:list_id])
     @oeuvre = Oeuvre.find(params[:oeuvre_id])
 
     if @list && @oeuvre

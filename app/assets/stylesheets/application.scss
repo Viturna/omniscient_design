@@ -29,6 +29,7 @@
 @import 'components/cardref';
 @import 'components/form';
 @import 'components/listcard';
+@import 'components/listmodal';
 @import 'components/loader';
 @import 'components/popup';
 
@@ -93,6 +94,12 @@ main{
   flex-direction: column;
   gap: 36px;
 }
+@media screen and (max-width: 1280px) {
+  main{
+    margin-left: 30vw;
+    width: 70vw;
+  }
+}
 @media screen and (min-width:769px) and (max-width: 1024px) {
   main{
     margin-left: 30vw;
@@ -129,18 +136,14 @@ main{
   position: relative;
 }
 
-@media screen and (max-width:500px) {
+@media screen and (max-width:600px) {
   .top-header{
     padding: 0 5vw;
     padding-top: 64px;
     padding-bottom: 56px;
   }
-
-  .button{
-    width:fit-content;
-  }
 }
-@media screen and (min-width:501px) and (max-width:800px) {
+@media screen and (min-width:601px) and (max-width:800px) {
   .top-header{
     padding: 0 8vw;
     padding-top: 72px;

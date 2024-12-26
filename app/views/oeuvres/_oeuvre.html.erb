@@ -247,7 +247,7 @@
                   <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(oeuvre.image) %>');">
                   <% end %>
                   <div class="oeuvre-card-content">
-                    <span class="oeuvre-designer"><%= oeuvre.designer.nom_designer %></span>
+                    <span class="oeuvre-designer"><%= oeuvre.designers.map(&:nom_designer).join(', ') %></span>
                     <p class="oeuvre-title"><%= oeuvre.nom_oeuvre %></p>
                   </div>
                 </div>

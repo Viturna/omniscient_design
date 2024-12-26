@@ -1,146 +1,3 @@
-<style>
-  .flex-card-list{
-    margin-top: 32px;
-    display: flex;
-    flex-wrap:wrap;
-    gap: 2.3vw;
-  }
-
-
-  .delete{
-    margin-top: 48px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius:5px;
-    color: #202020;
-    font-weight: 500;
-    font-size: 18px;
-    justify-content: center;
-    color: #E61818;
-    height: 70px;
-    border:none;
-    cursor: pointer;
-    margin-bottom: 50px;
-  }
-  .delete:hover{
-    background-color: #E9E9E9;
-  }
-   #editButtonForm:hover{
-    opacity: 0.8;
-    cursor: pointer;
-  }
-    /* Modal */
-    /* Style de la popup */
-  /* Style de la fenêtre contextuelle */
-  #popup-designers, #popup-oeuvres  {
-    display: none; /* Par défaut, la fenêtre contextuelle est cachée */
-    position: fixed; /* Position fixe pour s'assurer qu'elle reste au-dessus du contenu */
-    top: 0px;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
-    z-index: 1000; /* Assure que la fenêtre contextuelle est au-dessus du contenu */
-    overflow: auto; /* Permet le défilement si le contenu est trop long */
-  }
-
-  /* Style du contenu de la fenêtre contextuelle */
-  .modal-content {
-    background-color: #F7F7F7;
-    margin: 0 auto;
-    padding: 0 20px;
-    padding-bottom: 24px;
-    border-radius: 5px;
-    max-width: 850px; /* Largeur maximale de la fenêtre contextuelle */
-  }
-
-  input[type="submit"] {
-    background-color: #202020;
-    color: white;
-    padding: 20px 35px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top:32px;
-    font-size: 16px;
-  }
-
-  input[type="submit"]:hover {
-    background-color: #2B2B2B;
-  }
-
-  /* Add */
-  .flex-card {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-start;
-  }
-  .card-list-add {
-    width: 13vw;
-    height: 13vw;
-    display: flex;
-    align-items: end;
-    border: 1px solid #E9E9E9;
-    border-radius: 5px;
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-sizing: border-box;
-  }
-  .card-title-add {
-    position: relative;
-    font-weight: 500;
-    font-size: clamp(1.25rem, 0.85rem + 0.8vw, 1.75rem);
-    width: 60%;
-    color: #FFF;
-    padding: 10px;
-    font-size: 18px;
-  }
-  .card-checked {
-    opacity: 0.6;
-  }
-  .hidden {
-    display: none;
-  }
-  .hidden-check {
-    visibility: hidden;
-  }
-
-  .search-container {
-    position: relative;
-    width: 30vw;
-    height: 70px;
-    margin-top: 30px;
-  }
-  .search-container input[type="search"] {
-    margin-left: 20px;
-    width: 100%;
-    height: 60px;
-    padding-left: 50px;
-    border: none;
-    border-radius: 5px;
-    font-weight: 500;
-    font-size: 16px;
-    color: #202020;
-    background-color: #FFF;
-    margin-top: 20px;
-    position: relative;
-  }
-  .search-container input[type="search"]::placeholder {
-    color: #202020;
-  }
-  .search-container .search-icon {
-    position: absolute;
-    top: 70%;
-    left: 35px;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-  }
-</style>
 <section class="top-header">
   <%= link_to lists_path do%>
     <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -206,7 +63,7 @@
       </div>
     <% end %>
   </div>
-  <%= button_to 'Supprimer la liste', list_path(@list), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" }, class: "delete" %>
+  <%= button_to 'Supprimer la liste', list_path(@list), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" }, class: "button delete" %>
 </section>
 <script>
   $(document).ready(function() {
@@ -241,24 +98,23 @@
       </svg>
     </div>
     <%= form_with(model: @list, local: true) do |form| %>
-      <div class="modal-content">
-        <div id="designers-list" class="flex-card">
-          <%= form.collection_check_boxes :designer_ids, Designer.where(validation: true).order(:nom_designer), :id, :nom_designer do |b| %>
-            <div class="check-box-wrapper">
-              <%= b.check_box(class: 'hidden-check', id: "designer_#{b.object.id}") %>
-              <%= b.label for: "designer_#{b.object.id}" do %>
-                <div class="card-list-add" style="background: url('<%= b.object.image %>'); background-size: cover; background-position: center;">
-                  <div class="default-overlay"></div>
-                  <p class="card-title-add"><%= b.object.nom_designer %></p>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-        <%= form.submit "Ajouter à la liste", class: "button"  %>
+      <div id="designers-list" class="flex-card">
+        <%= form.collection_check_boxes :designer_ids, Designer.where(validation: true).order(:nom_designer), :id, :nom_designer do |b| %>
+          <div class="check-box-wrapper">
+            <%= b.check_box(class: 'hidden-check', id: "designer_#{b.object.id}") %>
+            <%= b.label for: "designer_#{b.object.id}" do %>
+              <div class="card-list-add" style="background: url('<%= b.object.image %>'); background-size: cover; background-position: center;">
+                <div class="default-overlay"></div>
+                <p class="card-title-add"><%= b.object.nom_designer %></p>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
+      <%= form.submit "Ajouter à la liste", class: "button large" %>
     </div>
-  <% end %>
+  </div>
+<% end %>
 </div>
 </div>
 <div id="popup-oeuvres" class="modal">
@@ -275,24 +131,23 @@
       </svg>
     </div>
     <%= form_with(model: @list, local: true) do |form| %>
-      <div class="modal-content">
-        <div id="oeuvres-list" class="flex-card">
-          <%= form.collection_check_boxes :oeuvre_ids, Oeuvre.where(validation: true).order(:nom_oeuvre), :id, :nom_oeuvre do |b| %>
-            <div class="check-box-wrapper">
-              <%= b.check_box(class: 'hidden-check', id: "oeuvre_#{b.object.id}") %>
-              <%= b.label for: "oeuvre_#{b.object.id}" do %>
-                <div class="card-list-add" style="background: url('<%= b.object.image %>'); background-size: cover; background-position: center;">
-                  <div class="default-overlay"></div>
-                  <p class="card-title-add"><%= b.object.nom_oeuvre %></p>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-        <%= form.submit "Ajouter à la liste" %>
+      <div id="oeuvres-list" class="flex-card">
+        <%= form.collection_check_boxes :oeuvre_ids, Oeuvre.where(validation: true).order(:nom_oeuvre), :id, :nom_oeuvre do |b| %>
+          <div class="check-box-wrapper">
+            <%= b.check_box(class: 'hidden-check', id: "oeuvre_#{b.object.id}") %>
+            <%= b.label for: "oeuvre_#{b.object.id}" do %>
+              <div class="card-list-add" style="background: url('<%= b.object.image %>'); background-size: cover; background-position: center;">
+                <div class="default-overlay"></div>
+                <p class="card-title-add"><%= b.object.nom_oeuvre %></p>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
+      <%= form.submit "Ajouter à la liste", class: "button large" %>
     </div>
-  <% end %>
+  </div>
+<% end %>
 </div>
 </div>
 <script>

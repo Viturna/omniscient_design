@@ -1,5 +1,5 @@
 <%= link_to designer_path(card) do %>
-  <div class="card" data-card-id="<%= card.id %>">
+  <div class="card <%= class_name %>" data-card-id="<%= card.id %>">
     <div class="bg-card">
       <p class="info-card date-main">
         <svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,5 +24,4 @@
     <h3 class="title-description-card">Présentation</h3>
     <p class="description-card description-card-home"><%= card.presentation_generale %></p>
   </div>
-</div>
 <%end%>

@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loadMoreTrigger = document.getElementById("load-more-trigger");
-  let offset = 10; // On commence après les 10 premières oeuvres
+  let offset = 10; // On commence après les 10 premières cartes
   let loading = false;
 
-  const loadMoreCards = async () => {
+  const loadMoreCards = async (type) => {
     if (loading) return;
     loading = true;
 
-    const response = await fetch(`/oeuvres/load_more?offset=${offset}`, {
+    const response = await fetch(`/${type}/load_more?offset=${offset}`, {
       headers: {
         "X-Requested-With": "XMLHttpRequest",
       },
@@ -29,17 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
-      loadMoreCards();
+      const type = loadMoreTrigger.getAttribute("data-type");
+      loadMoreCards(type);
     }
   });
 
-  if (loadMoreTrigger) {
-    observer.observe(loadMoreTrigger);
-  }
-
-  // Vérification pour les petits écrans
-  const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
-  if (isSmallScreen) {
-    loadMoreCards();
-  }
+  observer.observe(loadMoreTrigger);
 });

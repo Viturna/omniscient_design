@@ -1,4 +1,4 @@
-<% content_for :title, "Explorer le carnet de référence et de designers - Omniscient Design" %>
+<% content_for :title, "Explorer le carnet de références et de designers - Omniscient Design" %>
 <% content_for :description, "Explorez Omniscient Design, le meilleur carnet de référence numérique. Un répertoire unique avec des infos sur les travaux et la vie des designers." %>
 <%= javascript_include_tag "controllers/load_more", defer: true %>
 <%= javascript_include_tag "controllers/scroll_cards", defer: true %>
@@ -8,12 +8,12 @@
       display: none;
     }
     #cardContainer {
-      height: calc(100dvh - 50px); /* Ajuster la hauteur pour les petits écrans */
+      height: calc(100vh - 50px); /* Ajuster la hauteur pour les petits écrans */
     }
   }
   #cardContainer {
   position: relative;
-  height: 100dvh; /* Conteneur pleine hauteur */
+  height: 100vh; /* Conteneur pleine hauteur */
   overflow-y: auto;
   scroll-behavior: smooth; /* Support des navigateurs modernes */
   }
@@ -73,7 +73,7 @@
     <div class="box-card" id="boxCard">
       <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
     </div>
-    <div id="load-more-trigger"></div>
+    <div id="load-more-trigger" data-type="oeuvres"></div>
   </div>
   <div class="button-nav">
     <button class="arrow-button up">

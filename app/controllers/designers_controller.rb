@@ -10,10 +10,9 @@ class DesignersController < ApplicationController
   end
   def load_more
     offset = params[:offset].to_i
-    @designers = Designer.where(validation: true).offset(offset).limit(10).order("RANDOM()")
-    render partial: 'designers/card', collection: @designers, as: :card
+    @designers = Designer.where(validation: true).order(:nom_designer).offset(offset).limit(10)
+    render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' }
   end
-
   # GET /designers/1 or /designers/1.json
   def show
     # Ensure the user is authenticated before checking user-specific conditions

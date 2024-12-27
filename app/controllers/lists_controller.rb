@@ -1,6 +1,6 @@
 class ListsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_list, only: [:show, :edit, :update, :destroy, :invite_editors, :change_role, :remove_user, :toggle_privacy]
+  before_action :set_list, only: [:show, :edit, :update, :destroy, :invite_editors, :change_role, :remove_user, :toggle_privacy, :remove_designer,:remove_oeuvre, :add_oeuvre, :add_designer]
 
   def index
     @lists = current_user.lists
@@ -61,6 +61,45 @@ class ListsController < ApplicationController
   def destroy
     @list.destroy
     redirect_to lists_url, notice: 'Liste supprimée avec succès.'
+  end
+
+  def remove_designer
+    designer = Designer.find(params[:designer_id])
+    if @list.designers.delete(designer)
+      notice = "Designer retiré avec succès."
+    else
+      notice = "Erreur lors du retrait du designer."
+    end
+    redirect_to @list, notice: notice
+  end
+
+  def remove_oeuvre
+    oeuvre = Oeuvre.find(params[:oeuvre_id])
+    if @list.oeuvres.delete(oeuvre)
+      notice = "Référence retirée avec succès."
+    else
+      notice = "Erreur lors du retrait de la référence."
+    end
+    redirect_to @list, notice: notice
+  end
+
+  def add_oeuvre
+    oeuvre = Oeuvre.find(params[:artwork_id])
+
+    if @list.oeuvres << oeuvre
+      redirect_to request.referer, notice: "Référence ajoutée avec succès."
+    else
+      redirect_to request.referer, alert: "Impossible d'ajouter la référence."
+    end
+  end
+
+  def add_designer
+    designer = Designer.find(params[:designer_id])
+    if @list.designers << designer
+      redirect_to request.referer, notice: "Designer ajouté avec succès."
+    else
+      redirect_to request.referer, alert: "Impossible d'ajouter le designer."
+    end
   end
 
   def toggle_privacy

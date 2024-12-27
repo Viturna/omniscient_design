@@ -74,6 +74,9 @@
       <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
     </div>
     <div id="load-more-trigger" data-type="designers"></div>
+    <div id="loader">
+      <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
+    </div>
   </div>
   <div class="button-nav">
     <button class="arrow-button up">

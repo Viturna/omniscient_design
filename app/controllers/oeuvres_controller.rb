@@ -59,7 +59,6 @@ class OeuvresController < ApplicationController
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show
-    # Ensure the user is authenticated before checking user-specific conditions
     if user_signed_in?
       unless @oeuvre.validation || current_user.admin? || @oeuvre.user == current_user || current_user.certified?
         redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."

@@ -22,7 +22,16 @@
       <div class="error-message" id="death-year-error"></div>
     </div>
     <div>
-      <%= form.collection_select :country_id, Country.order(:country), :id, :country, prompt: "Sélectionner un pays" %>
+      <%= form.label :country_1, "Pays principal" %>
+      <%= form.collection_select :country_ids, Country.order(:country), :id, :country, { prompt: "Sélectionner un pays" }, { id: "country_1" } %>
+    </div>
+    <div>
+      <%= form.label :country_2, "Pays secondaire (optionnel)" %>
+      <%= form.collection_select :country_ids, Country.order(:country), :id, :country, { prompt: "Sélectionner un pays" }, { id: "country_2" } %>
+    </div>
+    <div>
+      <%= form.label :country_3, "Pays tertiaire (optionnel)" %>
+      <%= form.collection_select :country_ids, Country.order(:country), :id, :country, { prompt: "Sélectionner un pays" }, { id: "country_3" } %>
     </div>
     <div>
       <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>

@@ -30,8 +30,8 @@ Rails.application.routes.draw do
     member do
       post 'add_oeuvre'
       post 'add_designer'
-      delete 'remove_designer', to: 'lists#remove_designer'
-      delete 'remove_oeuvre', to: 'lists#remove_oeuvre'
+      post 'remove_designer'
+      post 'remove_oeuvre'
       post 'toggle_share'
       post 'invite_editors'
       post 'change_role'

@@ -33,16 +33,30 @@ module ApplicationHelper
   end
   def remove_accents_and_special_chars(str)
     return '' if str.nil? # Gère le cas où str est nil
-    normalized_str = str.tr(
-      'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØōòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž',
-      'AAAAAAaaaaaaOOOOOOoooooooEEEEeeeeecCDIIIIiiiiUUUUuuuuNnSsYyyZz'
-    )
+    normalized_str = str.gsub(/[ÀÁÂÃÄÅ]/, 'A')
+    .gsub(/[àáâãäå]/, 'a')
+    .gsub(/[ÒÓÔÕÖØōòóôõöø]/, 'O')
+    .gsub(/[ÈÉÊË]/, 'E')
+    .gsub(/[èéêë]/, 'e')
+    .gsub(/[Çç]/, 'c')
+    .gsub(/[Ð]/, 'D')
+    .gsub(/[ÌÍÎÏ]/, 'I')
+    .gsub(/[ìíîï]/, 'i')
+    .gsub(/[ÙÚÛÜ]/, 'U')
+    .gsub(/[ùúûü]/, 'u')
+    .gsub(/[Ññ]/, 'N')
+    .gsub(/[Šš]/, 'S')
+    .gsub(/[Ÿÿý]/, 'Y')
+    .gsub(/[Žž]/, 'Z')
+    .gsub(/[œ]/, 'oe')
+    .gsub(/[Œ]/, 'OE')
+    .gsub(/[\(\)\"\/\,!&“”']/, '') # Supprime les caractères spéciaux, y compris l'apostrophe
     normalized_str
-      .gsub(/[\(\)\"\/\,!&“”]/, '') # Supprime les caractères spéciaux
+      .gsub(/[\(\)\"\/\,!&“”']/, '') # Supprime les caractères spéciaux
       .gsub('\'', '_')             # Remplace les apostrophes par des underscores
       .gsub(' ', '_')              # Remplace les espaces par des underscores
+      .downcase
   end
-
   def linkify_designer_names_and_oeuvres(text)
     designers = Designer.where(validation: true)
     oeuvres = Oeuvre.where(validation: true)

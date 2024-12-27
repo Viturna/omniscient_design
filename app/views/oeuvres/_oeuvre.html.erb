@@ -295,7 +295,7 @@
     </div>
   </div>
   <% if !oeuvre.validation %>
-    <% if current_user.certified? %>
+    <% if current_user.certified? || current_user.admin? %>
       <div class="overlay-bottom" id="overlay-bottom">
         <div class="naviguation">
           <p class="naviguation-title">Panneau d'administration</p>
@@ -355,32 +355,32 @@
         <%= link_to 'Créer une liste', new_list_path, class: "popup-link-add" %>
       </div>
       <% @lists.each do |list| %>
-        <%= form_with(url: add_oeuvre_list_path(@oeuvre), method: "post") do |form| %>
-          <div class="field">
-            <%= form.hidden_field :list_id, value: list.id %>
-            <div class="box-list">
-              <%= link_to list, class: "box-list-left" do %>
-                <div class="img-list"></div>
-                <div class="box-text-list">
-                  <p class="title-list"><%= list.name %></p>
-                  <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
-                </div>
+        <div class="field">
+          <div class="box-list">
+            <%= link_to list, class: "box-list-left" do %>
+              <div class="img-list"></div>
+              <div class="box-text-list">
+                <p class="title-list"><%= list.name %></p>
+                <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
+              </div>
+            <% end %>
+            <% if @oeuvre.lists.include?(list) %>
+              <%= link_to remove_oeuvre_list_path(list, oeuvre_id: @oeuvre.id), method: :delete, class: "remove-from-list-btn", data: { confirm: 'Êtes-vous sûr de vouloir retirer cette œuvre de la liste ?' } do %>
+                <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_834_332)">
+                    <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
+                    <path d="M15.4035 22.0475L10.5409 17.1848L8 19.5065L15.4035 26.9102L29.9916 12.3221L27.6695 10L15.4035 22.0475Z" fill="#202020"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_834_332">
+                      <rect width="37" height="37" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
               <% end %>
-              <% if @oeuvre.lists.include?(list) %>
-                <%= link_to remove_oeuvre_list_url(list.id, oeuvre_id: @oeuvre.id), method: :delete do %>
-                  <svg class="remove-from-list-btn" id="remove-from-list-btn-<%= list.id %>" data-list-id="<%= list.id %>" width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_834_332)">
-                      <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
-                      <path d="M15.4035 22.0475L10.5409 17.1848L8 19.5065L15.4035 26.9102L29.9916 12.3221L27.6695 10L15.4035 22.0475Z" fill="#202020"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_834_332">
-                        <rect width="37" height="37" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                <% end %>
-              <%else%>
+            <% else %>
+              <%= form_with(url: add_oeuvre_list_path(list), method: "post", local: true) do |form| %>
+                <%= form.hidden_field :artwork_id, value: @oeuvre.id %>
                 <button type="submit" class="add-to-list-btn" style="border:none; background:none;">
                   <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_829_310)">
@@ -405,10 +405,9 @@
                   </svg>
                 </button>
               <% end %>
-            </div>
-            <%= form.hidden_field :artwork_id, value: @oeuvre.id %>
+            <% end %>
           </div>
-        <% end %>
+        </div>
       <% end %>
     </div>
   </div>

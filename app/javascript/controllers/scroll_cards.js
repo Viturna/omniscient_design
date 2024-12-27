@@ -12,7 +12,7 @@ $(document).ready(function () {
     const $targetCard = $cards.eq(index);
     const scrollTop = $targetCard.position().top + $container.scrollTop();
 
-    $container.stop().animate({ scrollTop }, 300, "swing"); // Défilement fluide
+    $container.stop().animate({ scrollTop }, 200, "swing"); // Défilement fluide
     currentIndex = index;
   }
 
@@ -51,7 +51,7 @@ $(document).ready(function () {
       } else {
         goToCard(currentIndex - 1); // Scroll vers le haut
       }
-    }, 50);
+    }, 43);
   });
 
   // Navigation avec le tactile (mobile)

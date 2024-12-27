@@ -15,15 +15,14 @@ class DesignersController < ApplicationController
   end
   # GET /designers/1 or /designers/1.json
   def show
-    # Ensure the user is authenticated before checking user-specific conditions
     if user_signed_in?
-      unless @designer.validation || current_user.admin? || @designer.user == current_user
-        redirect_to root_path, notice: "Vous n'avez pas l'autorisation d'accéder à ce designer."
+      unless @designer.validation || current_user.admin? || @designer.user == current_user || current_user.certified?
+        redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
       end
       @lists = current_user.lists
     else
       unless @designer.validation
-        redirect_to root_path, notice: "Vous n'avez pas l'autorisation d'accéder à ce designer."
+        redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
       end
       @lists = []
     end
@@ -146,9 +145,22 @@ class DesignersController < ApplicationController
 
   def set_designer
     @designer = Designer.friendly.find(params[:slug])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to designers_path, alert: "Designer introuvable."
   end
 
   def designer_params
-    params.require(:designer).permit(:nom_designer, :date_naissance, :image, :presentation_generale, :date_deces)
+    params.require(:designer).permit(
+      :nom_designer,
+      :date_naissance,
+      :date_deces,
+      :presentation_generale,
+      :formation_et_influences,
+      :style_ou_philosophie,
+      :creations_majeures,
+      :heritage_et_impact,
+      :image,
+      country_ids: []
+    )
   end
 end

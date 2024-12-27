@@ -42,7 +42,9 @@ input[type=search] {
   }
 
 }
-
+.field{
+  width: 100%;
+}
 input[type=text],
 input[type=date],
 input[type=email],
@@ -82,7 +84,7 @@ textarea {
   stroke: none;
   padding-top: 25px;
   padding-left: 25px;
-  width: 55vw;
+  width: calc(100% - 31px);
   height: 120px;
   resize: none;
   background-color: $secondary-color;

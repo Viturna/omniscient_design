@@ -74,7 +74,7 @@ module ApplicationHelper
       next if oeuvre.nom_oeuvre.nil?
       # Remplacer les titres des œuvres par des liens
       text = text.gsub(/\b(#{Regexp.escape(oeuvre.nom_oeuvre)})\b/i) do |match|
-        "<a style=\"color:#202020; font-weight:500;\" href='/oeuvres/#{oeuvre.id}'>#{match}</a>"
+        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/oeuvres/#{oeuvre.id}'>#{match}</a>"
       end
     end
     text.html_safe

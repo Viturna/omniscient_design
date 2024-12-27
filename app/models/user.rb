@@ -40,6 +40,10 @@ class User < ApplicationRecord
   has_many :list_visitors
   has_many :visitor_lists, through: :list_visitors, source: :list
 
+  has_many :referrals_as_referrer, class_name: 'Referral', foreign_key: 'referrer_id'
+  has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id'
+  has_many :referred_users, through: :referrals_as_referrer, source: :referee
+  has_one :referral, foreign_key: 'referee_id'
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -47,8 +51,4 @@ class User < ApplicationRecord
 
   validates :statut, inclusion: { in: STATUTS, message: "%{value} n'est pas un statut valide" }
 
-  def referred_users
-    User.joins("INNER JOIN referrals ON referrals.referee_id = users.id")
-        .where("referrals.referrer_id = ?", id)
-  end
 end

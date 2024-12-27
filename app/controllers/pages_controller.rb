@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage]
+  before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul]
   before_action :check_certified, only: [:validation]
   before_action :check_admin_role, only: [:suivi_references]
   def presentation
@@ -84,22 +84,44 @@ class PagesController < ApplicationController
     @current_page = 'profil'
     @user = current_user
     @referred_users = @user.referred_users
+    @referred_count = @referred_users.count
   end
   def parrainage_filleul
     @user = current_user
 
-    # Vérifier si un code de parrainage a été fourni
-    referral_code = params[:referral_code]
+    if request.post?
+      referral_code = params[:referral_code]
 
-    # Trouver l'utilisateur correspondant au code de parrainage
-    referrer = User.find_by(referral_code: referral_code)
+      if referral_code.blank?
+        flash[:error] = "Veuillez fournir un code de parrainage."
+        redirect_to parrainage_filleul_path and return
+      end
 
-    if referrer
-      # Créer la relation de parrainage
-      Referral.create!(referrer: referrer, referee: @user)
-      flash[:success] = "Vous avez été lié à votre parrain : #{referrer.firstname} #{referrer.lastname}."
-    else
-      flash[:error] = "Code de parrainage invalide."
+      # Trouver le parrain correspondant au code
+      referrer = User.find_by(referral_code: referral_code)
+
+      if referrer
+        if referrer == @user
+          flash[:error] = "Vous ne pouvez pas être votre propre parrain."
+        elsif Referral.exists?(referrer: referrer, referee: @user)
+          flash[:notice] = "Vous êtes déjà lié à ce parrain."
+        else
+          begin
+            # Créer la relation de parrainage
+            Rails.logger.debug "user: #{@user.inspect}"
+            Referral.create!(referrer: referrer, referee: @user)
+            flash[:success] = "Vous avez été lié à votre parrain : #{referrer.pseudo}."
+          rescue ActiveRecord::RecordInvalid => e
+            Rails.logger.debug "user: #{@user.inspect}"
+            Rails.logger.error "Erreur lors de la création de la relation de parrainage : #{e.message}"
+            flash[:error] = "Une erreur est survenue. Veuillez réessayer."
+          end
+        end
+      else
+        flash[:error] = "Code de parrainage invalide."
+      end
+
+      redirect_to parrainage_path
     end
   end
   def suivi_references

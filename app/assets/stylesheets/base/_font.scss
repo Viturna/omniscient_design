@@ -72,6 +72,9 @@ p{
 .black{
   color: $primary-color;
 }
+.underline{
+  text-decoration: underline;
+}
 
 @media screen and (min-width:426px) and (max-width: 600px) {
   h1 {

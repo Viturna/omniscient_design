@@ -1,32 +1,50 @@
 <style>
-  .top-header{
-    padding: 64px 10vw;
-    height: 200px;
-    background-color: #202020;
-    color:#FFF;
-    position: relative;
-  }
-    .grid-1{
-    padding-bottom: 64px;
-  }
-  .title-avantage{
+  .title-avantage {
     font-size: 24px;
     color: #202020;
     font-weight: 600;
   }
-  h2{
+    .grid-1{
+    padding-bottom: 64px;
+  }
+  h2 {
     margin: 32px 0;
+  }
+  .code{
+    margin-top: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .code-input{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .code input[type="text"]{
+    width: 20vw;
+    font-size: 48px;
+    font-weight: 600;
+  }
+    .code input[type="text"]::placeholder {
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .title-code{
+    color: #202020;
+    font-weight: 500;
   }
 </style>
 <section class="top-header">
-  <%= link_to profil_path do %>
+  <%= link_to parrainage_path do %>
     <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
     </svg>
   <% end %>
   <p class="subtitle-top">Parrainage </p>
   <h1>Apprenez à plusieurs</h1>
-  <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus.est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus.</p>
+  <p class="subtitle">Profitez des avantages du parrainage et partagez votre passion pour l'apprentissage avec vos amis et collègues.</p>
 </section>
 <section class="grid-1">
   <div style="display: inline-flex; align-items:center; gap:8px;">
@@ -42,14 +60,15 @@
       <p>Vous êtes déjà parrainé par <%= current_user.referral.referrer.pseudo %>.</p>
     </div>
   <% else %>
-    <%= form_with url: parrainage_filleul_path, method: :post do |form| %>
-      <div>
-        <%= form.label :referral_code, 'Code de parrainage' %>
-        <%= form.text_field :referral_code, placeholder: 'Entrez votre code de parrainage', class: 'input' %>
-      </div>
-      <div>
-        <%= form.submit 'Associer mon parrain', class: 'button dark' %>
-      </div>
+    <%= form_with url: parrainage_filleul_path, method: :post, local: true do |form| %>
+      <div class="code">
+        <p class="title-code">Code de parrainage :</p>
+        <div class="code-input">
+          <%= form.text_field :referral_code, placeholder: 'Entrez votre code de parrainage', class: 'input' %>
+          <%= form.submit 'Soumettre', class: 'button dark' %>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
+    <%= link_to parrainage_path, class: "black underline" do %>Parrainer quelqu'un<% end %>
+  </div>
 </section>

@@ -68,7 +68,7 @@
   <% end %>
   <p class="subtitle-top">Parrainage </p>
   <h1>Apprenez à plusieurs</h1>
-  <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus.est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus.</p>
+  <p class="subtitle">Profitez des avantages du parrainage et partagez votre passion pour l'apprentissage avec vos amis et collègues.</p>
 </section>
 <section class="grid-1">
   <div style="display: inline-flex; align-items:center; gap:8px;">
@@ -111,14 +111,13 @@
         </svg>
       </button>
     </div>
-    <%= link_to parrainage_filleul_path do %>Se faire parrainer
-    <%end%>
+    <%= link_to parrainage_filleul_path, class: "black underline" do %>Se faire parrainer<% end %>
   </div>
 </section>
 <section class="grid-1 filleul">
-  <p>Vous avez <%= @referred_count %> filleuls.</p>
+  <h2>Liste de vos filleuls</h2>
+  <p>Vous avez <%= @referred_count %> filleul(s).</p>
   <% if @referred_users.any? %>
-    <h2>Liste de vos filleuls :</h2>
     <ul>
       <% @referred_users.each do |referral| %>
         <li>

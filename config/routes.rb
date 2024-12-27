@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   get 'cgu', to: 'pages#cgu', as: 'cgu'
   get 'changelog', to: 'pages#changelog', as: 'changelog'
   get 'parrainage_filleul', to: 'pages#parrainage_filleul', as: 'parrainage_filleul'
+  post 'parrainage_filleul', to: 'pages#parrainage_filleul'
 
   # Route racine
   root 'oeuvres#index'

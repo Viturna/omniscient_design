@@ -21,8 +21,14 @@ $(document).ready(function () {
     $cards = $(".card");
   }
 
+  // Vérifier si l'écran est petit
+  function isSmallScreen() {
+    return window.innerWidth <= 320;
+  }
+
   // Navigation avec les flèches (desktop uniquement)
   $(document).on("keydown", function (e) {
+    if (isSmallScreen()) return; // Désactiver pour les petits écrans
     if (e.key === "ArrowDown") {
       e.preventDefault();
       goToCard(currentIndex + 1);
@@ -35,6 +41,7 @@ $(document).ready(function () {
   // Navigation avec la molette (desktop)
   let scrollTimeout;
   $container.on("wheel", function (e) {
+    if (isSmallScreen()) return; // Désactiver pour les petits écrans
     e.preventDefault();
 
     clearTimeout(scrollTimeout);

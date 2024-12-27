@@ -4,13 +4,16 @@
 <%= javascript_include_tag "controllers/scroll_cards", defer: true %>
 <style>
   @media screen and (max-width: 320px) {
-  .top-bar-search {
-    display: none;
-  }
+    .top-bar-search {
+      display: none;
+    }
+    #cardContainer {
+      height: calc(100dvh - 50px); /* Ajuster la hauteur pour les petits écrans */
+    }
   }
   #cardContainer {
   position: relative;
-  height: 100vh; /* Conteneur pleine hauteur */
+  height: 100dvh; /* Conteneur pleine hauteur */
   overflow-y: auto;
   scroll-behavior: smooth; /* Support des navigateurs modernes */
   }

@@ -36,4 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loadMoreTrigger) {
     observer.observe(loadMoreTrigger);
   }
+
+  // Vérification pour les petits écrans
+  const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
+  if (isSmallScreen) {
+    loadMoreCards();
+  }
 });

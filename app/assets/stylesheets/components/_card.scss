@@ -15,6 +15,7 @@
 }
 
 .card {
+  position: relative;
   padding-top: 190px;
   width: 50vw;
 }
@@ -24,29 +25,22 @@
   border-radius: 5px;
   width: 50vw;
   height: 350px;
-  position: relative;
+}
+.flex-info-card {
+  position: absolute;
+  width: 95%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+  margin-top: 16px;
+  padding: 0 16px;
+}
+.flex-info-card .info-card-dark{
+  scale: 0.9;
+  height: 30px;
 }
 
-.bg-card .date-main{
-  top: 48px;
-  position: absolute;
-  transform: rotate(-6deg);
-  background-color: rgba(32, 32, 32, 0.4);
-  color: #FFF;
-  font-size: 20px;
-}
-.bg-card .date-main, .bg-card .domaine-main{
-  scale: 0.9;
-}
-.bg-card .domaine-main{
-  right: 25px;
-  top: 0;
-  position: absolute;
-  transform: rotate(-6deg);
-  background-color: rgba(32, 32, 32, 0.4);
-  color: #FFF;
-  font-size: 20px;
-}
 .title-card {
   margin-top: 8px;
   font-size: 36px;

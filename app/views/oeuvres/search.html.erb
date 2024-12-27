@@ -404,7 +404,7 @@
   <h2 class="title">Designers</h2>
   <div class="container-designers">
     <div class="flex-designer" id="designer-cards">
-      <% @designers = Designer.where(validation: true).order(:nom_designer).limit(10) %>
+      <% @designers = Designer.where(validation: true).order(:nom_designer).limit(8) %>
       <% @designers.each do |designer| %>
         <%= link_to designer do %>
           <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
@@ -434,7 +434,7 @@
     <h2 class="title">Références</h2>
     <div class="container-oeuvres">
       <div class="flex-oeuvre" id="oeuvre-cards">
-        <% @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10) %>
+        <% @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(8) %>
         <% @oeuvres.each do |oeuvre| %>
           <%= link_to oeuvre do %>
             <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>

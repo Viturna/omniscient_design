@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_25_100007) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_27_101612) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -158,6 +158,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_25_100007) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
+  create_table "list_editors", force: :cascade do |t|
+    t.bigint "list_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_list_editors_on_list_id"
+    t.index ["user_id"], name: "index_list_editors_on_user_id"
+  end
+
   create_table "list_items", force: :cascade do |t|
     t.bigint "list_id", null: false
     t.string "listable_type", null: false
@@ -168,12 +177,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_25_100007) do
     t.index ["listable_type", "listable_id"], name: "index_list_items_on_listable"
   end
 
+  create_table "list_visitors", force: :cascade do |t|
+    t.bigint "list_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_list_visitors_on_list_id"
+    t.index ["user_id"], name: "index_list_visitors_on_user_id"
+  end
+
   create_table "lists", force: :cascade do |t|
     t.string "name"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
+    t.string "share_token"
+    t.string "previous_share_token"
+    t.index ["share_token"], name: "index_lists_on_share_token", unique: true
     t.index ["slug"], name: "index_lists_on_slug", unique: true
     t.index ["user_id"], name: "index_lists_on_user_id"
   end
@@ -286,7 +307,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_25_100007) do
   add_foreign_key "designers_oeuvres", "designers"
   add_foreign_key "designers_oeuvres", "oeuvres"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "list_editors", "lists"
+  add_foreign_key "list_editors", "users"
   add_foreign_key "list_items", "lists"
+  add_foreign_key "list_visitors", "lists"
+  add_foreign_key "list_visitors", "users"
   add_foreign_key "lists", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "oeuvres", "domaines"

@@ -37,6 +37,7 @@ class PagesController < ApplicationController
     @current_page = 'recherche'
     if params[:id].present?
       @oeuvre = Oeuvre.find(params[:id])
+      @oeuvres = Oeuvre.order(:nom_oeuvre)
     else
       @oeuvre = Oeuvre.all # Ou toute autre logique pour récupérer toutes les œuvres
     end

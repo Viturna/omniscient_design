@@ -216,7 +216,7 @@
               <div class="oeuvre-card">
                 <div class="oeuvre-card-image" style="background-image: url('<%= oeuvre.image %>');">
                   <div class="oeuvre-card-content">
-                    <p class="oeuvre-designer"><%= oeuvre.designer.nom_designer %></p>
+                    <p class="oeuvre-designer">  <%= oeuvre.designers.map(&:nom_designer).join(', ') %></p>
                     <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                   </div>
                 </div>

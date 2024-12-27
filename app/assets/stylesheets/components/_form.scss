@@ -50,7 +50,7 @@ input[type=password] {
   border: none;
   stroke: none;
   padding-left: 25px;
-  width: 55vw;
+  width: calc(100% - 31px);
   height: 70px;
   background-color: $secondary-color;
   border-radius: 5px;
@@ -60,7 +60,7 @@ input[type=password] {
 }
 
 select {
-  width: calc(55vw + 30px);
+  width: 100%;
   border: none;
   stroke: none;
   padding-left: 25px;
@@ -94,7 +94,7 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: 50vw;
+    width: 100%;
   }
 
   select {

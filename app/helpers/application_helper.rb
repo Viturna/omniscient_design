@@ -32,17 +32,17 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
   def remove_accents_and_special_chars(str)
+    return '' if str.nil? # Gère le cas où str est nil
     normalized_str = str.tr(
       'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØōòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž',
       'AAAAAAaaaaaaOOOOOOoooooooEEEEeeeeecCDIIIIiiiiUUUUuuuuNnSsYyyZz'
     )
-
     normalized_str
-    .gsub(/[\(\)\"\/\,!&“”]/, '')
-    .gsub('\'', '_')
-    .gsub(' ', '_')
-    .downcase
+      .gsub(/[\(\)\"\/\,!&“”]/, '') # Supprime les caractères spéciaux
+      .gsub('\'', '_')             # Remplace les apostrophes par des underscores
+      .gsub(' ', '_')              # Remplace les espaces par des underscores
   end
+
   def linkify_designer_names_and_oeuvres(text)
     designers = Designer.where(validation: true)
     oeuvres = Oeuvre.where(validation: true)

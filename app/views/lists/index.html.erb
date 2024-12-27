@@ -16,9 +16,10 @@
     <h2>Vos listes</h2>
     <%= link_to 'Créer votre liste', new_list_path, class:"button dark" %>
   </div>
-  <% if @lists.any? %>
+  <% combined_lists = @lists + @editor_lists + @visitor_lists %>
+  <% if combined_lists.any? %>
     <ul>
-      <% @lists.each do |list| %>
+      <% combined_lists.each do |list| %>
         <li>
           <%= link_to list_path(list) do %>
             <div class="list-card">

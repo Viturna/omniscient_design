@@ -1,14 +1,33 @@
 class ListsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_list, only: [:show, :edit, :update, :destroy]
+  before_action :set_list, only: [:show, :edit, :update, :destroy, :invite_editors, :change_role, :remove_user, :toggle_privacy]
 
   def index
     @lists = current_user.lists
+    @editor_lists = current_user.editable_lists
+    @visitor_lists = current_user.visitor_lists
     @current_page = 'listes'
   end
 
   def show
     @current_page = 'listes'
+    @list = List.friendly.find(params[:slug])
+    if @list.share_token.present? && @list.share_token == params[:share_token]
+      render :show
+    elsif @list.user == current_user || @list.editors.include?(current_user) || @list.visitors.include?(current_user)
+      render :show
+    else
+      redirect_to root_path, alert: "Cette liste n'existe pas ou n'est pas partagée."
+    end
+  end
+
+  def shared
+    @list = List.find_by(share_token: params[:share_token])
+    if @list
+      render :show
+    else
+      redirect_to root_path, alert: "Cette liste n'existe pas ou n'est pas partagée."
+    end
   end
 
   def new
@@ -43,74 +62,83 @@ class ListsController < ApplicationController
     @list.destroy
     redirect_to lists_url, notice: 'Liste supprimée avec succès.'
   end
-  def add_oeuvre
-    @list = List.find(params[:list_id])
-    @oeuvre = Oeuvre.find(params[:artwork_id])
 
-    if @list && @oeuvre
-      if @list.oeuvres.exists?(@oeuvre.id)
-        redirect_to @oeuvre, notice: "La référence est déjà dans la liste."
-      else
-        @list.oeuvres << @oeuvre
-        redirect_to @oeuvre, notice: "La référence a été ajoutée à la liste."
-      end
+  def toggle_privacy
+    if params[:privacy] == 'public'
+      @list.update(share_token: @list.previous_share_token || SecureRandom.hex(10))
+      notice = "La liste est maintenant publique."
     else
-      redirect_to @oeuvre, notice: "Impossible d'ajouter la référence à la liste."
+      @list.update(previous_share_token: @list.share_token, share_token: nil)
+      notice = "La liste est maintenant privée."
     end
-  end
-  def remove_oeuvre
-    @list = List.find(params[:list_id])
-    @oeuvre = Oeuvre.find(params[:oeuvre_id])
-
-    if @list && @oeuvre
-      if @list.oeuvres.exists?(@oeuvre.id)
-        @list.oeuvres.delete(@oeuvre)
-        redirect_to request.referer, notice: "La référence a été retirée de la liste."
-      else
-        redirect_to request.referer, notice: "La référence n'est pas dans la liste."
-      end
-    else
-      redirect_to request.referer, notice: "Impossible de retirer la référence de la liste."
-    end
+    redirect_to @list, notice: notice
   end
 
-  def add_designer
-    @list = List.find(params[:list_id])
-    @designer = Designer.find(params[:artwork_id])
+  def invite_editors
+    user = User.find_by(email: params[:email])
+    role = params[:role]
 
-    if @list && @designer
-      if @list.designers.exists?(@designer.id)
-        redirect_to @designer, notice: "La référence est déjà dans la liste."
-      else
-        @list.designers << @designer
-        redirect_to @designer, notice: "La référence a été ajoutée à la liste."
+    if user
+      if role == 'editor'
+        @list.editors << user unless @list.editors.include?(user)
+      elsif role == 'visitor'
+        @list.visitors << user unless @list.visitors.include?(user)
       end
+
+      # Assurez-vous que le share_token est défini
+      @list.update(share_token: SecureRandom.hex(10)) unless @list.share_token.present?
+
+      ListMailer.invite_editor(@list, user).deliver_now
+      redirect_to @list, notice: "Utilisateur invité avec succès."
     else
-      redirect_to @designer, notice: "Impossible d'ajouter la référence à la liste."
+      redirect_to @list, alert: "Utilisateur introuvable."
     end
   end
-  def remove_designer
-    @list = List.find(params[:id])
-    @designer = Designer.find(params[:designer_id])
 
-    if @list && @designer
-      if @list.designers.exists?(@designer.id)
-        @list.designers.delete(@designer)
-        redirect_to request.referer, notice: "La référence a été retirée de la liste."
+  def change_role
+    user = User.find(params[:user_id])
+    role = params[:role]
+
+    if role == 'remove'
+      if @list.editors.delete(user) || @list.visitors.delete(user)
+        notice = "Utilisateur supprimé avec succès."
       else
-        redirect_to request.referer, notice: "La référence n'est pas dans la liste."
+        notice = "Erreur lors de la suppression de l'utilisateur."
       end
+    elsif role == 'editor'
+      @list.editors << user unless @list.editors.include?(user)
+      @list.visitors.delete(user)
+      notice = "Utilisateur désigné comme éditeur."
+    elsif role == 'visitor'
+      @list.visitors << user unless @list.visitors.include?(user)
+      @list.editors.delete(user)
+      notice = "Utilisateur désigné comme visiteur."
     else
-      redirect_to request.referer, notice: "Impossible de retirer la référence de la liste."
+      notice = "Rôle invalide."
     end
+
+    redirect_to @list, notice: notice
+  end
+
+  def remove_user
+    user = User.find(params[:user_id])
+    if @list.editors.exists?(user.id)
+      @list.editors.delete(user)
+      notice = "Utilisateur supprimé avec succès."
+    elsif @list.visitors.exists?(user.id)
+      @list.visitors.delete(user)
+      notice = "Utilisateur supprimé avec succès."
+    else
+      notice = "Erreur lors de la suppression de l'utilisateur."
+    end
+    redirect_to @list, notice: notice
   end
 
   private
 
   def set_list
-    @list = current_user.lists.friendly.find(params[:slug])
+    @list = List.friendly.find(params[:slug])
     if @list.nil?
-      # Gérer le cas où la liste n'est pas trouvée
       redirect_to lists_path, alert: "List not found or you don't have access to it."
     end
   end

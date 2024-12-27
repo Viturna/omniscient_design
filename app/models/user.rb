@@ -33,6 +33,13 @@ class User < ApplicationRecord
   has_one_attached :profile_image
   has_many :feedbacks
   has_many :suivis, dependent: :destroy
+
+  has_many :list_editors
+  has_many :editable_lists, through: :list_editors, source: :list
+
+  has_many :list_visitors
+  has_many :visitor_lists, through: :list_visitors, source: :list
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

@@ -32,9 +32,15 @@ Rails.application.routes.draw do
       post 'add_designer'
       delete 'remove_designer', to: 'lists#remove_designer'
       delete 'remove_oeuvre', to: 'lists#remove_oeuvre'
+      post 'toggle_share'
+      post 'invite_editors'
+      post 'change_role'
+      delete 'remove_user'
+      post 'toggle_privacy'
     end
   end
 
+  get '/shared/:share_token', to: 'lists#shared', as: :shared_list
   resources :oeuvres, param: :slug do
     collection do
       get 'search'

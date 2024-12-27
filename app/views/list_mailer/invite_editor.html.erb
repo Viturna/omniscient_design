@@ -1,0 +1,5 @@
+<p>Bonjour <%= @user.pseudo || @user.email %>,</p>
+<p>Vous avez été invité à éditer la liste "<%= @list.name %>".</p>
+<p><%= link_to 'Voir la liste', shared_list_url(@list.share_token) %></p>
+<p>Cordialement,</p>
+<p>L'équipe</p>

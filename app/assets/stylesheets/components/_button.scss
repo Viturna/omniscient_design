@@ -166,6 +166,9 @@
   .circle {
     width: 55px;
     height: 55px;
+    svg{
+      scale: 0.7;
+    }
   }
 
   .circle-notif {
@@ -203,13 +206,13 @@
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (min-width:426px)  and (max-width: 600px) {
   .circle {
     width: 65px;
     height: 65px;
 
     svg {
-      scale: 0.85;
+      scale: 0.7;
     }
   }
 
@@ -239,7 +242,7 @@
   }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (min-width:376px)  and (max-width: 425px) {
   .button {
     width: 100%;
     padding: 20px 15px;
@@ -251,7 +254,7 @@
     height: 65px;
 
     svg {
-      scale: 0.85;
+      scale: 0.7;
     }
   }
 
@@ -293,7 +296,7 @@
     height: 60px;
 
     svg {
-      scale: 0.8;
+      scale: 0.7;
     }
   }
 

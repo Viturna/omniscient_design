@@ -141,7 +141,7 @@
     padding: 0px 4vw
   }
   .form {
-    width: 90vw;
+    width: calc(90vw - 100px);
   }
   .actions{
     margin: 0;
@@ -182,7 +182,7 @@
     padding: 0px 4vw
   }
   .form {
-    width: 85vw;
+    width: 82vw;
     padding: 24px 4vw
   }
   .actions{

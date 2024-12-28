@@ -1,3 +1,8 @@
+<%= javascript_include_tag "controllers/savePopup", defer: true %>
+<%= javascript_include_tag "controllers/referenceScroll", defer: true %>
+<%= javascript_include_tag "controllers/referenceShare", defer: true %>
+<%= javascript_include_tag "controllers/backBtn", defer: true %>
+<%= javascript_include_tag "controllers/validationOverlay", defer: true %>
 <style>
   .box-list{
     align-items: center;
@@ -179,7 +184,7 @@
         <%end%>
       </div>
       <div class="contribution">
-        <h2 class="title-description-card">Contribution</h2>
+        <h2 class="title-description-reference">Contribution</h2>
         <div class="flex-contributor">
           <div class="box-contributor">
             <% if designer.user_id.present? %>
@@ -209,7 +214,7 @@
       <% designer_oeuvres = @designer.oeuvres.where(validation: true)
                               .limit(3) %>
       <% if designer_oeuvres.any? %>
-        <h2 class="title-description-card">Œuvres du designer</h2>
+        <h2 class="title-description-reference">Œuvres du designer</h2>
         <div class="oeuvres-same">
           <% designer_oeuvres.each do |oeuvre| %>
             <%= link_to oeuvre do %>
@@ -225,7 +230,7 @@
           <% end %>
         </div>
       <% end %>
-      <h2 class="title-description-card">Découvrir d'autres designers</h2>
+      <h2 class="title-description-reference">Découvrir d'autres designers</h2>
       <div class="oeuvres-same">
         <% designers = Designer.all
                             .where(validation: true)
@@ -296,28 +301,6 @@
   <div class="overlay" id="overlay">
   </div>
 <% end %>
-<script>
-  const validation = document.getElementById('validation');
-  const overlay = document.getElementById('overlay');
-
-  function hideValidation() {
-    validation.style.display = 'none';
-    overlay.style.display = 'none';
-    window.removeEventListener('scroll', hideValidation);
-  }
-
-  window.addEventListener('scroll', hideValidation);
-</script>
-<script>
-  const overlaybottom = document.getElementById('overlay-bottom');
-
-  function seenValidation() {
-    overlaybottom.style.display = 'block';
-    window.removeEventListener('scroll', seenValidation);
-  }
-
-  window.addEventListener('scroll', seenValidation);
-</script>
 <div id="shareModal" class="popup">
   <div class="popup-content">
     <div class="top-popup">
@@ -354,10 +337,6 @@
     <input type="text" id="shareLink" value="" hidden readonly>
   </div>
 </div>
-<%= javascript_include_tag "controllers/savePopup", defer: true %>
-<%= javascript_include_tag "controllers/referenceScroll", defer: true %>
-<%= javascript_include_tag "controllers/referenceShare", defer: true %>
-<%= javascript_include_tag "controllers/backBtn", defer: true %>
 <div id="popup" class="popup">
   <div class="popup-content">
     <div class="top-popup">

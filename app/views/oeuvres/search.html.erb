@@ -507,7 +507,7 @@
       }
     });
   </script>
-  <%= javascript_include_tag "controllers/autocomplete", defer: true %>
+  <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
   <script>
     $(document).ready(function() {
       var works = <%= raw @works.to_json %>; // Injecter les noms des œuvres dans le JavaScript

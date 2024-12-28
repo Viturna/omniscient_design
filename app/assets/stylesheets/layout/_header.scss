@@ -7,7 +7,7 @@ header {
   padding: 0 50px;
   background-color: $secondary-color;
   overflow-y: scroll;
-  z-index: 99;
+  z-index: 999;
   transition: width 0.3s ease, height 0.3s ease;
 }
 
@@ -151,7 +151,7 @@ header li .active svg path {
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (min-width: 769px) and (max-width: 1024px) {
   header {
     width: 20vw;
     height: 100vh;
@@ -219,7 +219,6 @@ header li .active svg path {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    z-index: 99;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
 
@@ -284,7 +283,6 @@ header li .active svg path {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 99;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
 

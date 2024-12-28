@@ -1,7 +1,7 @@
 <% content_for :title, "Explorer le carnet de références et de designers - Omniscient Design" %>
 <% content_for :description, "Explorez Omniscient Design, le meilleur carnet de référence numérique. Un répertoire unique avec des infos sur les travaux et la vie des designers." %>
 <%= javascript_include_tag "controllers/load_more", defer: true %>
-<%= javascript_include_tag "controllers/scroll_cards", defer: true %>
+<%= javascript_include_tag "controllers/scrollCardsIndex", defer: true %>
 <style>
   @media screen and (max-width: 320px) {
     .top-bar-search {
@@ -74,9 +74,6 @@
       <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
     </div>
     <div id="load-more-trigger" data-type="designers"></div>
-    <div id="loader">
-      <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
-    </div>
   </div>
   <div class="button-nav">
     <button class="arrow-button up">

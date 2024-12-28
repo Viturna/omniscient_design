@@ -1,3 +1,8 @@
+ <%= javascript_include_tag "controllers/savePopup", defer: true %>
+<%= javascript_include_tag "controllers/referenceScroll", defer: true %>
+<%= javascript_include_tag "controllers/referenceShare", defer: true %>
+<%= javascript_include_tag "controllers/backBtn", defer: true %>
+<%= javascript_include_tag "controllers/validationOverlay", defer: true %>
 <style>
   .box-list{
         padding: 0px 50px;
@@ -412,29 +417,3 @@
       <% end %>
     </div>
   </div>
-  <%= javascript_include_tag "controllers/savePopup", defer: true %>
-  <%= javascript_include_tag "controllers/referenceScroll", defer: true %>
-  <%= javascript_include_tag "controllers/referenceShare", defer: true %>
-  <%= javascript_include_tag "controllers/backBtn", defer: true %>
-  <script>
-    const validation = document.getElementById('validation');
-    const overlay = document.getElementById('overlay');
-
-    function hideValidation() {
-      validation.style.display = 'none';
-      overlay.style.display = 'none';
-      window.removeEventListener('scroll', hideValidation);
-    }
-
-    window.addEventListener('scroll', hideValidation);
-  </script>
-  <script>
-    const overlaybottom = document.getElementById('overlay-bottom');
-
-    function seenValidation() {
-      overlaybottom.style.display = 'block';
-      window.removeEventListener('scroll', seenValidation);
-    }
-
-    window.addEventListener('scroll', seenValidation);
-  </script>

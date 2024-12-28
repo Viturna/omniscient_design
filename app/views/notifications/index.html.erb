@@ -131,14 +131,4 @@
     <p>Aucune notification.</p>
   <% end %>
 </section>
-<script>
-  document.getElementById('back-btn').addEventListener('click', function() {
-    const referrer = document.referrer;
-
-    if (referrer && referrer.includes(window.location.hostname)) {
-      window.history.back();
-    } else {
-      window.location.href = 'https://omniscientdesign.fr';
-    }
-  });
-</script>
+<%= javascript_include_tag "controllers/backBtn", defer: true %>

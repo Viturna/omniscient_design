@@ -81,18 +81,3 @@ tr:hover {
     background-color: #D49A26;
   }
 }
-
-
-
-@media screen and (max-width: 425px) {
-  .grid-1 {
-    padding: 0 5vw;
-    margin-top: 32px;
-  }
-}
-@media screen and (min-width:426px) and (max-width: 1024px) {
-  .grid-1 {
-    padding: 0 8vw;
-    margin-top: 48px;
-  }
-}

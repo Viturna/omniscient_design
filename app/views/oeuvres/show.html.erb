@@ -1,4 +1,3 @@
 <% content_for :title, "#{@oeuvre.nom_oeuvre} | #{@oeuvre.designers.map(&:nom_designer).join(', ')}  - Omniscient Design" %>
 <% content_for :description, @oeuvre.presentation_generale.truncate(160) %>
 <%= render @oeuvre %>
-<%= %>

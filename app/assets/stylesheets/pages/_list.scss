@@ -7,7 +7,6 @@
 }
 
 .flex-title-list {
-  margin-top: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,7 +53,7 @@
   }
 }
 
- #editButtonForm:hover{
+ #editButtonForm:hover, #manageUsersBtn:hover{
   opacity: 0.8;
   cursor: pointer;
 }

@@ -253,6 +253,7 @@
 }
 
 .share-options {
+  padding: 0 16px;
   margin-top: 32px;
   display: flex;
   justify-content: center;
@@ -440,7 +441,7 @@
   }
 
   .text-show {
-    width: 70vw;
+    width: 80vw;
     margin-top: 68dvh;
   }
 
@@ -625,6 +626,7 @@
   .flex-actions {
     margin-top: 32px;
     gap: 32px;
+    flex-direction: column;
   }
 
   .button-circle {
@@ -667,11 +669,15 @@
 
   // Contributor
   .flex-contributor {
+    flex-direction: column;
     gap: 32px;
+  }
+  .vertical-divider {
+    display: none;
   }
 
   .box-contributor {
-    width: 40vw;
+    width: 70vw;
   }
 
   .contributor {

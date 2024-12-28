@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="recaptcha-site-key" content="<%= Rails.application.secrets.recaptcha_site_key %>">
     <% if should_not_index? %>
       <meta name="robots" content="noindex, nofollow">
       <meta name="googlebot" content="noindex, nofollow">
@@ -25,6 +26,8 @@
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "controllers/loader", defer: true %>
+    <%= javascript_include_tag "controllers/progressBar", defer: true %>
     <!-- RS -->
     <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
     <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
@@ -68,44 +71,3 @@
     </main>
   </body>
 </html>
-<script>
-  $(document).ready(function() { // Changement de turbolinks:load à turbo:load
-    document.getElementById("loading").style.display = "none"; // Masquer le loader
-    document.getElementById("content").style.display = "block"; // Afficher le contenu
-  });
-
-  window.addEventListener('load', function() {
-    document.getElementById("loading").style.display = "none"; // Masquer le loader
-    document.getElementById("content").style.display = "block"; // Afficher le contenu
-  });
-
-  var alertDiv = document.getElementById("alert");
-
-  var countdownDuration = 5000;
-
-  function closeAlert() {
-    alertDiv.style.opacity = "0";
-    setTimeout(function(){ alertDiv.style.display = "none"; }, 600);
-  }
-
-  if (alertDiv) {
-    var progressBar = document.getElementById("progress-bar");
-    var width = 0;
-    var interval = setInterval(function() {
-      width += 100 / (countdownDuration / 100);
-      progressBar.style.width = width + '%';
-      if (width >= 100) {
-        clearInterval(interval);
-        closeAlert();
-      }
-    }, 100);
-
-    var close = document.getElementsByClassName("closebtn");
-    for (var i = 0; i < close.length; i++) {
-      close[i].onclick = function() {
-        clearInterval(interval);
-        closeAlert();
-      }
-    }
-  }
-</script>

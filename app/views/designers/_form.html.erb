@@ -1,3 +1,4 @@
+<%= javascript_include_tag "controllers/uniqueCountry", defer: true %>
 <%= form_with(model: @designer, local: true) do |form| %>
   <% if @designer.errors.any? %>
     <div style="color: red">
@@ -117,32 +118,5 @@
         event.preventDefault();
       }
     });
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const selects = document.querySelectorAll("select[id^='country_']");
-
-    const updateOptions = () => {
-      // Récupérer toutes les valeurs sélectionnées, en ignorant les sélecteurs vides
-      const selectedValues = Array.from(selects)
-        .map(select => select.value)
-        .filter(value => value !== "");
-
-      // Désactiver les options qui sont déjà sélectionnées dans d'autres champs
-      selects.forEach(select => {
-        Array.from(select.options).forEach(option => {
-          option.disabled = selectedValues.includes(option.value) && option.value !== select.value;
-        });
-      });
-    };
-
-    // Appliquer l'écouteur pour détecter les changements de chaque select
-    selects.forEach(select => {
-      select.addEventListener("change", updateOptions);
-    });
-
-    // Mise à jour initiale au cas où des valeurs seraient pré-sélectionnées
-    updateOptions();
   });
 </script>

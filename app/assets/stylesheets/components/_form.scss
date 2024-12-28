@@ -92,12 +92,6 @@ textarea {
   border-radius: 5px;
 }
 @media screen and (min-width:769px) and (max-width: 1024px) {
-  input[type=text],
-  input[type=date],
-  input[type=email],
-  input[type=password] {
-    width: 100%;
-  }
 
   select {
     width: calc(50vw + 30px);
@@ -143,7 +137,7 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: calc(100% - 18px);
+    width: calc(100% - 20px);
     padding-left: 15px;
     height: 60px;
     font-size: 15px;
@@ -163,7 +157,7 @@ textarea {
   }
 
   textarea {
-    width: calc(100% - 18px);
+    width: calc(100% - 20px);
     padding-left: 15px;
     height: 120px;
     font-size: 15px;
@@ -178,7 +172,7 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: calc(100% - 18px);
+    width: calc(100% - 25px);
     padding-left: 15px;
     height: 55px;
     font-size: 14px;
@@ -198,7 +192,7 @@ textarea {
   }
 
   textarea {
-    width: calc(100% - 18px);
+    width: calc(100% - 25px);
     padding-left: 15px;
     height: 120px;
     font-size: 14px;

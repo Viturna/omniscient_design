@@ -31,6 +31,7 @@
 @import 'components/listcard';
 @import 'components/listmodal';
 @import 'components/loader';
+@import 'components/navprofil';
 @import 'components/popup';
 
 @import 'layout/header';
@@ -40,6 +41,7 @@
 @import 'pages/homepage';
 @import 'pages/list';
 @import 'pages/log';
+@import 'pages/profil';
 @import 'pages/reference';
 
 
@@ -143,7 +145,6 @@ main{
   background-color: #202020;
   color:#FFF;
   position: relative;
-  margin-bottom: 48px;
 }
 
 @media screen and (max-width:600px) {
@@ -151,7 +152,6 @@ main{
     padding: 0 5vw;
     padding-top: 64px;
     padding-bottom: 56px;
-    margin-bottom: 24px;
   }
 }
 @media screen and (min-width:601px) and (max-width:800px) {
@@ -159,6 +159,5 @@ main{
     padding: 0 8vw;
     padding-top: 72px;
     padding-bottom: 64px;
-    margin-bottom: 32px;
   }
 }

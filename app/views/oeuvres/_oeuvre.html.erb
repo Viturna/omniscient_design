@@ -4,57 +4,8 @@
 <%= javascript_include_tag "controllers/backBtn", defer: true %>
 <%= javascript_include_tag "controllers/validationOverlay", defer: true %>
 <style>
-  .box-list{
-        padding: 0px 50px;
-    align-items: center;
-    margin-top: 24px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .box-list-left{
-    display: flex;
-    align-items: center;
-  }
-  .box-list svg{
-    scale: 0.9;
-    cursor: pointer;
-  }
-
-  .box-list svg:hover{
-    opacity: 0.8;
-  }
-  .img-list{
-    width: 80px;
-    height: 80px;
-    background-color: #D9D9D9;
-    border-radius:5px;
-    margin-right: 16px;
-  }
-  .title-list{
-    font-size: 20px;
-    color:#202020;
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-  .nb-list{
-    font-size: 16px;
-    color:#8D9299;
-  }
-
-  .hover-btn{
-    display: none;
-  }
   .popup .popup-content form{
   padding: 0px;
-  }
-  /* Afficher l'élément svg lorsqu'on survole le bouton */
-  .add-to-list-btn:hover + .hover-btn{
-    display: block;
-  }
-  #back-btn{
-    background: none;
-    border: none;
-    cursor: pointer;
   }
 </style>
 <div class="body-show" id="<%= dom_id oeuvre %>">

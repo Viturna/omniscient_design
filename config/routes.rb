@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       post 'add_oeuvre'
       post 'add_designer'
       post 'remove_designer'
-      post 'remove_oeuvre'
+      post 'remove_oeuvre', to: 'lists#remove_oeuvre'
       post 'toggle_share'
       post 'invite_editors'
       post 'change_role'

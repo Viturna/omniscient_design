@@ -70,7 +70,7 @@ class ListsController < ApplicationController
     else
       notice = "Erreur lors du retrait du designer."
     end
-    redirect_to @list, notice: notice
+    redirect_to request.referer, notice: notice
   end
 
   def remove_oeuvre
@@ -80,25 +80,34 @@ class ListsController < ApplicationController
     else
       notice = "Erreur lors du retrait de la référence."
     end
-    redirect_to @list, notice: notice
+    redirect_to request.referer, notice: notice
   end
 
   def add_oeuvre
     oeuvre = Oeuvre.find(params[:artwork_id])
 
-    if @list.oeuvres << oeuvre
-      redirect_to request.referer, notice: "Référence ajoutée avec succès."
+    if @list.oeuvres.include?(oeuvre)
+      redirect_to request.referer, alert: "Cette référence est déjà dans la liste."
     else
-      redirect_to request.referer, alert: "Impossible d'ajouter la référence."
+      if @list.oeuvres << oeuvre
+        redirect_to request.referer, notice: "Référence ajoutée avec succès."
+      else
+        redirect_to request.referer, alert: "Impossible d'ajouter la référence."
+      end
     end
   end
 
   def add_designer
     designer = Designer.find(params[:designer_id])
-    if @list.designers << designer
-      redirect_to request.referer, notice: "Designer ajouté avec succès."
+
+    if @list.designers.include?(designer)
+      redirect_to request.referer, alert: "Ce designer est déjà dans la liste."
     else
-      redirect_to request.referer, alert: "Impossible d'ajouter le designer."
+      if @list.designers << designer
+        redirect_to request.referer, notice: "Designer ajouté avec succès."
+      else
+        redirect_to request.referer, alert: "Impossible d'ajouter le designer."
+      end
     end
   end
 

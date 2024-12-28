@@ -132,7 +132,7 @@ class ListsController < ApplicationController
       elsif role == 'visitor'
         @list.visitors << user unless @list.visitors.include?(user)
       end
-
+      create_share_notification(@list)
       # Assurez-vous que le share_token est défini
       @list.update(share_token: SecureRandom.hex(10)) unless @list.share_token.present?
 
@@ -183,7 +183,12 @@ class ListsController < ApplicationController
   end
 
   private
-
+  def create_share_notification(list)
+    message = "La liste #{list.name} a été partagée avec vous."
+    list.editors.each do |editor|
+      Notification.create(user_id: editor.id, notifiable: list, message: message)
+    end
+  end
   def set_list
     @list = List.friendly.find(params[:slug])
     if @list.nil?

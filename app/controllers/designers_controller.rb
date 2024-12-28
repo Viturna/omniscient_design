@@ -1,7 +1,7 @@
 class DesignersController < ApplicationController
   include RecaptchaHelper
-  before_action :set_designer, only: %i[show edit update destroy validate cancel]
-  before_action :authenticate_user!, only: [:new]
+  before_action :set_designer, only: %i[show edit update destroy cancel validate cancel]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
 
   # GET /designers or /designers.json
   def index
@@ -44,7 +44,7 @@ class DesignersController < ApplicationController
   # POST /designers or /designers.json
   def create
     @designer = Designer.new(designer_params)
-
+    @designer.user = current_user
     if @designer.save
       update_suivi_references_emises(current_user)
       create_notification(@designer)
@@ -76,14 +76,16 @@ class DesignersController < ApplicationController
 
   # DELETE /designers/1 or /designers/1.json
   def destroy
-    @designer.destroy!
-
-    respond_to do |format|
-      update_suivi_references_refusees(@designer.user)
-      format.html { redirect_to validation_path, notice: "Le designer " + @designer.nom_designer + " a été supprimée avec succès." }
-      format.json { head :no_content }
+    if @designer.destroy!
+      respond_to do |format|
+        create_rejection_notification(@designer)
+        update_suivi_references_refusees(@designer.user)
+        format.html { redirect_to validation_path, notice: "Le designer " + @designer.nom_designer + " a été supprimé avec succès." }
+        format.json { head :no_content }
+      end
     end
   end
+
   def cancel
     if user_signed_in?
       if current_user.admin? || @designer.user_id == current_user.id
@@ -97,6 +99,7 @@ class DesignersController < ApplicationController
       end
     end
   end
+
 
   def validate
     if @designer.update(validation: true, validated_by_user_id: current_user.id)
@@ -126,7 +129,7 @@ class DesignersController < ApplicationController
 
   def update_suivi_references_refusees(user)
     suivi = user.suivis.first_or_create
-    suivi.increment(:nb_references_refusees)  # Correction de l'attribut
+    suivi.increment(:nb_references_refusees)
     suivi.save
   end
 
@@ -139,16 +142,25 @@ class DesignersController < ApplicationController
   end
 
   def create_validation_notification(designer)
-    message = "Le/La designer #{designer.nom_designer} a été validée. Encore un grand merci pour ta contribution"
+    message = "Le designer #{designer.nom_designer} a été validé(e). Encore un grand merci pour ta contribution"
+
     if designer.user_id.present?
       Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
     else
       Notification.create(notifiable: designer, message: message)
     end
   rescue ActiveRecord::NotNullViolation => e
+    # Gérez l'erreur ici, par exemple, en affichant un message ou en enregistrant les détails de l'erreur dans les journaux
     Rails.logger.error("Erreur lors de la création de la notification : #{e.message}")
   end
-
+  def create_rejection_notification(designer)
+    if designer.user_id.present?
+      message = "Votre designer #{designer.nom_designer} a été rejeté(e)."
+      Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
+    else
+      Rails.logger.error "Designer #{designer.id} n'a pas d'utilisateur associé pour la notification de rejet."
+    end
+  end
   def set_designer
     @designer = Designer.friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound

@@ -95,6 +95,7 @@ class OeuvresController < ApplicationController
 
   # POST /oeuvres or /oeuvres.json
   def create
+    @oeuvre.user = current_user
     # Rechercher le designer en fonction du nom entré
     if params[:oeuvre][:designer_name].present?
       designer = Designer.find_by(nom_designer: params[:oeuvre][:designer_name].strip)
@@ -134,12 +135,13 @@ class OeuvresController < ApplicationController
 
   # DELETE /oeuvres/1 or /oeuvres/1.json
   def destroy
-    @oeuvre.destroy!
-
-    respond_to do |format|
-      update_suivi_references_refusees(@oeuvre.user)
+    if @oeuvre.destroy!
+      respond_to do |format|
+        create_rejection_notification(@oeuvre)
+        update_suivi_references_refusees(@oeuvre.user)
       format.html { redirect_to validation_path, notice: "L'oeuvre " + @oeuvre.nom_oeuvre + " a été supprimée avec succès." }
       format.json { head :no_content }
+      end
     end
   end
   def cancel
@@ -156,22 +158,15 @@ class OeuvresController < ApplicationController
     end
   end
   def validate
-    Rails.logger.info("Validation method called for oeuvre ID: #{params[:id]}")
-
     if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@oeuvre)
-      if @oeuvre.user.present?
-        update_suivi_references_validees(@oeuvre.user)
-        redirect_to validation_path, notice: "L'oeuvre " + @oeuvre.nom_oeuvre + " a été validée avec succès."
-      else
-        redirect_to validation_path, alert: "Utilisateur associé à l'œuvre non trouvé."
-      end
+      update_suivi_references_validees(@oeuvre.user)
+      redirect_to validation_path, notice: "L'œuvre #{@oeuvre.nom_oeuvre} a été validée avec succès."
     else
-      Rails.logger.error("Failed to update oeuvre ID: #{params[:id]}")
-      redirect_to validation_path, alert: "Une erreur s'est produite lors de la validation de l'oeuvre."
+      Rails.logger.error "Erreur lors de la validation de l'œuvre : #{@oeuvre.errors.full_messages}"
+      redirect_to validation_path, alert: "Échec de validation : #{@oeuvre.errors.full_messages.join(', ')}"
     end
   end
-
 
   private
 
@@ -185,7 +180,6 @@ class OeuvresController < ApplicationController
   def create_validation_notification(oeuvre)
     message = "L'oeuvre #{oeuvre.nom_oeuvre} a été validée. Encore un grand merci pour ta contribution"
 
-    # Vérifie si l'attribut user_id n'est pas vide dans l'objet oeuvre
     if oeuvre.user_id.present?
       Notification.create(user_id: oeuvre.user_id, notifiable: oeuvre, message: message)
     else
@@ -196,7 +190,14 @@ class OeuvresController < ApplicationController
     # Gérez l'erreur ici, par exemple, en affichant un message ou en enregistrant les détails de l'erreur dans les journaux
     Rails.logger.error("Erreur lors de la création de la notification : #{e.message}")
   end
-
+  def create_rejection_notification(oeuvre)
+    if oeuvre.user_id.present?
+      message = "Votre oeuvre #{oeuvre.nom_oeuvre} a été rejeté(e)."
+      Notification.create(user_id: oeuvre.user_id, notifiable: oeuvre, message: message)
+    else
+      Rails.logger.error "L'oeuvre #{oeuvre.id} n'a pas d'utilisateur associé pour la notification de rejet."
+    end
+  end
   def update_suivi_references_emises(user)
     suivi = user.suivis.first_or_create
     suivi.increment(:nb_references_emises)

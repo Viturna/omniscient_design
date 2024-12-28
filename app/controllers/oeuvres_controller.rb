@@ -90,7 +90,7 @@ class OeuvresController < ApplicationController
 
   # GET /oeuvres/1/edit
   def edit
-
+    @current_page = 'add_elements'
   end
 
   # POST /oeuvres or /oeuvres.json

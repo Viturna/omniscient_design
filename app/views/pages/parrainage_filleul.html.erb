@@ -4,12 +4,7 @@
     color: #202020;
     font-weight: 600;
   }
-    .grid-1{
-    padding-bottom: 64px;
-  }
-  h2 {
-    margin: 32px 0;
-  }
+
   .code{
     margin-top: 96px;
     display: flex;
@@ -64,7 +59,7 @@
       <div class="code">
         <p class="title-code">Code de parrainage :</p>
         <div class="code-input">
-          <%= form.text_field :referral_code, placeholder: 'Entrez votre code de parrainage', class: 'input' %>
+          <%= form.text_field :referral_code, placeholder: 'Entrez votre code de parrainage', class: 'input', maxlength: 8  %>
           <%= form.submit 'Soumettre', class: 'button dark' %>
         </div>
       <% end %>

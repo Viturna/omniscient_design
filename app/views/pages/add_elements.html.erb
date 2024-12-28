@@ -5,7 +5,7 @@
     margin-top: 100px;
     display: flex;
     gap: 5vw;
-    min-height: 400px;
+    min-height: 200px;
   }
   @media screen and (min-width:1025px) and (max-width:1280px){
     .add-flex {
@@ -21,27 +21,29 @@
       gap:24px;
     }
   }
-  .grid{
-    display: flex;
-    align-items: center;
+  .add-elements{
+      display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100dvh;
+    background-color: #202020;
+    color: #FFF;
   }
 </style>
-<div class="grid" style="background-color:#202020; color:#FFF; min-height:100vh;">
-  <section class="add-elements">
-    <p class="subtitle-top">Votre contribution</p>
-    <h1 class="title-add-elements">Ajouter une référence</h1>
-    <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
-    <div class="add-flex">
-      <%= link_to new_designer_path do %>
-        <div class="button-add">
-          Designers
-        </div>
-      <%end%>
-      <%= link_to new_oeuvre_path do %>
-        <div class="button-add">
-          Références
-        </div>
-      <%end%>
-    </div>
-  </section>
-</div>
+<section class="grid-1 add-elements">
+  <p class="subtitle-top">Votre contribution</p>
+  <h1 class="title-add-elements">Ajouter une référence</h1>
+  <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
+  <div class="add-flex">
+    <%= link_to new_designer_path do %>
+      <div class="button-add">
+        Designers
+      </div>
+    <%end%>
+    <%= link_to new_oeuvre_path do %>
+      <div class="button-add">
+        Références
+      </div>
+    <%end%>
+  </div>
+</section>

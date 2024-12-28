@@ -1,69 +1,24 @@
 <style>
-  .top-profil{
-    display: flex;
-    align-items: center;
-    height: 15vh;
-    padding: 0 5vw;
-    gap: 50px;
-    background-color: #202020;
-  }
-  h1{
-    color: #FFF;
-  }
-
-  h2{
-    margin-top: 64px;
-  }
-  .desc-profil{
-    color:#8D9299;
-    line-height:130%
-  }
   label{
     color: #202020;
     font-size: 18px;
     font-weight: 500;
   }
-  .field{
-    display: flex;
-    flex-direction:column;
-    margin-top:32px
-  }
-  .edit-profil{
-    padding: 0 8vw;
-    gap: 32px;
-  }
+
+
   hr{
     margin-top: 64px;
     border: 2px solid #E9E9E9
   }
   .delete{
-    margin-top: 48px;
-    width: 57vw;
-    display: flex;
-    align-items: center;
     background-color: rgba(230, 24,24,0.15);
-    padding: 20px;
-    border-radius:5px;
-    color: #202020;
-    font-weight: 500;
-    font-size: 17px;
-    justify-content: center;
     color: #E61818;
-    height: 60px;
-    border:none;
-    cursor: pointer;
-    margin-bottom: 50px;
   }
   .delete:hover{
     background-color: rgba(230, 24,24,0.35);
   }
-  .maj{
-    margin-top: 32px;
-    height: 70px;
-    width: 57vw;
-  }
 </style>
-<section class="top-profil">
+<section class="top-default-page">
   <%= link_to profil_path do%>
     <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
@@ -71,62 +26,66 @@
   <%end%>
   <h1>Votre compte</h1>
 </section>
-<section class="edit-profil">
+<section class="grid-1">
   <h2>Profil public</h2>
   <p class="desc-profil">Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, veuillez vous modifier les informations ci-dessous </p>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-    <%= render "users/shared/error_messages", resource: resource %>
-    <div class="field">
-      <%= f.label "Prénom" %><br />
-      <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
-    </div>
-    <div class="field">
-      <%= f.label "Nom de famille" %><br />
-      <%= f.text_field :lastname, autocomplete: "lastname", placeholder: "Nom de famille" %>
-    </div>
-    <div class="field">
-      <%= f.label "Pseudo" %><br />
-      <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: "Pseudo" %>
-    </div>
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-    <% end %>
-    <div class="field">
-      <%= f.label "Mot de passe" %> <i>(Ne pas remplir si vous ne souhaitez pas le changer)</i><br />
-      <%= f.password_field :password, autocomplete: "new-password" %>
-      <% if @minimum_password_length %>
-        <br />
-        <em><%= @minimum_password_length %> characters minimum</em>
+    <div class="flex-form">
+      <%= render "users/shared/error_messages", resource: resource %>
+      <div class="field">
+        <%= f.label "Prénom" %>
+        <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
+      </div>
+      <div class="field">
+        <%= f.label "Nom de famille" %>
+        <%= f.text_field :lastname, autocomplete: "lastname", placeholder: "Nom de famille" %>
+      </div>
+      <div class="field">
+        <%= f.label "Pseudo" %>
+        <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: "Pseudo" %>
+      </div>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
-    </div>
-    <div class="field">
-      <%= f.label "Confirmer mot de passe" %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-    </div>
-    <hr>
-    <h2>Profil privé</h2>
-    <div class="field">
-      <%= f.label "Email" %><br />
-      <%= f.email_field :email, autocomplete: "email" %>
-    </div>
-    <div class="field">
-      <%= f.label "Statut" %><br />
-      <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut" }, { class: "form-control" } %>
-    </div>
-    <div class="field">
-      <%= f.label "Établissement" %><br />
-      <%= f.collection_select :etablissement_id, Etablissement.order(:city), :id, :all_info, { prompt: "Choisissez un établissement" } %>
-    </div>
-    <hr>
-    <div class="field">
-      <%= f.label "Mot de passe actuel" %> <i>(entrer votre mot de passe pour modifier votre profil)</i><br />
-      <%= f.password_field :current_password, autocomplete: "current-password", required: true  %>
-    </div>
-    <div class="actions">
-      <%= f.submit "Mettre à jour", class: "button maj" %>
+      <div class="field">
+        <%= f.label "Mot de passe" %><br />
+        <i>(Ne pas remplir si vous ne souhaitez pas le changer)</i>
+        <%= f.password_field :password, autocomplete: "new-password" %>
+        <% if @minimum_password_length %>
+          <br />
+          <em><%= @minimum_password_length %> characters minimum</em>
+        <% end %>
+      </div>
+      <div class="field">
+        <%= f.label "Confirmer mot de passe" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+      </div>
+      <hr>
+      <h2>Profil privé</h2>
+      <div class="field">
+        <%= f.label "Email" %>
+        <%= f.email_field :email, autocomplete: "email" %>
+      </div>
+      <div class="field">
+        <%= f.label "Statut" %>
+        <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut" }, { class: "form-control" } %>
+      </div>
+      <div class="field">
+        <%= f.label "Établissement" %><br />
+        <%= f.collection_select :etablissement_id, Etablissement.order(:city), :id, :all_info, { prompt: "Choisissez un établissement" } %>
+      </div>
+      <hr>
+      <div class="field">
+        <%= f.label "Mot de passe actuel" %><br />
+        <i>(entrer votre mot de passe pour modifier votre profil)</i>
+        <%= f.password_field :current_password, autocomplete: "current-password", required: true  %>
+      </div>
+      <div class="actions">
+        <%= f.submit "Mettre à jour", class: "button large maj" %>
+      </div>
     </div>
   <% end %>
   <div>
-    <%= button_to "Supprimer votre compte", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "delete" %>
+    <%= button_to "Supprimer votre compte", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "button delete" %>
   </div>
 </section>

@@ -7,7 +7,7 @@
 }
 
 .flex-title-list {
-  margin-top: 64px;
+  margin-top: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -86,7 +86,6 @@
   }
 
   .flex-title-list {
-    margin-top: 48px;
     gap: 16px;
     flex-direction: column;
   }
@@ -116,10 +115,6 @@
   .our-list {
     padding: 0 5vw;
     padding-bottom: 50px;
-  }
-
-  .flex-title-list {
-    margin-top: 48px;
   }
 
   .no-list p {

@@ -9,11 +9,9 @@
     padding: 24px 0px;
     line-height: 130%;
   }
-  form {
-    margin-top: 64px;
-  }
+
   .star-rating {
-    width: 60vw;
+    width: 100%;
     display: flex;
     align-items:center;
     justify-content:space-between;
@@ -67,7 +65,6 @@
   }
    @media screen and (min-width:0px) and (max-width:600px) {
     .star-rating{
-      width: 85vw;
       align-items:center;
       justify-content:center;
       flex-direction:column-reverse;
@@ -95,9 +92,7 @@
     }
   }
   @media screen and (min-width:600px) and (max-width:800px) {
-    .star-rating{
-      width: 85vw;
-    }
+
     .star-rating label {
       font-size: 38px;
     }
@@ -115,13 +110,13 @@
     }
   }
 </style>
-<div class="grid" style="background-color:#202020; color:#FFF; min-height:100vh;">
-  <div class="box-title">
-    <p class="subtitle-top">Votre contribution</p>
-    <h1 class="title-add-elements">Exprimer votre avis</h1>
-    <p class="subtitle">En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
-  </div>
-  <section class="form-feedback">
+<section class="top-header">
+  <p class="subtitle-top">Votre contribution</p>
+  <h1 class="title-add-elements">Exprimer votre avis</h1>
+  <p class="subtitle">En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+</section>
+<section class="grid-1" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <div class="form-feedback">
     <%= form_with(model: @feedback) do |f| %>
       <% if @feedback.errors.any? %>
         <div id="error_explanation">
@@ -208,33 +203,30 @@
         <%= f.submit "Envoyer", class: "button-submit" %>
       </div>
     <% end %>
-  </section>
-</div>
+  </div>
+</section>
 <script>
   $(document).ready(function() {
-    const starRatings = document.querySelectorAll('.star-rating');
-
-    starRatings.forEach(starRating => {
-      const stars = starRating.querySelectorAll('label');
-      const input = starRating.querySelector('input[type="hidden"]');
-
-      stars.forEach(star => {
-        star.addEventListener('click', function() {
-          const value = this.getAttribute('data-value');
-          input.value = value;
-          updateStars(stars, value);
-        });
-      });
-    });
-
-    function updateStars(stars, value) {
-      stars.forEach(star => {
-        if (star.getAttribute('data-value') <= value) {
-          star.style.color = '#f5c518';
-        } else {
-          star.style.color = '#ddd';
-        }
-      });
-    }
+  const starRatings = document.querySelectorAll('.star-rating');
+  starRatings.forEach(starRating => {
+  const stars = starRating.querySelectorAll('label');
+  const input = starRating.querySelector('input[type="hidden"]');
+  stars.forEach(star => {
+  star.addEventListener('click', function() {
+  const value = this.getAttribute('data-value');
+  input.value = value;
+  updateStars(stars, value);
   });
+  });
+  });
+  function updateStars(stars, value) {
+  stars.forEach(star => {
+  if (star.getAttribute('data-value') <= value) {
+        star.style.color = '#f5c518';
+      } else {
+        star.style.color = '#ddd';
+      }
+    });
+  }
+    });
 </script>

@@ -1,86 +1,69 @@
 <style>
-  .notification{
-    padding: 60px 10vw;
+  .grid-1 ul{
+   margin: 32px 0;
   }
-   .notification ul{
-    margin: 32px 0;
-   }
-  .notification ul li{
-    width: 100%;
-    height: 70px;
-    background-color:#FFF;
-    border-radius:5px;
-    display: flex;
-    align-items: center;
-    padding-left:25px;
-    color:#202020;
-    margin-top: 8px;
-  }
-  .notification ul li:hover{
-   background-color: #EDEDED;
-  }
-  .time{
-    font-size: 14px;
-    margin-left: 8px;
-    color:#8D9299;
-  }
-  #back-btn{
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-
-  @media screen and (min-width:0px) and (max-width:349px){
-
-    .notification{
-      padding: 60px 5vw;
+    .grid-1 ul li{
+   width: 100%;
+   height: 70px;
+   background-color:#FFF;
+   border-radius:5px;
+   display: flex;
+   align-items: center;
+   padding-left:25px;
+   color:#202020;
+   margin-top: 8px;
     }
-    .notification ul{
-      margin: 32px 0;
+    .grid-1 ul li:hover{
+  background-color: #EDEDED;
     }
     .time{
-      margin:0;
-    }
-    .notification ul li{
-      font-size: 14px;
-      width: 70vw;
-      gap: 16px;
-      height: auto;
-      align-items:start;
-      padding: 20px;
-      flex-direction:column;
-        margin-top: 16px;
-    }
-    h2{
-      font-size: 18px;
+   font-size: 14px;
+   margin-left: 8px;
+   color:#8D9299;
     }
 
-  }
-  @media screen and (min-width:350px) and (max-width:800px){
 
+    @media screen and (min-width:0px) and (max-width:349px){
+
+   .grid-1 ul{
+     margin: 32px 0;
+   }
    .time{
-      margin:0;
-    }
-    .notification{
-      padding: 60px 5vw;
-    }
-    .notification ul{
-      margin: 32px 0;
-    }
-    .notification ul li{
-      width: 80vw;
-      gap: 16px;
-      height: auto;
-      align-items:start;
-      padding: 20px;
-      flex-direction:column;
-        margin-top: 16px;
-    }
-    h2{
-      font-size: 18px;
-    }
+     margin:0;
+   }
+   .grid-1 ul li{
+     font-size: 14px;
+     width: 70vw;
+     gap: 16px;
+     height: auto;
+     align-items:start;
+     padding: 20px;
+     flex-direction:column;
+       margin-top: 16px;
+   }
 
-  }
+    }
+    @media screen and (min-width:350px) and (max-width:800px){
+
+  .time{
+     margin:0;
+   }
+
+   .grid-1 ul{
+     margin: 32px 0;
+   }
+   .grid-1 ul li{
+     width: 80vw;
+     gap: 16px;
+     height: auto;
+     align-items:start;
+     padding: 20px;
+     flex-direction:column;
+       margin-top: 16px;
+   }
+
+
+    }
 </style>
 <section class="top-default-page">
   <button id="back-btn">
@@ -90,7 +73,7 @@
   </button>
   <h1>Vos notifications</h1>
 </section>
-<section class="notification">
+<section class="grid-1">
   <% if @notifications.any? %>
     <% today_notifications = @notifications.select { |notification| notification.created_at.to_date == Date.today } %>
     <% last_7_days_notifications = @notifications.select { |notification| notification.created_at.to_date >= 7.days.ago.to_date && notification.created_at.to_date < Date.today } %>

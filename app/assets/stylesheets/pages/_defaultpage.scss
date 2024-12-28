@@ -1,10 +1,5 @@
 @import 'abstracts/variables';
 
-.grid-1 {
-  padding: 0 10vw;
-  margin-top: 64px;
-}
-
 .top-default-page {
   display: flex;
   align-items: center;
@@ -12,7 +7,7 @@
   padding: 0 5vw;
   gap: 50px;
   background-color: $primary-color;
-
+  margin-bottom: 64px;
   h1 {
     color: $secondary-color;
   }

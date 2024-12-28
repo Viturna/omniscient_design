@@ -1,22 +1,6 @@
 <style>
-  .top-header{
-    padding: 78px 10vw;
-    height: 150px;
-    background-color: #202020;
-    color:#FFF;
-  }
-  .subtitle{
-    width: 50vw;
-  }
   textarea{
     height:300px;
-  }
-  form{
-    margin: 64px 10vw;
-    display: flex;
-    flex-direction:column;
-    align-items: end;
-    gap: 32px;
   }
 </style>
 <section class="top-header">
@@ -25,28 +9,33 @@
       <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
     </svg>
   <% end %>
-  <p style="margin-top:16px" class="subtitle-top">Votre contribution</p>
+  <p class="subtitle-top">Votre contribution</p>
   <h1>Signaler un problème</h1>
   <p class="subtitle">Si vous rencontrez un problème avec notre site, une fonctionnalité ou un service, nous vous invitons à nous en informer afin que nous puissions résoudre rapidement la situation. </p>
 </section>
-<%= form_with(model: @bug_report, local: true, data: { turbo: false }) do |form| %>
-  <% if @bug_report.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@bug_report.errors.count, "error") %> prohibited this bug report from being saved:</h2>
-      <ul>
-        <% @bug_report.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<section class="grid-1">
+  <h2>Votre aide nous est précieuse</h2>
+  <%= form_with(model: @bug_report, local: true, data: { turbo: false }) do |form| %>
+    <% if @bug_report.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@bug_report.errors.count, "error") %> prohibited this bug report from being saved:</h2>
+        <ul>
+          <% @bug_report.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="flex-form">
+      <div class="field">
+        <%= form.text_area :description, placeholder: "Description du problème" %>
+      </div>
+      <div class="field">
+        <%= form.text_field :url, value: params[:url], placeholder: "Url d’où se situe le bug (ou liens vers une image)" %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Envoyer", class: "button large dark" %>
+      </div>
     </div>
   <% end %>
-  <div class="field">
-    <%= form.text_area :description, placeholder: "Description du problème" %>
-  </div>
-  <div class="field">
-    <%= form.text_field :url, value: params[:url], placeholder: "Url d’où se situe le bug (ou liens vers une image)" %>
-  </div>
-  <div class="actions">
-    <%= form.submit "Envoyer", class: "button large dark" %>
-  </div>
-<% end %>
+</section>

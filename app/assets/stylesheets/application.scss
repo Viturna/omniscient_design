@@ -67,10 +67,10 @@ main{
 }
 
 
-
-.grid {
-  padding: 64px 8vw;
+.grid-1 {
+  padding: 0 10vw 64px 10vw;
 }
+
 /* Home Page */
 
 .subtitle-top {
@@ -89,7 +89,6 @@ main{
 /* Add elements */
 
 .flex-form {
-  margin-top: 48px;
   display: flex;
   flex-direction: column;
   gap: 36px;

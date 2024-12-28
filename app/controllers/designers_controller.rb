@@ -35,6 +35,7 @@ class DesignersController < ApplicationController
 
   # GET /designers/1/edit
   def edit
+    @current_page = 'add_elements'
     # Pré-remplir les pays en tant que variables d'instance
     @country_1 = @designer.country_ids[0]
     @country_2 = @designer.country_ids[1]

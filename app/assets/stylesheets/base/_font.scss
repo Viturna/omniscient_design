@@ -46,16 +46,16 @@ h1 {
 }
 
 h2 {
-  margin-top: 0;
   color: $primary-color;
   font-size: 22px;
   font-weight: 500;
-  margin-bottom: 18px;
+  margin: 40px 0 24px 0;
 }
 h3{
   color: $primary-color;
   font-size: 20px;
   font-weight: 500;
+  margin: 24px 0 16px 0;
 }
 p{
   color: $text-color;
@@ -74,6 +74,10 @@ p{
 }
 .underline{
   text-decoration: underline;
+}
+.date{
+  font-weight: 300;
+  margin-top: 16px;
 }
 
 @media screen and (min-width:426px) and (max-width: 600px) {

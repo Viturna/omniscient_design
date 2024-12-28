@@ -13,12 +13,6 @@
     <div>
       <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
     </div>
-    <div>
-      <div class="autocomplete">
-        <%# <%= form.hidden_field :designer_id %>
-        <%#  <%= form.text_field :designer_name, placeholder: "Rechercher un designer", autocomplete: "off" %>
-      </div>
-    </div>
     <div style="display:flex">
       <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
     </div>

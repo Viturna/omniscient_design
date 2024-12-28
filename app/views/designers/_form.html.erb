@@ -23,15 +23,21 @@
     </div>
     <div>
       <%= form.label :country_1, "Pays principal" %>
-      <%= form.collection_select :country_ids, Country.order(:country), :id, :country, { prompt: "Sélectionner un pays" }, { id: "country_1" } %>
+      <%= form.collection_select :country_ids, Country.order(:country), :id, :country,
+    { prompt: "Sélectionner un pays", selected: @country_1 },
+    { id: "country_1", name: "designer[country_ids][]" } %>
     </div>
     <div>
       <%= form.label :country_2, "Pays secondaire (optionnel)" %>
-      <%= form.collection_select :country_ids, Country.order(:country), :id, :country, { prompt: "Sélectionner un pays" }, { id: "country_2" } %>
+      <%= form.collection_select :country_ids, Country.order(:country), :id, :country,
+    { prompt: "Sélectionner un pays", selected: @country_2 },
+    { id: "country_2", name: "designer[country_ids][]" } %>
     </div>
     <div>
       <%= form.label :country_3, "Pays tertiaire (optionnel)" %>
-      <%= form.collection_select :country_ids, Country.order(:country), :id, :country, { prompt: "Sélectionner un pays" }, { id: "country_3" } %>
+      <%= form.collection_select :country_ids, Country.order(:country), :id, :country,
+    { prompt: "Sélectionner un pays", selected: @country_3 },
+    { id: "country_3", name: "designer[country_ids][]" } %>
     </div>
     <div>
       <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
@@ -111,5 +117,32 @@
         event.preventDefault();
       }
     });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const selects = document.querySelectorAll("select[id^='country_']");
+
+    const updateOptions = () => {
+      // Récupérer toutes les valeurs sélectionnées, en ignorant les sélecteurs vides
+      const selectedValues = Array.from(selects)
+        .map(select => select.value)
+        .filter(value => value !== "");
+
+      // Désactiver les options qui sont déjà sélectionnées dans d'autres champs
+      selects.forEach(select => {
+        Array.from(select.options).forEach(option => {
+          option.disabled = selectedValues.includes(option.value) && option.value !== select.value;
+        });
+      });
+    };
+
+    // Appliquer l'écouteur pour détecter les changements de chaque select
+    selects.forEach(select => {
+      select.addEventListener("change", updateOptions);
+    });
+
+    // Mise à jour initiale au cas où des valeurs seraient pré-sélectionnées
+    updateOptions();
   });
 </script>

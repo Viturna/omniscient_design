@@ -1,6 +1,6 @@
 class DesignersController < ApplicationController
   include RecaptchaHelper
-  before_action :set_designer, only: %i[ show edit update destroy validate cancel]
+  before_action :set_designer, only: %i[show edit update destroy validate cancel]
   before_action :authenticate_user!, only: [:new]
 
   # GET /designers or /designers.json
@@ -35,38 +35,44 @@ class DesignersController < ApplicationController
 
   # GET /designers/1/edit
   def edit
-
+    # Pré-remplir les pays en tant que variables d'instance
+    @country_1 = @designer.country_ids[0]
+    @country_2 = @designer.country_ids[1]
+    @country_3 = @designer.country_ids[2]
   end
 
   # POST /designers or /designers.json
   def create
-    @designer = current_user.designers.build(designer_params)
+    @designer = Designer.new(designer_params)
 
-    respond_to do |format|
-      if @designer.save
-        update_suivi_references_emises(current_user)
-        create_notification(@designer)
-        format.html { redirect_to designer_url(@designer), notice: "Designer ajouté(e)" }
-        format.json { render :show, status: :created, location: @designer }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @designer.errors, status: :unprocessable_entity }
-      end
+    if @designer.save
+      update_suivi_references_emises(current_user)
+      create_notification(@designer)
+      flash[:success] = "Designer créé avec succès."
+      redirect_to @designer
+    else
+      @countries = Country.order(:country)
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /designers/1 or /designers/1.json
   def update
-    respond_to do |format|
-      if @designer.update(designer_params)
-        format.html { redirect_to designer_url(@designer), notice: "Référence mise à jour" }
-        format.json { render :show, status: :ok, location: @designer }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @designer.errors, status: :unprocessable_entity }
-      end
+    @designer = Designer.friendly.find(params[:slug])
+
+    # Collecter les IDs des pays
+    country_ids = [params[:designer][:country_1], params[:designer][:country_2], params[:designer][:country_3]].reject(&:blank?)
+    @designer.country_ids = country_ids
+
+    if @designer.update(designer_params)
+      flash[:success] = "Designer mis à jour avec succès."
+      redirect_to @designer
+    else
+      @countries = Country.order(:country)
+      render :edit, status: :unprocessable_entity
     end
   end
+
 
   # DELETE /designers/1 or /designers/1.json
   def destroy

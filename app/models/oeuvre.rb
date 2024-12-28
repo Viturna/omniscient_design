@@ -12,10 +12,24 @@ class Oeuvre < ApplicationRecord
 
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
   belongs_to :domaine
-  has_and_belongs_to_many :designers
   validates :designer_ids, presence: true
+
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items
   belongs_to :user, optional: true
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
+
+  has_and_belongs_to_many :designers
+
+  attr_accessor :primary_designer_ids, :secondary_designer_ids
+
+  after_save :assign_designers
+
+  private
+
+  def assign_designers
+    self.designers.clear
+    self.designers << Designer.where(id: primary_designer_ids) if primary_designer_ids.present?
+    self.designers << Designer.where(id: secondary_designer_ids) if secondary_designer_ids.present?
+  end
 end

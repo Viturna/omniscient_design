@@ -2,9 +2,9 @@
   <h1 class="title-add-elements">Modifier une référence</h1>
   <%= render "form", designer: @designer %>
   <br>
-  <div>
-    <%= link_to "Show this designer", @designer %> |
-    <%= link_to "Retourner aux validations", validation_path %>
+  <div style="display: flex; gap:16px">
+    <%= link_to "Voir le designer", @designer, class:"button" %>
+    <%= link_to "Retourner aux validations", validation_path, class:"button"  %>
   </div>
 </div>
 <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.secrets.recaptcha_site_key %>"></script>

@@ -111,7 +111,13 @@ class DesignersController < ApplicationController
       redirect_to validation_path, alert: "Une erreur s'est produite lors de la validation du designer."
     end
   end
-
+  def load_more_designers
+    offset = params[:offset].to_i
+    @designers = Designer.offset(offset).limit(8)
+    respond_to do |format|
+      format.js { render partial: 'designers/designer_card', collection: @designers, as: :designer }
+    end
+  end
   private
 
   def update_suivi_references_emises(user)

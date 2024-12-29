@@ -8,7 +8,7 @@ input.search-top-bar {
   font-size: 17px;
   padding: 5px 10px;
   padding-left: 50px;
-  width: 540px;
+  width: 40vw;
   height: 55px;
   border: none;
   position: relative;
@@ -21,24 +21,21 @@ input[type=search] {
 @media screen and (min-width:769px) and (max-width: 1024px) {
   input.search-top-bar {
     font-size: 16px;
-    width: 40vw;
     height: 50px;
   }
-
-  input[type=search] {
-    margin-right: 8px;
-  }
 }
-@media screen and (min-width:0) and (max-width: 425px) {
+@media screen and (min-width:426px) and (max-width: 768px) {
   input.search-top-bar {
     font-size: 14px;
-    padding: 5px 10px;
-    padding-left: 50px;
-    width: 90vw;
-    height: 55px;
+    height: 50px;
+    width: 58vw;
   }
-  input[type=search] {
-    margin-right: 0px;
+}
+@media screen and (min-width:0px) and (max-width: 425px) {
+  input.search-top-bar {
+    font-size: 14px;
+    height: 50px;
+    width: 55vw;
   }
 
 }

@@ -189,7 +189,7 @@
   </div>
   <% if oeuvre.validation %>
     <div class="next-card">
-      <h2 class="title-description-reference">Découvrir d'autres œuvres</h2>
+      <h2 class="title-description-reference">Découvrir d'autres références</h2>
       <div class="oeuvres-same">
         <% domaine_oeuvres =  @oeuvre.domaine.oeuvres.where(validation: true)
                             .where.not(id: @oeuvre.id)

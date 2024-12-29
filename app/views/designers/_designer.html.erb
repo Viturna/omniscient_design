@@ -174,7 +174,7 @@
       <% designer_oeuvres = @designer.oeuvres.where(validation: true)
                               .limit(3) %>
       <% if designer_oeuvres.any? %>
-        <h2 class="title-description-reference">Œuvres du designer</h2>
+        <h2 class="title-description-reference">Références du designer</h2>
         <div class="oeuvres-same">
           <% designer_oeuvres.each do |oeuvre| %>
             <%= link_to oeuvre do %>

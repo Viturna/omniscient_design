@@ -4,15 +4,18 @@
   position: fixed;
   z-index: 900;
   top: 0;
-  width: calc(100vw - 350px);
+  width: calc(80vw - 350px);
   height: 100px;
   display: flex;
   align-items: center;
-  gap: 32px;
-  justify-content: center;
+  justify-content: space-between;
   border-bottom: 1px solid #E9E9E9;
+  padding: 0 10vw;
 }
-
+.top-bar-flex{
+  display: flex;
+  gap: 1vw;
+}
 // Autocomplete
 .autocomplete-items {
   position: absolute;
@@ -65,24 +68,44 @@
 .autocomplete-items::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (min-width:769px) and (max-width: 1024px) {
   .top-bar-search {
-    width: 80vw;
-    padding: auto 42px;
+    width: 54vw;
+    padding: 0 8vw;
   }
 }
-@media screen and (min-width:0px) and (max-width: 425px) {
-  .top-bar-search {
-    width: 100vw;
-    height: 100px;
-    gap: 8px;
-  }
 
+
+@media screen and (min-width:426px) and (max-width: 768px) {
+  .top-bar-search {
+    width: 84vw;
+    padding: 0 8vw;
+  }
   .autocomplete-items {
     width: 80vw;
   }
 
   .autocomplete-items div {
     font-size: 16px;
+  }
+  .top-bar-flex{
+    gap: 8px;
+  }
+}
+@media screen and (min-width:0px) and (max-width: 425px) {
+  .top-bar-search {
+    width: 90vw;
+    padding: 0 5vw;
+    height: 90px;
+  }
+  .autocomplete-items {
+    width: 80vw;
+  }
+
+  .autocomplete-items div {
+    font-size: 16px;
+  }
+  .top-bar-flex{
+    gap: 8px;
   }
 }

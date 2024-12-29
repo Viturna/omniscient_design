@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     collection do
       get 'search'
       get :load_more
+      get :load_more_oeuvres
     end
 
     member do
@@ -57,6 +58,7 @@ Rails.application.routes.draw do
   resources :designers, param: :slug do
     collection do
       get 'load_more'
+      get :load_more_designers
     end
     member do
       get :validate

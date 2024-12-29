@@ -1,0 +1,19 @@
+<%= link_to designer do %>
+  <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
+  <% if asset_exists?(image_path) %>
+    <div class="card-designer" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position:center center;">
+    <% else %>
+      <% Rails.logger.debug("Image not found : #{image_path}") %>
+      <div class="card-designer" style="background: url('<%= asset_path(designer.image) %>'); background-size: cover; background-position:center;">
+      <% end %>
+      <div class="inner-card-designer">
+        <% designer.countries.each do |country| %>
+          <p class="country-card-designer">
+            <span class="flag"><%= country_flag(country.country_numeric) %></span>
+            <%= country.country %>
+          </p>
+        <% end %>
+        <p class="title-card-designer"><%= designer.nom_designer %></p>
+      </div>
+    </div>
+  <% end %>

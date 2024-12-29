@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loadMoreTrigger = document.getElementById("load-more-trigger");
-  const loader = document.getElementById("loader");
   let offset = 10; // On commence après les 10 premières cartes
   let loading = false;
 
   const loadMoreCards = async (type) => {
     if (loading) return;
     loading = true;
-    loader.style.display = 'block'; // Afficher le loader
 
     const response = await fetch(`/${type}/load_more?offset=${offset}`, {
       headers: {
@@ -26,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.dispatchEvent(event);
     }
 
-    loader.style.display = 'none'; // Masquer le loader
     loading = false;
   };
 

@@ -95,7 +95,7 @@ header li .active svg path {
 }
 
 /* Petit desktop */
-@media screen and (min-width: 1025px) and (max-width: 1280px) {
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
   header {
     width: 20vw;
     height: 100vh;
@@ -243,7 +243,7 @@ header li .active svg path {
   }
 
   header li {
-    flex: 1;
+    flex-grow: 1;
     text-align: center;
   }
 
@@ -257,6 +257,7 @@ header li .active svg path {
     align-items: center;
     font-size: 0.9rem;
     gap: 0.5rem;
+
   }
 
   header li a svg {
@@ -309,12 +310,8 @@ header li .active svg path {
   }
 
   header li {
-    flex: 1;
+    flex-grow: 1;
     text-align: center;
-  }
-
-  header li:nth-child(2) {
-    flex: 2;
   }
 
   header li a {
@@ -374,7 +371,7 @@ header li .active svg path {
   }
 
   header li {
-    flex: 1;
+    flex-grow: 1;
     text-align: center;
   }
 
@@ -455,6 +452,7 @@ header li .active svg path {
     align-items: center;
     font-size: 0.875rem;
     gap: 0.25rem;
+    width: 15vw;
   }
 
   header li a svg {

@@ -1,366 +1,36 @@
 <% content_for :title, "Rechercher des références et des designers - Omniscient Design" %>
 <% content_for :description, "La page de recherche permet de trouver efficacement et rapidement la référence que tu cherches. Trie les références par domaine, année ou encore pays !" %>
-<style>
-  .title {
-    margin-top: 48px;
-    color: #202020;
-    font-size: 24px;
-    letter-spacing: -1%;
-    font-weight: 500;
-  }
-
-  .flex-category, .flex-designer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
-    margin-top: 32px;
-  }
-  .flex-category  {
-    gap: 64px;
-  }
-
-  .flex-oeuvre {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
-    margin-top: 32px;
-    margin-bottom: 0; /* Assurez-vous qu'il n'y a pas de marge en bas du flex */
-    padding-bottom: 0; /* Si padding est utilisé, retirez-le également */
-  }
-
-  .card-oeuvre {
-    margin-bottom: 0; /* Assurez-vous que les cartes n'ajoutent pas de marge en bas */
-  }
-
-  .card-category {
-    flex-direction:column;
-    gap: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 18vw;
-    height: 180px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.3); /* Opacity set to 30% */
-  }
-  .card-category:hover{
-    opacity: 0.8;
-  }
-  .card-designer, .card-oeuvre {
-    background-repeat: no-repeat;
-    width: 160px;
-    height: 280px;
-    border-radius: 10px;
-    display: flex;
-    align-items: end;
-    position: relative;
-    padding: 20px;
-  }
-  .card-designer,
-  .card-oeuvre {
-  display: none;
-  }
-  .card-designer:hover, .card-oeuvre:hover{
-    opacity: 0.8;
-  }
-  .title-card-designer,   .title-card-oeuvre{
-    font-size:24px;
-    font-weight: 500;
-    text-transform: uppercase;
-    margin-top: 8px;
-    color:#FFF;
-  }
-  .card-designer .country-card-designer, .domaine-card-oeuvre{
-    font-size:14px;
-    font-weight: 300;
-    text-transform: uppercase;
-    color:#FFF;
-  }
-  .card-designer::after,  .card-oeuvre::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
-  }
-  .inner-card-designer,   .inner-card-oeuvre {
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-category::before {
-    opacity: 0.3;
-  }
-
-  .main-search {
-    padding: 100px 5vw 0 5vw;
-  }
-
-  .text-category {
-    text-transform: uppercase;
-    font-size: 20px;
-    font-weight: 500;
-  }
-
-
-  /* Frise */
-  .timeline {
-   display: flex;
-   align-items: end;
-   justify-content: space-between;
-   padding: 20px;
-   overflow-x: auto;
-   white-space: nowrap;
-   position: relative;
-   gap: 54px;
-   height: 140px;
-  margin: 48px 0
-  }
-
-  .timeline-item {
-   display: inline-block;
-   text-align: center;
-   position: relative;
-   width: 50px;
-  }
-
-  .timeline-hr {
-  position: absolute;
-  bottom: 40px; /* Place the line at the bottom */
-  left: 0; /* Start from the left edge */
-  height: 4px;
-  background: #202020;
-  z-index: -1;
-  border:none;
-  width: 100%; /* Ensure the line spans the entire width */
-  }
-
-  .year{
-    color: #202020;
-  }
-
-  .oeuvres {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .oeuvres-container {
-    max-height: 100px; /* Limiter la hauteur pour éviter les superpositions */
-    overflow-y: auto; /* Ajouter un défilement vertical */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .oeuvres-container::-webkit-scrollbar {
-    display: none; /* Masquer la barre de défilement dans Chrome, Safari et Opera */
-  }
-  .hidden-oeuvres {
-    display: none;
-    flex-direction: column;
-  }
-
-  .oeuvres-counter .hidden-oeuvres.visible {
-    display: flex;
-    align-items:start;
-    gap: 8px;
-  }
-
-
-     .oeuvre {
-       width: 35px;
-       height: 35px;
-       background-color: #202020;
-       border-radius: 50%;
-       cursor: pointer;
-       background-size:cover;
-     }
-     .oeuvre:hover,.circle-with-number:hover{
-       opacity: 0.8;
-     }
-     .oeuvre.empty {
-       width: 15px;
-       height: 15px;
-       background-color: #202020;
-       border-radius: 50%;
-     }
-     .oeuvre.empty:hover{
-      cursor: auto;
-      opacity: 1;
-     }
-    .oeuvre-frise{
-     margin-top: 32px;
-     }
-
-
-   @media screen and (min-width: 376px) and (max-width:425px) {
-    .main-search{
-      padding-bottom: 128px;
-    }
-    .main-search h1{
-     margin-top: 24px;
-    }
-    .header-search {
-      width: 100vw;
-      justify-content: space-around;
-    }
-    .title {
-      margin-top: 24px;
-      font-size: 20px;
-    }
-
-    .flex-category, .flex-designer, .flex-oeuvre {
-      justify-content: space-between;
-      row-gap: 24px;
-      column-gap: 0px;
-      margin-top: 32px;
-      a{
-        width: 100%;
-      }
-    }
-
-    .card-category {
-      width: 100%;
-      height: 100px;
-      font-size: 16px;
-      padding: 20px 0;
-      text-align:center;
-      img{
-        width: 80px;
-      }
-    }
-    .card-designer, .card-oeuvre {
-      background-position: center center;
-      width: 90%;
-      height: 220px;
-      padding: 20px 5%;
-    }
-    .title-card-designer,   .title-card-oeuvre{
-      font-size:22px;
-      margin-top: 8px;
-    }
-    .card-designer .country-card-designer, .domaine-card-oeuvre{
-      font-size:14px;
-    }
-
-    .text-category {
-      font-size: 16px;
-    }
-    /* Frise */
-    .timeline {
-      height: 100px;
-      margin: 24px 0
-    }
-
-    .timeline-item {
-    width: 10px;
-    }
-    .oeuvre {
-      width: 25px;
-      height: 25px;
-    }
-  }
-  @media screen and (max-width: 375px) {
-    .main-search{
-      padding-bottom: 128px;
-    }
-    .main-search h1{
-     margin-top: 24px;
-    }
-    .header-search {
-      width: 100vw;
-      justify-content: space-around;
-    }
-    .title {
-      margin-top: 24px;
-      font-size: 20px;
-    }
-
-    .flex-category, .flex-designer, .flex-oeuvre {
-      justify-content: space-between;
-      row-gap: 24px;
-      column-gap: 0px;
-      margin-top: 32px;
-      a{
-        width: 100%;
-      }
-    }
-
-    .card-category {
-      width: 100%;
-      height: 140px;
-      font-size: 16px;
-      padding: 20px 0;
-      text-align:center;
-      img{
-        width: 80px;
-      }
-    }
-    .card-designer, .card-oeuvre {
-      width: 90%;
-      height: 220px;
-      padding: 20px 5%;
-    }
-    .title-card-designer,   .title-card-oeuvre{
-      font-size:22px;
-      margin-top: 8px;
-    }
-    .card-designer .country-card-designer, .domaine-card-oeuvre{
-      font-size:14px;
-    }
-
-    .text-category {
-      font-size: 16px;
-    }
-    /* Frise */
-    .timeline {
-      height: 100px;
-      margin: 24px 0
-    }
-
-    .timeline-item {
-    width: 10px;
-    }
-    .oeuvre {
-      width: 25px;
-      height: 25px;
-    }
-  }
-</style>
-<div class="top-bar-search">
+<section class="top-bar-search">
   <%= form_with url: search_oeuvres_path, method: :get, local: true do %>
     <div class="autocomplete">
       <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
   </div>
 <% end %>
-<%= link_to notifications_path do %>
-  <div class="circle circle-notif">
-    <svg width="25" height="29" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M24.8571 23.4762V24.8571H0V23.4762L2.7619 20.7143V12.4286C2.7619 8.14762 5.56524 4.37762 9.66667 3.16238V2.7619C9.66667 2.0294 9.95765 1.3269 10.4756 0.808943C10.9936 0.290985 11.6961 0 12.4286 0C13.1611 0 13.8636 0.290985 14.3815 0.808943C14.8995 1.3269 15.1905 2.0294 15.1905 2.7619V3.16238C19.2919 4.37762 22.0952 8.14762 22.0952 12.4286V20.7143L24.8571 23.4762ZM15.1905 26.2381C15.1905 26.9706 14.8995 27.6731 14.3815 28.1911C13.8636 28.709 13.1611 29 12.4286 29C11.6961 29 10.9936 28.709 10.4756 28.1911C9.95765 27.6731 9.66667 26.9706 9.66667 26.2381" fill="white"/>
-    </svg>
-    <% if current_user %>
-      <% if @unread_notifications_count > 0 %>
-        <div class="notification-counter">
-          <div class="notification-badge"><%= @unread_notifications_count %></div>
-        </div>
+<div class="top-bar-flex">
+  <%= link_to notifications_path do %>
+    <div class="circle circle-notif">
+      <svg width="25" height="29" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24.8571 23.4762V24.8571H0V23.4762L2.7619 20.7143V12.4286C2.7619 8.14762 5.56524 4.37762 9.66667 3.16238V2.7619C9.66667 2.0294 9.95765 1.3269 10.4756 0.808943C10.9936 0.290985 11.6961 0 12.4286 0C13.1611 0 13.8636 0.290985 14.3815 0.808943C14.8995 1.3269 15.1905 2.0294 15.1905 2.7619V3.16238C19.2919 4.37762 22.0952 8.14762 22.0952 12.4286V20.7143L24.8571 23.4762ZM15.1905 26.2381C15.1905 26.9706 14.8995 27.6731 14.3815 28.1911C13.8636 28.709 13.1611 29 12.4286 29C11.6961 29 10.9936 28.709 10.4756 28.1911C9.95765 27.6731 9.66667 26.9706 9.66667 26.2381" fill="white"/>
+      </svg>
+      <% if current_user %>
+        <% if @unread_notifications_count > 0 %>
+          <div class="notification-counter">
+            <div class="notification-badge"><%= @unread_notifications_count %></div>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
-<% end %>
-<%= link_to new_feedback_url do %>
-  <div class="circle circle-notif">
-    <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19.5185 0C18.9095 0 18.3254 0.24193 17.8948 0.672569C17.4642 1.10321 17.2222 1.68728 17.2222 2.2963V6.88889C17.2222 7.4979 17.4642 8.08198 17.8948 8.51261C18.3254 8.94325 18.9095 9.18518 19.5185 9.18518V12.6296L23.6519 9.18518H28.7037C29.3127 9.18518 29.8968 8.94325 30.3274 8.51261C30.7581 8.08198 31 7.4979 31 6.88889V2.2963C31 1.68728 30.7581 1.10321 30.3274 0.672569C29.8968 0.24193 29.3127 0 28.7037 0H19.5185ZM9.18519 5.74074C7.96715 5.74074 6.79901 6.2246 5.93773 7.08588C5.07645 7.94716 4.59259 9.1153 4.59259 10.3333C4.59259 11.5514 5.07645 12.7195 5.93773 13.5808C6.79901 14.4421 7.96715 14.9259 9.18519 14.9259C10.4032 14.9259 11.5714 14.4421 12.4326 13.5808C13.2939 12.7195 13.7778 11.5514 13.7778 10.3333C13.7778 9.1153 13.2939 7.94716 12.4326 7.08588C11.5714 6.2246 10.4032 5.74074 9.18519 5.74074ZM14.9259 17.2222H3.44444C2.53092 17.2222 1.65481 17.5851 1.00885 18.2311C0.362896 18.877 0 19.7531 0 20.6667C0 23.2293 1.054 25.2822 2.78311 26.6715C4.48467 28.0378 6.76719 28.7037 9.18519 28.7037C11.6032 28.7037 13.8857 28.0378 15.5873 26.6715C17.3141 25.2822 18.3704 23.2293 18.3704 20.6667C18.3704 19.7531 18.0075 18.877 17.3615 18.2311C16.7156 17.5851 15.8394 17.2222 14.9259 17.2222Z" fill="white"/>
-    </svg>
-  </div>
-<% end %>
+    </div>
+  <% end %>
+  <%= link_to new_feedback_url do %>
+    <div class="circle circle-notif">
+      <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.5185 0C18.9095 0 18.3254 0.24193 17.8948 0.672569C17.4642 1.10321 17.2222 1.68728 17.2222 2.2963V6.88889C17.2222 7.4979 17.4642 8.08198 17.8948 8.51261C18.3254 8.94325 18.9095 9.18518 19.5185 9.18518V12.6296L23.6519 9.18518H28.7037C29.3127 9.18518 29.8968 8.94325 30.3274 8.51261C30.7581 8.08198 31 7.4979 31 6.88889V2.2963C31 1.68728 30.7581 1.10321 30.3274 0.672569C29.8968 0.24193 29.3127 0 28.7037 0H19.5185ZM9.18519 5.74074C7.96715 5.74074 6.79901 6.2246 5.93773 7.08588C5.07645 7.94716 4.59259 9.1153 4.59259 10.3333C4.59259 11.5514 5.07645 12.7195 5.93773 13.5808C6.79901 14.4421 7.96715 14.9259 9.18519 14.9259C10.4032 14.9259 11.5714 14.4421 12.4326 13.5808C13.2939 12.7195 13.7778 11.5514 13.7778 10.3333C13.7778 9.1153 13.2939 7.94716 12.4326 7.08588C11.5714 6.2246 10.4032 5.74074 9.18519 5.74074ZM14.9259 17.2222H3.44444C2.53092 17.2222 1.65481 17.5851 1.00885 18.2311C0.362896 18.877 0 19.7531 0 20.6667C0 23.2293 1.054 25.2822 2.78311 26.6715C4.48467 28.0378 6.76719 28.7037 9.18519 28.7037C11.6032 28.7037 13.8857 28.0378 15.5873 26.6715C17.3141 25.2822 18.3704 23.2293 18.3704 20.6667C18.3704 19.7531 18.0075 18.877 17.3615 18.2311C16.7156 17.5851 15.8394 17.2222 14.9259 17.2222Z" fill="white"/>
+      </svg>
+    </div>
+  <% end %>
 </div>
-<div class="main-search">
+</section>
+<section class="grid-1 searchpage">
   <h1>Rechercher</h1>
   <h2 class="title">Catégories</h2>
   <div class="flex-category">
@@ -373,166 +43,84 @@
       <% end %>
     <% end %>
   </div>
-  <h2 class="title">Frise Chronologique</h2>
-  <a href="/search_frise">
-    <div class="timeline">
-      <% @timeline_years.each do |year| %>
-        <div class="timeline-item">
-          <div class="oeuvres">
-            <div class="oeuvres-container">
-              <% oeuvres_year = @oeuvres_filtered.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
-              <% oeuvres_year.each do |oeuvre| %>
-                <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-image: url('<%= oeuvre.image %>');"></div>
-              <% end %>
-              <% designers_year = @designers_filtered.select { |designer| designer.date_naissance.to_i == year } %>
-              <% designers_year.each do |designer| %>
-                <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= designer.image %>');"></div>
-              <% end %>
-            </div>
-            <div class="oeuvre empty"></div>
-            <div class="year"><%= year %></div>
-          </div>
-        </div>
-      <% end %>
-      <hr class="timeline-hr">
-    </div>
-    <button class="button dark">Voir les frises chronologiques</button>
-  </a>
   <h2 class="title">Designers</h2>
   <div class="container-designers">
-    <div class="flex-designer" id="designer-cards">
-      <% @designers = Designer.where(validation: true).order(:nom_designer).limit(8) %>
-      <% @designers.each do |designer| %>
-        <%= link_to designer do %>
-          <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
-          <% if asset_exists?(image_path) %>
-            <div class="card-designer" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position:center center;">
-            <% else %>
-              <% Rails.logger.debug("Image not found : #{image_path}") %>
-              <div class="card-designer" style="background: url('<%= asset_path(designer.image) %>'); background-size: cover; background-position:center;">
-              <% end %>
-              <div class="inner-card-designer">
-                <% designer.countries.each do |country| %>
-                  <p class="country-card-designer">
-                    <span class="flag"><%= country_flag(country.country_numeric) %></span>
-                    <%= country.country %>
-                  </p>
-                <% end %>
-                <p class="title-card-designer"><%= designer.nom_designer %></p>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-      <div id="load-more-button-designers">
-        <button class="load-more-btn button dark" onclick="showMoreDesigners()">Charger plus de designers</button>
-      </div>
+    <div class="flex-container" id="designer-cards">
+      <% @designers.first(8).each do |designer| %>
+        <%= render 'designers/designer_card', designer: designer %>
+      <% end %>
     </div>
-    <h2 class="title">Références</h2>
-    <div class="container-oeuvres">
-      <div class="flex-oeuvre" id="oeuvre-cards">
-        <% @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(8) %>
-        <% @oeuvres.each do |oeuvre| %>
-          <%= link_to oeuvre do %>
-            <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
-            <% if asset_exists?(image_path) %>
-              <div class="card-oeuvre" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position:center center;">
-              <% else %>
-                <% Rails.logger.debug("Image not found : #{image_path}") %>
-                <div class="card-oeuvre" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position:center;">
-                <% end %>
-                <div class="inner-card-oeuvre">
-                  <p class="domaine-card-oeuvre"><%= oeuvre.domaine.domaine %></p>
-                  <p class="title-card-oeuvre"><%= oeuvre.nom_oeuvre %></p>
-                </div>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-        <div id="load-more-button-oeuvres">
-          <button class="load-more-btn button dark" onclick="showMoreOeuvres()">Charger plus de références</button>
-        </div>
-      </div>
+    <div id="load-more-button-designers">
+      <button class="load-more-btn button dark" id="loadMoreDesignersBtn">Charger plus de designers</button>
     </div>
   </div>
-  <script>
-    $(document).ready(function() {
-      const designerCards = document.querySelectorAll('.card-designer');
-      const oeuvreCards = document.querySelectorAll('.card-oeuvre');
-      const loadMoreButtonDesigners = document.getElementById('load-more-button-designers');
-      const loadMoreButtonOeuvres = document.getElementById('load-more-button-oeuvres');
-      const initialCardsToShow = 8;
-      let cardsToShowDesigners = initialCardsToShow;
-      let cardsToShowOeuvres = initialCardsToShow;
+  <h2 class="title">Références</h2>
+  <div class="container-oeuvres">
+    <div class="flex-container" id="oeuvre-cards">
+      <% @oeuvres.first(8).each do |oeuvre| %>
+        <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
+      <% end %>
+    </div>
+    <div id="load-more-button-oeuvres">
+      <button class="load-more-btn button dark" id="loadMoreOeuvresBtn">Charger plus de références</button>
+    </div>
+  </div>
+</div>
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  function loadMore(endpoint, containerId, offset) {
+    fetch(`${endpoint}?offset=${offset}`, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById(containerId).insertAdjacentHTML("beforeend", html);
+      })
+      .catch(error => console.error("Erreur lors du chargement :", error));
+  }
 
-      // Fonction pour afficher les cartes des designers
-      function showMoreDesigners() {
-        for (let i = cardsToShowDesigners - initialCardsToShow; i < cardsToShowDesigners; i++) {
-          if (i >= designerCards.length) {
-            loadMoreButtonDesigners.disabled = true;
-            loadMoreButtonDesigners.textContent = "Toutes les cartes sont chargées";
-            break;
-          }
-          designerCards[i].style.display = 'flex';
-        }
-        cardsToShowDesigners += initialCardsToShow;
-      }
+  let designerOffset = 8;
+  let oeuvreOffset = 8;
 
-      // Fonction pour afficher les cartes des oeuvres
-      function showMoreOeuvres() {
-        for (let i = cardsToShowOeuvres - initialCardsToShow; i < cardsToShowOeuvres; i++) {
-          if (i >= oeuvreCards.length) {
-            loadMoreButtonOeuvres.disabled = true;
-            loadMoreButtonOeuvres.textContent = "Toutes les cartes sont chargées";
-            break;
-          }
-          oeuvreCards[i].style.display = 'flex';
-        }
-        cardsToShowOeuvres += initialCardsToShow;
-      }
+  document.getElementById("loadMoreDesignersBtn").addEventListener("click", function () {
+    loadMore("/designers/load_more_designers", "designer-cards", designerOffset);
+    designerOffset += 8;
+  });
 
-      // Initialiser l'affichage des cartes
-      showMoreDesigners();
-      showMoreOeuvres();
+  document.getElementById("loadMoreOeuvresBtn").addEventListener("click", function () {
+    loadMore("/oeuvres/load_more_oeuvres", "oeuvre-cards", oeuvreOffset);
+    oeuvreOffset += 8;
+  });
+  });
+</script>
+<%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
+<script>
+  $(document).ready(function() {
+    var works = <%= raw @works.to_json %>; // Injecter les noms des œuvres dans le JavaScript
+    var designers = <%= raw @designers.to_json %>; // Injecter les noms des designers dans le JavaScript
 
-      // Ajouter les événements de clic pour les boutons "Charger plus"
-      if (loadMoreButtonDesigners) {
-        loadMoreButtonDesigners.addEventListener('click', showMoreDesigners);
-      }
-      if (loadMoreButtonOeuvres) {
-        loadMoreButtonOeuvres.addEventListener('click', showMoreOeuvres);
+    // Mapping des noms vers les URLs respectives
+    var routeMap = {
+      <% @oeuvres.each do |oeuvre| %>
+        "<%= j oeuvre.nom_oeuvre %>": "<%= oeuvre_path(oeuvre) %>",
+      <% end %>
+      <% @designers.each do |designer| %>
+        "<%= j designer.nom_designer %>": "<%= designer_path(designer) %>",
+      <% end %>
+    };
+
+    // Initialise l'autocomplétion
+    autocomplete(document.getElementById("workSearch"), works.concat(designers), routeMap);
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    var workSearchInput = document.getElementById("workSearch");
+
+    workSearchInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Empêche le comportement par défaut
+        document.querySelector("form").submit(); // Soumettre le formulaire
       }
     });
-  </script>
-  <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
-  <script>
-    $(document).ready(function() {
-      var works = <%= raw @works.to_json %>; // Injecter les noms des œuvres dans le JavaScript
-      var designers = <%= raw @designers.to_json %>; // Injecter les noms des designers dans le JavaScript
-
-      // Mapping des noms vers les URLs respectives
-      var routeMap = {
-        <% @oeuvres.each do |oeuvre| %>
-          "<%= j oeuvre.nom_oeuvre %>": "<%= oeuvre_path(oeuvre) %>",
-        <% end %>
-        <% @designers.each do |designer| %>
-          "<%= j designer.nom_designer %>": "<%= designer_path(designer) %>",
-        <% end %>
-      };
-
-      // Initialise l'autocomplétion
-      autocomplete(document.getElementById("workSearch"), works.concat(designers), routeMap);
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-      var workSearchInput = document.getElementById("workSearch");
-
-      workSearchInput.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-          event.preventDefault(); // Empêche le comportement par défaut
-          document.querySelector("form").submit(); // Soumettre le formulaire
-        }
-      });
-    });
-  </script>
+  });
+</script>

@@ -66,7 +66,7 @@ module ApplicationHelper
 
       # Remplacer les noms de designers par des liens
       text = text.gsub(/\b(#{Regexp.escape(designer.nom_designer)})\b/i) do |match|
-        "<a style=\"color:#202020; font-weight:500;\" href='/designers/#{designer.id}'>#{match}</a>"
+        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/designers/#{designer.id}'>#{match}</a>"
       end
     end
 

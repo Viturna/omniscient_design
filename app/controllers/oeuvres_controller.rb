@@ -56,7 +56,10 @@ class OeuvresController < ApplicationController
     end
   end
 
-
+  def load_more_oeuvres
+    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(8)
+    render partial: 'oeuvres/oeuvre_card', collection: @oeuvres, as: :oeuvre
+  end
   # GET /oeuvres/1 or /oeuvres/1.json
   def show
     if user_signed_in?

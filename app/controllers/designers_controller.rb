@@ -113,7 +113,7 @@ class DesignersController < ApplicationController
   end
   def load_more_designers
     offset = params[:offset].to_i
-    @designers = Designer.offset(offset).limit(8)
+    @designers = Designer.offset(offset).limit(8).order(:nom_designer)
     respond_to do |format|
       format.js { render partial: 'designers/designer_card', collection: @designers, as: :designer }
     end

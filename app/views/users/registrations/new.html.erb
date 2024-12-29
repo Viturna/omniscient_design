@@ -7,6 +7,16 @@
     <h1>S’inscrire</h1>
     <div class="form">
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :post, multipart: true }) do |f| %>
+        <% if resource.errors.any? %>
+          <div id="error_explanation">
+            <p style="color:red;"><%= pluralize(resource.errors.count, "erreur") %> empêchent cette inscription :</p>
+            <ul>
+              <% resource.errors.full_messages.each do |message| %>
+                <li style="color:red;"><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
         <div class="field">
           <%= f.label :email, "Email" %>
           <%= f.email_field :email, autocomplete: "email", placeholder: "Email*" %>
@@ -53,15 +63,21 @@
           <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut*" }, { class: "form-control" } %>
         </div>
         <div class="field">
-          <%= f.label :rgpd_consent, "J'accepte les conditions RGPD" %>
-          <%= f.check_box :rgpd_consent %>
+          <%= f.collection_select :etablissement_id, Etablissement.order(:city), :id, :all_info, { include_blank: "Aucun établissement" }, { class: "form-control" } %>
         </div>
         <div class="field">
+          <%= f.label :referral_code, "Code de parrainage (optionnel)" %>
           <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
         </div>
-        <div class="actions">
-          <%= f.submit "S’inscrire ⏩️", class: "btn btn-primary" %>
+        <div class="field rgpd">
+          <%= f.check_box :rgpd_consent, required: true %>
+          <%= f.label :rgpd_consent, ("J'accepte que mes données personnelles soient collectées et traitées conformément à la " + link_to('Politique de confidentialité', politiquedeconfidentialite_path, target: "_blank")).html_safe, class: "rgpd-label" %>
         </div>
+        <div class="actions">
+          <%= f.submit "S’inscrire ⏩️", class:"button dark btn-login" %>
+        </div>
+        <%= link_to "Vous avez déjà un compte ? Se connecter", new_user_session_path, class: "sign-up-in" %>
+        <p class="email-confirmation">Déjà inscrit mais pas encore confirmé ? <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path, class: "sign-up-in"%></p>
       <% end %>
     </div>
   </section>

@@ -43,7 +43,7 @@ class User < ApplicationRecord
 
   has_many :list_visitors
   has_many :visitor_lists, through: :list_visitors, source: :list
-
+  validates :email, uniqueness: { case_sensitive: false }
   has_many :referrals_as_referrer, class_name: 'Referral', foreign_key: 'referrer_id'
   has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id'
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
@@ -55,8 +55,11 @@ class User < ApplicationRecord
 
   validates :statut, inclusion: { in: STATUTS, message: "%{value} n'est pas un statut valide" }
   def profile_image_variant
-    profile_image.variant(resize_to_limit: [550, 550]).processed
+    if profile_image.attached?
+      profile_image.variant(resize_to_limit: [550, 550]).processed
+    end
   end
+
   private
 
   def purge_profile_image

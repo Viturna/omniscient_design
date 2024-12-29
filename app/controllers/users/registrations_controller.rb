@@ -2,36 +2,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def new
-    @etablissements = Etablissement.all # or any other logic to fetch the establishments
+    @etablissements = Etablissement.all
     super
   end
 
   def create
     super do |user|
       if params[:user][:referral_code].present?
-        referrer = User.find_by_referral_code(params[:user][:referral_code])
+        referrer = User.find_by(referral_code: params[:user][:referral_code])
         if referrer
           Referral.create(referrer: referrer, referee: user, reward_claimed: false)
         end
       end
     end
   end
+
   def edit
     @current_page = 'profil'
     super
   end
+
   def update
-    # Si l'utilisateur est mis à jour avec succès
     if resource.update_with_password(account_update_params)
-      # Redirige vers la page d'édition
       redirect_to edit_user_registration_path, notice: "Votre profil a été mis à jour avec succès."
     else
-      # Rendu de la vue d'édition avec les erreurs
       clean_up_passwords(resource)
       set_minimum_password_length
       render :edit
     end
   end
+
   def update_resource(resource, params)
     if params[:remove_profile_image] == '1'
       resource.profile_image.purge
@@ -40,14 +40,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
     resource.update(params.except(:current_password))
   end
+
   protected
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :profile_image, :rgpd_consent, :statut, :etablissement_id, :referral_code])
     devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :profile_image, :remove_profile_image, :statut, :etablissement_id])
   end
-  private
-  def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :statut, :etablissement_id, :referral_code)
-  end
 
+  private
+
+  def sign_up_params
+    params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :profile_image, :rgpd_consent, :statut, :etablissement_id, :referral_code)
+  end
 end

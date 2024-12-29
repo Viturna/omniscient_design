@@ -1,4 +1,7 @@
 <style>
+  .popup .popup-content form {
+    padding: 0px;
+  }
   .modal {
     display: none;
     position: fixed;
@@ -57,6 +60,11 @@
     align-items: center;
     justify-content: center;
   }
+  @media screen and (max-width:768px){
+    .input-action {
+      flex-direction: column;
+    }
+  }
 </style>
 <section class="top-header">
   <%= link_to lists_path do%>
@@ -86,73 +94,75 @@
 <section class="grid-1">
   <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
     <div id="manageUsersPopup" class="popup">
-      <div class="modal-content">
+      <div class="popup-content">
         <div class="top-popup">
-          <h2>Partager ma liste</h2>
           <svg class="close-popup" id="closePopupShare" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
           </svg>
         </div>
-        <p>Inviter des éditeurs</p>
-        <%= form_with url: invite_editors_list_path(@list), method: :post, local: true do |form| %>
-          <div class="form-group">
-            <div class="input-action">
-              <%= form.email_field :email, placeholder:"Email de l'utilisateur", class: "form-control" %>
-              <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor']]), {}, class: "form-control" %>
-              <%= form.submit "Inviter", class: "button dark" %>
-            </div>
-          </div>
-        <% end %>
-        <p>Utilisateurs actuels</p>
-        <ul class="user-list">
-          <% (@list.editors + @list.visitors).uniq.each do |user| %>
-            <li>
-              <div class="flex-share">
-                <%= user.email %>
-                <%= form_with url: change_role_list_path(@list, user_id: user.id), method: :post, local: true do |form| %>
-                  <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor'], ['Supprimer', 'remove']], @list.editors.include?(user) ? 'editor' : 'visitor'), {}, class: "form-control", onchange: "this.form.submit();" %>
-                <% end %>
+        <div style="padding: 0 32px;">
+          <h2>Partager ma liste</h2>
+          <p>Inviter des éditeurs</p>
+          <%= form_with url: invite_editors_list_path(@list), method: :post, local: true do |form| %>
+            <div class="form-group">
+              <div class="input-action">
+                <%= form.email_field :email, placeholder:"Email de l'utilisateur", class: "form-control email-share" %>
+                <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor']]), {}, class: "form-control" %>
+                <%= form.submit "Inviter", class: "button dark" %>
               </div>
-            </li>
-          <% end %>
-        </ul>
-        <p>Accessibilité de la liste</p>
-        <div class="form-group">
-          <%= form_with url: toggle_privacy_list_path(@list), method: :post, local: true, id: 'privacyForm' do |form| %>
-            <%= form.select :privacy, options_for_select([['Privée', 'private'], ['Publique', 'public']], @list.share_token.present? ? 'public' : 'private'), {}, class: "form-control", id: 'privacySelect' %>
-          <% end %>
-        </div>
-        <% if @list.share_token.present? %>
-          <div class="input-group">
-            <input type="hidden" id="shareLink" value="<%= shared_list_url(@list.share_token) %>" readonly class="form-control">
-            <div class="input-group-append">
-              <button class="button dark" type="button" id="copyButton" onclick="copyToClipboard()">Copier le lien</button>
             </div>
+          <% end %>
+          <p>Utilisateurs actuels</p>
+          <ul class="user-list">
+            <% (@list.editors + @list.visitors).uniq.each do |user| %>
+              <li>
+                <div class="flex-share">
+                  <%= user.email %>
+                  <%= form_with url: change_role_list_path(@list, user_id: user.id), method: :post, local: true do |form| %>
+                    <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor'], ['Supprimer', 'remove']], @list.editors.include?(user) ? 'editor' : 'visitor'), {}, class: "form-control", onchange: "this.form.submit();" %>
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+          <p>Accessibilité de la liste</p>
+          <div class="form-group">
+            <%= form_with url: toggle_privacy_list_path(@list), method: :post, local: true, id: 'privacyForm' do |form| %>
+              <%= form.select :privacy, options_for_select([['Privée', 'private'], ['Publique', 'public']], @list.share_token.present? ? 'public' : 'private'), {}, class: "form-control", id: 'privacySelect' %>
+            <% end %>
           </div>
-        <% end %>
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            var privacySelect = document.getElementById('privacySelect');
-            privacySelect.addEventListener('change', function() {
-              document.getElementById('privacyForm').submit();
+          <% if @list.share_token.present? %>
+            <div class="input-group">
+              <input type="hidden" id="shareLink" value="<%= shared_list_url(@list.share_token) %>" readonly class="form-control">
+              <div class="input-group-append">
+                <button class="button dark" type="button" id="copyButton" onclick="copyToClipboard()">Copier le lien</button>
+              </div>
+            </div>
+          <% end %>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              var privacySelect = document.getElementById('privacySelect');
+              privacySelect.addEventListener('change', function() {
+                document.getElementById('privacyForm').submit();
+              });
             });
-          });
-        </script>
-        <script>
-          function copyToClipboard() {
-                var copyText = document.getElementById("shareLink");
-                var copyButton = document.getElementById("copyButton");
-                copyText.type = 'text'; // Change input type to text to select the value
-                copyText.select();
-                copyText.setSelectionRange(0, 99999); // Pour les appareils mobiles
-                document.execCommand("copy");
-                copyText.type = 'hidden'; // Change input type back to hidden
-                copyButton.innerText = "Lien copié";
-                setTimeout(function() {
-                  copyButton.innerText = "Copier le lien";
-                }, 2000); // Change back to "Copier le lien" after 2 seconds
-              }
-        </script>
+          </script>
+          <script>
+            function copyToClipboard() {
+                  var copyText = document.getElementById("shareLink");
+                  var copyButton = document.getElementById("copyButton");
+                  copyText.type = 'text'; // Change input type to text to select the value
+                  copyText.select();
+                  copyText.setSelectionRange(0, 99999); // Pour les appareils mobiles
+                  document.execCommand("copy");
+                  copyText.type = 'hidden'; // Change input type back to hidden
+                  copyButton.innerText = "Lien copié";
+                  setTimeout(function() {
+                    copyButton.innerText = "Copier le lien";
+                  }, 2000); // Change back to "Copier le lien" after 2 seconds
+                }
+          </script>
+        </div>
       </div>
     </div>
   <% end %>

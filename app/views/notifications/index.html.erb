@@ -1,70 +1,3 @@
-<style>
-  .grid-1 ul{
-   margin: 32px 0;
-  }
-    .grid-1 ul li{
-   width: 100%;
-   height: 70px;
-   background-color:#FFF;
-   border-radius:5px;
-   display: flex;
-   align-items: center;
-   padding-left:25px;
-   color:#202020;
-   margin-top: 8px;
-    }
-    .grid-1 ul li:hover{
-  background-color: #EDEDED;
-    }
-    .time{
-   font-size: 14px;
-   margin-left: 8px;
-   color:#8D9299;
-    }
-
-
-    @media screen and (min-width:0px) and (max-width:349px){
-
-   .grid-1 ul{
-     margin: 32px 0;
-   }
-   .time{
-     margin:0;
-   }
-   .grid-1 ul li{
-     font-size: 14px;
-     width: 70vw;
-     gap: 16px;
-     height: auto;
-     align-items:start;
-     padding: 20px;
-     flex-direction:column;
-       margin-top: 16px;
-   }
-
-    }
-    @media screen and (min-width:350px) and (max-width:800px){
-
-  .time{
-     margin:0;
-   }
-
-   .grid-1 ul{
-     margin: 32px 0;
-   }
-   .grid-1 ul li{
-     width: 80vw;
-     gap: 16px;
-     height: auto;
-     align-items:start;
-     padding: 20px;
-     flex-direction:column;
-       margin-top: 16px;
-   }
-
-
-    }
-</style>
 <section class="top-default-page">
   <button id="back-btn">
     <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +14,7 @@
     <% previous_notifications = @notifications.select { |notification| notification.created_at.to_date < 30.days.ago.to_date } %>
     <% if today_notifications.any? %>
       <h2>Aujourd'hui</h2>
-      <ul>
+      <ul class="notifications">
         <% today_notifications.each do |notification| %>
           <li>
             <%= notification.message %>
@@ -93,7 +26,7 @@
     <% end %>
     <% if last_7_days_notifications.any? %>
       <h2>7 derniers jours</h2>
-      <ul>
+      <ul class="notifications">
         <% last_7_days_notifications.each do |notification| %>
           <li>
             <%= notification.message %>
@@ -105,7 +38,7 @@
     <% end %>
     <% if last_30_days_notifications.any? %>
       <h2>30 derniers jours</h2>
-      <ul>
+      <ul class="notifications">
         <% last_30_days_notifications.each do |notification| %>
           <li>
             <%= notification.message %>
@@ -117,7 +50,7 @@
     <% end %>
     <% if previous_notifications.any? %>
       <h2>Auparavant</h2>
-      <ul>
+      <ul class="notifications">
         <% previous_notifications.each do |notification| %>
           <li>
             <%= notification.message %>

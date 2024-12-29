@@ -17,6 +17,7 @@ class PagesController < ApplicationController
 
   def profil
     @current_page = 'profil'
+    @user = current_user
   end
   def validation
     @current_page = 'profil'

@@ -31,6 +31,10 @@ class User < ApplicationRecord
   has_many :notifications
   belongs_to :etablissement, optional: true
   has_one_attached :profile_image
+  attr_accessor :remove_profile_image
+
+  before_save :purge_profile_image, if: :remove_profile_image
+
   has_many :feedbacks
   has_many :suivis, dependent: :destroy
 
@@ -50,5 +54,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable
 
   validates :statut, inclusion: { in: STATUTS, message: "%{value} n'est pas un statut valide" }
+  def profile_image_variant
+    profile_image.variant(resize_to_limit: [550, 550]).processed
+  end
+  private
 
+  def purge_profile_image
+    profile_image.purge_later
+  end
 end

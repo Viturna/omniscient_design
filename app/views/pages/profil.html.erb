@@ -3,7 +3,13 @@
 <section class="top-profil">
   <h1>Votre profil</h1>
   <div class="flex-profil">
-    <%= image_tag "profil.png", class: "img-profil" %>
+    <div class="profile">
+      <% if @user.profile_image.attached? %>
+        <%= image_tag @user.profile_image_variant, class: "img-profil" %>
+      <% else %>
+        <%= image_tag "profil.png", class: "img-profil" %>
+      <% end %>
+    </div>
     <div>
       <p class="name"><%= current_user.firstname %> <%= current_user.lastname %></p>
       <div class="flex-certified">

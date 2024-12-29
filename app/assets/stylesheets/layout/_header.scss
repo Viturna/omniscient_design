@@ -7,7 +7,7 @@ header {
   padding: 0 50px;
   background-color: $secondary-color;
   overflow-y: scroll;
-  z-index: 999;
+  z-index: 99;
   transition: width 0.3s ease, height 0.3s ease;
 }
 
@@ -219,6 +219,7 @@ header li .active svg path {
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 999;
   }
 
   .logo-header,
@@ -284,6 +285,7 @@ header li .active svg path {
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 999;
   }
 
   .logo-header,
@@ -415,6 +417,7 @@ header li .active svg path {
     justify-content: center;
     align-items: center;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 999;
   }
 
   .logo-header,

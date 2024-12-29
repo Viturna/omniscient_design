@@ -18,16 +18,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
   def edit
     @current_page = 'profil'
+    super
+  end
+  def update
+    # Si l'utilisateur est mis à jour avec succès
+    if resource.update_with_password(account_update_params)
+      # Redirige vers la page d'édition
+      redirect_to edit_user_registration_path, notice: "Votre profil a été mis à jour avec succès."
+    else
+      # Rendu de la vue d'édition avec les erreurs
+      clean_up_passwords(resource)
+      set_minimum_password_length
+      render :edit
+    end
+  end
+  def update_resource(resource, params)
+    if params[:remove_profile_image] == '1'
+      resource.profile_image.purge
+    elsif params[:keep_profile_image] == 'true'
+      params.delete(:profile_image)
+    end
+    resource.update(params.except(:current_password))
   end
   protected
-
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :statut, :etablissement_id, :referral_code])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :statut, :etablissement_id, :current_password])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :profile_image, :rgpd_consent, :statut, :etablissement_id, :referral_code])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :profile_image, :remove_profile_image, :statut, :etablissement_id])
   end
-
   private
   def sign_up_params
     params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :statut, :etablissement_id, :referral_code)
   end
+
 end

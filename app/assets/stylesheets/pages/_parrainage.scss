@@ -1,0 +1,139 @@
+@import 'abstracts/variables';
+.title-avantage {
+  font-size: 24px;
+  color: $primary-color;
+  font-weight: 500;
+}
+
+.flex-avantages {
+  margin-top: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.box-avantage {
+  width: 45vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.box-avantage div {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.box-avantage p {
+  text-align: center;
+  width: 80%;
+}
+
+.and {
+  text-transform: uppercase;
+  color: $primary-color;
+  font-weight: 600;
+}
+
+.code {
+  margin-top: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.title-code {
+  color: $primary-color;
+  font-weight: 500;
+}
+
+.code-input {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.code input[type="text"]{
+  width: 220px;
+  font-size: 48px;
+  font-weight: 600;
+}
+  .code input[type="text"]::placeholder {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+@media screen and (max-width: 425px) {
+  .title-avantage {
+    font-size: 20px;
+  }
+
+  .flex-avantages {
+    margin-top: 48px;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .box-avantage {
+    width: 80vw;
+    gap: 8px;
+
+    svg{
+      scale: 0.8;
+    }
+  }
+
+
+  .code {
+    margin-top: 64px;
+  }
+
+
+
+  .code-input {
+    flex-direction: column;
+  }
+
+  .code input[type="text"]{
+    width: 60vw;
+  }
+
+}
+@media screen and (min-width:426px) and (max-width: 1024px) {
+  .title-avantage {
+    font-size: 20px;
+  }
+
+  .flex-avantages {
+    margin-top: 48px;
+
+    gap: 32px;
+  }
+
+  .box-avantage {
+    gap: 8px;
+
+    svg{
+      scale: 0.85;
+    }
+  }
+
+
+  .code {
+    margin-top: 64px;
+  }
+
+  .box-avantage p {
+    width: 100%;
+  }
+
+  .code-input {
+    flex-direction: column;
+  }
+
+
+}

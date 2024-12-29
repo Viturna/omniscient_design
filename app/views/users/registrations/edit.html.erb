@@ -29,9 +29,23 @@
 <section class="grid-1">
   <h2>Profil public</h2>
   <p class="desc-profil">Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, veuillez vous modifier les informations ci-dessous </p>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
     <div class="flex-form">
       <%= render "users/shared/error_messages", resource: resource %>
+      <div class="field">
+        <%= f.label :profile_image, "Photo de profil" %>
+        <%= f.file_field :profile_image %>
+        <% if resource.profile_image.attached? %>
+          <div class="profile-image-preview">
+            <%= image_tag resource.profile_image_variant, class:"profile-picture" %>
+          </div>
+          <div class="field">
+            <%= f.check_box :remove_profile_image, style: "display: none;" %>
+            <%= f.label :remove_profile_image, "Retirer la photo de profil", style: "display: none;" %>
+            <%= button_tag "Retirer la photo de profil", type: "button", id: "remove-profile-image-btn", class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
       <div class="field">
         <%= f.label "Prénom" %>
         <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
@@ -89,3 +103,15 @@
     <%= button_to "Supprimer votre compte", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "button delete" %>
   </div>
 </section>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const removeProfileImageBtn = document.getElementById('remove-profile-image-btn');
+  const removeProfileImageCheckbox = document.getElementById('user_remove_profile_image');
+  const form = removeProfileImageBtn.closest('form');
+
+  removeProfileImageBtn.addEventListener('click', function() {
+    removeProfileImageCheckbox.checked = true;
+    form.submit();
+  });
+  });
+</script>

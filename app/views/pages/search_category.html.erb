@@ -1,230 +1,84 @@
 <% content_for :title, "Recherche par catégories - Omniscient Design" %>
 <% content_for :description, "Recherche et trouve nos références en les triant par domaines du design : stylisme, graphisme, objets, art, architecture, métiers d'art, tout y est !" %>
 <style>
-  .search-button{
-   padding: 20px 45px;
-   border: none;
-   border-radius: 5px;
-   border-radius: 50px;
-   font-weight: 500;
-   cursor: pointer;
+  /* Card */
+  .flex-card-list{
+    margin-top: 32px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 55px;
   }
-  .title {
-    color: #202020;
-    font-size: clamp(1.25rem, 1.05rem + 0.4vw, 1.5rem);
-    letter-spacing: -1%;
-    font-weight: 500;
-  }
-  .flex-title{
-    margin-top: 48px;
-    gap: 16px;
+  .card-list{
+    overflow: hidden;
+    width: 17.5vw;
+    height: 17.5vw;
     display: flex;
-    align-items: center;
+    align-items: end;
+    border: 1px solid #E9E9E9;
+    border-radius:5px;
+    position: relative;
   }
-    .flex-category {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 64px;
-   margin-top: 32px;
-    }
-
-    .card-category {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 18vw;
-      height: 18vw;
-      border-radius: 10px;
-      background-color: rgba(255, 255, 255, 0.3); /* Opacity set to 30% */
-    }
-   .search-elements {
-      padding: 100px 5vw 100px 5vw;
-    }
-   .text-category {
-   text-transform: uppercase;
-   font-size: 20px;
-   font-weight: 500;
-    }
-    .result{
-   top:86px;
-   position: absolute;
-   border: 2px solid #E9E9E9;
-
-    }
-    .result li{
-   width: 55vw;
-   padding: 25px;
-   background-color: #fff;
-   cursor: pointer;
-    }
-   .result li:hover{
-  background-color: #F7F7F7;
-    }
-    .result li a{
-   color: #202020;
-    }
-    input[type=search]{
-   margin-right: 16px;
-    }
-
-
-
-    /* Card */
-    .flex-card-list{
-      margin-top: 32px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 55px;
-    }
-    .card-list{
-      overflow: hidden;
-      width: 17.5vw;
-      height: 17.5vw;
-      display: flex;
-      align-items: end;
-      border: 1px solid #E9E9E9;
-      border-radius:5px;
-      position: relative;
-    }
-    .overlay {
-      border-radius: 5px;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 64px;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .overlay svg {
-    scale: 1.5;
-    }
-    .default-overlay {
-       border-radius:5px;
+  .overlay {
+    border-radius: 5px;
     width: 100%;
     height: 100%;
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.5); /* Opacité par défaut */
-    }
-  .card-title{
-    position: relative;
-    font-weight: 500;
-    font-size: clamp(1.25rem, 1.05rem + 0.4vw, 1.5rem);
-    width: 60%;
-    color:#FFF;
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+    background-color: rgba(0, 0, 0, 0.5);
   }
-  @media screen and (min-width:0px) and (max-width:349px){
-     .header-search {
-      width: 100vw;
-      justify-content: space-around;
-    }
-    .title {
-      margin-top: 32px;
-      font-size: 20px;
-    }
 
-    .flex-title{
-      margin-top: 24px;
-    }
-    .flex-title svg{
-      scale: 0.8;
-    }
-    /* Card */
-    .flex-card-list{
-      margin-top: 24px;
-      gap: 5vw;
-    }
-    .card-list{
-      width: 40vw;
-      height: 40vw;
-    }
-    .overlay {
-      gap: 32px;
-    }
-
-    .overlay svg {
-      scale: 1.5;
-    }
-
+  .overlay svg {
+  scale: 1.5;
+  }
+  .default-overlay {
+     border-radius:5px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5); /* Opacité par défaut */
+  }
     .card-title{
-      font-size: 18px;
-      width: 80%;
-    }
-  }
-  @media screen and (min-width:350px) and (max-width:800px){
-    .header-search {
-      width: 100vw;
-      justify-content: space-around;
-    }
-    .title {
-      font-size: clamp(1.125rem, 1.0278rem + 0.4444vw, 1.25rem);
-    }
-    .flex-title{
-      margin-top: 24px;
-    }
-    .flex-title svg{
-      scale: 0.8;
-    }
-    /* Card */
-    .flex-card-list{
-      margin-top: 24px;
-      gap: 5vw;
-    }
-    .card-list{
-      width: 40vw;
-      height: 40vw;
-    }
-    .overlay {
-      gap: 32px;
-    }
-
-    .overlay svg {
-      scale: 1.5;
-    }
-
-    .card-title{
-      font-size: 18px;
-      width: 80%;
-    }
-  }
-   @media screen and (min-width:801px) and (max-width:1050px){
-    .header-search {
-      width: calc(100vw - 260px);
-      justify-content: space-around;
-    }
-  }
+  position: relative;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.05rem + 0.4vw, 1.5rem);
+  width: 60%;
+  color:#FFF;
+  padding: 20px;
+   }
 </style>
-<div class="top-bar-search">
+<section class="top-bar-search">
   <%= link_to search_oeuvres_path, class: "search-link" do %>
-    <input class="search-top-bar" type="search" placeholder="Rechercher une référence" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
+    <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
 <% end %>
-<%= link_to notifications_path do %>
-  <div class="circle circle-notif">
-    <svg width="25" height="29" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M24.8571 23.4762V24.8571H0V23.4762L2.7619 20.7143V12.4286C2.7619 8.14762 5.56524 4.37762 9.66667 3.16238V2.7619C9.66667 2.0294 9.95765 1.3269 10.4756 0.808943C10.9936 0.290985 11.6961 0 12.4286 0C13.1611 0 13.8636 0.290985 14.3815 0.808943C14.8995 1.3269 15.1905 2.0294 15.1905 2.7619V3.16238C19.2919 4.37762 22.0952 8.14762 22.0952 12.4286V20.7143L24.8571 23.4762ZM15.1905 26.2381C15.1905 26.9706 14.8995 27.6731 14.3815 28.1911C13.8636 28.709 13.1611 29 12.4286 29C11.6961 29 10.9936 28.709 10.4756 28.1911C9.95765 27.6731 9.66667 26.9706 9.66667 26.2381" fill="white"/>
-    </svg>
-    <% if current_user %>
-      <% if @unread_notifications_count > 0 %>
-        <div class="notification-counter">
-          <div class="notification-badge"><%= @unread_notifications_count %></div>
-        </div>
+<div class="top-bar-flex">
+  <%= link_to notifications_path do %>
+    <div class="circle circle-notif">
+      <svg width="25" height="29" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24.8571 23.4762V24.8571H0V23.4762L2.7619 20.7143V12.4286C2.7619 8.14762 5.56524 4.37762 9.66667 3.16238V2.7619C9.66667 2.0294 9.95765 1.3269 10.4756 0.808943C10.9936 0.290985 11.6961 0 12.4286 0C13.1611 0 13.8636 0.290985 14.3815 0.808943C14.8995 1.3269 15.1905 2.0294 15.1905 2.7619V3.16238C19.2919 4.37762 22.0952 8.14762 22.0952 12.4286V20.7143L24.8571 23.4762ZM15.1905 26.2381C15.1905 26.9706 14.8995 27.6731 14.3815 28.1911C13.8636 28.709 13.1611 29 12.4286 29C11.6961 29 10.9936 28.709 10.4756 28.1911C9.95765 27.6731 9.66667 26.9706 9.66667 26.2381" fill="white"/>
+      </svg>
+      <% if current_user %>
+        <% if @unread_notifications_count > 0 %>
+          <div class="notification-counter">
+            <div class="notification-badge"><%= @unread_notifications_count %></div>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
-<% end %>
-<%= link_to new_feedback_url do %>
-  <div class="circle circle-notif">
-    <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19.5185 0C18.9095 0 18.3254 0.24193 17.8948 0.672569C17.4642 1.10321 17.2222 1.68728 17.2222 2.2963V6.88889C17.2222 7.4979 17.4642 8.08198 17.8948 8.51261C18.3254 8.94325 18.9095 9.18518 19.5185 9.18518V12.6296L23.6519 9.18518H28.7037C29.3127 9.18518 29.8968 8.94325 30.3274 8.51261C30.7581 8.08198 31 7.4979 31 6.88889V2.2963C31 1.68728 30.7581 1.10321 30.3274 0.672569C29.8968 0.24193 29.3127 0 28.7037 0H19.5185ZM9.18519 5.74074C7.96715 5.74074 6.79901 6.2246 5.93773 7.08588C5.07645 7.94716 4.59259 9.1153 4.59259 10.3333C4.59259 11.5514 5.07645 12.7195 5.93773 13.5808C6.79901 14.4421 7.96715 14.9259 9.18519 14.9259C10.4032 14.9259 11.5714 14.4421 12.4326 13.5808C13.2939 12.7195 13.7778 11.5514 13.7778 10.3333C13.7778 9.1153 13.2939 7.94716 12.4326 7.08588C11.5714 6.2246 10.4032 5.74074 9.18519 5.74074ZM14.9259 17.2222H3.44444C2.53092 17.2222 1.65481 17.5851 1.00885 18.2311C0.362896 18.877 0 19.7531 0 20.6667C0 23.2293 1.054 25.2822 2.78311 26.6715C4.48467 28.0378 6.76719 28.7037 9.18519 28.7037C11.6032 28.7037 13.8857 28.0378 15.5873 26.6715C17.3141 25.2822 18.3704 23.2293 18.3704 20.6667C18.3704 19.7531 18.0075 18.877 17.3615 18.2311C16.7156 17.5851 15.8394 17.2222 14.9259 17.2222Z" fill="white"/>
-    </svg>
-  </div>
-<% end %>
+    </div>
+  <% end %>
+  <%= link_to new_feedback_url do %>
+    <div class="circle circle-notif">
+      <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.5185 0C18.9095 0 18.3254 0.24193 17.8948 0.672569C17.4642 1.10321 17.2222 1.68728 17.2222 2.2963V6.88889C17.2222 7.4979 17.4642 8.08198 17.8948 8.51261C18.3254 8.94325 18.9095 9.18518 19.5185 9.18518V12.6296L23.6519 9.18518H28.7037C29.3127 9.18518 29.8968 8.94325 30.3274 8.51261C30.7581 8.08198 31 7.4979 31 6.88889V2.2963C31 1.68728 30.7581 1.10321 30.3274 0.672569C29.8968 0.24193 29.3127 0 28.7037 0H19.5185ZM9.18519 5.74074C7.96715 5.74074 6.79901 6.2246 5.93773 7.08588C5.07645 7.94716 4.59259 9.1153 4.59259 10.3333C4.59259 11.5514 5.07645 12.7195 5.93773 13.5808C6.79901 14.4421 7.96715 14.9259 9.18519 14.9259C10.4032 14.9259 11.5714 14.4421 12.4326 13.5808C13.2939 12.7195 13.7778 11.5514 13.7778 10.3333C13.7778 9.1153 13.2939 7.94716 12.4326 7.08588C11.5714 6.2246 10.4032 5.74074 9.18519 5.74074ZM14.9259 17.2222H3.44444C2.53092 17.2222 1.65481 17.5851 1.00885 18.2311C0.362896 18.877 0 19.7531 0 20.6667C0 23.2293 1.054 25.2822 2.78311 26.6715C4.48467 28.0378 6.76719 28.7037 9.18519 28.7037C11.6032 28.7037 13.8857 28.0378 15.5873 26.6715C17.3141 25.2822 18.3704 23.2293 18.3704 20.6667C18.3704 19.7531 18.0075 18.877 17.3615 18.2311C16.7156 17.5851 15.8394 17.2222 14.9259 17.2222Z" fill="white"/>
+      </svg>
+    </div>
+  <% end %>
 </div>
-<section class="search-elements">
+</section>
+<section class="grid-1" style="margin-top: 148px;">
   <% if !params[:domaine].present? %>
     <div class="flex-title">
       <a href="/oeuvres/search">

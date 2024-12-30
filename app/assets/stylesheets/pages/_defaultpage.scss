@@ -6,13 +6,14 @@
   height: 15vh;
   padding: 0 5vw;
   gap: 50px;
-  background-color: $primary-color;
   margin-bottom: 64px;
+}
+.top-default-page {
+  background-color: $primary-color;
   h1 {
     color: $secondary-color;
   }
 }
-
 .table-wrapper {
   width: 100%;
   overflow-x: auto;

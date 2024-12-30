@@ -5,7 +5,6 @@ header {
   width: 250px;
   height: 100vh;
   padding: 0 50px;
-  background-color: $secondary-color;
   overflow-y: scroll;
   z-index: 99;
   transition: width 0.3s ease, height 0.3s ease;
@@ -21,7 +20,6 @@ header {
 
 .name-header {
   font-weight: 500;
-  color: $primary-color;
   font-size: 1.5rem;
   margin-left: 1rem;
 }
@@ -44,7 +42,6 @@ header li a {
   gap: 1rem;
   font-weight: 500;
   font-size: 1.2rem;
-  color: $text-color;
   transition: opacity 0.3s ease;
 
   &:hover {
@@ -57,13 +54,8 @@ header li a svg {
 }
 
 header li .active {
-  color: $primary-color;
   font-size: 1.2rem;
   font-weight: 600;
-}
-
-header li .active svg path {
-  fill: $primary-color;
 }
 
 .flex-btn-login {
@@ -86,7 +78,6 @@ header li .active svg path {
 .link-header a {
   font-size: 1rem;
   cursor: pointer;
-  color: $text-color;
   transition: opacity 0.3s ease;
 
   &:hover {
@@ -214,7 +205,6 @@ header li .active svg path {
     padding: 0px;
     bottom: 0;
     left: 0;
-    background-color: $secondary-color;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -281,7 +271,6 @@ header li .active svg path {
     padding: 0px;
     bottom: 0;
     left: 0;
-    background-color: $secondary-color;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -343,7 +332,6 @@ header li .active svg path {
     padding: 0px;
     bottom: 0;
     left: 0;
-    background-color: $secondary-color;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -400,7 +388,6 @@ header li .active svg path {
     display: none;
   }
 }
-
 @media screen and (max-width: 375px) {
   header {
     position: fixed;
@@ -409,7 +396,6 @@ header li .active svg path {
     padding: 0;
     bottom: 0;
     left: 0;
-    background-color: $secondary-color;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -466,5 +452,93 @@ header li .active svg path {
   .flex-btn-login,
   .link-header {
     display: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  header {
+    background-color: $primary-color;
+  }
+  .name-header {
+    color: $secondary-color;
+  }
+  header {
+    background-color: $primary-color;
+  }
+  .name-header {
+    color: $secondary-color;
+  }
+  header li a {
+    color: $dark-text-color;
+  }
+  header li .active {
+    color: $secondary-color;
+  }
+  header li svg path {
+    fill: $dark-text-color;
+  }
+  header li .active svg path {
+    fill: $secondary-color;
+  }
+  .link-header a {
+    color: $dark-text-color;
+  }
+
+  body.light header {
+    background-color: $secondary-color;
+  }
+  body.light .name-header {
+    color: $primary-color;
+  }
+  body.light header li a {
+    color: $text-color;
+  }
+  body.light header li .active{
+    color: $primary-color;
+  }
+  body.light header li .active svg path{
+    fill: $primary-color;
+  }
+  body.light .link-header a{
+    color: $text-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  header {
+    background-color: $secondary-color;
+  }
+  .name-header {
+    color: $primary-color;
+  }
+  header li a {
+    color: $text-color;
+  }
+  header li .active {
+    color: $primary-color;
+  }
+  header li .active svg path {
+    fill: $primary-color;
+  }
+  .link-header a {
+    color: $text-color;
+  }
+  body.dark header {
+    background-color: $primary-color;
+  }
+  body.dark .name-header {
+    color: $secondary-color;
+  }
+  body.dark header li a {
+    color: $dark-text-color;
+  }
+  body.dark header li .active {
+    color: $secondary-color;
+  }
+  body.dark header li .active svg path {
+    fill: $secondary-color;
+  }
+  body.dark .link-header a {
+    color: $dark-text-color;
   }
 }

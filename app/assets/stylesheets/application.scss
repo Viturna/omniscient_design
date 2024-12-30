@@ -55,9 +55,9 @@ html{
 
 body {
   font-family: "IBM Plex Sans";
-  background-color: #F7F7F7;
   overflow-x: hidden;
 }
+
 main{
   margin-left: 350px;
   width: calc(100vw - 350px);
@@ -148,6 +148,9 @@ main{
   background-color: #202020;
   color:#FFF;
   position: relative;
+  h1 {
+    color: $secondary-color;
+  }
 }
 
 @media screen and (max-width:600px) {
@@ -162,5 +165,32 @@ main{
     padding: 0 8vw;
     padding-top: 72px;
     padding-bottom: 64px;
+  }
+}
+
+
+
+
+
+
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  body {
+    background: $dark-background-color;
+  }
+
+  body.light {
+    background: $background-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: $background-color;
+  }
+
+  body.dark {
+    background: $dark-background-color;
   }
 }

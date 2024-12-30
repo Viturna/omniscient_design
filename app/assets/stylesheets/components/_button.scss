@@ -2,8 +2,6 @@
 
 .button {
   display: block;
-  color: $primary-color;
-  background-color: $secondary-color;
   padding: 20px 45px;
   border: none;
   border-radius: 5px;
@@ -15,10 +13,6 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  &:hover {
-    background-color: #EDEDED;
-  }
 }
 
 .large {
@@ -26,11 +20,8 @@
 }
 
 .dark {
-  background-color: $primary-color;
-  color: #FFF;
 
   &:hover {
-    background-color: $primary-color;
     opacity: 0.8;
   }
 }
@@ -39,9 +30,7 @@
 .button-add {
   font-weight: 500;
   font-size: 22px;
-  color: $primary-color;
   border-radius: 10px;
-  background-color: $secondary-color;
   padding: 90px 150px;
   width: 5vw;
   display: flex;
@@ -347,4 +336,97 @@
     width: auto;
   }
 
+}
+
+@media (prefers-color-scheme: dark) {
+  .button {
+    color: $secondary-color;
+    background-color: $dark-background-color;
+
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  .dark {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  .button-add {
+    color: $secondary-color;
+    background-color: $dark-background-color;
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  body.light .button {
+    color: $primary-color;
+    background-color: $secondary-color;
+
+    &:hover {
+      background-color: #EDEDED;
+    }
+  }
+  body.light .dark{
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
+  body.light .button-add {
+    color: $primary-color;
+    background-color: $secondary-color;
+
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .button {
+    color: $primary-color;
+    background-color: $secondary-color;
+
+    &:hover {
+      background-color: #EDEDED;
+    }
+  }
+  .dark {
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
+  .button-add {
+    color: $primary-color;
+    background-color: $secondary-color;
+  }
+  body.dark .button {
+    color: $secondary-color;
+    background-color: $dark-background-color;
+
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  body.darkk .dark {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  body.light .button-add {
+    color: $secondary-color;
+    background-color: $dark-background-color;
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
 }

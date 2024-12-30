@@ -30,7 +30,6 @@
 
 .nav-home a {
   font-size: 20px;
-  color: $primary-color;
   &:hover {
     cursor: pointer;
     font-weight: 500;
@@ -186,4 +185,23 @@
     display: none;
   }
 
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .nav-home a {
+    color: $secondary-color;
+  }
+  body.light .nav-home a {
+    color: $primary-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .nav-home a {
+    color: $primary-color;
+  }
+  body.dark .nav-home a {
+    color: $secondary-color;
+  }
 }

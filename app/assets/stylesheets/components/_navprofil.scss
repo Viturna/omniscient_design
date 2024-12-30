@@ -1,12 +1,12 @@
+@import 'abstracts/variables';
+
 .nav-link-profil {
   width: calc(100% - 40px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-  color: #202020;
   font-weight: 500;
 
   &:hover {
@@ -31,6 +31,7 @@
   color: #E61818;
   height: 40px;
 }
+
 @media screen and (min-width:426px) and (max-width: 600px) {
   .nav-link-profil {
     width: calc(100% - 30px);
@@ -51,6 +52,7 @@
     height: 30px;
   }
 }
+
 @media screen and (max-width: 425px) {
   .nav-link-profil {
     width: calc(100% - 30px);
@@ -69,5 +71,40 @@
   .nav-link-profil.deco {
     font-size: 16px;
     height: 30px;
+  }
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+
+  .nav-link-profil {
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    svg path {
+      fill: $secondary-color;
+    }
+  }
+
+  body.light .nav-link-profil {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .nav-link-profil {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+
+  body.dark .nav-link-profil {
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    svg path {
+      fill: $secondary-color;
+    }
   }
 }

@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const selects = document.querySelectorAll("select[id^='country_']");
-
-  const updateOptions = () => {
+  const updateOptions = (selects) => {
     const selectedValues = Array.from(selects)
       .map(select => select.value)
       .filter(value => value !== "");
@@ -13,9 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  selects.forEach(select => {
-    select.addEventListener("change", updateOptions);
-  });
+  const initializeSelects = (prefix) => {
+    const selects = document.querySelectorAll(`select[id^='${prefix}_']`);
+    selects.forEach(select => {
+      select.addEventListener("change", () => updateOptions(selects));
+    });
+    updateOptions(selects);
+  };
 
-  updateOptions();
+  initializeSelects('country');
+  initializeSelects('designer');
 });

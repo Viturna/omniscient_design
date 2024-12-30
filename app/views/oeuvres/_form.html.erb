@@ -1,3 +1,4 @@
+<%= javascript_include_tag "controllers/uniqueSelect", defer: true %>
 <%= form_with(model: @oeuvre, local: true) do |form| %>
   <% if @oeuvre.errors.any? %>
     <div style="color: red">

@@ -46,13 +46,11 @@ h1 {
 }
 
 h2 {
-  color: $primary-color;
   font-size: 22px;
   font-weight: 500;
   margin: 40px 0 24px 0;
 }
 h3{
-  color: $primary-color;
   font-size: 20px;
   font-weight: 500;
   margin: 24px 0 16px 0;
@@ -69,9 +67,6 @@ p{
   font-weight: 500;
 }
 
-.black{
-  color: $primary-color;
-}
 .underline{
   text-decoration: underline;
 }
@@ -112,5 +107,66 @@ p{
   }
   p{
     font-size: 16px;
+  }
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+  h1,h2,h3 {
+    color: $secondary-color;
+  }
+
+  p{
+    color: $dark-text-color;
+  }
+
+  .black{
+    color: $secondary-color;
+  }
+  body.light h1 {
+    color: $primary-color;
+  }
+  body.light h2 {
+    color: $primary-color;
+  }
+  body.light h3{
+    color: $primary-color;
+  }
+  body.light p{
+    color: $text-color;
+  }
+
+  body.light .black{
+    color: $primary-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  h1,h2,h3 {
+    color: $primary-color;
+  }
+  p{
+    color: $text-color;
+  }
+
+  .black{
+    color: $primary-color;
+  }
+  body.dark h1 {
+    color: $secondary-color;
+  }
+  body.dark h2 {
+    color: $secondary-color;
+  }
+  body.dark h3{
+    color: $secondary-color;
+  }
+  body.dark p{
+    color: $dark-text-color;
+  }
+
+  body.dark .black{
+    color: $secondary-color;
   }
 }

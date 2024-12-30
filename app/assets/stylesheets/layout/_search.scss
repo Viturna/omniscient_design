@@ -1,6 +1,5 @@
 @import 'abstracts/variables';
 .top-bar-search {
-  background-color: #F7F7F7;
   position: fixed;
   z-index: 900;
   top: 0;
@@ -9,7 +8,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #E9E9E9;
   padding: 0 10vw;
 }
 .top-bar-flex{
@@ -107,5 +105,32 @@
   }
   .top-bar-flex{
     gap: 8px;
+  }
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+
+  .top-bar-search {
+    background-color: $dark-background-color;
+    border-bottom: 1px solid #525252;
+  }
+
+  body.light .top-bar-search {
+    background-color: $background-color;
+    border-bottom: 1px solid #E9E9E9;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .top-bar-search {
+    background-color: $background-color;
+    border-bottom: 1px solid #E9E9E9;
+  }
+
+  body.dark .top-bar-search {
+    background-color: $dark-background-color;
+    border-bottom: 1px solid #525252;
   }
 }

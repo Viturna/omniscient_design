@@ -3,8 +3,6 @@
 
 input.search-top-bar {
   border-radius: 50px;
-  background-color: $secondary-color;
-  color: $primary-color;
   font-size: 17px;
   padding: 5px 10px;
   padding-left: 50px;
@@ -51,11 +49,9 @@ input[type=password] {
   padding-left: 25px;
   width: calc(100% - 31px);
   height: 70px;
-  background-color: $secondary-color;
   border-radius: 5px;
   border: 2px solid #E9E9E9;
   font-weight: 500;
-  color: $primary-color;
 }
 
 select {
@@ -64,16 +60,9 @@ select {
   stroke: none;
   padding-left: 25px;
   height: 70px;
-  background-color: $secondary-color;
   border-radius: 5px;
   border: 2px solid #E9E9E9;
   font-weight: 500;
-  color: $primary-color;
-}
-
-input::placeholder,
-select::placeholder {
-  color: $text-color;
 }
 
 textarea {
@@ -84,7 +73,6 @@ textarea {
   width: calc(100% - 31px);
   height: 120px;
   resize: none;
-  background-color: $secondary-color;
   border: 2px solid #E9E9E9;
   border-radius: 5px;
 }
@@ -204,4 +192,116 @@ textarea {
   width: 150px;
   height: 150px;
   object-fit: cover;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  input.search-top-bar {
+    background-color: $primary-color;
+    color: $secondary-color;
+  }
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password] {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+    border: 2px solid #525252;
+  }
+  input::placeholder,
+  select::placeholder,
+  textarea::placeholder {
+    color: $dark-text-color;
+  }
+  select {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+    border: 2px solid #525252;
+  }
+
+  textarea {
+    background-color: $dark-background-color;
+    border: 2px solid #525252;
+  }
+
+  body.light input.search-top-bar{
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+  body.light input[type=text],
+  body.light input[type=date],
+  body.light input[type=email],
+  body.light input[type=password] {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+  body.light input::placeholder,
+  body.light select::placeholder,
+  body.light textarea::placeholder {
+    color: $text-color;
+  }
+  body.light select {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+
+  body.light textarea {
+    background-color: $secondary-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  input.search-top-bar {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password] {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+  input::placeholder,
+  select::placeholder,
+  textarea::placeholder {
+    color: $text-color;
+  }
+  select {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+
+  textarea {
+    background-color: $secondary-color;
+  }
+
+
+
+  body.dark input.search-top-bar {
+    background-color: $primary-color;
+    color: $secondary-color;
+  }
+  body.dark input[type=text],
+  body.dark input[type=date],
+  body.dark input[type=email],
+  body.dark input[type=password] {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+    border: 2px solid #525252;
+  }
+  body.dark input::placeholder,
+  body.dark select::placeholder,
+  body.dark textarea::placeholder {
+    color: $dark-text-color;
+  }
+  body.dark select {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+    border: 2px solid #525252;
+  }
+  body.dark textarea {
+    background-color: $dark-background-color;
+    border: 2px solid #525252;
+  }
 }

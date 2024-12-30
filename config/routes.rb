@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   get 'changelog', to: 'pages#changelog', as: 'changelog'
   get 'parrainage_filleul', to: 'pages#parrainage_filleul', as: 'parrainage_filleul'
   post 'parrainage_filleul', to: 'pages#parrainage_filleul'
-
+  get 'set_theme', to: 'application#set_theme'
   # Route racine
   root 'oeuvres#index'
 

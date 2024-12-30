@@ -1,14 +1,15 @@
+<!-- filepath: /Users/thomasriq/omniscient_design/app/views/layouts/application.html.erb -->
 <!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="recaptcha-site-key" content="<%= Rails.application.secrets.recaptcha_site_key %>">
+    <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
     <% if should_not_index? %>
       <meta name="robots" content="noindex, nofollow">
       <meta name="googlebot" content="noindex, nofollow">
       <meta name="bingbot" content="noindex, nofollow">
-    <%else%>
+    <% else %>
       <meta name="robots" content="index, follow">
       <meta name="googlebot" content="index, follow">
       <meta name="bingbot" content="index, follow">
@@ -38,7 +39,7 @@
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:type" content="website">
   </head>
-  <body class="<%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
+  <body class="<%= (cookies && cookies[:theme].presence || 'system') %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>
       <div class="alert" id="alert">
         <p><%= notice %></p>

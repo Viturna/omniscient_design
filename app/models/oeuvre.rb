@@ -6,6 +6,7 @@ class Oeuvre < ApplicationRecord
   validates :presentation_generale, presence: true, length: { minimum: 200 }
 
   validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
+
   belongs_to :domaine
   validates :designer_ids, presence: true
 
@@ -17,5 +18,4 @@ class Oeuvre < ApplicationRecord
   has_many :designers_oeuvres, dependent: :destroy
   has_many :designers, through: :designers_oeuvres
 
-  accepts_nested_attributes_for :designers
 end

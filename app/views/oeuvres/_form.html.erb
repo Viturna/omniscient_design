@@ -1,10 +1,10 @@
 <%= form_with(model: @oeuvre, local: true) do |form| %>
   <% if @oeuvre.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(@oeuvre.errors.count, "erreur") %> ont empêché cette œuvre d'être sauvegardée :</h2>
+      <h2><%= pluralize(@oeuvre.errors.count, "erreur") %> interdit à cette référence d'être enregistré :</h2>
       <ul>
-        <% @oeuvre.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+        <% @oeuvre.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
         <% end %>
       </ul>
     </div>
@@ -12,6 +12,21 @@
   <div class="flex-form">
     <div>
       <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
+    </div>
+    <div>
+      <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer,
+    { prompt: "Sélectionner un designer", selected: @cdesigner_1 },
+    { id: "designer_1", name: "oeuvre[designer_ids][]" } %>
+    </div>
+    <div>
+      <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer,
+    { prompt: "Sélectionner un designer", selected: @cdesigner_2 },
+    { id: "designer_2", name: "oeuvre[designer_ids][]" } %>
+    </div>
+    <div>
+      <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer,
+    { prompt: "Sélectionner un designer", selected: @cdesigner_3 },
+    { id: "designer_3", name: "oeuvre[designer_ids][]" } %>
     </div>
     <div style="display:flex">
       <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
@@ -44,6 +59,7 @@
     <div>
       <%= form.text_field :image, placeholder: "Url de l'image" %>
     </div>
+    <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>
     <div>
       <%= form.submit "Continuer", class: "button large" %>
     </div>
@@ -84,83 +100,5 @@
         event.preventDefault();
       }
     });
-  });
-</script>
-<script>
-  function autocomplete(inp, arr) {
-  var currentFocus;
-  inp.addEventListener("input", function(e) {
-      var a, b, i, val = this.value;
-      closeAllLists();
-      if (!val) { return false; }
-      currentFocus = -1;
-      a = document.createElement("DIV");
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      this.parentNode.appendChild(a);
-      for (i = 0; i < arr.length; i++) {
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-          b = document.createElement("DIV");
-          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += arr[i].substr(val.length);
-          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-          b.addEventListener("click", function(e) {
-              inp.value = this.getElementsByTagName("input")[0].value;
-              closeAllLists();
-          });
-          a.appendChild(b);
-        }
-      }
-  });
-
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        currentFocus++;
-        addActive(x);
-      } else if (e.keyCode == 38) {
-        currentFocus--;
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        e.preventDefault();
-        if (currentFocus > -1) {
-          if (x) x[currentFocus].click();
-        }
-      }
-  });
-
-  function addActive(x) {
-    if (!x) return false;
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-
-  function removeActive(x) {
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
-  }
-
-  function closeAllLists(elmnt) {
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
-      }
-    }
-  }
-
-  document.addEventListener("click", function (e) {
-      closeAllLists(e.target);
-  });
-  }
-  var designerIdField = document.getElementById("designer_id_field");
-  $(document).ready(function() {
-    var works = <%= raw @works.to_json %>; // Injecter les œuvres dans le JavaScript
-    autocomplete(document.getElementById("oeuvre_designer_name"), works);
-    designerIdField.value = designer.id;
   });
 </script>

@@ -1,8 +1,7 @@
 class OeuvresController < ApplicationController
-  before_action :set_oeuvre, only: %i[show edit update destroy validate cancel]
+  before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :check_certified, only: [:validate, :destroy, :edit]
-
+  before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /oeuvres or /oeuvres.json
   def index
     @oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
@@ -111,18 +110,33 @@ class OeuvresController < ApplicationController
     end
   end
 
+ # PATCH/PUT /oeuvres/1/reject
+  def reject
+    rejection_reason = params[:rejection_reason].presence || "Sans commentaire"
+    @rejected_oeuvre = RejectedOeuvre.new(
+      nom_oeuvre: @oeuvre.nom_oeuvre,
+      user: @oeuvre.user,
+      reason: rejection_reason
+    )
+    if @rejected_oeuvre.save
+      @oeuvre.destroy
+      redirect_to validation_path, notice: "La référence a été refusée avec succès."
+    else
+      redirect_to validation_path, alert: "Une erreur est survenue lors du refus de l'œuvre."
+    end
+  end
+
   # DELETE /oeuvres/1 or /oeuvres/1.json
   def destroy
     if @oeuvre.destroy!
       respond_to do |format|
         create_rejection_notification(@oeuvre)
         update_suivi_references_refusees(@oeuvre.user)
-        format.html { redirect_to validation_path, notice: "L'oeuvre " + @oeuvre.nom_oeuvre + " a été supprimée avec succès." }
+        format.html { redirect_to validation_path, notice: "La référence " + @oeuvre.nom_oeuvre + " a été supprimée avec succès." }
         format.json { head :no_content }
       end
     end
   end
-
   def cancel
     if user_signed_in?
       if current_user.admin? || @oeuvre.user_id == current_user.id
@@ -200,7 +214,13 @@ class OeuvresController < ApplicationController
   end
 
   def set_oeuvre
-    @oeuvre = Oeuvre.friendly.find(params[:slug])
+    @oeuvre = if params[:id]
+                Oeuvre.friendly.find(params[:id])
+              else
+                Oeuvre.friendly.find(params[:slug])
+              end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to validation_path, alert: "L'œuvre n'a pas été trouvée."
   end
 
   def oeuvre_params

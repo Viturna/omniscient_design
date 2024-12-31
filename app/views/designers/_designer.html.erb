@@ -8,6 +8,69 @@
   padding: 0px;
   }
 </style>
+<style>
+  /* filepath: app/assets/stylesheets/application.scss */
+  .modal {
+  display: none;
+  position: fixed;
+  z-index: 1050;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal.show {
+  display: block;
+  }
+
+  .modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+  pointer-events: none;
+  }
+
+  .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+  }
+
+  .modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+  }
+
+  .modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1rem;
+  }
+
+  .modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
+  }
+</style>
 <div class="body-show" id="<%= dom_id designer %>">
   <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
   <div class="header-show"
@@ -221,7 +284,11 @@
           <% if user_signed_in? && current_user.id == designer.user_id || current_user.admin? || current_user.certified?%>
             <%= link_to 'Valider le designer ✅', validate_designer_path(designer), class: 'button'%>
             <%= link_to 'Modifier le designer 📝', edit_designer_path(designer), class: 'button'%>
-            <%= link_to 'Supprimer le designer ❌', designer_path(designer), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir supprimer cette œuvre ?' } %>
+            <a href="#" class="button" data-toggle="modal" data-target="#globalRejectModal"
+                  data-url="<%= reject_designer_path(designer) %>"
+                  data-title="<%= designer.nom_designer %>">
+              Supprimer le designer ❌
+            </a>
           <% end %>
         </div>
         <div class="naviguation-buttons">
@@ -365,3 +432,87 @@
     <% end %>
   </div>
 </div>
+<div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog" aria-labelledby="globalRejectModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="globalRejectModalLabel">Refuser l'entrée</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_with url: "", method: :patch, id: "rejectForm" do |form| %>
+          <div class="form-group">
+            <%= form.label :rejection_reason, "Raison du refus" %>
+            <%= form.text_area :rejection_reason, class: "form-control", id: "rejectionReasonField" %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <%= form.submit "Refuser", class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  // Ouvrir le modal
+  document.querySelectorAll('[data-toggle="modal"]').forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const targetModal = document.querySelector(button.getAttribute('data-target'));
+      if (targetModal) {
+        targetModal.classList.add('show');
+        targetModal.style.display = 'block';
+        document.body.classList.add('modal-open');
+      }
+    });
+  });
+
+  // Fermer le modal
+  document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(function(button) {
+    button.addEventListener('click', function() {
+      const modal = button.closest('.modal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+      }
+    });
+  });
+
+  // Fermer le modal en cliquant en dehors du contenu
+  document.querySelectorAll('.modal').forEach(function(modal) {
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+      }
+    });
+  });
+  });
+   document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.querySelector('#globalRejectModal');
+  const form = document.querySelector('#rejectForm');
+  const rejectionField = document.querySelector('#rejectionReasonField');
+
+  document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
+    button.addEventListener('click', function () {
+      const url = button.getAttribute('data-url');
+      const title = button.getAttribute('data-title');
+
+      // Mettre à jour l'URL du formulaire
+      form.setAttribute('action', url);
+
+      // Mettre à jour le titre ou d'autres informations (optionnel)
+      modal.querySelector('.modal-title').textContent = `Refuser l'entrée : ${title}`;
+
+      // Réinitialiser les champs si nécessaire
+      rejectionField.value = '';
+    });
+  });
+  });
+</script>

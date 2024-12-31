@@ -41,12 +41,25 @@
     <% end %>
   </div>
   <div class="form-footer">
+    <div>
+      <p id="designer-count">0 designers sélectionnés</p>
+      <p id="oeuvre-count">0 références sélectionnées</p>
+    </div>
     <%= form.submit "Créer la liste", class: "button large dark" %>
   </div>
 <% end %>
 <script>
   $(document).ready(function() {
     const checkboxes = document.querySelectorAll('.hidden-check');
+    const designerCount = document.getElementById('designer-count');
+    const oeuvreCount = document.getElementById('oeuvre-count');
+
+    function updateCounts() {
+      const selectedDesigners = document.querySelectorAll('#designers-list .hidden-check:checked').length;
+      const selectedOeuvres = document.querySelectorAll('#oeuvres-list .hidden-check:checked').length;
+      designerCount.textContent = `${selectedDesigners} designers sélectionnés`;
+      oeuvreCount.textContent = `${selectedOeuvres} œuvres sélectionnées`;
+    }
 
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
@@ -56,6 +69,7 @@
         } else {
           card.classList.remove('card-checked');
         }
+        updateCounts();
       });
 
       // Initialize the card-checked class based on initial checkbox state
@@ -64,6 +78,9 @@
         card.classList.add('card-checked');
       }
     });
+
+    // Initialize counts on page load
+    updateCounts();
   });
 </script>
 <script>

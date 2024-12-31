@@ -18,6 +18,8 @@ class Designer < ApplicationRecord
   has_many :lists, through: :list_items
   belongs_to :user, optional: true
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
+
+  attr_accessor :rejection_reason
   private
 
   def valid_birth_year

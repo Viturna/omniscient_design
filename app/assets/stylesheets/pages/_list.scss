@@ -64,7 +64,14 @@
   justify-content: center;
 }
 .form-footer {
+  width: calc(80vw - 350px);
+  padding: 16px 0;
+  background-color: $background-color;
+  position: fixed;
+  bottom: 0;
   display: flex;
+  align-items: center;
+  gap: 16px;
   justify-content: flex-end;
 }
 @media screen and (max-width: 375px) {

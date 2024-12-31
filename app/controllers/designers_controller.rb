@@ -1,8 +1,8 @@
 class DesignersController < ApplicationController
   include RecaptchaHelper
-  before_action :set_designer, only: %i[show edit update destroy cancel validate cancel]
+  before_action :set_designer, only: %i[show edit update destroy cancel validate cancel reject]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
-
+  before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /designers or /designers.json
   def index
     @designers = Designer.where(validation: true).limit(10).order("RANDOM()")
@@ -87,6 +87,22 @@ class DesignersController < ApplicationController
     end
   end
 
+  def reject
+    rejection_reason = params[:rejection_reason].presence || "Sans commentaire"
+    @rejected_designer = RejectedDesigner.new(
+      nom_designer: @designer.nom_designer,
+      user: @designer.user,
+      reason: rejection_reason
+    )
+    if @rejected_designer.save
+      @designer.destroy
+      redirect_to validation_path, notice: "Le designer a été refusé avec succès."
+    else
+      redirect_to validation_path, alert: "Une erreur est survenue lors du refus du designer."
+    end
+  end
+
+
   def cancel
     if user_signed_in?
       if current_user.admin? || @designer.user_id == current_user.id
@@ -169,9 +185,13 @@ class DesignersController < ApplicationController
     end
   end
   def set_designer
-    @designer = Designer.friendly.find(params[:slug])
+    @designer = if params[:id]
+                Designer.friendly.find(params[:id])
+              else
+                Designer.friendly.find(params[:slug])
+              end
   rescue ActiveRecord::RecordNotFound
-    redirect_to designers_path, alert: "Designer introuvable."
+    redirect_to validation_path, alert: "Designer n'a pas été trouvée."
   end
 
   def designer_params

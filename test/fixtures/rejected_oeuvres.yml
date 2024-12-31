@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nom_oeuvre: MyString
+  date_oeuvre: 2024-12-31
+  user: one
+  reason: MyText
+
+two:
+  nom_oeuvre: MyString
+  date_oeuvre: 2024-12-31
+  user: two
+  reason: MyText

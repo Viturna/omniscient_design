@@ -59,7 +59,8 @@ class User < ApplicationRecord
       profile_image.variant(resize_to_limit: [550, 550]).processed
     end
   end
-
+  has_many :rejected_oeuvres
+  has_many :rejected_designers
   private
 
   def purge_profile_image

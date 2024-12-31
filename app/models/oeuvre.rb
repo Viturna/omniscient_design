@@ -18,4 +18,5 @@ class Oeuvre < ApplicationRecord
   has_many :designers_oeuvres, dependent: :destroy
   has_many :designers, through: :designers_oeuvres
 
+  attr_accessor :rejection_reason
 end

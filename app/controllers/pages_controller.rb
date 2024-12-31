@@ -21,8 +21,8 @@ class PagesController < ApplicationController
   end
   def validation
     @current_page = 'profil'
-    @oeuvres = Oeuvre.all
-    @designers = Designer.all
+    @oeuvres = Oeuvre.all.order(created_at: :desc)
+    @designers = Designer.all.order(created_at: :desc)
     @oeuvres_count = Oeuvre.where(validation: true).count
     @designers_count = Designer.where(validation: true).count
     @oeuvres_count_val_false = Oeuvre.where(validation: false).count

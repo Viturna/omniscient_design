@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_27_101612) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_31_150826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -84,6 +84,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_27_101612) do
     t.text "style_ou_philosophie"
     t.text "creations_majeures"
     t.text "heritage_et_impact"
+    t.text "rejection_reason"
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
   end
@@ -239,6 +240,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_27_101612) do
     t.text "concept_et_inspiration"
     t.text "dimension_esthetique"
     t.text "impact_et_message"
+    t.text "rejection_reason"
     t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
     t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
     t.index ["user_id"], name: "index_oeuvres_on_user_id"
@@ -250,6 +252,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_27_101612) do
     t.boolean "reward_claimed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "rejected_designers", force: :cascade do |t|
+    t.string "nom_designer"
+    t.bigint "user_id"
+    t.text "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_rejected_designers_on_user_id"
+  end
+
+  create_table "rejected_oeuvres", force: :cascade do |t|
+    t.string "nom_oeuvre"
+    t.bigint "user_id"
+    t.text "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_rejected_oeuvres_on_user_id"
   end
 
   create_table "static_pages", force: :cascade do |t|
@@ -316,5 +336,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_27_101612) do
   add_foreign_key "notifications", "users"
   add_foreign_key "oeuvres", "domaines"
   add_foreign_key "oeuvres", "users"
+  add_foreign_key "rejected_designers", "users"
+  add_foreign_key "rejected_oeuvres", "users"
   add_foreign_key "suivis", "users"
 end

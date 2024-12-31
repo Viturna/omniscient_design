@@ -12,6 +12,7 @@
   font-weight: 500;
   border-radius: 5px;
   margin-top: 16px;
+  font-size: 18px;
   position: relative;
 
   &:hover{
@@ -20,7 +21,14 @@
   }
 
 }
-
+.list-card div{
+  gap: 8px;
+  display: flex;
+}
+.share-list{
+  font-weight: 400;
+  font-size: 16px;
+}
 @media screen and (min-width:0px) and (max-width:500px) {
   .list-card {
     font-size: 15px;

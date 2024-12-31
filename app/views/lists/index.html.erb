@@ -23,7 +23,14 @@
         <li>
           <%= link_to list_path(list) do %>
             <div class="list-card">
-              <%= list.name %>
+              <div>
+                <%= list.name %>
+                <% if list.share_token.present? %>
+                  <p class="share-list">(Liste partagée)</p>
+                <%else%>
+                  <p class="share-list">(Liste privée)</p>
+                <%end%>
+              </div>
               <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 10.5L20.4215 10.5M20.4215 10.5L13.1384 2.2832M20.4215 10.5L13.1384 18.7168" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
               </svg>

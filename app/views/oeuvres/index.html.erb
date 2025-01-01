@@ -1,29 +1,31 @@
 <% content_for :title, "Explorer le carnet de références et de designers - Omniscient Design" %>
 <% content_for :description, "Explorez Omniscient Design, le meilleur carnet de référence numérique. Un répertoire unique avec des infos sur les travaux et la vie des designers." %>
-<%= javascript_include_tag "controllers/loadMore", defer: true %>
-<%= javascript_include_tag "controllers/scrollCardsIndex", defer: true %>
+<%# <%= javascript_include_tag "controllers/loadMore", defer: true %>
+<%# <%= javascript_include_tag "controllers/scrollCardsIndex", defer: true %>
 <style>
   @media screen and (max-width: 320px) {
     .top-bar-search {
       display: none;
     }
     #cardContainer {
-      height: calc(100vh - 50px); /* Ajuster la hauteur pour les petits écrans */
+      height: calc(100dvh - 50px); /* Ajuster la hauteur pour les petits écrans */
     }
   }
   #cardContainer {
-  position: relative;
-  height: 100vh; /* Conteneur pleine hauteur */
-  overflow-y: auto;
-  scroll-behavior: smooth; /* Support des navigateurs modernes */
+    position: relative;
+    height: 100dvh; /* Hauteur de l'écran */
+    overflow-y: scroll; /* Active le scroll vertical uniquement */
+    scroll-snap-type: y mandatory; /* Active le snap pour le défilement vertical */
+    -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
   }
-
-  .card {
-  scroll-snap-align: start; /* Pour aligner les cartes */
+  .box-card{
+    display: flex;
+    flex-direction: column;
   }
 
   body {
-  overflow: hidden; /* Bloque le scroll global */
+    margin: 0;
+    overflow: hidden; /* Désactive le scroll global */
   }
 </style>
 <section class="home-page top-bar-search">
@@ -92,3 +94,68 @@
     </button>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("cardContainer");
+    const loadMoreTrigger = document.getElementById("load-more-trigger");
+    const upButton = document.querySelector(".arrow-button.up");
+    const downButton = document.querySelector(".arrow-button.down");
+    let isLoading = false;
+
+    // Fonction de chargement des cartes
+    function loadMoreCards() {
+      if (isLoading) return;
+      isLoading = true;
+      const url = loadMoreTrigger.dataset.type; // Endpoint pour charger les cartes
+      fetch(`/oeuvres/load_more?type=${url}`)
+        .then((response) => response.text())
+        .then((html) => {
+          const boxCard = document.getElementById("boxCard");
+          boxCard.insertAdjacentHTML("beforeend", html);
+          isLoading = false;
+        })
+        .catch((err) => {
+          console.error("Erreur lors du chargement des cartes :", err);
+          isLoading = false;
+        });
+    }
+
+    // Écouteur de défilement pour le chargement infini
+    container.addEventListener("scroll", () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      if (scrollTop + clientHeight >= scrollHeight - 50) {
+        loadMoreCards();
+      }
+    });
+
+    // Fonction pour défiler vers le haut ou le bas
+    function scrollByAmount(amount) {
+      container.scrollBy({ top: amount, behavior: "smooth" });
+    }
+
+    // Gestion des boutons
+    upButton.addEventListener("click", () => scrollByAmount(-window.innerHeight / 2));
+    downButton.addEventListener("click", () => scrollByAmount(window.innerHeight / 2));
+
+    // Gestion tactile (mobile-friendly)
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    container.addEventListener("touchstart", (e) => {
+      touchStartY = e.touches[0].clientY;
+    });
+
+    container.addEventListener("touchend", (e) => {
+      touchEndY = e.changedTouches[0].clientY;
+      const swipeDistance = touchStartY - touchEndY;
+
+      if (swipeDistance > 50) {
+        // Swipe up
+        scrollByAmount(window.innerHeight / 2);
+      } else if (swipeDistance < -50) {
+        // Swipe down
+        scrollByAmount(-window.innerHeight / 2);
+      }
+    });
+  });
+</script>

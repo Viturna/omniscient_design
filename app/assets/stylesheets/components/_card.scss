@@ -16,24 +16,31 @@
 
 .card {
   position: relative;
-  padding-top: 190px;
   width: 50vw;
+  scroll-snap-align: start;
+  height: 100dvh;
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
 }
 
 .bg-card {
   transform: rotate(6deg);
   border-radius: 5px;
   width: 50vw;
-  height: 350px;
+  min-height: 350px;
+  height: 45dvh;
+  position: relative;
 }
 .flex-info-card {
+  transform: rotate(-6deg);
   position: absolute;
   width: 95%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 99;
-  margin-top: 16px;
+  top: 24px;
   padding: 0 16px;
 }
 .flex-info-card .info-card-dark{
@@ -71,13 +78,14 @@
 }
 
 .description-card-home {
-  max-height: 150px;
+  max-height: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
+  margin-bottom: 3dvh;
 }
 
 
@@ -128,19 +136,22 @@
   .img-card {
     transform: rotate(-4deg);
   }
-
+  .flex-info-card{
+    transform: rotate(-4deg);
+  }
   .bg-card {
     transform: rotate(4deg);
   }
   .card {
-    padding-top: 90px;
     width: 80vw;
+    height: 85dvh;
   }
 
   .bg-card {
     width: 80vw;
-    height: calc(100dvh - 280px);
+    height: calc(90dvh - 280px);
     max-height: 700px;
+    min-height: 0px;
   }
 
   .bg-card .date-main{
@@ -180,6 +191,11 @@
   }
 }
 @media screen and (min-width:426px) and (max-width: 600px) {
+  .flex-info-card {
+    transform: rotate(-4deg);
+    width: 90%;
+    padding: 0 8px;
+  }
   .img-card {
     transform: rotate(-4deg);
   }
@@ -188,8 +204,9 @@
     transform: rotate(4deg);
   }
   .card {
-    padding-top: 100px;
+    height: 90dvh;
     width: 90vw;
+    justify-content: end;
   }
 
   .bg-card {
@@ -236,7 +253,8 @@
 }
 @media screen and (max-width: 425px) {
   .flex-info-card {
-    width: 100%;
+    transform: rotate(0deg);
+    width: 95%;
     padding: 0 8px;
   }
   .img-card {
@@ -247,8 +265,8 @@
     transform: rotate(0deg);
   }
   .card {
-    padding-top: 80px;
     width: 90vw;
+    justify-content: center;
   }
 
   .bg-card {

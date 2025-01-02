@@ -58,6 +58,7 @@
     <div>
       <%= form.text_field :image, placeholder: "Url de l'image"%>
     </div>
+    <!-- Champ caché pour le token reCAPTCHA -->
     <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>
     <div>
       <%= form.submit "Continuer", class: "button large" %>

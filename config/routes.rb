@@ -90,7 +90,8 @@ Rails.application.routes.draw do
   get 'contributions', to: 'contributions#index', as: 'user_contributions'
   # Route racine
   root 'oeuvres#index'
-
+  match "/404", to: "errors#not_found", via: :all
   # Health check route
   get 'up', to: 'rails/health#show', as: :rails_health_check
+
 end

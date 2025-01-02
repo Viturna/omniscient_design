@@ -60,7 +60,7 @@
     <div>
       <%= form.text_field :image, placeholder: "Url de l'image" %>
     </div>
-    <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>
+    <input type="hidden" id="recaptcha_token" name="recaptcha_token">
     <div>
       <%= form.submit "Continuer", class: "button large" %>
     </div>

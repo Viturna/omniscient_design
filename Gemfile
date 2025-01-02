@@ -95,3 +95,5 @@ gem 'whenever', require: false
 gem 'sprockets-rails'
 gem 'ruby-vips'
 gem 'aws-sdk-s3', require: false
+
+gem 'recaptcha', require: 'recaptcha/rails'

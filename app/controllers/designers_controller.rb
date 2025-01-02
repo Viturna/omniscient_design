@@ -1,5 +1,6 @@
 class DesignersController < ApplicationController
   include RecaptchaHelper
+
   before_action :set_designer, only: %i[show edit update destroy cancel validate cancel reject]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
@@ -46,16 +47,30 @@ class DesignersController < ApplicationController
   def create
     @designer = Designer.new(designer_params)
     @designer.user = current_user
-    if @designer.save
-      update_suivi_references_emises(current_user)
-      create_notification(@designer)
-      flash[:success] = "Designer créé avec succès."
-      redirect_to @designer
+
+    recaptcha_result = verify_recaptcha(params[:recaptcha_token])
+    Rails.logger.info "reCAPTCHA verification result: #{recaptcha_result}"
+
+    if recaptcha_result
+      if @designer.save
+        update_suivi_references_emises(current_user)
+        create_notification(@designer)
+        flash[:success] = "Designer créé avec succès."
+        redirect_to @designer
+      else
+        # Charger les pays à nouveau en cas d'échec de validation
+        @countries = Country.order(:country)
+        flash.now[:alert] = "Veuillez corriger les erreurs avant de soumettre à nouveau."
+        render :new, status: :unprocessable_entity
+      end
     else
+      # En cas d'échec reCAPTCHA
+      flash.now[:alert] = "Veuillez confirmer que vous n'êtes pas un robot."
       @countries = Country.order(:country)
       render :new, status: :unprocessable_entity
     end
   end
+
 
   # PATCH/PUT /designers/1 or /designers/1.json
   def update
@@ -205,6 +220,7 @@ class DesignersController < ApplicationController
       :creations_majeures,
       :heritage_et_impact,
       :image,
+      :recaptcha_token,
       country_ids: []
     )
   end

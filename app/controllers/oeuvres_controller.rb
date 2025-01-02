@@ -1,4 +1,5 @@
 class OeuvresController < ApplicationController
+  include RecaptchaHelper
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
   before_action :authenticate_user!, except: [:index, :show]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
@@ -87,6 +88,7 @@ class OeuvresController < ApplicationController
   def create
     @oeuvre = Oeuvre.new(oeuvre_params)
     @oeuvre.user = current_user
+
     if @oeuvre.save
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
@@ -227,7 +229,7 @@ class OeuvresController < ApplicationController
     params.require(:oeuvre).permit(
       :nom_oeuvre, :date_oeuvre, :presentation_generale, :contexte_historique,
       :materiaux_et_innovations_techniques, :concept_et_inspiration,
-      :dimension_esthetique, :impact_et_message, :image, :domaine_id, designer_ids: []
+      :dimension_esthetique, :impact_et_message, :image, :domaine_id, :recaptcha_token, designer_ids: []
     )
   end
 end

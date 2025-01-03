@@ -74,7 +74,9 @@ p{
   font-weight: 300;
   margin-top: 16px;
 }
-
+.center{
+  text-align: center;
+}
 @media screen and (min-width:426px) and (max-width: 600px) {
   h1 {
     font-size: 26px;

@@ -5,7 +5,7 @@ class OeuvresController < ApplicationController
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /oeuvres or /oeuvres.json
   def index
-    @oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
+    @oeuvres = Oeuvre.where(validation: true).limit(2).order("RANDOM()")
     @current_page = 'accueil'
     if user_signed_in?
       @lists = current_user.lists
@@ -16,8 +16,16 @@ class OeuvresController < ApplicationController
 
   def load_more
     offset = params[:offset].to_i
-    @oeuvres = Oeuvre.where(validation: true).order("RANDOM()").offset(offset).limit(10)
-    render partial: 'oeuvres/card', collection: @oeuvres, as: :card
+    limit = 2
+    loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
+
+    @oeuvres = Oeuvre.where(validation: true)
+                     .where.not(id: loaded_ids)
+                     .order("RANDOM()")
+                     .offset(offset)
+                     .limit(limit)
+
+    render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' }
   end
 
   def search
@@ -92,7 +100,7 @@ class OeuvresController < ApplicationController
     if @oeuvre.save
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
-      flash[:success] = "Référence créée avec succès."
+      flash[:success] = "Référence créée avesc succès."
       redirect_to @oeuvre
     else
       render :new, status: :unprocessable_entity

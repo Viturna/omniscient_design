@@ -6,12 +6,20 @@ class DesignersController < ApplicationController
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /designers or /designers.json
   def index
-    @designers = Designer.where(validation: true).limit(10).order("RANDOM()")
+    @designers = Designer.where(validation: true).order("RANDOM()").limit(2)
     @current_page = 'accueil'
   end
   def load_more
     offset = params[:offset].to_i
-    @designers = Designer.where(validation: true).order(:nom_designer).offset(offset).limit(10)
+    limit = 2
+    loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
+
+    @designers = Designer.where(validation: true)
+                     .where.not(id: loaded_ids)
+                     .order("RANDOM()")
+                     .offset(offset)
+                     .limit(limit)
+
     render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' }
   end
   # GET /designers/1 or /designers/1.json

@@ -77,85 +77,97 @@
     <div class="box-card" id="boxCard">
       <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
     </div>
-    <div id="load-more-trigger" data-type="designers"></div>
+    <div id="load-more-trigger" data-offset="2" data-loaded-ids="<%= @designers.pluck(:id).join(',') %>"></div>
+    <div class="button-nav">
+      <button class="arrow-button up">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 38L18 40L22 40L22 38L18 38ZM22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6L22 6ZM22 38L22 6L18 6L18 38L22 38Z" fill="white"/>
+          <path d="M5 15.8408L20.0002 2.54515L35.0005 15.8408" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
+        </svg>
+      </button>
+      <button class="arrow-button down">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 2L18 1.86484e-08L22 -1.86484e-08L22 2L18 2ZM22 34C22 35.1046 21.1046 36 20 36C18.8954 36 18 35.1046 18 34L22 34ZM22 2L22 34L18 34L18 2L22 2Z" fill="white"/>
+          <path d="M5 24.1592L20.0002 37.4549L35.0005 24.1592" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
+        </svg>
+      </button>
+    </div>
   </div>
-  <div class="button-nav">
-    <button class="arrow-button up">
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 38L18 40L22 40L22 38L18 38ZM22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6L22 6ZM22 38L22 6L18 6L18 38L22 38Z" fill="white"/>
-        <path d="M5 15.8408L20.0002 2.54515L35.0005 15.8408" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
-      </svg>
-    </button>
-    <button class="arrow-button down">
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 2L18 1.86484e-08L22 -1.86484e-08L22 2L18 2ZM22 34C22 35.1046 21.1046 36 20 36C18.8954 36 18 35.1046 18 34L22 34ZM22 2L22 34L18 34L18 2L22 2Z" fill="white"/>
-        <path d="M5 24.1592L20.0002 37.4549L35.0005 24.1592" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
-      </svg>
-    </button>
-  </div>
-</div>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("cardContainer");
-    const loadMoreTrigger = document.getElementById("load-more-trigger");
-    const upButton = document.querySelector(".arrow-button.up");
-    const downButton = document.querySelector(".arrow-button.down");
-    let isLoading = false;
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("cardContainer");
+      const loadMoreTrigger = document.getElementById("load-more-trigger");
+      const upButton = document.querySelector(".arrow-button.up");
+      const downButton = document.querySelector(".arrow-button.down");
+      let isLoading = false;
 
-    // Fonction de chargement des cartes
-    function loadMoreCards() {
-      if (isLoading) return;
-      isLoading = true;
-      const url = loadMoreTrigger.dataset.type; // Endpoint pour charger les cartes
-      fetch(`/designers/load_more?type=${url}`)
-        .then((response) => response.text())
-        .then((html) => {
-          const boxCard = document.getElementById("boxCard");
-          boxCard.insertAdjacentHTML("beforeend", html);
-          isLoading = false;
-        })
-        .catch((err) => {
-          console.error("Erreur lors du chargement des cartes :", err);
-          isLoading = false;
-        });
-    }
+      // Fonction de chargement des cartes
+      function loadMoreCards() {
+          if (isLoading) return;
+          isLoading = true;
+          const offset = loadMoreTrigger.dataset.offset;
+          const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
 
-    // Écouteur de défilement pour le chargement infini
-    container.addEventListener("scroll", () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      if (scrollTop + clientHeight >= scrollHeight - 50) {
-        loadMoreCards();
+          fetch(`/designers/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
+            .then((response) => response.text())
+            .then((html) => {
+              container.insertAdjacentHTML("beforeend", html);
+              isLoading = false;
+
+              // Mettre à jour l'offset
+              loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
+
+              // Mettre à jour les IDs chargés
+              const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
+              loadMoreTrigger.dataset.loadedIds = [...loadedIds, ...newLoadedIds].join(',');
+
+              // Vérifier s'il reste des designers à charger
+              if (html.trim() === "") {
+                loadMoreTrigger.style.display = "none";
+              }
+            })
+            .catch((err) => {
+              console.error("Erreur lors du chargement des cartes :", err);
+              isLoading = false;
+            });
+        }
+
+      // Écouteur de défilement pour le chargement infini
+      container.addEventListener("scroll", () => {
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        if (scrollTop + clientHeight >= scrollHeight - 50) {
+          loadMoreCards();
+        }
+      });
+
+      // Fonction pour défiler vers le haut ou le bas
+      function scrollByAmount(amount) {
+        container.scrollBy({ top: amount, behavior: "smooth" });
       }
+
+      // Gestion des boutons
+      upButton.addEventListener("click", () => scrollByAmount(-window.innerHeight / 2));
+      downButton.addEventListener("click", () => scrollByAmount(window.innerHeight / 2));
+
+      // Gestion tactile (mobile-friendly)
+      let touchStartY = 0;
+      let touchEndY = 0;
+
+      container.addEventListener("touchstart", (e) => {
+        touchStartY = e.touches[0].clientY;
+      });
+
+      container.addEventListener("touchend", (e) => {
+        touchEndY = e.changedTouches[0].clientY;
+        const swipeDistance = touchStartY - touchEndY;
+
+        if (swipeDistance > 50) {
+          // Swipe up
+          scrollByAmount(window.innerHeight / 2);
+        } else if (swipeDistance < -50) {
+          // Swipe down
+          scrollByAmount(-window.innerHeight / 2);
+        }
+      });
     });
-
-    // Fonction pour défiler vers le haut ou le bas
-    function scrollByAmount(amount) {
-      container.scrollBy({ top: amount, behavior: "smooth" });
-    }
-
-    // Gestion des boutons
-    upButton.addEventListener("click", () => scrollByAmount(-window.innerHeight / 2));
-    downButton.addEventListener("click", () => scrollByAmount(window.innerHeight / 2));
-
-    // Gestion tactile (mobile-friendly)
-    let touchStartY = 0;
-    let touchEndY = 0;
-
-    container.addEventListener("touchstart", (e) => {
-      touchStartY = e.touches[0].clientY;
-    });
-
-    container.addEventListener("touchend", (e) => {
-      touchEndY = e.changedTouches[0].clientY;
-      const swipeDistance = touchStartY - touchEndY;
-
-      if (swipeDistance > 50) {
-        // Swipe up
-        scrollByAmount(window.innerHeight / 2);
-      } else if (swipeDistance < -50) {
-        // Swipe down
-        scrollByAmount(-window.innerHeight / 2);
-      }
-    });
-  });
-</script>
+  </script>

@@ -1,5 +1,5 @@
-<%= link_to oeuvre_path(card) do %>
-  <div class="card" data-card-id="<%= card.id %>">
+<%= link_to oeuvre_path(card.slug) do %>
+  <div class="card" data-id="<%= card.id %>">
     <div class="bg-card" style="background-color: <%= card.domaine.couleur %>;">
       <div class="flex-info-card">
         <div class="info-card-dark">

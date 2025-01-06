@@ -116,21 +116,27 @@
     <div class="flex-card-list">
       <% @oeuvres = params[:domaine].present? ? Oeuvre.where(domaine_id: params[:domaine], validation: true) : Oeuvre.where(validation: true).shuffle %>
       <% @oeuvres.each do |oeuvre| %>
-        <div class="card-list" id="oeuvre_<%= oeuvre.id %>" style="background-image: url('<%= oeuvre.image %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
-          <div class="default-overlay"></div>
-          <p class="card-title"><%= oeuvre.nom_oeuvre %></p>
-          <div class="overlay" style="display: none;">
-            <%= link_to oeuvre_path(oeuvre.id), class: "delete-flex" do %>
-              <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 6.13636C16.085 6.13636 17.1255 6.56737 17.8927 7.33456C18.6599 8.10176 19.0909 9.1423 19.0909 10.2273C19.0909 11.3122 18.6599 12.3528 17.8927 13.12C17.1255 13.8872 16.085 14.3182 15 14.3182C13.915 14.3182 12.8745 13.8872 12.1073 13.12C11.3401 12.3528 10.9091 11.3122 10.9091 10.2273C10.9091 9.1423 11.3401 8.10176 12.1073 7.33456C12.8745 6.56737 13.915 6.13636 15 6.13636ZM15 0C21.8182 0 27.6409 4.24091 30 10.2273C27.6409 16.2136 21.8182 20.4545 15 20.4545C8.18182 20.4545 2.35909 16.2136 0 10.2273C2.35909 4.24091 8.18182 0 15 0ZM2.97273 10.2273C4.07489 12.4777 5.78633 14.3737 7.91247 15.6999C10.0386 17.026 12.4942 17.7291 15 17.7291C17.5058 17.7291 19.9614 17.026 22.0875 15.6999C24.2137 14.3737 25.9251 12.4777 27.0273 10.2273C25.9251 7.97685 24.2137 6.0808 22.0875 4.75465C19.9614 3.42851 17.5058 2.72547 15 2.72547C12.4942 2.72547 10.0386 3.42851 7.91247 4.75465C5.78633 6.0808 4.07489 7.97685 2.97273 10.2273Z" fill="white"/>
-              </svg>
+        <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
+        <% if asset_exists?(image_path) %>
+          <div class="card-list" id="oeuvre_<%= oeuvre.id %>" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+          <% else %>
+            <% Rails.logger.debug("Image not found : #{image_path}") %>
+            <div class="card-list" id="oeuvre_<%= oeuvre.id %>" style="background-image: url('<%= asset_path(oeuvre.image) %>'); background-repeat: no-repeat; background-position: center; background-size: cover;">
             <% end %>
+            <div class="default-overlay"></div>
+            <p class="card-title"><%= oeuvre.nom_oeuvre %></p>
+            <div class="overlay" style="display: none;">
+              <%= link_to oeuvre_path(oeuvre.id), class: "delete-flex" do %>
+                <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 6.13636C16.085 6.13636 17.1255 6.56737 17.8927 7.33456C18.6599 8.10176 19.0909 9.1423 19.0909 10.2273C19.0909 11.3122 18.6599 12.3528 17.8927 13.12C17.1255 13.8872 16.085 14.3182 15 14.3182C13.915 14.3182 12.8745 13.8872 12.1073 13.12C11.3401 12.3528 10.9091 11.3122 10.9091 10.2273C10.9091 9.1423 11.3401 8.10176 12.1073 7.33456C12.8745 6.56737 13.915 6.13636 15 6.13636ZM15 0C21.8182 0 27.6409 4.24091 30 10.2273C27.6409 16.2136 21.8182 20.4545 15 20.4545C8.18182 20.4545 2.35909 16.2136 0 10.2273C2.35909 4.24091 8.18182 0 15 0ZM2.97273 10.2273C4.07489 12.4777 5.78633 14.3737 7.91247 15.6999C10.0386 17.026 12.4942 17.7291 15 17.7291C17.5058 17.7291 19.9614 17.026 22.0875 15.6999C24.2137 14.3737 25.9251 12.4777 27.0273 10.2273C25.9251 7.97685 24.2137 6.0808 22.0875 4.75465C19.9614 3.42851 17.5058 2.72547 15 2.72547C12.4942 2.72547 10.0386 3.42851 7.91247 4.75465C5.78633 6.0808 4.07489 7.97685 2.97273 10.2273Z" fill="white"/>
+                </svg>
+              <% end %>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
 </section>
 <script>
   $(document).ready(function() {

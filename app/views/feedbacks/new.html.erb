@@ -59,10 +59,8 @@
     align-items: center;
     flex-direction: column;
   }
-  .button-submit{
-   margin-top: 32px;
-   height: 65px;
-   width: 20vw;
+  .button{
+    margin-top: 32px;
   }
    @media screen and (min-width:0px) and (max-width:600px) {
     .star-rating{
@@ -76,39 +74,23 @@
     .star-rating label {
       font-size: 32px;
     }
-    .main-div {
-      padding-bottom: 100px;
+
+    .label-number,.label-text,.question{
+      font-size: 16px;
     }
-    .form-feedback,.box-title{
-      margin-left:5vw;
-    }
-      .label-number,.label-text,.question{
-    font-size: 16px;
-    }
-    .button{
-      width: 85vw;
-    }
-    textarea{
-      width: 75vw;
-    }
+
+
   }
   @media screen and (min-width:600px) and (max-width:800px) {
 
     .star-rating label {
       font-size: 38px;
     }
-    .main-div {
-      padding-bottom: 200px;
-    }
-    .form-feedback,.box-title{
-      margin-left:5vw;
-    }
+
       .label-number,.label-text{
     font-size: 16px;
     }
-    .button{
-      width: 85vw;
-    }
+
   }
 </style>
 <section class="top-header">
@@ -135,13 +117,12 @@
         </div>
       <% end %>
       <% [
-        [:question_1, "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?"],
-        [:question_2, "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?"],
-        [:question_3, "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?"],
-        [:question_4, "Sur une échelle de 1 à 5, comment évalueriez-vous l’efficacité du quiz ?"],
-        [:question_5, "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?"],
+        [:question_1, "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?*"],
+        [:question_2, "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?*"],
+        [:question_3, "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?*"],
+        [:question_5, "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?*"],
         [:question_6, "Sur une échelle de 1 à 5, comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)"],
-        [:question_7, "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?"]
+        [:question_7, "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?*"]
       ].each do |question, label_text| %>
         <div>
           <%= f.label question, label_text, class: "question" %>
@@ -206,7 +187,7 @@
         <%= f.text_area :question_12, placeholder: 'Répondre ici' %>
       </div>
       <div>
-        <%= f.submit "Envoyer", class: "button-submit" %>
+        <%= f.submit "Envoyer", class: "button large" %>
       </div>
     <% end %>
   </div>

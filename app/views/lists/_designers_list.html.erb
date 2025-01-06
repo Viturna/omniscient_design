@@ -1,0 +1,17 @@
+<% designers.each do |designer| %>
+  <div class="check-box-wrapper">
+    <%= check_box_tag "designer_ids[]", designer.id, false, class: 'hidden-check', id: "designer_#{designer.id}" %>
+    <label for="designer_#{designer.id}">
+      <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
+      <% if asset_exists?(image_path) %>
+        <div class="card-list-add" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position: center;">
+        <% else %>
+          <% Rails.logger.debug("Image not found : #{image_path}") %>
+          <div class="card-list-add" style="background: url('<%= asset_path(designer.image) %>'); background-size: cover; background-position: center;">
+          <% end %>
+          <div class="default-overlay"></div>
+          <p class="card-title-add"><%= designer.nom_designer %></p>
+        </div>
+      </label>
+    </div>
+  <% end %>

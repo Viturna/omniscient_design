@@ -38,6 +38,10 @@ Rails.application.routes.draw do
       delete 'remove_user'
       post 'toggle_privacy'
     end
+    collection do
+      get :lazy_load_designers
+      get :lazy_load_oeuvres
+    end
   end
 
   get '/shared/:share_token', to: 'lists#shared', as: :shared_list

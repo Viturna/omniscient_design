@@ -175,17 +175,16 @@ main{
 
 
 // Dark mode
-@media (prefers-color-scheme: dark) {
-  body {
-    background: $dark-background-color;
-  }
+// @media (prefers-color-scheme: dark) {
+//   body {
+//     background: $dark-background-color;
+//   }
 
-  body.light {
-    background: $background-color;
-  }
-}
+//   body.light {
+//     background: $background-color;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
   body {
     background: $background-color;
   }
@@ -193,4 +192,3 @@ main{
   body.dark {
     background: $dark-background-color;
   }
-}

@@ -14,6 +14,9 @@ class Designer < ApplicationRecord
   has_many :countries, through: :designer_countries
   validates :countries, length: { maximum: 3, message: "Un designer peut être associé à un maximum de 3 pays." }
 
+  has_many :designers_domaines, dependent: :destroy
+  has_many :domaines, through: :designers_domaines
+
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items
   belongs_to :user, optional: true

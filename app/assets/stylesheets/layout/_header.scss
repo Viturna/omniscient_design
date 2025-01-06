@@ -458,56 +458,55 @@ header li .active {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  header {
-    background-color: $primary-color;
-  }
-  .name-header {
-    color: $secondary-color;
-  }
-  header {
-    background-color: $primary-color;
-  }
-  .name-header {
-    color: $secondary-color;
-  }
-  header li a {
-    color: $dark-text-color;
-  }
-  header li .active {
-    color: $secondary-color;
-  }
-  header li svg path {
-    fill: $dark-text-color;
-  }
-  header li .active svg path {
-    fill: $secondary-color;
-  }
-  .link-header a {
-    color: $dark-text-color;
-  }
+// @media (prefers-color-scheme: dark) {
+//   header {
+//     background-color: $primary-color;
+//   }
+//   .name-header {
+//     color: $secondary-color;
+//   }
+//   header {
+//     background-color: $primary-color;
+//   }
+//   .name-header {
+//     color: $secondary-color;
+//   }
+//   header li a {
+//     color: $dark-text-color;
+//   }
+//   header li .active {
+//     color: $secondary-color;
+//   }
+//   header li svg path {
+//     fill: $dark-text-color;
+//   }
+//   header li .active svg path {
+//     fill: $secondary-color;
+//   }
+//   .link-header a {
+//     color: $dark-text-color;
+//   }
 
-  body.light header {
-    background-color: $secondary-color;
-  }
-  body.light .name-header {
-    color: $primary-color;
-  }
-  body.light header li a {
-    color: $text-color;
-  }
-  body.light header li .active{
-    color: $primary-color;
-  }
-  body.light header li .active svg path{
-    fill: $primary-color;
-  }
-  body.light .link-header a{
-    color: $text-color;
-  }
-}
+//   body.light header {
+//     background-color: $secondary-color;
+//   }
+//   body.light .name-header {
+//     color: $primary-color;
+//   }
+//   body.light header li a {
+//     color: $text-color;
+//   }
+//   body.light header li .active{
+//     color: $primary-color;
+//   }
+//   body.light header li .active svg path{
+//     fill: $primary-color;
+//   }
+//   body.light .link-header a{
+//     color: $text-color;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
   header {
     background-color: $secondary-color;
   }
@@ -544,4 +543,3 @@ header li .active {
   body.dark .link-header a {
     color: $dark-text-color;
   }
-}

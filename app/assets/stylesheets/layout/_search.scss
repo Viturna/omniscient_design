@@ -110,20 +110,20 @@
 
 
 
-@media (prefers-color-scheme: dark) {
+// @media (prefers-color-scheme: dark) {
 
-  .top-bar-search {
-    background-color: $dark-background-color;
-    border-bottom: 1px solid #525252;
-  }
+//   .top-bar-search {
+//     background-color: $dark-background-color;
+//     border-bottom: 1px solid #525252;
+//   }
 
-  body.light .top-bar-search {
-    background-color: $background-color;
-    border-bottom: 1px solid #E9E9E9;
-  }
-}
+//   body.light .top-bar-search {
+//     background-color: $background-color;
+//     border-bottom: 1px solid #E9E9E9;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
+
   .top-bar-search {
     background-color: $background-color;
     border-bottom: 1px solid #E9E9E9;
@@ -132,5 +132,5 @@
   body.dark .top-bar-search {
     background-color: $dark-background-color;
     border-bottom: 1px solid #525252;
-  }
+
 }

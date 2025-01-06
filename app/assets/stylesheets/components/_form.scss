@@ -195,62 +195,61 @@ textarea {
 }
 
 
-@media (prefers-color-scheme: dark) {
-  input.search-top-bar {
-    background-color: $primary-color;
-    color: $secondary-color;
-  }
-  input[type=text],
-  input[type=date],
-  input[type=email],
-  input[type=password] {
-    background-color: $dark-background-color;
-    color: $secondary-color;
-    border: 2px solid #525252;
-  }
-  input::placeholder,
-  select::placeholder,
-  textarea::placeholder {
-    color: $dark-text-color;
-  }
-  select {
-    background-color: $dark-background-color;
-    color: $secondary-color;
-    border: 2px solid #525252;
-  }
+// @media (prefers-color-scheme: dark) {
+//   input.search-top-bar {
+//     background-color: $primary-color;
+//     color: $secondary-color;
+//   }
+//   input[type=text],
+//   input[type=date],
+//   input[type=email],
+//   input[type=password] {
+//     background-color: $dark-background-color;
+//     color: $secondary-color;
+//     border: 2px solid #525252;
+//   }
+//   input::placeholder,
+//   select::placeholder,
+//   textarea::placeholder {
+//     color: $dark-text-color;
+//   }
+//   select {
+//     background-color: $dark-background-color;
+//     color: $secondary-color;
+//     border: 2px solid #525252;
+//   }
 
-  textarea {
-    background-color: $dark-background-color;
-    border: 2px solid #525252;
-  }
+//   textarea {
+//     background-color: $dark-background-color;
+//     border: 2px solid #525252;
+//   }
 
-  body.light input.search-top-bar{
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
-  body.light input[type=text],
-  body.light input[type=date],
-  body.light input[type=email],
-  body.light input[type=password] {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
-  body.light input::placeholder,
-  body.light select::placeholder,
-  body.light textarea::placeholder {
-    color: $text-color;
-  }
-  body.light select {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
+//   body.light input.search-top-bar{
+//     background-color: $secondary-color;
+//     color: $primary-color;
+//   }
+//   body.light input[type=text],
+//   body.light input[type=date],
+//   body.light input[type=email],
+//   body.light input[type=password] {
+//     background-color: $secondary-color;
+//     color: $primary-color;
+//   }
+//   body.light input::placeholder,
+//   body.light select::placeholder,
+//   body.light textarea::placeholder {
+//     color: $text-color;
+//   }
+//   body.light select {
+//     background-color: $secondary-color;
+//     color: $primary-color;
+//   }
 
-  body.light textarea {
-    background-color: $secondary-color;
-  }
-}
+//   body.light textarea {
+//     background-color: $secondary-color;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
   input.search-top-bar {
     background-color: $secondary-color;
     color: $primary-color;
@@ -304,4 +303,3 @@ textarea {
     background-color: $dark-background-color;
     border: 2px solid #525252;
   }
-}

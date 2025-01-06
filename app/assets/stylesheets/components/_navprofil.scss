@@ -76,24 +76,24 @@
 
 
 
-@media (prefers-color-scheme: dark) {
+// @media (prefers-color-scheme: dark) {
 
-  .nav-link-profil {
-    background-color: $primary-color;
-    color: $secondary-color;
+//   .nav-link-profil {
+//     background-color: $primary-color;
+//     color: $secondary-color;
 
-    svg path {
-      fill: $secondary-color;
-    }
-  }
+//     svg path {
+//       fill: $secondary-color;
+//     }
+//   }
 
-  body.light .nav-link-profil {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
-}
+//   body.light .nav-link-profil {
+//     background-color: $secondary-color;
+//     color: $primary-color;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
+
   .nav-link-profil {
     background-color: $secondary-color;
     color: $primary-color;
@@ -107,4 +107,3 @@
       fill: $secondary-color;
     }
   }
-}

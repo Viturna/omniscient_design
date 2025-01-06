@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_31_150826) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_03_211231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -87,6 +87,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_31_150826) do
     t.text "rejection_reason"
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
+  end
+
+  create_table "designers_domaines", id: false, force: :cascade do |t|
+    t.bigint "designer_id", null: false
+    t.bigint "domaine_id", null: false
+    t.index ["designer_id"], name: "index_designers_domaines_on_designer_id"
+    t.index ["domaine_id"], name: "index_designers_domaines_on_domaine_id"
   end
 
   create_table "designers_lists", id: false, force: :cascade do |t|
@@ -324,6 +331,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_31_150826) do
   add_foreign_key "designer_countries", "countries"
   add_foreign_key "designer_countries", "designers"
   add_foreign_key "designers", "users"
+  add_foreign_key "designers_domaines", "designers"
+  add_foreign_key "designers_domaines", "domaines"
   add_foreign_key "designers_oeuvres", "designers"
   add_foreign_key "designers_oeuvres", "oeuvres"
   add_foreign_key "feedbacks", "users"

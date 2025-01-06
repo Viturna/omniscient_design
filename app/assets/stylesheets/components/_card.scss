@@ -37,7 +37,7 @@
   position: absolute;
   width: 95%;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   z-index: 99;
   top: 24px;
@@ -46,8 +46,14 @@
 .flex-info-card .info-card-dark{
   scale: 0.9;
   height: 30px;
+  width: fit-content;
 }
-
+.domaine-flex-card{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 8px;
+}
 .title-card {
   margin-top: 8px;
   font-size: 36px;
@@ -315,28 +321,27 @@
 
 
 
-@media (prefers-color-scheme: dark) {
-  .subtitle-card {
-    color: $secondary-color;
-    a{
-      color: $secondary-color;
-    }
-  }
-  .description-card {
-    color: $dark-text-color;
-  }
-  body.light .subtitle-card{
-    color: $primary-color;
-    a{
-      color: $primary-color;
-    }
-  }
-  body.light .description-card {
-    color: $text-color;
-  }
-}
+// @media (prefers-color-scheme: dark) {
+//   .subtitle-card {
+//     color: $secondary-color;
+//     a{
+//       color: $secondary-color;
+//     }
+//   }
+//   .description-card {
+//     color: $dark-text-color;
+//   }
+//   body.light .subtitle-card{
+//     color: $primary-color;
+//     a{
+//       color: $primary-color;
+//     }
+//   }
+//   body.light .description-card {
+//     color: $text-color;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
   .subtitle-card {
     color: $primary-color;
     a{
@@ -355,4 +360,3 @@
   body.dark .description-card {
     color: $dark-text-color;
   }
-}

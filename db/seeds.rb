@@ -116,7 +116,7 @@ csv_designers.each do |row|
   countries = []
 
   # Vérifiez si les pays dans les colonnes 'country_1', 'country_2', etc., existent et ajoutez-les
-  (1..2).each do |i| # Si vous avez trois colonnes de pays
+  (1..2).each do |i| # Si vous avez deux colonnes de pays
     country_column = row["country_#{i}"]
     if country_column.present?
       country = Country.find_or_create_by(country: country_column)
@@ -127,15 +127,34 @@ csv_designers.each do |row|
   # Associer les pays au designer via la table de jointure
   designer.countries = countries
 
+  # Créez un tableau vide pour les domaines
+  domaines = []
+
+  # Vérifiez si les domaines dans les colonnes 'domaine_1', 'domaine_2', etc., existent et ajoutez-les
+  (1..2).each do |i| # Si vous avez deux colonnes de domaines
+    domaine_column = row["domaine_#{i}"]
+    if domaine_column.present?
+      domaine = Domaine.find_or_create_by(domaine: domaine_column)
+      domaines << domaine
+    end
+  end
+
+  # Associer les domaines au designer via la table de jointure
+  designer.domaines = domaines
+
   # Sauvegarde du designer
   designer.save!
-  designers_counter += 1
+
+  if designer.save
+    puts "Designer importée : #{designer.nom_designer}"
+    designers_counter += 1
+  else
+    puts "Erreur lors de l'importation du designer : #{designer.errors.full_messages.join(', ')}"
+  end
+  puts
 end
 
-
-puts "Nombre total de designers importés : #{designers_counter}"
-
-
+puts "#{designers_counter} designers importés avec succès."
 # Import des oeuvres
 
 csv_text_oeuvres = File.read(Rails.root.join('lib', 'seeds', 'oeuvres.csv'), encoding: 'utf-8')

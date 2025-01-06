@@ -338,54 +338,53 @@
 
 }
 
-@media (prefers-color-scheme: dark) {
-  .button {
-    color: $secondary-color;
-    background-color: $dark-background-color;
+// @media (prefers-color-scheme: dark) {
+//   .button {
+//     color: $secondary-color;
+//     background-color: $dark-background-color;
 
-    &:hover {
-      background-color: #4a4a4a;
-    }
-  }
-  .dark {
-    background-color: $dark-background-color;
-    color: $secondary-color;
+//     &:hover {
+//       background-color: #4a4a4a;
+//     }
+//   }
+//   .dark {
+//     background-color: $dark-background-color;
+//     color: $secondary-color;
 
-    &:hover {
-      background-color: #4a4a4a;
-    }
-  }
-  .button-add {
-    color: $secondary-color;
-    background-color: $dark-background-color;
-    &:hover {
-      background-color: #4a4a4a;
-    }
-  }
-  body.light .button {
-    color: $primary-color;
-    background-color: $secondary-color;
+//     &:hover {
+//       background-color: #4a4a4a;
+//     }
+//   }
+//   .button-add {
+//     color: $secondary-color;
+//     background-color: $dark-background-color;
+//     &:hover {
+//       background-color: #4a4a4a;
+//     }
+//   }
+//   body.light .button {
+//     color: $primary-color;
+//     background-color: $secondary-color;
 
-    &:hover {
-      background-color: #EDEDED;
-    }
-  }
-  body.light .dark{
-    background-color: $primary-color;
-    color: $secondary-color;
+//     &:hover {
+//       background-color: #EDEDED;
+//     }
+//   }
+//   body.light .dark{
+//     background-color: $primary-color;
+//     color: $secondary-color;
 
-    &:hover {
-      background-color: $primary-color;
-    }
-  }
-  body.light .button-add {
-    color: $primary-color;
-    background-color: $secondary-color;
+//     &:hover {
+//       background-color: $primary-color;
+//     }
+//   }
+//   body.light .button-add {
+//     color: $primary-color;
+//     background-color: $secondary-color;
 
-  }
-}
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
   .button {
     color: $primary-color;
     background-color: $secondary-color;
@@ -429,4 +428,3 @@
       background-color: #4a4a4a;
     }
   }
-}

@@ -188,20 +188,18 @@
 }
 
 
-@media (prefers-color-scheme: dark) {
-  .nav-home a {
-    color: $secondary-color;
-  }
-  body.light .nav-home a {
-    color: $primary-color;
-  }
-}
+// @media (prefers-color-scheme: dark) {
+//   .nav-home a {
+//     color: $secondary-color;
+//   }
+//   body.light .nav-home a {
+//     color: $primary-color;
+//   }
+// }
 
-@media (prefers-color-scheme: light) {
   .nav-home a {
     color: $primary-color;
   }
   body.dark .nav-home a {
     color: $secondary-color;
   }
-}

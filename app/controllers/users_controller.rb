@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :check_admin_role, only: [:certify, :uncertify]
   def index
     @current_page = 'profil'
-    @users = User.all
+    @users = User.all.order(:created_at)
   end
   def ban
     if current_user.admin?

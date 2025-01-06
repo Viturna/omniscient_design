@@ -98,9 +98,11 @@
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
-
+.info-card-first-content{
+  display: block;
+}
 .header-top {
   display: none;
   position: absolute;

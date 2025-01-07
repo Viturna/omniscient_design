@@ -89,7 +89,7 @@
           <%= f.label :rgpd_consent, ("J'accepte que mes données personnelles soient collectées et traitées conformément à la " + link_to('Politique de confidentialité', politiquedeconfidentialite_path, target: "_blank")).html_safe, class: "rgpd-label" %>
         </div>
         <div class="actions">
-          <%= f.submit "S’inscrire ⏩️", class:"button dark btn-login" %>
+          <%= f.submit "S’inscrire", class:"button dark btn-login" %>
         </div>
         <%= link_to "Vous avez déjà un compte ? Se connecter", new_user_session_path, class: "sign-up-in" %>
         <p class="email-confirmation">Déjà inscrit mais pas encore confirmé ? <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path, class: "sign-up-in"%></p>

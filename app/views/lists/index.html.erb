@@ -1,0 +1,50 @@
+<% content_for :title, "Crée tes propres listes de références - Omniscient Design" %>
+<% content_for :description, "Ici, tu peux retrouver les références de design qui t'ont marqué. Crée tes propres listes pour apprendre, t'inspirer ou encore personnaliser ton expérience. " %>
+<style>
+  @media screen and (max-width:500px) {
+    .button{
+      width:fit-content;
+    }
+  }
+</style>
+<section class="top-header">
+  <h1>Trier, modifier, créer vos listes</h1>
+  <p class="subtitle">Créez des listes de références pour retrouver facilement vos sources et concentrez-vous sur ce qui compte vraiment.</p>
+</section>
+<section class="grid-1">
+  <div class="flex-title-list">
+    <h2>Vos listes</h2>
+    <%= link_to 'Créer votre liste', new_list_path, class:"button dark" %>
+  </div>
+  <% combined_lists = @lists + @editor_lists + @visitor_lists %>
+  <% if combined_lists.any? %>
+    <ul>
+      <% combined_lists.each do |list| %>
+        <li>
+          <%= link_to list_path(list) do %>
+            <div class="list-card">
+              <div>
+                <%= list.name %>
+                <% if list.share_token.present? %>
+                  <p class="share-list">(Liste partagée)</p>
+                <%else%>
+                  <p class="share-list">(Liste privée)</p>
+                <%end%>
+              </div>
+              <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 10.5L20.4215 10.5M20.4215 10.5L13.1384 2.2832M20.4215 10.5L13.1384 18.7168" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
+              </svg>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <%else%>
+    <div class="no-list">
+      <svg width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M35.5 33.875V50.125M35.5 20.9075L35.5325 20.8718M35.5 68C53.4497 68 68 53.4497 68 35.5C68 17.5503 53.4497 3 35.5 3C17.5503 3 3 17.5503 3 35.5C3 53.4497 17.5503 68 35.5 68Z" stroke="#52525D" stroke-width="4.875" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>Aucune liste trouvée pour le moment. Créez-en une pour commencer !</p>
+    </div>
+  <%end%>
+</section>

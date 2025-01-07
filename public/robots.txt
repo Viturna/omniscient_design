@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /lists/*/edit
+Disallow: /lists/*/show
+
+Sitemap: https://omniscientdesign.fr/sitemaps/sitemap.xml.gz

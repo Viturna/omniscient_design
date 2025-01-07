@@ -1,0 +1,41 @@
+<section class="top-default-page">
+  <%= link_to profil_path do %>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <% end %>
+  <h1>Rapport des Références</h1>
+</section>
+<section class="grid-1">
+  <h2>Listes de suivi des références</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Nb de références émises</th>
+          <th>Nb de références validées</th>
+          <th>Nb de références en attente</th>
+          <th>Nb de références refusées</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @suivis.present? %>
+          <% @suivis.each do |suivi| %>
+            <tr>
+              <td><%= suivi.user.email %></td>
+              <td><%= suivi.nb_references_emises %></td>
+              <td><%= suivi.nb_references_validees %></td>
+              <td><%= suivi.nb_references_non_validees %></td>
+              <td><%= suivi.nb_references_refusees %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5">Aucun suivi trouvé.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

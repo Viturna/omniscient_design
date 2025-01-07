@@ -1,0 +1,194 @@
+<% content_for :title, "Donnez nous vos feedbacks - Omniscient Design" %>
+<% content_for :description, "Fais-nous des retours PERTINENT sur le site pour qu'on puisse avancer plus loins plus vite plus mieux ! Miam les retours on adore ça." %>
+<%= javascript_include_tag "controllers/starRating", defer: true %>
+<style>
+  label {
+    font-weight: 500;
+    display: block;
+    width: 60%;
+    font-size: 18px;
+    padding: 24px 0px;
+    line-height: 130%;
+  }
+
+  .star-rating {
+    width: 100%;
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-direction:row-reverse;
+  }
+  .star-rating input[type="radio"] {
+    display: none;
+  }
+  .star-rating label {
+    width: 10vw;
+    width: fit-content;
+    display: flex;
+    text-align:center;
+    gap: 8px;
+    justify-content: start;
+    align-items: center;
+    flex-direction:column;
+    font-size: 48px;
+    color: #ddd;
+    cursor: pointer;
+    margin: 0;
+  }
+  .flex-label p {
+    color: #FFF;
+  }
+
+  .star-rating input[type="radio"]:checked ~ label,
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    color: #f5c518;
+  }
+  .label-number{
+    font-size: 18px;
+    line-height:130%;
+  }
+  .label-text{
+    font-weight: 400;
+    font-size: 18px;
+    line-height:130%;
+  }
+  .flex-label{
+    display: flex;
+    gap: 0;
+    align-items: center;
+    flex-direction: column;
+  }
+  .button{
+    margin-top: 32px;
+  }
+   @media screen and (min-width:0px) and (max-width:600px) {
+    .star-rating{
+      align-items:center;
+      justify-content:center;
+      flex-direction:column-reverse;
+    }
+    .question{
+      width: 80vw;
+    }
+    .star-rating label {
+      font-size: 32px;
+    }
+
+    .label-number,.label-text,.question{
+      font-size: 16px;
+    }
+
+
+  }
+  @media screen and (min-width:600px) and (max-width:800px) {
+
+    .star-rating label {
+      font-size: 38px;
+    }
+
+      .label-number,.label-text{
+    font-size: 16px;
+    }
+
+  }
+</style>
+<section class="top-header">
+  <%= link_to root_path do%>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <%end%>
+  <p class="subtitle-top">Votre contribution</p>
+  <h1 class="title-add-elements">Exprimer votre avis</h1>
+  <p class="subtitle">En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+</section>
+<section class="grid-1" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <div class="form-feedback">
+    <%= form_with(model: @feedback) do |f| %>
+      <% if @feedback.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@feedback.errors.count, "erreur") %> ont empêché ce feedback d'être enregistré :</h2>
+          <ul>
+            <% @feedback.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <% [
+        [:question_1, "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?*"],
+        [:question_2, "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?*"],
+        [:question_3, "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?*"],
+        [:question_5, "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?*"],
+        [:question_6, "Sur une échelle de 1 à 5, comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)"],
+        [:question_7, "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?*"]
+      ].each do |question, label_text| %>
+        <div>
+          <%= f.label question, label_text, class: "question" %>
+          <div class="star-rating">
+            <%= f.hidden_field question, value: 0 %>
+            <label data-value="5">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">5</p>
+                <p class="label-text">Très bonne</p>
+              </div>
+            </label>
+            <label data-value="4">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">4</p>
+                <p class="label-text">Bonne</p>
+              </div>
+            </label>
+            <label data-value="3">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">3</p>
+                <p class="label-text">Moyenne</p>
+              </div>
+            </label>
+            <label data-value="2">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">2</p>
+                <p class="label-text">Mauvaise</p>
+              </div>
+            </label>
+            <label data-value="1">
+              <div>★</div>
+              <div class="flex-label">
+                <p class="label-number">1</p>
+                <p class="label-text">Très mauvaise</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      <% end %>
+      <div>
+        <%= f.label :question_8, "Quels sont, selon vous, les points forts de notre site ?", class: "question" %>
+        <%= f.text_area :question_8, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_9, "Quels sont les aspects que vous aimeriez voir améliorés ?", class: "question" %>
+        <%= f.text_area :question_9, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_10, "Avez-vous des suggestions pour améliorer l'expérience utilisateur ?", class: "question" %>
+        <%= f.text_area :question_10, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_11, "Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?", class: "question" %>
+        <%= f.text_area :question_11, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.label :question_12, "Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?", class: "question" %>
+        <%= f.text_area :question_12, placeholder: 'Répondre ici' %>
+      </div>
+      <div>
+        <%= f.submit "Envoyer", class: "button large" %>
+      </div>
+    <% end %>
+  </div>
+</section>

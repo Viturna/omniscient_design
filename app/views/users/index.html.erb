@@ -1,0 +1,108 @@
+<style>
+  #map {
+    margin-bottom: 80px;
+  }
+</style>
+<section class="top-default-page">
+  <%= link_to profil_path do %>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <% end %>
+  <h1>Liste des membres</h1>
+</section>
+<section class="grid-1">
+  <h2>Membres inscrits sur le site</h2>
+  <p>Il y a actuellement <%= @users.count %> membres sur le site</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom de famille</th>
+          <th>Email</th>
+          <th>Pseudo</th>
+          <th>Statut</th>
+          <th>Établissement</th>
+          <th>BAN</th>
+          <th>Confirmé</th>
+          <th>Certifié</th>
+          <th>Date de création</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.firstname %></td>
+            <td><%= user.lastname %></td>
+            <td><%= user.email %></td>
+            <td><%= user.pseudo %></td>
+            <td><%= user.statut %></td>
+            <td><%= user.etablissement&.name %></td>
+            <td>
+              <% if current_user.admin? %>
+                <% if user.banned? %>
+                  <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
+                <% else %>
+                  <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
+                <% end %>
+              <% end %>
+            </td>
+            <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
+            <td>
+              <% if current_user.admin? %>
+                <% if user.certified? %>
+                  <%= link_to 'Retirer certification', uncertify_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir retirer la certification de cet utilisateur ?' } %>
+                <% else %>
+                  <%= link_to 'Certifier', certify_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir certifier cet utilisateur ?' } %>
+                <% end %>
+              <% else %>
+                <%= user.certified? ? 'Oui' : 'Non' %>
+              <% end %>
+            </td>
+            <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <h2>Carte des membres par géolocalisation</h2>
+  <div id="map" style="height: 400px;"></div>
+</section>
+<script>
+  import L from 'leaflet';
+  document.addEventListener("DOMContentLoaded", function() {
+    // Coordonnées des utilisateurs à charger dynamiquement depuis Rails
+    const userLocations = [
+      <% @users.each do |user| %>
+        <% if user.etablissement&.latitude && user.etablissement&.longitude %>
+          {
+            name: '<%= j user.firstname %> <%= j user.lastname %>',
+            latlng: [<%= user.etablissement.latitude %>, <%= user.etablissement.longitude %>]
+          },
+        <% end %>
+      <% end %>
+    ];
+
+    // Initialisation de la carte Leaflet
+    var map = L.map('map').setView([46.603354, 1.888334], 5); // Centré sur la France
+
+    // Chargement de la carte OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Cluster de marqueurs pour regrouper les utilisateurs à proximité
+    var markers = L.markerClusterGroup();
+
+    // Ajout des marqueurs pour chaque utilisateur
+    userLocations.forEach(function(user) {
+      var marker = L.marker(user.latlng)
+        .bindPopup(user.name);
+      markers.addLayer(marker);
+    });
+
+    // Ajout des marqueurs clusterisés à la carte
+    map.addLayer(markers);
+  });
+</script>

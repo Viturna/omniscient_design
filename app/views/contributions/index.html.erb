@@ -1,0 +1,123 @@
+<!-- filepath: app/views/contributions/index.html.erb -->
+<% content_for :title, "Mes Contributions - Omniscient Design" %>
+<% content_for :description, "Suivez vos contributions et voyez les œuvres que vous avez ajoutées, ainsi que leur statut de validation." %>
+<style>
+  .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    &.validated {
+      background-color: #28a745;
+    }
+    &.pending {
+      background-color: #ffc107;
+    }
+    &.rejected {
+      background-color: #dc3545;
+    }
+  }
+
+  table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 48px;
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f8f8f8;
+  }
+  }
+</style>
+<section class="top-header">
+  <%= link_to profil_path do %>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <% end %>
+  <p class="subtitle-top">Votre contribution</p>
+  <h1>Suivi des mes contributions</h1>
+  <p class="subtitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto laborum, reiciendis ipsa totam exercitationem necessitatibus laboriosam voluptate quidem sint, saepe, at dolorum itaque cupiditate! Accusantium itaque ut ratione incidunt excepturi!</p>
+</section>
+<section class="grid-1">
+  <h2>Mes références ajoutées</h2>
+  <% if @oeuvres.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th class="medium">Nom de la référence</th>
+          <th class="medium">Date d'ajout</th>
+          <th class="medium">Statut</th>
+          <th class="medium">Commentaire</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @oeuvres.each do |oeuvre| %>
+          <tr>
+            <td><%= oeuvre.nom_oeuvre %></td>
+            <td><%= oeuvre.created_at.present? ? oeuvre.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+            <td>
+              <% if oeuvre.validation %>
+                <span class="status validated">Validée</span>
+              <% elsif oeuvre.rejection_reason.present? %>
+                <span class="status rejected">Refusée</span>
+              <% else %>
+                <span class="status pending">En attente</span>
+              <% end %>
+            </td>
+            <td>
+              <% if oeuvre.rejection_reason.present? %>
+                <%= oeuvre.rejection_reason %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>Vous n'avez ajouté aucune œuvre pour le moment.</p>
+  <% end %>
+</section>
+<<section class="grid-1">
+  <h2>Mes designers ajouté(e)s</h2>
+  <% if @designers.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th class="medium">Nom du designer</th>
+          <th class="medium">Date d'ajout</th>
+          <th class="medium">Statut</th>
+          <th class="medium">Commentaire</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @designers.each do |designer| %>
+          <tr>
+            <td><%= designer.nom_designer %></td>
+            <td><%= designer.created_at.present? ? designer.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+            <td>
+              <% if designer.validation %>
+                <span class="status validated">Validée</span>
+              <% elsif designer.rejection_reason.present? %>
+                <span class="status rejected">Refusée</span>
+              <% else %>
+                <span class="status pending">En attente</span>
+              <% end %>
+            </td>
+            <td>
+              <% if designer.rejection_reason.present? %>
+                <%= designer.rejection_reason %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>Vous n'avez ajouté aucun designer pour le moment.</p>
+  <% end %>
+</section>

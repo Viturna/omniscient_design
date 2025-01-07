@@ -1,0 +1,131 @@
+<%= form_with(model: @list, local: true, data: { turbo: false }) do |form| %>
+  <%= form.text_field :name, placeholder: "Nom de la liste" %>
+  <h2 style="margin-top:32px" class="title">Designers</h2>
+  <div class="search-container">
+    <input type="search" id="designer-search" placeholder="Rechercher des designers" />
+  </div>
+  <div id="designers-list" class="flex-card" style="margin-top:32px">
+    <p>Chargement des designers...</p>
+  </div>
+  <h2 style="margin-top:32px" class="title">Références</h2>
+  <div class="search-container">
+    <input type="search" id="oeuvre-search" placeholder="Rechercher des œuvres" />
+  </div>
+  <div id="oeuvres-list" class="flex-card" style="margin-top:32px">
+    <p>Chargement des références...</p>
+  </div>
+  <div class="form-footer">
+    <div>
+      <p id="designer-count">0 designers sélectionnés</p>
+      <p id="oeuvre-count">0 références sélectionnées</p>
+    </div>
+    <%= form.submit "Créer la liste", class: "button large dark" %>
+  </div>
+<% end %>
+<script>
+  $(document).ready(function() {
+    const checkboxes = document.querySelectorAll('.hidden-check');
+    const designerCount = document.getElementById('designer-count');
+    const oeuvreCount = document.getElementById('oeuvre-count');
+
+    function updateCounts() {
+      const selectedDesigners = document.querySelectorAll('#designers-list .hidden-check:checked').length;
+      const selectedOeuvres = document.querySelectorAll('#oeuvres-list .hidden-check:checked').length;
+      designerCount.textContent = `${selectedDesigners} designers sélectionnés`;
+      oeuvreCount.textContent = `${selectedOeuvres} références sélectionnées`;
+    }
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const card = checkbox.closest('.check-box-wrapper').querySelector('.card-list-add');
+        if (checkbox.checked) {
+          card.classList.add('card-checked');
+        } else {
+          card.classList.remove('card-checked');
+        }
+        updateCounts();
+      });
+
+      // Initialize the card-checked class based on initial checkbox state
+      if (checkbox.checked) {
+        const card = checkbox.closest('.check-box-wrapper').querySelector('.card-list-add');
+        card.classList.add('card-checked');
+      }
+    });
+
+    // Initialize counts on page load
+    updateCounts();
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    const designerSearch = document.getElementById('designer-search');
+    const oeuvreSearch = document.getElementById('oeuvre-search');
+
+    designerSearch.addEventListener('input', () => {
+      filterCards('designers-list', designerSearch.value.toLowerCase());
+    });
+
+    oeuvreSearch.addEventListener('input', () => {
+      filterCards('oeuvres-list', oeuvreSearch.value.toLowerCase());
+    });
+
+    function filterCards(containerId, query) {
+      const container = document.getElementById(containerId);
+      const cards = container.querySelectorAll('.check-box-wrapper');
+
+      cards.forEach(card => {
+        const title = card.querySelector('.card-title-add').textContent.toLowerCase();
+        if (title.includes(query)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+   const designersList = document.getElementById('designers-list');
+   const oeuvresList = document.getElementById('oeuvres-list');
+
+   function loadContent(url, container) {
+     fetch(url)
+       .then(response => {
+         if (!response.ok) throw new Error('Network response was not ok');
+         return response.text();
+       })
+       .then(html => {
+         container.innerHTML = html;
+       })
+       .catch(error => {
+         container.innerHTML = '<p>Erreur de chargement.</p>';
+         console.error(error);
+       });
+   }
+
+   const observerOptions = {
+     root: null,
+     rootMargin: '0px',
+     threshold: 0.1,
+   };
+
+   const observer = new IntersectionObserver((entries) => {
+     entries.forEach(entry => {
+       if (entry.isIntersecting) {
+         if (entry.target === designersList) {
+           loadContent('/lists/lazy_load_designers', designersList);
+           observer.unobserve(designersList);
+         } else if (entry.target === oeuvresList) {
+           loadContent('/lists/lazy_load_oeuvres', oeuvresList);
+           observer.unobserve(oeuvresList);
+         }
+       }
+     });
+   }, observerOptions);
+
+   observer.observe(designersList);
+   observer.observe(oeuvresList);
+  });
+</script>

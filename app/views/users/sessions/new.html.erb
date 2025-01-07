@@ -1,0 +1,40 @@
+<%= javascript_include_tag "controllers/showPassword", defer: true %>
+<div class="log" style="background-color:#202020; color:#FFF;">
+  <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
+  <section class="box-log">
+    <h1>Connexion</h1>
+    <div class="form">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <div class="field">
+          <%= f.email_field :email, autocomplete: "email", placeholder: "Email" %>
+        </div>
+        <div class="field password-container">
+          <%= f.password_field :password, autocomplete: "current-password", placeholder: "Mot de passe", id: "password-field" %>
+          <button type="button" class="toggle-password" data-target="#password-field">
+            <svg class="show-password-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="hide-password-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off">
+              <path d="M17.94 17.94a10.97 10.97 0 0 1-5.94 1.94C6 20 2 12 2 12s1.5-3.34 4.94-5.94M1 1l22 22"></path>
+              <path d="M12 5a7 7 0 0 1 7 7"></path>
+            </svg>
+          </button>
+        </div>
+        <%= link_to "Mot de passe oublié ?", new_user_password_path, class: "forgot-password" %>
+        <% if devise_mapping.rememberable? %>
+          <div class="field remember-me">
+            <%= f.check_box :remember_me %>
+            <%= f.label "Se souvenir de moi" %>
+          </div>
+        <% end %>
+        <div class="actions">
+          <%= f.submit "Se connecter ⏩️", class:"button dark btn-login" %>
+        </div>
+        <%= link_to "Vous n'avez pas de compte ? S'inscrire", new_user_registration_path, class: "sign-up-in" %>
+        <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path,  class: "sign-up-in" %>
+      <% end %>
+    </div>
+  </section>
+</div>

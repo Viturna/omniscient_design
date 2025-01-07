@@ -1,0 +1,430 @@
+@import 'abstracts/variables';
+
+.button {
+  display: block;
+  padding: 20px 45px;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.large {
+  padding: 25px 125px;
+}
+
+.dark {
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// Add Element
+.button-add {
+  font-weight: 500;
+  font-size: 22px;
+  border-radius: 10px;
+  padding: 90px 150px;
+  width: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// Arrow button
+.arrow-button {
+  width: 80px;
+  height: 80px;
+  background-color: $primary-color;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+
+// Circle
+.circle {
+  background-color: $primary-color;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+//Save
+.circle-save {
+  position: absolute;
+  top: 50px;
+  right: 5vw;
+  width: 65px;
+  height: 65px;
+  z-index: 999;
+}
+
+//Notif
+.circle-notif {
+  width: 60px;
+  height: 60px;
+  position: relative;
+
+  &:hover {
+    background-color: $primary-color;
+    opacity: 0.8;
+  }
+}
+
+.notification-counter {
+  position: absolute;
+  right: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -10px;
+  background-color: #FFF;
+  color: $primary-color;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 30px;
+  height: 30px;
+}
+
+.notification-badge-profil {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+
+// Retour
+.circle-back {
+  position: absolute;
+  z-index: 100;
+  top: 50px;
+  left: 5vw;
+  background-color: rgba(32, 32, 32, 0.4);
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.circle-back:hover,
+.circle-save:hover {
+  opacity: 0.8;
+}
+
+#back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+@media screen and (min-width:1025px) and (max-width:1280px) {
+  //ADD
+  .button-add {
+    font-size: 20px;
+    padding: 100px 0;
+    width: 40vw;
+  }
+
+}
+@media screen and (min-width:601px) and (max-width: 1024px) {
+  .circle {
+    width: 55px;
+    height: 55px;
+    svg{
+      scale: 0.7;
+    }
+  }
+
+  .circle-notif {
+    width: 55px;
+    height: 55px;
+
+    svg {
+      scale: 0.8;
+    }
+  }
+
+  // Arrow button
+  .arrow-button {
+    width: 70px;
+    height: 70px;
+
+    svg {
+      scale: 0.8;
+    }
+  }
+
+  //Save
+  .circle-save {
+    width: 60px;
+    height: 60px;
+    svg{
+    scale: 0.9;
+  }
+  }
+  //ADD
+  .button-add {
+    font-size: 20px;
+    padding: 110px 0;
+    width: auto;
+  }
+}
+
+@media screen and (min-width:426px)  and (max-width: 600px) {
+  .circle {
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.7;
+    }
+  }
+  .circle-notif {
+    width: 50px;
+    height: 50px;
+
+    svg {
+      scale: 0.7;
+    }
+  }
+
+  // BACK
+  .circle-back {
+    top: 40px;
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.85;
+    }
+  }
+
+  //SAVE
+  .circle-save {
+    top: 40px;
+    width: 65px;
+    height: 65px;
+  }
+
+  //ADD
+  .button-add {
+    font-size: 18px;
+    padding: 110px 0;
+    width: auto;
+  }
+}
+
+@media screen and (min-width:376px)  and (max-width: 425px) {
+  .button {
+    width: 100%;
+    padding: 20px 15px;
+    font-size: 15px;
+  }
+
+  .circle {
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.7;
+    }
+  }
+  .circle-notif {
+    width: 50px;
+    height: 50px;
+
+    svg {
+      scale: 0.7;
+    }
+  }
+  // BACK
+  .circle-back {
+    top: 35px;
+    width: 65px;
+    height: 65px;
+
+    svg {
+      scale: 0.85;
+    }
+  }
+
+  //SAVE
+  .circle-save {
+    top: 35px;
+    width: 65px;
+    height: 65px;
+  }
+
+  //ADD
+  .button-add {
+    font-size: 18px;
+    padding: 80px 0;
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .button {
+    width: 100%;
+    padding: 20px 15px;
+    font-size: 14px;
+  }
+
+  .circle {
+    width: 60px;
+    height: 60px;
+
+    svg {
+      scale: 0.7;
+    }
+  }
+  .circle-notif {
+    width: 50px;
+    height: 50px;
+
+    svg {
+      scale: 0.6;
+    }
+  }
+  // BACK
+  .circle-back {
+    top: 25px;
+    width: 60px;
+    height: 60px;
+
+    svg {
+      scale: 0.8;
+    }
+  }
+
+  //SAVE
+  .circle-save {
+    top: 25px;
+    width: 60px;
+    height: 60px;
+  }
+
+  //ADD
+  .button-add {
+    font-size: 16px;
+    padding: 80px 0;
+    width: auto;
+  }
+
+}
+
+// @media (prefers-color-scheme: dark) {
+//   .button {
+//     color: $secondary-color;
+//     background-color: $dark-background-color;
+
+//     &:hover {
+//       background-color: #4a4a4a;
+//     }
+//   }
+//   .dark {
+//     background-color: $dark-background-color;
+//     color: $secondary-color;
+
+//     &:hover {
+//       background-color: #4a4a4a;
+//     }
+//   }
+//   .button-add {
+//     color: $secondary-color;
+//     background-color: $dark-background-color;
+//     &:hover {
+//       background-color: #4a4a4a;
+//     }
+//   }
+//   body.light .button {
+//     color: $primary-color;
+//     background-color: $secondary-color;
+
+//     &:hover {
+//       background-color: #EDEDED;
+//     }
+//   }
+//   body.light .dark{
+//     background-color: $primary-color;
+//     color: $secondary-color;
+
+//     &:hover {
+//       background-color: $primary-color;
+//     }
+//   }
+//   body.light .button-add {
+//     color: $primary-color;
+//     background-color: $secondary-color;
+
+//   }
+// }
+
+  .button {
+    color: $primary-color;
+    background-color: $secondary-color;
+
+    &:hover {
+      background-color: #EDEDED;
+    }
+  }
+  .dark {
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
+  .button-add {
+    color: $primary-color;
+    background-color: $secondary-color;
+  }
+  body.dark .button {
+    color: $secondary-color;
+    background-color: $dark-background-color;
+
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  body.darkk .dark {
+    background-color: $dark-background-color;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }
+  body.light .button-add {
+    color: $secondary-color;
+    background-color: $dark-background-color;
+    &:hover {
+      background-color: #4a4a4a;
+    }
+  }

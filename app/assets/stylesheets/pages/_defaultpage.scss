@@ -1,0 +1,84 @@
+@import 'abstracts/variables';
+
+.top-default-page {
+  display: flex;
+  align-items: center;
+  height: 15vh;
+  padding: 0 5vw;
+  gap: 50px;
+  margin-bottom: 64px;
+}
+.top-default-page {
+  background-color: $primary-color;
+  h1 {
+    color: $secondary-color;
+  }
+}
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  margin-top: 48px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+.btn {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+.btn-danger {
+  background-color: #dc3545;
+
+  &:hover {
+    background-color: #c82333;
+  }
+}
+
+.btn-green {
+  background-color: #3EBC68;
+
+  &:hover {
+    background-color: #1A843E;
+  }
+}
+
+.btn-orange {
+  background-color: #F2AD22;
+
+  &:hover {
+    background-color: #D49A26;
+  }
+}

@@ -1,0 +1,17 @@
+<% oeuvres.each do |oeuvre| %>
+  <div class="check-box-wrapper">
+    <%= check_box_tag "oeuvre_ids[]", oeuvre.id, false, class: 'hidden-check', id: "oeuvre_#{oeuvre.id}" %>
+    <label for="oeuvre_#{oeuvre.id}">
+      <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
+      <% if asset_exists?(image_path) %>
+        <div class="card-list-add" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position: center;">
+        <% else %>
+          <% Rails.logger.debug("Image not found : #{image_path}") %>
+          <div class="card-list-add" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position: center;">
+          <% end %>
+          <div class="default-overlay"></div>
+          <p class="card-title-add"><%= oeuvre.nom_oeuvre %></p>
+        </div>
+      </label>
+    </div>
+  <% end %>

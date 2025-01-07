@@ -1,0 +1,109 @@
+@import 'abstracts/variables';
+
+.nav-link-profil {
+  width: calc(100% - 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 5px;
+  font-weight: 500;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.nav-link-inner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 18px;
+}
+
+.nav-link-profil.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-link-profil.deco {
+  justify-content: center;
+  color: #E61818;
+  height: 40px;
+}
+
+@media screen and (min-width:426px) and (max-width: 600px) {
+  .nav-link-profil {
+    width: calc(100% - 30px);
+    padding: 20px 15px;
+  }
+
+  .nav-link-profil svg {
+    scale: 0.8;
+  }
+
+  .nav-link-inner {
+    gap: 16px;
+    font-size: 16px;
+  }
+
+  .nav-link-profil.deco {
+    font-size: 16px;
+    height: 30px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .nav-link-profil {
+    width: calc(100% - 30px);
+    padding: 20px 15px;
+  }
+
+  .nav-link-profil svg {
+    scale: 0.7;
+  }
+
+  .nav-link-inner {
+    gap: 8px;
+    font-size: 16px;
+  }
+
+  .nav-link-profil.deco {
+    font-size: 16px;
+    height: 30px;
+  }
+}
+
+
+
+// @media (prefers-color-scheme: dark) {
+
+//   .nav-link-profil {
+//     background-color: $primary-color;
+//     color: $secondary-color;
+
+//     svg path {
+//       fill: $secondary-color;
+//     }
+//   }
+
+//   body.light .nav-link-profil {
+//     background-color: $secondary-color;
+//     color: $primary-color;
+//   }
+// }
+
+
+  .nav-link-profil {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
+
+  body.dark .nav-link-profil {
+    background-color: $primary-color;
+    color: $secondary-color;
+
+    svg path {
+      fill: $secondary-color;
+    }
+  }

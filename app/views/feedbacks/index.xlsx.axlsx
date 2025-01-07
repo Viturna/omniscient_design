@@ -1,0 +1,8 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Feedbacks") do |sheet|
+  sheet.add_row ["User Email", "Comment évalueriez-vous votre expérience globale sur notre site ?", "Comment évalueriez-vous la facilité pour rechercher une information sur le site ?", "Comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?", "Comment évalueriez-vous l’efficacité du quiz ?", "Comment évalueriez-vous l’utilité des listes ?", "Comment évalueriez-vous la réactivité et l’efficacité de notre support client ?", "Comment évalueriez-vous la vitesse et la performance générale du site ?", "Quels sont, selon vous, les points forts de notre site ?", "Quels sont les aspects que vous aimeriez voir améliorés ?", "Avez-vous des suggestions pour améliorer l'expérience utilisateur ?", "Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?", "Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?"]
+  @feedbacks.each do |feedback|
+    user_email = feedback.user.email if feedback.user.present?
+    sheet.add_row [user_email, feedback.question_1, feedback.question_2, feedback.question_3, feedback.question_4, feedback.question_5, feedback.question_6, feedback.question_7, feedback.question_8, feedback.question_9, feedback.question_10, feedback.question_11, feedback.question_12]
+  end
+end

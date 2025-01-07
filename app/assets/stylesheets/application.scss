@@ -1,0 +1,198 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+/*
+ *= require select2
+ */
+
+@import 'abstracts/variables';
+
+@import 'base/reset';
+@import 'base/font';
+
+@import 'components/alert';
+@import 'components/button';
+@import 'components/card';
+@import 'components/cardref';
+@import 'components/form';
+@import 'components/listcard';
+@import 'components/listmodal';
+@import 'components/loader';
+@import 'components/navprofil';
+@import 'components/popup';
+
+@import 'layout/header';
+@import 'layout/search';
+
+@import 'pages/defaultpage';
+@import 'pages/homepage';
+@import 'pages/list';
+@import 'pages/log';
+@import 'pages/notification';
+@import 'pages/parrainage';
+@import 'pages/profil';
+@import 'pages/reference';
+@import 'pages/searchpage';
+
+
+html{
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "IBM Plex Sans";
+  overflow-x: hidden;
+}
+
+main{
+  margin-left: 350px;
+  width: calc(100vw - 350px);
+}
+.main-show {
+ margin-left: 0;
+  width: auto;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+
+.grid-1 {
+  padding: 0 10vw 64px 10vw;
+}
+@media screen and (max-width: 425px) {
+  .grid-1 {
+    padding: 0 5vw 32px 5vw;
+  }
+}
+@media screen and (min-width:426px) and (max-width: 1024px) {
+  .grid-1 {
+    padding: 0 8vw 52px 8vw;
+  }
+}
+
+/* Home Page */
+
+.subtitle-top {
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 24px;
+  color: #FFF;
+}
+
+.subtitle {
+  width: 50vw;
+  color: #E9E9E9;
+  line-height: 125%;
+}
+
+/* Add elements */
+
+.flex-form {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+@media screen and (max-width: 1280px) {
+  main{
+    margin-left: 30vw;
+    width: 70vw;
+  }
+}
+@media screen and (min-width:769px) and (max-width: 1024px) {
+  main{
+    margin-left: 30vw;
+    width: 70vw;
+  }
+  .subtitle {
+    width: fit-content;
+  }
+}
+@media screen and (max-width: 768px) {
+  main{
+    margin-left: 0;
+    width: auto;
+  }
+  .subtitle {
+    width: fit-content;
+  }
+  .grid {
+    padding: 48px 5vw;
+  }
+
+  main{
+    padding-bottom: 80px;
+  }
+}
+
+
+.top-header{
+  padding: 0 10vw;
+  padding-top: 96px;
+  padding-bottom: 72px;
+  background-color: #202020;
+  color:#FFF;
+  position: relative;
+  h1 {
+    color: $secondary-color;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .top-header{
+    padding: 0 5vw;
+    padding-top: 64px;
+    padding-bottom: 56px;
+  }
+}
+@media screen and (min-width:601px) and (max-width:800px) {
+  .top-header{
+    padding: 0 8vw;
+    padding-top: 72px;
+    padding-bottom: 64px;
+  }
+}
+
+
+
+
+
+
+
+// Dark mode
+// @media (prefers-color-scheme: dark) {
+//   body {
+//     background: $dark-background-color;
+//   }
+
+//   body.light {
+//     background: $background-color;
+//   }
+// }
+
+  body {
+    background: $background-color;
+  }
+
+  body.dark {
+    background: $dark-background-color;
+  }

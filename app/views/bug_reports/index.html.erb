@@ -1,0 +1,170 @@
+<%= javascript_include_tag "controllers/loadMoreTable", defer: true %>
+<style>
+  .status-select {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  form select{
+    width: fit-content;
+  }
+</style>
+<section class="top-default-page">
+  <%= link_to profil_path do %>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <% end %>
+  <h1>Signalements de bugs</h1>
+</section>
+<section class="grid-1">
+  <h2>À faire</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_todo.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <button id="load-more-button-todo" class="btn">Voir plus</button>
+  </div>
+</section>
+<section class="grid-1">
+  <h2>En cours</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_in_progress.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <button id="load-more-button-in-progress" class="btn">Voir plus</button>
+  </div>
+</section>
+<section class="grid-1">
+  <h2>Corrigé</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_resolved.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <button id="load-more-button-resolved" class="btn">Voir plus</button>
+  </div>
+</section>
+<section class="grid-1">
+  <h2>Tous les reports</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Signalé par</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bug_reports_all.each do |bug_report| %>
+          <tr>
+            <td><%= bug_report.description %></td>
+            <td><%= bug_report.url %></td>
+            <td><%= bug_report.user.email %></td>
+            <td><%= l(bug_report.created_at, format: :long) %></td>
+            <td>
+              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
+              <%= link_to 'Supprimer', bug_report, method: :delete, data: { confirm: 'Êtes-vous sûr?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <button id="load-more-button-all" class="btn">Voir plus</button>
+  </div>
+</section>

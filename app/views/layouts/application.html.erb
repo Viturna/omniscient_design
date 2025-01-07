@@ -1,0 +1,74 @@
+<!-- filepath: /Users/thomasriq/omniscient_design/app/views/layouts/application.html.erb -->
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
+    <% if should_not_index? %>
+      <meta name="robots" content="noindex, nofollow">
+      <meta name="googlebot" content="noindex, nofollow">
+      <meta name="bingbot" content="noindex, nofollow">
+    <% else %>
+      <meta name="robots" content="index, follow">
+      <meta name="googlebot" content="index, follow">
+      <meta name="bingbot" content="index, follow">
+    <% end %>
+    <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Description par défaut de ton site" %>">
+    <%= favicon_link_tag 'favicon.svg' %>
+    <meta name="theme-color" content="#ffffff">
+    <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="canonical" href="<%= request.original_url %>">
+    <!-- Stylesheets -->
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "controllers/loader", defer: true %>
+    <%= javascript_include_tag "controllers/progressBar", defer: true %>
+    <!-- RS -->
+    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
+    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
+    <meta name="twitter:url" content="<%= request.original_url %>">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
+    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:type" content="website">
+  </head>
+  <body class="<%= (cookies && cookies[:theme].presence || 'system') %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
+    <% if notice.present? %>
+      <div class="alert" id="alert">
+        <p><%= notice %></p>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+    <% elsif flash.any? %>
+      <% flash.each do |key, message| %>
+        <div class="alert <%= key %>" id="alert">
+          <%= message %>
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <div id="loading">
+      <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
+    </div>
+    <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
+      <%= render 'layouts/header' %>
+    <% end %>
+    <main class="<%= 'main-show' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' %>">
+      <div id="content">
+        <%= yield %>
+      </div>
+    </main>
+  </body>
+</html>

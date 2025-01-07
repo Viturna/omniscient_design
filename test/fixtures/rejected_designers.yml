@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nom_designer: MyString
+  user: one
+  reason: MyText
+
+two:
+  nom_designer: MyString
+  user: two
+  reason: MyText

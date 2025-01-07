@@ -1,0 +1,3 @@
+<% content_for :title, "#{@designer.nom_designer} - Omniscient Design" %>
+<% content_for :description, @designer.presentation_generale.truncate(160) %>
+<%= render @designer %>

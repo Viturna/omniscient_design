@@ -1,0 +1,46 @@
+@import 'abstracts/variables';
+.notifications {
+  margin: 32px 0;
+}
+
+.notifications li {
+  width: calc(100% - 25px);
+  height: 70px;
+  background-color: #FFF;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding-left: 25px;
+  color: $primary-color;
+  margin-top: 8px;
+}
+
+.notifications li:hover {
+  background-color: #EDEDED;
+}
+
+.time {
+  font-size: 14px;
+  margin-left: 8px;
+  color: $text-color;
+}
+
+@media screen and (min-width: 0px) and (max-width: 1024px) {
+  .time {
+    margin: 0;
+  }
+
+  .notifications {
+    margin: 32px 0;
+  }
+
+  .notifications li {
+    width: calc(100% - 40px);
+    gap: 16px;
+    height: auto;
+    align-items: start;
+    padding: 20px;
+    flex-direction: column;
+    margin-top: 16px;
+  }
+}

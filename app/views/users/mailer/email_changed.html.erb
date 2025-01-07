@@ -1,0 +1,23 @@
+<p>Bonjour <%= @email %>,</p>
+<% if @resource.try(:unconfirmed_email?) %>
+  <p>
+    Nous vous contactons pour vous informer que votre adresse e-mail est en cours de modification.
+    La nouvelle adresse e-mail sera : <%= @resource.unconfirmed_email %>.
+    Veuillez suivre les instructions envoyées à cette nouvelle adresse pour confirmer le changement.
+  </p>
+<% else %>
+  <p>
+    Nous vous informons que votre adresse e-mail a été modifiée avec succès.
+    La nouvelle adresse associée à votre compte est : <%= @resource.email %>.
+  </p>
+<% end %>
+<p>
+  Si vous n'avez pas demandé ce changement, veuillez contacter notre support immédiatement.
+</p>
+<p>
+  Merci pour votre attention.
+</p>
+<p>
+  Cordialement,<br>
+  L'équipe Omniscient Design
+</p>

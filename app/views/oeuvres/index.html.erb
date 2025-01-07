@@ -1,0 +1,174 @@
+<% content_for :title, "Explorer le carnet de références et de designers - Omniscient Design" %>
+<% content_for :description, "Explorez Omniscient Design, le meilleur carnet de référence numérique. Un répertoire unique avec des infos sur les travaux et la vie des designers." %>
+<%# <%= javascript_include_tag "controllers/loadMore", defer: true %>
+<%# <%= javascript_include_tag "controllers/scrollCardsIndex", defer: true %>
+<style>
+  @media screen and (max-width: 320px) {
+    .top-bar-search {
+      display: none;
+    }
+    #cardContainer {
+      height: calc(100vh - 50px); /* Ajuster la hauteur pour les petits écrans */
+    }
+  }
+  #cardContainer {
+    position: relative;
+    height: 100dvh; /* Hauteur de l'écran */
+    overflow-y: scroll; /* Active le scroll vertical uniquement */
+    scroll-snap-type: y mandatory; /* Active le snap pour le défilement vertical */
+    -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
+  }
+  .box-card{
+    display: flex;
+    flex-direction: column;
+  }
+
+  body {
+    margin: 0;
+    overflow: hidden; /* Désactive le scroll global */
+  }
+</style>
+<section class="home-page top-bar-search">
+  <%= link_to search_oeuvres_path, class: "search-link" do %>
+    <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
+<% end %>
+<div class="top-bar-flex">
+  <%= link_to notifications_path do %>
+    <div class="circle circle-notif">
+      <svg width="25" height="29" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24.8571 23.4762V24.8571H0V23.4762L2.7619 20.7143V12.4286C2.7619 8.14762 5.56524 4.37762 9.66667 3.16238V2.7619C9.66667 2.0294 9.95765 1.3269 10.4756 0.808943C10.9936 0.290985 11.6961 0 12.4286 0C13.1611 0 13.8636 0.290985 14.3815 0.808943C14.8995 1.3269 15.1905 2.0294 15.1905 2.7619V3.16238C19.2919 4.37762 22.0952 8.14762 22.0952 12.4286V20.7143L24.8571 23.4762ZM15.1905 26.2381C15.1905 26.9706 14.8995 27.6731 14.3815 28.1911C13.8636 28.709 13.1611 29 12.4286 29C11.6961 29 10.9936 28.709 10.4756 28.1911C9.95765 27.6731 9.66667 26.9706 9.66667 26.2381" fill="white"/>
+      </svg>
+      <% if current_user %>
+        <% if @unread_notifications_count > 0 %>
+          <div class="notification-counter">
+            <div class="notification-badge"><%= @unread_notifications_count %></div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+  <%= link_to new_feedback_url do %>
+    <div class="circle circle-notif">
+      <svg width="31" height="29" viewBox="0 0 31 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.5185 0C18.9095 0 18.3254 0.24193 17.8948 0.672569C17.4642 1.10321 17.2222 1.68728 17.2222 2.2963V6.88889C17.2222 7.4979 17.4642 8.08198 17.8948 8.51261C18.3254 8.94325 18.9095 9.18518 19.5185 9.18518V12.6296L23.6519 9.18518H28.7037C29.3127 9.18518 29.8968 8.94325 30.3274 8.51261C30.7581 8.08198 31 7.4979 31 6.88889V2.2963C31 1.68728 30.7581 1.10321 30.3274 0.672569C29.8968 0.24193 29.3127 0 28.7037 0H19.5185ZM9.18519 5.74074C7.96715 5.74074 6.79901 6.2246 5.93773 7.08588C5.07645 7.94716 4.59259 9.1153 4.59259 10.3333C4.59259 11.5514 5.07645 12.7195 5.93773 13.5808C6.79901 14.4421 7.96715 14.9259 9.18519 14.9259C10.4032 14.9259 11.5714 14.4421 12.4326 13.5808C13.2939 12.7195 13.7778 11.5514 13.7778 10.3333C13.7778 9.1153 13.2939 7.94716 12.4326 7.08588C11.5714 6.2246 10.4032 5.74074 9.18519 5.74074ZM14.9259 17.2222H3.44444C2.53092 17.2222 1.65481 17.5851 1.00885 18.2311C0.362896 18.877 0 19.7531 0 20.6667C0 23.2293 1.054 25.2822 2.78311 26.6715C4.48467 28.0378 6.76719 28.7037 9.18519 28.7037C11.6032 28.7037 13.8857 28.0378 15.5873 26.6715C17.3141 25.2822 18.3704 23.2293 18.3704 20.6667C18.3704 19.7531 18.0075 18.877 17.3615 18.2311C16.7156 17.5851 15.8394 17.2222 14.9259 17.2222Z" fill="white"/>
+      </svg>
+    </div>
+  <% end %>
+</div>
+</section>
+<div id="oeuvres">
+  <div class="home-flex" id="cardContainer">
+    <div class="nav-home-mobile">
+      <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>
+      <div>
+        <%= link_to "Designers", designers_path %> |
+        <%= link_to "Références", oeuvres_path, class: "active" %>
+      </div>
+      <%= link_to search_oeuvres_path do %>
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.8193 9.9518L8.74218 7.8808C9.41235 7.02701 9.77598 5.9727 9.77463 4.88732C9.77463 3.9207 9.48799 2.97578 8.95097 2.17207C8.41394 1.36836 7.65065 0.741936 6.75761 0.372027C5.86457 0.00211759 4.88189 -0.0946675 3.93385 0.0939106C2.9858 0.282489 2.11497 0.74796 1.43146 1.43146C0.74796 2.11497 0.282489 2.9858 0.0939106 3.93385C-0.0946675 4.88189 0.00211759 5.86457 0.372027 6.75761C0.741936 7.65065 1.36836 8.41394 2.17207 8.95097C2.97578 9.48799 3.9207 9.77463 4.88732 9.77463C5.9727 9.77598 7.02701 9.41235 7.8808 8.74218L9.9518 10.8193C10.0086 10.8766 10.0762 10.922 10.1506 10.953C10.225 10.984 10.3049 11 10.3855 11C10.4662 11 10.546 10.984 10.6205 10.953C10.6949 10.922 10.7625 10.8766 10.8193 10.8193C10.8766 10.7625 10.922 10.6949 10.953 10.6205C10.984 10.546 11 10.4662 11 10.3855C11 10.3049 10.984 10.225 10.953 10.1506C10.922 10.0762 10.8766 10.0086 10.8193 9.9518ZM1.22183 4.88732C1.22183 4.16235 1.43681 3.45367 1.83958 2.85088C2.24234 2.2481 2.81482 1.77828 3.4846 1.50085C4.15438 1.22342 4.89138 1.15083 5.60242 1.29226C6.31345 1.4337 6.96658 1.7828 7.47921 2.29543C7.99183 2.80805 8.34094 3.46118 8.48237 4.17222C8.6238 4.88325 8.55122 5.62026 8.27378 6.29004C7.99635 6.95982 7.52654 7.53229 6.92375 7.93506C6.32096 8.33782 5.61228 8.5528 4.88732 8.5528C3.91517 8.5528 2.98284 8.16662 2.29543 7.47921C1.60801 6.79179 1.22183 5.85946 1.22183 4.88732Z" fill="#202020"/>
+        </svg>
+      <%end%>
+    </div>
+    <p class="nav-home">
+      <%= link_to "Designers", designers_path %> |
+      <%= link_to "Références", oeuvres_path, class: "active" %>
+    </p>
+    <div class="box-card" id="boxCard">
+      <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
+    </div>
+    <div id="load-more-trigger" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
+  </div>
+  <div class="button-nav">
+    <button class="arrow-button up">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 38L18 40L22 40L22 38L18 38ZM22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6L22 6ZM22 38L22 6L18 6L18 38L22 38Z" fill="white"/>
+        <path d="M5 15.8408L20.0002 2.54515L35.0005 15.8408" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
+      </svg>
+    </button>
+    <button class="arrow-button down">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 2L18 1.86484e-08L22 -1.86484e-08L22 2L18 2ZM22 34C22 35.1046 21.1046 36 20 36C18.8954 36 18 35.1046 18 34L22 34ZM22 2L22 34L18 34L18 2L22 2Z" fill="white"/>
+        <path d="M5 24.1592L20.0002 37.4549L35.0005 24.1592" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("cardContainer");
+    const loadMoreTrigger = document.getElementById("load-more-trigger");
+    const upButton = document.querySelector(".arrow-button.up");
+    const downButton = document.querySelector(".arrow-button.down");
+    let isLoading = false;
+
+    // Fonction de chargement des cartes
+   function loadMoreCards() {
+      if (isLoading) return;
+      isLoading = true;
+      const offset = loadMoreTrigger.dataset.offset;
+      const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
+
+      fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
+        .then((response) => response.text())
+        .then((html) => {
+          container.insertAdjacentHTML("beforeend", html);
+          isLoading = false;
+
+          // Mettre à jour l'offset
+          loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
+
+          // Mettre à jour les IDs chargés
+          const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
+          loadMoreTrigger.dataset.loadedIds = [...loadedIds, ...newLoadedIds].join(',');
+
+          // Vérifier s'il reste des œuvres à charger
+          if (html.trim() === "") {
+            loadMoreTrigger.style.display = "none";
+          }
+        })
+        .catch((err) => {
+          console.error("Erreur lors du chargement des cartes :", err);
+          isLoading = false;
+        });
+    }
+
+    // Écouteur de défilement pour le chargement infini
+    container.addEventListener("scroll", () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      if (scrollTop + clientHeight >= scrollHeight - 50) {
+        loadMoreCards();
+      }
+    });
+
+    // Fonction pour défiler vers le haut ou le bas
+    function scrollByAmount(amount) {
+      container.scrollBy({ top: amount, behavior: "smooth" });
+    }
+
+    // Gestion des boutons
+    upButton.addEventListener("click", () => scrollByAmount(-window.innerHeight / 2));
+    downButton.addEventListener("click", () => scrollByAmount(window.innerHeight / 2));
+
+    // Gestion tactile (mobile-friendly)
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    container.addEventListener("touchstart", (e) => {
+      touchStartY = e.touches[0].clientY;
+    });
+
+    container.addEventListener("touchend", (e) => {
+      touchEndY = e.changedTouches[0].clientY;
+      const swipeDistance = touchStartY - touchEndY;
+
+      if (swipeDistance > 50) {
+        // Swipe up
+        scrollByAmount(window.innerHeight / 2);
+      } else if (swipeDistance < -50) {
+        // Swipe down
+        scrollByAmount(-window.innerHeight / 2);
+      }
+    });
+  });
+</script>

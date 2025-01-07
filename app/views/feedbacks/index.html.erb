@@ -1,0 +1,55 @@
+<section class="top-default-page">
+  <%= link_to profil_path do %>
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+  <% end %>
+  <h1>Liste des feedbacks</h1>
+</section>
+<section class="grid-1">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Comment évalueriez-vous votre expérience globale sur notre site ?</th>
+          <th>Comment évalueriez-vous la facilité pour rechercher une information sur le site ?</th>
+          <th>comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?</th>
+          <th>Comment évalueriez-vous l’efficacité du quiz ?</th>
+          <th>Comment évalueriez-vous l’utilité des listes ?</th>
+          <th>Comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)</th>
+          <th>Comment évalueriez-vous la vitesse et la performance générale du site ?</th>
+          <th>Quels sont, selon vous, les points forts de notre site ?</th>
+          <th>Quels sont les aspects que vous aimeriez voir améliorés ?</th>
+          <th>Avez-vous des suggestions pour améliorer l'expérience utilisateur ?</th>
+          <th>Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?</th>
+          <th>Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?</th>
+          <th>Supprimer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @feedbacks.each do |feedback| %>
+          <tr>
+            <td><%= feedback.user.email %></td>
+            <td><%= feedback.question_1 %></td>
+            <td><%= feedback.question_2 %></td>
+            <td><%= feedback.question_3 %></td>
+            <td><%= feedback.question_4 %></td>
+            <td><%= feedback.question_5 %></td>
+            <td><%= feedback.question_6 %></td>
+            <td><%= feedback.question_7 %></td>
+            <td><%= feedback.question_8 %></td>
+            <td><%= feedback.question_9 %></td>
+            <td><%= feedback.question_10 %></td>
+            <td><%= feedback.question_11 %></td>
+            <td><%= feedback.question_12 %></td>
+            <td>
+              <%= link_to 'Supprimer', feedback_path(feedback), method: :delete, data: { confirm: 'Êtes-vous sûr de vouloir supprimer ce feedback?' } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= link_to 'Télécharger en Excel', feedbacks_path(format: :xlsx), class: 'btn btn-primary' %>
+</section>

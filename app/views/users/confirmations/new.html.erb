@@ -1,0 +1,18 @@
+<div class="log" style="color:#FFF; min-height:100vh;">
+  <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
+  <section class="box-log">
+    <h1>Recevoir l'email de confirmation</h1>
+    <div class="form">
+      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <div class="field">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: :email %>
+        </div>
+        <div class="actions">
+          <%= f.submit "Renvoyer l'email", class:"button dark btn-login" %>
+        </div>
+        <%= link_to "Se connecter", new_user_session_path, class: "sign-up-in" %>
+      <% end %>
+    </div>
+  </section>
+</div>

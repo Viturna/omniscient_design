@@ -1,0 +1,167 @@
+.top-profil {
+  padding: 96px 10vw;
+  background-color: #202020;
+  margin-bottom: 16px;
+
+  h1 {
+    color: #FFF;
+  }
+}
+
+.flex-profil {
+  margin-top: 42px;
+  display: flex;
+  align-items: center;
+  color: #FFF;
+  gap: 48px;
+}
+
+.img-profil {
+  width: 160px;
+  height: 160px;
+  border-radius: 200px;
+  object-fit: cover;
+}
+
+.name {
+  font-weight: 500;
+  font-size: 30px;
+  color: #FFF;
+}
+
+.flex-certified {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  gap: 8px
+}
+
+.pseudo {
+  font-size: 24px;
+  color: #FFF;
+}
+
+.version {
+  text-align: center;
+  color: #8D9299;
+  font-weight: 300;
+}
+.flex-profils {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+@media screen and (min-width:601px) and (max-width: 1024px) {
+  .top-profil {
+    padding: 96px 8vw;
+  }
+
+  .flex-profil {
+    gap: 40px;
+  }
+
+  .img-profil {
+    width: 140px;
+    height: 140px;
+  }
+
+  .name {
+    font-size: 26px;
+  }
+
+
+  .pseudo {
+    font-size: 22px;
+  }
+}
+
+
+@media screen and (min-width:426px) and (max-width: 600px) {
+
+  .top-profil {
+    padding: 64px 5vw;
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flex-profil {
+    margin-top: 32px;
+    flex-direction: column;
+    gap: 32px;
+    div{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .img-profil {
+    width: 100px;
+    height: 100px;
+  }
+
+  .name {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .pseudo {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .version {
+    font-size: 14px;
+  }
+  .flex-profils {
+    gap: 24px;
+  }
+}
+@media screen and (max-width: 425px) {
+
+  .top-profil {
+    padding: 64px 5vw;
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flex-profil {
+    margin-top: 32px;
+    flex-direction: column;
+    gap: 32px;
+    div{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .img-profil {
+    width: 90px;
+    height: 90px;
+  }
+
+  .name {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .pseudo {
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .version {
+    font-size: 14px;
+  }
+  .flex-profils {
+    gap: 24px;
+  }
+}

@@ -545,3 +545,616 @@ Processing by ListsController#show as HTML
 Completed 200 OK in 93ms (Views: 61.7ms | ActiveRecord: 21.5ms | Allocations: 80560)
 
 
+[dotenv] Set [36mSENDGRID_USERNAME[0m and [36mSENDGRID_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/lists/dscfvc-b" for ::1 at 2025-01-07 16:22:00 +0100
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ListsController#show as HTML
+  Parameters: {"slug"=>"dscfvc-b"}
+Completed 401 Unauthorized in 15ms (ActiveRecord: 0.0ms | Allocations: 4077)
+
+
+Started GET "/users/sign_in" for ::1 at 2025-01-07 16:22:00 +0100
+Processing by Users::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/sessions/new.html.erb within layouts/application
+  Rendered /Users/thomasriq/.rbenv/versions/3.3.4/lib/ruby/gems/3.3.0/gems/devise-4.9.4/app/views/devise/shared/_error_messages.html.erb (Duration: 0.3ms | Allocations: 227)
+  Rendered users/sessions/new.html.erb within layouts/application (Duration: 13.5ms | Allocations: 6991)
+  Rendered layouts/_header.html.erb (Duration: 2.1ms | Allocations: 1587)
+  Rendered layout layouts/application.html.erb (Duration: 73.7ms | Allocations: 86083)
+Completed 200 OK in 140ms (Views: 78.9ms | ActiveRecord: 15.2ms | Allocations: 107731)
+
+
+Started POST "/users/sign_in" for ::1 at 2025-01-07 16:22:04 +0100
+Processing by Users::SessionsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"email"=>"thomasriqperso@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Se connecter ⏩️"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "thomasriqperso@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (3.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+Redirected to http://localhost:3000/lists/dscfvc-b
+Completed 303 See Other in 466ms (ActiveRecord: 11.8ms | Allocations: 11361)
+
+
+Started GET "/lists/dscfvc-b" for ::1 at 2025-01-07 16:22:04 +0100
+Processing by ListsController#show as HTML
+  Parameters: {"slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.7ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mCACHE List Load (0.0ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:14:in `show'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:17:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering lists/show.html.erb within layouts/application
+  [1m[36mList Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "lists" WHERE "lists"."user_id" = $1 LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:77
+  [1m[36mList Load (0.2ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."user_id" = $1 ORDER BY "lists"."id" ASC LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:78
+  [1m[36mDesigner Count (1.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mOeuvre Count (2.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_visitors" ON "users"."id" = "list_visitors"."user_id" WHERE "list_visitors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mDesigner Load (1.0ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:176
+  [1m[36mOeuvre Load (1.2ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:204
+  [1m[36mDesigner Load (3.5ms)[0m  [1m[34mSELECT "designers".* FROM "designers" WHERE "designers"."validation" = $1 ORDER BY "designers"."nom_designer" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:264
+  [1m[36mOeuvre Load (9.8ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" WHERE "oeuvres"."validation" = $1 ORDER BY "oeuvres"."nom_oeuvre" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:299
+  Rendered lists/show.html.erb within layouts/application (Duration: 113.3ms | Allocations: 109178)
+  Rendered layouts/_header.html.erb (Duration: 0.7ms | Allocations: 811)
+  Rendered layout layouts/application.html.erb (Duration: 120.1ms | Allocations: 121730)
+Completed 200 OK in 153ms (Views: 87.4ms | ActiveRecord: 39.7ms | Allocations: 136121)
+
+
+Started POST "/lists/dscfvc-b/invite_editors" for ::1 at 2025-01-07 16:22:11 +0100
+Processing by ListsController#invite_editors as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "email"=>"viturnapro@gmail.com", "role"=>"editor", "commit"=>"Inviter", "slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.2ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "viturnapro@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:136:in `invite_editors'
+  [1m[36mUser Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1 AND "users"."id" = $2 LIMIT $3[0m  [["list_id", 2], ["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mListEditor Create (1.6ms)[0m  [1m[32mINSERT INTO "list_editors" ("list_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["list_id", 2], ["user_id", 6], ["created_at", "2025-01-07 15:22:11.944383"], ["updated_at", "2025-01-07 15:22:11.944383"]]
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/controllers/lists_controller.rb:198:in `create_share_notification'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mNotification Create (1.6ms)[0m  [1m[32mINSERT INTO "notifications" ("user_id", "notifiable_type", "notifiable_id", "message", "status", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["user_id", 2], ["notifiable_type", "List"], ["notifiable_id", 2], ["message", "La liste dscfvc b a été partagée avec vous."], ["status", 0], ["created_at", "2025-01-07 15:22:11.959694"], ["updated_at", "2025-01-07 15:22:11.959694"]]
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mNotification Create (1.1ms)[0m  [1m[32mINSERT INTO "notifications" ("user_id", "notifiable_type", "notifiable_id", "message", "status", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["user_id", 6], ["notifiable_type", "List"], ["notifiable_id", 2], ["message", "La liste dscfvc b a été partagée avec vous."], ["status", 0], ["created_at", "2025-01-07 15:22:11.963925"], ["updated_at", "2025-01-07 15:22:11.963925"]]
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  Rendering layout layouts/mailer.html.erb
+  Rendering list_mailer/invite_editor.html.erb within layouts/mailer
+  Rendered list_mailer/invite_editor.html.erb within layouts/mailer (Duration: 0.4ms | Allocations: 239)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.6ms | Allocations: 452)
+ListMailer#invite_editor: processed outbound mail in 4.5ms
+Delivered mail 677d46a3f3d64_133df4d30309fb@MacBook-Pro-de-Thomas.local.mail (3.6ms)
+Date: Tue, 07 Jan 2025 16:22:11 +0100
+From: contact@omniscientdesign.fr
+To: viturnapro@gmail.com
+Message-ID: <677d46a3f3d64_133df4d30309fb@MacBook-Pro-de-Thomas.local.mail>
+Subject: =?UTF-8?Q?Invitation_=C3=A0_=C3=A9diter_une_liste?=
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <p>Bonjour zdesfgvb,</p>
+<p>Vous avez =C3=A9t=C3=A9 invit=C3=A9 =C3=A0 =C3=A9diter la liste "dscfv=
+c b".</p>
+<p><a href=3D"http://localhost:3000/shared/d657f65e92e365315bb7">Voir la =
+liste</a></p>
+<p>Cordialement,</p>
+<p>L'=C3=A9quipe</p>
+
+  </body>
+</html>
+
+Redirected to http://localhost:3000/lists/dscfvc-b
+Completed 302 Found in 83ms (ActiveRecord: 13.1ms | Allocations: 39080)
+
+
+Started GET "/lists/dscfvc-b" for ::1 at 2025-01-07 16:22:12 +0100
+Processing by ListsController#show as HTML
+  Parameters: {"slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.2ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mCACHE List Load (0.0ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:14:in `show'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:17:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering lists/show.html.erb within layouts/application
+  [1m[36mList Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "lists" WHERE "lists"."user_id" = $1 LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:77
+  [1m[36mList Load (0.2ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."user_id" = $1 ORDER BY "lists"."id" ASC LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:78
+  [1m[36mDesigner Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mOeuvre Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_visitors" ON "users"."id" = "list_visitors"."user_id" WHERE "list_visitors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mDesigner Load (0.6ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:176
+  [1m[36mOeuvre Load (0.6ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:204
+  [1m[36mDesigner Load (2.2ms)[0m  [1m[34mSELECT "designers".* FROM "designers" WHERE "designers"."validation" = $1 ORDER BY "designers"."nom_designer" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:264
+  [1m[36mOeuvre Load (10.0ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" WHERE "oeuvres"."validation" = $1 ORDER BY "oeuvres"."nom_oeuvre" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:299
+  Rendered lists/show.html.erb within layouts/application (Duration: 60.5ms | Allocations: 65878)
+  Rendered layouts/_header.html.erb (Duration: 0.5ms | Allocations: 775)
+  Rendered layout layouts/application.html.erb (Duration: 67.4ms | Allocations: 78304)
+Completed 200 OK in 73ms (Views: 51.5ms | ActiveRecord: 17.3ms | Allocations: 81845)
+
+
+Started POST "/lists/dscfvc-b/change_role?user_id=2" for ::1 at 2025-01-07 16:22:44 +0100
+Processing by ListsController#change_role as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "role"=>"remove", "user_id"=>"2", "slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.1ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:157:in `change_role'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:161:in `change_role'
+  [1m[36mListEditor Delete All (1.2ms)[0m  [1m[31mDELETE FROM "list_editors" WHERE "list_editors"."list_id" = $1 AND "list_editors"."user_id" = $2[0m  [["list_id", 2], ["user_id", 2]]
+  ↳ app/controllers/lists_controller.rb:161:in `change_role'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:161:in `change_role'
+Redirected to http://localhost:3000/lists/dscfvc-b
+Completed 302 Found in 10ms (ActiveRecord: 2.5ms | Allocations: 5266)
+
+
+Started GET "/lists/dscfvc-b" for ::1 at 2025-01-07 16:22:44 +0100
+Processing by ListsController#show as HTML
+  Parameters: {"slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.3ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mCACHE List Load (0.0ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:14:in `show'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:17:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering lists/show.html.erb within layouts/application
+  [1m[36mList Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "lists" WHERE "lists"."user_id" = $1 LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:77
+  [1m[36mList Load (0.2ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."user_id" = $1 ORDER BY "lists"."id" ASC LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:78
+  [1m[36mDesigner Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mOeuvre Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_visitors" ON "users"."id" = "list_visitors"."user_id" WHERE "list_visitors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mDesigner Load (0.6ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:176
+  [1m[36mOeuvre Load (0.6ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:204
+  [1m[36mDesigner Load (3.6ms)[0m  [1m[34mSELECT "designers".* FROM "designers" WHERE "designers"."validation" = $1 ORDER BY "designers"."nom_designer" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:264
+  [1m[36mOeuvre Load (7.1ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" WHERE "oeuvres"."validation" = $1 ORDER BY "oeuvres"."nom_oeuvre" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:299
+  Rendered lists/show.html.erb within layouts/application (Duration: 67.9ms | Allocations: 65848)
+  Rendered layouts/_header.html.erb (Duration: 0.6ms | Allocations: 775)
+  Rendered layout layouts/application.html.erb (Duration: 76.5ms | Allocations: 78272)
+Completed 200 OK in 84ms (Views: 63.1ms | ActiveRecord: 15.1ms | Allocations: 81791)
+
+
+Started POST "/lists/dscfvc-b/invite_editors" for ::1 at 2025-01-07 16:22:48 +0100
+Processing by ListsController#invite_editors as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "email"=>"thomas.riquier@mmibordeaux.com", "role"=>"editor", "commit"=>"Inviter", "slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.1ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "thomas.riquier@mmibordeaux.com"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:136:in `invite_editors'
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1 AND "users"."id" = $2 LIMIT $3[0m  [["list_id", 2], ["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mListEditor Create (1.4ms)[0m  [1m[32mINSERT INTO "list_editors" ("list_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["list_id", 2], ["user_id", 2], ["created_at", "2025-01-07 15:22:48.957179"], ["updated_at", "2025-01-07 15:22:48.957179"]]
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:141:in `invite_editors'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/controllers/lists_controller.rb:198:in `create_share_notification'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mNotification Create (1.1ms)[0m  [1m[32mINSERT INTO "notifications" ("user_id", "notifiable_type", "notifiable_id", "message", "status", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["user_id", 6], ["notifiable_type", "List"], ["notifiable_id", 2], ["message", "La liste dscfvc b a été partagée avec vous."], ["status", 0], ["created_at", "2025-01-07 15:22:48.962605"], ["updated_at", "2025-01-07 15:22:48.962605"]]
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mNotification Create (1.1ms)[0m  [1m[32mINSERT INTO "notifications" ("user_id", "notifiable_type", "notifiable_id", "message", "status", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["user_id", 2], ["notifiable_type", "List"], ["notifiable_id", 2], ["message", "La liste dscfvc b a été partagée avec vous."], ["status", 0], ["created_at", "2025-01-07 15:22:48.965934"], ["updated_at", "2025-01-07 15:22:48.965934"]]
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/lists_controller.rb:199:in `block in create_share_notification'
+  Rendering layout layouts/mailer.html.erb
+  Rendering list_mailer/invite_editor.html.erb within layouts/mailer
+  Rendered list_mailer/invite_editor.html.erb within layouts/mailer (Duration: 0.2ms | Allocations: 64)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.4ms | Allocations: 161)
+ListMailer#invite_editor: processed outbound mail in 1.6ms
+Delivered mail 677d46c8ed17c_133df4d08310f2@MacBook-Pro-de-Thomas.local.mail (1.5ms)
+Date: Tue, 07 Jan 2025 16:22:48 +0100
+From: contact@omniscientdesign.fr
+To: thomas.riquier@mmibordeaux.com
+Message-ID: <677d46c8ed17c_133df4d08310f2@MacBook-Pro-de-Thomas.local.mail>
+Subject: =?UTF-8?Q?Invitation_=C3=A0_=C3=A9diter_une_liste?=
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <p>Bonjour zdesfrdg,</p>
+<p>Vous avez =C3=A9t=C3=A9 invit=C3=A9 =C3=A0 =C3=A9diter la liste "dscfv=
+c b".</p>
+<p><a href=3D"http://localhost:3000/shared/d657f65e92e365315bb7">Voir la =
+liste</a></p>
+<p>Cordialement,</p>
+<p>L'=C3=A9quipe</p>
+
+  </body>
+</html>
+
+Redirected to http://localhost:3000/lists/dscfvc-b
+Completed 302 Found in 24ms (ActiveRecord: 6.0ms | Allocations: 12734)
+
+
+Started GET "/lists/dscfvc-b" for ::1 at 2025-01-07 16:22:48 +0100
+Processing by ListsController#show as HTML
+  Parameters: {"slug"=>"dscfvc-b"}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:13:in `set_unread_notifications_count'
+  [1m[36mList Load (0.1ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:203:in `set_list'
+  [1m[36mCACHE List Load (0.0ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."slug" = $1 LIMIT $2[0m  [["slug", "dscfvc-b"], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:14:in `show'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/lists_controller.rb:17:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering lists/show.html.erb within layouts/application
+  [1m[36mList Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "lists" WHERE "lists"."user_id" = $1 LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:77
+  [1m[36mList Load (0.4ms)[0m  [1m[34mSELECT "lists".* FROM "lists" WHERE "lists"."user_id" = $1 ORDER BY "lists"."id" ASC LIMIT $2[0m  [["user_id", 1], ["LIMIT", 1]]
+  ↳ app/views/lists/show.html.erb:78
+  [1m[36mDesigner Count (0.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mOeuvre Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:92
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_editors" ON "users"."id" = "list_editors"."user_id" WHERE "list_editors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" INNER JOIN "list_visitors" ON "users"."id" = "list_visitors"."user_id" WHERE "list_visitors"."list_id" = $1[0m  [["list_id", 2]]
+  ↳ app/views/lists/show.html.erb:117
+  [1m[36mDesigner Load (0.4ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "list_items" ON "designers"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Designer"]]
+  ↳ app/views/lists/show.html.erb:176
+  [1m[36mOeuvre Load (0.5ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" INNER JOIN "list_items" ON "oeuvres"."id" = "list_items"."listable_id" WHERE "list_items"."list_id" = $1 AND "list_items"."listable_type" = $2[0m  [["list_id", 2], ["listable_type", "Oeuvre"]]
+  ↳ app/views/lists/show.html.erb:204
+  [1m[36mDesigner Load (1.7ms)[0m  [1m[34mSELECT "designers".* FROM "designers" WHERE "designers"."validation" = $1 ORDER BY "designers"."nom_designer" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:264
+  [1m[36mOeuvre Load (11.7ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" WHERE "oeuvres"."validation" = $1 ORDER BY "oeuvres"."nom_oeuvre" ASC[0m  [["validation", true]]
+  ↳ app/views/lists/show.html.erb:299
+  Rendered lists/show.html.erb within layouts/application (Duration: 80.0ms | Allocations: 65869)
+  Rendered layouts/_header.html.erb (Duration: 0.5ms | Allocations: 775)
+  Rendered layout layouts/application.html.erb (Duration: 89.4ms | Allocations: 78294)
+Completed 200 OK in 97ms (Views: 72.2ms | ActiveRecord: 18.4ms | Allocations: 81825)
+
+
+[dotenv] Set [36mSENDGRID_USERNAME[0m and [36mSENDGRID_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+ListMailer#invite_editor: processed outbound mail in 5.5ms
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.3ms | Allocations: 198)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.6ms | Allocations: 468)
+TestMailer#sample_email: processed outbound mail in 15.1ms
+Delivered mail 677d47eaa9acf_134cb1004-491@MacBook-Pro-de-Thomas.local.mail (4.3ms)
+Date: Tue, 07 Jan 2025 16:27:38 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d47eaa9acf_134cb1004-491@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+
+[dotenv] Set [36mSENDGRID_USERNAME[0m and [36mSENDGRID_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.2ms | Allocations: 198)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.5ms | Allocations: 474)
+TestMailer#sample_email: processed outbound mail in 15.3ms
+Delivered mail 677d4857e3e08_1354710049880@MacBook-Pro-de-Thomas.local.mail (3.8ms)
+Date: Tue, 07 Jan 2025 16:29:27 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d4857e3e08_1354710049880@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.2ms | Allocations: 7)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.7ms | Allocations: 104)
+TestMailer#sample_email: processed outbound mail in 6.6ms
+Delivered mail 677d4970cc6b6_13547100499d7@MacBook-Pro-de-Thomas.local.mail (3.2ms)
+Date: Tue, 07 Jan 2025 16:34:08 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d4970cc6b6_13547100499d7@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.1ms | Allocations: 7)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.3ms | Allocations: 104)
+TestMailer#sample_email: processed outbound mail in 3.7ms
+Delivered mail 677d4ae66a477_13547100410070@MacBook-Pro-de-Thomas.local.mail (1.6ms)
+Date: Tue, 07 Jan 2025 16:40:22 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d4ae66a477_13547100410070@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.2ms | Allocations: 7)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.7ms | Allocations: 104)
+TestMailer#sample_email: processed outbound mail in 6.9ms
+Delivered mail 677d4badb6d25_135471004101c@MacBook-Pro-de-Thomas.local.mail (2.4ms)
+Date: Tue, 07 Jan 2025 16:43:41 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d4badb6d25_135471004101c@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+
+[dotenv] Set [36mSENDGRID_USERNAME[0m and [36mSENDGRID_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.2ms | Allocations: 198)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.5ms | Allocations: 474)
+TestMailer#sample_email: processed outbound mail in 15.8ms
+Delivered mail 677d4cfdaa973_137721004342bc@MacBook-Pro-de-Thomas.local.mail (2042.0ms)
+Date: Tue, 07 Jan 2025 16:49:17 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d4cfdaa973_137721004342bc@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+

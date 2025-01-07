@@ -163,13 +163,6 @@ csv_oeuvres = CSV.parse(csv_text_oeuvres, headers: true)
 oeuvres_counter = 0
 
 csv_oeuvres.each do |row|
-  # Initialisation des designers principaux
-  main_designer = Designer.find_or_create_by(nom_designer: row['nom_designer']) do |designer|
-    designer.date_naissance = row['date_naissance']
-    designer.image = row['image']
-    designer.presentation_generale = row['presentation_generale']
-  end
-
   # Création ou association d'une œuvre
   oeuvre = Oeuvre.new(
     nom_oeuvre: row['nom_oeuvre'],

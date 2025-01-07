@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:ban,  :unban]
+  before_action :set_user, only: [:ban, :unban]
   before_action :check_admin_role, only: [:certify, :uncertify]
   def index
     @current_page = 'profil'

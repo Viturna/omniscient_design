@@ -11,5 +11,3 @@
 <section class="grid-1" style="background-color:#202020; color:#FFF;">
   <%= render "form", oeuvre: @oeuvre %>
 </section>
-<script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
-<%= javascript_include_tag "controllers/recaptcha", defer: true %>

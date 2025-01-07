@@ -56,10 +56,6 @@ class DesignersController < ApplicationController
     @designer = Designer.new(designer_params)
     @designer.user = current_user
 
-    recaptcha_result = verify_recaptcha(params[:recaptcha_token])
-    Rails.logger.info "reCAPTCHA verification result: #{recaptcha_result}"
-
-    if recaptcha_result
       if @designer.save
         update_suivi_references_emises(current_user)
         create_notification(@designer)
@@ -71,12 +67,7 @@ class DesignersController < ApplicationController
         flash.now[:alert] = "Veuillez corriger les erreurs avant de soumettre à nouveau."
         render :new, status: :unprocessable_entity
       end
-    else
-      # En cas d'échec reCAPTCHA
-      flash.now[:alert] = "Veuillez confirmer que vous n'êtes pas un robot."
-      @countries = Country.order(:country)
-      render :new, status: :unprocessable_entity
-    end
+
   end
 
 

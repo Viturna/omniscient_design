@@ -23,22 +23,28 @@
       <div class="error-message" id="death-year-error"></div>
     </div>
     <div>
-      <%= form.label :country_1, "Pays principal" %>
-      <%= form.collection_select :country_ids, Country.order(:country), :id, :country,
-    { prompt: "Sélectionner un pays", selected: @country_1 },
-    { id: "country_1", name: "designer[country_ids][]" } %>
+      <%= form.collection_select :country_1,
+      Country.order(:country),
+      :id,
+      :country,
+      { include_blank: "Aucun pays", prompt: "Sélectionner un pays", selected: @country_1 },
+      { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_1", name: "designer[country_ids][]" } %>
     </div>
     <div>
-      <%= form.label :country_2, "Pays secondaire (optionnel)" %>
-      <%= form.collection_select :country_ids, Country.order(:country), :id, :country,
-    { prompt: "Sélectionner un pays", selected: @country_2 },
-    { id: "country_2", name: "designer[country_ids][]" } %>
+      <%= form.collection_select :country_2,
+      Country.order(:country),
+      :id,
+      :country,
+      { include_blank: "Aucun pays", prompt: "Sélectionner un second pays", selected: @country_2 },
+      { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_2", name: "designer[country_ids][]" } %>
     </div>
     <div>
-      <%= form.label :country_3, "Pays tertiaire (optionnel)" %>
-      <%= form.collection_select :country_ids, Country.order(:country), :id, :country,
-    { prompt: "Sélectionner un pays", selected: @country_3 },
-    { id: "country_3", name: "designer[country_ids][]" } %>
+      <%= form.collection_select :country_3,
+      Country.order(:country),
+      :id,
+      :country,
+      { include_blank: "Aucun pays", prompt: "Sélectionner un troisième pays", selected: @country_3 },
+      { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_3", name: "designer[country_ids][]" } %>
     </div>
     <div>
       <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
@@ -116,6 +122,25 @@
 
       if (errors.length > 0) {
         event.preventDefault();
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    $('.select2').select2({
+      placeholder: "Rechercher un pays...",
+      allowClear: true,
+      language: {
+        inputTooShort: function() {
+          return "Veuillez entrer plus de caractères...";
+        },
+        searching: function() {
+          return "Recherche en cours...";
+        },
+        noResults: function() {
+          return "Aucun résultat trouvé";
+        }
       }
     });
   });

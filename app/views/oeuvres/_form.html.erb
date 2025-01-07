@@ -15,19 +15,28 @@
       <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
     </div>
     <div>
-      <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer,
-    { prompt: "Sélectionner un designer", selected: @cdesigner_1 },
-    { id: "designer_1", name: "oeuvre[designer_ids][]" } %>
+      <%= form.collection_select :designer_ids,
+      Designer.order(:nom_designer),
+      :id,
+      :nom_designer,
+      { include_blank: "Aucun designer", prompt: "Lié un/une designer", selected: @cdesigner_1 },
+      { class: "form-control select2", data: { placeholder: "Lié un/une designer" }, id: "designer_1", name: "oeuvre[designer_ids][]" } %>
     </div>
     <div>
-      <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer,
-    { prompt: "Sélectionner un designer", selected: @cdesigner_2 },
-    { id: "designer_2", name: "oeuvre[designer_ids][]" } %>
+      <%= form.collection_select :designer_ids,
+      Designer.order(:nom_designer),
+      :id,
+      :nom_designer,
+      { include_blank: "Aucun designer", prompt: "Lié un/une designer", selected: @cdesigner_2 },
+      { class: "form-control select2", data: { placeholder: "Lié un/une designer" }, id: "designer_2", name: "oeuvre[designer_ids][]" } %>
     </div>
     <div>
-      <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer,
-    { prompt: "Sélectionner un designer", selected: @cdesigner_3 },
-    { id: "designer_3", name: "oeuvre[designer_ids][]" } %>
+      <%= form.collection_select :designer_ids,
+      Designer.order(:nom_designer),
+      :id,
+      :nom_designer,
+      { include_blank: "Aucun designer", prompt: "Lié un/une designer", selected: @cdesigner_3 },
+      { class: "form-control select2", data: { placeholder: "Lié un/une designer" }, id: "designer_3", name: "oeuvre[designer_ids][]" } %>
     </div>
     <div style="display:flex">
       <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
@@ -99,6 +108,25 @@
 
       if (errors.length > 0) {
         event.preventDefault();
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    $('.select2').select2({
+      placeholder: "Rechercher un/une designer...",
+      allowClear: true,
+      language: {
+        inputTooShort: function() {
+          return "Veuillez entrer plus de caractères...";
+        },
+        searching: function() {
+          return "Recherche en cours...";
+        },
+        noResults: function() {
+          return "Aucun résultat trouvé";
+        }
       }
     });
   });

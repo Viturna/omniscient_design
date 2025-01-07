@@ -107,8 +107,4 @@ Rails.application.configure do
     authentication: :plain,
     enable_starttls_auto: true
   }
-
-  Rails.logger.info "SMTP user_name: #{ENV['SENDGRID_USERNAME']}"
-  Rails.logger.info "SMTP api_key: #{ENV['SENDGRID_API_KEY'] ? 'Present' : 'Missing'}"
-
 end

@@ -1520,3 +1520,45 @@ Processing by ListsController#show as HTML
 Completed 200 OK in 92ms (Views: 61.6ms | ActiveRecord: 22.6ms | Allocations: 81800)
 
 
+[dotenv] Set [36mSENDGRID_USERNAME[0m and [36mSENDGRID_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+  Rendering layout layouts/mailer.html.erb
+  Rendering test_mailer/sample_email.html.erb within layouts/mailer
+  Rendered test_mailer/sample_email.html.erb within layouts/mailer (Duration: 0.4ms | Allocations: 198)
+  Rendered layout layouts/mailer.html.erb (Duration: 0.8ms | Allocations: 474)
+TestMailer#sample_email: processed outbound mail in 25.0ms
+Delivered mail 677d722314bc5_13fa7100489ba@MacBook-Pro-de-Thomas.local.mail (1555.7ms)
+Date: Tue, 07 Jan 2025 19:27:47 +0100
+From: contact@omniscientdesign.fr
+To: devastatorzpro@gmail.com
+Message-ID: <677d722314bc5_13fa7100489ba@MacBook-Pro-de-Thomas.local.mail>
+Subject: Hello from Omniscient Design!
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html>
+  <body>
+    <h1>Bonjour,</h1>
+    <p>Merci de nous avoir contact=C3=A9s.</p>
+    <p>Ceci est un e-mail de test de l'=C3=A9quipe Omniscient Design !</p=
+>
+  </body>
+</html>
+
+  </body>
+</html>
+

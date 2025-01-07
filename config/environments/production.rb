@@ -95,16 +95,20 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { host: "omniscientdesign.fr", protocol: "https" }
+
+  # SMTP settings for SendGrid
   config.action_mailer.smtp_settings = {
-    user_name: ENV['SENDGRID_USERNAME'],
-    password: ENV['SENDGRID_API_KEY'],
+    user_name: ENV['SENDGRID_USERNAME'],       # Utilisez la variable d'environnement ici
+    password: ENV['SENDGRID_API_KEY'],         # Utilisez la variable d'environnement ici
     domain: 'omniscientdesign.fr',
     address: 'smtp.sendgrid.net',
     port: 587,
     authentication: :plain,
     enable_starttls_auto: true
   }
-  config.action_mailer.default_url_options = { host: 'omniscientdesign.fr', protocol: 'https' }
 
+  Rails.logger.info "SMTP user_name: #{ENV['SENDGRID_USERNAME']}"
+  Rails.logger.info "SMTP api_key: #{ENV['SENDGRID_API_KEY'] ? 'Present' : 'Missing'}"
 
 end

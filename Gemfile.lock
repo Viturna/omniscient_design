@@ -283,6 +283,7 @@ GEM
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
+    ruby_http_client (3.5.5)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -294,12 +295,15 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    select2-rails (4.0.13)
     selenium-webdriver (4.23.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sendgrid-ruby (6.7.0)
+      ruby_http_client (~> 3.4)
     sitemap_generator (6.3.0)
       builder (~> 3.0)
     sprockets (4.2.1)
@@ -380,7 +384,9 @@ DEPENDENCIES
   ruby-vips
   rubyzip (~> 2.3.0)
   sass-rails
+  select2-rails
   selenium-webdriver
+  sendgrid-ruby
   sitemap_generator
   sprockets-rails
   stimulus-rails

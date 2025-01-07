@@ -95,9 +95,6 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { host: "omniscientdesign.fr", protocol: "https" }
-
-  # SMTP settings for Gmail
   config.action_mailer.smtp_settings = {
     user_name: ENV['SENDGRID_USERNAME'],
     password: ENV['SENDGRID_API_KEY'],
@@ -107,5 +104,7 @@ Rails.application.configure do
     authentication: :plain,
     enable_starttls_auto: true
   }
+  config.action_mailer.default_url_options = { host: 'omniscientdesign.fr', protocol: 'https' }
+
 
 end

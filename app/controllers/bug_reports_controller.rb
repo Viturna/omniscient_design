@@ -12,7 +12,6 @@ class BugReportsController < ApplicationController
     @bug_report = BugReport.new(bug_report_params)
     @bug_report.user = current_user
     if @bug_report.save
-      BugReportMailer.new_bug_report(@bug_report).deliver_now
       redirect_to profil_path, notice: 'Votre signalement a été soumis avec succès.'
     else
       render :new

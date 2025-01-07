@@ -1,7 +1,7 @@
 class OeuvresController < ApplicationController
   include RecaptchaHelper
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
-  before_action :authenticate_user!, except: [:index, :show, :load_more]
+  before_action :authenticate_user!, except: [:index, :show, :load_more, :search]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /oeuvres or /oeuvres.json
   def index

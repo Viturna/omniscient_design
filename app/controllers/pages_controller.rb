@@ -74,7 +74,7 @@ class PagesController < ApplicationController
     # Filtrer les designers par année et pays si nécessaire
     @designers_filtered = @designers.select do |designer|
       designer.date_naissance.to_i.between?(@start_year_designer, @end_year_designer) &&
-        (designer.country_id == @country_id || @country_id.nil?)
+        (designer.country_ids == @country_ids || @country_ids.nil?)
     end
 
     # Récupérer tous les pays pour les options de sélection

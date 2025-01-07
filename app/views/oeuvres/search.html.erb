@@ -43,6 +43,31 @@
       <% end %>
     <% end %>
   </div>
+  <h2 class="title">Frise Chronologique</h2>
+  <a href="/search_frise">
+    <div class="timeline">
+      <% @timeline_years.each do |year| %>
+        <div class="timeline-item">
+          <div class="oeuvres">
+            <div class="oeuvres-container">
+              <% oeuvres_year = @oeuvres_filtered.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
+              <% oeuvres_year.each do |oeuvre| %>
+                <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-image: url('<%= oeuvre.image %>');"></div>
+              <% end %>
+              <% designers_year = @designers_filtered.select { |designer| designer.date_naissance.to_i == year } %>
+              <% designers_year.each do |designer| %>
+                <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= designer.image %>');"></div>
+              <% end %>
+            </div>
+            <div class="oeuvre empty"></div>
+            <div class="year"><%= year %></div>
+          </div>
+        </div>
+      <% end %>
+      <hr class="timeline-hr">
+    </div>
+    <button class="button dark">Voir les frises chronologiques</button>
+  </a>
   <h2 class="title">Designers</h2>
   <div class="container-designers">
     <div class="flex-container" id="designer-cards">

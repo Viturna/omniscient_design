@@ -5,223 +5,6 @@
     margin-top: 128px;
     padding-bottom: 100px;
   }
-  .timeline {
-   display: flex;
-   align-items: end;
-   justify-content: space-between;
-   padding: 20px;
-   overflow-x: auto;
-   white-space: nowrap;
-   position: relative;
-   gap: 54px;
-   height: 140px;
-   margin-top: 48px;
-  }
-
-  .timeline-item {
-   display: inline-block;
-   text-align: center;
-   position: relative;
-   width: 50px;
-  }
-
-  .timeline-hr {
-  position: absolute;
-  bottom: 40px; /* Place the line at the bottom */
-  left: 0; /* Start from the left edge */
-  height: 4px;
-  background: #202020;
-  z-index: -1;
-  border:none;
-  width: 100%; /* Ensure the line spans the entire width */
-  }
-
-
-
-  .oeuvres {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .oeuvres-container {
-    max-height: 100px; /* Limiter la hauteur pour éviter les superpositions */
-    overflow-y: auto; /* Ajouter un défilement vertical */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .oeuvres-container::-webkit-scrollbar {
-    display: none; /* Masquer la barre de défilement dans Chrome, Safari et Opera */
-  }
-  .hidden-oeuvres {
-    display: none;
-    flex-direction: column;
-  }
-
-  .oeuvres-counter .hidden-oeuvres.visible {
-    display: flex;
-    align-items:start;
-    gap: 8px;
-  }
-
-
-     .oeuvre {
-       width: 35px;
-       height: 35px;
-       background-color: #202020;
-       border-radius: 50%;
-       cursor: pointer;
-       background-size:cover;
-     }
-     .oeuvre:hover,.circle-with-number:hover{
-       opacity: 0.8;
-     }
-     .oeuvre.empty {
-       width: 15px;
-       height: 15px;
-       background-color: #202020;
-       border-radius: 50%;
-     }
-     .oeuvre.empty:hover{
-      cursor: auto;
-      opacity: 1;
-     }
-     .oeuvre-frise{
-     margin-top: 32px;
-     }
-     .filter-box{
-       margin-top: 16px;
-       display: flex;
-       align-items: center;
-       gap: 16px;
-     }
-     .filter-title{
-       font-weight: 500;
-       font-size: 20px;
-     }
-     .filter-icon{
-       display: flex;
-       gap: 24px;
-       align-items: center;
-     }
-     select{
-       width: fit-content;
-       height: fit-content;
-       padding: 0px;
-       background: none;
-       border:none;
-       color:#8D9299;
-       font-size: 16px;
-     }
-     .filter-button{
-       border:none;
-       padding: 15px 45px;
-       border-radius:5px;
-       font-weight: 500;
-     }
-
-     .circle-with-number {
-       width: 35px;
-       height: 35px;
-       border-radius: 50%;
-       background-color: white;
-       color: #202020;
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       user-select:none;
-     }
-    .circle-with-number:hover{
-    cursor: pointer;
-    opacity: 0.6;
-    }
-
-  .header-search {
-    position: fixed;
-    z-index: 99;
-    background-color: #F7F7F7;
-    height: 100px;
-    width: calc(100vw - 350px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .search-button{
-   padding: 20px 45px;
-   border: none;
-   border-radius: 5px;
-   border-radius: 50px;
-   font-weight: 500;
-   cursor: pointer;
-  }
-     .title {
-       color: #202020;
-       font-size: clamp(1.25rem, 1.05rem + 0.4vw, 1.5rem);
-       letter-spacing: -1%;
-       font-weight: 500;
-     }
-
-             .flex-title {
-               margin-top: 48px;
-               gap: 16px;
-               display: flex;
-               align-items: center;
-             }
-
-             .flex-category {
-               display: flex;
-               flex-wrap: wrap;
-               gap: 64px;
-               margin-top: 32px;
-             }
-
-             .card-category {
-               display: flex;
-               justify-content: center;
-               align-items: center;
-               width: 18vw;
-               height: 18vw;
-               border-radius: 10px;
-               background-color: rgba(255, 255, 255, 0.3); /* Opacity set to 30% */
-             }
-
-             .search-elements {
-               padding: 100px 5vw 0 5vw;
-             }
-
-             .text-category {
-               text-transform: uppercase;
-               font-size: 20px;
-               font-weight: 500;
-             }
-
-             .result {
-               top: 86px;
-               position: absolute;
-               border: 2px solid #E9E9E9;
-             }
-
-             .result li {
-               width: 55vw;
-               padding: 25px;
-               background-color: #fff;
-               cursor: pointer;
-             }
-
-             .result li:hover {
-               background-color: #F7F7F7;
-             }
-
-             .result li a {
-               color: #202020;
-             }
-
-             input[type=search] {
-               margin-right: 16px;
-             }
 </style>
 <section class="top-bar-search">
   <%= link_to search_oeuvres_path, class: "search-link" do %>
@@ -251,29 +34,27 @@
   <% end %>
 </div>
 </section>
-<section class="search-elements">
+<section class="grid-1" style="margin-top: 148px;">
   <div class="flex-title">
-    <a href="/oeuvres/search">
-      <svg width="26" height="23" viewBox="0 0 26 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M25.0002 11.4996L2.00012 11.4996M2.00012 11.4996L10.6252 21.2305M2.00012 11.4996L10.6252 1.76882" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
+    <%= link_to search_oeuvres_path do %>
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10.2168L1.57848 10.2168M1.57848 10.2168L8.86155 18.4336M1.57848 10.2168L8.86155 2" stroke="#202020" stroke-width="2" stroke-linecap="square"/>
       </svg>
-    </a>
-    <h1 class="title">Frise chronologique</h1>
+    <% end %>
+    <h1>Frise chronologique</h1>
   </div>
   <div class="oeuvre-frise">
     <h2 class="title">Oeuvres</h2>
     <%= form_tag(search_frise_path, method: :get) do %>
+      <p class="filter-title medium">Filtres :</p>
       <div class="filter-box">
-        <p class="filter-title">Filtres :</p>
-        <div class="filter-icon">
-          <label for="start_year">De</label>
-          <%= select_tag :start_year_oeuvre, options_for_select((1880..Date.current.year).to_a, @start_year_oeuvre), id: 'start_year' %>
-          <label for="end_year">À</label>
-          <%= select_tag :end_year_oeuvre, options_for_select((1880..Date.current.year).to_a, @end_year_oeuvre), id: 'end_year' %>
-          <label for="domaine_id">| Domaine</label>
-          <%= select_tag :domaine_id, options_from_collection_for_select(@domaines, :id, :domaine, @domaine_id), id: 'domaine_id' %>
-          <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
-        </div>
+        <label for="start_year">De</label>
+        <%= select_tag :start_year_oeuvre, options_for_select((1880..Date.current.year).to_a, @start_year_oeuvre), id: 'start_year' %>
+        <label for="end_year">À</label>
+        <%= select_tag :end_year_oeuvre, options_for_select((1880..Date.current.year).to_a, @end_year_oeuvre), id: 'end_year' %>
+        <label for="domaine_id">| Domaine</label>
+        <%= select_tag :domaine_id, options_from_collection_for_select(@domaines, :id, :domaine, @domaine_id), id: 'domaine_id' %>
+        <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
       </div>
     <% end %>
     <div class="timeline">
@@ -312,17 +93,15 @@
   <div class="designer-frise">
     <h2 class="title">Designers</h2>
     <%= form_tag(search_frise_path, method: :get) do %>
+      <p class="filter-title medium">Filtres :</p>
       <div class="filter-box">
-        <p class="filter-title">Filtres :</p>
-        <div class="filter-icon">
-          <label for="start_year">De</label>
-          <%= select_tag :start_year_designer, options_for_select((1830..Date.current.year).to_a, @start_year_designer), id: 'start_year' %>
-          <label for="end_year">À</label>
-          <%= select_tag :end_year_designer, options_for_select((1830..Date.current.year).to_a, @end_year_designer), id: 'end_year' %>
-          <label for="country_id">| Pays</label>
-          <%= select_tag :country_id, options_from_collection_for_select(@countries, :id, :name, @country_id), id: 'country_id' %>
-          <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
-        </div>
+        <label for="start_year">De</label>
+        <%= select_tag :start_year_designer, options_for_select((1830..Date.current.year).to_a, @start_year_designer), id: 'start_year' %>
+        <label for="end_year">À</label>
+        <%= select_tag :end_year_designer, options_for_select((1830..Date.current.year).to_a, @end_year_designer), id: 'end_year' %>
+        <%# <label for="country_id">| Pays</label> %>
+        <%# <%= select_tag :country_id, options_from_collection_for_select(@countries, :id, :name, @country_id), id: 'country_id' %>
+        <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
       </div>
     <% end %>
     <div class="timeline">

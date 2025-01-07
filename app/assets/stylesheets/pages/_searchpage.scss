@@ -1,3 +1,5 @@
+@import 'abstracts/variables';
+
 .searchpage {
   margin-top: 148px;
 }
@@ -177,6 +179,7 @@
       width: 40%;
     }
   }
+
   .card-designer,
   .card-oeuvre {
     width: calc(38vw - 20px);
@@ -189,6 +192,7 @@
     font-size: 20px;
   }
 }
+
 @media screen and (min-width:769px) and (max-width: 1024px) {
 
   .flex-category,
@@ -207,6 +211,7 @@
       width: 70px
     }
   }
+
   .card-designer,
   .card-oeuvre {
     width: calc(24vw - 20px);
@@ -219,6 +224,7 @@
     font-size: 20px;
   }
 }
+
 @media screen and (min-width:1025px) and (max-width: 1280px) {
 
   .flex-category,
@@ -237,6 +243,7 @@
       width: 70px
     }
   }
+
   .card-designer,
   .card-oeuvre {
     width: calc(24vw - 20px);
@@ -251,105 +258,138 @@
 }
 
 // /* Frise */
-// .timeline {
-//   display: flex;
-//   align-items: end;
-//   justify-content: space-between;
-//   padding: 20px;
-//   overflow-x: auto;
-//   white-space: nowrap;
-//   position: relative;
-//   gap: 54px;
-//   height: 140px;
-//   margin: 48px 0
-// }
+.timeline {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  padding: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  position: relative;
+  gap: 54px;
+  height: 140px;
+  margin: 48px 0
+}
 
-// .timeline-item {
-//   display: inline-block;
-//   text-align: center;
-//   position: relative;
-//   width: 50px;
-// }
+.timeline-item {
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  width: 50px;
+}
 
-// .timeline-hr {
-//   position: absolute;
-//   bottom: 40px;
-//   /* Place the line at the bottom */
-//   left: 0;
-//   /* Start from the left edge */
-//   height: 4px;
-//   background: #202020;
-//   z-index: -1;
-//   border: none;
-//   width: 100%;
-//   /* Ensure the line spans the entire width */
-// }
+.timeline-hr {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  height: 4px;
+  background: $primary-color;
+  z-index: -1;
+  border: none;
+  width: 100%;
+}
 
-// .year {
-//   color: #202020;
-// }
+.year {
+  color: $primary-color;
+}
 
-// .oeuvres {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   gap: 8px;
-// }
+.oeuvres {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
 
-// .oeuvres-container {
-//   max-height: 100px;
-//   /* Limiter la hauteur pour éviter les superpositions */
-//   overflow-y: auto;
-//   /* Ajouter un défilement vertical */
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   gap: 8px;
-// }
+.oeuvres-container {
+  max-height: 100px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
 
-// .oeuvres-container::-webkit-scrollbar {
-//   display: none;
-//   /* Masquer la barre de défilement dans Chrome, Safari et Opera */
-// }
+.oeuvres-container::-webkit-scrollbar {
+  display: none;
+}
 
-// .hidden-oeuvres {
-//   display: none;
-//   flex-direction: column;
-// }
+.hidden-oeuvres {
+  display: none;
+  flex-direction: column;
+}
 
-// .oeuvres-counter .hidden-oeuvres.visible {
-//   display: flex;
-//   align-items: start;
-//   gap: 8px;
-// }
+.oeuvres-counter .hidden-oeuvres.visible {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
 
 
-// .oeuvre {
-//   width: 35px;
-//   height: 35px;
-//   background-color: #202020;
-//   border-radius: 50%;
-//   cursor: pointer;
-//   background-size: cover;
-// }
+.oeuvre {
+  width: 35px;
+  height: 35px;
+  background-color: $primary-color;
+  border-radius: 50%;
+  cursor: pointer;
+  background-size: cover;
+}
 
-// .oeuvre:hover,
-// .circle-with-number:hover {
-//   opacity: 0.8;
-// }
+.oeuvre:hover,
+.circle-with-number:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
 
-// .oeuvre.empty {
-//   width: 15px;
-//   height: 15px;
-//   background-color: #202020;
-//   border-radius: 50%;
-// }
+.oeuvre.empty {
+  width: 15px;
+  height: 15px;
+  background-color: $primary-color;
+  border-radius: 50%;
+}
 
-// .oeuvre.empty:hover {
-//   cursor: auto;
-//   opacity: 1;
-// }
+.oeuvre.empty:hover {
+  cursor: auto;
+  opacity: 1;
+}
 
-// .oeuvre-frise {
-//   margin-top: 32px;
-// }
+.oeuvre-frise {
+  margin-top: 32px;
+}
+
+.circle-with-number {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: $secondary-color;
+  color: $primary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+// Filter frise
+.filter-box {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+select {
+  width: fit-content;
+  height: fit-content;
+  padding: 0px;
+  background: none;
+  border: none;
+  color: $text-color;
+  font-size: 16px;
+}
+
+.filter-button {
+  border: none;
+  padding: 15px 45px;
+  border-radius: 5px;
+  font-weight: 500;
+}

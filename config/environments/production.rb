@@ -99,8 +99,8 @@ Rails.application.configure do
 
   # SMTP settings for Gmail
   config.action_mailer.smtp_settings = {
-    user_name: ENV['SENDGRID_USERNAME'],
-    password: ENV['SENDGRID_API_KEY'],
+    user_name: Rails.application.credentials.dig(:sendgrid, :username),
+    password: Rails.application.credentials.dig(:sendgrid, :api_key),
     domain: 'omniscientdesign.fr',
     address: 'smtp.sendgrid.net',
     port: 587,

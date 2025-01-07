@@ -99,11 +99,12 @@ Rails.application.configure do
 
   # SMTP settings for Gmail
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
+    address: 'smtp.sendgrid.net',
     port: 587,
-    user_name: "omniscientdesign.co@gmail.com",
-    password: "aeca kiyl sogb yfkb",
-    authentication: "plain",
+    domain: 'omniscientdesign.fr',
+    user_name: 'apikey', # "apikey" doit être littéralement écrit ainsi
+    password: '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', # Remplacez par votre clé API
+    authentication: 'plain',
     enable_starttls_auto: true
   }
 

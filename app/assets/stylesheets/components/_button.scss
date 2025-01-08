@@ -19,13 +19,6 @@
   padding: 25px 125px;
 }
 
-.dark {
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
 // Add Element
 .button-add {
   font-weight: 500;
@@ -68,6 +61,12 @@
   justify-content: center;
   transition: background-color 0.3s ease;
   cursor: pointer;
+  &:hover{
+    background-color: $secondary-color;
+    svg path{
+      fill: $primary-color;
+    }
+  }
 }
 
 //Save
@@ -86,9 +85,11 @@
   height: 60px;
   position: relative;
 
-  &:hover {
-    background-color: $primary-color;
-    opacity: 0.8;
+  &:hover{
+    background-color: $secondary-color;
+    svg path{
+      fill: $primary-color;
+    }
   }
 }
 
@@ -398,7 +399,8 @@
     color: $secondary-color;
 
     &:hover {
-      background-color: $primary-color;
+      background-color: $secondary-color;
+      color: $primary-color;
     }
   }
   .button-add {

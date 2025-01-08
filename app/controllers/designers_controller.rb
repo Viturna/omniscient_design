@@ -143,11 +143,19 @@ class DesignersController < ApplicationController
   end
   def load_more_designers
     offset = params[:offset].to_i
-    @designers = Designer.offset(offset).limit(8).order(:nom_designer)
-    respond_to do |format|
-      format.js { render partial: 'designers/designer_card', collection: @designers, as: :designer }
+    loaded_ids = params[:loaded_ids] || []
+
+    designers = Designer.where(validation: true).where.not(id: loaded_ids).limit(10).offset(offset)
+    if designers.any?
+      render partial: "designer_card", collection: designers, as: :designer
+    else
+      head :no_content
     end
+  rescue => e
+    Rails.logger.error("Erreur dans load_more_designers : #{e.message}")
+    render json: { error: "Une erreur s'est produite." }, status: 500
   end
+
   private
 
   def update_suivi_references_emises(user)

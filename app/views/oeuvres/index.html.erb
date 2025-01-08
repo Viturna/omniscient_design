@@ -111,7 +111,7 @@
       const offset = loadMoreTrigger.dataset.offset;
       const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
 
-      fetch(`/designers/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
+      fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
         .then((response) => response.text())
         .then((html) => {
           if (html.trim() === "") {

@@ -100,45 +100,47 @@
       const upButton = document.querySelector(".arrow-button.up");
       const downButton = document.querySelector(".arrow-button.down");
       let isLoading = false;
+      let isScrolling = false;
 
       // Fonction de chargement des cartes
       function loadMoreCards() {
-          if (isLoading) return;
-          isLoading = true;
-          const offset = loadMoreTrigger.dataset.offset;
-          const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
+        if (isLoading) return;
+        isLoading = true;
 
-          fetch(`/designers/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
-            .then((response) => response.text())
-            .then((html) => {
+        const offset = loadMoreTrigger.dataset.offset;
+        const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
+
+        fetch(`/designers/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
+          .then((response) => response.text())
+          .then((html) => {
+            if (html.trim() === "") {
+              loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
+            } else {
               container.insertAdjacentHTML("beforeend", html);
-              isLoading = false;
 
-              // Mettre à jour l'offset
+              // Mettre à jour l'offset et les IDs chargés
               loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
-
-              // Mettre à jour les IDs chargés
               const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
-              loadMoreTrigger.dataset.loadedIds = [...loadedIds, ...newLoadedIds].join(',');
+              loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
 
-              // Vérifier s'il reste des designers à charger
-              if (html.trim() === "") {
-                loadMoreTrigger.style.display = "none";
-              }
-            })
-            .catch((err) => {
-              console.error("Erreur lors du chargement des cartes :", err);
-              isLoading = false;
-            });
-        }
+              // Assurez-vous que les cartes s'alignent bien
+              validateCardAlignment();
+            }
+            isLoading = false;
+          })
+          .catch((err) => {
+            console.error("Erreur lors du chargement des cartes :", err);
+            isLoading = false;
+          });
+      }
 
-      // Écouteur de défilement pour le chargement infini
-      container.addEventListener("scroll", () => {
-        const { scrollTop, scrollHeight, clientHeight } = container;
-        if (scrollTop + clientHeight >= scrollHeight - 50) {
-          loadMoreCards();
-        }
-      });
+      // Vérification et ajustement de l'alignement des cartes
+      function validateCardAlignment() {
+        const cards = container.querySelectorAll(".card");
+        cards.forEach((card) => {
+          card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
+        });
+      }
 
       // Fonction pour défiler vers le haut ou le bas
       function scrollByAmount(amount) {
@@ -158,6 +160,8 @@
       });
 
       container.addEventListener("touchend", (e) => {
+        if (isScrolling) return; // Ne pas gérer les événements tactiles pendant le défilement
+
         touchEndY = e.changedTouches[0].clientY;
         const swipeDistance = touchStartY - touchEndY;
 
@@ -168,6 +172,32 @@
           // Swipe down
           scrollByAmount(-window.innerHeight / 2);
         }
+      });
+
+      // Gestion des touches du clavier
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+          // Flèche Haut
+          scrollByAmount(-window.innerHeight / 2);
+        } else if (e.key === "ArrowDown") {
+          // Flèche Bas
+          scrollByAmount(window.innerHeight / 2);
+        }
+      });
+
+      // Ajustement initial
+      validateCardAlignment();
+
+      // Écouteur de défilement pour le chargement infini
+      container.addEventListener("scroll", () => {
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        isScrolling = true;
+
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+          loadMoreCards();
+        }
+
+        setTimeout(() => (isScrolling = false), 100);
       });
     });
   </script>

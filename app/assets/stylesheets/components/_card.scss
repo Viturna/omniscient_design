@@ -15,12 +15,13 @@
 }
 
 .card {
+  padding-top: 200px;
+  height: calc(100dvh - 200px);
   position: relative;
   width: 50vw;
   scroll-snap-align: start;
-  height: 100dvh;
   display: flex;
-  justify-content: end;
+  justify-content: center;
   flex-direction: column;
 }
 
@@ -28,7 +29,7 @@
   transform: rotate(6deg);
   border-radius: 5px;
   width: 50vw;
-  min-height: 350px;
+  min-height: 100px;
   height: 45dvh;
   position: relative;
 }
@@ -73,7 +74,7 @@
 }
 
 .title-description-card {
-  margin-top: 48px;
+  margin-top: 32px;
   font-size: 24px;
   font-weight: 500;
 }
@@ -99,6 +100,8 @@
 
   .card {
     width: 60vw;
+    padding-top: 180px;
+    height: calc(100dvh - 180px);
   }
 
   .bg-card {
@@ -150,7 +153,8 @@
   }
   .card {
     width: 80vw;
-    height: 85dvh;
+    padding-top: 50px;
+    height: calc(100dvh - 50px);
   }
 
   .bg-card {
@@ -198,38 +202,37 @@
 }
 @media screen and (min-width:426px) and (max-width: 600px) {
   .flex-info-card {
-    transform: rotate(-4deg);
+    transform: rotate(0deg);
     width: 90%;
     padding: 0 8px;
   }
   .img-card {
-    transform: rotate(-4deg);
+    transform: rotate(0deg);
   }
-
   .bg-card {
-    transform: rotate(4deg);
+    transform: rotate(0deg);
   }
   .card {
-    height: 90dvh;
+    padding-top: 10px;
+    height: calc(100dvh - 10px);
     width: 90vw;
-    justify-content: end;
   }
 
   .bg-card {
     width: 90vw;
     height: calc(100dvh - 280px);
-    max-height: 700px;
   }
 
+
   .bg-card .date-main{
-    transform: rotate(-4deg);
+    transform: rotate(0deg);
     top: 24px;
     scale: 0.8;
     font-size: 18px;
   }
   .bg-card .domaine-main{
     width: fit-content;
-    transform: rotate(-4deg);
+    transform: rotate(0deg);
     right: 24px;
     top: 0;
     scale: 0.8;
@@ -271,15 +274,14 @@
     transform: rotate(0deg);
   }
   .card {
-    width: 90vw;
-    justify-content: center;
+    padding-top: 0px;
     height: 100dvh;
+    width: 90vw;
   }
 
   .bg-card {
     width: 90vw;
     height: calc(100dvh - 260px);
-    max-height: 700px;
   }
 
   .bg-card .date-main{

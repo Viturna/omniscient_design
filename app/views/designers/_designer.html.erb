@@ -80,13 +80,24 @@
       style="background-image: url('<%= designer.image%>');"
     <% end %>>
     <% if designer.validation %>
-      <button id="back-btn">
-        <div class="circle-back">
-          <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
-          </svg>
-        </div>
-      </button>
+      <div class="flex-back-btn">
+        <button id="back-btn">
+          <div class="circle-back">
+            <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
+            </svg>
+          </div>
+        </button>
+        <%= link_to designers_path do %>
+          <button id="home-btn">
+            <div class="circle-back">
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.941 29.428V25.0963C12.941 23.9905 13.844 23.0941 14.9578 23.0941H19.0295C19.5644 23.0941 20.0774 23.3051 20.4556 23.6806C20.8338 24.056 21.0463 24.5653 21.0463 25.0963V29.428C21.0429 29.8877 21.2245 30.3297 21.5508 30.6559C21.877 30.9822 22.321 31.1657 22.784 31.1657H25.5619C26.8593 31.169 28.1047 30.6597 29.0232 29.7502C29.9418 28.8407 30.458 27.6057 30.458 26.3177V13.9775C30.458 12.9371 29.9935 11.9502 29.1896 11.2828L19.7398 3.79047C18.096 2.47681 15.7408 2.51923 14.1461 3.8912L4.91189 11.2828C4.07003 11.9306 3.56686 12.9203 3.54199 13.9775V26.3051C3.54199 28.9895 5.73407 31.1657 8.43812 31.1657H11.1526C12.1144 31.1657 12.896 30.3953 12.903 29.4406L12.941 29.428Z" fill="white"/>
+              </svg>
+            </div>
+          </button>
+        <%end%>
+      </div>
       <% unless !user_signed_in? %>
         <button id="openPopup" style="border:none; background:none;">
           <div class="circle circle-save">

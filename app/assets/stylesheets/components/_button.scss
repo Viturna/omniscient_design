@@ -118,11 +118,8 @@
 
 
 // Retour
+
 .circle-back {
-  position: absolute;
-  z-index: 100;
-  top: 50px;
-  left: 5vw;
   background-color: rgba(32, 32, 32, 0.4);
   width: 65px;
   height: 65px;
@@ -138,7 +135,7 @@
   opacity: 0.8;
 }
 
-#back-btn {
+#back-btn, #home-btn {
   background: none;
   border: none;
   cursor: pointer;

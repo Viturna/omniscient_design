@@ -61,7 +61,14 @@
   left: 0;
   background: center center / cover no-repeat;
 }
-
+.flex-back-btn{
+  display: flex;
+  position: absolute;
+  z-index: 100;
+  top: 50px;
+  left: 5vw;
+  gap: 16px;
+}
 .date-header {
   position: absolute;
   bottom: 50px;

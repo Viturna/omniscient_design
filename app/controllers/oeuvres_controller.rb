@@ -30,21 +30,23 @@ class OeuvresController < ApplicationController
 
   def search
     @current_page = 'recherche'
-    query = params[:query].to_s.strip
+    query = params[:query].to_s.strip.downcase
     @works = Oeuvre.where(validation: true).pluck(:nom_oeuvre) + Designer.where(validation: true).pluck(:nom_designer)
-    @designer = nil
 
-    if query.present?
-      @work = Oeuvre.where('LOWER(nom_oeuvre) = ? AND validation = ?', query.downcase, true).first
-      @designer = Designer.where('LOWER(nom_designer) = ? AND validation = ?', query.downcase, true).first
+    if !query.blank?
+      # Recherche exacte
+      @work = Oeuvre.find_by('LOWER(nom_oeuvre) = ? AND validation = ?', query, true)
+      @designer = Designer.find_by('LOWER(nom_designer) = ? AND validation = ?', query, true)
 
       if @work
         redirect_to oeuvre_path(@work) and return
       elsif @designer
         redirect_to designer_path(@designer) and return
-      else
-        flash.now[:alert] = "Aucun résultat trouvé pour votre recherche"
       end
+
+      # Recherche partielle pour suggestions
+      @oeuvre_suggestions = Oeuvre.where('LOWER(nom_oeuvre) LIKE ? AND validation = ?', "%#{query}%", true)
+      @designer_suggestions = Designer.where('LOWER(nom_designer) LIKE ? AND validation = ?', "%#{query}%", true)
     end
 
     @oeuvres = Oeuvre.where(validation: true).shuffle

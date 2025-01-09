@@ -41,7 +41,7 @@
       <p class="medium black" style="margin-top: 16px;">Suggestions pour "<%= params[:query] %>"</p>
       <div class="suggestions">
         <% if @oeuvre_suggestions.present? %>
-          <p>Œuvres :</p>
+          <p>Références :</p>
           <div class="flex-container">
             <% @oeuvre_suggestions.each do |oeuvre| %>
               <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
@@ -156,7 +156,7 @@
 <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
 <script>
   $(document).ready(function() {
-    var works = <%= raw @works.to_json %>; // Injecter les noms des œuvres dans le JavaScript
+    var works = <%= raw @works.to_json %>; // Injecter les noms des références dans le JavaScript
     var designers = <%= raw @designers.to_json %>; // Injecter les noms des designers dans le JavaScript
 
     // Mapping des noms vers les URLs respectives

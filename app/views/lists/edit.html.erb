@@ -58,7 +58,7 @@
   </div>
   <div class="flex-title-list">
     <h2>Les références</h2>
-    <%= link_to 'Ajouter des œuvres', '#', id: 'openPopupOeuvres', class:"button dark" %>
+    <%= link_to 'Ajouter des références', '#', id: 'openPopupOeuvres', class:"button dark" %>
   </div>
   <div class="flex-card-list">
     <% @list.oeuvres.each do |oeuvre| %>
@@ -125,7 +125,7 @@
   <div class="modal-content">
     <span class="close" id="closePopupOeuvres">&times;</span>
     <%= form_with(model: @list, local: true) do |form| %>
-      <%= form.label :oeuvre_ids, "Sélectionner des œuvres" %>
+      <%= form.label :oeuvre_ids, "Sélectionner des références" %>
       <div class="modal-content">
         <div class="field">
           <%= form.collection_check_boxes :oeuvre_ids, Oeuvre.where(validation: true), :id, :nom_oeuvre do |b| %>
@@ -156,7 +156,7 @@
   popupDesigners.style.display = "block";
   }
 
-  // Ouvrir la popup des œuvres lorsque le bouton est cliqué
+  // Ouvrir la popup des références lorsque le bouton est cliqué
   btnOpenOeuvres.onclick = function() {
   popupOeuvres.style.display = "block";
   }
@@ -166,7 +166,7 @@
   popupDesigners.style.display = "none";
   }
 
-  // Fermer la popup des œuvres lorsque le bouton de fermeture est cliqué
+  // Fermer la popup des références lorsque le bouton de fermeture est cliqué
   btnCloseOeuvres.onclick = function() {
   popupOeuvres.style.display = "none";
   }

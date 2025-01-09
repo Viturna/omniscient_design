@@ -71,17 +71,14 @@
   left: 5vw;
   gap: 16px;
 }
-.date-header {
+.info-card-first-content{
+  display: flex;
+  gap: 24px;
   position: absolute;
   bottom: 50px;
   left: 5vw;
 }
 
-.domaine-header {
-  position: absolute;
-  bottom: 50px;
-  right: 5vw;
-}
 .text-show {
   width: 60vw;
   max-width: 1000px;
@@ -109,9 +106,7 @@
 .hidden {
   display: none;
 }
-.info-card-first-content{
-  display: block;
-}
+
 .header-top {
   display: none;
   position: absolute;
@@ -143,6 +138,7 @@
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.3);
+  color: #FFF;
   padding: 12px 25px;
   height: 30px;
   border-radius: 5px;
@@ -150,7 +146,6 @@
 }
 
 .info-card-dark {
-  height: fit-content;
   gap: 8px;
   display: flex;
   align-items: center;
@@ -158,6 +153,7 @@
   background-color: rgba(32, 32, 32, 0.4);
   color: #FFF;
   padding: 12px 25px;
+  height: 30px;
   border-radius: 5px;
   font-size: 20px;
 }

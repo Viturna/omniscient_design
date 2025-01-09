@@ -24,6 +24,7 @@ class DesignersController < ApplicationController
   end
   # GET /designers/1 or /designers/1.json
   def show
+    @domaines = @designer.domaines
     if user_signed_in?
       unless @designer.validation || current_user.admin? || @designer.user == current_user || current_user.certified?
         redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."

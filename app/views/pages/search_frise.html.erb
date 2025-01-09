@@ -44,7 +44,7 @@
     <h1>Frise chronologique</h1>
   </div>
   <div class="oeuvre-frise">
-    <h2 class="title">Oeuvres</h2>
+    <h2 class="title">Références</h2>
     <%= form_tag(search_frise_path, method: :get) do %>
       <p class="filter-title medium">Filtres :</p>
       <div class="filter-box">
@@ -65,7 +65,7 @@
               <% oeuvres_year = @oeuvres_filtered.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
               <% if oeuvres_year.size > 1 %>
                 <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
-                  <!-- Conteneur caché pour les œuvres -->
+                  <!-- Conteneur caché pour les références -->
                   <div class="hidden-oeuvres">
                     <% oeuvres_year.each do |oeuvre| %>
                       <%= link_to oeuvre, class: "oeuvre-point" do %>
@@ -112,7 +112,7 @@
               <% designers_year = @designers_filtered.select { |designer| designer.date_naissance.to_i == year } %>
               <% if designers_year.size > 1 %>
                 <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
-                  <!-- Conteneur caché pour les œuvres -->
+                  <!-- Conteneur caché pour les références -->
                   <div class="hidden-oeuvres">
                     <% designers_year.each do |designer| %>
                       <%= link_to designer, class: "oeuvre-point" do %>
@@ -240,7 +240,7 @@
 
             counter.insertBefore(circle, counter.firstChild);
 
-            // Ajouter un gestionnaire de clic pour afficher les œuvres
+            // Ajouter un gestionnaire de clic pour afficher les références
             counter.addEventListener('click', function() {
                 const hiddenOeuvres = counter.querySelector('.hidden-oeuvres');
                 hiddenOeuvres.classList.toggle('visible');

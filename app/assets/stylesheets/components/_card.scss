@@ -35,15 +35,12 @@
   position: relative;
 }
 .flex-info-card {
-  transform: rotate(-6deg);
-  position: absolute;
-  width: 95%;
   display: flex;
   align-items: start;
   justify-content: space-between;
   z-index: 99;
   top: 24px;
-  padding: 0 16px;
+  padding: 24px 16px;
 }
 .flex-info-card .info-card-dark{
   scale: 0.9;
@@ -110,17 +107,6 @@
     height: 55vh;
   }
 
-  .bg-card .date-main{
-    top: 42px;
-    scale: 0.8;
-    font-size: 18px;
-  }
-  .bg-card .domaine-main{
-    top: 0cqw;
-    scale: 0.8;
-    font-size: 18px;
-  }
-
   .title-card {
     font-size: 30px;
   }
@@ -144,9 +130,6 @@
 }
 @media screen and (min-width:601px) and (max-width: 768px) {
   .img-card {
-    transform: rotate(-4deg);
-  }
-  .flex-info-card{
     transform: rotate(-4deg);
   }
   .bg-card {
@@ -203,9 +186,7 @@
 }
 @media screen and (min-width:426px) and (max-width: 600px) {
   .flex-info-card {
-    transform: rotate(0deg);
-    width: 90%;
-    padding: 0 8px;
+    padding: 16px 8px;
   }
   .img-card {
     transform: rotate(0deg);
@@ -263,9 +244,7 @@
 }
 @media screen and (max-width: 425px) {
   .flex-info-card {
-    transform: rotate(0deg);
-    width: 95%;
-    padding: 0 8px;
+    padding:16px 8px;
   }
   .img-card {
     transform: rotate(0deg)

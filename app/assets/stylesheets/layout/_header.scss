@@ -3,17 +3,30 @@
 header {
   position: fixed;
   width: 250px;
-  height: 100vh;
+  height: 100dvh;
   padding: 0 50px;
   overflow-y: scroll;
   z-index: 99;
   transition: width 0.3s ease, height 0.3s ease;
 }
+header::-webkit-scrollbar {
+  width: 6px; /* Largeur de la scrollbar */
+}
+
+header::-webkit-scrollbar-thumb {
+  background: $text-color; /* Couleur de la "poignée" de la scrollbar */
+  border-radius: 10px; /* Arrondi de la poignée */
+}
+
+header::-webkit-scrollbar-thumb:hover {
+  background: #363636; /* Couleur au survol */
+}
+
 
 // Logo
 
 .logo-header {
-  padding: 8vh 0;
+  padding: 7dvh 0;
   display: flex;
   align-items: center;
 }
@@ -68,11 +81,11 @@ header li .active {
 }
 
 .link-header {
-  margin-top: 10vh;
+  margin-top: 12dvh;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-bottom: 3.75rem;
+  padding-bottom: 20px;
   p{
     font-size: 1rem;
   }

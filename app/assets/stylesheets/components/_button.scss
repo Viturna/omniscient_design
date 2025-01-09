@@ -44,8 +44,11 @@
   border-radius: 5px;
   cursor: pointer;
 
-  &:hover {
-    opacity: 0.8;
+  &:hover{
+    background-color: #3C3C3C;
+  }
+  &:active{
+    background-color: #1B1B1B;
   }
 }
 
@@ -62,10 +65,10 @@
   transition: background-color 0.3s ease;
   cursor: pointer;
   &:hover{
-    background-color: $secondary-color;
-    svg path{
-      fill: $primary-color;
-    }
+    background-color: #3C3C3C;
+  }
+  &:active{
+    background-color: #1B1B1B;
   }
 }
 
@@ -86,10 +89,10 @@
   position: relative;
 
   &:hover{
-    background-color: $secondary-color;
-    svg path{
-      fill: $primary-color;
-    }
+    background-color: #3C3C3C;
+  }
+  &:active{
+    background-color: #1B1B1B;
   }
 }
 
@@ -395,14 +398,22 @@
     background-color: $primary-color;
     color: $secondary-color;
 
-    &:hover {
-      background-color: $secondary-color;
-      color: $primary-color;
+    &:hover{
+      background-color: #3C3C3C;
+    }
+    &:active{
+      background-color: #1B1B1B;
     }
   }
   .button-add {
-    color: $primary-color;
-    background-color: $secondary-color;
+    background-color: $primary-color;
+    color: $secondary-color;
+    &:hover{
+      background-color: #3C3C3C;
+    }
+    &:active{
+      background-color: #1B1B1B;
+    }
   }
   body.dark .button {
     color: $secondary-color;
@@ -412,7 +423,7 @@
       background-color: #4a4a4a;
     }
   }
-  body.darkk .dark {
+  body.dark .dark {
     background-color: $dark-background-color;
     color: $secondary-color;
 

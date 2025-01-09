@@ -28,7 +28,7 @@ class User < ApplicationRecord
   has_many :lists
   has_many :oeuvres
   has_many :designers
-  has_many :notifications
+  has_many :notifications, dependent: :destroy
   belongs_to :etablissement, optional: true
   has_one_attached :profile_image
   attr_accessor :remove_profile_image

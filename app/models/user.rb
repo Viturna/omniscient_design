@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   before_create :generate_referral_code
   validates :rgpd_consent, acceptance: true
-  validates :pseudo, presence: true
+  validates :pseudo, presence: true, uniqueness: { message: "Ce pseudo est déjà pris." }
+  validates :firstname, presence: true
   attribute :banned, :boolean, default: false
 
   def certified?

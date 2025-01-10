@@ -41,6 +41,27 @@ end
 
 puts "Nombre total de domaines importés : #{domaines_counter}"
 
+# Import des concepts
+csv_text_concepts = File.read(Rails.root.join('lib', 'seeds', 'concepts.csv'), encoding: 'utf-8')
+csv_concepts = CSV.parse(csv_text_concepts, headers: true)
+
+concepts_counter = 0
+
+csv_concepts.each do |row|
+  concept = Concept.find_or_create_by(
+    name: row['name']
+  )
+  if concept.save
+    puts "Concept importé : #{concept.name}"
+  else
+    puts "Erreur lors de l'importation du concept : #{concept.errors.full_messages}"
+  end
+
+  concepts_counter += 1
+end
+
+puts "Nombre total de concepts importés : #{concepts_counter}"
+
 # Import des établissements
 csv_text_etablissements = File.read(Rails.root.join('lib', 'seeds', 'etablissements.csv'), encoding: 'utf-8')
 csv_etablissements = CSV.parse(csv_text_etablissements, headers: true)

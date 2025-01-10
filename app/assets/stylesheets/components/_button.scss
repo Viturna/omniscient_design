@@ -73,12 +73,12 @@
 }
 
 //Save
-.circle-save {
+.flex-right-btn {
+  display: flex;
+  gap: 16px;
   position: absolute;
   top: 50px;
   right: 5vw;
-  width: 65px;
-  height: 65px;
   z-index: 999;
 }
 

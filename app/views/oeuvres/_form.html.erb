@@ -14,30 +14,26 @@
     <div>
       <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
     </div>
-    <div>
-      <%= form.collection_select :designer_ids,
+    <% max_designers = 3 %> <!-- Définit le nombre maximal de designers à afficher -->
+    <% (0...max_designers).each do |index| %>
+      <div>
+        <%= form.collection_select :designer_ids,
       Designer.order(:nom_designer),
       :id,
       :nom_designer,
-      { include_blank: "Aucun designer", prompt: "Lié un/une designer", selected: @cdesigner_1 },
-      { class: "form-control select2", data: { placeholder: "Lié un/une designer" }, id: "designer_1", name: "oeuvre[designer_ids][]" } %>
-    </div>
-    <div>
-      <%= form.collection_select :designer_ids,
-      Designer.order(:nom_designer),
-      :id,
-      :nom_designer,
-      { include_blank: "Aucun designer", prompt: "Lié un/une designer", selected: @cdesigner_2 },
-      { class: "form-control select2", data: { placeholder: "Lié un/une designer" }, id: "designer_2", name: "oeuvre[designer_ids][]" } %>
-    </div>
-    <div>
-      <%= form.collection_select :designer_ids,
-      Designer.order(:nom_designer),
-      :id,
-      :nom_designer,
-      { include_blank: "Aucun designer", prompt: "Lié un/une designer", selected: @cdesigner_3 },
-      { class: "form-control select2", data: { placeholder: "Lié un/une designer" }, id: "designer_3", name: "oeuvre[designer_ids][]" } %>
-    </div>
+      {
+        include_blank: "Aucun designer",
+        prompt: "Lié un/une designer",
+        selected: @selected_designers[index]
+      },
+      {
+        class: "form-control designer-select",
+        data: { placeholder: "Lié un/une designer" },
+        id: "designer_#{index + 1}",
+        name: "oeuvre[designer_ids][]"
+      } %>
+      </div>
+    <% end %>
     <div style="display:flex">
       <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
     </div>
@@ -65,6 +61,14 @@
     </div>
     <div>
       <%= form.text_area :impact_et_message, placeholder: "Impact et message (Min. 200 caractères)" %>
+    </div>
+    <div>
+      <%= form.collection_select :concept_ids,
+        Concept.order(:name),
+        :id,
+        :name,
+        { include_blank: false },
+        { class: "form-control concept-select", multiple: true, name: "oeuvre[concept_ids][]" } %>
     </div>
     <div>
       <%= form.text_field :image, placeholder: "Url de l'image" %>
@@ -114,8 +118,26 @@
 </script>
 <script>
   $(document).ready(function() {
-    $('.select2').select2({
+    // Configuration pour les designers
+    $('.designer-select').select2({
       placeholder: "Rechercher un/une designer...",
+      allowClear: true,
+      language: {
+        inputTooShort: function() {
+          return "Veuillez entrer plus de caractères...";
+        },
+        searching: function() {
+          return "Recherche en cours...";
+        },
+        noResults: function() {
+          return "Aucun résultat trouvé";
+        }
+      }
+    });
+
+    // Configuration pour les concepts
+    $('.concept-select').select2({
+      placeholder: "Rechercher des concepts...",
       allowClear: true,
       language: {
         inputTooShort: function() {

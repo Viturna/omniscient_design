@@ -191,16 +191,23 @@
 }
 
 .oeuvres-same {
-  overflow-x: scroll;
   display: flex;
-  justify-content: start;
-  margin-top: 32px;
+  overflow-x: scroll; /* Active le scroll horizontal */
+  scroll-snap-type: x mandatory; /* Active le snapping */
   gap: 24px;
+  padding-right: 32px;
+  scrollbar-width: none; /* Masque la barre de scroll (Firefox) */
+}
+
+.oeuvres-same::-webkit-scrollbar {
+  display: none; /* Masque la barre de scroll (Chrome, Safari) */
 }
 
 .oeuvre-card {
+  flex: 0 0 auto;
   width: 380px;
   height: 240px;
+  scroll-snap-align: start; 
   border: 1px solid #ccc;
   border-radius: 10px;
 
@@ -208,7 +215,6 @@
     opacity: 0.8;
   }
 }
-
 
 .oeuvre-card-image {
   width: 100%;

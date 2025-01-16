@@ -26,6 +26,9 @@
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-d1b7iqqXlFrBtTFYQXvT/WUnPM+AbFAM3/R6V9LMhI5ARngJQHfyIkNgAXb5YRaRLskF/THwxL8FjIQhUFEJWA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-NDYZhsjVj7Xgl0I1aod8sQlqYNBHvzH1Q0mEsuMS3ml8SC7XPcdMZztEP1C4QciX8MLmK4rrAtuWQZkwiOY4XQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <%= javascript_importmap_tags %>
     <%= javascript_include_tag "controllers/loader", defer: true %>
     <%= javascript_include_tag "controllers/progressBar", defer: true %>

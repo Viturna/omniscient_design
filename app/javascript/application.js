@@ -2,6 +2,7 @@ import "@hotwired/turbo-rails"
 import "controllers";
 import Rails from "@rails/ujs";
 import "stylesheets/application.scss";
+import "./controllers/select2_initializer";
 
 Rails.start();
 Turbo.start();

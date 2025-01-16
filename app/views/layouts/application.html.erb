@@ -30,7 +30,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-NDYZhsjVj7Xgl0I1aod8sQlqYNBHvzH1Q0mEsuMS3ml8SC7XPcdMZztEP1C4QciX8MLmK4rrAtuWQZkwiOY4XQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "controllers/loader", defer: true %>
+    <%= javascript_include_tag "controllers/loader", defer: true %> 
     <%= javascript_include_tag "controllers/progressBar", defer: true %>
     <!-- RS -->
     <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
@@ -62,13 +62,16 @@
         </div>
       <% end %>
     <% end %>
-    <div id="loading">
-      <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
-    </div>
+   
     <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
       <%= render 'layouts/header' %>
     <% end %>
     <main class="<%= 'main-show' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' %>">
+      <div id="loading">
+        <div class="loader-bg">      
+          <img src="<%= asset_path('loader.gif') %>" alt="Loading...">
+        </div>
+      </div>
       <div id="content">
         <%= yield %>
       </div>

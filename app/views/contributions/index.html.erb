@@ -3,7 +3,9 @@
 <% content_for :description, "Suivez vos contributions et voyez les références que vous avez ajoutées, ainsi que leur statut de validation." %>
 <style>
   .status {
-    padding: 5px 10px;
+    display: flex;
+    width: fit-content;
+    padding: 8px 10px;
     border-radius: 5px;
     color: #fff;
     &.validated {
@@ -41,11 +43,14 @@
   <% end %>
   <p class="subtitle-top">Votre contribution</p>
   <h1>Suivi des mes contributions</h1>
-  <p class="subtitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto laborum, reiciendis ipsa totam exercitationem necessitatibus laboriosam voluptate quidem sint, saepe, at dolorum itaque cupiditate! Accusantium itaque ut ratione incidunt excepturi!</p>
+  <p class="subtitle">Ici, vous pouvez consulter toutes vos participations au sein d’Omniscient Design.
+  <br>Suivez en détail, vos contenus en attente de validation, et ceux déjà publiés. Gardez un œil sur les interactions et les retours générés par vos contributions.
+  <br>Merci de contribuer à enrichir notre univers collaboratif !</p>
 </section>
 <section class="grid-1">
   <h2>Mes références ajoutées</h2>
   <% if @oeuvres.any? %>
+    <div class="table-wrapper">
     <table>
       <thead>
         <tr>
@@ -78,13 +83,15 @@
         <% end %>
       </tbody>
     </table>
+    </div>
   <% else %>
     <p>Vous n'avez ajouté aucune référence pour le moment.</p>
   <% end %>
 </section>
-<<section class="grid-1">
+<section class="grid-1">
   <h2>Mes designers ajouté(e)s</h2>
   <% if @designers.any? %>
+    <div class="table-wrapper">
     <table>
       <thead>
         <tr>
@@ -117,6 +124,7 @@
         <% end %>
       </tbody>
     </table>
+    </div>
   <% else %>
     <p>Vous n'avez ajouté aucun designer pour le moment.</p>
   <% end %>

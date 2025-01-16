@@ -192,15 +192,22 @@
 
 .oeuvres-same {
   display: flex;
-  overflow-x: scroll; /* Active le scroll horizontal */
-  scroll-snap-type: x mandatory; /* Active le snapping */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
   gap: 24px;
   padding-right: 32px;
-  scrollbar-width: none; /* Masque la barre de scroll (Firefox) */
+}
+.oeuvres-same::-webkit-scrollbar {
+  height: 6px;
 }
 
-.oeuvres-same::-webkit-scrollbar {
-  display: none; /* Masque la barre de scroll (Chrome, Safari) */
+.oeuvres-same::-webkit-scrollbar-thumb {
+  background: $text-color;
+  border-radius: 10px;
+}
+
+.oeuvres-same::-webkit-scrollbar-thumb:hover {
+  background: #363636; 
 }
 
 .oeuvre-card {

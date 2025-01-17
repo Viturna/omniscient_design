@@ -1,5 +1,6 @@
 class OeuvresController < ApplicationController
   include RecaptchaHelper
+  before_action :verify_authenticity_token
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
   before_action :authenticate_user!, except: [:index, :show, :load_more, :search]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
@@ -138,6 +139,7 @@ class OeuvresController < ApplicationController
     else
       redirect_to validation_path, alert: "Une erreur est survenue lors du refus de la référence."
     end
+     Rails.logger.info "CSRF token reçu : #{request.headers['X-CSRF-Token']}"
   end
 
   # DELETE /oeuvres/1 or /oeuvres/1.json

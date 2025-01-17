@@ -284,7 +284,6 @@
       </div>
       <div class="modal-body">
         <%= form_with url: "", method: :patch, id: "rejectForm" do |form| %>
-          <%= csrf_meta_tags %>
           <div class="form-group">
             <%= form.label :rejection_reason, "Raison du refus" %>
             <%= form.text_area :rejection_reason, class: "form-control", id: "rejectionReasonField" %>

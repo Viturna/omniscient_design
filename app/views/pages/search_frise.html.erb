@@ -94,15 +94,22 @@
     <h2 class="title">Designers</h2>
     <%= form_tag(search_frise_path, method: :get) do %>
       <p class="filter-title medium">Filtres :</p>
-      <div class="filter-box">
-        <label for="start_year">De</label>
-        <%= select_tag :start_year_designer, options_for_select((1830..Date.current.year).to_a, @start_year_designer), id: 'start_year' %>
-        <label for="end_year">À</label>
-        <%= select_tag :end_year_designer, options_for_select((1830..Date.current.year).to_a, @end_year_designer), id: 'end_year' %>
-        <%# <label for="country_id">| Pays</label> %>
-        <%# <%= select_tag :country_id, options_from_collection_for_select(@countries, :id, :name, @country_id), id: 'country_id' %>
-        <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
-      </div>
+     <div class="filter-box">
+  <label for="start_year">De</label>
+  <%= select_tag :start_year_designer, options_for_select((1830..Date.current.year).to_a, @start_year_designer), id: 'start_year' %>
+  
+  <label for="end_year">À</label>
+  <%= select_tag :end_year_designer, options_for_select((1830..Date.current.year).to_a, @end_year_designer), id: 'end_year' %>
+  
+  <label for="designer_domaine_id">| Domaine</label>
+  <%= select_tag :designer_domaine_id, options_from_collection_for_select(@domaines, :id, :domaine, @designer_domaine_id), id: 'designer_domaine_id' %>
+  
+  <label for="country_id">| Pays</label>
+  <%= select_tag :country_id, options_from_collection_for_select(@countries, :id, :country, @country_id), id: 'country_id' %>
+  
+  <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
+</div>
+
     <% end %>
     <div class="timeline">
       <% @timeline_years_2.each do |year| %>

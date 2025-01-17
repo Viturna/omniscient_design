@@ -45,39 +45,38 @@ class PagesController < ApplicationController
   end
   def search_frise
     @current_page = 'recherche'
-    @oeuvres = Oeuvre.where(validation: true).shuffle
-    @designers = Designer.where(validation: true).shuffle
+    
+    # Chargement initial des œuvres et designers validés
+    @oeuvres = Oeuvre.where(validation: true)
+    @designers = Designer.where(validation: true)
+    
+    # Plages d'années pour la frise
+    @timeline_years = (1000..2000).to_a
+    @timeline_years_2 = (1900..2000).to_a
 
-    # Date oeuvres
+    # Récupération des paramètres pour les filtres
     @start_year_oeuvre = params[:start_year_oeuvre].to_i.positive? ? params[:start_year_oeuvre].to_i : 1880
     @end_year_oeuvre = params[:end_year_oeuvre].to_i.positive? ? params[:end_year_oeuvre].to_i : Date.current.year
-    # Date designers
     @start_year_designer = params[:start_year_designer].to_i.positive? ? params[:start_year_designer].to_i : 1830
     @end_year_designer = params[:end_year_designer].to_i.positive? ? params[:end_year_designer].to_i : Date.current.year
-
-    # Par défaut, tous les domaines sont affichés
     @domaine_id = params[:domaine_id].present? ? params[:domaine_id].to_i : nil
-    # Par défaut, tous les pays sont affichés
     @country_id = params[:country_id].present? ? params[:country_id].to_i : nil
+    @designer_domaine_id = params[:designer_domaine_id].present? ? params[:designer_domaine_id].to_i : nil
 
-    # Récupérer toutes les années distinctes avec des œuvres
-    @timeline_years = (@start_year_oeuvre..@end_year_oeuvre).to_a
-    # Récupérer toutes les années distinctes avec des designers
-    @timeline_years_2 = (@start_year_designer..@end_year_designer).to_a
+    # Filtrage des œuvres
+    @oeuvres_filtered = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", @start_year_oeuvre, @end_year_oeuvre)
+    @oeuvres_filtered = @oeuvres_filtered.where(domaine_id: @domaine_id) if @domaine_id.present?
 
-    # Filtrer les œuvres par année, domaine et pays si nécessaire
-    @oeuvres_filtered = @oeuvres.select do |oeuvre|
-      oeuvre.date_oeuvre.to_i.between?(@start_year_oeuvre, @end_year_oeuvre) &&
-        (oeuvre.domaine_id == @domaine_id || @domaine_id.nil?)
+    # Filtrage des designers
+    @designers_filtered = @designers.where("date_naissance BETWEEN ? AND ?", @start_year_designer, @end_year_designer)
+    if @country_id.present?
+      @designers_filtered = @designers_filtered.joins(:countries).where(countries: { id: @country_id })
+    end
+    if @designer_domaine_id.present?
+      @designers_filtered = @designers_filtered.joins(:domaines).where(domaines: { id: @designer_domaine_id })
     end
 
-    # Filtrer les designers par année et pays si nécessaire
-    @designers_filtered = @designers.select do |designer|
-      designer.date_naissance.to_i.between?(@start_year_designer, @end_year_designer) &&
-        (designer.country_ids == @country_ids || @country_ids.nil?)
-    end
-
-    # Récupérer tous les pays pour les options de sélection
+    # Options pour les listes déroulantes de filtres
     @countries = Country.order(:country).to_a.unshift(Country.new(id: nil, country: "Tous les pays"))
     @domaines = Domaine.all.to_a.unshift(Domaine.new(id: nil, domaine: "Tous les domaines"))
   end

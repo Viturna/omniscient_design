@@ -124,9 +124,9 @@
 
 .circle-back {
   background-color: rgba(32, 32, 32, 0.4);
-  width: 65px;
-  height: 65px;
   border-radius: 50%;
+  width: 75px;
+  height: 75px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,13 +154,19 @@
 }
 @media screen and (min-width:601px) and (max-width: 1024px) {
   .circle {
-    width: 55px;
-    height: 55px;
+    width: 60px;
+    height: 60px;
     svg{
-      scale: 0.7;
+      scale: 0.8;
     }
   }
-
+  .circle-back{
+    width: 60px;
+    height: 60px;
+    svg{
+      scale: 0.8;
+    }
+  }
   .circle-notif {
     width: 55px;
     height: 55px;
@@ -202,7 +208,7 @@
     height: 65px;
 
     svg {
-      scale: 0.7;
+      scale: 0.8;
     }
   }
   .circle-notif {
@@ -221,7 +227,7 @@
     height: 65px;
 
     svg {
-      scale: 0.85;
+      scale: 0.8;
     }
   }
 
@@ -252,7 +258,7 @@
     height: 65px;
 
     svg {
-      scale: 0.7;
+      scale: 0.8;
     }
   }
   .circle-notif {
@@ -270,7 +276,7 @@
     height: 65px;
 
     svg {
-      scale: 0.85;
+      scale: 0.8;
     }
   }
 
@@ -290,6 +296,10 @@
 }
 
 @media screen and (max-width: 375px) {
+  .flex-right-btn {
+    gap: 4px;
+  }
+  
   .button {
     width: 100%;
     padding: 20px 15px;
@@ -301,7 +311,7 @@
     height: 60px;
 
     svg {
-      scale: 0.7;
+      scale: 0.8;
     }
   }
   .circle-notif {

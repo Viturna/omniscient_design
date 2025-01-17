@@ -87,6 +87,7 @@ class OeuvresController < ApplicationController
   def new
     @oeuvre = Oeuvre.new
     @current_page = 'add_elements'
+    @selected_designers = [] 
   end
 
   # GET /oeuvres/1/edit

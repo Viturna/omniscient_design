@@ -140,13 +140,13 @@ csv_designers.each do |row|
   (1..2).each do |i| # Si vous avez deux colonnes de pays
     country_column = row["country_#{i}"]
     if country_column.present?
-      country = Country.find_or_create_by(country: country_column)
-      countries << country
+      country = Country.find_by(country: country_column) # On cherche seulement
+      countries << country if country # Ajout uniquement si le pays existe
     end
   end
 
   # Associer les pays au designer via la table de jointure
-  designer.countries = countries
+  designer.countries = countries.compact 
 
   # Créez un tableau vide pour les domaines
   domaines = []

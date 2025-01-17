@@ -38,7 +38,7 @@
   <div class="flex-title">
     <%= link_to search_oeuvres_path do %>
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+        <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="#202020"/>
       </svg>
     <% end %>
     <h1>Frise chronologique</h1>
@@ -52,8 +52,18 @@
         <%= select_tag :start_year_oeuvre, options_for_select((1880..Date.current.year).to_a, @start_year_oeuvre), id: 'start_year' %>
         <label for="end_year">À</label>
         <%= select_tag :end_year_oeuvre, options_for_select((1880..Date.current.year).to_a, @end_year_oeuvre), id: 'end_year' %>
-        <label for="domaine_id">| Domaine</label>
-        <%= select_tag :domaine_id, options_from_collection_for_select(@domaines, :id, :domaine, @domaine_id), id: 'domaine_id' %>
+        <label for="domaine_id">| Domaines</label>
+        <%= collection_select(
+          nil,
+          :domaine_id,
+          @domaines,
+          :id,
+          :domaine,
+          { include_blank: false },
+          { id: 'domaine_id', class: 'select2', multiple: true } 
+        ) %>
+
+
         <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
       </div>
     <% end %>
@@ -102,11 +112,23 @@
   <%= select_tag :end_year_designer, options_for_select((1830..Date.current.year).to_a, @end_year_designer), id: 'end_year' %>
   
   <label for="designer_domaine_id">| Domaine</label>
-  <%= select_tag :designer_domaine_id, options_from_collection_for_select(@domaines, :id, :domaine, @designer_domaine_id), id: 'designer_domaine_id' %>
-  
+  <%= select_tag :designer_domaine_id, 
+    options_from_collection_for_select(@domaines, :id, :domaine, @designer_domaine_id),
+    id: 'designer_domaine_id',
+    class: 'form-control select2',
+    multiple: true,
+    include_blank: false
+  %>
   <label for="country_id">| Pays</label>
-  <%= select_tag :country_id, options_from_collection_for_select(@countries, :id, :country, @country_id), id: 'country_id' %>
-  
+  <%= select_tag :country_id, 
+    options_from_collection_for_select(@countries, :id, :country, @country_id),
+    id: 'country_id',
+    class: 'select2',
+    multiple: true,
+    include_blank: false
+  %>
+
+
   <%= submit_tag 'Filtrer', class: 'filter-button dark' %>
 </div>
 
@@ -259,4 +281,24 @@
         }
     });
   });
+</script>
+<script>
+  $(document).ready(function() {
+  $('.select2').select2({
+    placeholder: 'Sélectionnez une ou plusieurs options',
+    allowClear: true,
+     language: {
+        inputTooShort: function() {
+          return "Veuillez entrer plus de caractères...";
+        },
+        searching: function() {
+          return "Recherche en cours...";
+        },
+        noResults: function() {
+          return "Aucun résultat trouvé";
+        }
+      }
+  });
+});
+
 </script>

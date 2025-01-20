@@ -25,6 +25,7 @@ class User < ApplicationRecord
 
   has_one :referral, foreign_key: :referrer_id
   has_many :referees, through: :referrals, source: :referee
+  
   has_many :bug_reports
   has_many :lists
   has_many :oeuvres

@@ -84,8 +84,43 @@
         <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
       </svg>
     </div>
-    <div class="flex-title-popup">
+    <div class="popup-inner">
       <p class="title-popup">Règles de parrainage</p>
+      <p class="subtitle-popup">Règles de base</p>
+      <p>1. Qui peut parrainer ?<br>
+      &nbsp;&nbsp;• Tout utilisateur inscrit depuis au moins 7 jours peut devenir parrain.<br>
+      &nbsp;&nbsp;• Les parrains doivent avoir une adresse e-mail vérifié.<br>
+      <br>
+      2. Qui peut être parrainé ?<br>
+      &nbsp;&nbsp;• Les filleuls doivent être de nouveaux utilisateurs (Compte créé depuis maximum 30j).<br>
+      &nbsp;&nbsp;• Un utilisateur ne peut être parrainé qu'une seule fois.</p>
+      <p class="subtitle-popup">Avantages pour les parrains</p>
+      <p>1. Récompenses pour chaque parrainage réussi :<br>
+      &nbsp;&nbsp;• Un parrain reçoit une récompense (5% de réduction sur son abonnement) une fois que le filleul remplit les conditions.<br>
+      &nbsp;&nbsp;• Les récompenses sont cumulables.<br>
+      <br>
+      2. Récompenses supplémentaires :<br>
+      &nbsp;&nbsp;• Les parrains atteignant un certain nombre de filleuls actifs (5 filleuls) obtiennent des bonus supplémentaires.</p>
+      <p class="subtitle-popup">Avantages pour les filleuls</p>
+      <p>Réduction ou bonus de bienvenue :<br>
+      &nbsp;&nbsp;• Chaque filleul bénéficie d’un cadeau exclusif à l’inscription grâce au code parrainage.<br>
+      &nbsp;&nbsp;• Cette offre est valable uniquement lors de la première inscription.</p>
+      <p class="subtitle-popup">Conditions et limitations</p>
+      <p>1. Période de validité des codes :<br>
+      &nbsp;&nbsp;• Les codes de parrainage sont valables pendant une période illimitée.<br>
+      <br>
+      2. Conditions pour valider un parrainage :<br>
+      &nbsp;&nbsp;• Le filleul doit remplir une action spécifique pour activer le parrainage (valider son compte).<br>
+      <br>
+      3. Limite de parrainages :<br>
+      &nbsp;&nbsp;• Les filleuls ne peuvent pas utiliser plus d’un code parrainage à la fois.</p>
+      <p class="subtitle-popup">Sanctions et prévention des abus</p>
+      <p>1. Détection des abus :<br>
+      &nbsp;&nbsp;• Toute tentative de fraude (ex. : auto-parrainage, création de comptes multiples) entraînera la suspension des avantages liés au parrainage.<br>
+      &nbsp;&nbsp;• Les parrains identifiés comme abusifs seront exclus du programme.<br>
+      <br>
+      2. Validation des comptes :<br>
+      &nbsp;&nbsp;• Les comptes filleuls doivent être authentiques et actifs pour que les parrainages soient validés.</p>
     </div>
   </div>
 </div>
@@ -96,7 +131,7 @@
     const popup = document.getElementById("popup");
 
     openPopupButton.addEventListener("click", function() {
-      popup.style.display = "block";
+      popup.style.display = "flex";
     });
 
     closePopupButton.addEventListener("click", function() {

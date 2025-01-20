@@ -93,23 +93,25 @@ class PagesController < ApplicationController
   end
   def parrainage_filleul
     @user = current_user
-
+  
     if request.post?
       referral_code = params[:referral_code]
-
+  
       if referral_code.blank?
         flash[:error] = "Veuillez fournir un code de parrainage."
         redirect_to parrainage_filleul_path and return
       end
-
+  
       # Trouver le parrain correspondant au code
       referrer = User.find_by(referral_code: referral_code)
-
+  
       if referrer
         if referrer == @user
           flash[:error] = "Vous ne pouvez pas être votre propre parrain."
         elsif Referral.exists?(referrer: referrer, referee: @user)
           flash[:notice] = "Vous êtes déjà lié à ce parrain."
+        elsif @user.created_at < 30.days.ago
+          flash[:error] = "Votre compte a plus de 30 jours. Vous ne pouvez pas utiliser un code de parrainage."
         else
           begin
             # Créer la relation de parrainage
@@ -125,10 +127,11 @@ class PagesController < ApplicationController
       else
         flash[:error] = "Code de parrainage invalide."
       end
-
+  
       redirect_to parrainage_path
     end
   end
+  
   def suivi_references
     @current_page = 'profil'
     @suivis = Suivi.includes(:user).all

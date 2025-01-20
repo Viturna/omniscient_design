@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_09_203648) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_19_181527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,19 +50,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_09_203648) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_bug_reports_on_user_id"
-  end
-
-  create_table "concepts", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "concepts_oeuvres", id: false, force: :cascade do |t|
-    t.bigint "oeuvre_id", null: false
-    t.bigint "concept_id", null: false
-    t.index ["concept_id", "oeuvre_id"], name: "index_concepts_oeuvres_on_concept_id_and_oeuvre_id"
-    t.index ["oeuvre_id", "concept_id"], name: "index_concepts_oeuvres_on_oeuvre_id_and_concept_id"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -237,6 +224,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_09_203648) do
     t.datetime "updated_at", null: false
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "notions", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "notions_oeuvres", id: false, force: :cascade do |t|
+    t.bigint "oeuvre_id", null: false
+    t.bigint "notion_id", null: false
+    t.index ["notion_id", "oeuvre_id"], name: "index_notions_oeuvres_on_notion_id_and_oeuvre_id"
+    t.index ["oeuvre_id", "notion_id"], name: "index_notions_oeuvres_on_oeuvre_id_and_notion_id", unique: true
   end
 
   create_table "oeuvres", force: :cascade do |t|

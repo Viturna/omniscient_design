@@ -153,6 +153,11 @@
           <span><%= domaine.domaine %></span>
         </div>
       <% end %>
+        <div class="info-card-dark info-header-show">
+          <span>
+            <%= designer.countries.map { |country| country_flag(country.country_numeric) }.join(' ') %>
+          </span>
+        </div>
     </div>
     <div class="header-top">
       <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
@@ -177,6 +182,9 @@
             <%= domaine.domaine %>
           </div>
         <% end %>
+        <div class="info-card">
+           <%= designer.countries.map { |country| country_flag(country.country_numeric) }.join(' ') %>
+        </div>
       </div>
     </div>
   </div>

@@ -76,6 +76,11 @@
       <%= link_to "Designers", designers_path %> |
       <%= link_to "Références", oeuvres_path, class: "active" %>
     </p>
+
+    <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" id="openPopup" class="info-beta">
+      <path d="M16.3293 0.330078C25.1603 0.330078 32.3301 7.49987 32.3301 16.3293C32.3301 25.1603 25.1603 32.3301 16.3293 32.3301C7.49987 32.3301 0.330078 25.1603 0.330078 16.3293C0.330078 7.49987 7.49987 0.330078 16.3293 0.330078ZM16.3293 13.1333C15.6667 13.1333 15.129 13.671 15.129 14.3336V23.1358C15.129 23.7983 15.6667 24.3361 16.3293 24.3361C16.9918 24.3361 17.5296 23.7983 17.5296 23.1358V14.3336C17.5296 13.671 16.9918 13.1333 16.3293 13.1333ZM16.3261 8.33208C15.4427 8.33208 14.7257 9.04906 14.7257 9.93248C14.7257 10.8159 15.4427 11.5329 16.3261 11.5329C17.2095 11.5329 17.9265 10.8159 17.9265 9.93248C17.9265 9.04906 17.2095 8.33208 16.3261 8.33208Z" fill="#202020"/>
+    </svg>
+
     <div class="box-card" id="boxCard">
       <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
     </div>
@@ -201,6 +206,90 @@
       }
 
       setTimeout(() => (isScrolling = false), 100);
+    });
+  });
+</script>
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <div class="top-popup">
+      <svg class="close-popup" id="closePopupSave" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+      </svg>
+    </div>
+    <div class="popup-inner">
+      <p class="title-popup">Bêta Omniscient design</p>
+      <p>Nous sommes ravis de vous accueillir dans cette phase importante de notre projet. La bêta est une étape cruciale pour tester le site, identifier les améliorations nécessaires et construire une expérience qui répond à vos attentes.</p>
+      <div class="popup-decoration">
+        <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
+      </div>
+      <p class="subtitle-popup">Découvrir le projet</p>
+      <p>Omniscient Design est né de la volonté de centraliser, sur une plateforme unique, toutes les connaissances liées au monde du design. Qu'il s'agisse de design d'objet, de stylisme ou de scénographie, Omniscient Design aspire à rendre chaque travail, chaque projet et chaque référence aussi accessibles et complets que possible.
+      <br><br>
+      Notre mission est de favoriser le partage, l'exploration et l'enrichissement des savoirs dans tous les domaines du design, en mettant à disposition des ressources exhaustives et facilement consultables, que ce soit pour les étudiants, les professionnels ou les passionnés.</p>
+      <%= link_to presentation_url, class: "button dark" do %>
+        En savoir plus
+      <%end%>
+       <p class="subtitle-popup">Informations sur la bêta</p>
+      <p>1. Phase de test <br>
+      Nous testons activement le site. Cela signifie que des bugs ou des erreurs peuvent survenir. Si vous en repérez, n'hésitez pas à nous les signaler.<br><br>
+      2. Mises à jour fréquentes <br>
+      Nous déployons régulièrement des corrections et des nouvelles fonctionnalités. Vous pouvez suivre l'évolution du site grâce à nos notes de mise à jour.<br><br>
+      3. Réinitialisation possible <br>
+      Pendant la bêta, il est possible que certains comptes, listes ou données soient réinitialisés. Nous nous excusons d’avance pour la gêne occasionnée et vous remercions pour votre compréhension.</p>
+        <%= link_to changelog_url, class: "button dark" do %>
+        Voir les mises à jour
+        <%end%>
+      <div class="popup-decoration">
+        <svg width="186" height="46" viewBox="0 0 186 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_3317_340)">
+          <path d="M23 0L30.0303 15.6304L46 17.8365L34.3773 29.0068L37.214 46L23 37.2715L8.78408 46L11.6227 29.0068L0 17.8365L15.9697 15.6304L23 0Z" fill="white"/>
+          </g>
+          <g clip-path="url(#clip1_3317_340)">
+          <path d="M93 0L100.03 15.6304L116 17.8365L104.377 29.0068L107.214 46L93 37.2715L78.7841 46L81.6227 29.0068L70 17.8365L85.9697 15.6304L93 0Z" fill="white"/>
+          </g>
+          <g clip-path="url(#clip2_3317_340)">
+          <path d="M163 0L170.03 15.6304L186 17.8365L174.377 29.0068L177.214 46L163 37.2715L148.784 46L151.623 29.0068L140 17.8365L155.97 15.6304L163 0Z" fill="white"/>
+          </g>
+          <defs>
+          <clipPath id="clip0_3317_340">
+          <rect width="46" height="46" fill="white"/>
+          </clipPath>
+          <clipPath id="clip1_3317_340">
+          <rect width="46" height="46" fill="white" transform="translate(70)"/>
+          </clipPath>
+          <clipPath id="clip2_3317_340">
+          <rect width="46" height="46" fill="white" transform="translate(140)"/>
+          </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <p class="subtitle-popup">Vos feedbacks</p>
+      <p>En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+        <%= link_to new_feedback_url, class: "button dark" do %>
+        Donner votre avis
+        <%end%>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const openPopupButton = document.getElementById("openPopup");
+    const closePopupButton = document.getElementById("closePopupSave");
+    const popup = document.getElementById("popup");
+
+    openPopupButton.addEventListener("click", function() {
+      popup.style.display = "flex";
+    });
+
+    closePopupButton.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
+
+    // Fermer la popup en cliquant en dehors de celle-ci
+    window.addEventListener("click", function(event) {
+      if (event.target === popup) {
+        popup.style.display = "none";
+      }
     });
   });
 </script>

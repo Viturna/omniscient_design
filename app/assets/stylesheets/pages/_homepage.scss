@@ -21,7 +21,7 @@
 }
 .nav-home {
   position: fixed;
-  z-index: 9999;
+  z-index: 99;
   margin-top: 132px;
   .active {
     font-weight: 500;
@@ -44,7 +44,12 @@
   bottom: 45px;
   gap: 24px;
 }
-
+.info-beta{
+  position: fixed;
+  right: 10vw;
+  margin-top: 132px;
+  cursor: pointer;
+}
 @media screen and (min-width:769px) and (max-width: 1024px) {
 
   .nav-home a {

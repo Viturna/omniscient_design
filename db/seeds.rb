@@ -41,26 +41,26 @@ end
 
 puts "Nombre total de domaines importés : #{domaines_counter}"
 
-# Import des concepts
-csv_text_concepts = File.read(Rails.root.join('lib', 'seeds', 'concepts.csv'), encoding: 'utf-8')
-csv_concepts = CSV.parse(csv_text_concepts, headers: true)
+# Import des notions
+csv_text_notions = File.read(Rails.root.join('lib', 'seeds', 'notions.csv'), encoding: 'utf-8')
+csv_notions = CSV.parse(csv_text_notions, headers: true)
 
-concepts_counter = 0
+notions_counter = 0
 
-csv_concepts.each do |row|
-  concept = Concept.find_or_create_by(
+csv_notions.each do |row|
+  notion = Notion.find_or_create_by(
     name: row['name']
   )
-  if concept.save
-    puts "Concept importé : #{concept.name}"
+  if notion.save
+    puts "notions importé : #{notion.name}"
   else
-    puts "Erreur lors de l'importation du concept : #{concept.errors.full_messages}"
+    puts "Erreur lors de l'importation du notion : #{notion.errors.full_messages}"
   end
 
-  concepts_counter += 1
+  notions_counter += 1
 end
 
-puts "Nombre total de concepts importés : #{concepts_counter}"
+puts "Nombre total de notions importés : #{notions_counter}"
 
 # Import des établissements
 csv_text_etablissements = File.read(Rails.root.join('lib', 'seeds', 'etablissements.csv'), encoding: 'utf-8')
@@ -191,7 +191,7 @@ csv_oeuvres.each do |row|
     presentation_generale: row['presentation_generale'],
     contexte_historique: row['contexte_historique'],
     materiaux_et_innovations_techniques: row['materiaux_et_innovations_techniques'],
-    concept_et_inspiration: row['concept_et_inspiration'],
+    notion_et_inspiration: row['notion_et_inspiration'],
     dimension_esthetique: row['dimension_esthetique'],
     impact_et_message: row['impact_et_message'],
     image: row['image']

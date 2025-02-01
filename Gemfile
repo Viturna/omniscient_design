@@ -92,7 +92,6 @@ gem 'sass-rails'
 gem 'friendly_id', '~> 5.5.0'
 gem 'sitemap_generator'
 gem 'whenever', require: false
-gem 'sprockets-rails'
 gem 'ruby-vips'
 gem 'aws-sdk-s3', require: false
 
@@ -100,3 +99,4 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'select2-rails'
 gem 'sendgrid-ruby'
 gem 'responsive_image_tag'
+

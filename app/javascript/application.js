@@ -3,6 +3,8 @@ import "controllers";
 import Rails from "@rails/ujs";
 import "stylesheets/application.scss";
 import "./controllers/select2_initializer";
+// Inclure cookieconsent.js depuis un CDN
+import "https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.1/cookieconsent.min.js";
 
 Rails.start();
 Turbo.start();
@@ -14,7 +16,7 @@ window.jQuery = $;
 // Code pour la gestion des champs dynamiques
 document.addEventListener('turbo:load', () => {
   // Gestion des événements dynamiques (Turbo remplace 'DOMContentLoaded')
-  document.addEventListener('click', function(event) {
+  document.addEventListener('click', function (event) {
     if (event.target.matches('.add_fields')) {
       event.preventDefault();
       const time = new Date().getTime();

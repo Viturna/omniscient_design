@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :set_unread_notifications_count
   before_action :check_if_banned
   before_action :configure_permitted_parameters, if: :devise_controller?
+  protect_from_forgery with: :exception
   def set_theme
     theme = params[:theme]
     cookies[:theme] = theme

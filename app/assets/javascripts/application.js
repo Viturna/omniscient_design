@@ -3,9 +3,10 @@
 //= require_tree .
 //= require rails-ujs
 //= require select2
+//= require cookies_eu
 
-document.addEventListener("DOMContentLoaded", function() {
-  document.addEventListener('click', function(event) {
+document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener('click', function (event) {
     if (event.target.matches('.add_fields')) {
       event.preventDefault();
       var time = new Date().getTime();

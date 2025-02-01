@@ -1,0 +1,8 @@
+cookies_eu:
+  position: bottom
+  message: "Ce site utilise des cookies pour améliorer votre expérience."
+  button_text: "J'accepte"
+  learn_more: "/politique-de-confidentialite"  # Lien vers la politique de confidentialité
+  expire_after: 365  # Durée de validité du consentement (en jours)
+  hide_after_accepted: true  # Masquer le bandeau après acceptation
+  analytics_enabled: true  # Permet d'activer Google Analytics après acceptation

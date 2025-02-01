@@ -100,3 +100,4 @@ gem 'select2-rails'
 gem 'sendgrid-ruby'
 gem 'responsive_image_tag'
 
+gem 'cookies_eu'

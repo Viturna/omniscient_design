@@ -46,43 +46,22 @@
     <%= javascript_include_tag "controllers/loader", defer: true %> 
     <%= javascript_include_tag "controllers/progressBar", defer: true %>
     <%# Google analytics %>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3"></script>
+   
     <script>
-      window.addEventListener('load', function() {
-        window.cookieconsent.initialise({
-          "palette": {
-            "popup": {
-              "background": "#000"
-            },
-            "button": {
-              "background": "#f1d600"
-            }
-          },
-          "theme": "classic",
-          "content": {
-            "message": "Nous utilisons des cookies pour améliorer votre expérience.",
-            "dismiss": "J'accepte",
-            "link": "En savoir plus",
-            "href": "/politique-de-confidentialite"
-          },
-          onStatusChange: function(status) {
-            if (status === 'allow') {
-              // Chargez Google Analytics ici
-              var script = document.createElement('script');
-              script.src = 'https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3';
-              document.head.appendChild(script);
-              script.onload = function() {
-                window.dataLayer = window.dataLayer || [];
-                function gtag() {
-                  dataLayer.push(arguments);
-                }
-                gtag('js', new Date());
-                gtag('config', 'G-WVD06EPJC3');
-              };
-            }
-          }
-        });
-      });
+      $(document).on('cookiesEu:accepted', function() {
+      var script = document.createElement('script');
+      script.src = 'ttps://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3';
+      document.head.appendChild(script);
+      
+      script.onload = function() {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-WVD06EPJC3');
+      };
+    });
 
     </script>
     <!-- RS -->

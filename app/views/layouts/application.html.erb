@@ -45,6 +45,15 @@
     <%= javascript_importmap_tags %>
     <%= javascript_include_tag "controllers/loader", defer: true %> 
     <%= javascript_include_tag "controllers/progressBar", defer: true %>
+    <%# Google analytics %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-WVD06EPJC3');
+    </script>
     <!-- RS -->
     <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
     <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">

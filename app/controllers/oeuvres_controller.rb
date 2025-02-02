@@ -103,6 +103,9 @@ class OeuvresController < ApplicationController
     @oeuvre.user = current_user
 
     if @oeuvre.save
+      if params[:oeuvre][:image].present?
+        @oeuvre.image.attach(params[:oeuvre][:image])
+      end
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
       flash[:success] = "Référence créée avec succès."
@@ -178,6 +181,21 @@ class OeuvresController < ApplicationController
     end
   end
 
+  def check_existence
+    oeuvre = Oeuvre.find_by("LOWER(nom_oeuvre) = ?", params[:nom_oeuvre].downcase)
+  
+    if oeuvre
+      if oeuvre.validated?
+        render json: { exists: true, edit_path: nil }
+      else
+        render json: { exists: true, edit_path: edit_oeuvre_path(oeuvre) }
+      end
+    else
+      render json: { exists: false }
+    end
+  end
+  
+  
   private
 
   def create_notification(oeuvre)

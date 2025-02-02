@@ -1,0 +1,26 @@
+.progress-container-form {
+    margin-top: 48px;
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background: #E9E9E9;
+    border: #FFF 2px solid;
+    border-radius: 35px;
+    overflow: hidden;
+}
+
+.progress-bar-form {
+    height: 100%;
+    background: #202020;
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+}
+
+.progress-percent-form {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #202020;
+}

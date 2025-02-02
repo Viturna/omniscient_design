@@ -1,0 +1,10 @@
+<div class="log" style="background-color:#202020; color:#FFF; min-height:100vh;">
+  <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
+  <section class="box-log">
+    <h1>Confirmez votre email</h1>
+    <div class="form">
+        <p>Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour activer votre compte. <br>Si vous ne recevez pas l'email, vérifiez votre dossier spam ou <%= link_to 'demandez un nouvel envoi', new_user_confirmation_path %>.</p>
+        <%= link_to "Retour à l'accueil", root_path, class: "button large" %>
+    </div>
+  </section>
+</div>

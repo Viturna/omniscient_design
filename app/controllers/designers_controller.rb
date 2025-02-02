@@ -157,6 +157,19 @@ class DesignersController < ApplicationController
     render json: { error: "Une erreur s'est produite." }, status: 500
   end
 
+  def check_existence
+    designer = Designer.find_by("LOWER(nom_designer) = ?", params[:nom_designer].downcase)
+  
+    if designer
+      if designer.validated?
+        render json: { exists: true, edit_path: nil }
+      else
+        render json: { exists: true, edit_path: edit_designer_path(designer) }
+      end
+    else
+      render json: { exists: false }
+    end
+  end
   private
 
   def update_suivi_references_emises(user)

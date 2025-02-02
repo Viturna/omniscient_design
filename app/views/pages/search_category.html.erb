@@ -1,55 +1,6 @@
 <% content_for :title, "Recherche par catégories - Omniscient Design" %>
 <% content_for :description, "Recherche et trouve nos références en les triant par domaines du design : stylisme, graphisme, objets, art, architecture, métiers d'art, tout y est !" %>
-<style>
-  /* Card */
-  .flex-card-list{
-    margin-top: 32px;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 55px;
-  }
-  .card-list{
-    overflow: hidden;
-    width: 17.5vw;
-    height: 17.5vw;
-    display: flex;
-    align-items: end;
-    border: 1px solid #E9E9E9;
-    border-radius:5px;
-    position: relative;
-  }
-  .overlay {
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 64px;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
 
-  .overlay svg {
-  scale: 1.5;
-  }
-  .default-overlay {
-     border-radius:5px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.5); /* Opacité par défaut */
-  }
-    .card-title{
-  position: relative;
-  font-weight: 500;
-  font-size: clamp(1.25rem, 1.05rem + 0.4vw, 1.5rem);
-  width: 60%;
-  color:#FFF;
-  padding: 20px;
-   }
-</style>
 <section class="top-bar-search">
   <%= link_to search_oeuvres_path, class: "search-link" do %>
     <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
@@ -121,7 +72,7 @@
             <% end %>
             <div class="default-overlay"></div>
             <p class="card-title"><%= oeuvre.nom_oeuvre %></p>
-            <div class="overlay" style="display: none;">
+            <div class="overlay-card-ref" style="display: none;">
               <%= link_to oeuvre_path(oeuvre.id), class: "delete-flex" do %>
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="white"/>
@@ -141,13 +92,13 @@
     cardList.forEach(function(card) {
       card.addEventListener('click', function() {
         // Cacher tous les overlays
-        const allOverlays = document.querySelectorAll('.overlay');
+        const allOverlays = document.querySelectorAll('.overlay-card-ref');
         allOverlays.forEach(function(overlay) {
           overlay.style.display = 'none';
         });
 
         // Afficher l'overlay de la carte cliquée
-        const overlay = this.querySelector('.overlay');
+        const overlay = this.querySelector('.overlay-card-ref');
         overlay.style.display = 'flex';
       });
     });

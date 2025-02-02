@@ -7,7 +7,90 @@
   <p class="subtitle-top">Votre contribution</p>
   <h1>Ajouter une référence</h1>
   <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
+  <div class="progress-container-form">
+    <div class="progress-bar-form"></div>
+    <span class="progress-percent-form">0%</span>
+  </div>
 </section>
-<section class="grid-1" style="background-color:#202020; color:#FFF;">
+<section class="grid-1" style="background-color:#202020; color:#FFF; min-height: 100vh;">
   <%= render "form", oeuvre: @oeuvre %>
 </section>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentStep = 1;
+    const steps = document.querySelectorAll(".form-step");
+
+    // Fonction pour afficher l'étape
+    function showStep(step) {
+      steps.forEach((el) => (el.style.display = "none"));
+      document.querySelector(`[data-step="${step}"]`).style.display = "block";
+    }
+
+    // Fonction pour afficher les messages d'erreur
+    function showError(message) {
+      const errorMessageElement = document.querySelector(".error-message");
+      errorMessageElement.textContent = message;
+      errorMessageElement.style.display = "block";  // Afficher le message d'erreur
+    }
+
+    // Fonction pour cacher les messages d'erreur
+    function hideError() {
+      const errorMessageElement = document.querySelector(".error-message");
+      errorMessageElement.style.display = "none";  // Cacher le message d'erreur
+    }
+
+    // Gérer l'événement de changement d'étape
+    document.querySelectorAll(".next-step").forEach((button) => {
+      button.addEventListener("click", function () {
+        if (currentStep === 1) {
+          const nomOeuvre = document.querySelector("input[name='oeuvre[nom_oeuvre]']").value;
+          
+          // Vérifier si le champ est vide
+          if (nomOeuvre.trim() === "") {
+            showError("Veuillez entrer un nom d'œuvre.");  // Afficher le message d'erreur
+            return;  // Ne pas aller à l'étape suivante si le champ est vide
+          }
+
+          // Masquer les messages d'erreur si le champ est valide
+          hideError();
+
+          fetch(`/oeuvres/check_existence?nom_oeuvre=${encodeURIComponent(nomOeuvre)}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.exists) {
+                if (data.edit_path) {
+                  window.location.href = data.edit_path; // Redirige vers l'édition si pas validé
+                } else {
+                  showError("Cette œuvre existe déjà et est validée.");
+                }
+              } else {
+                currentStep++;
+                if (currentStep > steps.length) {
+                  currentStep = steps.length;
+                }
+                showStep(currentStep);
+              }
+            });
+        } else {
+          currentStep++;
+          if (currentStep > steps.length) {
+            currentStep = steps.length;
+          }
+          showStep(currentStep);
+        }
+      });
+    });
+
+    document.querySelectorAll(".prev-step").forEach((button) => {
+      button.addEventListener("click", function () {
+        currentStep--;
+        if (currentStep < 1) {
+          currentStep = 1;
+        }
+        showStep(currentStep);
+      });
+    });
+
+    showStep(currentStep);
+  });
+</script>

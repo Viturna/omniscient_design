@@ -38,6 +38,7 @@
 @import 'components/loader';
 @import 'components/navprofil';
 @import 'components/popup';
+@import 'components/progressbar';
 
 @import 'layout/header';
 @import 'layout/search';
@@ -53,7 +54,7 @@
 @import 'pages/searchpage';
 
 
-html{
+html {
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
@@ -63,12 +64,13 @@ body {
   overflow-x: hidden;
 }
 
-main{
+main {
   margin-left: 350px;
   width: calc(100vw - 350px);
 }
+
 .main-show {
- margin-left: 0;
+  margin-left: 0;
   width: auto;
 }
 
@@ -76,15 +78,22 @@ main{
   overflow: hidden;
 }
 
+.form-step h3 {
+  color: #FFF;
+  margin-top: 0;
+  padding: 48px 0;
+}
 
 .grid-1 {
   padding: 0 10vw 64px 10vw;
 }
+
 @media screen and (max-width: 425px) {
   .grid-1 {
     padding: 0 5vw 32px 5vw;
   }
 }
+
 @media screen and (min-width:426px) and (max-width: 1024px) {
   .grid-1 {
     padding: 0 8vw 52px 8vw;
@@ -113,60 +122,68 @@ main{
   flex-direction: column;
   gap: 36px;
 }
+
 @media screen and (max-width: 1280px) {
-  main{
+  main {
     margin-left: 30vw;
     width: 70vw;
   }
 }
+
 @media screen and (min-width:769px) and (max-width: 1024px) {
-  main{
+  main {
     margin-left: 30vw;
     width: 70vw;
   }
+
   .subtitle {
     width: fit-content;
   }
 }
+
 @media screen and (max-width: 768px) {
-  main{
+  main {
     margin-left: 0;
     width: auto;
   }
+
   .subtitle {
     width: fit-content;
   }
+
   .grid {
     padding: 48px 5vw;
   }
 
-  main{
+  main {
     padding-bottom: 80px;
   }
 }
 
 
-.top-header{
+.top-header {
   padding: 0 10vw;
   padding-top: 96px;
   padding-bottom: 72px;
   background-color: #202020;
-  color:#FFF;
+  color: #FFF;
   position: relative;
+
   h1 {
     color: $secondary-color;
   }
 }
 
 @media screen and (max-width:600px) {
-  .top-header{
+  .top-header {
     padding: 0 5vw;
     padding-top: 64px;
     padding-bottom: 56px;
   }
 }
+
 @media screen and (min-width:601px) and (max-width:800px) {
-  .top-header{
+  .top-header {
     padding: 0 8vw;
     padding-top: 72px;
     padding-bottom: 64px;
@@ -190,10 +207,10 @@ main{
 //   }
 // }
 
-  body {
-    background: $background-color;
-  }
+body {
+  background: $background-color;
+}
 
-  body.dark {
-    background: $dark-background-color;
-  }
+body.dark {
+  background: $dark-background-color;
+}

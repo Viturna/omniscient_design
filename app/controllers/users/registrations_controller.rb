@@ -14,6 +14,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
           Referral.create(referrer: referrer, referee: user, reward_claimed: false)
         end
       end
+      if resource.persisted?
+        flash[:notice] = "Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception."
+        return redirect_to confirmation_pending_path
+      end
     end
   end
 

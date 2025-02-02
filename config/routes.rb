@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       get 'search'
       get :load_more
       get :load_more_oeuvres
+      get 'check_existence'
     end
 
     member do
@@ -59,10 +60,12 @@ Rails.application.routes.draw do
       patch :reject
     end
   end
+
   resources :designers, param: :slug do
     collection do
       get 'load_more'
       get :load_more_designers
+      get 'check_existence'
     end
     member do
       get :validate
@@ -92,6 +95,7 @@ Rails.application.routes.draw do
   post 'parrainage_filleul', to: 'pages#parrainage_filleul'
   get 'set_theme', to: 'application#set_theme'
   get 'contributions', to: 'contributions#index', as: 'user_contributions'
+  get 'confirmation_pending', to: 'pages#confirmation_pending', as: 'confirmation_pending'
   # Route racine
   root 'oeuvres#index'
   match "/404", to: "errors#not_found", via: :all

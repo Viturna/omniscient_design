@@ -22,6 +22,7 @@ input[type=search] {
     height: 50px;
   }
 }
+
 @media screen and (min-width:426px) and (max-width: 768px) {
   input.search-top-bar {
     font-size: 14px;
@@ -29,6 +30,7 @@ input[type=search] {
     width: 58vw;
   }
 }
+
 @media screen and (min-width:0px) and (max-width: 425px) {
   input.search-top-bar {
     font-size: 14px;
@@ -37,9 +39,11 @@ input[type=search] {
   }
 
 }
-.field{
+
+.field {
   width: 100%;
 }
+
 input[type=text],
 input[type=date],
 input[type=email],
@@ -64,22 +68,31 @@ select {
   border: 2px solid #E9E9E9;
   font-weight: 500;
 }
-.select2{
+
+.select2 {
   width: 100% !important;
 }
+
 /* Forcer la hauteur du champ */
 .select2-container .select2-selection--single {
   padding-left: 25px !important;
-  height: 70px !important; /* Fixe la hauteur */
-  line-height: 70px !important; /* Centre verticalement le texte */
-  display: flex!important;; /* Assure un alignement flexible */
-  align-items: center!important;; /* Aligne verticalement le contenu */
+  height: 70px !important;
+  /* Fixe la hauteur */
+  line-height: 70px !important;
+  /* Centre verticalement le texte */
+  display: flex !important;
+  ;
+  /* Assure un alignement flexible */
+  align-items: center !important;
+  ;
+  /* Aligne verticalement le contenu */
 }
 
 .select2-container .select2-results__option {
   padding: 10px !important
 }
-.select2-container .select2-selection__placeholder{
+
+.select2-container .select2-selection__placeholder {
   font-size: 14px !important;
 }
 
@@ -94,6 +107,13 @@ textarea {
   border: 2px solid #E9E9E9;
   border-radius: 5px;
 }
+
+.flex-btn-add {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
 @media screen and (min-width:769px) and (max-width: 1024px) {
 
   select {
@@ -102,8 +122,9 @@ textarea {
 
   textarea {
     width: 50vw;
-   }
+  }
 }
+
 @media screen and (min-width:601px) and (max-width: 768px) {
 
   input[type=text],
@@ -112,6 +133,7 @@ textarea {
   input[type=password] {
     width: calc(100% - 18px);
     font-size: 15px;
+
     &::placeholder {
       font-size: 15px;
     }
@@ -120,6 +142,7 @@ textarea {
   select {
     width: calc(100% + 2px);
     font-size: 15px;
+
     &::placeholder {
       font-size: 15px;
     }
@@ -129,11 +152,13 @@ textarea {
     width: calc(100% - 18px);
     height: 120px;
     font-size: 15px;
+
     &::placeholder {
       font-size: 15px;
     }
   }
 }
+
 @media screen and (min-width:376px) and (max-width: 600px) {
 
   input[type=text],
@@ -144,6 +169,7 @@ textarea {
     padding-left: 15px;
     height: 60px;
     font-size: 15px;
+
     &::placeholder {
       font-size: 15px;
     }
@@ -154,6 +180,7 @@ textarea {
     padding-left: 15px;
     height: 60px;
     font-size: 15px;
+
     &::placeholder {
       font-size: 15px;
     }
@@ -164,11 +191,13 @@ textarea {
     padding-left: 15px;
     height: 120px;
     font-size: 15px;
+
     &::placeholder {
       font-size: 15px;
     }
   }
 }
+
 @media screen and (max-width: 375px) {
 
   input[type=text],
@@ -179,6 +208,7 @@ textarea {
     padding-left: 15px;
     height: 55px;
     font-size: 14px;
+
     &::placeholder {
       font-size: 14px;
     }
@@ -189,6 +219,7 @@ textarea {
     padding-left: 15px;
     height: 55px;
     font-size: 14px;
+
     &::placeholder {
       font-size: 14px;
     }
@@ -199,13 +230,14 @@ textarea {
     padding-left: 15px;
     height: 120px;
     font-size: 14px;
+
     &::placeholder {
       font-size: 14px;
     }
   }
 }
 
-.profile-picture{
+.profile-picture {
   border-radius: 150px;
   width: 150px;
   height: 150px;
@@ -268,57 +300,64 @@ textarea {
 //   }
 // }
 
-  input.search-top-bar {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
-  input[type=text],
-  input[type=date],
-  input[type=email],
-  input[type=password],
-  .select2-container .select2-selection__placeholder  {
-    background-color: $secondary-color !important;
-    color: $primary-color !important;
-  }
-  input::placeholder,
-  select::placeholder,
-  textarea::placeholder {
-    color: $text-color;
-  }
-  select {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
+input.search-top-bar {
+  background-color: $secondary-color;
+  color: $primary-color;
+}
 
-  textarea {
-    background-color: $secondary-color;
-  }
+input[type=text],
+input[type=date],
+input[type=email],
+input[type=password],
+.select2-container .select2-selection__placeholder {
+  background-color: $secondary-color !important;
+  color: $primary-color !important;
+}
+
+input::placeholder,
+select::placeholder,
+textarea::placeholder {
+  color: $text-color;
+}
+
+select {
+  background-color: $secondary-color;
+  color: $primary-color;
+}
+
+textarea {
+  background-color: $secondary-color;
+}
 
 
 
-  body.dark input.search-top-bar {
-    background-color: $primary-color;
-    color: $secondary-color;
-  }
-  body.dark input[type=text],
-  body.dark input[type=date],
-  body.dark input[type=email],
-  body.dark input[type=password] {
-    background-color: $dark-background-color;
-    color: $secondary-color;
-    border: 2px solid #525252;
-  }
-  body.dark input::placeholder,
-  body.dark select::placeholder,
-  body.dark textarea::placeholder {
-    color: $dark-text-color;
-  }
-  body.dark select {
-    background-color: $dark-background-color;
-    color: $secondary-color;
-    border: 2px solid #525252;
-  }
-  body.dark textarea {
-    background-color: $dark-background-color;
-    border: 2px solid #525252;
-  }
+body.dark input.search-top-bar {
+  background-color: $primary-color;
+  color: $secondary-color;
+}
+
+body.dark input[type=text],
+body.dark input[type=date],
+body.dark input[type=email],
+body.dark input[type=password] {
+  background-color: $dark-background-color;
+  color: $secondary-color;
+  border: 2px solid #525252;
+}
+
+body.dark input::placeholder,
+body.dark select::placeholder,
+body.dark textarea::placeholder {
+  color: $dark-text-color;
+}
+
+body.dark select {
+  background-color: $dark-background-color;
+  color: $secondary-color;
+  border: 2px solid #525252;
+}
+
+body.dark textarea {
+  background-color: $dark-background-color;
+  border: 2px solid #525252;
+}

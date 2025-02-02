@@ -7,7 +7,45 @@
   <p class="subtitle-top">Votre contribution</p>
   <h1>Modifier une référence</h1>
   <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
+  <div class="progress-container-form">
+    <div class="progress-bar-form"></div>
+    <span class="progress-percent-form">0%</span>
+  </div>
 </section>
-<section class="grid-1" style="background-color:#202020; color:#FFF;">
+<section class="grid-1" style="background-color:#202020; color:#FFF; min-height: 100vh;">
   <%= render "form", oeuvre: @oeuvre %>
 </section>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentStep = 1;
+    const steps = document.querySelectorAll(".form-step");
+
+    function showStep(step) {
+      steps.forEach((el) => (el.style.display = "none"));
+      document.querySelector(`[data-step="${step}"]`).style.display = "block";
+    }
+
+    document.querySelectorAll(".next-step").forEach((button) => {
+      button.addEventListener("click", function () {
+        currentStep++;
+        if (currentStep > steps.length) {
+          currentStep = steps.length;
+        }
+        showStep(currentStep);
+      });
+    });
+
+    document.querySelectorAll(".prev-step").forEach((button) => {
+      button.addEventListener("click", function () {
+        currentStep--;
+        if (currentStep < 1) {
+          currentStep = 1;
+        }
+        showStep(currentStep);
+      });
+    });
+
+    showStep(currentStep);
+  });
+</script>
+

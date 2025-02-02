@@ -2,13 +2,12 @@ class ApplicationController < ActionController::Base
   before_action :set_unread_notifications_count
   before_action :check_if_banned
   before_action :configure_permitted_parameters, if: :devise_controller?
-  protect_from_forgery with: :exception
-  before_action :set_csrf_cookie
   def set_theme
     theme = params[:theme]
     cookies[:theme] = theme
     redirect_back(fallback_location: root_path)
   end
+  
   private
 
   def set_unread_notifications_count
@@ -39,10 +38,5 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:referral_code])
-  end
-
-  private
-  def set_csrf_cookie
-    cookies['CSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   end
 end

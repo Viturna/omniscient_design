@@ -1,8 +1,10 @@
 <%= javascript_include_tag "controllers/uniqueSelect", defer: true %>
+<%= javascript_include_tag "controllers/formProgressBar", defer: true %>
 <%= form_with(model: @designer, local: true) do |form| %>
+ <div class="error-message" style="color: red; display: none;"></div>
   <% if @designer.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(@designer.errors.count, "erreur") %> interdit à ce designer d'être enregistré :</h2>
+      <h2><%= pluralize(@designer.errors.count, "erreur") %> interdit à cet designer d'être enregistré :</h2>
       <ul>
         <% @designer.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -10,67 +12,81 @@
       </ul>
     </div>
   <% end %>
-  <div class="flex-form">
-    <div>
-      <%= form.text_field :nom_designer, placeholder: "Nom du designer" %>
+  <div class="form-step" data-step="1">
+    <h3>Étape 1 : Nom</h3>
+    <div class="flex-form">
+      <div>
+        <%= form.text_field :nom_designer, placeholder: "Nom du designer" %>
+      </div>
     </div>
-    <div>
-      <%= form.text_field :date_naissance, placeholder: "Année de naissance", class: "year-input", id: "birth-year-input" %>
-      <div class="error-message" id="birth-year-error"></div>
-    </div>
-    <div>
-      <%= form.text_field :date_deces, placeholder: "Année de décès (optionnel)", class: "year-input", id: "death-year-input" %>
-      <div class="error-message" id="death-year-error"></div>
-    </div>
-    <div>
-      <%= form.collection_select :country_1,
-      Country.order(:country),
-      :id,
-      :country,
-      { include_blank: "Aucun pays", prompt: "Sélectionner un pays", selected: @country_1 },
-      { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_1", name: "designer[country_ids][]" } %>
-    </div>
-    <div>
-      <%= form.collection_select :country_2,
-      Country.order(:country),
-      :id,
-      :country,
-      { include_blank: "Aucun pays", prompt: "Sélectionner un second pays", selected: @country_2 },
-      { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_2", name: "designer[country_ids][]" } %>
-    </div>
-    <div>
-      <%= form.collection_select :country_3,
-      Country.order(:country),
-      :id,
-      :country,
-      { include_blank: "Aucun pays", prompt: "Sélectionner un troisième pays", selected: @country_3 },
-      { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_3", name: "designer[country_ids][]" } %>
-    </div>
-    <div>
-      <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
-    </div>
-    <div>
-      <%= form.text_area :formation_et_influences, placeholder: "Formation et influences (Min. 200 caractères)" %>
-    </div>
-    <div>
-      <%= form.text_area :style_ou_philosophie, placeholder: "Style ou philosophie (Min. 200 caractères)" %>
-    </div>
-    <div>
-      <%= form.text_area :creations_majeures, placeholder: "Ses créations majeures (Min. 200 caractères)" %>
-    </div>
-    <div>
-      <%= form.text_area :heritage_et_impact, placeholder: "Héritage et impact (Min. 200 caractères)" %>
-    </div>
-    <div>
-      <%= form.text_field :image, placeholder: "Url de l'image"%>
-    </div>
-    <!-- Champ caché pour le token reCAPTCHA -->
-    <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>
-    <div>
-      <%= form.submit "Continuer", class: "button large" %>
+    <div class="flex-btn-add" style="justify-content: flex-end;">
+      <button type="button" class="next-step button large">Suivant</button>
     </div>
   </div>
+
+  <div class="form-step" data-step="2" style="display:none;">
+    <!-- Étape 2 : Autres informations -->
+    <div class="flex-form">
+       <div>
+          <%= form.text_field :date_naissance, placeholder: "Année de naissance", class: "year-input", id: "birth-year-input" %>
+          <div class="error-message" id="birth-year-error"></div>
+      </div>
+
+      <div>
+        <%= form.text_field :date_deces, placeholder: "Année de décès (optionnel)", class: "year-input", id: "death-year-input" %>
+        <div class="error-message" id="death-year-error"></div>
+      </div>
+      <div>
+        <%= form.collection_select :country_1, Country.order(:country), :id, :country, { include_blank: "Aucun pays", prompt: "Sélectionner un pays", selected: @country_1 }, { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_1", name: "designer[country_ids][]" } %>
+      </div>
+    </div>
+    <div class="flex-btn-add">
+      <button type="button" class="prev-step button large">Précédent</button>
+      <button type="button" class="next-step button large">Suivant</button>
+    </div>
+  </div>
+
+  <div class="form-step" data-step="3" style="display:none;">
+    <!-- Étape 3 : Description et image -->
+    <div class="flex-form">
+      <div>
+        <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
+      </div>
+      <div>
+        <%= form.text_area :formation_et_influences, placeholder: "Formation et influences (Min. 200 caractères)" %>
+      </div>
+      <div>
+        <%= form.text_area :style_ou_philosophie, placeholder: "Style ou philosophie (Min. 200 caractères)" %>
+      </div>
+      <div>
+        <%= form.text_area :creations_majeures, placeholder: "Ses créations majeures (Min. 200 caractères)" %>
+      </div>
+      <div>
+        <%= form.text_area :heritage_et_impact, placeholder: "Héritage et impact (Min. 200 caractères)" %>
+      </div>
+      <div class="flex-btn-add">
+        <button type="button" class="prev-step button large">Précédent</button>
+        <button type="button" class="next-step button large">Suivant</button>
+      </div>
+    </div>
+  </div>
+
+   <div class="form-step" data-step="4" style="display:none;">
+    <!-- Étape 3 : Description et image -->
+    <div class="flex-form">
+      <div>
+        <%= form.text_field :image, placeholder: "Url de l'image"%>
+      </div>
+      <div class="flex-btn-add">
+        <button type="button" class="prev-step button large">Précédent</button>
+        <%= form.submit "Envoyer", class: "button large" %>
+      </div>
+    </div>
+  </div>
+
+  <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>
 <% end %>
+
 <script>
   $(document).ready(function() {
     var birthYearInput = document.getElementById("birth-year-input");

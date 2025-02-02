@@ -2,10 +2,8 @@ class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
 
-  validates :nom_designer, uniqueness: true
-  validates :presentation_generale, presence: true, length: { minimum: 200 }
+  validates :nom_designer, uniqueness: true, presence: true
 
-  validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year
   has_and_belongs_to_many :oeuvres
@@ -23,6 +21,10 @@ class Designer < ApplicationRecord
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
 
   attr_accessor :rejection_reason
+
+  def validated?
+    validation == true
+  end
   private
 
   def valid_birth_year
@@ -44,4 +46,6 @@ class Designer < ApplicationRecord
       end
     end
   end
+
+ 
 end

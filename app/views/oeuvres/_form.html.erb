@@ -1,5 +1,7 @@
 <%= javascript_include_tag "controllers/uniqueSelect", defer: true %>
+<%= javascript_include_tag "controllers/formProgressBar", defer: true %>
 <%= form_with(model: @oeuvre, local: true) do |form| %>
+  <div class="error-message" style="color: red; display: none;"></div>
   <% if @oeuvre.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(@oeuvre.errors.count, "erreur") %> interdit à cette référence d'être enregistré :</h2>
@@ -10,40 +12,43 @@
       </ul>
     </div>
   <% end %>
-  <div class="flex-form">
-    <div>
-      <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
-    </div>
-    <% max_designers = 3 %> <!-- Définit le nombre maximal de designers à afficher -->
-    <% (0...max_designers).each do |index| %>
-      <div>
-        <%= form.collection_select :designer_ids,
-      Designer.order(:nom_designer),
-      :id,
-      :nom_designer,
-      {
-        include_blank: "Aucun designer",
-        prompt: "Lié un/une designer",
-        selected: @selected_designers[index]
-      },
-      {
-        class: "form-control designer-select",
-        data: { placeholder: "Lié un/une designer" },
-        id: "designer_#{index + 1}",
-        name: "oeuvre[designer_ids][]"
-      } %>
-      </div>
-    <% end %>
-    <div style="display:flex">
-      <p>Si votre designer n'est pas ici vous pouvez <a style="color:#FFF; font-weight:500;" href="<%= new_designer_path %>"> ajouter un designer ici</a></p>
-    </div>
+<div class="form-step" data-step="1">
+  <h3>Étape 1 : Nom de l'oeuvre</h3>
+  <div class="flex-form"> 
     <div>
       <%= form.text_field :nom_oeuvre, placeholder: "Nom de la référence" %>
     </div>
-    <div>
-      <%= form.text_field :date_oeuvre, placeholder: "Date de la référence", id: "date-oeuvre-input" %>
-      <div id="date-oeuvre-error"></div>
+  </div>
+  <div class="flex-btn-add" style="justify-content: flex-end;">
+    <button type="button" class="next-step button large">Suivant</button>
+  </div>
+</div>
+
+<div class="form-step" data-step="2" style="display: none;">
+  <h3>Étape 2 : Contexte et Description</h3>
+  <div class="flex-form"> 
+    <% max_designers = 3 %>
+    <% (0...max_designers).each do |index| %>
+      <div>
+        <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer, { include_blank: "Aucun designer", prompt: "Lier un/une designer" }, { class: "form-control designer-select", id: "designer_#{index + 1}", name: "oeuvre[designer_ids][]" } %>
+      </div>
+    <% end %>
+      <div>
+      <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control concept-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
     </div>
+    <div>
+      <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
+    </div>
+  </div>
+  <div class="flex-btn-add">
+    <button type="button" class="prev-step button large">Précédent</button>
+    <button type="button" class="next-step button large">Suivant</button>
+  </div>
+</div>
+
+<div class="form-step" data-step="3" style="display: none;">
+  <h3>Étape 3 : Contexte et Description</h3>
+  <div class="flex-form"> 
     <div>
       <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
     </div>
@@ -62,22 +67,30 @@
     <div>
       <%= form.text_area :impact_et_message, placeholder: "Impact et message (Min. 200 caractères)" %>
     </div>
+  </div>
+  <div class="flex-btn-add">
+    <button type="button" class="prev-step button large">Précédent</button>
+    <button type="button" class="next-step button large">Suivant</button>
+  </div>
+</div>
+
+<div class="form-step" data-step="4" style="display: none;">
+  <h3>Étape 4 : Impact et Image</h3>
+  <div class="flex-form"> 
     <div>
-      <%= form.collection_select :notion_ids,
-        Notion.order(:name),
-        :id,
-        :name,
-        { include_blank: false },
-        { class: "form-control concept-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
+      <%= form.text_field :date_oeuvre, placeholder: "Date de la référence", id: "date-oeuvre-input" %>
+      <div id="date-oeuvre-error"></div>
     </div>
-    <div>
-      <%= form.text_field :image, placeholder: "Url de l'image" %>
-    </div>
-    <input type="hidden" id="recaptcha_token" name="recaptcha_token">
-    <div>
-      <%= form.submit "Continuer", class: "button large" %>
+     <div>
+      <%= form.file_field :image, accept: "image/*", direct_upload: true %>
     </div>
   </div>
+  <div class="flex-btn-add">
+    <button type="button" class="prev-step button large">Précédent</button>
+    <%= form.submit "Envoyer", class: "button large" %>
+  </div>
+</div>
+
 <% end %>
 <script>
   $(document).ready(function() {
@@ -152,4 +165,29 @@
       }
     });
   });
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+  const input = document.querySelector('input[type="file"]');
+  const preview = document.createElement("img");
+  preview.style.maxWidth = "300px";
+  preview.style.display = "none";
+
+  input.parentNode.appendChild(preview);
+
+  input.addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+});
+
 </script>

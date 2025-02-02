@@ -2,13 +2,9 @@ class Oeuvre < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_oeuvre, use: :slugged
 
-  validates :nom_oeuvre, uniqueness: true
-  validates :presentation_generale, presence: true, length: { minimum: 200 }
-
-  validates :image, format: { with: /\A#{URI::regexp(['http', 'https'])}\z/, message: 'must be a valid URL' }
+  validates :nom_oeuvre, uniqueness: true, presence: true
 
   belongs_to :domaine
-  validates :designer_ids, presence: true
 
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items
@@ -17,7 +13,19 @@ class Oeuvre < ApplicationRecord
 
   has_many :designers_oeuvres, dependent: :destroy
   has_many :designers, through: :designers_oeuvres
+  has_one_attached :image
 
   has_and_belongs_to_many :notions
   attr_accessor :rejection_reason
+
+  def validated?
+    validation == true
+  end
+  def image_variant
+    return unless image.attached? && image.content_type&.start_with?('image/')
+
+    image.variant(resize_to_limit: [500, 500]).processed
+  rescue ActiveStorage::InvariableError
+    nil
+  end
 end

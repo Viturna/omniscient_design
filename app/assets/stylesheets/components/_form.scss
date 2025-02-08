@@ -10,6 +10,12 @@ input.search-top-bar {
   height: 55px;
   border: none;
   position: relative;
+  background: url('/assets/search-icon.svg') no-repeat left 20px center;
+  background-size: 16px 16px;
+}
+
+input.search-top-bar::placeholder {
+  color: $primary-color;
 }
 
 input[type=search] {

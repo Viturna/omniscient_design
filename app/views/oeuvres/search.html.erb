@@ -3,13 +3,16 @@
 <section class="top-bar-search">
   <%= form_with url: search_oeuvres_path, method: :get, local: true do |form| %>
     <div class="autocomplete">
-      <%= form.search_field :query, class: 'search-top-bar', placeholder: 'Rechercher une référence', autocomplete: 'off', id: 'workSearch', style: "background-image: url('...'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;" %>
+     <%= form.search_field :query, class: 'search-top-bar', placeholder: 'Rechercher une référence', autocomplete: 'off', id: 'workSearch' %>
     </div>
   <% end %>
  <div class="top-bar-flex">
-  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" id="openPopup">
-    <path d="M29.9985 0C46.5566 0 60 13.4434 60 29.9985C60 46.5566 46.5566 60 29.9985 60C13.4434 60 0 46.5566 0 29.9985C0 13.4434 13.4434 0 29.9985 0ZM29.9985 24.006C28.7562 24.006 27.7479 25.0143 27.7479 26.2566V42.7607C27.7479 44.003 28.7562 45.0113 29.9985 45.0113C31.2408 45.0113 32.2491 44.003 32.2491 42.7607V26.2566C32.2491 25.0143 31.2408 24.006 29.9985 24.006ZM29.9925 15.0038C28.3361 15.0038 26.9917 16.3481 26.9917 18.0045C26.9917 19.6609 28.3361 21.0053 29.9925 21.0053C31.6489 21.0053 32.9932 19.6609 32.9932 18.0045C32.9932 16.3481 31.6489 15.0038 29.9925 15.0038Z" fill="#202020"/>
-  </svg>
+  <div class="circle circle-notif" id="openPopup">
+    <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+      <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+    </svg>
+  </div>
   <%= link_to notifications_path do %>
     <div class="circle circle-notif">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -147,6 +147,15 @@
         <div class="small-circle" style="background-color: <%= oeuvre.domaine.couleur %>;"></div>
         <%= oeuvre.domaine.domaine %>
       </div>
+      <div class="info-card-dark info-header-show">
+         <% if oeuvre.notions.any? %>
+            <% oeuvre.notions.each do |notion| %>
+              <%= notion.name %>
+            <% end %>
+        <% else %>
+          Aucune notion associée à cette œuvre.
+        <% end %>
+      </div>
     </div>
     <div class="header-top">
       <p class="subtitle-card">

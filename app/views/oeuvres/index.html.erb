@@ -31,12 +31,15 @@
 
 <section class="home-page top-bar-search">
   <%= link_to search_oeuvres_path, class: "search-link" do %>
-    <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 15 15&quot; fill=&quot;none&quot;><path d=&quot;M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z&quot; fill=&quot;%23202020&quot;/></svg>'); background-repeat: no-repeat; background-position-x: 20px; background-position-y: center;">
+    <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence">
 <% end %>
 <div class="top-bar-flex">
-  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" id="openPopup" class="circe circle-notif">
-    <path d="M29.9985 0C46.5566 0 60 13.4434 60 29.9985C60 46.5566 46.5566 60 29.9985 60C13.4434 60 0 46.5566 0 29.9985C0 13.4434 13.4434 0 29.9985 0ZM29.9985 24.006C28.7562 24.006 27.7479 25.0143 27.7479 26.2566V42.7607C27.7479 44.003 28.7562 45.0113 29.9985 45.0113C31.2408 45.0113 32.2491 44.003 32.2491 42.7607V26.2566C32.2491 25.0143 31.2408 24.006 29.9985 24.006ZM29.9925 15.0038C28.3361 15.0038 26.9917 16.3481 26.9917 18.0045C26.9917 19.6609 28.3361 21.0053 29.9925 21.0053C31.6489 21.0053 32.9932 19.6609 32.9932 18.0045C32.9932 16.3481 31.6489 15.0038 29.9925 15.0038Z" fill="#202020"/>
-  </svg>
+  <div class="circle circle-notif" id="openPopup">
+    <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+      <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+    </svg>
+  </div>
   <%= link_to notifications_path do %>
     <div class="circle circle-notif">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

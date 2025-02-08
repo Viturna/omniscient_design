@@ -44,10 +44,11 @@
   border-radius: 5px;
   cursor: pointer;
 
-  &:hover{
+  &:hover {
     background-color: #3C3C3C;
   }
-  &:active{
+
+  &:active {
     background-color: #1B1B1B;
   }
 }
@@ -64,10 +65,12 @@
   justify-content: center;
   transition: background-color 0.3s ease;
   cursor: pointer;
-  &:hover{
+
+  &:hover {
     background-color: #3C3C3C;
   }
-  &:active{
+
+  &:active {
     background-color: #1B1B1B;
   }
 }
@@ -88,12 +91,7 @@
   height: 60px;
   position: relative;
 
-  &:hover{
-    background-color: #3C3C3C;
-  }
-  &:active{
-    background-color: #1B1B1B;
-  }
+
 }
 
 .notification-counter {
@@ -138,12 +136,15 @@
   opacity: 0.8;
 }
 
-#back-btn, #home-btn {
+#back-btn,
+#home-btn {
   background: none;
   border: none;
   cursor: pointer;
 }
+
 @media screen and (min-width:1025px) and (max-width:1280px) {
+
   //ADD
   .button-add {
     font-size: 20px;
@@ -152,21 +153,26 @@
   }
 
 }
+
 @media screen and (min-width:601px) and (max-width: 1024px) {
   .circle {
     width: 60px;
     height: 60px;
-    svg{
+
+    svg {
       scale: 0.8;
     }
   }
-  .circle-back{
+
+  .circle-back {
     width: 60px;
     height: 60px;
-    svg{
+
+    svg {
       scale: 0.8;
     }
   }
+
   .circle-notif {
     width: 55px;
     height: 55px;
@@ -190,10 +196,12 @@
   .circle-save {
     width: 60px;
     height: 60px;
-    svg{
-    scale: 0.9;
+
+    svg {
+      scale: 0.9;
+    }
   }
-  }
+
   //ADD
   .button-add {
     font-size: 20px;
@@ -202,7 +210,7 @@
   }
 }
 
-@media screen and (min-width:426px)  and (max-width: 600px) {
+@media screen and (min-width:426px) and (max-width: 600px) {
   .circle {
     width: 65px;
     height: 65px;
@@ -211,6 +219,7 @@
       scale: 0.8;
     }
   }
+
   .circle-notif {
     width: 50px;
     height: 50px;
@@ -246,7 +255,7 @@
   }
 }
 
-@media screen and (min-width:376px)  and (max-width: 425px) {
+@media screen and (min-width:376px) and (max-width: 425px) {
   .button {
     width: 100%;
     padding: 20px 15px;
@@ -261,6 +270,7 @@
       scale: 0.8;
     }
   }
+
   .circle-notif {
     width: 50px;
     height: 50px;
@@ -269,6 +279,7 @@
       scale: 0.7;
     }
   }
+
   // BACK
   .circle-back {
     top: 35px;
@@ -299,7 +310,7 @@
   .flex-right-btn {
     gap: 4px;
   }
-  
+
   .button {
     width: 100%;
     padding: 20px 15px;
@@ -314,6 +325,7 @@
       scale: 0.8;
     }
   }
+
   .circle-notif {
     width: 50px;
     height: 50px;
@@ -322,6 +334,7 @@
       scale: 0.6;
     }
   }
+
   // BACK
   .circle-back {
     top: 25px;
@@ -396,49 +409,56 @@
 //   }
 // }
 
-  .button {
-    color: $primary-color;
-    background-color: $secondary-color;
+.button {
+  color: $primary-color;
+  background-color: $secondary-color;
 
-    &:hover {
-      background-color: #EDEDED;
-    }
+  &:hover {
+    background-color: #EDEDED;
   }
-  .dark {
-    background-color: $primary-color;
-    color: $secondary-color;
+}
 
-    &:hover{
-      background-color: #3C3C3C;
-    }
-    &:active{
-      background-color: #1B1B1B;
-    }
-  }
-  .button-add {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
-  body.dark .button {
-    color: $secondary-color;
-    background-color: $dark-background-color;
+.dark {
+  background-color: $primary-color;
+  color: $secondary-color;
 
-    &:hover {
-      background-color: #4a4a4a;
-    }
+  &:hover {
+    background-color: #3C3C3C;
   }
-  body.dark .dark {
-    background-color: $dark-background-color;
-    color: $secondary-color;
 
-    &:hover {
-      background-color: #4a4a4a;
-    }
+  &:active {
+    background-color: #1B1B1B;
   }
-  body.light .button-add {
-    color: $secondary-color;
-    background-color: $dark-background-color;
-    &:hover {
-      background-color: #4a4a4a;
-    }
+}
+
+.button-add {
+  background-color: $secondary-color;
+  color: $primary-color;
+}
+
+body.dark .button {
+  color: $secondary-color;
+  background-color: $dark-background-color;
+
+  &:hover {
+    background-color: #4a4a4a;
   }
+}
+
+body.dark .dark {
+  background-color: $dark-background-color;
+  color: $secondary-color;
+
+  &:hover {
+    background-color: #4a4a4a;
+  }
+}
+
+body.light .button-add {
+  color: $secondary-color;
+  background-color: $dark-background-color;
+
+  &:hover {
+    background-color: #4a4a4a;
+  }
+}

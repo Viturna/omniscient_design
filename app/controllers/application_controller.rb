@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
     end
   end
   def check_certified
-    unless user_signed_in? && current_user.certified? || current_user.admin?
+    unless user_signed_in? && (current_user.certified? || current_user&.admin?)
       redirect_to root_path, alert: "Vous n'avez pas la permission d'accéder à cette page."
     end
   end

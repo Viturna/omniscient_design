@@ -13,9 +13,10 @@ class Oeuvre < ApplicationRecord
 
   has_many :designers_oeuvres, dependent: :destroy
   has_many :designers, through: :designers_oeuvres
-  has_one_attached :image
 
-  has_and_belongs_to_many :notions
+
+  has_many :notion_oeuvres, dependent: :destroy
+  has_many :notions, through: :notion_oeuvres
   attr_accessor :rejection_reason
 
   def validated?

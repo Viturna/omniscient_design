@@ -1,4 +1,4 @@
 class Notion < ApplicationRecord
-  has_and_belongs_to_many :oeuvres
-  validates :name, presence: true, uniqueness: true
+  has_many :notion_oeuvres
+  has_many :oeuvres, through: :notion_oeuvres
 end

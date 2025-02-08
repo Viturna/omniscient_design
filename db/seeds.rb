@@ -191,7 +191,7 @@ csv_oeuvres.each do |row|
     presentation_generale: row['presentation_generale'],
     contexte_historique: row['contexte_historique'],
     materiaux_et_innovations_techniques: row['materiaux_et_innovations_techniques'],
-    notion_et_inspiration: row['notion_et_inspiration'],
+    concept_et_inspiration: row['concept_et_inspiration'],
     dimension_esthetique: row['dimension_esthetique'],
     impact_et_message: row['impact_et_message'],
     image: row['image']

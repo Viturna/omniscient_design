@@ -2,79 +2,92 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
-    <% if should_not_index? %>
-      <meta name="robots" content="noindex, nofollow">
-      <meta name="googlebot" content="noindex, nofollow">
-      <meta name="bingbot" content="noindex, nofollow">
-    <% else %>
-      <meta name="robots" content="index, follow">
-      <meta name="googlebot" content="index, follow">
-      <meta name="bingbot" content="index, follow">
-    <% end %>
-    <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Description par défaut de ton site" %>">
-    <%= render 'application/favicon' %>
-    <meta name="theme-color" content="#ffffff">
-    <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <link rel="canonical" href="<%= request.original_url %>">
-    <!-- Stylesheets -->
-    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
-    <!-- JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" 
-      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Balises pour les navigateurs -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" 
-      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Sécurité et CSRF protection -->
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" 
-      integrity="sha384-JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk" 
-      crossorigin="anonymous"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" 
-      rel="stylesheet" 
-      integrity="sha384-KZO2FRYNmIHerhfYMjCIUaJeGBRXP7CN24SiNSG+wdDzgwvxWbl16wMVtWiJTcMt" 
-      crossorigin="anonymous">
+  <!-- SEO et indexation -->
+  <meta name="robots" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
+  <meta name="googlebot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
+  <meta name="bingbot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
+  <link rel="canonical" href="<%= request.original_url %>">
 
-    <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "controllers/loader", defer: true %> 
-    <%= javascript_include_tag "controllers/progressBar", defer: true %>
+  <!-- META -->
+  <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
+  <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d\'art' %>">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="copyright" content="© Omniscient Design - Tous droits réservés.">
 
-   <!-- Google tag (gtag.js) -->
-   <!-- Cookie Consent by TermsFeed https://www.TermsFeed.com -->
-    <script type="text/javascript" src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js" charset="UTF-8"></script>
-    <script type="text/javascript" charset="UTF-8">
+  <!-- Open Graph (Facebook, LinkedIn, etc.) -->
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Omniscient Design">
+  <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : 'Omniscient Design' %>">
+  <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d\'art' %>">
+  <meta property="og:url" content="<%= request.original_url %>">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="<%= asset_url('logo-od-rs.jpg') %>">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:site" content="@OmniscientDesign">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Omniscient Design' %>">
+  <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d\'art' %>">
+  <meta name="twitter:url" content="<%= request.original_url %>">
+  <meta property="twitter:image" content="<%= asset_url('logo-od-rs.jpg') %>">
+
+  <!-- reCAPTCHA -->
+  <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
+
+  <!-- Favicon et manifest -->
+  <%= render 'application/favicon' %>
+  <link rel="manifest" href="<%= asset_path('site.webmanifest') %>">
+
+  <!-- Stylesheets -->
+  <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha384-KZO2FRYNmIHerhfYMjCIUaJeGBRXP7CN24SiNSG+wdDzgwvxWbl16wMVtWiJTcMt" crossorigin="anonymous">
+
+  <!-- JavaScript Libraries -->
+  <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw==" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha384-JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk" crossorigin="anonymous"></script>
+
+  <!-- JavaScript Rails -->
+  <%= javascript_importmap_tags %>
+  <%= javascript_include_tag "controllers/loader", defer: true %>
+  <%= javascript_include_tag "controllers/progressBar", defer: true %>
+
+  <!-- Cookie Consent -->
+  <script defer src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js" charset="UTF-8"></script>
+  <script defer>
     document.addEventListener('DOMContentLoaded', function () {
-    cookieconsent.run({"notice_banner_type":"interstitial","consent_type":"express","palette":"light","language":"fr","page_load_consent_levels":["strictly-necessary"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"website_name":"Omniscient Design","website_privacy_policy_url":"https://omniscientdesign.fr/cookies"});
+      cookieconsent.run({
+        "notice_banner_type": "interstitial",
+        "consent_type": "express",
+        "palette": "light",
+        "language": "fr",
+        "page_load_consent_levels": ["strictly-necessary"],
+        "website_name": "Omniscient Design",
+        "website_privacy_policy_url": "https://omniscientdesign.fr/cookies"
+      });
     });
-    </script>
+  </script>
 
-    <!-- Google Analytics -->
-    <script type="text/plain" data-cookie-consent="tracking" async src="https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3"></script>
-        <script type="text/plain" data-cookie-consent="tracking">
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+  <!-- Google Analytics (Consent-based) -->
+  <script type="text/plain" data-cookie-consent="tracking" async src="https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3"></script>
+  <script type="text/plain" data-cookie-consent="tracking" defer>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WVD06EPJC3');
+  </script>
 
-          gtag('config', 'G-WVD06EPJC3');
-        </script>
-    <!-- end of Google Analytics-->
-    <!-- RS -->
-    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
-    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
-    <meta name="twitter:url" content="<%= request.original_url %>">
-    <meta property="og:locale" content="fr_FR">
-    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : 'Nom de ton site' %>">
-    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Description par défaut de ton site' %>">
-    <meta property="og:url" content="<%= request.original_url %>">
-    <meta property="og:type" content="website">
-  </head>
+</head>
+
   <body class="<%= (cookies && cookies[:theme].presence || 'system') %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>
       <div class="alert" id="alert">

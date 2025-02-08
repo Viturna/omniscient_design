@@ -91,11 +91,11 @@
 
             <td><%= oeuvre.nom_oeuvre %>
            
-         <% if oeuvre.image.attached? && oeuvre.image_variant.present? %>
-  <%= image_tag oeuvre.image_variant %>
-<% else %>
-  <p>Aucune image attachée.</p>
-<% end %>
+            <% if oeuvre.image.attached? && oeuvre.image_variant.present? %>
+              <%= image_tag oeuvre.image_variant %>
+            <% else %>
+              <p>Aucune image attachée.</p>
+            <% end %>
 
               <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
               <td>

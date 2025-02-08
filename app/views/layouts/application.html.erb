@@ -16,7 +16,7 @@
     <% end %>
     <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Description par défaut de ton site" %>">
-    <%= favicon_link_tag 'favicon.svg' %>
+    <%= render 'application/favicon' %>
     <meta name="theme-color" content="#ffffff">
     <meta name="copyright" content="© Copyright Omniscient Design - Tous droits réservés.">
     <%= csrf_meta_tags %>

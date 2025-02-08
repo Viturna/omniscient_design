@@ -42,3 +42,4 @@ node_modules
 *.local
 log/development.log
 log/development.log
+app/assets/.DS_Store

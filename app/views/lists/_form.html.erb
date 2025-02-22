@@ -5,14 +5,14 @@
     <input type="search" id="designer-search" placeholder="Rechercher des designers" />
   </div>
   <div id="designers-list" class="flex-card" style="margin-top:32px">
-    <p>Chargement des designers...</p>
+  <%= render partial: 'designers_list', collection: @designers, as: :card%> 
   </div>
   <h2 style="margin-top:32px" class="title">Références</h2>
   <div class="search-container">
     <input type="search" id="oeuvre-search" placeholder="Rechercher des références" />
   </div>
   <div id="oeuvres-list" class="flex-card" style="margin-top:32px">
-    <p>Chargement des références...</p>
+    <%= render partial: 'oeuvres_list', collection: @oeuvres, as: :card%> 
   </div>
   <div class="form-footer">
     <div>
@@ -83,49 +83,5 @@
         }
       });
     }
-  });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-   const designersList = document.getElementById('designers-list');
-   const oeuvresList = document.getElementById('oeuvres-list');
-
-   function loadContent(url, container) {
-     fetch(url)
-       .then(response => {
-         if (!response.ok) throw new Error('Network response was not ok');
-         return response.text();
-       })
-       .then(html => {
-         container.innerHTML = html;
-       })
-       .catch(error => {
-         container.innerHTML = '<p>Erreur de chargement.</p>';
-         console.error(error);
-       });
-   }
-
-   const observerOptions = {
-     root: null,
-     rootMargin: '0px',
-     threshold: 0.1,
-   };
-
-   const observer = new IntersectionObserver((entries) => {
-     entries.forEach(entry => {
-       if (entry.isIntersecting) {
-         if (entry.target === designersList) {
-           loadContent('/lists/lazy_load_designers', designersList);
-           observer.unobserve(designersList);
-         } else if (entry.target === oeuvresList) {
-           loadContent('/lists/lazy_load_oeuvres', oeuvresList);
-           observer.unobserve(oeuvresList);
-         }
-       }
-     });
-   }, observerOptions);
-
-   observer.observe(designersList);
-   observer.observe(oeuvresList);
   });
 </script>

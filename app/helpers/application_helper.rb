@@ -34,53 +34,60 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
   def remove_accents_and_special_chars(str)
-    return '' if str.nil? # Gère le cas où str est nil
+    return '' if str.nil?
+  
     normalized_str = str.gsub(/[ÀÁÂÃÄÅ]/, 'A')
-    .gsub(/[àáâãäå]/, 'a')
-    .gsub(/[ÒÓÔÕÖØōòóôõöø]/, 'O')
-    .gsub(/[ÈÉÊË]/, 'E')
-    .gsub(/[èéêë]/, 'e')
-    .gsub(/[Çç]/, 'c')
-    .gsub(/[Ð]/, 'D')
-    .gsub(/[ÌÍÎÏ]/, 'I')
-    .gsub(/[ìíîï]/, 'i')
-    .gsub(/[ÙÚÛÜ]/, 'U')
-    .gsub(/[ùúûü]/, 'u')
-    .gsub(/[Ññ]/, 'N')
-    .gsub(/[Šš]/, 'S')
-    .gsub(/[Ÿÿý]/, 'Y')
-    .gsub(/[Žž]/, 'Z')
-    .gsub(/[œ]/, 'oe')
-    .gsub(/[Œ]/, 'OE')
-    .gsub(/[\(\)\"\/\,!&“”']/, '') # Supprime les caractères spéciaux, y compris l'apostrophe
+                        .gsub(/[àáâãäå]/, 'a')
+                        .gsub(/[ÒÓÔÕÖØōòóôõöø]/, 'O')
+                        .gsub(/[ÈÉÊË]/, 'E')
+                        .gsub(/[èéêë]/, 'e')
+                        .gsub(/[Çç]/, 'c')
+                        .gsub(/[Ð]/, 'D')
+                        .gsub(/[ÌÍÎÏ]/, 'I')
+                        .gsub(/[ìíîï]/, 'i')
+                        .gsub(/[ÙÚÛÜ]/, 'U')
+                        .gsub(/[ùúûü]/, 'u')
+                        .gsub(/[Ññ]/, 'N')
+                        .gsub(/[Šš]/, 'S')
+                        .gsub(/[Ÿÿý]/, 'Y')
+                        .gsub(/[Žž]/, 'Z')
+                        .gsub(/[œ]/, 'oe')
+                        .gsub(/[Œ]/, 'OE')
+                        .gsub(/[\(\)\"\,.!&“”']/, '') 
+                        .gsub('/', '_') 
+                        .gsub('\'', '_')             
+                        .gsub(' ', '_')              
+                        .downcase
+  
     normalized_str
-      .gsub(/[\(\)\"\/\,!&“”']/, '') # Supprime les caractères spéciaux
-      .gsub('\'', '_')             # Remplace les apostrophes par des underscores
-      .gsub(' ', '_')              # Remplace les espaces par des underscores
-      .downcase
   end
+  
 
   def linkify_designer_names_and_oeuvres(text)
     designers = Designer.where(validation: true)
     oeuvres = Oeuvre.where(validation: true)
-
+  
     designers.each do |designer|
-      next if designer.nom_designer.nil?
-
+      nom_complet = "#{designer.prenom} #{designer.nom}"
+      next if nom_complet.blank?
+  
       # Remplacer les noms de designers par des liens
-      text = text.gsub(/\b(#{Regexp.escape(designer.nom_designer)})\b/i) do |match|
-        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/designers/#{designer.id}'>#{match}</a>"
+      text = text.gsub(/\b(#{Regexp.escape(nom_complet)})\b/i) do |match|
+        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/designers/#{designer.slug}'>#{match}</a>"
       end
     end
-
+  
     oeuvres.each do |oeuvre|
-      next if oeuvre.nom_oeuvre.nil?
+      next if oeuvre.nom_oeuvre.blank?
+  
       # Remplacer les titres des œuvres par des liens
       text = text.gsub(/\b(#{Regexp.escape(oeuvre.nom_oeuvre)})\b/i) do |match|
-        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/oeuvres/#{oeuvre.id}'>#{match}</a>"
+        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/oeuvres/#{oeuvre.slug}'>#{match}</a>"
       end
     end
+    
     text.html_safe
   end
+  
 
 end

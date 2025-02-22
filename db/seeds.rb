@@ -123,7 +123,8 @@ designers_counter = 0
 
 csv_designers.each do |row|
   designer = Designer.find_or_create_by(
-    nom_designer: row['nom_designer'],
+    nom: row['nom'],
+    prenom: row['prenom'],
     date_naissance: row['date_naissance'],
     image: row['image'],
     presentation_generale: row['presentation_generale'],
@@ -206,13 +207,19 @@ csv_oeuvres.each do |row|
   oeuvre.domaine = domaine
   # Initialisation des designers supplémentaires
   designers = []
-  (1..2).each do |i| # Ajustez ce nombre si le CSV peut contenir plus de designers
+  
+  (1..2).each do |i|
     designer_name = row["nom_designer_#{i}"]
-    next unless designer_name.present? # Ignorer si la colonne est vide
-
-    designer = Designer.find_or_create_by(nom_designer: designer_name)
-    designers << designer
+    next unless designer_name.present? 
+    designer = Designer.find_by(nom: designer_name)
+  
+    if designer.nil?
+      puts "⚠️ Designer non trouvé : #{designer_name}"
+    else
+      designers << designer
+    end
   end
+  
 
   # Ajouter le designer principal uniquement s'il n'y a pas d'autres designers
   if designers.empty?
@@ -220,7 +227,7 @@ csv_oeuvres.each do |row|
   end
 
   # Associer tous les designers à l'œuvre
-  oeuvre.designers = designers
+  oeuvre.designers = designers.compact
 
 
   # Sauvegarde de l'œuvre

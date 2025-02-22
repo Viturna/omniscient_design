@@ -58,16 +58,6 @@ class ListsController < ApplicationController
     end
   end
 
-  def lazy_load_designers
-    @designers = Designer.where(validation: true).order(:nom_designer)
-    render partial: 'designers_list', locals: { designers: @designers }
-  end
-
-  def lazy_load_oeuvres
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre)
-    render partial: 'oeuvres_list', locals: { oeuvres: @oeuvres }
-  end
-
   def destroy
     @list.destroy
     redirect_to lists_url, notice: 'Liste supprimée avec succès.'

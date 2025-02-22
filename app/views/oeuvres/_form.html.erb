@@ -30,7 +30,7 @@
     <% max_designers = 3 %>
     <% (0...max_designers).each do |index| %>
       <div>
-        <%= form.collection_select :designer_ids, Designer.order(:nom_designer), :id, :nom_designer, { include_blank: "Aucun designer", prompt: "Lier un/une designer" }, { class: "form-control designer-select", id: "designer_#{index + 1}", name: "oeuvre[designer_ids][]" } %>
+        <%= form.collection_select :designer_ids, Designer.order(:nom), :id, :nom_designer, { include_blank: "Aucun designer", prompt: "Lier un/une designer" }, { class: "form-control designer-select", id: "designer_#{index + 1}", name: "oeuvre[designer_ids][]" } %>
       </div>
     <% end %>
       <div>

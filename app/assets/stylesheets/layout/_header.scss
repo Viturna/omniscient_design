@@ -9,24 +9,25 @@ header {
   z-index: 99;
   transition: width 0.3s ease, height 0.3s ease;
 }
+
 header::-webkit-scrollbar {
-  width: 6px; /* Largeur de la scrollbar */
+  width: 6px;
 }
 
 header::-webkit-scrollbar-thumb {
-  background: $text-color; /* Couleur de la "poignée" de la scrollbar */
-  border-radius: 10px; /* Arrondi de la poignée */
+  background: $text-color;
+  border-radius: 10px;
 }
 
 header::-webkit-scrollbar-thumb:hover {
-  background: #363636; /* Couleur au survol */
+  background: #363636;
 }
 
 
 // Logo
 
 .logo-header {
-  padding: 7dvh 0;
+  padding: 5dvh 0;
   display: flex;
   align-items: center;
 }
@@ -40,13 +41,13 @@ header::-webkit-scrollbar-thumb:hover {
 // Navigation
 
 .nav-header {
-  margin-top: 1rem;
+  margin-top: 3dvh;
 }
 
 header ul {
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 3.5dvh;
 }
 
 header li a {
@@ -72,7 +73,7 @@ header li .active {
 }
 
 .flex-btn-login {
-  margin-top: 5vh;
+  margin-top: 5dvh;
 }
 
 // Button et liens
@@ -81,12 +82,13 @@ header li .active {
 }
 
 .link-header {
-  margin-top: 12dvh;
+  margin-top: 13dvh;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding-bottom: 20px;
-  p{
+
+  p {
     font-size: 1rem;
   }
 }
@@ -102,7 +104,7 @@ header li .active {
 }
 
 /* Petit desktop */
-@media screen and (min-width: 1024px) and (max-width: 1280px) {
+@media screen and (min-width: 1025px) and (max-width: 1280px) {
   header {
     width: 20vw;
     height: 100vh;
@@ -160,13 +162,13 @@ header li .active {
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   header {
-    width: 20vw;
+    width: 22vw;
     height: 100vh;
-    padding: 0 5vw;
+    padding: 0 4vw;
   }
 
   .logo-header {
-    padding: 8vh 0;
+    padding: 6dvh 0;
   }
 
   .name-header {
@@ -174,16 +176,7 @@ header li .active {
     margin-left: 1rem;
   }
 
-  .nav-header {
-    margin-top: 1rem;
-  }
-
-  header ul {
-    gap: 1.25rem;
-  }
-
   header li a {
-    gap: 1rem;
     font-size: 1.125rem;
   }
 
@@ -196,7 +189,7 @@ header li .active {
   }
 
   .flex-btn-login {
-    margin-top: 5vh;
+    margin-top: 5dvh;
   }
 
   .button-login {
@@ -205,15 +198,16 @@ header li .active {
   }
 
   .link-header {
-    margin-top: 10vh;
-    padding-bottom: 3.75rem;
+    margin-top: 6dvh;
+    padding-bottom: 3dvh;
   }
 
   .link-header a {
     font-size: 1rem;
   }
 }
-@media screen and (min-width: 601px) and (max-width: 768px ) {
+
+@media screen and (min-width: 601px) and (max-width: 768px) {
   header {
     position: fixed;
     width: 100vw;
@@ -233,7 +227,7 @@ header li .active {
     display: none;
   }
 
- .nav-header {
+  .nav-header {
     width: 100%;
     margin: 0;
     padding: 0 20vw;
@@ -279,7 +273,8 @@ header li .active {
     display: none;
   }
 }
-@media screen and (min-width: 501px) and (max-width: 600px ) {
+
+@media screen and (min-width: 501px) and (max-width: 600px) {
   header {
     position: fixed;
     width: 100vw;
@@ -299,7 +294,7 @@ header li .active {
     display: none;
   }
 
- .nav-header {
+  .nav-header {
     width: 100%;
     margin: 0;
     padding: 0 12vw;
@@ -340,6 +335,7 @@ header li .active {
     display: none;
   }
 }
+
 @media screen and (min-width: 376px) and (max-width: 500px) {
   header {
     position: fixed;
@@ -359,7 +355,7 @@ header li .active {
     display: none;
   }
 
- .nav-header {
+  .nav-header {
     width: 100%;
     margin: 0;
     padding: 0 8vw;
@@ -404,6 +400,7 @@ header li .active {
     display: none;
   }
 }
+
 @media screen and (max-width: 375px) {
   header {
     position: fixed;
@@ -520,39 +517,50 @@ header li .active {
 //   }
 // }
 
-  header {
-    background-color: $secondary-color;
-  }
-  .name-header {
-    color: $primary-color;
-  }
-  header li a {
-    color: $text-color;
-  }
-  header li .active {
-    color: $primary-color;
-  }
-  header li .active svg path {
-    fill: $primary-color;
-  }
-  .link-header a {
-    color: $text-color;
-  }
-  body.dark header {
-    background-color: $primary-color;
-  }
-  body.dark .name-header {
-    color: $secondary-color;
-  }
-  body.dark header li a {
-    color: $dark-text-color;
-  }
-  body.dark header li .active {
-    color: $secondary-color;
-  }
-  body.dark header li .active svg path {
-    fill: $secondary-color;
-  }
-  body.dark .link-header a {
-    color: $dark-text-color;
-  }
+header {
+  background-color: $secondary-color;
+}
+
+.name-header {
+  color: $primary-color;
+}
+
+header li a {
+  color: $text-color;
+}
+
+header li .active {
+  color: $primary-color;
+}
+
+header li .active svg path {
+  fill: $primary-color;
+}
+
+.link-header a {
+  color: $text-color;
+}
+
+body.dark header {
+  background-color: $primary-color;
+}
+
+body.dark .name-header {
+  color: $secondary-color;
+}
+
+body.dark header li a {
+  color: $dark-text-color;
+}
+
+body.dark header li .active {
+  color: $secondary-color;
+}
+
+body.dark header li .active svg path {
+  fill: $secondary-color;
+}
+
+body.dark .link-header a {
+  color: $dark-text-color;
+}

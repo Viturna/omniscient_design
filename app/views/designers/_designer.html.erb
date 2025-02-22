@@ -4,12 +4,11 @@
 <%= javascript_include_tag "controllers/backBtn", defer: true %>
 <%= javascript_include_tag "controllers/validationOverlay", defer: true %>
 <%= javascript_include_tag "controllers/scroll_horizontal", defer: true %>
+
 <style>
   .popup .popup-content form{
   padding: 0px;
   }
-</style>
-<style>
   /* filepath: app/assets/stylesheets/application.scss */
   .modal {
   display: none;
@@ -305,7 +304,7 @@
                       <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(oeuvre.image) %>');">
                       <% end %>
                       <div class="oeuvre-card-content">
-                        <p class="oeuvre-designer">  <%= oeuvre.designers.map(&:nom_designer).join(', ') %></p>
+                         <p class="oeuvre-designer">  <%= oeuvre.designers.map(&:nom_designer).join(', ') %></p> 
                         <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                       </div>
                     </div>

@@ -147,15 +147,6 @@
         <div class="small-circle" style="background-color: <%= oeuvre.domaine.couleur %>;"></div>
         <%= oeuvre.domaine.domaine %>
       </div>
-      <div class="info-card-dark info-header-show">
-         <% if oeuvre.notions.any? %>
-            <% oeuvre.notions.each do |notion| %>
-              <%= notion.name %>
-            <% end %>
-        <% else %>
-          Aucune notion associée à cette œuvre.
-        <% end %>
-      </div>
     </div>
     <div class="header-top">
       <p class="subtitle-card">
@@ -204,6 +195,18 @@
         </p>
         <h1 class="title-card"><%= oeuvre.nom_oeuvre %></h1>
       </div>
+        <h2 class="title-description-reference">Notions</h2>
+      <% if oeuvre.notions.any? %>
+        <div class="notions-flex">
+            <% oeuvre.notions.each do |notion| %>
+            <div class="notion-container">
+              <%= notion.name %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p>Aucune notion associée à cette œuvre.</p>
+        <% end %>
       <h2 class="title-description-reference">Présentation générale</h2>
       <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.presentation_generale) %></p>
       <% if oeuvre.contexte_historique.present? %>

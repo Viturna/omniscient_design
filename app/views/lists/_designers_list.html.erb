@@ -1,4 +1,4 @@
-<% designers.each do |designer| %>
+<% @designers.each do |designer| %>
   <div class="check-box-wrapper">
     <%= check_box_tag "designer_ids[]", designer.id, false, class: 'hidden-check', id: "designer_#{designer.id}" %>
     <label for="designer_#{designer.id}">

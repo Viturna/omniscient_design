@@ -261,7 +261,7 @@
       </div>
       <%= form_with(model: @list, local: true) do |form| %>
         <div id="designers-list" class="flex-card">
-          <%= form.collection_check_boxes :designer_ids, Designer.where(validation: true).order(:nom_designer), :id, :nom_designer do |b| %>
+          <%= form.collection_check_boxes :designer_ids, Designer.where(validation: true).order(:nom), :id, :nom_designer do |b| %>
             <div class="check-box-wrapper">
               <%= b.check_box(class: 'hidden-check', id: "designer_#{b.object.id}") %>
               <%= b.label for: "designer_#{b.object.id}" do %>

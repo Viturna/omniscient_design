@@ -1,4 +1,4 @@
-<% oeuvres.each do |oeuvre| %>
+<% @oeuvres.each do |oeuvre| %>
   <div class="check-box-wrapper">
     <%= check_box_tag "oeuvre_ids[]", oeuvre.id, false, class: 'hidden-check', id: "oeuvre_#{oeuvre.id}" %>
     <label for="oeuvre_#{oeuvre.id}">

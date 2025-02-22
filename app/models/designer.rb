@@ -2,7 +2,7 @@ class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
 
-  validates :nom_designer, uniqueness: true, presence: true
+  validates :nom, presence: true
 
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year
@@ -21,7 +21,11 @@ class Designer < ApplicationRecord
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
 
   attr_accessor :rejection_reason
-
+ 
+  def nom_designer
+    prenom.present? ? "#{prenom} #{nom}" : nom
+  end 
+ 
   def validated?
     validation == true
   end
@@ -47,5 +51,6 @@ class Designer < ApplicationRecord
     end
   end
 
- 
+  
+  validates :slug, uniqueness: true, presence: true
 end

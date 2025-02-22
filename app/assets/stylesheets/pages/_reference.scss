@@ -26,6 +26,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
+
 .header-top {
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -63,7 +64,8 @@
   left: 0;
   background: center center / cover no-repeat;
 }
-.flex-back-btn{
+
+.flex-back-btn {
   display: flex;
   position: absolute;
   z-index: 100;
@@ -71,7 +73,8 @@
   left: 5vw;
   gap: 16px;
 }
-.info-card-first-content{
+
+.info-card-first-content {
   display: flex;
   gap: 24px;
   position: absolute;
@@ -86,7 +89,7 @@
   transition: margin-top 0.6s ease;
 }
 
- .text-show.small-height {
+.text-show.small-height {
   margin-top: 54dvh; // Ajustez cette valeur selon vos besoins
 }
 
@@ -197,6 +200,7 @@
   gap: 24px;
   padding-right: 32px;
 }
+
 .oeuvres-same::-webkit-scrollbar {
   height: 6px;
 }
@@ -207,14 +211,14 @@
 }
 
 .oeuvres-same::-webkit-scrollbar-thumb:hover {
-  background: #363636; 
+  background: #363636;
 }
 
 .oeuvre-card {
   flex: 0 0 auto;
   width: 380px;
   height: 240px;
-  scroll-snap-align: start; 
+  scroll-snap-align: start;
   border: 1px solid #ccc;
   border-radius: 10px;
 
@@ -346,6 +350,23 @@
   font-size: 24px;
 }
 
+.notions-flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.notion-container {
+  border-radius: 32px;
+  width: fit-content;
+  padding: 22px 32px;
+  background-color: #FFF;
+  color: $primary-color;
+  font-weight: 400;
+  font-size: 18px;
+}
+
 //Validation
 .overlay {
   position: fixed;
@@ -443,6 +464,7 @@
   .body-show {
     padding-bottom: 50px;
   }
+
   .header-show {
     height: 70dvh;
   }
@@ -582,7 +604,7 @@
     height: 75dvh;
   }
 
-  .header-show.small-height  {
+  .header-show.small-height {
     height: 320px !important;
   }
 
@@ -598,6 +620,7 @@
   .margin-text-header {
     margin-top: 350px;
   }
+
   .header-top {
     display: none;
     position: absolute;
@@ -683,6 +706,7 @@
     flex-direction: column;
     gap: 32px;
   }
+
   .vertical-divider {
     display: none;
   }
@@ -713,7 +737,7 @@
     height: 75dvh;
   }
 
-  .header-show.small-height  {
+  .header-show.small-height {
     height: 320px !important;
   }
 
@@ -729,6 +753,7 @@
   .margin-text-header {
     margin-top: 350px;
   }
+
   .header-top {
     display: none;
     position: absolute;

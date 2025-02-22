@@ -43,25 +43,27 @@
     document.querySelectorAll(".next-step").forEach((button) => {
       button.addEventListener("click", function () {
         if (currentStep === 1) {
-          const nomDesigner = document.querySelector("input[name='designer[nom_designer]']").value;
-          
-          // Vérifier si le champ est vide
-          if (nomDesigner.trim() === "") {
-            showError("Veuillez entrer un nom d'œuvre.");  // Afficher le message d'erreur
-            return;  // Ne pas aller à l'étape suivante si le champ est vide
+          const nom = document.querySelector("input[name='designer[nom]']").value.trim();
+          const prenom = document.querySelector("input[name='designer[prenom]']").value.trim();
+
+          // Vérifier si les champs sont vides
+          if (nom === "") {
+            showError("Veuillez entrer le nom du designer.");
+            return;
           }
 
-          // Masquer les messages d'erreur si le champ est valide
+          // Masquer les messages d'erreur si les champs sont valides
           hideError();
 
-          fetch(`/designers/check_existence?nom_designer=${encodeURIComponent(nomDesigner)}`)
+          // Vérification d'existence du designer
+          fetch(`/designers/check_existence?nom=${encodeURIComponent(nom)}&prenom=${encodeURIComponent(prenom)}`)
             .then(response => response.json())
             .then(data => {
               if (data.exists) {
                 if (data.edit_path) {
                   window.location.href = data.edit_path; // Redirige vers l'édition si pas validé
                 } else {
-                  showError("Ce designer existe déjà et est validée.");
+                  showError("Ce designer existe déjà et est validé.");
                 }
               } else {
                 currentStep++;

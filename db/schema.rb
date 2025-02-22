@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_08_210635) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_08_231435) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,7 +69,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_08_210635) do
   end
 
   create_table "designers", force: :cascade do |t|
-    t.text "nom_designer"
     t.integer "date_naissance"
     t.text "image"
     t.datetime "created_at", null: false
@@ -85,6 +84,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_08_210635) do
     t.text "creations_majeures"
     t.text "heritage_et_impact"
     t.text "rejection_reason"
+    t.string "prenom"
+    t.string "nom"
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
   end

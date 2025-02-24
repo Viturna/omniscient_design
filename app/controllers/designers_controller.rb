@@ -93,30 +93,42 @@ class DesignersController < ApplicationController
 
   # DELETE /designers/1 or /designers/1.json
   def destroy
-    if @designer.destroy
-      create_rejection_notification(@designer)
-      update_suivi_references_refusees(@designer.user)
-      redirect_to validation_path, notice: "Le designer #{full_name(@designer)} a été supprimé avec succès."
+    @designer = Designer.find_by(slug: params[:slug])
+    if @designer
+      handle_destroy(@designer, "Le designer #{@designer.nom_designer} a été supprimé avec succès.")
     else
-      redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression."
+      respond_to do |format|
+        format.html { redirect_to validation_path, alert: "Designer non trouvé." }
+        format.json { render json: { error: "Designer non trouvé" }, status: :not_found }
+      end
     end
   end
+  
 
+  # PATCH/PUT /designers/1/reject
   def reject
     rejection_reason = params[:rejection_reason].presence || "Sans commentaire"
-    @rejected_designer = RejectedDesigner.new(
-      nom: @designer.nom, prenom: @designer.prenom,
-      user: @designer.user, reason: rejection_reason
-    )
-
-    if @rejected_designer.save
-      @designer.destroy
-      redirect_to validation_path, notice: "Le designer a été refusé avec succès."
+    @designer = Designer.find_by(slug: params[:slug])
+  
+    if @designer
+      @rejected_designer = RejectedDesigner.new(
+        nom: @designer.nom,
+        prenom: @designer.prenom,
+        user: @designer.user,
+        reason: rejection_reason
+      )
+      if @rejected_designer.save
+        # Ajoutez rejection_reason au designer avant de le détruire
+        @designer.update(rejection_reason: rejection_reason)
+        
+        handle_destroy(@designer, "Le designer a été refusé avec succès.")
+      else
+        redirect_to validation_path, alert: "Une erreur s'est produite lors du refus du designer."
+      end
     else
-      redirect_to validation_path, alert: "Une erreur s'est produite lors du refus du designer."
+      redirect_to validation_path, alert: "Designer non trouvé."
     end
-  end
-
+  end  
 
   def cancel
     if user_signed_in?
@@ -137,7 +149,7 @@ class DesignersController < ApplicationController
     if @designer.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@designer)
       update_suivi_references_validees(@designer.user)
-      redirect_to validation_path, notice: "Le/La designer #{full_name(@designer)} a été validé(e) avec succès."
+      redirect_to validation_path, notice: "Le/La designer #{@designer.nom_designer} a été validé(e) avec succès."
     else
       redirect_to validation_path, alert: "Une erreur s'est produite lors de la validation du designer."
     end
@@ -170,6 +182,23 @@ class DesignersController < ApplicationController
 
   private
 
+  def handle_destroy(designer, success_message)
+    if designer.destroy
+      create_rejection_notification(designer)
+      update_suivi_references_refusees(designer.user)
+  
+      respond_to do |format|
+        format.html { redirect_to validation_path, notice: success_message }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression du designer." }
+        format.json { render json: designer.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def update_suivi_references_emises(user)
     suivi = user.suivis.first_or_create
     suivi.increment(:nb_references_emises)
@@ -191,7 +220,7 @@ class DesignersController < ApplicationController
   end
 
   def create_notification(designer)
-    message = "Un nouveau designer est à valider : #{full_name(designer)}"
+    message = "Un nouveau designer est à valider : #{designer.nom_designer}"
     admins = User.where(role: 'admin')
     admins.each do |admin|
       Notification.create(user_id: admin.id, notifiable: designer, message: message)
@@ -199,7 +228,7 @@ class DesignersController < ApplicationController
   end
 
   def create_validation_notification(designer)
-    message = "Le designer #{full_name(designer)} a été validé(e). Encore un grand merci pour ta contribution"
+    message = "Le designer #{designer.nom_designer} a été validé(e). Encore un grand merci pour ta contribution"
 
     if designer.user_id.present?
       Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
@@ -212,7 +241,7 @@ class DesignersController < ApplicationController
   end
   def create_rejection_notification(designer)
     if designer.user_id.present?
-      message = "Votre designer #{full_name(designer)} a été rejeté(e)."
+      message = "Votre designer #{designer.nom_designer} a été rejeté(e)."
       Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
     else
       Rails.logger.error "Designer #{designer.id} n'a pas d'utilisateur associé pour la notification de rejet."

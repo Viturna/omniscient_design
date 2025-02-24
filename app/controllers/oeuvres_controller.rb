@@ -121,6 +121,8 @@ class OeuvresController < ApplicationController
     end
   end
 
+  
+
   # PATCH/PUT /oeuvres/1 or /oeuvres/1.json
   def update
     respond_to do |format|
@@ -134,34 +136,49 @@ class OeuvresController < ApplicationController
     end
   end
 
- # PATCH/PUT /oeuvres/1/reject
+  # PATCH/PUT /oeuvres/1/reject
   def reject
     rejection_reason = params[:rejection_reason].presence || "Sans commentaire"
-    @rejected_oeuvre = RejectedOeuvre.new(
-      nom_oeuvre: @oeuvre.nom_oeuvre,
-      user: @oeuvre.user,
-      reason: rejection_reason
-    )
-    if @rejected_oeuvre.save
-      @oeuvre.destroy
-      redirect_to validation_path, notice: "La référence a été refusée avec succès."
+    @oeuvre = Oeuvre.find_by(slug: params[:slug])
+
+    if @oeuvre
+      @rejected_oeuvre = RejectedOeuvre.new(
+        nom_oeuvre: @oeuvre.nom_oeuvre,
+        user: @oeuvre.user,
+        reason: rejection_reason
+      )
+
+      if @rejected_oeuvre.save
+        if @oeuvre.notions_oeuvres.exists?
+          Rails.logger.info "Suppression des notions associées à l'oeuvre #{@oeuvre.id}"
+          @oeuvre.notions_oeuvres.delete_all
+        end
+
+        # Détruire l'oeuvre
+        handle_destroy(@oeuvre, "La référence a été refusée avec succès.")
+      else
+        redirect_to validation_path, alert: "Une erreur est survenue lors du refus de la référence."
+      end
     else
-      redirect_to validation_path, alert: "Une erreur est survenue lors du refus de la référence."
+      redirect_to validation_path, alert: "Oeuvre non trouvée."
     end
-     Rails.logger.info "CSRF token reçu : #{request.headers['X-CSRF-Token']}"
+
+    Rails.logger.info "CSRF token reçu : #{request.headers['X-CSRF-Token']}"
   end
 
   # DELETE /oeuvres/1 or /oeuvres/1.json
   def destroy
-    if @oeuvre.destroy!
+    @oeuvre = Oeuvre.find_by(slug: params[:slug])
+    if @oeuvre
+      handle_destroy(@oeuvre, "La référence #{@oeuvre.nom_oeuvre} a été supprimée avec succès.")
+    else
       respond_to do |format|
-        create_rejection_notification(@oeuvre)
-        update_suivi_references_refusees(@oeuvre.user)
-        format.html { redirect_to validation_path, notice: "La référence " + @oeuvre.nom_oeuvre + " a été supprimée avec succès." }
-        format.json { head :no_content }
+        format.html { redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression de la référence." }
+        format.json { render json: { error: "Oeuvre non trouvée" }, status: :not_found }
       end
     end
   end
+
   def cancel
     if user_signed_in?
       if current_user.admin? || @oeuvre.user_id == current_user.id
@@ -203,6 +220,22 @@ class OeuvresController < ApplicationController
   
   
   private
+  def handle_destroy(oeuvre, success_message)
+    if oeuvre.destroy
+      create_rejection_notification(oeuvre)
+      update_suivi_references_refusees(oeuvre.user)
+  
+      respond_to do |format|
+        format.html { redirect_to validation_path, notice: success_message }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression de la référence." }
+        format.json { render json: oeuvre.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   def create_notification(oeuvre)
     message = "Une nouvelle oeuvre est à valider : #{oeuvre.nom_oeuvre}"

@@ -92,38 +92,38 @@
   <h2>Mes designers ajouté(e)s</h2>
   <% if @designers.any? %>
     <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th class="medium">Nom du designer</th>
-          <th class="medium">Date d'ajout</th>
-          <th class="medium">Statut</th>
-          <th class="medium">Commentaire</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @designers.each do |designer| %>
+      <table>
+        <thead>
           <tr>
-            <td><%= designer.nom_designer %></td>
-            <td><%= designer.created_at.present? ? designer.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
-            <td>
-              <% if designer.validation %>
-                <span class="status validated">Validée</span>
-              <% elsif designer.rejection_reason.present? %>
-                <span class="status rejected">Refusée</span>
-              <% else %>
-                <span class="status pending">En attente</span>
-              <% end %>
-            </td>
-            <td>
-              <% if designer.rejection_reason.present? %>
-                <%= designer.rejection_reason %>
-              <% end %>
-            </td>
+            <th class="medium">Nom du designer</th>
+            <th class="medium">Date d'ajout</th>
+            <th class="medium">Statut</th>
+            <th class="medium">Commentaire</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @designers.each do |designer| %>
+            <tr>
+              <td><%= designer.nom_designer %></td>
+              <td><%= designer.created_at.present? ? designer.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+              <td>
+                <% if designer.validation %>
+                  <span class="status validated">Validée</span>
+                <% elsif designer.rejection_reason.present? %>
+                  <span class="status rejected">Refusée</span>
+                <% else %>
+                  <span class="status pending">En attente</span>
+                <% end %>
+              </td>
+              <td>
+                <% if designer.rejection_reason.present? %>
+                  <%= designer.rejection_reason %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   <% else %>
     <p>Vous n'avez ajouté aucun designer pour le moment.</p>

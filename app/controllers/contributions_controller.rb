@@ -13,7 +13,8 @@ class ContributionsController < ApplicationController
     end
     @designers = current_user.designers + current_user.rejected_designers.map do |rejected_designer|
       Designer.new(
-        nom_designer: rejected_designer.nom_designer,
+        nom: rejected_designer.nom,
+        prenom: rejected_designer.prenom,
         created_at: rejected_designer.created_at,
         validation: false,
         user: rejected_designer.user,

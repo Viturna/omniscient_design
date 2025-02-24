@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_08_231435) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_24_105729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -236,8 +236,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_08_231435) do
   create_table "notions_oeuvres", id: false, force: :cascade do |t|
     t.bigint "oeuvre_id", null: false
     t.bigint "notion_id", null: false
-    t.index ["notion_id", "oeuvre_id"], name: "index_notions_oeuvres_on_notion_id_and_oeuvre_id"
+    t.index ["notion_id", "oeuvre_id"], name: "index_notions_oeuvres_on_notion_id_and_oeuvre_id", unique: true
+    t.index ["notion_id"], name: "index_notions_oeuvres_on_notion_id"
     t.index ["oeuvre_id", "notion_id"], name: "index_notions_oeuvres_on_oeuvre_id_and_notion_id", unique: true
+    t.index ["oeuvre_id"], name: "index_notions_oeuvres_on_oeuvre_id"
   end
 
   create_table "oeuvres", force: :cascade do |t|
@@ -276,11 +278,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_08_231435) do
   end
 
   create_table "rejected_designers", force: :cascade do |t|
-    t.string "nom_designer"
     t.bigint "user_id"
     t.text "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "nom"
+    t.string "prenom"
     t.index ["user_id"], name: "index_rejected_designers_on_user_id"
   end
 
@@ -351,6 +354,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_08_231435) do
   add_foreign_key "list_visitors", "users"
   add_foreign_key "lists", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "notions_oeuvres", "notions"
+  add_foreign_key "notions_oeuvres", "oeuvres"
   add_foreign_key "oeuvres", "domaines"
   add_foreign_key "oeuvres", "users"
   add_foreign_key "rejected_designers", "users"

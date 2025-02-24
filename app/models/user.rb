@@ -21,8 +21,7 @@ class User < ApplicationRecord
       break code unless User.exists?(referral_code: code)
     end
   end
-  STATUTS = ["Étudiant", "Enseignant", "Autre"]
-
+  STATUTS = ["Étudiant", "Enseignant", "Autre", "Entreprise", "Association", "Designer", "Artiste"]
   has_one :referral, foreign_key: :referrer_id
   has_many :referees, through: :referrals, source: :referee
   

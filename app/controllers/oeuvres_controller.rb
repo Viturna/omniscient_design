@@ -31,27 +31,15 @@ class OeuvresController < ApplicationController
 
   def search
     @current_page = 'recherche'
-    query = params[:query].to_s.strip.downcase
-    @works = Oeuvre.where(validation: true).pluck(:nom_oeuvre) + 
-             Designer.where(validation: true).map { |d| d.nom_designer }
 
+      query = params[:query].to_s.strip
   
-    if query.present?
-      #  Recherche exacte
-      @work = Oeuvre.find_by('LOWER(nom_oeuvre) = ? AND validation = ?', query, true)
-      @designer = Designer.find_by("LOWER(prenom || ' ' || nom) = ? AND validation = ?", query, true)
-  
-      if @work
-        redirect_to oeuvre_path(@work) and return
-      elsif @designer
-        redirect_to designer_path(@designer) and return
+      if query.present?
+        # Recherche dans Oeuvre et Designer avec Searchkick
+        @oeuvre_suggestions = Oeuvre.search(query, fields: [:nom_oeuvre], match: :word_start)
+        @designer_suggestions = Designer.search(query, fields: [:prenom, :nom], match: :word_start)
       end
-  
-      # Recherche partielle pour suggestions
-      @oeuvre_suggestions = Oeuvre.where('LOWER(nom_oeuvre) LIKE ? AND validation = ?', "%#{query}%", true)
-      @designer_suggestions = Designer.where("LOWER(prenom || ' ' || nom) LIKE ? AND validation = ?", "%#{query}%", true)
-    end
-  
+
     # Récupération des œuvres et designers validés pour affichage
     @oeuvres = Oeuvre.where(validation: true).shuffle
     @designers = Designer.where(validation: true).order(:nom)
@@ -68,7 +56,6 @@ class OeuvresController < ApplicationController
       designer.date_naissance.to_i.between?(@start_year_oeuvre, @end_year_oeuvre)
     end
   end
-  
 
   def load_more_oeuvres
     @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(8)

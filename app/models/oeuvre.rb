@@ -2,6 +2,7 @@ class Oeuvre < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_oeuvre, use: :slugged
 
+  searchkick word_start: [:nom_oeuvre]
   validates :nom_oeuvre, uniqueness: true, presence: true
 
   belongs_to :domaine

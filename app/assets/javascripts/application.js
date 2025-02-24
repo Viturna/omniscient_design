@@ -5,6 +5,7 @@
 //= require select2
 //= require cookies_eu
 
+
 document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener('click', function (event) {
     if (event.target.matches('.add_fields')) {

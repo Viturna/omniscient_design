@@ -1,6 +1,7 @@
 class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
+  searchkick word_start: [:nom, :prenom]
 
   validates :nom, presence: true
   validate :valid_death_year, if: -> { date_deces.present? }

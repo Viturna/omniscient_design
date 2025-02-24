@@ -102,3 +102,7 @@ gem 'responsive_image_tag'
 gem 'cookies_eu'
 
 gem 'cloudinary'
+
+gem 'searchkick'
+gem 'opensearch-ruby'
+

@@ -78,6 +78,8 @@ Rails.application.routes.draw do
     patch :update_status, on: :member
   end
   # Routes pour les pages statiques
+  get '/search_autocomplete', to: 'search#autocomplete'
+  
   get 'search_category', to: 'pages#search_category', as: 'search_category'
   get 'search_frise', to: 'pages#search_frise', as: 'search_frise'
   get 'parrainage', to: 'pages#parrainage', as: 'parrainage'

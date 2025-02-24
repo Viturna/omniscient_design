@@ -103,7 +103,17 @@
       </div>
       <div class="field">
         <%= f.label "Statut" %>
-        <%= f.collection_select :statut, [["Étudiant", "Étudiant"], ["Enseignant", "Enseignant"], ["Autre", "Autre"]], :first, :last, { prompt: "Choisissez un statut" }, { class: "form-control" } %>
+        <%= f.collection_select :statut, 
+        [
+          ["Étudiant", "Étudiant"], 
+          ["Enseignant", "Enseignant"], 
+          ["Entreprise", "Entreprise"],
+          ["Association", "Association"],
+          ["Designer", "Designer"],
+          ["Artiste", "Artiste"],
+           ["Autre", "Autre"],
+        ], :first, :last, { prompt: "Choisissez un statut*" }, { class: "form-control" } %>
+
       </div>
       <div class="field">
         <%= f.label "Établissement" %><br />

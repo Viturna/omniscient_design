@@ -1,5 +1,51 @@
 @import 'abstracts/variables';
 
+.suggestions-box {
+  border: 2px solid #E9E9E9;
+  max-height: 400px;
+  overflow-y: auto;
+  position: absolute;
+  background-color: white;
+  width: 50vw;
+  border-radius: 16px;
+  z-index: 100;
+  margin-top: 32px;
+}
+
+strong {
+  font-weight: bold;
+  color: #f39c12;
+  /* Exemple : couleur dorée pour le texte en gras */
+}
+
+.suggestion-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.suggestion-item {
+  padding: 24px 56px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-item:hover {
+  background-color: #F9F9F9;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: $text-color;
+  margin-bottom: 16px;
+  margin-left: 32px;
+  margin-top: 48px;
+}
+
 .searchpage {
   margin-top: 148px;
 }
@@ -8,7 +54,7 @@
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content:flex-start;
+  justify-content: flex-start;
   align-items: stretch;
   column-gap: 1.5vw;
   row-gap: 24px;
@@ -381,7 +427,7 @@
   flex-wrap: wrap;
 }
 
-.filter-box  select {
+.filter-box select {
   width: fit-content;
   height: fit-content;
   padding: 0px;

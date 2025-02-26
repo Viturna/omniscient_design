@@ -70,7 +70,7 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || Rails.env.production?
   config.assets.compile = false # Ne pas compiler à la volée
   config.assets.digest = true # Générer des hachages pour les assets
-  config.assets.js_compressor = :uglifier # Compresser les fichiers JS
+  config.assets.js_compressor = :terser # Compresser les fichiers JS
   config.assets.css_compressor = :sass # Compresser les fichiers CSS
   
   config.public_file_server.headers = {

@@ -66,8 +66,7 @@ Rails.application.configure do
   # Use a different cache store in production.
 
   config.cache_classes = true
-  config.eager_load = true
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || Rails.env.production?
+  config.public_file_server.enabled = true
   config.assets.compile = false # Ne pas compiler à la volée
   config.assets.digest = true # Générer des hachages pour les assets
   config.assets.js_compressor = :terser # Compresser les fichiers JS

@@ -20,9 +20,9 @@
 <section class="grid-1 searchpage">
   <h1>Rechercher</h1>
   <div class="tabs">
-    <button class="tab" data-tab="designers">Designers</button>
-    <button class="tab" data-tab="references">Références</button>
-    <button class="tab" data-tab="frise">Frise Chronologique</button>
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" data-tab="designers">Designers</button>
+    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références</button>
+    <button class="tab <%= 'active' if params[:tab] == 'frise' %>" data-tab="frise">Frise Chronologique</button>
   </div>
 
   <%= form_with url: search_oeuvres_path, method: :get, local: true, id: "filterForm" do |form| %>
@@ -69,16 +69,16 @@
   <% end %>
 
   <turbo-frame id="search-results">
-    <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'designers' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'designers' %>">
-      <div class="flex-container">
+   <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'designers' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'designers' %>">
+      <div class="flex-container" id="designers-container">
         <% @designers.each do |designer| %>
           <%= render 'designers/designer_card', designer: designer %>
         <% end %>
       </div>
     </div>
 
-    <div id="references" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'oeuvres' %>">
-      <div class="flex-container">
+    <div id="references" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
+      <div class="flex-container" id="oeuvres-container">
         <% @oeuvres.each do |oeuvre| %>
           <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
         <% end %>
@@ -208,5 +208,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
- <%= javascript_include_tag "controllers/reset", defer: true %>
-  <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
+
+<%= javascript_include_tag "controllers/reset", defer: true %>
+<%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>

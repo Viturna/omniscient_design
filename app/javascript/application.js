@@ -3,7 +3,7 @@ import "controllers";
 import Rails from "@rails/ujs";
 import "stylesheets/application.scss";
 import "./controllers/select2_initializer";
-import "stylesheets/application"
+import "../stylesheets/application.scss";
 
 Rails.start();
 Turbo.start();

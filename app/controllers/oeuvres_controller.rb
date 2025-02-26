@@ -67,6 +67,7 @@ class OeuvresController < ApplicationController
       end_year = params[:end_year].to_i
     
       @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
+      @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
     end
     
     
@@ -92,9 +93,6 @@ class OeuvresController < ApplicationController
         @frises << { annee: year, oeuvres: oeuvres_in_year, designers: designers_in_year }
       end
     end
-
-    Rails.logger.debug "DESIGNERS TROUVÉS: #{@designers.map(&:nom)}"
-
   end  
   
   def load_more_oeuvres

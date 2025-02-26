@@ -25,4 +25,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Pour éviter les valeurs négatives
   });
-});
+}, { passive: true });

@@ -27,7 +27,6 @@ Rails.application.configure do
   config.assets.css_compressor = :sass
 
   # Do not fall back to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = true
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -65,7 +64,18 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+
+  config.cache_classes = true
+  config.eager_load = true
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || Rails.env.production?
+  config.assets.compile = false # Ne pas compiler à la volée
+  config.assets.digest = true # Générer des hachages pour les assets
+  config.assets.js_compressor = :uglifier # Compresser les fichiers JS
+  config.assets.css_compressor = :sass # Compresser les fichiers CSS
+  
+  config.public_file_server.headers = {
+  'Cache-Control' => "public, max-age=#{1.year.to_i}"
+}
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque

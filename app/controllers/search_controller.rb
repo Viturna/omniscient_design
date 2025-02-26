@@ -9,17 +9,28 @@ class SearchController < ApplicationController
 
     # Mapper les résultats
     oeuvre_results = @oeuvre_suggestions.results.map { |oeuvre| 
-      { name: oeuvre.nom_oeuvre, url: oeuvre_path(oeuvre) }
+      { name: oeuvre.nom_oeuvre,
+        url: oeuvre_path(oeuvre),
+        img: oeuvre.image.present? ? helpers.asset_path(oeuvre.image) : nil
+      }
     }
 
     designer_results = @designer_suggestions.results.map { |designer| 
-      { name: "#{designer.prenom} #{designer.nom}", url: designer_path(designer) }
+      { name: "#{designer.prenom} #{designer.nom}",
+       url: designer_path(designer),
+       img: designer.image.present? ? helpers.asset_path(designer.image) : nil }
     }
 
-    # Utilisation de l'ID du domaine et non du nom
-    domaine_results = @domaine_suggestions.results.map { |domaine| 
-      { name: domaine.domaine, url: search_category_path(domaine: domaine.id) } # Lien vers la recherche filtrée par ID du domaine
-    }
+    domaine_results = @domaine_suggestions.results.map do |domaine|
+      { 
+        name: domaine.domaine, 
+        url: search_category_path(domaine: domaine.id), 
+        svg: domaine.svg.present? ? helpers.asset_path("domaines/#{domaine.svg}") : nil 
+      }
+    end
+    
+ 
+
 
     # Organiser les résultats sous trois sections séparées
     suggestions = {

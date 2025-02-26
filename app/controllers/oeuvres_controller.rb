@@ -31,23 +31,49 @@ class OeuvresController < ApplicationController
 
   def search
     @current_page = 'recherche'
-
-      query = params[:query].to_s.strip
+    @country = Country.all
+    @notions = Notion.all
+    query = params[:query].to_s.strip
   
-      if query.present?
-        # Recherche dans Oeuvre et Designer avec Searchkick
-        @oeuvre_suggestions = Oeuvre.search(query, fields: [:nom_oeuvre], match: :word_start)
-        @designer_suggestions = Designer.search(query, fields: [:prenom, :nom], match: :word_start)
-      end
-
+    if query.present?
+      # Recherche dans Oeuvre et Designer avec Searchkick
+      @oeuvre_suggestions = Oeuvre.search(query, fields: [:nom_oeuvre], match: :word_start)
+      @designer_suggestions = Designer.search(query, fields: [:prenom, :nom], match: :word_start)
+    end
+  
     # Récupération des œuvres et designers validés pour affichage
-    @oeuvres = Oeuvre.where(validation: true).shuffle
+    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre)
     @designers = Designer.where(validation: true).order(:nom)
   
+    # Application des filtres
+    if params[:domaine].present? && params[:domaine].reject(&:blank?).any?
+      filtered_domains = params[:domaine].reject(&:blank?)
+    
+      @oeuvres = @oeuvres.where(domaine_id: filtered_domains)
+      @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
+    end
+    
+  
+    if params[:country].present? && params[:country].reject(&:blank?).any?
+      @designers = @designers.joins(:countries).where(countries: { id: params[:country] })
+    end
+  
+    if params[:notion].present? && params[:notion].reject(&:blank?).any?
+      @oeuvres = @oeuvres.joins(:notions).where(notions: { id: params[:notion] })
+    end
+  
+    if params[:start_year].present? && params[:end_year].present?
+      start_year = params[:start_year].to_i
+      end_year = params[:end_year].to_i
+    
+      @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
+    end
+    
+    
     # Gestion des filtres par année
     @start_year_oeuvre = params[:start_year_oeuvre].to_i.positive? ? params[:start_year_oeuvre].to_i : 1880
     @end_year_oeuvre = params[:end_year_oeuvre].to_i.positive? ? params[:end_year_oeuvre].to_i : 1889
-  
+    
     @timeline_years = (@start_year_oeuvre..@end_year_oeuvre).to_a
     @oeuvres_filtered = @oeuvres.select do |oeuvre|
       oeuvre.date_oeuvre.to_i.between?(@start_year_oeuvre, @end_year_oeuvre)
@@ -55,8 +81,22 @@ class OeuvresController < ApplicationController
     @designers_filtered = @designers.select do |designer|
       designer.date_naissance.to_i.between?(@start_year_oeuvre, @end_year_oeuvre)
     end
-  end
+  
+    # Créer des frises à partir des œuvres et des designers
+    @frises = []
+    @timeline_years.each do |year|
+      oeuvres_in_year = @oeuvres_filtered.select { |oeuvre| oeuvre.date_oeuvre.year == year }
+      designers_in_year = @designers_filtered.select { |designer| designer.date_naissance.year == year }
+      
+      if oeuvres_in_year.any? || designers_in_year.any?
+        @frises << { annee: year, oeuvres: oeuvres_in_year, designers: designers_in_year }
+      end
+    end
 
+    Rails.logger.debug "DESIGNERS TROUVÉS: #{@designers.map(&:nom)}"
+
+  end  
+  
   def load_more_oeuvres
     @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(8)
     render partial: 'oeuvres/oeuvre_card', collection: @oeuvres, as: :oeuvre

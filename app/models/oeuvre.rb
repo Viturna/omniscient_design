@@ -3,6 +3,9 @@ class Oeuvre < ApplicationRecord
   friendly_id :nom_oeuvre, use: :slugged
 
   searchkick word_start: [:nom_oeuvre]
+  after_commit :reindex_searchkick, if: :validated?
+  after_destroy :remove_from_searchkick
+  
   validates :nom_oeuvre, uniqueness: true, presence: true
 
   belongs_to :domaine
@@ -28,5 +31,14 @@ class Oeuvre < ApplicationRecord
     image.variant(resize_to_limit: [500, 500]).processed
   rescue ActiveStorage::InvariableError
     nil
+  end
+
+  private
+
+  def reindex_searchkick
+    reindex
+  end
+  def remove_from_searchkick
+    self.class.search_index.remove(self)
   end
 end

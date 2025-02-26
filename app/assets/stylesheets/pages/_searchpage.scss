@@ -9,13 +9,7 @@
   width: 50vw;
   border-radius: 16px;
   z-index: 100;
-  margin-top: 32px;
-}
-
-strong {
-  font-weight: bold;
-  color: #f39c12;
-  /* Exemple : couleur dorée pour le texte en gras */
+  margin-top: 8px;
 }
 
 .suggestion-image {
@@ -26,8 +20,24 @@ strong {
   margin-right: 10px;
 }
 
+.svg-icon {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  margin-right: 16px;
+}
+
+.search-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 16px;
+}
+
+
 .suggestion-item {
-  padding: 24px 56px;
+  padding: 20px 32px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -50,6 +60,42 @@ strong {
   margin-top: 148px;
 }
 
+// Tabs
+.tabs {
+  display: flex;
+  margin-top: 48px;
+  border-bottom: 2px solid #E9E9E9;
+  gap: 4px;
+}
+
+.tab {
+  font-size: 16px;
+  color: $text-color;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  padding: 12px 32px;
+
+  &.active {
+    color: $primary-color;
+    font-weight: 600;
+    border-bottom: 3px solid $primary-color;
+  }
+}
+
+
+.tab:hover {
+  cursor: pointer;
+  color: $primary-color;
+  font-weight: 600;
+  border-bottom: 3px solid $primary-color;
+}
+
+// filtres
+.filters {
+  display: flex;
+}
+
 .flex-category,
 .flex-container {
   display: flex;
@@ -61,6 +107,47 @@ strong {
   padding: 32px 0;
   max-width: 1200px;
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.dropdown-toggle {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 100%;
+  z-index: 10;
+}
+
+.dropdown-menu label {
+  display: block;
+  margin-top: 5px;
+}
+
+.dropdown-menu input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.dropdown.active .dropdown-menu {
+  display: block;
+}
+
 
 
 .card-category {

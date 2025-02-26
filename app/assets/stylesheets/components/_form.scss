@@ -22,6 +22,31 @@ input[type=search] {
   margin-right: 16px;
 }
 
+.search-wrapper {
+  position: relative;
+}
+
+.clear-search {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  /* Laissez un petit espace du bord droit */
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  /* Cacher la croix par défaut */
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  /* Supprime la croix par défaut */
+  appearance: none;
+}
+
 @media screen and (min-width:769px) and (max-width: 1024px) {
   input.search-top-bar {
     font-size: 16px;

@@ -67,7 +67,16 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
-
+  config.cache_classes = true
+  config.public_file_server.enabled = true
+  
+  config.assets.digest = true # Générer des hachages pour les assets
+  config.assets.js_compressor = :terser # Compresser les fichiers JS
+  config.assets.css_compressor = :sass # Compresser les fichiers CSS
+  
+  config.public_file_server.headers = {
+  'Cache-Control' => "public, max-age=#{1.year.to_i}"
+}
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "omniscient_design_production"

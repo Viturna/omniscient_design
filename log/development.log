@@ -29809,3 +29809,96 @@ Processing by DesignersController#new as HTML
 Completed 200 OK in 34ms (Views: 26.9ms | ActiveRecord: 2.0ms | Allocations: 34885)
 
 
+[dotenv] Set [36mSENDGRID_USERNAME[0m, [36mSENDGRID_API_KEY[0m, [36mCLOUDINARY_CLOUD_NAME[0m, [36mCLOUDINARY_API_KEY[0m, and [36mCLOUDINARY_API_SECRET[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/" for ::1 at 2025-02-26 19:15:05 +0100
+  [1m[36mActiveRecord::SchemaMigration Load (1.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by OeuvresController#index as HTML
+  [1m[36mUser Load (1.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:14:in `set_unread_notifications_count'
+  [1m[36mNotification Count (2.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:14:in `set_unread_notifications_count'
+  Rendering layout layouts/application.html.erb
+  Rendering oeuvres/index.html.erb within layouts/application
+  [1m[36mOeuvre Load (3.8ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" WHERE "oeuvres"."validation" = $1 ORDER BY RANDOM() LIMIT $2[0m  [["validation", true], ["LIMIT", 2]]
+  ↳ app/views/oeuvres/index.html.erb:79
+  [1m[36mDomaine Load (0.9ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" WHERE "domaines"."id" = $1 LIMIT $2[0m  [["id", 28], ["LIMIT", 1]]
+  ↳ app/views/oeuvres/_card.html.erb:3
+  [1m[36mDesigner Load (5.3ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "designers_oeuvres" ON "designers"."id" = "designers_oeuvres"."designer_id" WHERE "designers_oeuvres"."oeuvre_id" = $1[0m  [["oeuvre_id", 3090]]
+  ↳ app/views/oeuvres/_card.html.erb:63:in `map'
+  [1m[36mCACHE Domaine Load (0.0ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" WHERE "domaines"."id" = $1 LIMIT $2[0m  [["id", 28], ["LIMIT", 1]]
+  ↳ app/views/oeuvres/_card.html.erb:3
+  [1m[36mDesigner Load (0.7ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "designers_oeuvres" ON "designers"."id" = "designers_oeuvres"."designer_id" WHERE "designers_oeuvres"."oeuvre_id" = $1[0m  [["oeuvre_id", 3098]]
+  ↳ app/views/oeuvres/_card.html.erb:63:in `map'
+  Rendered collection of oeuvres/_card.html.erb [2 times] (Duration: 54.9ms | Allocations: 36890)
+  Rendered oeuvres/index.html.erb within layouts/application (Duration: 79.1ms | Allocations: 51747)
+  Rendered application/_favicon.html.erb (Duration: 5.4ms | Allocations: 3373)
+  Rendered layouts/_header.html.erb (Duration: 2.3ms | Allocations: 1592)
+  Rendered layout layouts/application.html.erb (Duration: 400.9ms | Allocations: 203787)
+Completed 200 OK in 528ms (Views: 379.5ms | ActiveRecord: 63.0ms | Allocations: 246652)
+
+
+Started GET "/designers" for ::1 at 2025-02-26 19:15:07 +0100
+Processing by DesignersController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:14:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:14:in `set_unread_notifications_count'
+  Rendering layout layouts/application.html.erb
+  Rendering designers/index.html.erb within layouts/application
+  [1m[36mDesigner Load (1.1ms)[0m  [1m[34mSELECT "designers".* FROM "designers" WHERE "designers"."validation" = $1 ORDER BY RANDOM() LIMIT $2[0m  [["validation", true], ["LIMIT", 2]]
+  ↳ app/views/designers/index.html.erb:78
+  [1m[36mDomaine Exists? (1.0ms)[0m  [1m[34mSELECT 1 AS one FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1 LIMIT $2[0m  [["designer_id", 1581], ["LIMIT", 1]]
+  ↳ app/views/designers/_card.html.erb:3
+  [1m[36mDomaine Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1[0m  [["designer_id", 1581]]
+  ↳ app/views/designers/_card.html.erb:4
+  [1m[36mDomaine Load (0.4ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1 ORDER BY "domaines"."id" ASC LIMIT $2[0m  [["designer_id", 1581], ["LIMIT", 1]]
+  ↳ app/views/designers/_card.html.erb:6
+  [1m[36mCountry Load (2.1ms)[0m  [1m[34mSELECT "countries".* FROM "countries" INNER JOIN "designer_countries" ON "countries"."id" = "designer_countries"."country_id" WHERE "designer_countries"."designer_id" = $1[0m  [["designer_id", 1581]]
+  ↳ app/views/designers/_card.html.erb:33:in `map'
+  [1m[36mDomaine Load (0.3ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1[0m  [["designer_id", 1581]]
+  ↳ app/views/designers/_card.html.erb:36
+  [1m[36mDomaine Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1 LIMIT $2[0m  [["designer_id", 1668], ["LIMIT", 1]]
+  ↳ app/views/designers/_card.html.erb:3
+  [1m[36mDomaine Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1[0m  [["designer_id", 1668]]
+  ↳ app/views/designers/_card.html.erb:4
+  [1m[36mDomaine Load (0.6ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1 ORDER BY "domaines"."id" ASC LIMIT $2[0m  [["designer_id", 1668], ["LIMIT", 1]]
+  ↳ app/views/designers/_card.html.erb:6
+  [1m[36mCountry Load (0.5ms)[0m  [1m[34mSELECT "countries".* FROM "countries" INNER JOIN "designer_countries" ON "countries"."id" = "designer_countries"."country_id" WHERE "designer_countries"."designer_id" = $1[0m  [["designer_id", 1668]]
+  ↳ app/views/designers/_card.html.erb:33:in `map'
+  [1m[36mDomaine Load (0.4ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" INNER JOIN "designers_domaines" ON "domaines"."id" = "designers_domaines"."domaine_id" WHERE "designers_domaines"."designer_id" = $1[0m  [["designer_id", 1668]]
+  ↳ app/views/designers/_card.html.erb:36
+  Rendered collection of designers/_card.html.erb [2 times] (Duration: 36.9ms | Allocations: 26045)
+  Rendered designers/index.html.erb within layouts/application (Duration: 42.5ms | Allocations: 29232)
+  Rendered application/_favicon.html.erb (Duration: 1.8ms | Allocations: 2590)
+  Rendered layouts/_header.html.erb (Duration: 0.5ms | Allocations: 769)
+  Rendered layout layouts/application.html.erb (Duration: 52.0ms | Allocations: 46266)
+Completed 200 OK in 57ms (Views: 39.4ms | ActiveRecord: 13.8ms | Allocations: 48640)
+
+
+Started GET "/oeuvres" for ::1 at 2025-02-26 19:15:08 +0100
+Processing by OeuvresController#index as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:14:in `set_unread_notifications_count'
+  [1m[36mNotification Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "notifications" WHERE "notifications"."user_id" = $1 AND "notifications"."status" = $2[0m  [["user_id", 1], ["status", 0]]
+  ↳ app/controllers/application_controller.rb:14:in `set_unread_notifications_count'
+  Rendering layout layouts/application.html.erb
+  Rendering oeuvres/index.html.erb within layouts/application
+  [1m[36mOeuvre Load (1.4ms)[0m  [1m[34mSELECT "oeuvres".* FROM "oeuvres" WHERE "oeuvres"."validation" = $1 ORDER BY RANDOM() LIMIT $2[0m  [["validation", true], ["LIMIT", 2]]
+  ↳ app/views/oeuvres/index.html.erb:79
+  [1m[36mDomaine Load (0.7ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" WHERE "domaines"."id" = $1 LIMIT $2[0m  [["id", 26], ["LIMIT", 1]]
+  ↳ app/views/oeuvres/_card.html.erb:3
+  [1m[36mDesigner Load (0.9ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "designers_oeuvres" ON "designers"."id" = "designers_oeuvres"."designer_id" WHERE "designers_oeuvres"."oeuvre_id" = $1[0m  [["oeuvre_id", 3269]]
+  ↳ app/views/oeuvres/_card.html.erb:63:in `map'
+  [1m[36mCACHE Domaine Load (0.0ms)[0m  [1m[34mSELECT "domaines".* FROM "domaines" WHERE "domaines"."id" = $1 LIMIT $2[0m  [["id", 26], ["LIMIT", 1]]
+  ↳ app/views/oeuvres/_card.html.erb:3
+  [1m[36mDesigner Load (0.8ms)[0m  [1m[34mSELECT "designers".* FROM "designers" INNER JOIN "designers_oeuvres" ON "designers"."id" = "designers_oeuvres"."designer_id" WHERE "designers_oeuvres"."oeuvre_id" = $1[0m  [["oeuvre_id", 3274]]
+  ↳ app/views/oeuvres/_card.html.erb:63:in `map'
+  Rendered collection of oeuvres/_card.html.erb [2 times] (Duration: 21.2ms | Allocations: 8522)
+  Rendered oeuvres/index.html.erb within layouts/application (Duration: 25.9ms | Allocations: 10709)
+  Rendered application/_favicon.html.erb (Duration: 2.3ms | Allocations: 2590)
+  Rendered layouts/_header.html.erb (Duration: 0.6ms | Allocations: 774)
+  Rendered layout layouts/application.html.erb (Duration: 36.4ms | Allocations: 27802)
+Completed 200 OK in 41ms (Views: 33.0ms | ActiveRecord: 4.7ms | Allocations: 29759)
+
+

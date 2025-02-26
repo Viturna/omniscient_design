@@ -49,16 +49,18 @@
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
 
     <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script> <!-- Ajout du defer -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" 
       integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" 
       integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" 
       integrity="sha384-JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk" 
-      crossorigin="anonymous" defer></script> <!-- Ajout du defer -->
+      crossorigin="anonymous"></script>
     
     <!-- JavaScript Rails -->
     <%= javascript_importmap_tags %>
@@ -66,7 +68,7 @@
     <%= javascript_include_tag "controllers/progressBar", defer: true %>
 
     <!-- Cookie Consent -->
-    <script defer src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js" charset="UTF-8"></script> <!-- Ajout du defer -->
+    <script defer src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js" charset="UTF-8"></script>
     <script defer>
       document.addEventListener('DOMContentLoaded', function () {
         cookieconsent.run({
@@ -90,8 +92,7 @@
       gtag('config', 'G-WVD06EPJC3');
     </script>
 
-  </head>
-
+</head>
   <body class="<%= (cookies && cookies[:theme].presence || 'system') %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
     <% if notice.present? %>
       <div class="alert" id="alert">

@@ -20,18 +20,6 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
 
-  config.cache_classes = true
-  config.public_file_server.enabled = true
-  
-  config.assets.digest = true # Générer des hachages pour les assets
-  config.assets.js_compressor = :terser # Compresser les fichiers JS
-  config.assets.css_compressor = :sass # Compresser les fichiers CSS
-  
-  config.public_file_server.headers = {
-  'Cache-Control' => "public, max-age=#{1.year.to_i}"
-}
-
-
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 

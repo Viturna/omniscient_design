@@ -31,7 +31,7 @@ class OeuvresController < ApplicationController
 
   def search
     @current_page = 'recherche'
-    @country = Country.all
+    @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
     @notions = Notion.all
     query = params[:query].to_s.strip
   
@@ -66,32 +66,24 @@ class OeuvresController < ApplicationController
       start_year = params[:start_year].to_i
       end_year = params[:end_year].to_i
     
-      @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
-      @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
-    end
-    
-    
-    # Gestion des filtres par année
-    @start_year_oeuvre = params[:start_year_oeuvre].to_i.positive? ? params[:start_year_oeuvre].to_i : 1880
-    @end_year_oeuvre = params[:end_year_oeuvre].to_i.positive? ? params[:end_year_oeuvre].to_i : 1889
-    
-    @timeline_years = (@start_year_oeuvre..@end_year_oeuvre).to_a
-    @oeuvres_filtered = @oeuvres.select do |oeuvre|
-      oeuvre.date_oeuvre.to_i.between?(@start_year_oeuvre, @end_year_oeuvre)
-    end
-    @designers_filtered = @designers.select do |designer|
-      designer.date_naissance.to_i.between?(@start_year_oeuvre, @end_year_oeuvre)
+      if start_year > 0 && end_year > 0 && start_year <= end_year
+        @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
+        @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
+        @timeline_years = (start_year..end_year).to_a
+      else
+        start_year =  1880
+        end_year = Time.now.year
+        @timeline_years = (start_year..end_year).to_a
+      end
+      else
+        start_year =  1880
+        end_year = Time.now.year
+        @timeline_years = (start_year..end_year).to_a
     end
   
-    # Créer des frises à partir des œuvres et des designers
-    @frises = []
-    @timeline_years.each do |year|
-      oeuvres_in_year = @oeuvres_filtered.select { |oeuvre| oeuvre.date_oeuvre.year == year }
-      designers_in_year = @designers_filtered.select { |designer| designer.date_naissance.year == year }
-      
-      if oeuvres_in_year.any? || designers_in_year.any?
-        @frises << { annee: year, oeuvres: oeuvres_in_year, designers: designers_in_year }
-      end
+    respond_to do |format|
+      format.html # Si c'est une navigation normale
+      format.turbo_stream # Pour les requêtes AJAX via Turbo
     end
   end  
   

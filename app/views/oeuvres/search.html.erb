@@ -25,47 +25,45 @@
     <button class="tab <%= 'active' if params[:tab] == 'frise' %>" data-tab="frise">Frise Chronologique</button>
   </div>
 
-  <%= form_with url: search_oeuvres_path, method: :get, local: true, id: "filterForm" do |form| %>
+<%= form_with url: search_oeuvres_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
+
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers" %>
-         <h2>Filtres</h2>
+      <h2>Filtres</h2>
       <div class="filters">
-       
         <div class="filter">
           <label for="domainFilter">Domaine</label>
           <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, 
-            { include_blank: "Choisir un domaine", selected: params[:domaine] }, 
+            { selected: params[:domaine] }, 
             { multiple: true, class: "select2" } %>
         </div>
         <div class="filter" id="countryFilterContainer">
           <label for="paysFilter">Pays</label>
-          <%= form.select :country, Country.all.map { |p| [p.country, p.id] }, 
-            { include_blank: "Choisir un pays", selected: params[:country] }, 
+          <%= form.select :country, @countries.all.map { |p| [p.country, p.id] }, 
+            { selected: params[:country] }, 
             { multiple: true, class: "select2" } %>
         </div>
-       <div class="filter" id="notionsFilterContainer">
-          <label for="notionsFilter">Notions</label>
-          <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, 
-            { include_blank: "Choisir une notion", selected: params[:notions] }, 
-            { multiple: true, class: "select2" } %>
-        </div>
-          <div class="filter">
-            <label for="dateFilter">Dates</label>
-            <div class="dropdown">
-              <button type="button" class="dropdown-toggle">Sélectionner une période</button>
-              <div class="dropdown-menu">
-                <label for="startDate">Début</label>
-                <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
-
-                <label for="endDate">Fin</label>
-                <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
-              </div>
-            </div>
+        <div class="filter" id="notionsFilterContainer">
+            <label for="notionsFilter">Notions</label>
+            <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, 
+              { selected: params[:notions] }, 
+              { multiple: true, class: "select2" } %>
           </div>
-    </div>
+       <div class="filter">
+        <label for="dateFilter">Dates</label>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle">Sélectionner une période</button>
+          <div class="dropdown-menu">
+            <label for="startDate">De</label>
+            <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
+            <label for="endDate">À</label>
+            <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
+            <button type="button" id="applyDateFilter" class="button dark">Appliquer</button> <!-- Bouton ajouté -->
+          </div>
+        </div>
+      </div>
 
+      </div>
 
-
-    <button type="submit" id="filterSubmit">Filtrer</button>
   <% end %>
 
   <turbo-frame id="search-results">
@@ -86,19 +84,123 @@
     </div>
 
     <div id="frise" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'frise' %><%= 'display: none;' unless params[:tab] == 'frise' %>">
-      <h2>Frise Chronologique</h2>
+      <h2>Références</h2>
       <div class="timeline">
-        <% @frises.each do |frise| %>
+        <% @timeline_years.each do |year| %>
           <div class="timeline-item">
-            <div class="year"><%= frise.annee %></div>
+            <div class="oeuvres">
+              <div class="oeuvres-container">
+                <% oeuvres_year = @oeuvres.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
+                <% if oeuvres_year.size > 1 %>
+                <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
+                  <span class="circle-with-number">+<%= oeuvres_year.size %></span>
+                  <div class="hidden-oeuvres" style="display: none;">
+                    <% oeuvres_year.each do |oeuvre| %>
+                      <%= link_to oeuvre, class: "oeuvre-point" do %>
+                        <div class="oeuvre" 
+                            title="<%= oeuvre.nom_oeuvre %>" 
+                            data-year="<%= oeuvre.date_oeuvre %>" 
+                            style="background-image: url('<%= oeuvre.image %>');">
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% else %>
+                <% oeuvres_year.each do |oeuvre| %>
+                  <%= link_to oeuvre, class: "oeuvre-point" do %>
+                    <div class="oeuvre" 
+                        title="<%= oeuvre.nom_oeuvre %>" 
+                        data-year="<%= oeuvre.date_oeuvre %>" 
+                        style="background-image: url('<%= oeuvre.image %>');">
+                    </div>
+                  <% end %>
+                <% end %>
+              <% end %>
+              </div>
+              <div class="oeuvre empty"></div>
+              <div class="year"><%= year %></div>
+            </div>
           </div>
         <% end %>
+        <hr class="timeline-hr">
+      </div>
+      <h2>Designers</h2>
+      <div class="timeline">
+        <% @timeline_years.each do |year| %>
+          <div class="timeline-item">
+            <div class="oeuvres">
+              <div class="oeuvres-container">
+                <% designers_year = @designers.select { |designer| designer.date_naissance.to_i == year } %>
+                <% if designers_year.size > 1 %>
+                <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
+                  <span class="circle-with-number">+<%= designers_year.size %></span>
+                  <div class="hidden-oeuvres" style="display: none;">
+                    <% designers_year.each do |designer| %>
+                      <%= link_to designer, class: "oeuvre-point" do %>
+                        <div class="oeuvre" 
+                            title="<%= designer.nom_designer %>" 
+                            data-year="<%= designer.date_naissance %>" 
+                            style="background-image: url('<%= designer.image %>');">
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% else %>
+                <% designers_year.each do |designer| %>
+                  <%= link_to designer, class: "oeuvre-point" do %>
+                    <div class="oeuvre" 
+                        title="<%= designer.nom_designer %>" 
+                        data-year="<%= designer.date_naissance %>" 
+                        style="background-image: url('<%= designer.image %>');">
+                    </div>
+                  <% end %>
+                <% end %>
+              <% end %>
+              </div>
+              <div class="oeuvre empty"></div>
+              <div class="year"><%= year %></div>
+            </div>
+          </div>
+        <% end %>
+        <hr class="timeline-hr">
       </div>
     </div>
   </turbo-frame>
 
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".oeuvres-counter").forEach(counter => {
+    counter.addEventListener("click", function () {
+      let hiddenOeuvres = this.querySelector(".hidden-oeuvres");
+      if (hiddenOeuvres.style.display === "none" || hiddenOeuvres.style.display === "") {
+        hiddenOeuvres.style.display = "flex";
+      } else {
+        hiddenOeuvres.style.display = "none";
+      }
+    });
+  });
+});
 
+</script>
+<script>
+  $(document).ready(function() {
+    // Initialize timeline and hr elements for both sections
+    const timelines = document.querySelectorAll('.timeline');
+    const hrs = document.querySelectorAll('.timeline-hr');
+
+    // Adjust HR width function for each timeline section
+    function adjustHrWidth() {
+      timelines.forEach((timeline, index) => {
+        // Set the width of hr to match the scroll width of the timeline
+        hrs[index].style.width = `${timeline.scrollWidth}px`;
+      });
+    }
+  });
+  </script>
+ 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const tabs = document.querySelectorAll(".tabs button");
@@ -143,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (tabName === "designers") {
       notionsFilter.style.display = "none";
     } else {
-      notionsFilter.style.display = "block";
+      notionsFilter.style.display = "flex";
     }
   }
 
@@ -152,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (tabName === "references") {
       countryFilter.style.display = "none";
     } else {
-      countryFilter.style.display = "block";
+      countryFilter.style.display = "flex";
     }
   }
 
@@ -208,6 +310,77 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  function initSelect2() {
+    console.log("Initialisation de Select2");
+    $('.select2').select2({
+      placeholder: "Choisir des filtres",
+      allowClear: true
+    });
+  }
+
+
+  initSelect2(); // Initialisation au chargement
+
+  // Ré-initialiser Select2 après chaque Turbo navigation
+  document.addEventListener("turbo:load", function () {
+    initSelect2();
+  });
+
+  // Soumettre le formulaire automatiquement quand un filtre est changé
+  const filterForm = document.getElementById("filterForm");
+
+  // Fonction pour soumettre le formulaire avec les filtres mis à jour
+  function submitFilterForm() {
+    const formData = new FormData(filterForm);
+    const url = new URL(window.location.href);
+
+    // On ajoute tous les filtres dans l'URL
+    formData.forEach((value, key) => {
+      if (value) { // Si la valeur n'est pas vide
+        url.searchParams.set(key, value);
+      }
+    });
+
+    // Change l'URL sans recharger la page (pour conserver l'état de l'URL)
+    window.history.pushState({}, '', url);
+
+    // Soumettre le formulaire avec Turbo
+    filterForm.requestSubmit(); // Fonctionne mieux avec Turbo
+
+  }
+
+  // Écouter les changements sur les filtres
+  document.querySelectorAll('.select2, .date-filter').forEach(function (element) {
+    element.addEventListener('change', function () {
+      console.log("Changement détecté :", this.name, this.value);
+      submitFilterForm();
+    });
+  });
+$('.select2').on('select2:select', function () {
+  console.log("Sélection détectée :", $(this).attr("name"), $(this).val());
+  submitFilterForm();
+});
+$('.select2').on('select2:unselect', function () {
+  console.log("Suppression détectée :", $(this).attr("name"), $(this).val());
+  submitFilterForm();
+});
+
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const applyDateFilterBtn = document.getElementById("applyDateFilter");
+  const filterForm = document.getElementById("filterForm");
+
+  applyDateFilterBtn.addEventListener("click", function () {
+    console.log("Filtrage appliqué");
+    filterForm.requestSubmit(); // Soumet le formulaire uniquement après validation
+  });
+});</script>
 
 <%= javascript_include_tag "controllers/reset", defer: true %>
 <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>

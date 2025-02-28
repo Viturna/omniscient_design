@@ -24,28 +24,26 @@
     <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références</button>
     <button class="tab <%= 'active' if params[:tab] == 'frise' %>" data-tab="frise">Frise Chronologique</button>
   </div>
-
-<%= form_with url: search_oeuvres_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
-
+  <%= form_with url: search_oeuvres_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers" %>
       <h2>Filtres</h2>
       <div class="filters">
         <div class="filter">
           <label for="domainFilter">Domaine</label>
           <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, 
-            { selected: params[:domaine] }, 
+            {  include_blank: false, selected: params[:domaine] }, 
             { multiple: true, class: "select2" } %>
         </div>
         <div class="filter" id="countryFilterContainer">
           <label for="paysFilter">Pays</label>
           <%= form.select :country, @countries.all.map { |p| [p.country, p.id] }, 
-            { selected: params[:country] }, 
+            {  include_blank: false, selected: params[:country] }, 
             { multiple: true, class: "select2" } %>
         </div>
         <div class="filter" id="notionsFilterContainer">
             <label for="notionsFilter">Notions</label>
             <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, 
-              { selected: params[:notions] }, 
+              {  include_blank: false, selected: params[:notions] }, 
               { multiple: true, class: "select2" } %>
           </div>
        <div class="filter">
@@ -67,12 +65,13 @@
   <% end %>
 
   <turbo-frame id="search-results">
-   <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'designers' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'designers' %>">
+    <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'designers' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'designers' %>">
       <div class="flex-container" id="designers-container">
         <% @designers.each do |designer| %>
           <%= render 'designers/designer_card', designer: designer %>
         <% end %>
       </div>
+      <%= paginate @designers, params: { tab: 'designers' } %>
     </div>
 
     <div id="references" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
@@ -81,235 +80,118 @@
           <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
         <% end %>
       </div>
-    </div>
-
-    <div id="frise" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'frise' %><%= 'display: none;' unless params[:tab] == 'frise' %>">
-      <h2>Références</h2>
-      <div class="timeline">
-        <% @timeline_years.each do |year| %>
-          <div class="timeline-item">
-            <div class="oeuvres">
-              <div class="oeuvres-container">
-                <% oeuvres_year = @oeuvres.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
-                <% if oeuvres_year.size > 1 %>
-                <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
-                  <span class="circle-with-number">+<%= oeuvres_year.size %></span>
-                  <div class="hidden-oeuvres" style="display: none;">
-                    <% oeuvres_year.each do |oeuvre| %>
-                      <%= link_to oeuvre, class: "oeuvre-point" do %>
-                        <div class="oeuvre" 
-                            title="<%= oeuvre.nom_oeuvre %>" 
-                            data-year="<%= oeuvre.date_oeuvre %>" 
-                            style="background-image: url('<%= oeuvre.image %>');">
-                        </div>
-                      <% end %>
-                    <% end %>
-                  </div>
-                </div>
-              <% else %>
-                <% oeuvres_year.each do |oeuvre| %>
-                  <%= link_to oeuvre, class: "oeuvre-point" do %>
-                    <div class="oeuvre" 
-                        title="<%= oeuvre.nom_oeuvre %>" 
-                        data-year="<%= oeuvre.date_oeuvre %>" 
-                        style="background-image: url('<%= oeuvre.image %>');">
-                    </div>
-                  <% end %>
-                <% end %>
-              <% end %>
-              </div>
-              <div class="oeuvre empty"></div>
-              <div class="year"><%= year %></div>
-            </div>
-          </div>
-        <% end %>
-        <hr class="timeline-hr">
-      </div>
-      <h2>Designers</h2>
-      <div class="timeline">
-        <% @timeline_years.each do |year| %>
-          <div class="timeline-item">
-            <div class="oeuvres">
-              <div class="oeuvres-container">
-                <% designers_year = @designers.select { |designer| designer.date_naissance.to_i == year } %>
-                <% if designers_year.size > 1 %>
-                <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
-                  <span class="circle-with-number">+<%= designers_year.size %></span>
-                  <div class="hidden-oeuvres" style="display: none;">
-                    <% designers_year.each do |designer| %>
-                      <%= link_to designer, class: "oeuvre-point" do %>
-                        <div class="oeuvre" 
-                            title="<%= designer.nom_designer %>" 
-                            data-year="<%= designer.date_naissance %>" 
-                            style="background-image: url('<%= designer.image %>');">
-                        </div>
-                      <% end %>
-                    <% end %>
-                  </div>
-                </div>
-              <% else %>
-                <% designers_year.each do |designer| %>
-                  <%= link_to designer, class: "oeuvre-point" do %>
-                    <div class="oeuvre" 
-                        title="<%= designer.nom_designer %>" 
-                        data-year="<%= designer.date_naissance %>" 
-                        style="background-image: url('<%= designer.image %>');">
-                    </div>
-                  <% end %>
-                <% end %>
-              <% end %>
-              </div>
-              <div class="oeuvre empty"></div>
-              <div class="year"><%= year %></div>
-            </div>
-          </div>
-        <% end %>
-        <hr class="timeline-hr">
-      </div>
+      <%= paginate @oeuvres, params: { tab: 'references' } %>
     </div>
   </turbo-frame>
 
+  <div id="frise" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'frise' %><%= 'display: none;' unless params[:tab] == 'frise' %>">
+    <h2>Références</h2>
+    <div class="timeline">
+      <% @timeline_years.each do |year| %>
+        <div class="timeline-item">
+          <div class="oeuvres">
+            <div class="oeuvres-container">
+              <% oeuvres_year = @oeuvres.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
+              <% if oeuvres_year.size > 1 %>
+              <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
+                <span class="circle-with-number">+<%= oeuvres_year.size %></span>
+                <div class="hidden-oeuvres" style="display: none;">
+                  <% oeuvres_year.each do |oeuvre| %>
+                    <%= link_to oeuvre, class: "oeuvre-point" do %>
+                      <div class="oeuvre" 
+                          title="<%= oeuvre.nom_oeuvre %>" 
+                          data-year="<%= oeuvre.date_oeuvre %>" 
+                          style="background-image: url('<%= oeuvre.image %>');">
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            <% else %>
+              <% oeuvres_year.each do |oeuvre| %>
+                <%= link_to oeuvre, class: "oeuvre-point" do %>
+                  <div class="oeuvre" 
+                      title="<%= oeuvre.nom_oeuvre %>" 
+                      data-year="<%= oeuvre.date_oeuvre %>" 
+                      style="background-image: url('<%= oeuvre.image %>');">
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+            </div>
+            <div class="oeuvre empty"></div>
+            <div class="year"><%= year %></div>
+          </div>
+        </div>
+      <% end %>
+      <hr class="timeline-hr">
+    </div>
+    <h2>Designers</h2>
+    <div class="timeline">
+      <% @timeline_years.each do |year| %>
+        <div class="timeline-item">
+          <div class="oeuvres">
+            <div class="oeuvres-container">
+              <% designers_year = @designers.select { |designer| designer.date_naissance.to_i == year } %>
+              <% if designers_year.size > 1 %>
+              <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
+                <span class="circle-with-number">+<%= designers_year.size %></span>
+                <div class="hidden-oeuvres" style="display: none;">
+                  <% designers_year.each do |designer| %>
+                    <%= link_to designer, class: "oeuvre-point" do %>
+                      <div class="oeuvre" 
+                          title="<%= designer.nom_designer %>" 
+                          data-year="<%= designer.date_naissance %>" 
+                          style="background-image: url('<%= designer.image %>');">
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            <% else %>
+              <% designers_year.each do |designer| %>
+                <%= link_to designer, class: "oeuvre-point" do %>
+                  <div class="oeuvre" 
+                      title="<%= designer.nom_designer %>" 
+                      data-year="<%= designer.date_naissance %>" 
+                      style="background-image: url('<%= designer.image %>');">
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+            </div>
+            <div class="oeuvre empty"></div>
+            <div class="year"><%= year %></div>
+          </div>
+        </div>
+      <% end %>
+      <hr class="timeline-hr">
+    </div>
+  </div>
+
 </section>
+
+
+ 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".oeuvres-counter").forEach(counter => {
-    counter.addEventListener("click", function () {
-      let hiddenOeuvres = this.querySelector(".hidden-oeuvres");
-      if (hiddenOeuvres.style.display === "none" || hiddenOeuvres.style.display === "") {
-        hiddenOeuvres.style.display = "flex";
-      } else {
-        hiddenOeuvres.style.display = "none";
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.querySelector(".dropdown");
+    const dropdownToggle = document.querySelector(".dropdown-toggle");
+
+    // Ouvrir/Fermer le menu
+    dropdownToggle.addEventListener("click", function () {
+      dropdown.classList.toggle("active");
+    });
+
+    // Fermer le menu si on clique en dehors
+    document.addEventListener("click", function (event) {
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove("active");
       }
     });
   });
-});
-
 </script>
-<script>
-  $(document).ready(function() {
-    // Initialize timeline and hr elements for both sections
-    const timelines = document.querySelectorAll('.timeline');
-    const hrs = document.querySelectorAll('.timeline-hr');
 
-    // Adjust HR width function for each timeline section
-    function adjustHrWidth() {
-      timelines.forEach((timeline, index) => {
-        // Set the width of hr to match the scroll width of the timeline
-        hrs[index].style.width = `${timeline.scrollWidth}px`;
-      });
-    }
-  });
-  </script>
- 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const tabs = document.querySelectorAll(".tabs button");
-  const contentTabs = document.querySelectorAll(".content-tab");
-  const tabInput = document.getElementById("activeTab");
-
-  function showTab(tabName) {
-    contentTabs.forEach(tab => tab.style.display = "none");
-    document.getElementById(tabName).style.display = "block";
-
-    tabs.forEach(tab => tab.classList.remove("active"));
-    document.querySelector(`.tabs button[data-tab="${tabName}"]`).classList.add("active");
-  }
-  
-
- tabs.forEach(tab => {
-  tab.addEventListener("click", function () {
-    const tabName = this.getAttribute("data-tab");
-    tabInput.value = tabName;
-
-    // Réinitialisation des filtres
-    const filterForm = document.getElementById("filterForm");
-    if (filterForm) {
-      filterForm.reset(); // Réinitialise le formulaire
-      $('.select2').val(null).trigger('change'); // Réinitialise les select2
-    }
-
-    const url = new URL(window.location);
-    url.searchParams.set("tab", tabName);
-    window.history.pushState({}, "", url);
-
-    showTab(tabName);
-  });
-});
-});
-document.addEventListener("DOMContentLoaded", function () {
-  const tabs = document.querySelectorAll(".tabs button");
-  const notionsFilter = document.getElementById("notionsFilterContainer");
-  const countryFilter = document.getElementById("countryFilterContainer");
-
-  function toggleNotionsFilter(tabName) {
-    if (tabName === "designers") {
-      notionsFilter.style.display = "none";
-    } else {
-      notionsFilter.style.display = "flex";
-    }
-  }
-
-
-  function toggleCountryFilter(tabName) {
-    if (tabName === "references") {
-      countryFilter.style.display = "none";
-    } else {
-      countryFilter.style.display = "flex";
-    }
-  }
-
-  tabs.forEach(tab => {
-    tab.addEventListener("click", function () {
-      const tabName = this.getAttribute("data-tab");
-      toggleNotionsFilter(tabName);
-      toggleCountryFilter(tabName);
-    });
-  });
-
-  // Vérifie l'onglet actif au chargement de la page
-  const activeTab = new URLSearchParams(window.location.search).get("tab") || "designers";
-  toggleNotionsFilter(activeTab);
-  toggleCountryFilter(activeTab);
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const dropdown = document.querySelector(".dropdown");
-  const dropdownToggle = document.querySelector(".dropdown-toggle");
-
-  // Ouvrir/Fermer le menu
-  dropdownToggle.addEventListener("click", function () {
-    dropdown.classList.toggle("active");
-  });
-
-  // Fermer le menu si on clique en dehors
-  document.addEventListener("click", function (event) {
-    if (!dropdown.contains(event.target)) {
-      dropdown.classList.remove("active");
-    }
-  });
-});
-
-
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-  function initSelect2() {
-    $('.select2').select2({
-      placeholder: "Choisir des filtres",
-      allowClear: true
-    });
-  }
-
-  initSelect2(); // Initialisation au chargement
-
-  document.addEventListener("turbo:load", function () {
-    initSelect2(); // Ré-initialiser Select2 après chaque Turbo navigation
-  });
-
- 
-});
-
-</script>
 <script>
  document.addEventListener("DOMContentLoaded", function () {
   function initSelect2() {
@@ -350,14 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
     filterForm.requestSubmit(); // Fonctionne mieux avec Turbo
 
   }
-
-  // Écouter les changements sur les filtres
-  document.querySelectorAll('.select2, .date-filter').forEach(function (element) {
-    element.addEventListener('change', function () {
-      console.log("Changement détecté :", this.name, this.value);
-      submitFilterForm();
-    });
-  });
 $('.select2').on('select2:select', function () {
   console.log("Sélection détectée :", $(this).attr("name"), $(this).val());
   submitFilterForm();
@@ -366,11 +240,9 @@ $('.select2').on('select2:unselect', function () {
   console.log("Suppression détectée :", $(this).attr("name"), $(this).val());
   submitFilterForm();
 });
-
 });
 
 </script>
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const applyDateFilterBtn = document.getElementById("applyDateFilter");
@@ -378,9 +250,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   applyDateFilterBtn.addEventListener("click", function () {
     console.log("Filtrage appliqué");
-    filterForm.requestSubmit(); // Soumet le formulaire uniquement après validation
+    filterForm.requestSubmit(); 
   });
 });</script>
 
 <%= javascript_include_tag "controllers/reset", defer: true %>
 <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
+<%= javascript_include_tag "controllers/tabsSearch", defer: true %>
+<%= javascript_include_tag "controllers/friseCounter", defer: true %>

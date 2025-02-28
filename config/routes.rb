@@ -49,7 +49,6 @@ Rails.application.routes.draw do
     collection do
       get 'search'
       get :load_more
-      get :load_more_oeuvres
       get 'check_existence'
     end
 
@@ -64,7 +63,6 @@ Rails.application.routes.draw do
   resources :designers, param: :slug do
     collection do
       get 'load_more'
-      get :load_more_designers
       get 'check_existence'
     end
     member do
@@ -79,9 +77,7 @@ Rails.application.routes.draw do
   end
   # Routes pour les pages statiques
   get '/search_autocomplete', to: 'search#autocomplete'
-  
   get 'search_category', to: 'pages#search_category', as: 'search_category'
-  get 'search_frise', to: 'pages#search_frise', as: 'search_frise'
   get 'parrainage', to: 'pages#parrainage', as: 'parrainage'
   get 'presentation', to: 'pages#presentation', as: 'presentation'
   get 'add_elements', to: 'pages#add_elements', as: 'add_elements'

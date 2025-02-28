@@ -2,7 +2,7 @@ class OeuvresController < ApplicationController
   include RecaptchaHelper
 
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
-  before_action :authenticate_user!, except: [:index, :show, :search, :load_more, :load_more_oeuvres]
+  before_action :authenticate_user!, except: [:index, :show, :search, :load_more]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /oeuvres or /oeuvres.json
   def index
@@ -42,9 +42,8 @@ class OeuvresController < ApplicationController
     end
   
     # Récupération des œuvres et designers validés pour affichage
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre)
-    @designers = Designer.where(validation: true).order(:nom)
-  
+    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
+    @designers = Designer.where(validation: true).order(:nom).page(params[:page])
     # Application des filtres
     if params[:domaine].present? && params[:domaine].reject(&:blank?).any?
       filtered_domains = params[:domaine].reject(&:blank?)
@@ -86,11 +85,6 @@ class OeuvresController < ApplicationController
       format.turbo_stream # Pour les requêtes AJAX via Turbo
     end
   end  
-  
-  def load_more_oeuvres
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(8)
-    render partial: 'oeuvres/oeuvre_card', collection: @oeuvres, as: :oeuvre
-  end
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show

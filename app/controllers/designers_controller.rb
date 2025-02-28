@@ -22,6 +22,7 @@ class DesignersController < ApplicationController
 
     render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' }
   end
+  
   # GET /designers/1 or /designers/1.json
   def show
     @domaines = @designer.domaines

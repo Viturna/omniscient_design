@@ -1,0 +1,12 @@
+fr:
+  views:
+    pagination:
+      first: "Première"
+      last: "Dernière"
+      previous: "Précédente"
+      next: "Suivante"
+      truncate: "&hellip;"
+      page:
+        display_entries: "Affichage de %{entry_from} à %{entry_to} sur un total de %{entry_total} entrées"
+        gap_marker: "..."
+        total_entries: "Total de %{entry_total} entrées"

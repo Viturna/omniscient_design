@@ -108,5 +108,7 @@ gem 'opensearch-ruby'
 
 gem 'terser'
 
+gem 'kaminari'
+
 
 

@@ -1,0 +1,17 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.pagination a,
+.pagination span {
+    margin: 0 5px;
+    color: #202020;
+    text-decoration: none;
+}
+
+.pagination a:hover,
+.pagination .current {
+    font-weight: 500;
+}

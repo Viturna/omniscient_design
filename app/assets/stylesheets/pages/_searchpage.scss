@@ -361,6 +361,45 @@
 }
 
 @media screen and (max-width: 425px) {
+  .suggestions-box {
+    width: 90vw;
+  }
+
+  .suggestion-item {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-left: 24px;
+    margin-top: 32px;
+  }
+
+  // Tabs
+  .tabs {
+    margin-top: 24px;
+    flex-direction: column;
+  }
+
+  .tab {
+    padding: 16px 32px;
+  }
+
+
+  // filtres
+  .filters {
+    flex-direction: column;
+  }
+
+  .filter {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: 80%;
+  }
+
   .searchpage {
     margin-top: 124px;
   }
@@ -383,7 +422,6 @@
     }
   }
 
-
   .card-designer,
   .card-oeuvre {
     width: calc(40vw - 20px);
@@ -398,6 +436,43 @@
 }
 
 @media screen and (min-width:426px) and (max-width: 600px) {
+  .suggestions-box {
+    width: 85vw;
+  }
+
+  .suggestion-item {
+    padding: 12px 24px;
+  }
+
+  .section-title {
+    margin-left: 24px;
+    margin-top: 32px;
+  }
+
+  // Tabs
+  .tabs {
+    margin-top: 24px;
+
+  }
+
+  .tab {
+    padding: 12px 18px;
+  }
+
+
+  // filtres
+  .filters {
+    flex-direction: column;
+  }
+
+  .filter {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: 80%;
+  }
+
   .searchpage {
     margin-top: 132px;
   }
@@ -435,6 +510,33 @@
 }
 
 @media screen and (min-width:601px) and (max-width: 768px) {
+  .suggestions-box {
+    width: 80vw;
+  }
+
+  // Tabs
+  .tabs {
+    margin-top: 24px;
+
+  }
+
+  .tab {
+    padding: 12px 18px;
+  }
+
+
+  // filtres
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .filter {
+    width: 30%;
+  }
+
+  .dropdown-menu {
+    width: 80%;
+  }
 
   .flex-category,
   .flex-container {

@@ -12,6 +12,49 @@ class ListsController < ApplicationController
   def show
     @current_page = 'listes'
     @list = List.friendly.find(params[:slug])
+    @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
+    @notions = Notion.all
+
+    # Filtres
+    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre)
+    @designers = Designer.where(validation: true).order(:nom)
+    # Application des filtres
+    if params[:domaine].present? && params[:domaine].reject(&:blank?).any?
+      filtered_domains = params[:domaine].reject(&:blank?)
+    
+      @oeuvres = @oeuvres.where(domaine_id: filtered_domains)
+      @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
+    end
+    
+  
+    if params[:country].present? && params[:country].reject(&:blank?).any?
+      @designers = @designers.joins(:countries).where(countries: { id: params[:country] })
+    end
+  
+    if params[:notion].present? && params[:notion].reject(&:blank?).any?
+      @oeuvres = @oeuvres.joins(:notions).where(notions: { id: params[:notion] })
+    end
+  
+    if params[:start_year].present? && params[:end_year].present?
+      start_year = params[:start_year].to_i
+      end_year = params[:end_year].to_i
+    
+      if start_year > 0 && end_year > 0 && start_year <= end_year
+        @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
+        @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
+        @timeline_years = (start_year..end_year).to_a
+      else
+        start_year =  1880
+        end_year = Time.now.year
+        @timeline_years = (start_year..end_year).to_a
+      end
+      else
+        start_year =  1880
+        end_year = Time.now.year
+        @timeline_years = (start_year..end_year).to_a
+    end
+
+
     if @list.share_token.present? && @list.share_token == params[:share_token]
       render :show
     elsif @list.user == current_user || @list.editors.include?(current_user) || @list.visitors.include?(current_user)
@@ -33,6 +76,7 @@ class ListsController < ApplicationController
   def new
     @current_page = 'listes'
     @list = current_user.lists.build
+    @oeuvres = Oeuvre.all
   end
 
   def create

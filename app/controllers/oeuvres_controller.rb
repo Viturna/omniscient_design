@@ -2,7 +2,7 @@ class OeuvresController < ApplicationController
   include RecaptchaHelper
 
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
-  before_action :authenticate_user!, except: [:index, :show, :search, :load_more]
+  before_action :authenticate_user!, except: [:index, :show, :load_more]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
   # GET /oeuvres or /oeuvres.json
   def index
@@ -27,64 +27,7 @@ class OeuvresController < ApplicationController
                      .limit(limit)
 
     render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' }
-  end
-
-  def search
-    @current_page = 'recherche'
-    @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
-    @notions = Notion.all
-    query = params[:query].to_s.strip
-  
-    if query.present?
-      # Recherche dans Oeuvre et Designer avec Searchkick
-      @oeuvre_suggestions = Oeuvre.search(query, fields: [:nom_oeuvre], match: :word_start)
-      @designer_suggestions = Designer.search(query, fields: [:prenom, :nom], match: :word_start)
-    end
-  
-    # Récupération des œuvres et designers validés pour affichage
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
-    @designers = Designer.where(validation: true).order(:nom).page(params[:page])
-    # Application des filtres
-    if params[:domaine].present? && params[:domaine].reject(&:blank?).any?
-      filtered_domains = params[:domaine].reject(&:blank?)
-    
-      @oeuvres = @oeuvres.where(domaine_id: filtered_domains)
-      @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
-    end
-    
-  
-    if params[:country].present? && params[:country].reject(&:blank?).any?
-      @designers = @designers.joins(:countries).where(countries: { id: params[:country] })
-    end
-  
-    if params[:notion].present? && params[:notion].reject(&:blank?).any?
-      @oeuvres = @oeuvres.joins(:notions).where(notions: { id: params[:notion] })
-    end
-  
-    if params[:start_year].present? && params[:end_year].present?
-      start_year = params[:start_year].to_i
-      end_year = params[:end_year].to_i
-    
-      if start_year > 0 && end_year > 0 && start_year <= end_year
-        @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
-        @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
-        @timeline_years = (start_year..end_year).to_a
-      else
-        start_year =  1880
-        end_year = Time.now.year
-        @timeline_years = (start_year..end_year).to_a
-      end
-      else
-        start_year =  1880
-        end_year = Time.now.year
-        @timeline_years = (start_year..end_year).to_a
-    end
-  
-    respond_to do |format|
-      format.html # Si c'est une navigation normale
-      format.turbo_stream # Pour les requêtes AJAX via Turbo
-    end
-  end  
+  end 
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show

@@ -135,6 +135,7 @@
       <% end %>
     <%end%>
     <div class="info-card-first-content">
+      <%= link_to search_path(:tab => "frise") do %>
       <p class="info-card-dark info-header-show">
         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_3261_191)">
@@ -146,23 +147,30 @@
           - <%= designer.date_deces %>
         <% end %>
       </p>
-      <% @domaines.each do |domaine| %>
-        <div class="info-card-dark info-header-show">
-          <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
-          <span><%= domaine.domaine %></span>
-        </div>
       <% end %>
-        <div class="info-card-dark info-header-show">
-          <span>
-            <%= designer.countries.map { |country| country_flag(country.country_numeric) }.join(' ') %>
-          </span>
-        </div>
+      <% @domaines.each do |domaine| %>
+        <%= link_to search_path(:tab => "designers", :domaine => domaine.id) do %>
+          <div class="info-card-dark info-header-show">
+            <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
+            <span><%= domaine.domaine %></span>
+          </div>
+        <% end %>
+      <% end %>
+        <% designer.countries.each do |country| %>
+          <%= link_to search_path(tab: "designers", country: country.id) do %>
+            <div class="info-card-dark info-header-show">
+              <span>
+                <%= country_flag(country.country_numeric) %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
     </div>
     <div class="header-top">
       <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
       <p class="title-card"><%= designer.nom_designer %></p>
       <div class="flex-info">
-        <%= link_to search_frise_path do %>
+       <%= link_to search_path(:tab => "frise",) do %>
           <p class="info-card">
             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_3261_191)">
@@ -176,14 +184,22 @@
           </p>
         <%end%>
         <% @domaines.each do |domaine| %>
-          <div class="info-card">
-            <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
-            <%= domaine.domaine %>
-          </div>
+          <%= link_to search_path(:tab => "designers", :domaine => domaine.id) do %>
+            <div class="info-card">
+              <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
+              <%= domaine.domaine %>
+            </div>
+          <% end %>
         <% end %>
-        <div class="info-card">
-           <%= designer.countries.map { |country| country_flag(country.country_numeric) }.join(' ') %>
-        </div>
+         <% designer.countries.each do |country| %>
+          <%= link_to search_path(tab: "designers", country: country.id) do %>
+            <div class="info-card">
+              <span>
+                <%= country_flag(country.country_numeric) %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

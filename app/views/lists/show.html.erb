@@ -259,6 +259,36 @@
           <path d="M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z" fill="%23202020"/>
         </svg>
       </div>
+      <%= form_with url: request.original_url, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
+        <h2>Filtres</h2>
+        <div class="filters">
+          <div class="filter">
+            <label for="domainFilter">Domaine</label>
+            <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, 
+              {  include_blank: false, selected: params[:domaine] }, 
+              { multiple: true, class: "select2" } %>
+          </div>
+          <div class="filter">
+            <label for="countryFilter">Pays</label>
+            <%= form.select :country, @countries.all.map { |c| [c.country, c.id] }, 
+              {  include_blank: false, selected: params[:country] }, 
+              { multiple: true, class: "select2" } %>
+          </div>
+          <div class="filter">
+            <label for="dateFilter">Dates</label>
+            <div class="dropdown">
+              <button type="button" class="dropdown-toggle">Sélectionner une période</button>
+              <div class="dropdown-menu">
+                <label for="startDate">De</label>
+                <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
+                <label for="endDate">À</label>
+                <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
+                <button type="button" id="applyDateFilter" class="button dark">Appliquer</button> <!-- Bouton ajouté -->
+              </div>
+            </div>
+        </div>
+        </div>
+      <% end %>
       <%= form_with(model: @list, local: true) do |form| %>
         <div id="designers-list" class="flex-card">
           <%= form.collection_check_boxes :designer_ids, Designer.where(validation: true).order(:nom), :id, :nom_designer do |b| %>
@@ -294,9 +324,39 @@
           <path d="M14.7564 13.4147L11.9565 10.6231C12.8599 9.47218 13.3501 8.051 13.3482 6.58794C13.3482 5.28497 12.9619 4.01126 12.238 2.92788C11.5141 1.8445 10.4852 1.00011 9.2814 0.50148C8.07761 0.00285444 6.753 -0.127609 5.47506 0.126588C4.19713 0.380785 3.02327 1.00823 2.10193 1.92957C1.18059 2.8509 0.553149 4.02476 0.298952 5.3027C0.0447546 6.58063 0.175218 7.90525 0.673843 9.10903C1.17247 10.3128 2.01686 11.3417 3.10024 12.0656C4.18362 12.7895 5.45733 13.1759 6.7603 13.1759C8.22336 13.1777 9.64455 12.6875 10.7954 11.7842L13.5871 14.584C13.6636 14.6612 13.7547 14.7225 13.855 14.7643C13.9554 14.8061 14.063 14.8276 14.1717 14.8276C14.2804 14.8276 14.3881 14.8061 14.4884 14.7643C14.5888 14.7225 14.6799 14.6612 14.7564 14.584C14.8336 14.5075 14.8949 14.4164 14.9367 14.3161C14.9785 14.2157 15 14.1081 15 13.9994C15 13.8907 14.9785 13.783 14.9367 13.6827C14.8949 13.5823 14.8336 13.4912 14.7564 13.4147ZM1.81935 6.58794C1.81935 5.61071 2.10913 4.65543 2.65205 3.84289C3.19497 3.03036 3.96664 2.39706 4.86948 2.02309C5.77232 1.64913 6.76578 1.55128 7.72424 1.74193C8.68269 1.93257 9.56308 2.40315 10.2541 3.09416C10.9451 3.78516 11.4157 4.66556 11.6063 5.62401C11.797 6.58246 11.6991 7.57592 11.3251 8.47876C10.9512 9.3816 10.3179 10.1533 9.50535 10.6962C8.69281 11.2391 7.73753 11.5289 6.7603 11.5289C5.44988 11.5289 4.19313 11.0083 3.26652 10.0817C2.33991 9.15511 1.81935 7.89836 1.81935 6.58794Z" fill="%23202020"/>
         </svg>
       </div>
+      <%= form_with url: request.original_url, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
+        <h2>Filtres</h2>
+        <div class="filters">
+          <div class="filter">
+            <label for="domainFilter">Domaine</label>
+            <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, 
+              {  include_blank: false, selected: params[:domaine] }, 
+              { multiple: true, class: "select2" } %>
+          </div>
+          <div class="filter">
+            <label for="notionFilter">Notions</label>
+            <%= form.select :notion, @notions.all.map { |n| [n.name, n.id] }, 
+              {  include_blank: false, selected: params[:notion] }, 
+              { multiple: true, class: "select2" } %>
+          </div>
+          <div class="filter">
+            <label for="dateFilter">Dates</label>
+            <div class="dropdown">
+              <button type="button" class="dropdown-toggle">Sélectionner une période</button>
+              <div class="dropdown-menu">
+                <label for="startDate">De</label>
+                <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
+                <label for="endDate">À</label>
+                <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
+                <button type="button" id="applyDateFilter" class="button dark">Appliquer</button> <!-- Bouton ajouté -->
+              </div>
+            </div>
+        </div>
+        </div>
+      <% end %>
       <%= form_with(model: @list, local: true) do |form| %>
         <div id="oeuvres-list" class="flex-card">
-          <%= form.collection_check_boxes :oeuvre_ids, Oeuvre.where(validation: true).order(:nom_oeuvre), :id, :nom_oeuvre do |b| %>
+          <%= form.collection_check_boxes :oeuvre_ids, @oeuvres, :id, :nom_oeuvre do |b| %>
             <div class="check-box-wrapper">
               <%= b.check_box(class: 'hidden-check', id: "oeuvre_#{b.object.id}") %>
               <%= b.label for: "oeuvre_#{b.object.id}" do %>
@@ -431,3 +491,69 @@
   });
   });
 </script>
+
+
+
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  function initSelect2() {
+    console.log("Initialisation de Select2");
+    $('.select2').select2({
+      placeholder: "Choisir des filtres",
+      allowClear: true
+    });
+  }
+
+
+  initSelect2(); // Initialisation au chargement
+
+  // Ré-initialiser Select2 après chaque Turbo navigation
+  document.addEventListener("turbo:load", function () {
+    initSelect2();
+  });
+
+  // Soumettre le formulaire automatiquement quand un filtre est changé
+  const filterForm = document.getElementById("filterForm");
+
+  // Fonction pour soumettre le formulaire avec les filtres mis à jour
+  function submitFilterForm() {
+    const formData = new FormData(filterForm);
+    const url = new URL(window.location.href);
+
+    // On ajoute tous les filtres dans l'URL
+    formData.forEach((value, key) => {
+      if (value) { // Si la valeur n'est pas vide
+        url.searchParams.set(key, value);
+      }
+    });
+
+    // Change l'URL sans recharger la page (pour conserver l'état de l'URL)
+    window.history.pushState({}, '', url);
+
+    // Soumettre le formulaire avec Turbo
+    filterForm.requestSubmit(); // Fonctionne mieux avec Turbo
+
+  }
+$('.select2').on('select2:select', function () {
+  console.log("Sélection détectée :", $(this).attr("name"), $(this).val());
+  submitFilterForm();
+});
+$('.select2').on('select2:unselect', function () {
+  console.log("Suppression détectée :", $(this).attr("name"), $(this).val());
+  submitFilterForm();
+});
+});
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const applyDateFilterBtn = document.getElementById("applyDateFilter");
+  const filterForm = document.getElementById("filterForm");
+
+  applyDateFilterBtn.addEventListener("click", function () {
+    console.log("Filtrage appliqué");
+    filterForm.requestSubmit(); 
+  });
+});
+</script>
+<%= javascript_include_tag "controllers/dropdownFilter", defer: true %>

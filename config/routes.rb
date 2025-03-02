@@ -47,7 +47,6 @@ Rails.application.routes.draw do
   get '/shared/:share_token', to: 'lists#shared', as: :shared_list
   resources :oeuvres, param: :slug do
     collection do
-      get 'search'
       get :load_more
       get 'check_existence'
     end
@@ -77,7 +76,7 @@ Rails.application.routes.draw do
   end
   # Routes pour les pages statiques
   get '/search_autocomplete', to: 'search#autocomplete'
-  get 'search_category', to: 'pages#search_category', as: 'search_category'
+  get 'search', to: 'search#search', as: 'search'
   get 'parrainage', to: 'pages#parrainage', as: 'parrainage'
   get 'presentation', to: 'pages#presentation', as: 'presentation'
   get 'add_elements', to: 'pages#add_elements', as: 'add_elements'

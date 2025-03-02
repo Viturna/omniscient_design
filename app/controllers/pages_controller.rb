@@ -34,56 +34,6 @@ class PagesController < ApplicationController
   end
   def cookies
   end
-  def search_category
-    @current_page = 'recherche'
-    if params[:id].present?
-      @oeuvre = Oeuvre.find(params[:id])
-      @oeuvres = Oeuvre.order(:nom_oeuvre)
-    else
-      @oeuvre = Oeuvre.all # Ou toute autre logique pour récupérer toutes les œuvres
-    end
-  end
-  def search_frise
-    @current_page = 'recherche'
-  
-    # Chargement initial des œuvres et designers validés
-    @oeuvres = Oeuvre.where(validation: true).order(:date_oeuvre)
-    @designers = Designer.where(validation: true).order(:date_naissance)
-  
-    # Récupération des paramètres pour les filtres
-    @start_year_oeuvre = params[:start_year_oeuvre].to_i.positive? ? params[:start_year_oeuvre].to_i : 1880
-    @end_year_oeuvre = params[:end_year_oeuvre].to_i.positive? ? params[:end_year_oeuvre].to_i : Date.current.year
-    @start_year_designer = params[:start_year_designer].to_i.positive? ? params[:start_year_designer].to_i : 1830
-    @end_year_designer = params[:end_year_designer].to_i.positive? ? params[:end_year_designer].to_i : Date.current.year
-    @domaine_ids = params[:domaine_id].present? ? params[:domaine_id].map(&:to_i) : nil
-    @country_ids = params[:country_id].present? ? params[:country_id].map(&:to_i) : nil
-    @designer_domaine_ids = params[:designer_domaine_id].present? ? params[:designer_domaine_id].map(&:to_i) : nil
-
-
-
-
-
-   
-    @timeline_years = (@start_year_oeuvre..@end_year_oeuvre).to_a
-    @timeline_years_2 = (@start_year_designer..@end_year_designer).to_a
-  
-    # Filtrage des œuvres
-    @oeuvres_filtered = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", @start_year_oeuvre, @end_year_oeuvre)
-    @oeuvres_filtered = @oeuvres_filtered.where(domaine_id: @domaine_ids) if @domaine_ids.present?
-    
-    # Filtrage des designers
-    @designers_filtered = @designers.where("date_naissance BETWEEN ? AND ?", @start_year_designer, @end_year_designer)
-    if @country_ids.present?
-      @designers_filtered = @designers_filtered.joins(:countries).where(countries: { id: @country_ids })
-    end
-    if @designer_domaine_ids.present?
-      @designers_filtered = @designers_filtered.joins(:domaines).where(domaines: { id: @designer_domaine_ids })
-    end
-    # Options pour les listes déroulantes de filtres
-    @countries = Country.order(:country).to_a.unshift(Country.new(id: nil, country: "Tous les pays"))
-    @domaines = Domaine.all.to_a.unshift(Domaine.new(id: nil, domaine: "Tous les domaines"))
-  end
-  
   
   def parrainage
     @current_page = 'profil'

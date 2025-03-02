@@ -2,7 +2,7 @@
 <% content_for :description, "La page de recherche permet de trouver efficacement et rapidement la référence que tu cherches. Trie les références par domaine, année ou encore pays !" %>
 
 <section class="top-bar-search">
-  <%= form_with url: search_oeuvres_path, method: :get, local: true do |form| %>
+  <%= form_with url: search_path, method: :get, local: true do |form| %>
     <div class="autocomplete">
       <div class="search-wrapper">
         <%= form.search_field :query, class: 'search-top-bar', placeholder: 'Rechercher une référence', autocomplete: 'off', id: 'workSearch' %>
@@ -24,7 +24,7 @@
     <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références</button>
     <button class="tab <%= 'active' if params[:tab] == 'frise' %>" data-tab="frise">Frise Chronologique</button>
   </div>
-  <%= form_with url: search_oeuvres_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
+  <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers" %>
       <h2>Filtres</h2>
       <div class="filters">
@@ -172,26 +172,6 @@
 </section>
 
 
- 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const dropdown = document.querySelector(".dropdown");
-    const dropdownToggle = document.querySelector(".dropdown-toggle");
-
-    // Ouvrir/Fermer le menu
-    dropdownToggle.addEventListener("click", function () {
-      dropdown.classList.toggle("active");
-    });
-
-    // Fermer le menu si on clique en dehors
-    document.addEventListener("click", function (event) {
-      if (!dropdown.contains(event.target)) {
-        dropdown.classList.remove("active");
-      }
-    });
-  });
-</script>
-
 <script>
  document.addEventListener("DOMContentLoaded", function () {
   function initSelect2() {
@@ -258,3 +238,4 @@ document.addEventListener("DOMContentLoaded", function () {
 <%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
 <%= javascript_include_tag "controllers/tabsSearch", defer: true %>
 <%= javascript_include_tag "controllers/friseCounter", defer: true %>
+<%= javascript_include_tag "controllers/dropdownFilter", defer: true %>

@@ -124,6 +124,12 @@ main {
   gap: 36px;
 }
 
+.flex-form div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 @media screen and (max-width: 1280px) {
   main {
     margin-left: 30vw;
@@ -214,4 +220,24 @@ body {
 
 body.dark {
   background: $dark-background-color;
+}
+
+
+// Cookies
+#cookie-consent-banner {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  z-index: 1000;
+}
+
+#cookie-consent-banner button {
+  background-color: #f1d600;
+  color: black;
+  padding: 5px 10px;
+  margin: 5px;
 }

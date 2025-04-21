@@ -13,10 +13,11 @@
     </div>
   <% end %>
 <div class="form-step" data-step="1">
-  <h3>Étape 1 : Nom de l'oeuvre</h3>
+  <h3>Étape 1 : La référence</h3>
   <div class="flex-form"> 
     <div>
-      <%= form.text_field :nom_oeuvre, placeholder: "Nom de la référence" %>
+      <%= form.label :nom_oeuvre, "Nom de la référence" %>
+      <%= form.text_field :nom_oeuvre, placeholder: "Ex: La petite fille au ballon" %>
     </div>
   </div>
   <div class="flex-btn-add" style="justify-content: flex-end;">
@@ -27,6 +28,7 @@
 <div class="form-step" data-step="2" style="display: none;">
   <h3>Étape 2 : Contexte et Description</h3>
   <div class="flex-form"> 
+    <%= form.label :designer_ids, "Nom du/des designer(s)" %>
     <% max_designers = 3 %>
     <% (0...max_designers).each do |index| %>
       <div>
@@ -34,9 +36,11 @@
       </div>
     <% end %>
       <div>
-      <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control concept-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
+      <%= form.label :notion_ids, "Notion(s) de la référence" %>
+      <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
     </div>
     <div>
+      <%= form.label :domaine_id, "Domaine de la référence" %>
       <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
     </div>
   </div>
@@ -50,22 +54,28 @@
   <h3>Étape 3 : Contexte et Description</h3>
   <div class="flex-form"> 
     <div>
-      <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
+      <%= form.label :presentation_generale, "Présentation générale (Min. 200 caractères)" %>
+      <%= form.text_area :presentation_generale, placeholder: "Ex : La petite fille au ballon est l'une des œuvres les plus emblématiques de Banksy, un artiste britannique connu pour ses œuvres de street art et ses messages politiques et sociaux percutants. Cette image représente une petite fille qui tend la main vers un ballon rouge en forme de cœur qui flotte juste au-dessus d'elle, symbolisant l'espoir, l'innocence et le rêve. L'œuvre est caractérisée par sa simplicité visuelle et sa force émotionnelle, qui ont contribué à la rendre universellement reconnaissable et à en faire un symbole d'aspiration et de perte." %>
     </div>
     <div>
-      <%= form.text_area :contexte_historique, placeholder: "Contexte historique (Min. 200 caractères)" %>
+      <%= form.label :contexte_historique, "Contexte historique (Min. 200 caractères)" %>
+      <%= form.text_area :contexte_historique, placeholder: "Ex : La petite fille au ballon est apparue pour la première fois sur un mur de Londres en 2002. Banksy, qui a commencé sa carrière dans les années 1990, est reconnu pour ses interventions urbaines qui remettent en question les conventions sociales et politiques. Cette œuvre, comme beaucoup d'autres de Banksy, a été réalisée de manière anonyme et est devenue rapidement une icône de la culture de rue. Elle représente un contraste frappant entre la vulnérabilité de l'enfance et l'idée de quelque chose d'inaccessible ou de perdu, ce qui en fait une métaphore puissante de l'espoir et de l'évasion." %>
     </div>
     <div>
-      <%= form.text_area :materiaux_et_innovations_techniques, placeholder: "Matériaux et innovations techniques (Min. 200 caractères)" %>
+      <%= form.label :materiaux_et_innovations_techniques, "Matériaux et innovations techniques (Min. 200 caractères)" %>
+      <%= form.text_area :materiaux_et_innovations_techniques, placeholder: "Ex : Banksy utilise généralement la technique du pochoir pour créer ses œuvres, ce qui lui permet de travailler rapidement et de rester anonyme. La petite fille au ballon n'échappe pas à cette règle, combinant des lignes nettes et un minimalisme caractéristique. Le rouge du ballon, qui contraste avec le noir et le blanc du reste de l'image, attire l'attention du spectateur et symbolise la passion, l'amour ou le désir. L'utilisation du mur comme toile permet à Banksy de dialoguer directement avec l'espace urbain, créant une interaction entre l'œuvre et son environnement." %>
     </div>
     <div>
-      <%= form.text_area :concept_et_inspiration, placeholder: "Concept et inspiration (Min. 200 caractères)" %>
+      <%= form.label :concept_et_inspiration, "Concept et inspiration(Min. 200 caractères)" %>
+      <%= form.text_area :concept_et_inspiration, placeholder: "Ex : Le concept de La petite fille au ballon est à la fois simple et profond. Le ballon rouge représente un rêve ou un désir qui flotte juste hors de portée, un symbole d'innocence, de fragilité et de l'espoir de quelque chose de meilleur. La petite fille qui tend la main vers le ballon est un symbole de vulnérabilité et d'aspiration. Banksy a souvent parlé de son désir de mettre en lumière les aspects cachés ou négligés de la société, et cette œuvre ne fait pas exception. L'image peut être interprétée comme un commentaire sur la perte, le désir et l'espoir dans un monde où beaucoup de choses semblent inaccessibles." %>
     </div>
     <div>
-      <%= form.text_area :dimension_esthetique, placeholder: "Dimension esthétique (Min. 200 caractères)" %>
+      <%= form.label :dimension_esthetique, "Dimension esthétique (Min. 200 caractères)" %>
+      <%= form.text_area :dimension_esthetique, placeholder: "Ex : L'esthétique de La petite fille au ballon est marquée par sa simplicité et son contraste. L'œuvre est essentiellement en noir et blanc, à l'exception du ballon rouge qui capte immédiatement le regard. Cette utilisation du minimalisme permet à Banksy de transmettre un message fort tout en maintenant une certaine pureté visuelle. L'image est dessinée de manière à provoquer une réflexion émotionnelle, en soulignant l'innocence de la fille et la nature éphémère du ballon. La composition est également équilibrée de telle sorte que le spectateur est naturellement attiré vers le ballon, accentuant ainsi l'idée de désir et de perte." %>
     </div>
     <div>
-      <%= form.text_area :impact_et_message, placeholder: "Impact et message (Min. 200 caractères)" %>
+      <%= form.label :impact_et_message, "Impact et message (Min. 200 caractères)" %>
+      <%= form.text_area :impact_et_message, placeholder: "Ex : La petite fille au ballon est plus qu'une simple œuvre d'art ; elle est devenue un symbole de l'espoir et de la fragilité. L'image a été largement reproduite et interprétée, souvent vue comme un symbole de l'espoir dans des situations désespérées. En 2018, l'œuvre a été vendue aux enchères et a été partiellement détruite par un mécanisme caché, ce qui a ajouté une dimension supplémentaire de réflexion sur la consommation de l'art et la valeur de l'œuvre dans un monde axé sur le marché de l'art. Cet événement a renforcé le message de Banksy sur le contraste entre l'art, sa valeur perçue et sa signification réelle. La petite fille au ballon incite à la réflexion sur la nature des rêves, des aspirations et des pertes dans un monde souvent complexe et imprévisible." %>
     </div>
   </div>
   <div class="flex-btn-add">
@@ -75,13 +85,16 @@
 </div>
 
 <div class="form-step" data-step="4" style="display: none;">
-  <h3>Étape 4 : Impact et Image</h3>
+  <h3>Étape 4 : Date et Image</h3>
   <div class="flex-form"> 
     <div>
-      <%= form.text_field :date_oeuvre, placeholder: "Date de la référence", id: "date-oeuvre-input" %>
+
+      <%= form.label :date_oeuvre, "Date de la référence" %>
+      <%= form.text_field :date_oeuvre, placeholder: "Ex : 2002", id: "date-oeuvre-input" %>
       <div id="date-oeuvre-error"></div>
     </div>
      <div>
+       <%= form.label :image, "Image(s)" %>
       <%= form.file_field :image, accept: "image/*", direct_upload: true %>
     </div>
   </div>
@@ -93,7 +106,7 @@
 
 <% end %>
 <script>
-  $(document).ready(function() {
+ document.addEventListener("DOMContentLoaded", function () {
     var oeuvreYearInput = document.getElementById("date-oeuvre-input");
     var oeuvreYearError = document.getElementById("date-oeuvre-error");
 
@@ -130,7 +143,7 @@
   });
 </script>
 <script>
-  $(document).ready(function() {
+ document.addEventListener("DOMContentLoaded", function () {
     // Configuration pour les designers
     $('.designer-select').select2({
       placeholder: "Rechercher un/une designer...",
@@ -149,8 +162,8 @@
     });
 
     // Configuration pour les concepts
-    $('.concept-select').select2({
-      placeholder: "Rechercher des concepts...",
+    $('.notions-select').select2({
+      placeholder: "Rechercher des notions...",
       allowClear: true,
       language: {
         inputTooShort: function() {

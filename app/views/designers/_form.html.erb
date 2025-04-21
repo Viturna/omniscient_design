@@ -13,15 +13,15 @@
     </div>
   <% end %>
   <div class="form-step" data-step="1">
-    <h3>Étape 1 : Nom</h3>
+    <h3>Étape 1 : Identité</h3>
     <div class="flex-form">
-      <div>
-        <%= form.label :nom, "Nom" %>
-        <%= form.text_field :nom, placeholder: "Nom de famille" %>
+       <div>
+        <%= form.label :prenom, "Prénom" %>
+        <%= form.text_field :prenom, placeholder: "Ex : Gustave" %>
       </div>
       <div>
-        <%= form.label :prenom, "Prénom" %>
-        <%= form.text_field :prenom, placeholder: "Prénom" %>
+        <%= form.label :nom, "Nom" %>
+        <%= form.text_field :nom, placeholder: "Ex : Eiffel" %>
       </div>
     </div>
     <div class="flex-btn-add" style="justify-content: flex-end;">
@@ -30,18 +30,21 @@
   </div>
 
   <div class="form-step" data-step="2" style="display:none;">
-    <!-- Étape 2 : Autres informations -->
+     <h3>Étape 2 : Informations clés</h3>
     <div class="flex-form">
        <div>
-          <%= form.text_field :date_naissance, placeholder: "Année de naissance", class: "year-input", id: "birth-year-input" %>
+          <%= form.label :date_naissance, "Année de naissance" %>
+          <%= form.text_field :date_naissance, placeholder: "Ex : 1832", class: "year-input", id: "birth-year-input" %>
           <div class="error-message" id="birth-year-error"></div>
       </div>
 
       <div>
-        <%= form.text_field :date_deces, placeholder: "Année de décès (optionnel)", class: "year-input", id: "death-year-input" %>
+        <%= form.label :date_deces, "Année de décès (optionnel)" %>
+        <%= form.text_field :date_deces, placeholder: "Ex : 1923", class: "year-input", id: "death-year-input" %>
         <div class="error-message" id="death-year-error"></div>
       </div>
       <div>
+        <%= form.label :country, "Pays" %>
         <%= form.collection_select :country_1, Country.order(:country), :id, :country, { include_blank: "Aucun pays", prompt: "Sélectionner un pays", selected: @country_1 }, { class: "form-control select2", data: { placeholder: "Ajouter un pays" }, id: "country_1", name: "designer[country_ids][]" } %>
       </div>
     </div>
@@ -52,41 +55,48 @@
   </div>
 
   <div class="form-step" data-step="3" style="display:none;">
-    <!-- Étape 3 : Description et image -->
+  <h3>Étape 3 : Contexte et Description</h3>
     <div class="flex-form">
       <div>
-        <%= form.text_area :presentation_generale, placeholder: "Présentation générale (Min. 200 caractères)" %>
+        <%= form.label :presentation_generale, "Présentation générale (Min. 200 caractères)" %>
+        <%= form.text_area :presentation_generale, placeholder: "Ex : Gustave Eiffel, ingénieur et entrepreneur français de renom, est né le 15 décembre 1832 à Dijon et est décédé le 27 décembre 1923 à Paris. Il est mondialement connu pour avoir révolutionné le domaine de l’ingénierie métallique et laissé une empreinte indélébile dans l’histoire de l’architecture grâce à des œuvres emblématiques comme la tour Eiffel. Son travail est reconnu pour son audace technique, son innovation structurelle et son influence durable sur l’architecture moderne." %>
       </div>
       <div>
-        <%= form.text_area :formation_et_influences, placeholder: "Formation et influences (Min. 200 caractères)" %>
+        <%= form.label :formation_et_influences, "Formation et influences (Min. 200 caractères)" %>
+        <%= form.text_area :formation_et_influences, placeholder: "Ex : Issu d’une famille bourgeoise, Gustave Eiffel a suivi des études d’ingénierie à l’École centrale des arts et manufactures, où il s’est spécialisé dans la chimie industrielle avant de se tourner vers l’ingénierie civile. Il a été fortement influencé par la révolution industrielle et les progrès techniques de son époque, qui ont permis de nouvelles applications du fer et de l’acier dans la construction. Des figures comme Jean-Baptiste Krantz ou les travaux des ponts britanniques en métal ont nourri son intérêt pour les structures innovantes." %>
       </div>
       <div>
-        <%= form.text_area :style_ou_philosophie, placeholder: "Style ou philosophie (Min. 200 caractères)" %>
+        <%= form.label :style_ou_philosophie, "Style ou philosophie (Min. 200 caractères)" %>
+        <%= form.text_area :style_ou_philosophie, placeholder: "Ex : Le travail de Gustave Eiffel se distingue par une approche rigoureuse et scientifique de la construction. Il a développé une philosophie centrée sur l’efficacité structurelle et l’optimisation des matériaux, tout en mettant en valeur l’esthétique propre aux formes fonctionnelles. Convaincu de l’importance de l’innovation, il a souvent expérimenté de nouvelles techniques et outils pour repousser les limites de l’ingénierie métallique. Sa démarche reposait également sur une collaboration étroite avec les architectes et les artisans." %>
       </div>
       <div>
-        <%= form.text_area :creations_majeures, placeholder: "Ses créations majeures (Min. 200 caractères)" %>
+        <%= form.label :creations_majeures, "Ses créations majeures (Min. 200 caractères)" %>
+        <%= form.text_area :creations_majeures, placeholder: "Ex : La tour Eiffel (1889) : Conçue pour l’Exposition universelle de Paris, cette structure de fer puddlé, haute de 324 mètres, est devenue l’un des monuments les plus célèbres au monde et un symbole de la modernité. Le viaduc de Garabit (1884) : Un pont ferroviaire spectaculaire au-dessus de la Truyère, alliant légèreté visuelle et robustesse technique. La Statue de la Liberté (1886) : Eiffel a conçu la structure interne du monument, permettant à l’œuvre de Bartholdi de résister aux vents et aux intempéries." %>
       </div>
       <div>
-        <%= form.text_area :heritage_et_impact, placeholder: "Héritage et impact (Min. 200 caractères)" %>
+        <%= form.label :heritage_et_impact, "Héritage et impact (Min. 200 caractères)" %>
+        <%= form.text_area :heritage_et_impact, placeholder: "Ex : Gustave Eiffel a redéfini les standards de l’ingénierie et de l’architecture grâce à ses avancées techniques et son audace visionnaire. Il a contribué à populariser l’utilisation du métal dans les grandes structures et a démontré que l’ingénierie pouvait être aussi artistique qu’utilitaire. Son travail reste une référence pour les architectes et les ingénieurs du monde entier. La tour Eiffel, en particulier, incarne son héritage en tant que symbole universel de créativité et de progrès technologique." %>
       </div>
+    </div>
       <div class="flex-btn-add">
         <button type="button" class="prev-step button large">Précédent</button>
         <button type="button" class="next-step button large">Suivant</button>
       </div>
-    </div>
   </div>
 
    <div class="form-step" data-step="4" style="display:none;">
-    <!-- Étape 3 : Description et image -->
+     <h3>Étape 4 : Image</h3>
     <div class="flex-form">
       <div>
-        <%= form.text_field :image, placeholder: "Url de l'image"%>
+         <%= form.label :image, "Url de l'image" %>
+        <%= form.text_field :image, placeholder: "https://url-de-l-image.fr"%>
       </div>
+    </div>
       <div class="flex-btn-add">
         <button type="button" class="prev-step button large">Précédent</button>
         <%= form.submit "Envoyer", class: "button large" %>
       </div>
-    </div>
+
   </div>
 
   <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token" %>

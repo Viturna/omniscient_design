@@ -1,19 +1,14 @@
 @import 'abstracts/variables';
 
 
-.our-list {
-  padding: 0 10vw;
-  padding-bottom: 100px;
-}
-
 .flex-title-list {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.our-list ul {
-  margin-top: 48px;
+.list-show {
+  padding-bottom: 200px;
 }
 
 .no-list {
@@ -31,38 +26,43 @@
   width: 50%;
 }
 
-.flex-card-list{
+.flex-card-list {
   margin-top: 32px;
   display: flex;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
   gap: 0.5vw;
+  padding-bottom: 100px;
 }
 
-.delete{
-  margin-top: 48px;
-  width: 100%;
-  padding: 20px;
+.delete {
+  height: 60px;
+  padding: 5px;
   font-weight: 500;
   font-size: 18px;
-  color: #E61818;
-  height: 70px;
-  border:none;
-  margin-bottom: 50px;
-  &:hover{
-    background-color: #E9E9E9;
+  aspect-ratio: 1/1;
+
+  fill: #E61818;
+  border: none;
+  background-color: rgba(230, 24, 24, 0.1);
+
+  &:hover {
+    background-color: rgba(230, 24, 24, 0.3);
   }
 }
 
- #editButtonForm:hover, #manageUsersBtn:hover{
+#editButtonForm:hover,
+#manageUsersBtn:hover {
   opacity: 0.8;
   cursor: pointer;
 }
-.list-edit-name{
+
+.list-edit-name {
   display: flex;
   gap: 16px;
   align-items: center;
   justify-content: center;
 }
+
 .form-footer {
   width: calc(80vw - 350px);
   padding: 16px 0;
@@ -74,22 +74,36 @@
   gap: 32px;
   justify-content: flex-end;
 }
+
+.bottom-list {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: calc(100vw - 350px - 128px);
+  padding-right: 128px;
+  gap: 24px;
+  background-color: #fff;
+  display: flex;
+  height: 100px;
+  align-items: center;
+  justify-content: end;
+  z-index: 99;
+}
+
 @media screen and (max-width: 375px) {
-  .flex-card-list{
+  .flex-card-list {
     align-items: center;
     justify-content: center;
   }
-  .list-edit-name{
+
+  .list-edit-name {
     flex-wrap: wrap;
     padding: 16px 0;
   }
 }
+
 @media screen and (min-width:0px) and (max-width:600px) {
 
-  .our-list {
-    padding: 0 5vw;
-    padding-bottom: 50px;
-  }
 
   .flex-title-list {
     gap: 16px;
@@ -97,31 +111,29 @@
   }
 
   .no-list {
-    svg{
+    svg {
       scale: 0.8;
     }
-    p{
+
+    p {
       width: 80%;
     }
   }
-  .delete{
+
+  .delete {
     margin-top: 32px;
     padding: 18px;
     font-size: 16px;
     height: 60px;
   }
-  .flex-card-list{
+
+  .flex-card-list {
     gap: 16px;
   }
 
 }
 
 @media screen and (min-width:501px) and (max-width:800px) {
-
-  .our-list {
-    padding: 0 5vw;
-    padding-bottom: 50px;
-  }
 
   .no-list p {
     width: 65%;

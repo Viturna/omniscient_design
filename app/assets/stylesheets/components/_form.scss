@@ -81,8 +81,8 @@ input[type=email],
 input[type=password] {
   border: none;
   stroke: none;
-  padding-left: 25px;
-  width: calc(100% - 31px);
+  padding: 0 25px;
+  width: calc(100% - 56px);
   height: 70px;
   border-radius: 5px;
   border: 2px solid #E9E9E9;
@@ -93,7 +93,7 @@ select {
   width: 100%;
   border: none;
   stroke: none;
-  padding-left: 25px;
+  padding: 0 25px;
   height: 70px;
   border-radius: 5px;
   border: 2px solid #E9E9E9;
@@ -107,7 +107,7 @@ select {
 /* Forcer la hauteur du champ */
 .select2-container .select2-selection--single {
   padding-left: 25px !important;
-  height: 70px !important;
+  height: 60px !important;
   /* Fixe la hauteur */
   line-height: 70px !important;
   /* Centre verticalement le texte */
@@ -130,9 +130,8 @@ select {
 textarea {
   border: none;
   stroke: none;
-  padding-top: 25px;
-  padding-left: 25px;
-  width: calc(100% - 31px);
+  padding: 25px;
+  width: calc(100% - 56px);
   height: 120px;
   resize: none;
   border: 2px solid #E9E9E9;
@@ -143,6 +142,14 @@ textarea {
   display: flex;
   justify-content: space-between;
   margin-top: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.flex-form label {
+  font-size: 16px;
+  font-weight: 500;
+  color: $secondary-color;
 }
 
 @media screen and (min-width:769px) and (max-width: 1024px) {
@@ -162,8 +169,8 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: calc(100% - 18px);
-    font-size: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
 
     &::placeholder {
       font-size: 15px;
@@ -180,7 +187,8 @@ textarea {
   }
 
   textarea {
-    width: calc(100% - 18px);
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 120px;
     font-size: 15px;
 
@@ -196,8 +204,8 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: calc(100% - 20px);
-    padding-left: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 60px;
     font-size: 15px;
 
@@ -218,8 +226,8 @@ textarea {
   }
 
   textarea {
-    width: calc(100% - 20px);
-    padding-left: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 120px;
     font-size: 15px;
 
@@ -235,8 +243,8 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    width: calc(100% - 25px);
-    padding-left: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 55px;
     font-size: 14px;
 
@@ -257,8 +265,8 @@ textarea {
   }
 
   textarea {
-    width: calc(100% - 25px);
-    padding-left: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 120px;
     font-size: 14px;
 

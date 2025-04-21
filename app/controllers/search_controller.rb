@@ -33,18 +33,18 @@ class SearchController < ApplicationController
     suggestions = {
       designers: {
         title: "Designers",
-        class: "section-title", # Classe CSS partagée pour tous les titres
+        class: "section-title",
         results: designer_results
         
       },
       oeuvres: {
         title: "Références",
-        class: "section-title", # Classe CSS partagée pour tous les titres
+        class: "section-title",
         results: oeuvre_results
       },
       domaines: {
         title: "Domaines",
-        class: "section-title", # Classe CSS partagée pour tous les titres
+        class: "section-title",
         results: domaine_results
       }
     }

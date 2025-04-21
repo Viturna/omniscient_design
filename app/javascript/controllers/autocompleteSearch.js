@@ -9,13 +9,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (query.length > 2) {
       fetch(`/search_autocomplete?query=${query}`)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) throw new Error("Erreur serveur");
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Réponse invalide : pas du JSON");
+          }
+          return response.json();
+        })
         .then((data) => {
           suggestionsBox.innerHTML = ""; // Réinitialise les suggestions
 
-          // Fonction générique pour créer une section
           const createSection = (sectionData) => {
-            if (sectionData.results.length === 0) return;
+            if (!sectionData || sectionData.results.length === 0) return;
 
             const section = document.createElement("div");
             const title = document.createElement("p");
@@ -27,10 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
               const suggestionElement = document.createElement("div");
               suggestionElement.classList.add("suggestion-item");
 
-              // Ajouter l'image SVG ou l'image si elle est disponible
               if (item.svg) {
                 const imgElement = document.createElement("img");
-                imgElement.src = item.svg; // URL correcte générée par `asset_path`
+                imgElement.src = item.svg;
                 imgElement.classList.add("svg-icon");
                 suggestionElement.appendChild(imgElement);
               }
@@ -39,16 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const imgElement = document.createElement("img");
                 imgElement.src = item.img;
                 imgElement.alt = item.name;
-                imgElement.classList.add("search-img"); // Ajoute une classe CSS pour le style
+                imgElement.classList.add("search-img");
                 suggestionElement.appendChild(imgElement);
               }
 
-              // Afficher le nom de l'élément (Designer ou Oeuvre)
               const textElement = document.createElement("span");
               textElement.textContent = item.name;
               suggestionElement.appendChild(textElement);
 
-              // Si c'est une œuvre, ajouter également le designer
               if (item.designer) {
                 const designerElement = document.createElement("span");
                 designerElement.classList.add("designer-name");
@@ -66,21 +69,23 @@ document.addEventListener("DOMContentLoaded", function () {
             suggestionsBox.appendChild(section);
           };
 
-          // Générer les différentes sections (Domaines, Designers, Oeuvres)
           createSection(data.domaines);
           createSection(data.designers);
           createSection(data.oeuvres);
 
-          // Afficher "Aucune suggestion" si aucun résultat
           if (
-            !data.designers.results.length &&
-            !data.oeuvres.results.length &&
-            !data.domaines.results.length
+            (!data.designers || data.designers.results.length === 0) &&
+            (!data.oeuvres || data.oeuvres.results.length === 0) &&
+            (!data.domaines || data.domaines.results.length === 0)
           ) {
-            suggestionsBox.innerHTML = "Aucune suggestion";
+            suggestionsBox.innerHTML = "<div class='no-suggestion'>Aucune suggestion</div>";
           }
         })
-        .catch((error) => console.error("Erreur AJAX :", error));
+        .catch((error) => {
+          console.error("Erreur AJAX :", error);
+          suggestionsBox.innerHTML = "<div class='error-msg'>Erreur lors de la recherche</div>";
+        });
+
     } else {
       suggestionsBox.innerHTML = ""; // Effacer si la requête est trop courte
     }

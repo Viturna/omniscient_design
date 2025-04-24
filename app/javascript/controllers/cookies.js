@@ -22,14 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
         consentBanner.style.display = 'none'; // Cacher le bandeau
     };
 
-    acceptButton.onclick = function () {
-        console.log('Cookies acceptés');
-    };
-
-    declineButton.onclick = function () {
-        console.log('Cookies refusés');
-    };
-
     // Fonction pour activer les cookies (par exemple, Google Analytics)
     function enableCookies() {
         // Google Analytics

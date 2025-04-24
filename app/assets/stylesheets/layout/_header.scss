@@ -8,6 +8,9 @@ header {
   overflow-y: scroll;
   z-index: 99;
   transition: width 0.3s ease, height 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 header::-webkit-scrollbar {
@@ -25,9 +28,20 @@ header::-webkit-scrollbar-thumb:hover {
 
 
 // Logo
+.first-content-header {
+  padding-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 8dvh;
+}
+
+.naviguation-header {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
 
 .logo-header {
-  padding: 5dvh 0;
   display: flex;
   align-items: center;
 }
@@ -40,14 +54,11 @@ header::-webkit-scrollbar-thumb:hover {
 
 // Navigation
 
-.nav-header {
-  margin-top: 3dvh;
-}
 
 header ul {
   display: flex;
   flex-direction: column;
-  gap: 3.5dvh;
+  gap: 28px;
 }
 
 header li a {
@@ -72,21 +83,17 @@ header li .active {
   font-weight: 600;
 }
 
-.flex-btn-login {
-  margin-top: 5dvh;
-}
-
 // Button et liens
 .button-login {
   width: 10rem;
 }
 
 .link-header {
-  margin-top: 13dvh;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-bottom: 20px;
+  padding-top: 8dvh;
+  padding-bottom: 24px;
 
   p {
     font-size: 1rem;
@@ -111,17 +118,9 @@ header li .active {
     padding: 0 5vw;
   }
 
-  .logo-header {
-    padding: 8vh 0;
-  }
-
   .name-header {
     font-size: 1.25rem;
     margin-left: 1rem;
-  }
-
-  .nav-header {
-    margin-top: 1rem;
   }
 
   header ul {
@@ -141,18 +140,9 @@ header li .active {
     font-size: 1.125rem;
   }
 
-  .flex-btn-login {
-    margin-top: 5vh;
-  }
-
   .button-login {
     width: fit-content;
     font-size: 0.875rem;
-  }
-
-  .link-header {
-    margin-top: 10vh;
-    padding-bottom: 3.75rem;
   }
 
   .link-header a {
@@ -165,10 +155,6 @@ header li .active {
     width: 22vw;
     height: 100vh;
     padding: 0 4vw;
-  }
-
-  .logo-header {
-    padding: 6dvh 0;
   }
 
   .name-header {
@@ -188,18 +174,9 @@ header li .active {
     font-size: 1.125rem;
   }
 
-  .flex-btn-login {
-    margin-top: 5dvh;
-  }
-
   .button-login {
     width: fit-content;
     font-size: 0.875rem;
-  }
-
-  .link-header {
-    margin-top: 6dvh;
-    padding-bottom: 3dvh;
   }
 
   .link-header a {
@@ -230,7 +207,7 @@ header li .active {
   .nav-header {
     width: 100%;
     margin: 0;
-    padding: 0 20vw;
+    padding: 0 10vw;
   }
 
   header ul {
@@ -271,6 +248,10 @@ header li .active {
   .flex-btn-login,
   .link-header {
     display: none;
+  }
+
+  .first-content-header {
+    padding-top: 0;
   }
 }
 

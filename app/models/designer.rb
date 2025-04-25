@@ -1,7 +1,7 @@
 class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
-  searchkick word_start: [:nom, :prenom]
+  # searchkick word_start: [:nom, :prenom]
   after_commit :reindex_searchkick, if: :validated?
   after_destroy :remove_from_searchkick
 

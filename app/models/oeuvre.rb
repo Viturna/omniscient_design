@@ -1,8 +1,15 @@
 class Oeuvre < ApplicationRecord
   extend FriendlyId
+  include MeiliSearch::Rails
   friendly_id :nom_oeuvre, use: :slugged
 
-  searchkick word_start: [:nom_oeuvre]
+  meilisearch do
+    attribute :nom_oeuvre, :presentation_generale
+    searchable_attributes [:nom_oeuvre, :presentation_generale]
+  end
+  after_commit :reindex_meili, if: :validated?
+  after_destroy :remove_from_meili
+
   after_commit :reindex_searchkick, if: :validated?
   after_destroy :remove_from_searchkick
   
@@ -35,10 +42,12 @@ class Oeuvre < ApplicationRecord
 
   private
 
-  def reindex_searchkick
-    reindex
+  def reindex_meili
+    self.class.reindex 
+    self.meilisearch_index.add_documents([self])
   end
-  def remove_from_searchkick
-    self.class.search_index.remove(self)
+
+  def remove_from_meili
+    self.meilisearch_index.delete_document(self.id)
   end
 end

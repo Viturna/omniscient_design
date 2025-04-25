@@ -119,6 +119,7 @@ GEM
     cookies_eu (1.7.8)
       js_cookie_rails (~> 2.2.0)
     crass (1.0.6)
+    csv (3.3.4)
     date (3.3.4)
     debug (1.9.2)
       irb (~> 1.10)
@@ -158,9 +159,12 @@ GEM
       activerecord (>= 4.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    hashie (5.0.0)
     htmlbeautifier (1.4.3)
     htmlentities (4.3.4)
+    httparty (0.23.1)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     image_processing (1.13.0)
@@ -208,11 +212,17 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
+    meilisearch (0.31.0)
+      httparty (~> 0.22)
+    meilisearch-rails (0.15.0)
+      meilisearch (~> 0.31.0)
+      mutex_m (~> 0.2)
     mini_magick (4.13.2)
     mini_mime (1.1.5)
     minitest (5.25.1)
     msgpack (1.7.2)
-    multi_json (1.15.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     multipart-post (2.4.1)
     mutex_m (0.2.0)
     net-http (0.6.0)
@@ -240,9 +250,6 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
-    opensearch-ruby (3.4.0)
-      faraday (>= 1.0, < 3)
-      multi_json (>= 1.0)
     orm_adapter (0.5.0)
     ostruct (0.6.1)
     pg (1.5.7)
@@ -321,9 +328,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    searchkick (5.4.0)
-      activemodel (>= 6.1)
-      hashie
     select2-rails (4.0.13)
     selenium-webdriver (4.23.0)
       base64 (~> 0.2)
@@ -408,8 +412,8 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   kaminari
+  meilisearch-rails
   net-ssh (~> 7.2)
-  opensearch-ruby
   pg (~> 1.2)
   puma (~> 6.4)
   pundit
@@ -420,7 +424,6 @@ DEPENDENCIES
   ruby-vips
   rubyzip (~> 2.3.0)
   sass-rails
-  searchkick
   select2-rails
   selenium-webdriver
   sendgrid-ruby

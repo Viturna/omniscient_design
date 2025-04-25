@@ -134,7 +134,7 @@
       <% end %>
     <%end%>
     <div class="info-card-first-content">
-      <%= link_to search_path(:tab => "frise") do %>
+        <%= link_to search_path(:tab => "frise", :start_year => designer.date_naissance, :end_year => designer.date_naissance) do %>
       <p class="info-card-dark info-header-show">
         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_3261_191)">
@@ -169,7 +169,7 @@
       <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
       <p class="title-card"><%= designer.nom_designer %></p>
       <div class="flex-info">
-       <%= link_to search_path(:tab => "frise",) do %>
+        <%= link_to search_path(:tab => "frise", :start_year => designer.date_naissance, :end_year => designer.date_naissance) do %>
           <p class="info-card">
             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_3261_191)">

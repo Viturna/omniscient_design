@@ -58,8 +58,10 @@
     <ul>
       <% @referred_users.each do |referral| %>
         <li>
-          <strong><%= referral.pseudo %></strong> -
+         <p> 
+          <span class="bold"><%= referral.pseudo %></span> -
           (inscrit le <%= referral.created_at.strftime('%d/%m/%Y') %>)
+          </p>
         </li>
       <% end %>
     </ul>

@@ -52,14 +52,16 @@
   </div>
 </section>
 <section class="grid-1 filleul">
-  <h2>Liste de vos filleuls</h2>
-  <p>Vous avez <%= @referred_count %> filleul(s).</p>
+  <div class="title-filleul">
+    <h2>Liste de vos filleuls</h2>
+    <p>Vous avez <%= @referred_count %> filleul(s).</p>
+  </div>
   <% if @referred_users.any? %>
     <ul>
       <% @referred_users.each do |referral| %>
         <li>
          <p> 
-          <span class="bold"><%= referral.pseudo %></span> -
+          <span class="medium black"><%= referral.pseudo %></span> -
           (inscrit le <%= referral.created_at.strftime('%d/%m/%Y') %>)
           </p>
         </li>

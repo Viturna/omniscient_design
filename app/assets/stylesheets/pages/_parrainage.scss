@@ -1,4 +1,5 @@
 @import 'abstracts/variables';
+
 .title-avantage {
   font-size: 24px;
   color: $primary-color;
@@ -57,14 +58,21 @@
   gap: 16px;
 }
 
-.code input[type="text"]{
+.code input[type="text"] {
   width: 220px;
   font-size: 48px;
   font-weight: 600;
 }
-  .code input[type="text"]::placeholder {
+
+.code input[type="text"]::placeholder {
   font-size: 16px;
   font-weight: 400;
+}
+
+.title-filleul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @media screen and (max-width: 425px) {
@@ -82,7 +90,7 @@
     width: 80vw;
     gap: 8px;
 
-    svg{
+    svg {
       scale: 0.8;
     }
   }
@@ -98,11 +106,12 @@
     flex-direction: column;
   }
 
-  .code input[type="text"]{
+  .code input[type="text"] {
     width: 60vw;
   }
 
 }
+
 @media screen and (min-width:426px) and (max-width: 1024px) {
   .title-avantage {
     font-size: 20px;
@@ -117,7 +126,7 @@
   .box-avantage {
     gap: 8px;
 
-    svg{
+    svg {
       scale: 0.85;
     }
   }

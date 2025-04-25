@@ -3,6 +3,7 @@
 <%= javascript_include_tag "controllers/referenceShare", defer: true %>
 <%= javascript_include_tag "controllers/backBtn", defer: true %>
 <%= javascript_include_tag "controllers/validationOverlay", defer: true %>
+<%= javascript_include_tag "controllers/scroll_horizontal", defer: true %>
 <style>
   .popup .popup-content form{
     padding: 0px;
@@ -300,10 +301,12 @@
       </div>
     </div>
   </div>
-  <% if oeuvre.validation %>
-    <div class="next-card">
-      <h2 class="title-description-reference">Découvrir d'autres références</h2>
-      <div class="oeuvres-same">
+<% if oeuvre.validation %>
+  <div class="next-card">
+    <h2 class="title-description-reference">Découvrir d'autres références</h2>
+
+    <div class="horizontal-scroll-section">
+      <div class="horizontal-wrapper">
         <% domaine_oeuvres =  @oeuvre.domaine.oeuvres.where(validation: true)
                             .where.not(id: @oeuvre.id)
                             .order("RANDOM()")
@@ -314,10 +317,9 @@
             <div class="oeuvre-card">
               <% if asset_exists?(image_path) %>
                 <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(image_path) %>');">
-                <% else %>
-                  <% Rails.logger.debug("Image not found : #{image_path}") %>
-                  <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(oeuvre.image) %>');">
-                  <% end %>
+              <% else %>
+                <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(oeuvre.image) %>');">
+              <% end %>
                   <div class="oeuvre-card-content">
                     <span class="oeuvre-designer"><%= oeuvre.designers.map(&:nom_designer).join(', ') %></span>
                     <p class="oeuvre-title"><%= oeuvre.nom_oeuvre %></p>
@@ -326,10 +328,11 @@
               </div>
             <% end %>
           <% end %>
-        </div>
       </div>
-    <%end%>
+    </div>
   </div>
+<% end %>
+
   <div id="shareModal" class="popup">
     <div class="popup-content">
       <div class="top-popup">

@@ -3,6 +3,7 @@
 <%= javascript_include_tag "controllers/referenceShare", defer: true %>
 <%= javascript_include_tag "controllers/backBtn", defer: true %>
 <%= javascript_include_tag "controllers/validationOverlay", defer: true %>
+<%= javascript_include_tag "controllers/scroll_horizontal", defer: true %>
 
 <style>
   .popup .popup-content form{
@@ -301,61 +302,64 @@
         </div>
       </div>
     </div>
-    <% if designer.validation %>
-      <div class="next-card">
-        <% designer_oeuvres = @designer.oeuvres.where(validation: true)
-                              .limit(3) %>
-        <% if designer_oeuvres.any? %>
-          <h2 class="title-description-reference">Références du designer</h2>
-          <div class="oeuvres-same">
-            <% designer_oeuvres.each do |oeuvre| %>
-              <%= link_to oeuvre do %>
-                <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
-                <div class="oeuvre-card">
-                  <% if asset_exists?(image_path) %>
-                    <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(image_path) %>');">
-                    <% else %>
-                      <% Rails.logger.debug("Image not found : #{image_path}") %>
-                      <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(oeuvre.image) %>');">
-                      <% end %>
-                      <div class="oeuvre-card-content">
-                         <p class="oeuvre-designer">  <%= oeuvre.designers.map(&:nom_designer).join(', ') %></p> 
-                        <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
-                      </div>
+  <% if designer.validation %>
+  <div class="next-card">
+    <% designer_oeuvres = @designer.oeuvres.where(validation: true).limit(3) %>
+    <% if designer_oeuvres.any? %>
+      <h2 class="title-description-reference">Références du designer</h2>
+
+      <div class="horizontal-scroll-section">
+        <div class="horizontal-wrapper">
+          <% designer_oeuvres.each do |oeuvre| %>
+            <%= link_to oeuvre do %>
+              <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
+              <div class="oeuvre-card">
+                <% if asset_exists?(image_path) %>
+                  <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(image_path) %>');">
+                <% else %>
+                  <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(oeuvre.image) %>');">
+                <% end %>
+                    <div class="oeuvre-card-content">
+                      <p class="oeuvre-designer"><%= oeuvre.designers.map(&:nom_designer).join(', ') %></p>
+                      <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                     </div>
                   </div>
-                <% end %>
+                </div>
               <% end %>
-            </div>
-          <% end %>
-          <h2 class="title-description-reference">Découvrir d'autres designers</h2>
-          <div class="oeuvres-same">
-            <% designers = Designer.all
-                            .where(validation: true)
-                            .where.not(id: @designer.id)
-                            .order("RANDOM()")
-                            .limit(5) %>
-            <% designers.each do |designer| %>
-              <%= link_to designer do %>
-                <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
-                <div class="oeuvre-card">
-                  <% if asset_exists?(image_path) %>
-                    <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(image_path) %>');">
-                    <% else %>
-                      <% Rails.logger.debug("Image not found : #{image_path}") %>
-                      <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(designer.image) %>');">
-                      <% end %>
-                      <div class="oeuvre-card-content">
-                        <h2 class="oeuvre-title"><%= designer.nom_designer %></h2>
-                      </div>
-                    </div>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
+            <% end %>
+        </div>
       </div>
+    <% end %>
+
+    <h2 class="title-description-reference">Découvrir d'autres designers</h2>
+
+    <div class="horizontal-scroll-section">
+      <div class="horizontal-wrapper">
+        <% designers = Designer.where(validation: true).where.not(id: @designer.id).order("RANDOM()").limit(5) %>
+        <% designers.each do |designer| %>
+          <%= link_to designer do %>
+            <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
+            <div class="oeuvre-card">
+              <% if asset_exists?(image_path) %>
+                <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(image_path) %>');">
+              <% else %>
+                <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(designer.image) %>');">
+              <% end %>
+                  <div class="oeuvre-card-content">
+                    <p class="oeuvre-designer">
+                      <%= designer.countries.map(&:country).join(", ") %>
+                    </p>
+                    <h2 class="oeuvre-title"><%= designer.nom_designer %></h2>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
       <% if !designer.validation %>
         <% if current_user.certified? || current_user.admin? %>
           <div class="overlay-bottom" id="overlay-bottom">

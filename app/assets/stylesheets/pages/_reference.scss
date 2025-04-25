@@ -193,25 +193,23 @@
   margin-left: 20vw;
 }
 
-.oeuvres-same {
-  display: flex;
+.horizontal-scroll-section {
+  margin-right: 32px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  gap: 24px;
-  padding-right: 32px;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
-.oeuvres-same::-webkit-scrollbar {
-  height: 6px;
+.horizontal-scroll-section::-webkit-scrollbar {
+  display: none;
 }
 
-.oeuvres-same::-webkit-scrollbar-thumb {
-  background: $text-color;
-  border-radius: 10px;
-}
-
-.oeuvres-same::-webkit-scrollbar-thumb:hover {
-  background: #363636;
+.horizontal-wrapper {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 1rem;
 }
 
 .oeuvre-card {
@@ -221,6 +219,8 @@
   scroll-snap-align: start;
   border: 1px solid #ccc;
   border-radius: 10px;
+  min-width: 350px;
+  flex: 0 0 auto;
 
   &:hover {
     opacity: 0.8;
@@ -243,6 +243,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  border-radius: 10px;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
@@ -547,11 +548,6 @@
     margin-left: 5vw;
   }
 
-  .oeuvres-same {
-    margin-top: 32px;
-    gap: 24px;
-  }
-
   .oeuvre-card {
     width: 380px;
     height: 220px;
@@ -675,9 +671,8 @@
     margin-left: 5vw;
   }
 
-  .oeuvres-same {
-    margin-top: 32px;
-    gap: 24px;
+  .horizontal-scroll-section {
+    margin-right: 28px;
   }
 
   .oeuvre-card {
@@ -810,9 +805,8 @@
     margin-left: 5vw;
   }
 
-  .oeuvres-same {
-    margin-top: 32px;
-    gap: 24px;
+  .horizontal-scroll-section {
+    margin-right: 24px;
   }
 
   .oeuvre-card {

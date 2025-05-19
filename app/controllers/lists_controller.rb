@@ -16,44 +16,8 @@ class ListsController < ApplicationController
     @notions = Notion.all
 
     # Filtres
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre)
-    @designers = Designer.where(validation: true).order(:nom)
-    # Application des filtres
-    if params[:domaine].present? && params[:domaine].reject(&:blank?).any?
-      filtered_domains = params[:domaine].reject(&:blank?)
-    
-      @oeuvres = @oeuvres.where(domaine_id: filtered_domains)
-      @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
-    end
-    
-  
-    if params[:country].present? && params[:country].reject(&:blank?).any?
-      @designers = @designers.joins(:countries).where(countries: { id: params[:country] })
-    end
-  
-    if params[:notion].present? && params[:notion].reject(&:blank?).any?
-      @oeuvres = @oeuvres.joins(:notions).where(notions: { id: params[:notion] })
-    end
-  
-    if params[:start_year].present? && params[:end_year].present?
-      start_year = params[:start_year].to_i
-      end_year = params[:end_year].to_i
-    
-      if start_year > 0 && end_year > 0 && start_year <= end_year
-        @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
-        @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
-        @timeline_years = (start_year..end_year).to_a
-      else
-        start_year =  1880
-        end_year = Time.now.year
-        @timeline_years = (start_year..end_year).to_a
-      end
-      else
-        start_year =  1880
-        end_year = Time.now.year
-        @timeline_years = (start_year..end_year).to_a
-    end
-
+    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page]).per(10)
+    @designers = Designer.where(validation: true).order(:nom).page(params[:page]).per(10)
 
     if @list.share_token.present? && @list.share_token == params[:share_token]
       render :show
@@ -76,22 +40,72 @@ class ListsController < ApplicationController
   def new
     @current_page = 'listes'
     @list = current_user.lists.build
-    @oeuvres = Oeuvre.all
+    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10)
+    @designers = Designer.where(validation: true).order(:nom).limit(10)
+    @domaines = Domaine.all
   end
-
+  def load_more_oeuvres
+    if params[:slug].present?
+      @list = List.friendly.find_by(slug: params[:slug])
+  
+      unless @list
+        head :not_found and return
+      end
+  
+      # on pourrait ici charger seulement les oeuvres rattachées à la liste
+      @oeuvres = @list.oeuvres.offset(params[:offset]).limit(10)
+    else
+      # mode création ➔ on affiche toutes les oeuvres validées
+      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(10)
+    end
+  
+    render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+  end
+  def load_more_designers
+    if params[:slug].present?
+      @list = List.friendly.find_by(slug: params[:slug])
+  
+      unless @list
+        head :not_found and return
+      end
+  
+      @designers = @list.designers.offset(params[:offset]).limit(10)
+    else
+      @designers = Designer.where(validation: true).order(:nom).offset(params[:offset]).limit(10)
+    end
+  
+    render partial: 'designers_list', collection: @designers, as: :designer
+  end
+  
   def create
     @list = current_user.lists.build(list_params)
-
+  
     if @list.save
+      if params[:designer_ids].present?
+        designer_ids = params[:designer_ids].split(',').map(&:to_i)
+        @list.designers = Designer.where(id: designer_ids)
+      end
+  
+      if params[:oeuvre_ids].present?
+        oeuvre_ids = params[:oeuvre_ids].split(',').map(&:to_i)
+        @list.oeuvres = Oeuvre.where(id: oeuvre_ids)
+      end
+  
       redirect_to @list, notice: 'Liste créée avec succès.'
     else
+      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10)
+      @designers = Designer.where(validation: true).order(:nom).limit(10)
+      @domaines = Domaine.all
+
+      @selected_designer_ids = params[:designer_ids].to_s.split(',').map(&:to_i)
+      @selected_oeuvre_ids = params[:oeuvre_ids].to_s.split(',').map(&:to_i)
+  
       render :new
     end
   end
-
+  
   def edit
     @current_page = 'listes'
-    # Afficher le formulaire de modification de la liste
   end
 
   def update
@@ -225,7 +239,7 @@ class ListsController < ApplicationController
     end
     redirect_to @list, notice: notice
   end
-
+  
   private
   def create_share_notification(list)
     message = "La liste #{list.name} a été partagée avec vous."

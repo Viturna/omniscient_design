@@ -64,6 +64,7 @@
 }
 
 .form-footer {
+  z-index: 2;
   width: calc(80vw - 350px);
   padding: 16px 0;
   background-color: $background-color;
@@ -82,12 +83,21 @@
   width: calc(100vw - 350px - 128px);
   padding-right: 128px;
   gap: 24px;
-  background-color: #fff;
+  background-color: $secondary-color;
   display: flex;
   height: 100px;
   align-items: center;
   justify-content: end;
   z-index: 99;
+}
+
+.list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  padding: 96px 0;
 }
 
 @media screen and (max-width: 375px) {
@@ -137,5 +147,16 @@
 
   .no-list p {
     width: 65%;
+  }
+}
+
+
+body.dark-mode {
+  .bottom-list {
+    background-color: $secondary-color-dark;
+  }
+
+  .form-footer {
+    background-color: $background-color-dark;
   }
 }

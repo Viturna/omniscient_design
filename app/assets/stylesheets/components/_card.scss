@@ -34,6 +34,7 @@
   height: 45dvh;
   position: relative;
 }
+
 .flex-info-card {
   display: flex;
   align-items: start;
@@ -42,17 +43,20 @@
   top: 24px;
   padding: 24px 16px;
 }
-.flex-info-card .info-card-dark{
+
+.flex-info-card .info-card-dark {
   scale: 0.9;
   height: 30px;
   width: fit-content;
 }
-.domaine-flex-card{
+
+.domaine-flex-card {
   display: flex;
   flex-direction: column;
   align-items: end;
   gap: 8px;
 }
+
 .title-card {
   margin-top: 8px;
   font-size: 36px;
@@ -128,13 +132,16 @@
     display: none;
   }
 }
+
 @media screen and (min-width:601px) and (max-width: 768px) {
   .img-card {
     transform: rotate(-4deg);
   }
+
   .bg-card {
     transform: rotate(4deg);
   }
+
   .card {
     width: 80vw;
     padding-top: 50px;
@@ -148,13 +155,14 @@
     min-height: 0px;
   }
 
-  .bg-card .date-main{
+  .bg-card .date-main {
     transform: rotate(-4deg);
     top: 26px;
     scale: 0.8;
     font-size: 18px;
   }
-  .bg-card .domaine-main{
+
+  .bg-card .domaine-main {
     width: fit-content;
     transform: rotate(-4deg);
     right: 24px;
@@ -184,16 +192,20 @@
     display: none;
   }
 }
+
 @media screen and (min-width:426px) and (max-width: 600px) {
   .flex-info-card {
     padding: 16px 8px;
   }
+
   .img-card {
     transform: rotate(0deg);
   }
+
   .bg-card {
     transform: rotate(0deg);
   }
+
   .card {
     padding-top: 10px;
     height: calc(100dvh - 10px);
@@ -206,13 +218,14 @@
   }
 
 
-  .bg-card .date-main{
+  .bg-card .date-main {
     transform: rotate(0deg);
     top: 24px;
     scale: 0.8;
     font-size: 18px;
   }
-  .bg-card .domaine-main{
+
+  .bg-card .domaine-main {
     width: fit-content;
     transform: rotate(0deg);
     right: 24px;
@@ -242,10 +255,12 @@
     display: none;
   }
 }
+
 @media screen and (max-width: 425px) {
   .flex-info-card {
-    padding:16px 8px;
+    padding: 16px 8px;
   }
+
   .img-card {
     transform: rotate(0deg)
   }
@@ -253,6 +268,7 @@
   .bg-card {
     transform: rotate(0deg);
   }
+
   .card {
     padding-top: 0px;
     height: 100dvh;
@@ -264,13 +280,14 @@
     height: calc(100dvh - 260px);
   }
 
-  .bg-card .date-main{
+  .bg-card .date-main {
     transform: rotate(0deg);
     top: 16px;
     scale: 0.8;
     font-size: 18px;
   }
-  .bg-card .domaine-main{
+
+  .bg-card .domaine-main {
     width: fit-content;
     transform: rotate(0deg);
     left: -8px;
@@ -303,42 +320,30 @@
 
 
 
-// @media (prefers-color-scheme: dark) {
-//   .subtitle-card {
-//     color: $secondary-color;
-//     a{
-//       color: $secondary-color;
-//     }
-//   }
-//   .description-card {
-//     color: $dark-text-color;
-//   }
-//   body.light .subtitle-card{
-//     color: $primary-color;
-//     a{
-//       color: $primary-color;
-//     }
-//   }
-//   body.light .description-card {
-//     color: $text-color;
-//   }
-// }
 
-  .subtitle-card {
+.subtitle-card {
+  color: $primary-color;
+
+  a {
     color: $primary-color;
-    a{
-      color: $primary-color;
+  }
+}
+
+.description-card {
+  color: $text-color;
+}
+
+
+body.dark-mode {
+  .subtitle-card {
+    color: $primary-color-dark;
+
+    a {
+      color: $primary-color-dark;
     }
   }
+
   .description-card {
-    color: $text-color;
+    color: $text-color-dark;
   }
-  body.dark .subtitle-card {
-    color: $secondary-color;
-    a{
-      color: $secondary-color;
-    }
-  }
-  body.dark .description-card {
-    color: $dark-text-color;
-  }
+}

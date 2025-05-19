@@ -16,8 +16,6 @@
   position: relative;
   font-weight: 500;
   font-size: 24px;
-
-  color: $secondary-color;
   padding: 20px;
 }
 
@@ -203,5 +201,16 @@
 
   .card-list {
     width: 16vw;
+  }
+}
+
+
+.card-title {
+  color: $secondary-color;
+}
+
+body.dark-mode {
+  .card-title {
+    color: $secondary-color-dark;
   }
 }

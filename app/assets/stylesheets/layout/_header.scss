@@ -449,55 +449,6 @@ header li .active {
   }
 }
 
-// @media (prefers-color-scheme: dark) {
-//   header {
-//     background-color: $primary-color;
-//   }
-//   .name-header {
-//     color: $secondary-color;
-//   }
-//   header {
-//     background-color: $primary-color;
-//   }
-//   .name-header {
-//     color: $secondary-color;
-//   }
-//   header li a {
-//     color: $dark-text-color;
-//   }
-//   header li .active {
-//     color: $secondary-color;
-//   }
-//   header li svg path {
-//     fill: $dark-text-color;
-//   }
-//   header li .active svg path {
-//     fill: $secondary-color;
-//   }
-//   .link-header a {
-//     color: $dark-text-color;
-//   }
-
-//   body.light header {
-//     background-color: $secondary-color;
-//   }
-//   body.light .name-header {
-//     color: $primary-color;
-//   }
-//   body.light header li a {
-//     color: $text-color;
-//   }
-//   body.light header li .active{
-//     color: $primary-color;
-//   }
-//   body.light header li .active svg path{
-//     fill: $primary-color;
-//   }
-//   body.light .link-header a{
-//     color: $text-color;
-//   }
-// }
-
 header {
   background-color: $secondary-color;
 }
@@ -522,26 +473,37 @@ header li .active svg path {
   color: $text-color;
 }
 
-body.dark header {
-  background-color: $primary-color;
-}
+body.dark-mode {
+  header {
+    background-color: $secondary-color-dark;
+  }
 
-body.dark .name-header {
-  color: $secondary-color;
-}
+  .logo-header svg path {
+    fill: $primary-color-dark;
+  }
 
-body.dark header li a {
-  color: $dark-text-color;
-}
 
-body.dark header li .active {
-  color: $secondary-color;
-}
+  .name-header {
+    color: $primary-color-dark;
+  }
 
-body.dark header li .active svg path {
-  fill: $secondary-color;
-}
+  header li a {
+    color: $text-color-dark;
+  }
 
-body.dark .link-header a {
-  color: $dark-text-color;
+  header li .active {
+    color: $primary-color-dark;
+  }
+
+  header li svg path {
+    fill: $text-color-dark;
+  }
+
+  header li .active svg path {
+    fill: $primary-color-dark;
+  }
+
+  .link-header a {
+    color: $text-color-dark;
+  }
 }

@@ -16,21 +16,23 @@
 
 .popup-content {
   margin-top: 10dvh;
-  background-color: #ffffff;
+  background-color: $secondary-color;
   border-radius: 10px;
   z-index: 1000;
   width: 700px;
   padding-bottom: 45px;
   margin-bottom: 32px;
 }
-.popup-inner{
+
+.popup-inner {
   padding: 0 2.5vw;
 }
+
 .top-popup {
   border-radius: 10px 10px 0 0;
   height: 80px;
   width: 90%;
-  background-color: #F7F7F7;
+  background-color: $background-color;
   position: relative;
   display: flex;
   align-items: center;
@@ -59,25 +61,27 @@
 }
 
 .title-popup {
-  color: #202020;
+  color: $primary-color;
   font-weight: 500;
   font-size: 24px;
   margin: 32px 0;
 }
+
 .subtitle-popup {
-  color: #202020;
+  color: $primary-color;
   font-weight: 500;
   font-size: 20px;
   margin: 16px 0;
 }
+
 .popup-link-add {
   padding: 0;
   font-size: 18px;
-  color: #202020;
+  color: $primary-color;
   text-decoration: underline;
 }
 
-.popup-decoration{
+.popup-decoration {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,10 +91,13 @@
   background-color: #333333;
   margin: 32px 0;
 }
-.popup .button{
+
+.popup .button {
   width: fit-content;
   margin-top: 24px;
 }
+
+
 @media screen and (min-width: 0px) and (max-width: 425px) {
   .top-popup {
     height: 70px;
@@ -160,6 +167,10 @@
   &:hover {
     opacity: 0.8;
   }
+
+  path {
+    fill: $primary-color;
+  }
 }
 
 .img-list {
@@ -189,6 +200,7 @@
 .add-to-list-btn {
   padding: 0;
 }
+
 @media screen and (min-width: 446px) and (max-width: 768px) {
   .box-list {
     padding: 0px 40px;
@@ -197,10 +209,12 @@
   .box-list svg {
     scale: 0.8;
   }
+
   .title-list {
     font-size: 18px;
     margin-bottom: 4px;
   }
+
   .img-list {
     width: 60px;
     height: 60px;
@@ -208,6 +222,7 @@
 
 
 }
+
 @media screen and (min-width: 0px) and (max-width: 445px) {
   .box-list {
     padding: 0px 16px;
@@ -231,4 +246,36 @@
     font-size: 14px;
   }
 
+}
+
+body.dark-mode {
+  .title-popup {
+    color: $primary-color-dark;
+  }
+
+  .popup-link-add {
+    color: $primary-color-dark;
+  }
+
+  .subtitle-popup {
+    color: $primary-color-dark;
+  }
+
+  .top-popup {
+    background-color: $background-color-dark;
+  }
+
+  .popup-content {
+    background-color: $secondary-color-dark;
+  }
+
+  .box-list svg path {
+    fill: $primary-color-dark;
+  }
+
+  .close-popup {
+    path {
+      fill: $primary-color-dark;
+    }
+  }
 }

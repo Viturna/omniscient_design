@@ -94,16 +94,16 @@
 // }
 
 
-  .nav-link-profil {
-    background-color: $secondary-color;
-    color: $primary-color;
-  }
+.nav-link-profil {
+  background-color: $secondary-color;
+  color: $primary-color;
+}
 
-  body.dark .nav-link-profil {
-    background-color: $primary-color;
-    color: $secondary-color;
+body.dark-mode .nav-link-profil {
+  background-color: $primary-color;
+  color: $secondary-color;
 
-    svg path {
-      fill: $secondary-color;
-    }
+  svg path {
+    fill: $secondary-color;
   }
+}

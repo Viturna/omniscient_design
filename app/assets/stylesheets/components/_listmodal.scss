@@ -1,108 +1,118 @@
 @import 'abstracts/variables';
 
- .modal-content {
-   background-color: #F7F7F7;
-   margin: 0 auto;
-   padding: 0 50px;
-   padding-bottom: 24px;
-   border-radius: 5px;
-   width: 70vw;
-   margin-bottom: 32px;
- }
- /* Add */
- .flex-card {
+.modal-content {
+  background-color: #F7F7F7;
+  margin: 0 auto;
+  padding: 0 50px;
+  padding-bottom: 24px;
+  border-radius: 5px;
+  width: 70vw;
+  margin-bottom: 32px;
+}
+
+/* Add */
+.flex-card {
   margin: 32px 0;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   gap: 2%;
- }
-.check-box-wrapper{
+}
+
+.check-box-wrapper {
   width: 18%;
   aspect-ratio: 1/1;
 }
- .card-list-add {
-   width: 100%;
-   aspect-ratio: 1/1;
-   display: flex;
-   align-items: end;
-   border: 1px solid #E9E9E9;
-   border-radius: 5px;
-   position: relative;
-   background-color: rgba(255, 255, 255, 0.8);
-   box-sizing: border-box;
-   &:hover{
-      cursor: pointer;
-      opacity: 0.9;
-   }
- }
 
- .card-title-add {
-   position: relative;
-   font-weight: 500;
-   width: 60%;
-   color: $secondary-color;
-   padding: 10px;
-   font-size: 18px;
- }
+.check-box-wrapper.selected {
+  opacity: 0.5;
+}
 
- .card-checked {
-   opacity: 0.5;
-   border: 3px solid #E9E9E9;
- }
+.card-list-add {
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: end;
+  border: 1px solid #E9E9E9;
+  border-radius: 5px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
 
- .hidden {
-   display: none;
- }
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
 
- .hidden-check {
-   visibility: hidden;
- }
+.card-title-add {
+  position: relative;
+  font-weight: 500;
+  width: 60%;
+  color: $secondary-color;
+  padding: 10px;
+  font-size: 18px;
+}
 
- .search-container {
-   position: relative;
-   width: 30vw;
-   height: 70px;
-   margin-top: 30px;
- }
+.card-checked {
+  opacity: 0.5;
+  border: 3px solid #E9E9E9;
+}
 
- .search-container input[type="search"] {
-   width: 100%;
-   height: 60px;
-   padding-left: 50px;
-   border: none;
-   border-radius: 5px;
-   font-weight: 500;
-   font-size: 16px;
-   color: $primary-color;
-   background-color: $secondary-color;
-   position: relative;
- }
+.hidden {
+  display: none;
+}
 
- .search-container input[type="search"]::placeholder {
-   color: $primary-color;
- }
+.hidden-check {
+  visibility: hidden;
+}
 
- .search-container .search-icon {
-   position: absolute;
-   top: 30%;
-   left: 15px;
-   width: 18px;
-   height: 18px;
- }
+.search-container {
+  position: relative;
+  width: 30vw;
+  height: 70px;
+  margin-top: 30px;
+}
 
- @media screen and (min-width:769px) and (max-width: 1024px) {
- .check-box-wrapper{
-   width: 23%;
-   aspect-ratio: 1/1;
- }
+.search-container input[type="search"] {
+  width: 100%;
+  height: 60px;
+  padding-left: 45px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 16px;
+  color: $primary-color;
+  background-color: $secondary-color;
+  position: relative;
+}
+
+.search-container input[type="search"]::placeholder {
+  color: $primary-color;
+}
+
+.search-container .search-icon {
+  position: absolute;
+  top: 30%;
+  left: 15px;
+  width: 18px;
+  height: 18px;
+  z-index: 1;
+}
+
+@media screen and (min-width:769px) and (max-width: 1024px) {
+  .check-box-wrapper {
+    width: 23%;
+    aspect-ratio: 1/1;
+  }
 
   .search-container {
     width: 40vw;
   }
 
- }
- @media screen and (min-width:600px) and (max-width: 768px) {
+}
+
+@media screen and (min-width:600px) and (max-width: 768px) {
 
   .modal-content {
     padding: 0 20px 32px 20px;
@@ -111,12 +121,13 @@
 
   .flex-card {
     margin-top: 24px;
-   gap: 2%;
+    gap: 2%;
   }
- .check-box-wrapper{
-   width: 23%;
-   aspect-ratio: 1/1;
- }
+
+  .check-box-wrapper {
+    width: 23%;
+    aspect-ratio: 1/1;
+  }
 
   .card-title-add {
     width: 100%;
@@ -132,8 +143,9 @@
     height: 60px;
   }
 
- }
- @media screen and (min-width:425px) and (max-width: 601px) {
+}
+
+@media screen and (min-width:425px) and (max-width: 601px) {
 
   .modal-content {
     padding: 0 20px 32px 20px;
@@ -144,9 +156,10 @@
     margin-top: 0px;
     gap: 2%;
   }
-  .check-box-wrapper{
-   width: 32%;
-   aspect-ratio: 1/1;
+
+  .check-box-wrapper {
+    width: 32%;
+    aspect-ratio: 1/1;
   }
 
   .card-title-add {
@@ -173,8 +186,9 @@
     height: 17px;
   }
 
- }
- @media screen and (min-width:0px) and (max-width: 426px) {
+}
+
+@media screen and (min-width:0px) and (max-width: 426px) {
 
   .modal-content {
     padding: 0 15px 32px 15px;
@@ -185,9 +199,10 @@
     margin-top: 0px;
     gap: 2%;
   }
-  .check-box-wrapper{
-   width: 49%;
-   aspect-ratio: 1/1;
+
+  .check-box-wrapper {
+    width: 49%;
+    aspect-ratio: 1/1;
   }
 
   .card-title-add {
@@ -214,4 +229,4 @@
     height: 16px;
   }
 
- }
+}

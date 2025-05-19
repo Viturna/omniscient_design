@@ -1,8 +1,11 @@
+// Default (light mode)
 $primary-color: #202020;
 $secondary-color: #fff;
-// Couleurs de texte
 $background-color: #F7F7F7;
 $text-color: #52525D;
-// Couleurs dark mode
-$dark-background-color: #333;
-$dark-text-color: #E9E9E9;
+
+// Dark mode theme
+$primary-color-dark: #fff;
+$secondary-color-dark: #272729;
+$background-color-dark: #18181A;
+$text-color-dark: #E9E9E9;

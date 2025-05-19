@@ -78,7 +78,14 @@
 
   </head>
 
-  <body class="<%= (cookies && cookies[:theme].presence || 'system') %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
+<% theme = cookies&.[](:theme).presence || 'system' %>
+<% body_class = case theme
+                when 'dark-mode' then 'dark-mode'
+                when 'light-mode' then 'light-mode'
+                else ''
+               end %>
+<body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
+
     <div id="cookie-consent-banner" style="display:none;">
       <div>
         <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?</p>
@@ -110,7 +117,9 @@
     <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
       <%= render 'layouts/header' %>
     <% end %>
-    <main class="<%= 'main-show' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' %>">
+<% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
+<main class="<%= 'main-show' if main_show %>">
+
       <div id="loading">
         <div class="loader-bg">      
           <video autoplay loop muted>
@@ -123,5 +132,14 @@
         <%= yield %>
       </div>
     </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const hasTheme = document.body.classList.contains('dark-mode') || document.body.classList.contains('light-mode');
+        if (!hasTheme) {
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.body.classList.add(prefersDark ? 'dark-mode' : 'light-mode');
+        }
+      });
+    </script>
   </body>
 </html>

@@ -4,6 +4,7 @@ import Rails from "@rails/ujs";
 import "stylesheets/application.scss";
 import "./controllers/select2_initializer";
 import "../stylesheets/application.scss";
+import { gsap } from "gsap";
 
 Rails.start();
 Turbo.start();

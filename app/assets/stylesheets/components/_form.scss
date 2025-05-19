@@ -284,61 +284,6 @@ textarea {
 }
 
 
-// @media (prefers-color-scheme: dark) {
-//   input.search-top-bar {
-//     background-color: $primary-color;
-//     color: $secondary-color;
-//   }
-//   input[type=text],
-//   input[type=date],
-//   input[type=email],
-//   input[type=password] {
-//     background-color: $dark-background-color;
-//     color: $secondary-color;
-//     border: 2px solid #525252;
-//   }
-//   input::placeholder,
-//   select::placeholder,
-//   textarea::placeholder {
-//     color: $dark-text-color;
-//   }
-//   select {
-//     background-color: $dark-background-color;
-//     color: $secondary-color;
-//     border: 2px solid #525252;
-//   }
-
-//   textarea {
-//     background-color: $dark-background-color;
-//     border: 2px solid #525252;
-//   }
-
-//   body.light input.search-top-bar{
-//     background-color: $secondary-color;
-//     color: $primary-color;
-//   }
-//   body.light input[type=text],
-//   body.light input[type=date],
-//   body.light input[type=email],
-//   body.light input[type=password] {
-//     background-color: $secondary-color;
-//     color: $primary-color;
-//   }
-//   body.light input::placeholder,
-//   body.light select::placeholder,
-//   body.light textarea::placeholder {
-//     color: $text-color;
-//   }
-//   body.light select {
-//     background-color: $secondary-color;
-//     color: $primary-color;
-//   }
-
-//   body.light textarea {
-//     background-color: $secondary-color;
-//   }
-// }
-
 input.search-top-bar {
   background-color: $secondary-color;
   color: $primary-color;
@@ -370,33 +315,38 @@ textarea {
 
 
 
-body.dark input.search-top-bar {
-  background-color: $primary-color;
-  color: $secondary-color;
-}
+body.dark-mode {
+  input.search-top-bar {
+    background-color: $secondary-color-dark;
+    color: $primary-color-dark;
+    border-color: $background-color-dark;
+  }
 
-body.dark input[type=text],
-body.dark input[type=date],
-body.dark input[type=email],
-body.dark input[type=password] {
-  background-color: $dark-background-color;
-  color: $secondary-color;
-  border: 2px solid #525252;
-}
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password],
+  .select2-container .select2-selection__placeholder {
+    background-color: $secondary-color-dark !important;
+    color: $primary-color-dark !important;
+    border-color: $background-color-dark;
+  }
 
-body.dark input::placeholder,
-body.dark select::placeholder,
-body.dark textarea::placeholder {
-  color: $dark-text-color;
-}
+  input::placeholder,
+  select::placeholder,
+  textarea::placeholder {
+    color: $text-color-dark;
+  }
 
-body.dark select {
-  background-color: $dark-background-color;
-  color: $secondary-color;
-  border: 2px solid #525252;
-}
+  select {
+    background-color: $secondary-color-dark;
+    color: $primary-color-dark;
+    border-color: $background-color-dark;
+  }
 
-body.dark textarea {
-  background-color: $dark-background-color;
-  border: 2px solid #525252;
+  textarea {
+    background-color: $secondary-color-dark;
+    border-color: $background-color-dark;
+  }
+
 }

@@ -1,4 +1,5 @@
 @import 'abstracts/variables';
+
 .top-bar-search {
   position: fixed;
   z-index: 900;
@@ -10,10 +11,12 @@
   justify-content: space-between;
   padding: 0 10vw;
 }
-.top-bar-flex{
+
+.top-bar-flex {
   display: flex;
   gap: 1vw;
 }
+
 // Autocomplete
 .autocomplete-items {
   position: absolute;
@@ -66,6 +69,7 @@
 .autocomplete-items::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
 @media screen and (min-width:769px) and (max-width: 1024px) {
   .top-bar-search {
     width: 54vw;
@@ -79,6 +83,7 @@
     width: 84vw;
     padding: 0 8vw;
   }
+
   .autocomplete-items {
     width: 80vw;
   }
@@ -86,16 +91,19 @@
   .autocomplete-items div {
     font-size: 16px;
   }
-  .top-bar-flex{
+
+  .top-bar-flex {
     gap: 8px;
   }
 }
+
 @media screen and (min-width:0px) and (max-width: 425px) {
   .top-bar-search {
     width: 90vw;
     padding: 0 5vw;
     height: 90px;
   }
+
   .autocomplete-items {
     width: 80vw;
   }
@@ -103,34 +111,48 @@
   .autocomplete-items div {
     font-size: 16px;
   }
-  .top-bar-flex{
+
+  .top-bar-flex {
     gap: 8px;
   }
 }
 
 
+.top-bar-search {
+  background-color: $background-color;
+  border-bottom: 1px solid #E9E9E9;
+}
 
-// @media (prefers-color-scheme: dark) {
-
-//   .top-bar-search {
-//     background-color: $dark-background-color;
-//     border-bottom: 1px solid #525252;
-//   }
-
-//   body.light .top-bar-search {
-//     background-color: $background-color;
-//     border-bottom: 1px solid #E9E9E9;
-//   }
-// }
-
-
+body.dark-mode {
   .top-bar-search {
-    background-color: $background-color;
-    border-bottom: 1px solid #E9E9E9;
+    background-color: $background-color-dark; // Mode sombre
+    border-bottom: 1px solid #272729; // Une couleur plus sombre pour la bordure
   }
 
-  body.dark .top-bar-search {
-    background-color: $dark-background-color;
-    border-bottom: 1px solid #525252;
+  .autocomplete-items {
+    background-color: $secondary-color-dark; // Mode sombre
+    border: 1px solid #333; // Une bordure plus sombre
+  }
 
+  .autocomplete-items div {
+    color: $text-color-dark; // Texte clair en mode sombre
+  }
+
+  .autocomplete-items div:hover,
+  .autocomplete-active {
+    background-color: #363636; // Un fond plus sombre quand survolé
+    color: $primary-color-dark; // Texte clair sur survol
+  }
+
+  .autocomplete-items::-webkit-scrollbar-thumb {
+    background: #555; // Barre de défilement plus sombre
+  }
+
+  .autocomplete-items::-webkit-scrollbar-thumb:hover {
+    background: #333; // Plus foncé en survol
+  }
+
+  .top-bar-flex {
+    color: $text-color-dark; // Couleur des éléments flex en mode sombre
+  }
 }

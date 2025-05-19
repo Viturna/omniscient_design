@@ -15,25 +15,29 @@
   font-size: 18px;
   position: relative;
 
-  &:hover{
+  &:hover {
     background-color: #EDEDED;
     cursor: pointer;
   }
 
 }
-.list-card div{
+
+.list-card div {
   gap: 8px;
   display: flex;
 }
-.share-list{
+
+.share-list {
   font-weight: 400;
   font-size: 16px;
 }
+
 @media screen and (min-width:0px) and (max-width:500px) {
   .list-card {
     font-size: 15px;
     height: 30px;
     padding: 20px;
+
     svg {
       scale: 0.8;
     }
@@ -43,5 +47,20 @@
 @media screen and (min-width:501px) and (max-width:800px) {
   .list-card {
     height: 30px;
+  }
+}
+
+body.dark-mode {
+  .list-card {
+    background-color: $secondary-color-dark;
+    color: $primary-color-dark;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .list-card svg path {
+    fill: $primary-color-dark;
   }
 }

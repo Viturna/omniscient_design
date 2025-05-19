@@ -59,7 +59,6 @@ h3 {
 }
 
 p {
-  color: $text-color;
   font-size: 18px;
   line-height: 130%;
 }
@@ -99,24 +98,23 @@ p {
   color: $primary-color;
 }
 
-body.dark h1 {
-  color: $secondary-color;
-}
 
-body.dark h2 {
-  color: $secondary-color;
-}
+body.dark-mode {
 
-body.dark h3 {
-  color: $secondary-color;
-}
+  h1,
+  h2,
+  h3 {
+    color: $primary-color-dark;
+  }
 
-body.dark p {
-  color: $dark-text-color;
-}
+  p {
+    color: $text-color-dark;
+  }
 
-body.dark .black {
-  color: $secondary-color;
+  .black {
+    color: $primary-color-dark;
+  }
+
 }
 
 @media screen and (min-width:426px) and (max-width: 600px) {
@@ -156,74 +154,5 @@ body.dark .black {
 
   p {
     font-size: 16px;
-  }
-}
-
-
-
-// @media (prefers-color-scheme: dark) {
-//   h1,h2,h3 {
-//     color: $secondary-color;
-//   }
-
-//   p{
-//     color: $dark-text-color;
-//   }
-
-//   .black{
-//     color: $secondary-color;
-//   }
-//   body.light h1 {
-//     color: $primary-color;
-//   }
-//   body.light h2 {
-//     color: $primary-color;
-//   }
-//   body.light h3{
-//     color: $primary-color;
-//   }
-//   body.light p{
-//     color: $text-color;
-//   }
-
-//   body.light .black{
-//     color: $primary-color;
-//   }
-// }
-
-@media (prefers-color-scheme: light) {
-
-  h1,
-  h2,
-  h3 {
-    color: $primary-color;
-  }
-
-  p {
-    color: $text-color;
-  }
-
-  .black {
-    color: $primary-color;
-  }
-
-  body.dark h1 {
-    color: $secondary-color;
-  }
-
-  body.dark h2 {
-    color: $secondary-color;
-  }
-
-  body.dark h3 {
-    color: $secondary-color;
-  }
-
-  body.dark p {
-    color: $dark-text-color;
-  }
-
-  body.dark .black {
-    color: $secondary-color;
   }
 }

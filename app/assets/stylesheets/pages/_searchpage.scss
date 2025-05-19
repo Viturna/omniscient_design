@@ -212,10 +212,32 @@
 
 .select2-selection__rendered {
   display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: flex-start !important;
+  align-items: center !important;
   gap: 4px;
+  overflow-x: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: #999 #f0f0f0;
 }
+
+.select2-selection__rendered::-webkit-scrollbar {
+  height: 4px;
+}
+
+.select2-selection__rendered::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.select2-selection__rendered::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+}
+
+.select2-selection__rendered::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}
+
 
 /* Style des options sélectionnées */
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -256,6 +278,7 @@
 .select2-container--default .select2-results__option {
   padding: 12px 24px !important;
   background-color: #F7F7F7 !important;
+  border-radius: 5px !important;
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
@@ -265,6 +288,10 @@
   border-radius: 5px !important;
   font-size: 16px;
   opacity: 0.95;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+  color: rgb(255, 255, 255) !important;
 }
 
 /* Affichage du dropdown actif */
@@ -764,4 +791,56 @@
   border-radius: 5px;
   font-weight: 500;
   cursor: pointer;
+}
+
+
+body.dark-mode {
+  .tab {
+    color: $text-color-dark;
+
+    &.active {
+      color: $primary-color-dark;
+      border-bottom: 3px solid $primary-color-dark;
+    }
+  }
+
+
+  .tab:hover {
+    color: $primary-color-dark;
+    border-bottom: 3px solid $primary-color-dark;
+  }
+
+  .filter-box select {
+    color: $text-color-dark;
+  }
+
+  .select2-dropdown {
+    background-color: $secondary-color-dark;
+  }
+
+  .dropdown-menu {
+    background-color: $secondary-color-dark;
+  }
+
+  .dropdown-menu label {
+    color: $text-color-dark;
+  }
+
+  .dropdown-menu input {
+    background-color: $secondary-color-dark;
+  }
+
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: $primary-color-dark !important;
+    color: $secondary-color-dark !important;
+  }
+
+  .select2-container--default .select2-results__option {
+    background-color: $primary-color-dark !important;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: $primary-color-dark !important;
+    color: $secondary-color-dark !important;
+  }
 }

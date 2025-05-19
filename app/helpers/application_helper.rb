@@ -73,7 +73,7 @@ module ApplicationHelper
   
       # Remplacer les noms de designers par des liens
       text = text.gsub(/\b(#{Regexp.escape(nom_complet)})\b/i) do |match|
-        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/designers/#{designer.slug}'>#{match}</a>"
+        "<a class=\"black underline\" href='/designers/#{designer.slug}'>#{match}</a>"
       end
     end
   
@@ -82,7 +82,7 @@ module ApplicationHelper
   
       # Remplacer les titres des œuvres par des liens
       text = text.gsub(/\b(#{Regexp.escape(oeuvre.nom_oeuvre)})\b/i) do |match|
-        "<a style=\"color:#202020; font-weight:500;\" class=\"underline\" href='/oeuvres/#{oeuvre.slug}'>#{match}</a>"
+        "<a class=\"black underline\" href='/oeuvres/#{oeuvre.slug}'>#{match}</a>"
       end
     end
     

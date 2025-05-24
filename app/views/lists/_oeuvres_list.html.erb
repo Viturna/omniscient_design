@@ -1,5 +1,5 @@
 <div class="check-box-wrapper <%= 'selected' if defined?(@selected_oeuvre_ids) && @selected_oeuvre_ids.include?(oeuvre.id) %>" data-id="<%= oeuvre.id %>">
-  <%= check_box_tag "oeuvre_ids[]", oeuvre.id, false, class: 'hidden-check', id: "oeuvre_#{oeuvre.id}" %>
+  <%= check_box_tag "oeuvre_ids[]", oeuvre.id, false, class: 'hidden-check', id: "oeuvre_#{oeuvre.id}", disabled: true %>
   <label for="oeuvre_#{oeuvre.id}">
     <% thumb_path = "oeuvres/thumbs/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
     <% if asset_exists?(thumb_path) %>
@@ -8,7 +8,7 @@
         <div class="card-list-add" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position: center;">
         <% end %>
         <div class="default-overlay"></div>
-        <p class="card-title-add"><%= oeuvre.nom_oeuvre %></p>
+        <p class="card-title-add"><%= truncate(oeuvre.nom_oeuvre, length: 20, omission: '...') %></p>
       </div>
     </label>
   </div>

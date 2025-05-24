@@ -15,10 +15,23 @@ class ListsController < ApplicationController
     @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
     @notions = Notion.all
 
-    # Filtres
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page]).per(10)
-    @designers = Designer.where(validation: true).order(:nom).page(params[:page]).per(10)
+    # Designers
+    selected_designer_ids = @list.designer_ids
+    @selected_designers = Designer.where(id: selected_designer_ids, validation: true).order(:nom)
+    @other_designers = Designer.where(validation: true)
+                                .where.not(id: selected_designer_ids)
+                                .order(:nom)
+                                .page(params[:designers_page]).per(10)
 
+    # Œuvres
+    selected_oeuvre_ids = @list.oeuvre_ids
+    @selected_oeuvres = Oeuvre.where(id: selected_oeuvre_ids, validation: true).order(:nom_oeuvre)
+    @other_oeuvres = Oeuvre.where(validation: true)
+                          .where.not(id: selected_oeuvre_ids)
+                          .order(:nom_oeuvre)
+                          .page(params[:oeuvres_page]).per(10)
+
+    # Autorisation
     if @list.share_token.present? && @list.share_token == params[:share_token]
       render :show
     elsif @list.user == current_user || @list.editors.include?(current_user) || @list.visitors.include?(current_user)
@@ -27,6 +40,7 @@ class ListsController < ApplicationController
       redirect_to root_path, alert: "Cette liste n'existe pas ou n'est pas partagée."
     end
   end
+
 
   def shared
     @list = List.find_by(share_token: params[:share_token])
@@ -44,6 +58,21 @@ class ListsController < ApplicationController
     @designers = Designer.where(validation: true).order(:nom).limit(10)
     @domaines = Domaine.all
   end
+  def search_items
+    type = params[:type] # 'designers' ou 'oeuvres'
+    query = params[:q].to_s.strip.downcase
+
+    if type == 'designers'
+      results = Designer.where('nom ILIKE :q OR prenom ILIKE :q', q: "%#{query}%")
+      render partial: 'designers_list', collection: results, as: :designer
+    elsif type == 'oeuvres'
+      results = Oeuvre.where('lower(nom_oeuvre) LIKE ?', "%#{query}%")
+      render partial: 'oeuvres_list', collection: results, as: :oeuvre
+    else
+      head :bad_request
+    end
+  end
+
   def load_more_oeuvres
     if params[:slug].present?
       @list = List.friendly.find_by(slug: params[:slug])

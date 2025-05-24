@@ -42,9 +42,10 @@
         </div>
         <div class="filter" id="notionsFilterContainer">
             <label for="notionsFilter">Notions</label>
-            <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, 
-              {  include_blank: false, selected: params[:notions] }, 
-              { multiple: true, class: "select2" } %>
+            <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] },
+            { include_blank: false, selected: params[:notions] },
+            { multiple: true, class: "select2", name: "notions[]" } %>
+
           </div>
        <div class="filter">
         <label for="dateFilter">Dates</label>

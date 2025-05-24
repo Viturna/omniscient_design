@@ -41,8 +41,11 @@ Rails.application.routes.draw do
     end
     get :load_more_oeuvres, on: :collection
     get :load_more_designers, on: :collection
+    collection do
+      get :search_items
+    end
   end
-
+ 
   get '/shared/:share_token', to: 'lists#shared', as: :shared_list
   resources :oeuvres, param: :slug do
     collection do
@@ -73,6 +76,7 @@ Rails.application.routes.draw do
   resources :bug_reports, only: [:index, :new, :create, :show, :destroy] do
     patch :update_status, on: :member
   end
+
   # Routes pour les pages statiques
   get '/search_autocomplete', to: 'search#autocomplete'
   get 'search', to: 'search#search', as: 'search'
@@ -92,6 +96,7 @@ Rails.application.routes.draw do
   get 'set_theme', to: 'application#set_theme'
   get 'contributions', to: 'contributions#index', as: 'user_contributions'
   get 'confirmation_pending', to: 'pages#confirmation_pending', as: 'confirmation_pending'
+
   # Route racine
   root 'oeuvres#index'
   match "/404", to: "errors#not_found", via: :all

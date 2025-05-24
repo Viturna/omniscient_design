@@ -1,9 +1,9 @@
 class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
-  # searchkick word_start: [:nom, :prenom]
-  after_commit :reindex_searchkick, if: :validated?
-  after_destroy :remove_from_searchkick
+
+  # after_commit :reindex_searchkick, if: :validated?
+  # after_destroy :remove_from_searchkick
 
   validates :nom, presence: true
   validate :valid_death_year, if: -> { date_deces.present? }

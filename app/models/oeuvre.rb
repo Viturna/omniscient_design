@@ -3,15 +3,15 @@ class Oeuvre < ApplicationRecord
   include MeiliSearch::Rails
   friendly_id :nom_oeuvre, use: :slugged
 
-  meilisearch do
-    attribute :nom_oeuvre, :presentation_generale
-    searchable_attributes [:nom_oeuvre, :presentation_generale]
-  end
-  after_commit :reindex_meili, if: :validated?
-  after_destroy :remove_from_meili
+  # meilisearch do
+  #   attribute :nom_oeuvre, :presentation_generale
+  #   searchable_attributes [:nom_oeuvre, :presentation_generale]
+  # end
+  # after_commit :reindex_meili, if: :validated?
+  # after_destroy :remove_from_meili
 
-  after_commit :reindex_searchkick, if: :validated?
-  after_destroy :remove_from_searchkick
+  # after_commit :reindex_searchkick, if: :validated?
+  # after_destroy :remove_from_searchkick
   
   validates :nom_oeuvre, uniqueness: true, presence: true
 

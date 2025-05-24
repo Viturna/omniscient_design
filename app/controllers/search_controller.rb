@@ -67,7 +67,7 @@ class SearchController < ApplicationController
     # Récupération des œuvres et designers validés pour affichage
     @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
     @designers = Designer.where(validation: true).order(:nom).page(params[:page])
-    # Application des filtres
+
     if params[:domaine].present?
       filtered_domains = Array(params[:domaine]).reject(&:blank?)  # Convertir en tableau et filtrer
       if filtered_domains.any?
@@ -83,9 +83,19 @@ class SearchController < ApplicationController
       end
     end
     
-    if params[:notion].present? && params[:notion].reject(&:blank?).any?
-      @oeuvres = @oeuvres.joins(:notions).where(notions: { id: params[:notion] })
+    if params[:notions].present?
+      notion_ids = Array(params[:notions]).reject(&:blank?)
+      if notion_ids.any?
+        @oeuvres = @oeuvres
+          .joins(:notions)
+          .where(notions: { id: notion_ids })
+          .group('oeuvres.id')
+          .having('COUNT(DISTINCT notions.id) = ?', notion_ids.size)
+      end
     end
+
+
+
   
     if params[:start_year].present? && params[:end_year].present?
       start_year = params[:start_year].to_i

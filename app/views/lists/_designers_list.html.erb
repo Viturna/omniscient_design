@@ -1,15 +1,15 @@
 <div class="check-box-wrapper <%= 'selected' if defined?(@selected_designer_ids) && @selected_designer_ids.include?(designer.id) %>" data-id="<%= designer.id %>">
-  <%= check_box_tag "designer_ids[]", designer.id, false, class: 'hidden-check', id: "designer_#{designer.id}" %>
+  <%= check_box_tag "designer_ids[]", designer.id, false, class: 'hidden-check', id: "designer_#{designer.id}", disabled: true %>
   <label for="designer_#{designer.id}">
     <% thumb_path = "designers/thumbs/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
     <% if asset_exists?(thumb_path) %>
       <div class="card-list-add" style="background-image: url('<%= asset_path(thumb_path) %>');  background-size: cover; background-position: center;">
       <% else %>
-        <% Rails.logger.debug("Image not found : #{image_path}") %>
+        <% Rails.logger.debug("Image not found : #{thumb_path}") %>
         <div class="card-list-add" style="background: url('<%= asset_path(designer.image) %>'); background-size: cover; background-position: center;">
         <% end %>
         <div class="default-overlay"></div>
-        <p class="card-title-add"><%= designer.nom_designer %></p>
+        <p class="card-title-add"><%= truncate(designer.nom_designer, length: 25, omission: '...') %></p>
       </div>
     </label>
   </div>

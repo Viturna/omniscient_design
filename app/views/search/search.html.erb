@@ -12,7 +12,7 @@
           </svg>
         </button>
       </div>
-      
+       <div class="suggestions-box" id="autocompleteResults"></div>
     </div>
   <% end %>
 </section>
@@ -20,8 +20,8 @@
 <section class="grid-1 searchpage">
   <h1>Rechercher</h1>
   <div class="tabs">
-    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" data-tab="designers">Designers</button>
-    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références</button>
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" data-tab="designers">Designers (<%=Designer.where(validation: true).count%>)</button>
+    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références (<%=Oeuvre.where(validation: true).count%>)</button>
     <button class="tab <%= 'active' if params[:tab] == 'frise' %>" data-tab="frise">Frise Chronologique</button>
   </div>
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
@@ -60,7 +60,22 @@
           </div>
         </div>
       </div>
-
+      </div>
+      <div class="filter" id="sortFilterContainer" style="margin-top: 24px;">
+        <label for="sort">Trier par</label>
+        <select name="sort" id="sortSelect">
+          <% if params[:tab] == 'references' %>
+            <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>>Nom A-Z</option>
+            <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>>Nom Z-A</option>
+            <option value="oeuvre_asc" <%= 'selected' if params[:sort] == 'oeuvre_asc' %>>Date œuvre (ancien → récent)</option>
+            <option value="oeuvre_desc" <%= 'selected' if params[:sort] == 'oeuvre_desc' %>>Date œuvre (récent → ancien)</option>
+          <% elsif params[:tab] == 'designers' || params[:tab].blank? %>
+            <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>>Nom A-Z</option>
+            <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>>Nom Z-A</option>
+            <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>>Date naissance (ancien → récent)</option>
+            <option value="naissance_desc" <%= 'selected' if params[:sort] == 'naissance_desc' %>>Date naissance (récent → ancien)</option>
+          <% end %>
+        </select>
       </div>
 
   <% end %>

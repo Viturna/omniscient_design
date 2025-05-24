@@ -1,69 +1,73 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchField = document.getElementById("workSearch");
-  const suggestionsBox = document.createElement("div");
-  suggestionsBox.classList.add("suggestions-box");
-  searchField.parentElement.appendChild(suggestionsBox);
+  const suggestionsBox = document.getElementById("autocompleteResults");
 
-  searchField.addEventListener("keyup", function () {
+  let debounceTimer;
+
+  function debounce(callback, delay) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(callback, delay);
+  }
+
+  searchField.addEventListener("input", function () {
     const query = searchField.value.trim();
 
-    if (query.length > 2) {
-      fetch(`/search_autocomplete?query=${query}`)
-        .then((response) => {
+    if (query.length <= 2) {
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.style.display = "none";
+      return;
+    }
+
+    debounce(() => {
+      fetch(`/search_autocomplete?query=${encodeURIComponent(query)}`)
+        .then(response => {
           if (!response.ok) throw new Error("Erreur serveur");
-          const contentType = response.headers.get("content-type");
-          if (!contentType || !contentType.includes("application/json")) {
-            throw new Error("Réponse invalide : pas du JSON");
-          }
           return response.json();
         })
-        .then((data) => {
-          suggestionsBox.innerHTML = ""; // Réinitialise les suggestions
+        .then(data => {
+          suggestionsBox.innerHTML = "";
+          suggestionsBox.style.display = "block";
 
           const createSection = (sectionData) => {
             if (!sectionData || sectionData.results.length === 0) return;
 
             const section = document.createElement("div");
+            section.classList.add("autocomplete-section");
+
             const title = document.createElement("p");
-            title.classList.add(sectionData.class);
+            title.classList.add("autocomplete-title");
             title.textContent = sectionData.title;
             section.appendChild(title);
 
             sectionData.results.forEach((item) => {
-              const suggestionElement = document.createElement("div");
-              suggestionElement.classList.add("suggestion-item");
+              const suggestion = document.createElement("div");
+              suggestion.classList.add("suggestion-item");
 
-              if (item.svg) {
-                const imgElement = document.createElement("img");
-                imgElement.src = item.svg;
-                imgElement.classList.add("svg-icon");
-                suggestionElement.appendChild(imgElement);
+              if (item.svg || item.img) {
+                const img = document.createElement("img");
+                img.src = item.svg || item.img;
+                img.alt = item.name;
+                img.classList.add("suggestion-icon");
+                suggestion.appendChild(img);
               }
 
-              if (item.img) {
-                const imgElement = document.createElement("img");
-                imgElement.src = item.img;
-                imgElement.alt = item.name;
-                imgElement.classList.add("search-img");
-                suggestionElement.appendChild(imgElement);
-              }
-
-              const textElement = document.createElement("span");
-              textElement.textContent = item.name;
-              suggestionElement.appendChild(textElement);
+              const label = document.createElement("div");
+              label.classList.add("suggestion-label");
+              label.textContent = item.name;
+              suggestion.appendChild(label);
 
               if (item.designer) {
-                const designerElement = document.createElement("span");
-                designerElement.classList.add("designer-name");
-                designerElement.textContent = `Designé par: ${item.designer}`;
-                suggestionElement.appendChild(designerElement);
+                const designer = document.createElement("small");
+                designer.classList.add("suggestion-designer");
+                designer.textContent = `Designé par : ${item.designer}`;
+                suggestion.appendChild(designer);
               }
 
-              suggestionElement.addEventListener("click", function () {
+              suggestion.addEventListener("click", () => {
                 window.location.href = item.url;
               });
 
-              section.appendChild(suggestionElement);
+              section.appendChild(suggestion);
             });
 
             suggestionsBox.appendChild(section);
@@ -74,20 +78,24 @@ document.addEventListener("DOMContentLoaded", function () {
           createSection(data.oeuvres);
 
           if (
+            (!data.domaines || data.domaines.results.length === 0) &&
             (!data.designers || data.designers.results.length === 0) &&
-            (!data.oeuvres || data.oeuvres.results.length === 0) &&
-            (!data.domaines || data.domaines.results.length === 0)
+            (!data.oeuvres || data.oeuvres.results.length === 0)
           ) {
             suggestionsBox.innerHTML = "<div class='no-suggestion'>Aucune suggestion</div>";
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Erreur AJAX :", error);
-          suggestionsBox.innerHTML = "<div class='error-msg'>Erreur lors de la recherche</div>";
+          suggestionsBox.innerHTML = "<div class='error-msg'>Erreur de chargement</div>";
         });
+    }, 300); // délai pour éviter les requêtes trop fréquentes
+  });
 
-    } else {
-      suggestionsBox.innerHTML = ""; // Effacer si la requête est trop courte
+  // Clic en dehors = cacher la box
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".autocomplete")) {
+      suggestionsBox.style.display = "none";
     }
   });
 });

@@ -1,56 +1,56 @@
 class SearchController < ApplicationController
-  def autocomplete
+    include ApplicationHelper
+   def autocomplete
     query = params[:query].to_s.strip
 
-    # Recherche dans Oeuvre, Designer et Domaine avec Searchkick
-    @oeuvre_suggestions = Oeuvre.search(query, fields: [:nom_oeuvre], match: :word_start, where: { validation: true })
-    @designer_suggestions = Designer.search(query, fields: [:nom, :prenom], match: :word_start, where: { validation: true })
-    @domaine_suggestions = Domaine.search(query, fields: [:domaine], match: :word_start)
-
-    # Mapper les résultats
-    oeuvre_results = @oeuvre_suggestions.results.map { |oeuvre| 
-      { name: oeuvre.nom_oeuvre,
-        url: oeuvre_path(oeuvre),
-        img: oeuvre.image.present? ? helpers.asset_path(oeuvre.image) : nil
-      }
-    }
-
-    designer_results = @designer_suggestions.results.map { |designer| 
-      { name: "#{designer.prenom} #{designer.nom}",
-       url: designer_path(designer),
-       img: designer.image.present? ? helpers.asset_path(designer.image) : nil }
-    }
-
-    domaine_results = @domaine_suggestions.results.map do |domaine|
-      { 
-        name: domaine.domaine, 
-        url: search_path(:domaine => domaine.id) , 
-        svg: domaine.svg.present? ? helpers.asset_path("domaines/#{domaine.svg}") : nil 
-      }
+    if query.length < 2
+      return render json: { error: "Query too short" }, status: :bad_request
     end
 
-    # Organiser les résultats sous trois sections séparées
-    suggestions = {
+    domaines = Domaine.where("domaine ILIKE ?", "%#{query}%").limit(5)
+    designers = Designer.where("nom ILIKE ?", "%#{query}%").limit(5)
+    oeuvres = Oeuvre.where("nom_oeuvre ILIKE ?", "%#{query}%").limit(5)
+
+    render json: {
+      domaines: {
+        title: "Domaines",
+        class: "section-title",
+        results: domaines.map do |d|
+          {
+            name: d.domaine,
+              url: search_path(tab: 'frise', domaine: [d.id]),
+            svg: "/assets/domaines/#{d.svg}"
+          }
+        end
+      },
       designers: {
         title: "Designers",
         class: "section-title",
-        results: designer_results
-        
+        results: designers.map do |d|
+          {
+            name: d.nom_designer,
+            url: designer_path(d),
+            img: "/assets/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
+          }
+        end
       },
       oeuvres: {
         title: "Références",
         class: "section-title",
-        results: oeuvre_results
-      },
-      domaines: {
-        title: "Domaines",
-        class: "section-title",
-        results: domaine_results
+        results: oeuvres.map do |o|
+          {
+            name: o.nom_oeuvre,
+            url: oeuvre_path(o),
+            img: "/assets/oeuvres/thumbs/#{remove_accents_and_special_chars(o.nom_oeuvre)}.webp"
+          }
+        end
       }
     }
-
-    render json: suggestions
+  rescue => e
+    Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
+    render json: { error: "Erreur serveur" }, status: 500
   end
+
 
   def search
     @current_page = 'recherche'
@@ -94,9 +94,6 @@ class SearchController < ApplicationController
       end
     end
 
-
-
-  
     if params[:start_year].present? && params[:end_year].present?
       start_year = params[:start_year].to_i
       end_year = params[:end_year].to_i
@@ -116,6 +113,24 @@ class SearchController < ApplicationController
         @timeline_years = (start_year..end_year).to_a
     end
   
+    case params[:sort]
+      when 'nom_asc'
+        @designers = @designers.reorder('designers.nom ASC')
+        @oeuvres = @oeuvres.reorder('oeuvres.nom_oeuvre ASC')
+      when 'nom_desc'
+        @designers = @designers.reorder('designers.nom DESC')
+        @oeuvres = @oeuvres.reorder('oeuvres.nom_oeuvre DESC')
+      when 'oeuvre_asc'
+        @oeuvres = @oeuvres.reorder('oeuvres.date_oeuvre ASC')
+      when 'oeuvre_desc'
+        @oeuvres = @oeuvres.reorder('oeuvres.date_oeuvre DESC')
+      when 'naissance_asc'
+        @designers = @designers.reorder('designers.date_naissance ASC')
+      when 'naissance_desc'
+        @designers = @designers.reorder('designers.date_naissance DESC')
+      end
+
+
     respond_to do |format|
       format.html
       format.turbo_stream

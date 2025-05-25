@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul]
   before_action :check_certified, only: [:validation]
-  before_action :check_admin_role, only: [:suivi_references]
+
   def presentation
   end
 
@@ -82,10 +82,6 @@ class PagesController < ApplicationController
     end
   end
   
-  def suivi_references
-    @current_page = 'profil'
-    @suivis = Suivi.includes(:user).all
-  end
   def changelog
     @current_page = 'profil'
   end

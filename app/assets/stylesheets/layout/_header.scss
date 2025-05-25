@@ -473,6 +473,10 @@ header li .active svg path {
   color: $text-color;
 }
 
+.logo-dark {
+  display: none;
+}
+
 body.dark-mode {
   header {
     background-color: $secondary-color-dark;
@@ -505,5 +509,13 @@ body.dark-mode {
 
   .link-header a {
     color: $text-color-dark;
+  }
+
+  .logo-dark {
+    display: block;
+  }
+
+  .logo-light {
+    display: none;
   }
 }

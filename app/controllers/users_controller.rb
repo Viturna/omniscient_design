@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
+    layout 'admin', only: [:index]
   before_action :set_user, only: [:ban, :unban]
   before_action :check_admin_role, only: [:certify, :uncertify]
   def index
-    @current_page = 'profil'
+    @current_page = 'users'
     @users = User.all.order(:created_at)
   end
   def ban

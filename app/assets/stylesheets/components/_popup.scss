@@ -148,11 +148,14 @@
 
 // Save Liste
 .box-list {
-  padding: 0px 50px;
+  width: 80%;
+  padding: 24px 0;
   align-items: center;
-  margin-top: 24px;
   display: flex;
+  margin-left: auto;
+  margin-right: auto;
   justify-content: space-between;
+  border-bottom: 2px solid $primary-color;
 }
 
 .box-list-left {
@@ -267,6 +270,10 @@ body.dark-mode {
 
   .popup-content {
     background-color: $secondary-color-dark;
+  }
+
+  .box-list {
+    border-bottom: 2px solid $primary-color-dark;
   }
 
   .box-list svg path {

@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'suivi_references/index'
+    get 'validation/index'
+    get 'feedbacks/index'
+    get 'reports/index'
+    get 'users/index'
+    get 'oeuvres/index'
+    get 'dashboard/index'
+  end
   get 'bug_reports/new'
   get 'bug_reports/create'
   get 'bug_reports/index'
@@ -77,6 +86,15 @@ Rails.application.routes.draw do
     patch :update_status, on: :member
   end
 
+
+namespace :admin do
+  root to: "dashboard#index"
+  get "dashboard",     to: "dashboard#index"
+  get "suivi_references",      to: "dashboard#suivi_references"
+  get "feedbacks",     to: "dashboard#feedbacks"
+end
+
+
   # Routes pour les pages statiques
   get '/search_autocomplete', to: 'search#autocomplete'
   get 'search', to: 'search#search', as: 'search'
@@ -85,7 +103,7 @@ Rails.application.routes.draw do
   get 'add_elements', to: 'pages#add_elements', as: 'add_elements'
   get 'profil', to: 'pages#profil', as: 'profil'
   get 'validation', to: 'pages#validation', as: 'validation'
-  get 'suivi_references', to: 'pages#suivi_references', as: 'suivi_references'
+  # get 'suivi_references', to: 'pages#suivi_references', as: 'suivi_references'
   get 'mentionslegales', to: 'pages#mentionslegales', as: 'mentionslegales'
   get 'politiquedeconfidentialite', to: 'pages#politiquedeconfidentialite', as: 'politiquedeconfidentialite'
   get 'cookies', to: 'pages#cookies', as: 'cookies'

@@ -36,25 +36,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def update_resource(resource, params)
-    if params[:remove_profile_image] == '1'
-      resource.profile_image.purge
-    elsif params[:keep_profile_image] == 'true'
-      params.delete(:profile_image)
-    end
-    resource.update(params.except(:current_password))
-  end
-
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :profile_image, :rgpd_consent, :statut, :etablissement_id, :referral_code])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :profile_image, :remove_profile_image, :statut, :etablissement_id])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :referral_code])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :statut, :etablissement_id])
   end
 
   private
 
   def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :profile_image, :rgpd_consent, :statut, :etablissement_id, :referral_code)
+    params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :referral_code)
   end
 end

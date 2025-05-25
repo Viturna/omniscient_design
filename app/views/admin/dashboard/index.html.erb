@@ -1,0 +1,142 @@
+<style>
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat-card h2 {
+  font-size: 2.2rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem 3rem;
+}
+
+.chart-box {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.chart-box h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #374151;
+  text-align: center;
+}
+</style>
+
+
+<section class="top-default-page">
+ 
+  <h1>Tableau de bord Administrateur</h1>
+</section>
+<section class="grid-1">
+  <!-- Statistiques -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <!-- Icône pinceau (Œuvres publiées) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <path d="M2 22l1-4 10-10 3 3-10 10-4 1zM21.7 7.3c.39-.39.39-1.02 0-1.41l-4.6-4.6a.996.996 0 00-1.41 0L13 4.4l5 5 3.7-3.7z"/>
+      </svg>
+      <h2><%= Oeuvre.where(validation: true).count %></h2>
+      <p>Œuvres publiées</p>
+    </div>
+    <div class="stat-card">
+      <!-- Icône utilisateur avec check (Designers validés) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <path d="M16 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-8 8c0-2.67 5.33-4 8-4s8 1.33 8 4v1H8v-1zM9 10l2 2 4-4"/>
+      </svg>
+      <h2><%= Designer.where(validation: true).count %></h2>
+      <p>Designers validés</p>
+    </div>
+    <div class="stat-card">
+      <!-- Icône groupe (Total Références) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <circle cx="9" cy="7" r="4"/>
+        <circle cx="17" cy="7" r="4"/>
+        <path d="M5 21v-2a4 4 0 014-4h6a4 4 0 014 4v2"/>
+      </svg>
+      <h2><%= Designer.where(validation: true).count + Oeuvre.where(validation: true).count %></h2>
+      <p>Total Références</p>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <!-- Icône utilisateurs (Utilisateurs) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h18v-3c0-2.66-5.33-4-8-4zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45v3h5v-3c0-2.66-5.33-4-6-4z"/>
+      </svg>
+      <h2><%= User.count %></h2>
+      <p>Utilisateurs</p>
+    </div>
+    <div class="stat-card">
+      <!-- Icône bouclier utilisateur (Utilisateurs certifiés) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3zM11 14h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
+      </svg>
+      <h2><%= User.where(certified: true).count %></h2>
+      <p>Utilisateurs certifiés</p>
+    </div>
+    <div class="stat-card">
+      <!-- Icône bulles de discussion (Feedbacks) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <path d="M21 6h-2v9H7v2l-4-4V6a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      <h2><%= Feedback.count %></h2>
+      <p>Feedbacks</p>
+    </div>
+    <div class="stat-card">
+      <!-- Icône bug (Signalements de bugs) -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
+        <path d="M20 8h-3.19a6.974 6.974 0 00-1.78-2.79l2.27-2.27-1.41-1.41-2.27 2.27A6.978 6.978 0 0012 4c-1.47 0-2.82.51-3.87 1.36L5.86 3.94 4.44 5.36l2.27 2.27A6.978 6.978 0 004 12c0 1.47.51 2.82 1.36 3.87l-2.27 2.27 1.41 1.41 2.27-2.27A6.974 6.974 0 0012 20c1.47 0 2.82-.51 3.87-1.36l2.27 2.27 1.41-1.41-2.27-2.27A6.974 6.974 0 0020 12v-4zM12 15a3 3 0 110-6 3 3 0 010 6z"/>
+      </svg>
+      <h2><%= BugReport.count %></h2>
+      <p>Signalements de bugs</p>
+    </div>
+  </div>
+
+  <!-- Graphiques -->
+  <div class="charts-grid">
+
+    <div class="chart-box">
+      <h3>Répartition œuvres (validées vs non)</h3>
+      <%= pie_chart Oeuvre.group(:validation).count %>
+    </div>
+
+    <div class="chart-box">
+      <h3>Répartition designers (validés vs non)</h3>
+      <%= pie_chart Designer.group(:validation).count %>
+    </div>
+  </div>
+</section>

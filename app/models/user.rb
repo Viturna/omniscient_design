@@ -5,6 +5,9 @@ class User < ApplicationRecord
   validates :firstname, presence: true
   attribute :banned, :boolean, default: false
 
+  validate :no_ban_words_in_names
+
+
   def certified?
     self.certified
   end
@@ -31,10 +34,6 @@ class User < ApplicationRecord
   has_many :designers
   has_many :notifications, dependent: :destroy
   belongs_to :etablissement, optional: true
-  has_one_attached :profile_image
-  attr_accessor :remove_profile_image
-
-  before_save :purge_profile_image, if: :remove_profile_image
 
   has_many :feedbacks
   has_many :suivis, dependent: :destroy
@@ -55,16 +54,33 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable
 
   validates :statut, inclusion: { in: STATUTS, message: "%{value} n'est pas un statut valide" }
-  def profile_image_variant
-    if profile_image.attached?
-      profile_image.variant(resize_to_limit: [550, 550]).processed
-    end
-  end
+
   has_many :rejected_oeuvres
   has_many :rejected_designers
   private
 
-  def purge_profile_image
-    profile_image.purge_later
+   def no_ban_words_in_names
+    ban_words = %w[
+      anal anus arse ass ballsack balls bastard bitch biatch blowjob blow job bollock bollok boner boob bugger bum butt buttplug clitoris cock crap cunt damn dick dildo dyke fag feck fellate fellatio felching fuck f u c k fudgepacker fudge packer flange hell homo jerk jizz knobend knob end labia lmao lmfao muff nigger nigga omg penis piss poop prick pube pussy queer scrotum sex shit s hit sh1t slut smegma spunk tit tosser turd twat vagina wank whore wtf
+      enculé salope connard con putain pétasse bite chatte nichon couilles trouduc branleur enculeur bordel foutre nique niquer suce suceuse merde merdeux zizi teub pipi caca cul branlette gicler giclée éjaculer éjaculation pénétration pénétrer porn porno pornographie negre negro salearabe xxx
+    ].to_set
+
+    fields = {
+      "prénom" => firstname,
+      "nom" => lastname,
+      "pseudo" => pseudo
+    }
+
+    fields.each do |field_name, value|
+      next if value.blank?
+
+      normalized_value = value.strip.downcase
+      ban_words.each do |bad_word|
+        if normalized_value.include?(bad_word)
+          errors.add(:base, "Le #{field_name} contient un mot interdit.")
+          break
+        end
+      end
+    end
   end
 end

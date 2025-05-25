@@ -109,5 +109,7 @@ gem 'terser'
 
 gem 'kaminari'
 
+gem 'chartkick'
+gem 'groupdate'
 
 

@@ -8,8 +8,12 @@ class SearchController < ApplicationController
     end
 
     domaines = Domaine.where("domaine ILIKE ?", "%#{query}%").limit(5)
-    designers = Designer.where("nom ILIKE ?", "%#{query}%").limit(5)
-    oeuvres = Oeuvre.where("nom_oeuvre ILIKE ?", "%#{query}%").limit(5)
+    designers = Designer.where(validation: true).where(
+      "prenom ILIKE :q OR nom ILIKE :q OR (prenom || ' ' || nom) ILIKE :q OR (nom || ' ' || prenom) ILIKE :q",
+      q: "%#{query}%"
+    ).limit(5)
+
+    oeuvres = Oeuvre.where(validation: true).where("nom_oeuvre ILIKE ?", "%#{query}%").limit(5)
 
     render json: {
       domaines: {
@@ -46,9 +50,9 @@ class SearchController < ApplicationController
         end
       }
     }
-  rescue => e
-    Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
-    render json: { error: "Erreur serveur" }, status: 500
+    rescue => e
+      Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
+      render json: { error: "Erreur serveur" }, status: 500
   end
 
 
@@ -58,12 +62,32 @@ class SearchController < ApplicationController
     @notions = Notion.all
     query = params[:query].to_s.strip
   
-    if query.present?
-      # Recherche dans Oeuvre et Designer avec Searchkick
-      @oeuvre_suggestions = Oeuvre.search(query, fields: [:nom_oeuvre], match: :word_start)
-      @designer_suggestions = Designer.search(query, fields: [:prenom, :nom], match: :word_start)
+   if query.present?
+    # Recherche sur designers et oeuvres, avec limite 1 chacun, ordre par similarité (simple LIKE ici)
+    designer = Designer.where(validation: true)
+      .where("prenom ILIKE :q OR nom ILIKE :q OR (prenom || ' ' || nom) ILIKE :q OR (nom || ' ' || prenom) ILIKE :q", q: "%#{query}%")
+      .order(
+        Arel.sql("CASE WHEN nom ILIKE #{ActiveRecord::Base.connection.quote(query)} THEN 0 ELSE 1 END, nom ASC")
+      )
+      .first
+
+    oeuvre = Oeuvre.where(validation: true)
+      .where("nom_oeuvre ILIKE ?", "%#{query}%")
+      .order(
+        Arel.sql("CASE WHEN nom_oeuvre ILIKE #{ActiveRecord::Base.connection.quote(query)} THEN 0 ELSE 1 END, nom_oeuvre ASC")
+      )
+      .first
+
+    # Si on a un designer dont le nom/prénom correspond quasi-exactement, on redirige vers lui
+    if designer && (oeuvre.nil? || query.length <= designer.nom.length)
+      redirect_to designer_path(designer) and return
     end
-  
+
+    # Sinon si on a une oeuvre, on redirige vers elle
+    if oeuvre
+      redirect_to oeuvre_path(oeuvre) and return
+    end
+  end
     # Récupération des œuvres et designers validés pour affichage
     @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
     @designers = Designer.where(validation: true).order(:nom).page(params[:page])

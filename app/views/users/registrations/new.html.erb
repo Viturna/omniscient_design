@@ -48,15 +48,7 @@
         <div class="field">
           <p class="title-boxlog">Informations supplémentaires</p>
         </div>
-        <div class="field">
-          <%= f.label :profile_image, "Photo de profil" %>
-          <%= f.file_field :profile_image %>
-          <% if resource.profile_image.attached? %>
-            <div class="profile-image-preview">
-              <%= image_tag resource.profile_image_variant, class:"profile-picture" %>
-            </div>
-          <% end %>
-        </div>
+       
         <div class="field">
           <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom*" %>
         </div>

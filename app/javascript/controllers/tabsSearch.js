@@ -88,14 +88,22 @@ document.addEventListener("DOMContentLoaded", function () {
             ];
         }
 
+        // Sauvegarde la valeur courante (paramètre sort dans l'URL ou sélection précédente)
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSort = urlParams.get("sort") || sortSelect.value;
+
         sortSelect.innerHTML = "";
         options.forEach(opt => {
             const option = document.createElement("option");
             option.value = opt.value;
             option.textContent = opt.text;
+            if (opt.value === currentSort) {
+                option.selected = true;  // Sélectionne la bonne option
+            }
             sortSelect.appendChild(option);
         });
     }
+
 
     tabs.forEach(tab => {
         tab.addEventListener("click", function () {

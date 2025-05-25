@@ -4,18 +4,13 @@
   }
 </style>
 <section class="top-default-page">
-  <%= link_to profil_path do %>
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
-    </svg>
-  <% end %>
   <h1>Liste des membres</h1>
 </section>
 <section class="grid-1">
   <h2>Membres inscrits sur le site</h2>
   <p>Il y a actuellement <%= @users.count %> membres sur le site</p>
-  <div class="table-wrapper">
-    <table>
+  <div class="table-wrapper" >
+    <table id="members-table">
       <thead>
         <tr>
           <th>Prénom</th>
@@ -41,7 +36,7 @@
             <td><%= user.etablissement&.name %></td>
             <td>
               <% if current_user.admin? %>
-                <% if user.banned? %>
+               <% if user.banned? %>
                   <%= link_to 'Débannir', unban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir débannir cet utilisateur ?' } %>
                 <% else %>
                   <%= link_to 'Bannir l\'utilisateur', ban_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir bannir cet utilisateur ?' } %>
@@ -52,9 +47,9 @@
             <td>
               <% if current_user.admin? %>
                 <% if user.certified? %>
-                  <%= link_to 'Retirer certification', uncertify_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir retirer la certification de cet utilisateur ?' } %>
+                  <%= link_to 'Décertifier', uncertify_user_path(user), method: :patch, data: { confirm: 'Retirer la certification de cet utilisateur ?' } %>
                 <% else %>
-                  <%= link_to 'Certifier', certify_user_path(user), method: :patch, data: { confirm: 'Êtes-vous sûr de vouloir certifier cet utilisateur ?' } %>
+                  <%= link_to 'Certifier', certify_user_path(user), method: :patch, data: { confirm: 'Certifier cet utilisateur ?' } %>
                 <% end %>
               <% else %>
                 <%= user.certified? ? 'Oui' : 'Non' %>
@@ -70,39 +65,39 @@
   <div id="map" style="height: 400px;"></div>
 </section>
 <script>
-  import L from 'leaflet';
   document.addEventListener("DOMContentLoaded", function() {
-    // Coordonnées des utilisateurs à charger dynamiquement depuis Rails
-    const userLocations = [
-      <% @users.each do |user| %>
-        <% if user.etablissement&.latitude && user.etablissement&.longitude %>
-          {
-            name: '<%= j user.firstname %> <%= j user.lastname %>',
-            latlng: [<%= user.etablissement.latitude %>, <%= user.etablissement.longitude %>]
-          },
-        <% end %>
+  // Coordonnées des utilisateurs à charger dynamiquement depuis Rails
+  const userLocations = [
+    <% @users.each do |user| %>
+      <% if user.etablissement&.latitude && user.etablissement&.longitude %>
+        {
+          name: '<%= j user.firstname %> <%= j user.lastname %>',
+          latlng: [<%= user.etablissement.latitude %>, <%= user.etablissement.longitude %>]
+        },
       <% end %>
-    ];
+    <% end %>
+  ];
 
-    // Initialisation de la carte Leaflet
-    var map = L.map('map').setView([46.603354, 1.888334], 5); // Centré sur la France
+  // Initialisation de la carte Leaflet
+  var map = L.map('map').setView([46.603354, 1.888334], 5); // Centré sur la France
 
-    // Chargement de la carte OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-    }).addTo(map);
+  // Chargement de la carte OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+  }).addTo(map);
 
-    // Cluster de marqueurs pour regrouper les utilisateurs à proximité
-    var markers = L.markerClusterGroup();
+  // Cluster de marqueurs pour regrouper les utilisateurs à proximité
+  var markers = L.markerClusterGroup();
 
-    // Ajout des marqueurs pour chaque utilisateur
-    userLocations.forEach(function(user) {
-      var marker = L.marker(user.latlng)
-        .bindPopup(user.name);
-      markers.addLayer(marker);
-    });
-
-    // Ajout des marqueurs clusterisés à la carte
-    map.addLayer(markers);
+  // Ajout des marqueurs pour chaque utilisateur
+  userLocations.forEach(function(user) {
+    var marker = L.marker(user.latlng)
+      .bindPopup(user.name);
+    markers.addLayer(marker);
   });
+
+  // Ajout des marqueurs clusterisés à la carte
+  map.addLayer(markers);
+});
+
 </script>

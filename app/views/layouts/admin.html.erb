@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+   <head>
+    <!-- Balises pour les navigateurs -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Sécurité et CSRF protection -->
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- SEO et indexation -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
+    <link rel="canonical" href="<%= request.original_url %>">
+
+    <!-- META -->
+    <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design - Dashboard" %></title>
+    <meta name="theme-color" content="#ffffff">
+    <meta name="copyright" content="© Omniscient Design - Tous droits réservés.">
+
+    <!-- reCAPTCHA -->
+    <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
+
+    <!-- Favicon et manifest -->
+    <%= render 'application/favicon' %>
+
+    <!-- Stylesheets -->
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script> <!-- Ajout du defer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" 
+      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" 
+      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" 
+      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw==" 
+      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" 
+      integrity="sha384-JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk" 
+      crossorigin="anonymous" defer></script> <!-- Ajout du defer -->
+    
+        
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+    <!-- JavaScript Rails -->
+    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "controllers/loader", defer: true %>
+    <%= javascript_include_tag "controllers/progressBar", defer: true %>
+
+    <!-- Cookie Consent -->
+    <%= javascript_include_tag "controllers/cookies", defer: true %>
+  </head>
+
+  <body class="admin-layout">
+    <header>
+      <div class="first-content-header admin-header">
+        <%= link_to root_path, class: "logo-header" do %>
+          <%= image_tag "logo-beta.svg", alt: "", class: "logo-light" %>
+          <%= image_tag "logo-beta-blanc.svg", alt: "", class: "logo-dark" %>
+          <p class="name-header">Omniscient <br> Admin</p>
+        <% end %>
+
+        <nav class="nav-header">
+          <ul>
+            <li>
+              <%= link_to root_path, class: ("active" if @current_page == "users") do %>
+                <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16.1934 11.2389C16.1934 11.2389 11.1922 16.2445 9.24445 18.1934C9.08111 18.3556 9 18.5689 9 18.7823C9 18.9956 9.08111 19.2089 9.24445 19.3712C11.1911 21.3201 16.1912 26.3234 16.1912 26.3234C16.3523 26.4845 16.5645 26.5645 16.7767 26.5645C16.9889 26.5634 17.2023 26.4823 17.3656 26.319C17.6912 25.9934 17.6923 25.4679 17.37 25.1445L11.8411 19.6156H28.1657C28.6257 19.6156 28.999 19.2423 28.999 18.7823C28.999 18.3223 28.6257 17.9489 28.1657 17.9489H11.8411L17.3723 12.4167C17.6934 12.0956 17.6912 11.5711 17.3656 11.2456C17.2023 11.0822 16.9889 11 16.7767 11C16.5645 10.9989 16.3545 11.0789 16.1934 11.2389Z" fill="#52525D"/>
+                </svg>
+                Retour au site
+              <% end %>
+            </li>
+            <li><%= link_to "Dashboard", admin_root_path, class: ("active" if @current_page == "dashboard") %></li>
+            <li><%= link_to "Suivi références", admin_suivi_references_path, class: ("active" if @current_page == "suivi_references") %></li>
+            <li><%= link_to "Rapports de bug", bug_reports_path, class: ("active" if @current_page == "bug_reports") %></li>
+            <li>
+              <%= link_to users_path, class: ("active" if @current_page == "users") do %>
+                Utilisateurs
+              <% end %>
+            </li>
+            <li>
+              <%= link_to feedbacks_path, class: ("active" if @current_page == "feedbacks") do %> 
+                Feedbacks
+              <% end %>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="flex-btn-login">
+          <% if user_signed_in? %>
+            <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "button button-login dark" %>
+          <% end %>
+        </div>
+      </div>
+       <div class="link-header">
+          <p>©<%= Time.now.year %> - Omniscient Design</p>
+        </div>
+    </header>
+    <div id="cookie-consent-banner" style="display:none;">
+      <div>
+        <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?</p>
+        <button id="accept-cookies">Accepter</button>
+        <button id="decline-cookies">Refuser</button>
+      </div>
+    </div>
+
+    <% if notice.present? %>
+      <div class="alert" id="alert">
+        <p><%= notice %></p>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+    <% elsif flash.any? %>
+      <% flash.each do |key, message| %>
+        <div class="alert <%= key %>" id="alert">
+          <%= message %>
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <main class="admin-main">
+       <div id="loading">
+        <div class="loader-bg">      
+          <video autoplay loop muted>
+            <source src="<%= asset_path('loader.webm') %>" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div id="content">
+        <%= yield %>
+      </div>
+    </main>
+  </body>
+</html>

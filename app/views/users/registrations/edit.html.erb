@@ -1,15 +1,17 @@
 <%= javascript_include_tag "controllers/showPassword", defer: true %>
 <style>
-  label{
+  .profil .flex-form label {
     color: #202020;
-    font-size: 18px;
-    font-weight: 500;
   }
 
+  body.dark-mode  .profil .flex-form label {
+    color: #FFF;
+  }
 
   hr{
-    margin-top: 64px;
-    border: 2px solid #E9E9E9
+    margin-top: 32px;
+    width: 100%;
+    border: 1px solid #202020
   }
   .delete{
     background-color: rgba(230, 24,24,0.15);
@@ -17,6 +19,14 @@
   }
   .delete:hover{
     background-color: rgba(230, 24,24,0.35);
+  }
+  .delete-account{
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  body.dark-mode hr{
+    border: 1px solid #FFF;
   }
 </style>
 <section class="top-default-page">
@@ -27,26 +37,12 @@
   <%end%>
   <h1>Votre compte</h1>
 </section>
-<section class="grid-1">
+<section class="grid-1 profil">
   <h2>Profil public</h2>
   <p class="desc-profil">Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, veuillez vous modifier les informations ci-dessous </p>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
-    <div class="flex-form">
+    <div class="flex-form" style="margin-top: 32px;">
       <%= render "users/shared/error_messages", resource: resource %>
-      <div class="field">
-        <%= f.label :profile_image, "Photo de profil" %>
-        <%= f.file_field :profile_image %>
-        <% if resource.profile_image.attached? %>
-          <div class="profile-image-preview">
-            <%= image_tag resource.profile_image_variant, class:"profile-picture" %>
-          </div>
-          <div class="field">
-            <%= f.check_box :remove_profile_image, style: "display: none;" %>
-            <%= f.label :remove_profile_image, "Retirer la photo de profil", style: "display: none;" %>
-            <%= button_tag "Retirer la photo de profil", type: "button", id: "remove-profile-image-btn", class: "btn btn-danger" %>
-          </div>
-        <% end %>
-      </div>
       <div class="field">
         <%= f.label "Prénom" %>
         <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
@@ -63,7 +59,7 @@
         <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
       <div class="field">
-        <%= f.label "Mot de passe" %><br />
+        <%= f.label "Mot de passe" %>
         <i>(Ne pas remplir si vous ne souhaitez pas le changer)</i>
         <div class="password-container">
           <%= f.password_field :password, autocomplete: "new-password", id: "password-field-1"  %>
@@ -77,7 +73,6 @@
           </button>
         </div>
         <% if @minimum_password_length %>
-          <br />
           <em><%= @minimum_password_length %> characters minimum</em>
         <% end %>
       </div>
@@ -116,12 +111,12 @@
 
       </div>
       <div class="field">
-        <%= f.label "Établissement" %><br />
+        <%= f.label "Établissement" %>
         <%= f.collection_select :etablissement_id, Etablissement.order(:city), :id, :all_info, { prompt: "Choisissez un établissement" } %>
       </div>
       <hr>
       <div class="field">
-        <%= f.label "Mot de passe actuel" %><br />
+        <%= f.label "Mot de passe actuel" %>
         <i>(entrer votre mot de passe pour modifier votre profil)</i>
         <div class="password-container">
           <%= f.password_field :current_password, autocomplete: "current-password", required: true, id: "password-field-3" %>
@@ -136,12 +131,12 @@
         </div>
       </div>
       <div class="actions">
-        <%= f.submit "Mettre à jour", class: "button large maj" %>
+        <%= f.submit "Mettre à jour", class: "button large maj dark" %>
       </div>
     </div>
   <% end %>
-  <div>
-    <%= button_to "Supprimer votre compte", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "button delete" %>
+  <div display="flex">
+    <%= button_to "Supprimer votre compte", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "button delete delete-account" %>
   </div>
 </section>
 <script>

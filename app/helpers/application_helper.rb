@@ -66,28 +66,31 @@ module ApplicationHelper
   def linkify_designer_names_and_oeuvres(text)
     designers = Designer.where(validation: true)
     oeuvres = Oeuvre.where(validation: true)
-  
+
     designers.each do |designer|
       nom_complet = "#{designer.prenom} #{designer.nom}"
       next if nom_complet.blank?
-  
-      # Remplacer les noms de designers par des liens
-      text = text.gsub(/\b(#{Regexp.escape(nom_complet)})\b/i) do |match|
+
+      regex = Regexp.new("\\b#{Regexp.escape(nom_complet)}\\b")
+
+      text = text.gsub(regex) do |match|
         "<a class=\"black underline\" href='/designers/#{designer.slug}'>#{match}</a>"
       end
     end
-  
+
     oeuvres.each do |oeuvre|
       next if oeuvre.nom_oeuvre.blank?
-  
-      # Remplacer les titres des œuvres par des liens
-      text = text.gsub(/\b(#{Regexp.escape(oeuvre.nom_oeuvre)})\b/i) do |match|
+
+      regex = Regexp.new("\\b#{Regexp.escape(oeuvre.nom_oeuvre)}\\b")
+
+      text = text.gsub(regex) do |match|
         "<a class=\"black underline\" href='/oeuvres/#{oeuvre.slug}'>#{match}</a>"
       end
     end
-    
+
     text.html_safe
   end
-  
-
+  def current_theme
+    cookies&.[](:theme).presence || 'system'
+  end
 end

@@ -1,3 +1,5 @@
+@import 'abstracts/variables';
+
 .top-profil {
   padding: 96px 10vw;
   background-color: #202020;
@@ -46,11 +48,14 @@
   color: #8D9299;
   font-weight: 300;
 }
+
 .flex-profils {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
+
+
 
 @media screen and (min-width:601px) and (max-width: 1024px) {
   .top-profil {
@@ -92,7 +97,8 @@
     margin-top: 32px;
     flex-direction: column;
     gap: 32px;
-    div{
+
+    div {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -117,10 +123,12 @@
   .version {
     font-size: 14px;
   }
+
   .flex-profils {
     gap: 24px;
   }
 }
+
 @media screen and (max-width: 425px) {
 
   .top-profil {
@@ -136,7 +144,8 @@
     margin-top: 32px;
     flex-direction: column;
     gap: 32px;
-    div{
+
+    div {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -161,6 +170,7 @@
   .version {
     font-size: 14px;
   }
+
   .flex-profils {
     gap: 24px;
   }

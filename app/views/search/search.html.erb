@@ -26,44 +26,51 @@
   </div>
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers" %>
-      <h2>Filtres</h2>
-      <div class="filters">
-        <div class="filter">
-          <label for="domainFilter">Domaine</label>
-          <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, 
-            {  include_blank: false, selected: params[:domaine] }, 
-            { multiple: true, class: "select2" } %>
-        </div>
-        <div class="filter" id="countryFilterContainer">
-          <label for="paysFilter">Pays</label>
-          <%= form.select :country, @countries.all.map { |p| [p.country, p.id] }, 
-            {  include_blank: false, selected: params[:country] }, 
-            { multiple: true, class: "select2" } %>
-        </div>
-        <div class="filter" id="notionsFilterContainer">
-            <label for="notionsFilter">Notions</label>
-            <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] },
-            { include_blank: false, selected: params[:notions] },
-            { multiple: true, class: "select2", name: "notions[]" } %>
 
-          </div>
-       <div class="filter">
+    <h2>Filtres</h2>
+
+    <div class="filters">
+      <div class="filter">
+        <label for="domainFilter">Domaine</label>
+        <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] },
+                        { include_blank: false, selected: params[:domaine] },
+                        { multiple: true, class: "select2" } %>
+      </div>
+
+      <div class="filter" id="countryFilterContainer">
+        <label for="paysFilter">Pays</label>
+        <%= form.select :country, @countries.all.map { |p| [p.country, p.id] },
+                        { include_blank: false, selected: params[:country] },
+                        { multiple: true, class: "select2" } %>
+      </div>
+
+      <div class="filter" id="notionsFilterContainer">
+        <label for="notionsFilter">Notions</label>
+        <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] },
+                        { include_blank: false, selected: params[:notions] },
+                        { multiple: true, class: "select2", name: "notions[]" } %>
+      </div>
+
+      <div class="filter">
         <label for="dateFilter">Dates</label>
         <div class="dropdown">
           <button type="button" class="dropdown-toggle">Sélectionner une période</button>
           <div class="dropdown-menu">
             <label for="startDate">De</label>
             <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
+
             <label for="endDate">À</label>
             <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
-            <button type="button" id="applyDateFilter" class="button dark">Appliquer</button> <!-- Bouton ajouté -->
+
+            <button type="button" id="applyDateFilter" class="button dark">Appliquer</button>
           </div>
         </div>
       </div>
-      </div>
-      <div class="filter" id="sortFilterContainer" style="margin-top: 24px;">
+    </div>
+    
+  <div class="filter" id="sortFilterContainer" style="margin-top: 24px;">
         <label for="sort">Trier par</label>
-        <select name="sort" id="sortSelect">
+        <select name="sort" id="sortSelect" class="select2">
           <% if params[:tab] == 'references' %>
             <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>>Nom A-Z</option>
             <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>>Nom Z-A</option>
@@ -77,8 +84,10 @@
           <% end %>
         </select>
       </div>
+   
 
   <% end %>
+
 
   <turbo-frame id="search-results">
     <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'designers' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'designers' %>">

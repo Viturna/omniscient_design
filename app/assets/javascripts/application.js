@@ -4,7 +4,8 @@
 //= require rails-ujs
 //= require select2
 //= require cookies_eu
-
+import "chartkick"
+import "Chart.bundle"
 
 document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener('click', function (event) {

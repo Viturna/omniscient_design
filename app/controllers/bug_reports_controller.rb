@@ -2,7 +2,7 @@ class BugReportsController < ApplicationController
   before_action :authenticate_user!, only: [:new]
   before_action :authenticate_admin!, only: [:index, :show, :destroy]
   before_action :set_bug_report, only: [:show, :destroy, :update_status]
-
+  layout 'admin', only: [:index]
   def new
     @current_page = 'profil'
     @bug_report = BugReport.new
@@ -19,7 +19,7 @@ class BugReportsController < ApplicationController
   end
 
   def index
-    @current_page = 'profil'
+    @current_page = 'bug_reports'
     @bug_reports_all= BugReport.all
     @bug_reports_todo = BugReport.where(status: 'À faire')
     @bug_reports_in_progress = BugReport.where(status: 'En cours')

@@ -3,9 +3,9 @@ class FeedbacksController < ApplicationController
   before_action :check_feedback_submission, only: [:new, :create]
   before_action :set_feedback, only: [:destroy]
   before_action :check_admin_role, only: [:index]
-
+  layout 'admin', only: [:index]
   def index
-    @current_page = 'profil'
+    @current_page = 'feedbacks'
     @feedbacks = Feedback.all
 
     respond_to do |format|

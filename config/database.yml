@@ -22,6 +22,10 @@ test:
   database: omniscient_design_test
 
 production:
-  <<: *default
-  database: omniscient_design_production
-  username: dokku
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  database: <%= ENV["POSTGRES_DB"] %>
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  host: <%= ENV["POSTGRES_HOST"] %>

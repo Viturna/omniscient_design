@@ -20,3 +20,4 @@ COPY . .
 RUN mkdir -p tmp/pids
 
 CMD ["bash", "-c", "bundle exec puma -C config/puma.rb"]
+EXPOSE 3000

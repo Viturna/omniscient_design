@@ -59,28 +59,35 @@ class User < ApplicationRecord
   has_many :rejected_designers
   private
 
-   def no_ban_words_in_names
-    ban_words = %w[
-      anal anus arse ass ballsack balls bastard bitch biatch blowjob blow job bollock bollok boner boob bugger bum butt buttplug clitoris cock crap cunt damn dick dildo dyke fag feck fellate fellatio felching fuck f u c k fudgepacker fudge packer flange hell homo jerk jizz knobend knob end labia lmao lmfao muff nigger nigga omg penis piss poop prick pube pussy queer scrotum sex shit s hit sh1t slut smegma spunk tit tosser turd twat vagina wank whore wtf
-      enculé salope connard con putain pétasse bite chatte nichon couilles trouduc branleur enculeur bordel foutre nique niquer suce suceuse merde merdeux zizi teub pipi caca cul branlette gicler giclée éjaculer éjaculation pénétration pénétrer porn porno pornographie negre negro salearabe xxx
-    ].to_set
+  def no_ban_words_in_names
+  ban_words = %w[
+    anal anus arse ass ballsack balls bastard bitch biatch blowjob blow job
+    bollock bollok boner boob bugger bum butt buttplug clitoris cock crap cunt
+    damn dick dildo dyke fag feck fellate fellatio felching fuck f u c k fudgepacker
+    fudge packer flange hell homo jerk jizz knobend knob end labia lmao lmfao muff
+    nigger nigga omg penis piss poop prick pube pussy queer scrotum sex shit s hit
+    sh1t slut smegma spunk tit tosser turd twat vagina wank whore wtf
+    enculé salope connard con putain pétasse bite chatte nichon couilles trouduc
+    branleur enculeur bordel foutre nique niquer suce suceuse merde merdeux zizi teub
+    pipi caca cul branlette gicler giclée éjaculer éjaculation pénétration pénétrer
+    porn porno pornographie negre negro salearabe xxx
+  ].map { |w| Regexp.escape(w) } # escape mots pour regex
 
-    fields = {
-      "prénom" => firstname,
-      "nom" => lastname,
-      "pseudo" => pseudo
-    }
+  fields = {
+    "prénom" => firstname,
+    "nom" => lastname,
+    "pseudo" => pseudo
+  }
 
-    fields.each do |field_name, value|
-      next if value.blank?
+  pattern = /\b(#{ban_words.join('|')})\b/i
 
-      normalized_value = value.strip.downcase
-      ban_words.each do |bad_word|
-        if normalized_value.include?(bad_word)
-          errors.add(:base, "Le #{field_name} contient un mot interdit.")
-          break
-        end
-      end
+  fields.each do |field_name, value|
+    next if value.blank?
+
+    if value =~ pattern
+      errors.add(:base, "Le #{field_name} contient un mot interdit.")
     end
   end
+end
+
 end

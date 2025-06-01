@@ -28,6 +28,9 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+gem "webrick", ">= 1.8.2"
+gem "rack", ">= 3.1.14"
+gem "nokogiri", ">= 1.18.8"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

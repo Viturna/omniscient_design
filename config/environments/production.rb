@@ -108,14 +108,13 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { host: "omniscientdesign.fr", protocol: "https" }
 
-  # SMTP settings for SendGrid
   config.action_mailer.smtp_settings = {
-    user_name: "apikey",       # Utilisez la variable d'environnement ici
-    password: ENV["SENDGRID_API_KEY"],         # Utilisez la variable d'environnement ici
-    domain: 'omniscientdesign.fr',
-    address: 'smtp.sendgrid.net',
+    address: "in-v3.mailjet.com",
     port: 587,
+    user_name: ENV["MAILJET_API_KEY"],
+    password: ENV["MAILJET_SECRET_KEY"],
     authentication: :plain,
     enable_starttls_auto: true
   }
+
 end

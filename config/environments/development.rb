@@ -58,11 +58,10 @@ Rails.application.configure do
 
   # SMTP settings for Gmail
   config.action_mailer.smtp_settings = {
-    user_name: ENV['SENDGRID_USERNAME'],
-    password: ENV['SENDGRID_API_KEY'],
-    domain: 'omniscientdesign.fr',
-    address: 'smtp.sendgrid.net',
+    address: "in-v3.mailjet.com",
     port: 587,
+    user_name: ENV["MAILJET_API_KEY"],
+    password: ENV["MAILJET_SECRET_KEY"],
     authentication: :plain,
     enable_starttls_auto: true
   }

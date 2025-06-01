@@ -110,8 +110,8 @@ Rails.application.configure do
 
   # SMTP settings for SendGrid
   config.action_mailer.smtp_settings = {
-    user_name: ENV['SENDGRID_USERNAME'],       # Utilisez la variable d'environnement ici
-    password: ENV['SENDGRID_API_KEY'],         # Utilisez la variable d'environnement ici
+    user_name: "apikey",       # Utilisez la variable d'environnement ici
+    password: ENV["SENDGRID_API_KEY"],         # Utilisez la variable d'environnement ici
     domain: 'omniscientdesign.fr',
     address: 'smtp.sendgrid.net',
     port: 587,

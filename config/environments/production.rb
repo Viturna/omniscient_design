@@ -117,4 +117,9 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
+  config.middleware.insert_before 0, Rack::Rewrite do
+    r301 %r{.*}, 'https://omniscientdesign.fr$&', if: Proc.new { |rack_env|
+      rack_env['SERVER_NAME'] =~ /^www\./
+    }
+  end
 end

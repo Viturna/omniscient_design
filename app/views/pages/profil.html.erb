@@ -23,6 +23,49 @@
 </section>
 <section class="grid-1">
   <div class="flex-profils">
+    <div class="theme-switcher">
+      <label for="theme-select">Thème :</label>
+      <select id="theme-select">
+        <option value="system">Système</option>
+        <option value="light">Clair</option>
+        <option value="dark">Sombre</option>
+      </select>
+    </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  const themeSelect = document.getElementById("theme-select");
+
+  function setTheme(theme) {
+    if (theme === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+    } else {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+  }
+
+  // Load theme from localStorage
+  const savedTheme = localStorage.getItem("theme") || "system";
+  themeSelect.value = savedTheme;
+  setTheme(savedTheme);
+
+  // Listen to user selection
+  themeSelect.addEventListener("change", () => {
+    const selected = themeSelect.value;
+    localStorage.setItem("theme", selected);
+    setTheme(selected);
+  });
+
+  // If system is selected, listen to system changes
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    if (localStorage.getItem("theme") === "system") {
+      setTheme("system");
+    }
+  });
+});
+
+    </script>
     <h2>Général</h2>
     <%= link_to edit_user_registration_path, class: "nav-link-profil" do %>
       <div class="nav-link-inner">

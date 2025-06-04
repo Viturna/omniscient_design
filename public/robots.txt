@@ -1,5 +1,8 @@
 User-agent: *
 Disallow: /lists/*/edit
 Disallow: /lists/*/show
+Disallow: /search?
+Disallow: /users/password/new
+Disallow: /users/confirmation/new
 
 Sitemap: https://omniscientdesign.fr/sitemaps/sitemap.xml.gz

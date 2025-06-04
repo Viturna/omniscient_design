@@ -14,7 +14,7 @@
     <meta name="robots" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
     <meta name="googlebot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
     <meta name="bingbot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <link rel="canonical" href="<%= request.original_url %>">
+    <%= tag :link, rel: 'canonical', href: request.original_url.split('?').first %>
 
     <!-- META -->
     <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
@@ -78,12 +78,13 @@
     <% end %>
   </head>
 
-<% theme = cookies&.[](:theme).presence || 'system' %>
-<% body_class = case theme
-                when 'dark-mode' then 'dark-mode'
-                when 'light-mode' then 'light-mode'
-                else ''
-               end %>
+  <% theme = cookies&.[](:theme).presence || 'light-mode' %>
+
+  <% body_class = case theme
+                  when 'dark-mode' then 'dark-mode'
+                  when 'light-mode' then 'light-mode'
+                  else ''
+                end %>
 <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
 
     <div id="cookie-consent-banner" style="display:none;">
@@ -132,14 +133,5 @@
         <%= yield %>
       </div>
     </main>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const hasTheme = document.body.classList.contains('dark-mode') || document.body.classList.contains('light-mode');
-        if (!hasTheme) {
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          document.body.classList.add(prefersDark ? 'dark-mode' : 'light-mode');
-        }
-      });
-    </script>
   </body>
 </html>

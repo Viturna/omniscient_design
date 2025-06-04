@@ -2,8 +2,7 @@
   <div class="card" data-id="<%= card.id %>">
     <div class="bg-card" style="background-color: <%= card.domaine.couleur %>;">
       <% desktop_image = "oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
-      <% mobile_image = "oeuvres/mobile/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
-      <% if image_path.present? && asset_exists?(image_path) %>
+      <% if desktop_image.present? && asset_exists?(desktop_image) %>
         <div class="img-card" style="background-image: url('<%= asset_path(desktop_image) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
           <div class="flex-info-card">
             <div class="info-card-dark">

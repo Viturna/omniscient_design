@@ -31,6 +31,9 @@ gem "jbuilder"
 gem "webrick", ">= 1.8.2"
 gem "rack", ">= 3.1.14"
 gem "nokogiri", ">= 1.18.8"
+
+gem 'rack-rewrite'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

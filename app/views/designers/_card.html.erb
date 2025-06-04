@@ -14,7 +14,7 @@
           <div class="bg-card" style="background-color: #ccc;">
           <% end %>
           <% image_path = "designers/desktop/#{remove_accents_and_special_chars(card.nom_designer)}.webp" %>
-          <% if asset_exists?(image_path) %>
+            <% if image_path.present? && asset_exists?(image_path) %>
             <div class="img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
               <div class="flex-info-card">
                 <div>

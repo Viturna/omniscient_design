@@ -74,7 +74,7 @@
 <div class="body-show" id="<%= dom_id designer %>">
   <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
   <div class="header-show"
-    <% if asset_exists?(image_path) %>
+  <% if image_path.present? && asset_exists?(image_path) %>
     style="background-image: url('<%= asset_path(image_path) %>');"
     <% else %>
       style="background-image: url('<%= designer.image%>');"

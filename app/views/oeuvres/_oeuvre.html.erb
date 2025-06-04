@@ -73,7 +73,7 @@
 <div class="body-show" id="<%= dom_id oeuvre %>">
   <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
   <div class="header-show"
-   <% if asset_exists?(image_path) %>
+  <% if image_path.present? && asset_exists?(image_path) %>
    style="background-image: url('<%= asset_path(image_path) %>'); "
   <% else %>
    <% Rails.logger.debug("Image not found : #{image_path}") %>

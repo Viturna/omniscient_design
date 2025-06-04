@@ -3,7 +3,7 @@
     <div class="bg-card" style="background-color: <%= card.domaine.couleur %>;">
       <% desktop_image = "oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
       <% mobile_image = "oeuvres/mobile/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp" %>
-      <% if asset_exists?(desktop_image) %>
+      <% if image_path.present? && asset_exists?(image_path) %>
         <div class="img-card" style="background-image: url('<%= asset_path(desktop_image) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
           <div class="flex-info-card">
             <div class="info-card-dark">

@@ -1,6 +1,6 @@
 <%= link_to designer do %>
   <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
-  <% if asset_exists?(image_path) %>
+  <% if image_path.present? && asset_exists?(image_path) %>
     <div class="card-designer" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position:center center;">
     <% else %>
       <% Rails.logger.debug("Image not found : #{image_path}") %>
@@ -13,7 +13,8 @@
             <%= country.country %>
           </p>
         <% end %>
-        <p class="title-card-designer"><%= designer.nom %> <br> <%= designer.prenom %> </p>
+        <p class="title-card-designer"><%= designer.nom %> <br>
+ <%= designer.prenom %> </p>
       </div>
     </div>
   <% end %>

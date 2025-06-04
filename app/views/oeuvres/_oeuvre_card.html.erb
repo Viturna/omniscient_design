@@ -1,6 +1,6 @@
 <%= link_to oeuvre do %>
   <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
-  <% if asset_exists?(image_path) %>
+  <% if image_path.present? && asset_exists?(image_path) %>
     <div class="card-oeuvre" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position: center center;">
     <% else %>
       <div class="card-oeuvre" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position: center center;">

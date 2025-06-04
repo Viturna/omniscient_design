@@ -91,6 +91,8 @@ module ApplicationHelper
     text.html_safe
   end
   def current_theme
-    cookies&.[](:theme).presence || 'system'
+    cookies[:theme].presence || 'light-mode'
+  rescue
+    'light-mode'
   end
 end

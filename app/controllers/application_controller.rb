@@ -2,12 +2,9 @@ class ApplicationController < ActionController::Base
   before_action :set_unread_notifications_count
   before_action :check_if_banned
   before_action :configure_permitted_parameters, if: :devise_controller?
-  def set_theme
-    theme = params[:theme]
-    cookies[:theme] = theme
-    redirect_back(fallback_location: root_path)
-  end
-  
+  before_action :set_theme
+  helper_method :theme
+
   private
 
   def set_unread_notifications_count
@@ -33,7 +30,15 @@ class ApplicationController < ActionController::Base
       flash[:alert] = 'Votre compte a été banni.'
     end
   end
+  
+  def theme
+    @theme
+  end
 
+  def set_theme
+    @theme = cookies&.[](:theme).presence || 'light-mode'
+  end
+ 
   protected
 
   def configure_permitted_parameters

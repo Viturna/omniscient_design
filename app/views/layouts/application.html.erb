@@ -78,7 +78,8 @@
     <% end %>
   </head>
 
-  <% theme = cookies&.[](:theme).presence || 'light-mode' %>
+<% current_theme = theme %>
+
 
   <% body_class = case theme
                   when 'dark-mode' then 'dark-mode'

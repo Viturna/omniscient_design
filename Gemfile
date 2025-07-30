@@ -119,3 +119,4 @@ gem 'chartkick'
 gem 'groupdate'
 
 
+gem 'rack-cors'

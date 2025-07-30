@@ -118,5 +118,5 @@ gem 'kaminari'
 gem 'chartkick'
 gem 'groupdate'
 
+gem 'rack-cors', require: 'rack/cors'
 
-gem 'rack-cors'

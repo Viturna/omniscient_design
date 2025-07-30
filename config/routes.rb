@@ -93,7 +93,28 @@ namespace :admin do
   get "suivi_references",      to: "dashboard#suivi_references"
   get "feedbacks",     to: "dashboard#feedbacks"
 end
-
+namespace :api do
+    namespace :v1 do
+      resources :designers
+      resources :oeuvres
+      resources :domaines
+      resources :users
+      resources :countries
+      resources :notions
+      resources :feedbacks
+      resources :lists
+      resources :list_items
+      resources :list_editors
+      resources :list_visitors
+      resources :rejected_designers
+      resources :rejected_oeuvres
+      resources :suivis
+      resources :notifications
+      resources :bug_reports
+       post 'login', to: 'sessions#create'
+    delete 'logout', to: 'sessions#destroy'
+    get 'me', to: 'sessions#show'
+    end
 
   # Routes pour les pages statiques
   get '/search_autocomplete', to: 'search#autocomplete'

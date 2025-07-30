@@ -115,7 +115,7 @@ namespace :api do
     delete 'logout', to: 'sessions#destroy'
     get 'me', to: 'sessions#show'
     end
-
+  end
   # Routes pour les pages statiques
   get '/search_autocomplete', to: 'search#autocomplete'
   get 'search', to: 'search#search', as: 'search'

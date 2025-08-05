@@ -115,7 +115,7 @@
 }
 
 .filter {
-  width: 20vw;
+   flex: 1 1 240px;
 }
 
 .flex-category,
@@ -146,7 +146,7 @@
 }
 
 .select2-container .select2-selection {
-  border-radius: 10px !important;
+  border-radius: 4px !important;
   border: 2px solid #E9E9E9 !important;
   padding: 8px;
 }
@@ -267,7 +267,7 @@
   font-size: 16px;
   cursor: pointer;
   text-align: left;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .select2-container {
@@ -396,6 +396,7 @@
 
   .filter {
     width: 100%;
+    flex: 1 1 40px;
   }
 
   .dropdown-menu {
@@ -469,6 +470,7 @@
 
   .filter {
     width: 100%;
+    flex: 1 1 40px;
   }
 
   .dropdown-menu {

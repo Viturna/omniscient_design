@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
             start: "top top",
             end: () => "+=" + totalScroll,
             scrub: true,
-            pin: true,
             anticipatePin: 1,
         }
     });

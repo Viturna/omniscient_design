@@ -1,8 +1,10 @@
 @import 'abstracts/variables';
 
-header {
+.header-desktop {
+  overflow-x: hidden;
+  box-sizing: border-box;
   position: fixed;
-  width: 250px;
+  width: 350px;
   height: 100dvh;
   padding: 0 50px;
   overflow-y: scroll;
@@ -11,18 +13,19 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: #FFF;
 }
 
-header::-webkit-scrollbar {
+.header-desktop ::-webkit-scrollbar {
   width: 6px;
 }
 
-header::-webkit-scrollbar-thumb {
+.header-desktop ::-webkit-scrollbar-thumb {
   background: $text-color;
   border-radius: 10px;
 }
 
-header::-webkit-scrollbar-thumb:hover {
+.header-desktop ::-webkit-scrollbar-thumb:hover {
   background: #363636;
 }
 
@@ -55,13 +58,13 @@ header::-webkit-scrollbar-thumb:hover {
 // Navigation
 
 
-header ul {
+.header-desktop  ul {
   display: flex;
   flex-direction: column;
   gap: 28px;
 }
 
-header li a {
+.header-desktop li a {
   display: inline-flex;
   align-items: center;
   gap: 1rem;
@@ -74,11 +77,11 @@ header li a {
   }
 }
 
-header li a svg {
+.header-desktop  li a svg {
   scale: 0.9;
 }
 
-header li .active {
+.header-desktop  li .active {
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -112,10 +115,10 @@ header li .active {
 
 /* Petit desktop */
 @media screen and (min-width: 1025px) and (max-width: 1280px) {
-  header {
-    width: 20vw;
+  .header-desktop  {
+    width: 30vw;
     height: 100vh;
-    padding: 0 5vw;
+    padding: 0 4vw;
   }
 
   .name-header {
@@ -141,7 +144,7 @@ header li .active {
   }
 
   .button-login {
-    width: fit-content;
+    width: 14vw;
     font-size: 0.875rem;
   }
 
@@ -151,10 +154,10 @@ header li .active {
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
-  header {
-    width: 22vw;
+  .header-desktop  {
+    width: 30vw;
     height: 100vh;
-    padding: 0 4vw;
+    padding: 0 2vw;
   }
 
   .name-header {
@@ -175,7 +178,7 @@ header li .active {
   }
 
   .button-login {
-    width: fit-content;
+    width: 14vw;
     font-size: 0.875rem;
   }
 
@@ -184,270 +187,126 @@ header li .active {
   }
 }
 
-@media screen and (min-width: 601px) and (max-width: 768px) {
-  header {
-    position: fixed;
-    width: 100vw;
-    height: 90px;
-    padding: 0px;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-  }
+/* Base : cache mobile par défaut */
+.header-mobile {
+  display: none;
+}
 
-  .logo-header,
-  .name-header {
+/* Desktop visible uniquement au-dessus de 768px */
+@media screen and (min-width: 769px) {
+  .header-mobile {
     display: none;
   }
 
-  .nav-header {
-    width: 100%;
-    margin: 0;
-    padding: 0 10vw;
-  }
-
-  header ul {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  header li {
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  header li:nth-child(2) {
-    flex: 2;
-  }
-
-  header li a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.9rem;
-    gap: 0.5rem;
-
-  }
-
-  header li a svg {
-    scale: 1;
-  }
-
-  header li .active {
-    font-size: 0.9rem;
-  }
-
-  .flex-btn-login,
-  .link-header {
-    display: none;
-  }
-
-  .first-content-header {
-    padding-top: 0;
+  .header-desktop {
+    display: block;
   }
 }
 
-@media screen and (min-width: 501px) and (max-width: 600px) {
-  header {
+/* Mobile visible uniquement en dessous de 768px */
+@media screen and (max-width: 768px) {
+  .header-desktop {
+    display: none;
+  }
+
+  .header-mobile {
+    display: block;
+  }
+
+  .header-mobile header {
+    box-sizing: border-box;
     position: fixed;
-    width: 100vw;
-    height: 90px;
-    padding: 0px;
     bottom: 0;
     left: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-  }
-
-  .logo-header,
-  .name-header {
-    display: none;
-  }
-
-  .nav-header {
-    width: 100%;
-    margin: 0;
-    padding: 0 12vw;
-  }
-
-  header ul {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  header li {
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  header li a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.9rem;
-    gap: 0.25rem;
-  }
-
-  header li a svg {
-    scale: 0.9;
-  }
-
-  header li .active {
-    font-size: 0.9rem;
-  }
-
-  .flex-btn-login,
-  .link-header {
-    display: none;
-  }
-}
-
-@media screen and (min-width: 376px) and (max-width: 500px) {
-  header {
-    position: fixed;
     width: 100vw;
-    height: 80px;
-    padding: 0px;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  }
-
-  .logo-header,
-  .name-header {
-    display: none;
-  }
-
-  .nav-header {
-    width: 100%;
-    margin: 0;
-    padding: 0 8vw;
-  }
-
-  header ul {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  header li {
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  header li:nth-child(2) {
-    flex: 2;
-  }
-
-  header li a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.875rem;
-    gap: 0.25rem;
-  }
-
-  header li a svg {
-    scale: 0.9;
-  }
-
-  header li .active {
-    font-size: 0.875rem;
-  }
-
-  .flex-btn-login,
-  .link-header {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 375px) {
-  header {
-    position: fixed;
-    width: 100vw;
-    height: 80px;
-    padding: 0;
-    bottom: 0;
-    left: 0;
+    height: 72px;
+    background-color: $secondary-color;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
     z-index: 999;
   }
 
-  .logo-header,
-  .name-header {
-    display: none;
-  }
-
-  .nav-header {
+  .header-mobile .nav-header {
     width: 100%;
-    margin: 0;
-    padding: 0 5vw;
+    padding: 0 3vw;
   }
 
-  header ul {
+  .header-mobile ul {
     display: flex;
     flex-direction: row;
-    gap: 5%;
-    width: 100%;
     justify-content: space-between;
-    align-items: center;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
-  header li {
+  .header-mobile li {
     flex: 1;
     text-align: center;
   }
 
-  header li:nth-child(2) {
-    flex: 2;
-  }
-
-  header li a {
+  .header-mobile li a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 0.875rem;
-    gap: 0.25rem;
-    width: 15vw;
+    justify-content: center;
+    font-size: 0.7rem;
+    gap: 0.3rem;
+    color: $text-color;
+
+    svg {
+      width: 24px;
+      height: 24px;
+
+      path {
+        fill: $text-color;
+        transition: fill 0.3s ease;
+      }
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      transform: scale(0.95);
+      opacity: 0.7;
+    }
   }
 
-  header li a svg {
-    scale: 0.9;
+  .header-mobile li .active {
+    color: $primary-color;
+
+    svg path {
+      fill: $primary-color;
+    }
   }
 
-  header li .active {
-    font-size: 0.875rem;
+  body.dark-mode .header-mobile header {
+    background-color: $secondary-color-dark;
   }
 
-  .flex-btn-login,
-  .link-header {
-    display: none;
+  body.dark-mode .header-mobile li a {
+    color: $text-color-dark;
+
+    svg path {
+      fill: $text-color-dark;
+    }
+  }
+
+  body.dark-mode .header-mobile li .active {
+    color: $primary-color-dark;
+
+    svg path {
+      fill: $primary-color-dark;
+    }
   }
 }
+
 
 header {
   background-color: $secondary-color;

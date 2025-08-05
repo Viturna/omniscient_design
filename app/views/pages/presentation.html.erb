@@ -1,26 +1,28 @@
 <% content_for :title, "Découvrez notre site - Omniscient Design" %>
 <% content_for :description, "Omniscient Design est le plus grand et le meilleur carnet de référence numérique de tous les temps ! Découvre les designs du monde entier." %>
-<%= image_tag "logo-white.svg", alt: "", class: "logo-top" %>
+
 <section class="top-presentation grid-1">
-  <div class="left-container">
+
+  <div class="header-landing">
     <div class="top-presentation-tag">
+        <%= image_tag "logo-white.svg", alt: "", class: "logo-top" %>
       <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 0.5L10.4453 5.93667L16 6.704L11.9573 10.5893L12.944 16.5L8 13.464L3.05533 16.5L4.04267 10.5893L0 6.704L5.55467 5.93667L8 0.5Z" fill="#202020"/>
       </svg>
-      403 Références sur la plateforme • <span class="semi-bold">Voir les références ></span>
+      <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • <span class="semi-bold">Voir les références ></span>
     </div>
     <div class="text-top-presentation">
-      <h1>Omniscient Design - <br><span class="medium">
-      “Le monde du design accessible à tous”</span></h1>
-      <p>Un carnet de référence numérique pour ...a </p>
+      <h1>Le monde du design accessible à tous</h1>
+      <p>LE carnet de référence numérique</p>
     </div>
     <div class="btn-section-top">
       <%= link_to "Démarrer maintenant", new_user_registration_path, class: "button"%>
-      <%= link_to "Explorer le carnet", root_path, class: "button" %>
+      <p>C’est gratuit</p>
     </div>
   </div>
-    <div class="right-container">
-      </div>
+  <div class="right-container">
+     <%= image_tag "landing/image-1.jpg", alt: "", class: "first-image" %>
+  </div>
 </section>
 <section class="about-us">
   <div class="container">
@@ -29,33 +31,34 @@
         <p class="tag">Un problème ?</p>
         <h2>Une plateforme née d’un besoin</h2>
       </div>
-      <p>Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués. Le manque d’un outil centralisé, fiable et vivant pour retrouver des références de design.<br><br>
-Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel “carnet de références” en une ressource numérique – s’est progressivement mué en projet de fond, pensé pour durer.</p>
+      <p>Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués.Le manque <span class="medium black">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span><br><br>
+Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel <span class="medium black">“carnet de références”</span> en <span class="medium black">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
     </div>
     <div class="image-container">
- <%= image_tag "rect.png", alt: "", class: "img-about first-image" %>
+ <%= image_tag "landing/image-2.png", alt: "", class: "image-landing" %>
     </div>
   </div>
   <div class="container">
     <div class="image-container">
-      <%= image_tag "rect.png", alt: "", class: "second-image" %>
+      <%= image_tag "landing/image-3.png", alt: "", class: "image-landing" %>
     </div>
     <div class="flex-text">
       <div>
         <p class="tag">Une solution</p>
-        <h2>Le début d’une longue histoire</h2>
+        <h2>Un carnet de références numériques</h2>
       </div>
-      <p>Créé en 2024 par Edgar Quéméré et Thomas Riquier, Omniscient Design vise à rassembler, organiser et transmettre la mémoire du design dans toute sa diversité.</p>
+      <p>Accède à une base riche de références en constante évolution.  Alimenté directement par la communauté.</p>
     </div>
   </div>
 </section>
 <section class="citation">
-  <p class="citation-text">“Nous croyons que le design est une forme d’expression profondément humaine, bien plus qu’une discipline ou une tendance. C’est un dialogue entre forme et fonction, entre nécessité et sensibilité. Le design raconte notre manière d’habiter le monde, de le penser, de l’adapter. Il reflète nos intentions, nos erreurs, nos réussites.”</p>
-  <p class="citation-name">- Edgar & Thomas</p>
+  <p class="citation-text">Omniscient design est une plateforme</p>
+  <p class="citation-name">collaborative</p>
 </section>
 <section>
-  <h2>Ce projet repose sur une conviction simple</h2>
+  <h2>Recherche tes références et tes designers en 2 clics</h2>
   <p>Le design mérite un lieu qui le respecte, qui le rende compréhensible, et surtout, qui le rende accessible.</p>
+
 </section>
 <section>
   <div class="container">
@@ -66,5 +69,5 @@ Ce qui n’était au départ qu’une idée – celle de transformer le traditio
     </div>
   </div>
 </section>
-
-    <%= javascript_include_tag "controllers/hero_animation", defer: true %>
+<%# 
+    <%= javascript_include_tag "controllers/hero_animation", defer: true %> %>

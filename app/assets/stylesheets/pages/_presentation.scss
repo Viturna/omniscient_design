@@ -1,5 +1,12 @@
 @import 'abstracts/variables';
 
+.logo-top{
+    position: absolute;
+    z-index: 99;
+    left: 5vw;
+    top: 45px;
+    width: 150px;
+}
 .top-presentation {
     background-color: $primary-color;
     height: 90vh;
@@ -7,17 +14,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
-.top-presentation .left-container {
+.top-presentation .header-landing{
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 32px;
+    width: 100%;
 }
 
-.top-presentation .right-container {
-    width: 40vw;
-}
 
 .text-top-presentation {
     display: flex;
@@ -26,16 +33,18 @@
 }
 
 .top-presentation h1 {
-    font-size: 48px;
+    font-size: 64px;
+    font-weight: 700;
 }
 
 .top-presentation h1,
 .top-presentation p {
     color: $secondary-color;
+    text-align: center;
 }
 
 .text-top-presentation {
-    width: 35vw;
+    width: 65vw;
 }
 
 .top-presentation-tag {
@@ -52,9 +61,22 @@
 
 .btn-section-top {
     display: flex;
-    gap: 24px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 }
 
+.first-image{
+    position: absolute;
+    left: auto;
+    right: auto;
+    width: 85vw;
+    border-radius: 8px;
+    border: solid 8px var(--secondary-color);
+}
+.image-landing{
+    width: 95%;
+}
 
 // About us
 .about-us h2 {
@@ -73,7 +95,7 @@
     justify-content: end;
     width: 55vw;
     background-color: $secondary-color;
-    padding: 64px 0;
+    padding: 56px 0;
 }
 
 .about-us .container {

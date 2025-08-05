@@ -19,7 +19,7 @@
       <% end %>
     </div>
   </div>
-  <button id="load-more-designers" class="button light" data-type="designers" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>Charger plus de designers</button>
+  <button id="load-more-designers" class="button dark" data-type="designers" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>Charger plus de designers</button>
   <h2 style="margin-top:32px" class="title">Références</h2>
   <div class="search-container" style="margin-top: 64px;">
     <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +37,7 @@
     </div>
   </div>
   <div style="text-align:center; margin-top:20px;">
-    <button id="load-more-oeuvres" data-type="oeuvres" class="button light" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>Charger plus de références</button>
+    <button id="load-more-oeuvres" data-type="oeuvres" class="button dark" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>Charger plus de références</button>
   </div>
   <div class="form-footer">
     <div>

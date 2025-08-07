@@ -81,7 +81,7 @@
   <% end %>>
     <% if oeuvre.validation %>
       <div class="flex-back-btn">
-        <button id="back-btn">
+        <button id="back-btn" data-no-popup>
           <div class="circle-back">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
@@ -89,7 +89,7 @@
           </div>
         </button>
         <%= link_to oeuvres_path do %>
-          <button id="home-btn">
+          <button id="home-btn" data-no-popup>
             <div class="circle-back">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_3261_197)">
@@ -104,14 +104,14 @@
         <div class="flex-right-btn">
           <% if current_user.certified? %>
             <%= link_to edit_oeuvre_path(oeuvre) do%>
-              <div class="circle">
+              <div class="circle" data-no-popup>
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14.9998 8.00054C15.5305 8.00054 15.9998 8.46988 15.9998 9.00054C15.9998 9.55254 15.5518 10.0005 14.9998 10.0005C12.9932 10.0005 4.6665 10.0005 4.6665 10.0005V26.0005H27.3332V14.3339C27.3332 13.7819 27.7812 13.3339 28.3332 13.3339C28.8852 13.3339 29.3332 13.7819 29.3332 14.3339V26.6672C29.3332 27.4952 28.6372 28.0005 27.9998 28.0005H3.99984C3.35984 28.0005 2.6665 27.4952 2.6665 26.6672V9.33388C2.6665 8.69254 3.17317 8.00054 3.99984 8.00054H14.9998ZM12.3185 16.7019C10.9252 20.7059 10.6678 21.3019 10.6678 21.8219C10.6678 22.4099 11.1812 22.6565 11.5038 22.6565C11.8665 22.6565 12.9812 22.2552 16.6092 20.9912L12.3185 16.7019ZM13.5025 15.5165L17.7958 19.8099L29.0065 8.60988C29.2238 8.39254 29.3332 8.10721 29.3332 7.82054C29.3332 7.53654 29.2238 7.25121 29.0065 7.03254C28.2332 6.26188 27.0625 5.08988 26.2878 4.31788C26.0705 4.10054 25.7852 3.99121 25.4998 3.99121C25.2158 3.99121 24.9292 4.10054 24.7105 4.31788L13.5025 15.5165Z" fill="white"/>
                 </svg>
               </div>
             <%end%>
           <%end%>
-          <button id="openPopup" style="border:none; background:none;">
+          <button id="openPopup" style="border:none; background:none;" data-no-popup>
             <div class="circle">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" fill="white"/>
@@ -121,20 +121,20 @@
         </div>
       <% end %>
     <%else%>
-      <div class="circle-back">
+      <div class="circle-back" data-no-popup>
         <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
         </svg>
       </div>
       <% unless !user_signed_in? %>
-        <div class="circle-save">
+        <div class="circle-save" data-no-popup>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" fill="white"/>
           </svg>
         </div>
       <% end %>
     <%end%>
-    <div class="info-card-first-content">
+    <div class="info-card-first-content" data-no-popup>
           <%= link_to search_path(:tab => "frise", :start_year => oeuvre.date_oeuvre, :end_year => oeuvre.date_oeuvre) do %>
         <p class="info-card-dark info-header-show">
           <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -511,6 +511,83 @@
       </div>
     </div>
   </div>
+
+
+  <!-- Modal image -->
+<div id="imageModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="closeImageModal" style="cursor:pointer;font-size:1.5rem;">×</span>
+      </div>
+      <div class="modal-body" style="text-align:center;">
+        <img id="modalImage" src="" alt="Vue agrandie" style="max-width:100%; max-height:100vh;" />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('.header-show');
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const closeButtons = [
+    document.getElementById('closeImageModal'),
+    document.getElementById('closePopup'),
+  ];
+
+  if (header) {
+    header.addEventListener('click', (event) => {
+      const target = event.target;
+
+      // 👉 Log pour debug
+      console.log('Clic sur:', target);
+
+      // ❌ Si clic sur bouton ou enfant de bouton → on ne fait rien
+      if (target.closest('button')) {
+        console.log('Clic sur un bouton — popup annulée');
+        return;
+      }
+
+      // ✅ Récupère l'image de fond
+      const style = getComputedStyle(header);
+      const bg = style.backgroundImage;
+      const urlMatch = bg.match(/url\("(.*)"\)/);
+
+      if (urlMatch && urlMatch[1]) {
+        modalImg.src = urlMatch[1];
+      }
+
+      // ✅ Affiche le modal
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      document.body.classList.add('modal-open');
+    });
+  }
+
+  // 🔒 Fonction de fermeture
+  function closeModal() {
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+  }
+
+  // 🔘 Boutons de fermeture (compatibilité avec les deux IDs)
+  closeButtons.forEach(btn => {
+    if (btn) btn.addEventListener('click', closeModal);
+  });
+
+  // 📤 Clique en dehors de l’image
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+});
+
+
+
+</script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
     // Ouvrir le modal

@@ -4,13 +4,15 @@
 <section class="top-presentation grid-1">
 
   <div class="header-landing">
-    <div class="top-presentation-tag">
-        <%= image_tag "logo-white.svg", alt: "", class: "logo-top" %>
+    <%= link_to root_path do %>
+      <%= image_tag "logo-white.svg", alt: "", class: "logo-top" %>
+    <%end%> 
+    <%= link_to root_path, class: "top-presentation-tag" do %>
       <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 0.5L10.4453 5.93667L16 6.704L11.9573 10.5893L12.944 16.5L8 13.464L3.05533 16.5L4.04267 10.5893L0 6.704L5.55467 5.93667L8 0.5Z" fill="#202020"/>
       </svg>
       <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • <span class="semi-bold">Voir les références ></span>
-    </div>
+    <%end%>
     <div class="text-top-presentation">
       <h1>Le monde du design accessible à tous</h1>
       <p>LE carnet de référence numérique</p>
@@ -25,37 +27,62 @@
   </div>
 </section>
 <section class="about-us">
+  <div class="flex-tags">
+    <div class="tags">
+      <% Domaine.all.each do |domaine| %>
+        <%= link_to search_path(tab: "references", domaine: domaine.id), class: "tag-domaine" do %>
+          <span class="color-dot" style="background-color: <%= domaine.couleur %>;"></span>
+          <%= domaine.domaine %>
+        <%end%>
+      <% end %>
+    </div>
+  </div>
+
   <div class="container">
-     <div class="flex-text">
+     <div class="flex-text padding-container-left">
       <div>
         <p class="tag">Un problème ?</p>
         <h2>Une plateforme née d’un besoin</h2>
       </div>
-      <p>Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués.Le manque <span class="medium black">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span><br><br>
-Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel <span class="medium black">“carnet de références”</span> en <span class="medium black">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
+      <p>Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués. Le manque <span class="medium black">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span><br><br>
+      Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel <span class="medium black">“carnet de références”</span> en <span class="medium black">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
     </div>
     <div class="image-container">
- <%= image_tag "landing/image-2.png", alt: "", class: "image-landing" %>
+    <%= image_tag "landing/image-2.png", alt: "", class: "image-landing" %>
     </div>
   </div>
   <div class="container">
     <div class="image-container">
       <%= image_tag "landing/image-3.png", alt: "", class: "image-landing" %>
     </div>
-    <div class="flex-text">
+    <div class="flex-text padding-container-right">
       <div>
         <p class="tag">Une solution</p>
         <h2>Un carnet de références numériques</h2>
       </div>
       <p>Accède à une base riche de références en constante évolution.  Alimenté directement par la communauté.</p>
+      <div class="flex-stats">
+        <div class="box-stats">
+          <p class="title-stats"><%= Oeuvre.where(validation: true).count %></p>
+          <p class="text-stats">Références</p>
+        </div>
+         <div class="box-stats">
+          <p class="title-stats"><%= Designer.where(validation: true).count %></p>
+          <p class="text-stats">Designers</p>
+        </div>
+         <div class="box-stats">
+          <p class="title-stats">5</p>
+          <p class="text-stats">Modérateurs</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 <section class="citation">
   <p class="citation-text">Omniscient design est une plateforme</p>
-  <p class="citation-name">collaborative</p>
+  <p class="citation-adjectif">collaborative</p>
 </section>
-<section>
+<section class="">
   <h2>Recherche tes références et tes designers en 2 clics</h2>
   <p>Le design mérite un lieu qui le respecte, qui le rende compréhensible, et surtout, qui le rende accessible.</p>
 

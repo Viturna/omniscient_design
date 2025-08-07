@@ -5,11 +5,11 @@
     z-index: 99;
     left: 5vw;
     top: 45px;
-    width: 150px;
+    width: 180px;
 }
 .top-presentation {
     background-color: $primary-color;
-    height: 90vh;
+    height: 95dvh;
     min-height: 700px;
     display: flex;
     align-items: center;
@@ -44,7 +44,7 @@
 }
 
 .text-top-presentation {
-    width: 65vw;
+    width: 55vw;
 }
 
 .top-presentation-tag {
@@ -57,6 +57,10 @@
     padding: 8px 16px;
     width: fit-content;
     font-size: 16px;
+    color: $primary-color;
+    &:hover{
+        opacity: 0.8;
+    }
 }
 
 .btn-section-top {
@@ -68,11 +72,12 @@
 
 .first-image{
     position: absolute;
-    left: auto;
-    right: auto;
     width: 85vw;
+    left: 50%;
+    top: 630px;
+    transform: translateX(-50%);
     border-radius: 8px;
-    border: solid 8px var(--secondary-color);
+    border: solid 8px $secondary-color;
 }
 .image-landing{
     width: 95%;
@@ -84,7 +89,9 @@
 }
 
 .about-us {
-    padding: 128px 0;
+    width: 100%;
+    padding-top: 656px;
+    padding-bottom: 64px;
     display: flex;
     flex-direction: column;
     gap: 96px;
@@ -97,23 +104,27 @@
     background-color: $secondary-color;
     padding: 56px 0;
 }
-
+.image-container:nth-child(1){
+        justify-content: start;
+}
 .about-us .container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 64px;
     width: 100%;
 }
-
-.about-us .container:nth-child(1) {
-    justify-content: end
+.padding-container-left{
+    padding-left: 5vw;
 }
-
+.padding-container-right{
+    padding-right: 5vw;
+}
 .flex-text {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    width: 30vw;
+    width: 32vw;
 
     .tag {
         text-transform: uppercase;
@@ -123,6 +134,7 @@
 
     h2 {
         margin-top: 8px;
+        width: 25vw;
     }
 }
 
@@ -134,20 +146,83 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: 32px;
+    gap: 56px;
 
     .citation-text {
-        width: 55vw;
-        font-size: 20px;
+        font-size: 32px;
         line-height: 180%;
         font-weight: 500;
         text-align: center;
         color: $secondary-color;
     }
 
-    .citation-name {
-        font-style: italic;
+    .citation-adjectif {
+        font-size: 32px;
         color: $secondary-color;
+        font-weight: 600;
     }
+}
+
+// Flex tags 
+
+.flex-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+}
+
+.tag-domaine {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: $secondary-color;
+  border-radius: 30px;
+  padding: 12px 22px;
+  font-size: 18px;
+  font-weight: 400;
+  color: $primary-color;
+
+  &:hover{
+    color: $secondary-color;
+    background-color: $primary-color;
+  }
+}
+
+.color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+
+// Stats
+
+.flex-stats{
+    display: flex;
+    gap: 50px;
+}
+
+.box-stats{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.title-stats{
+    font-size: 32px;
+    font-weight: 600;
+}
+.text-stats{
+     font-size: 20px;
 }

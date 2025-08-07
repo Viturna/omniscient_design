@@ -111,6 +111,7 @@
 // filtres
 .filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
@@ -530,9 +531,6 @@
 
 
   // filtres
-  .filters {
-    flex-wrap: wrap;
-  }
 
   .filter {
     width: 30%;

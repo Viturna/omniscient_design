@@ -79,7 +79,8 @@
           .then(response => response.text())
           .then(html => {
             if (html.trim() !== "") {
-              document.getElementById(`${type}-list`).insertAdjacentHTML("beforeend", html);
+              document.getElementById(`${type}-load-more`).insertAdjacentHTML("beforeend", html);
+
               offsets[type] += 10;
             } else {
               this.disabled = true;

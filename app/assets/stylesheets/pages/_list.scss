@@ -105,6 +105,7 @@
   .flex-card-list {
     align-items: center;
     justify-content: center;
+    gap: 4px !important;
   }
 
   .list-edit-name {
@@ -181,4 +182,29 @@ body.dark-mode {
   .form-footer {
     padding: 16px 20px;
   }
+}
+
+
+
+@media screen and (max-width: 1280px) {
+  .bottom-list {
+  width: calc(100vw - 30vw - 8vw);
+  padding-right: 8vw;
+}
+  
+}
+@media screen and (max-width: 768px) {
+  .bottom-list {
+  width: 100vw;
+  padding-right: 8vw;
+    bottom: 70px;
+    .delete{
+      margin-top: 0;
+    }
+    #openPopupAdd{
+      width: 40vw
+    }
+}
+
+  
 }

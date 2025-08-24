@@ -1,6 +1,5 @@
 //= link_tree ../images
-//= link_directory ../../javascript .js
-//= link_directory ../../../vendor/javascript .js
+//= link_directory ../../javascripts .js
 //= link rails-ujs.js
 //= link jquery.min.js
 //= link favicon/site.webmanifest

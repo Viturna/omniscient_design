@@ -6,3 +6,4 @@
 //= link favicon/site.webmanifest
 //= link_tree ../builds
 //= link application.js
+//= link controllers/application.js

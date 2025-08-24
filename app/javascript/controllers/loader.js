@@ -1,9 +1,15 @@
-$(document).ready(function() { // Changement de turbolinks:load à turbo:load
-  document.getElementById("loading").style.display = "none"; // Masquer le loader
-  document.getElementById("content").style.display = "block"; // Afficher le contenu
-});
+document.addEventListener('turbo:before-render', () => {
+  const loading = document.querySelector('#loading')
+  const content = document.querySelector('#content')
 
-window.addEventListener('load', function() {
-  document.getElementById("loading").style.display = "none"; // Masquer le loader
-  document.getElementById("content").style.display = "block"; // Afficher le contenu
-});
+  if (loading) loading.style.display = 'block'
+  if (content) content.style.display = 'none'
+})
+
+document.addEventListener('turbo:load', () => {
+  const loading = document.querySelector('#loading')
+  const content = document.querySelector('#content')
+
+  if (loading) loading.style.display = 'none'
+  if (content) content.style.display = 'block'
+})

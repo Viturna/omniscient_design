@@ -49,25 +49,8 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> <!-- Ajout du defer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" 
-      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" 
-      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" 
-      integrity="sha384-JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk" 
-      crossorigin="anonymous" defer></script> <!-- Ajout du defer -->
 
-    <!-- JavaScript Rails -->
-    <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "controllers/loader", defer: true %>
-    <%= javascript_include_tag "controllers/progressBar", defer: true %>
 
-    <!-- Cookie Consent -->
-    <%= javascript_include_tag "controllers/cookies", defer: true %>
     <% if Rails.env.production? %>
     <!-- Google Analytics (Consent-based) -->
     <script type="text/plain" data-cookie-consent="tracking" async src="https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3"></script>
@@ -124,7 +107,7 @@
 <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
 <main class="<%= 'main-show' if main_show %>">
 
-      <div id="loading">
+     <div id="loading" data-turbo-permanent>
         <div class="loader-bg">      
           <video autoplay loop muted>
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">
@@ -136,5 +119,8 @@
         <%= yield %>
       </div>
     </main>
+    <!-- JavaScript Rails -->
+    <%= javascript_importmap_tags %>
   </body>
+
 </html>

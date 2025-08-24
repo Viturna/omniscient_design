@@ -18,6 +18,8 @@ module OmniscientDesign
     config.i18n.default_locale = :fr
     config.exceptions_app = self.routes
 
+    config.assets.paths << Rails.root.join("app/assets/stylesheets")
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

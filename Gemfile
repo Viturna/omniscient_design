@@ -120,4 +120,4 @@ gem 'groupdate'
 
 
 # CSS
-gem "cssbundling-rails"
+gem "tailwindcss-rails"

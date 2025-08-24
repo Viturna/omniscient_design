@@ -5,4 +5,3 @@
 //= link jquery.min.js
 //= link favicon/site.webmanifest
 //= link_tree ../builds
-//= link_directory ../javascript .js

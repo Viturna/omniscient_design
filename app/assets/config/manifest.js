@@ -4,4 +4,4 @@
 //= link rails-ujs.js
 //= link jquery.min.js
 //= link favicon/site.webmanifest
-
+//= link ../../javascript/application.js

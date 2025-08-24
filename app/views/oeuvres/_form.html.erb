@@ -92,6 +92,25 @@
       <%= form.label :impact_et_message, "Impact et message (Min. 200 caractères)" %>
       <%= form.text_area :impact_et_message, placeholder: "Ex : La petite fille au ballon est plus qu'une simple œuvre d'art ; elle est devenue un symbole de l'espoir et de la fragilité. L'image a été largement reproduite et interprétée, souvent vue comme un symbole de l'espoir dans des situations désespérées. En 2018, l'œuvre a été vendue aux enchères et a été partiellement détruite par un mécanisme caché, ce qui a ajouté une dimension supplémentaire de réflexion sur la consommation de l'art et la valeur de l'œuvre dans un monde axé sur le marché de l'art. Cet événement a renforcé le message de Banksy sur le contraste entre l'art, sa valeur perçue et sa signification réelle. La petite fille au ballon incite à la réflexion sur la nature des rêves, des aspirations et des pertes dans un monde souvent complexe et imprévisible." %>
     </div>
+    <div>
+  <%= form.label :source, "Source(s)" %>
+  <div id="sources-container">
+    <% (@oeuvre.source || "").split("\n").each do |src| %>
+      <div class="source-input">
+        <%= form.text_field :source, value: src, name: "oeuvre[source][]" , placeholder: "Ex: https://example.com" %>
+        <button type="button" class="remove-source button small">Supprimer</button>
+      </div>
+    <% end %>
+    <% if (@oeuvre.source || "").empty? %>
+      <div class="source-input">
+        <%= form.text_field :source, name: "oeuvre[source][]", placeholder: "Ex: https://example.com" %>
+        <button type="button" class="remove-source button small">Supprimer</button>
+      </div>
+    <% end %>
+  </div>
+  <button type="button" id="add-source" class="button small">Ajouter un lien</button>
+</div>
+
   </div>
   <div class="flex-btn-add">
     <button type="button" class="prev-step button large">Précédent</button>
@@ -218,4 +237,28 @@
   });
 });
 
+</script><script>
+document.addEventListener("DOMContentLoaded", function() {
+  const container = document.getElementById("sources-container");
+  const addButton = document.getElementById("add-source");
+
+  addButton.addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.className = "source-input";
+    div.innerHTML = `
+      <input type="text" name="oeuvre[source][]" placeholder="Ex: https://example.com" />
+      <button type="button" class="remove-source button small">Supprimer</button>
+    `;
+    container.appendChild(div);
+    attachRemoveListener(div.querySelector(".remove-source"));
+  });
+
+  function attachRemoveListener(button) {
+    button.addEventListener("click", () => {
+      button.parentNode.remove();
+    });
+  }
+
+  document.querySelectorAll(".remove-source").forEach(btn => attachRemoveListener(btn));
+});
 </script>

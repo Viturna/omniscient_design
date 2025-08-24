@@ -30,8 +30,7 @@
   font-weight: 500;
   font-size: 22px;
   border-radius: 10px;
-  padding: 90px 150px;
-  width: 5vw;
+  padding: 90px 125px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,6 +48,9 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 
   &:hover {
     background-color: #3C3C3C;

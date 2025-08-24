@@ -22,50 +22,7 @@
   </div>
 </section>
 <section class="grid-1">
-  <div class="flex-profils">
-    <h2>Thème</h2>
-    <div class="theme-switcher">
-      <select id="theme-select">
-        <option value="system">Système</option>
-        <option value="light">Clair</option>
-        <option value="dark">Sombre</option>
-      </select>
-    </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-  const themeSelect = document.getElementById("theme-select");
-
-  function setTheme(theme) {
-    if (theme === "system") {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
-    } else {
-      document.documentElement.setAttribute("data-theme", theme);
-    }
-  }
-
-  // Load theme from localStorage
-  const savedTheme = localStorage.getItem("theme") || "system";
-  themeSelect.value = savedTheme;
-  setTheme(savedTheme);
-
-  // Listen to user selection
-  themeSelect.addEventListener("change", () => {
-    const selected = themeSelect.value;
-    localStorage.setItem("theme", selected);
-    setTheme(selected);
-  });
-
-  // If system is selected, listen to system changes
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-    if (localStorage.getItem("theme") === "system") {
-      setTheme("system");
-    }
-  });
-});
-
-    </script>
+    <div class="flex-profils">
     <h2>Général</h2>
     <%= link_to edit_user_registration_path, class: "nav-link-profil" do %>
       <div class="nav-link-inner">
@@ -151,6 +108,61 @@
         <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
       </svg>
     <%end%>
+    <%= link_to kit_presse_path, class: "nav-link-profil" do %>
+      <div class="nav-link-inner">
+        <svg width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.85714 15.9607V13.6806H9.14286V15.9607H6.85714ZM0 4.5602C0 3.35076 0.481631 2.19085 1.33894 1.33565C2.19625 0.480448 3.35901 0 4.57143 0H20.5714C21.7838 0 22.9466 0.480448 23.8039 1.33565C24.6612 2.19085 25.1429 3.35076 25.1429 4.5602V19.3808C25.1429 19.6832 25.2633 19.9732 25.4776 20.187C25.6919 20.4008 25.9826 20.5209 26.2857 20.5209C26.5888 20.5209 26.8795 20.4008 27.0938 20.187C27.3082 19.9732 27.4286 19.6832 27.4286 19.3808V4.5602C28.641 4.5602 29.8037 5.04064 30.6611 5.89585C31.5184 6.75105 32 7.91095 32 9.12039V19.3808C32 20.8926 31.398 22.3425 30.3263 23.4115C29.2547 24.4805 27.8012 25.0811 26.2857 25.0811H5.71429C4.19876 25.0811 2.74531 24.4805 1.67368 23.4115C0.602039 22.3425 0 20.8926 0 19.3808V4.5602ZM5.71429 6.84029C5.41118 6.84029 5.12049 6.96041 4.90616 7.17421C4.69184 7.38801 4.57143 7.67798 4.57143 7.98034C4.57143 8.2827 4.69184 8.57268 4.90616 8.78648C5.12049 9.00028 5.41118 9.12039 5.71429 9.12039H19.4286C19.7317 9.12039 20.0224 9.00028 20.2367 8.78648C20.451 8.57268 20.5714 8.2827 20.5714 7.98034C20.5714 7.67798 20.451 7.38801 20.2367 7.17421C20.0224 6.96041 19.7317 6.84029 19.4286 6.84029H5.71429ZM5.71429 11.4005C5.41118 11.4005 5.12049 11.5206 4.90616 11.7344C4.69184 11.9482 4.57143 12.2382 4.57143 12.5405V17.1007C4.57143 17.4031 4.69184 17.6931 4.90616 17.9069C5.12049 18.1207 5.41118 18.2408 5.71429 18.2408H10.2857C10.5888 18.2408 10.8795 18.1207 11.0938 17.9069C11.3082 17.6931 11.4286 17.4031 11.4286 17.1007V12.5405C11.4286 12.2382 11.3082 11.9482 11.0938 11.7344C10.8795 11.5206 10.5888 11.4005 10.2857 11.4005H5.71429ZM14.8571 11.4005C14.554 11.4005 14.2633 11.5206 14.049 11.7344C13.8347 11.9482 13.7143 12.2382 13.7143 12.5405C13.7143 12.8429 13.8347 13.1329 14.049 13.3467C14.2633 13.5605 14.554 13.6806 14.8571 13.6806H19.4286C19.7317 13.6806 20.0224 13.5605 20.2367 13.3467C20.451 13.1329 20.5714 12.8429 20.5714 12.5405C20.5714 12.2382 20.451 11.9482 20.2367 11.7344C20.0224 11.5206 19.7317 11.4005 19.4286 11.4005H14.8571ZM14.8571 15.9607C14.554 15.9607 14.2633 16.0808 14.049 16.2946C13.8347 16.5084 13.7143 16.7984 13.7143 17.1007C13.7143 17.4031 13.8347 17.6931 14.049 17.9069C14.2633 18.1207 14.554 18.2408 14.8571 18.2408H19.4286C19.7317 18.2408 20.0224 18.1207 20.2367 17.9069C20.451 17.6931 20.5714 17.4031 20.5714 17.1007C20.5714 16.7984 20.451 16.5084 20.2367 16.2946C20.0224 16.0808 19.7317 15.9607 19.4286 15.9607H14.8571Z" fill="#202020"/>
+        </svg>
+        Kit de presse
+      </div>
+      <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
+      </svg>
+    <%end%>
+
+    <h2>Thème</h2>
+    <div class="theme-switcher">
+      <select id="theme-select">
+        <option value="system">Système</option>
+        <option value="light">Clair</option>
+        <option value="dark">Sombre</option>
+      </select>
+    </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeSelect = document.getElementById("theme-select");
+
+      function setTheme(theme) {
+        if (theme === "system") {
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+        } else {
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+      }
+
+      // Load theme from localStorage
+      const savedTheme = localStorage.getItem("theme") || "system";
+      themeSelect.value = savedTheme;
+      setTheme(savedTheme);
+
+      // Listen to user selection
+      themeSelect.addEventListener("change", () => {
+        const selected = themeSelect.value;
+        localStorage.setItem("theme", selected);
+        setTheme(selected);
+      });
+
+
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+        if (localStorage.getItem("theme") === "system") {
+          setTheme("system");
+        }
+      });
+    });
+
+    </script>
     <h2>Support</h2>
     <%= link_to bug_reports_new_path, class: "nav-link-profil" do %>
       <div class="nav-link-inner">
@@ -178,6 +190,7 @@
         <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
       </svg>
     </a>
+    
     <% if current_user.admin? || current_user.certified? %>
       <h2>Validation</h2>
       <%= link_to validation_path, class: "nav-link-profil" do %>

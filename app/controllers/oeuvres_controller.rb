@@ -254,7 +254,7 @@ class OeuvresController < ApplicationController
     params.require(:oeuvre).permit(
       :nom_oeuvre, :date_oeuvre, :presentation_generale, :contexte_historique,
       :materiaux_et_innovations_techniques, :concept_et_inspiration,
-      :dimension_esthetique, :impact_et_message, :image, :domaine_id, :recaptcha_token, designer_ids: [], concept_ids: [], notion_ids: []
+      :dimension_esthetique, :impact_et_message, :image, :domaine_id, :recaptcha_token, source: [], designer_ids: [], concept_ids: [], notion_ids: []
     )
   end
 end

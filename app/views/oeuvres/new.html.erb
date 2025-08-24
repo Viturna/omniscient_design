@@ -47,7 +47,7 @@
           
           // Vérifier si le champ est vide
           if (nomOeuvre.trim() === "") {
-            showError("Veuillez entrer un nom d'œuvre.");  // Afficher le message d'erreur
+            showError("Veuillez entrer un nom de référence.");  // Afficher le message d'erreur
             return;  // Ne pas aller à l'étape suivante si le champ est vide
           }
 
@@ -61,7 +61,7 @@
                 if (data.edit_path) {
                   window.location.href = data.edit_path; // Redirige vers l'édition si pas validé
                 } else {
-                  showError("Cette œuvre existe déjà et est validée.");
+                  showError("Cette référence existe déjà et est validée.");
                 }
               } else {
                 currentStep++;

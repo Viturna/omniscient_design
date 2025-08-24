@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   color: #FFF;
-  gap: 48px;
+  gap: 32px;
 }
 
 .img-profil {
@@ -32,7 +32,8 @@
 }
 
 .flex-certified {
-  display: inline-flex;
+  display: inline-flex !important;
+  flex-direction: row !important;
   align-items: center;
   margin-top: 8px;
   gap: 8px
@@ -86,7 +87,7 @@
 
   .top-profil {
     padding: 64px 5vw;
-    height: 260px;
+    height: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -133,7 +134,7 @@
 
   .top-profil {
     padding: 64px 5vw;
-    height: 240px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;

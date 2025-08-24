@@ -10,8 +10,7 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require_self
+
  */
 
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -26,7 +25,6 @@
 
 @import 'abstracts/variables';
 
-@import 'base/reset';
 @import 'base/font';
 
 @import 'components/alert';
@@ -50,10 +48,11 @@
 @import 'pages/log';
 @import 'pages/notification';
 @import 'pages/parrainage';
-@import 'pages/presentation';
 @import 'pages/profil';
 @import 'pages/reference';
 @import 'pages/searchpage';
+
+
 
 
 html {
@@ -157,10 +156,6 @@ main {
 
   .subtitle {
     width: fit-content;
-  }
-
-  .grid {
-    padding: 48px 5vw;
   }
 
   main {

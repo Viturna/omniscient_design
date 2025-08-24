@@ -1,6 +1,6 @@
 @import 'abstracts/variables';
 
-.img-card {
+.bg-img-card {
   position: absolute;
   top: 0;
   left: 0;
@@ -12,12 +12,42 @@
   transform: rotate(-6deg);
   z-index: -1;
   object-fit: cover;
+  overflow: hidden;
+}
+
+
+.bg-img-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px);
+  transform: scale(1.1);
+  z-index: 0;
+}
+
+.bg-img-card > * {
+  position: relative;
+  z-index: 1;
+}
+.img-card{
+  max-width: 100%;
+  max-height:100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .card {
-
   padding-top: 200px;
-  height: calc(100dvh - 200px);
+  height: 97dvh;
   position: relative;
   width: 50vw;
   scroll-snap-align: start;
@@ -35,18 +65,19 @@
   position: relative;
 }
 
+
 .flex-info-card {
   display: flex;
   align-items: start;
   justify-content: space-between;
   z-index: 99;
-  top: 24px;
+  top: 0px;
   padding: 24px 16px;
 }
 
 .flex-info-card .info-card-dark {
   scale: 0.9;
-  height: 30px;
+  height: 55px;
   width: fit-content;
 }
 
@@ -103,7 +134,6 @@
   .card {
     width: 60vw;
     padding-top: 180px;
-    height: calc(100dvh - 180px);
   }
 
   .bg-card {
@@ -134,7 +164,7 @@
 }
 
 @media screen and (min-width:601px) and (max-width: 768px) {
-  .img-card {
+  .bg-img-card {
     transform: rotate(-4deg);
   }
 
@@ -145,7 +175,6 @@
   .card {
     width: 80vw;
     padding-top: 50px;
-    height: calc(100dvh - 50px);
   }
 
   .bg-card {
@@ -198,7 +227,7 @@
     padding: 16px 8px;
   }
 
-  .img-card {
+  .bg-img-card {
     transform: rotate(0deg);
   }
 
@@ -208,7 +237,6 @@
 
   .card {
     padding-top: 10px;
-    height: calc(100dvh - 10px);
     width: 90vw;
   }
 
@@ -261,7 +289,7 @@
     padding: 16px 8px;
   }
 
-  .img-card {
+  .bg-img-card {
     transform: rotate(0deg)
   }
 
@@ -271,7 +299,6 @@
 
   .card {
     padding-top: 0px;
-    height: 100dvh;
     width: 90vw;
   }
 

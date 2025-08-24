@@ -1,100 +1,153 @@
-<% content_for :title, "Découvrez notre site - Omniscient Design" %>
-<% content_for :description, "Omniscient Design est le plus grand et le meilleur carnet de référence numérique de tous les temps ! Découvre les designs du monde entier." %>
+<!-- SECTION HERO -->
+<section class="w-full bg-[#202020]">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center px-6 lg:px-12 py-16 lg:py-24">
+    
+    <!-- Colonne gauche -->
+    <div class="flex flex-col max-w-xl space-y-10">
+      <!-- Logo -->
+      <%= link_to root_path do %>
+        <%= image_tag "logo-white.svg", alt: "", class: "h-9 w-auto" %>
+      <%end%> 
 
-<section class="top-presentation grid-1">
+      <!-- Badge références -->
+      <%= link_to root_path, class: "inline-flex items-center gap-2 bg-white rounded-2xl px-4 py-2 text-sm font-medium shadow" do %>
+        <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 0.5L10.4453 5.93667L16 6.704L11.9573 10.5893L12.944 16.5L8 13.464L3.05533 16.5L4.04267 10.5893L0 6.704L5.55467 5.93667L8 0.5Z" fill="#202020"/>
+        </svg>
+        <span>
+          <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • 
+          <span class="font-semibold">Voir les références ></span>
+        </span>
+      <%end%>
 
-  <div class="header-landing">
-    <%= link_to root_path do %>
-      <%= image_tag "logo-white.svg", alt: "", class: "logo-top" %>
-    <%end%> 
-    <%= link_to root_path, class: "top-presentation-tag" do %>
-      <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 0.5L10.4453 5.93667L16 6.704L11.9573 10.5893L12.944 16.5L8 13.464L3.05533 16.5L4.04267 10.5893L0 6.704L5.55467 5.93667L8 0.5Z" fill="#202020"/>
-      </svg>
-      <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • <span class="semi-bold">Voir les références ></span>
-    <%end%>
-    <div class="text-top-presentation">
-      <h1>Le monde du design accessible à tous</h1>
-      <p>LE carnet de référence numérique</p>
-    </div>
-    <div class="btn-section-top">
-      <%= link_to "Démarrer maintenant", new_user_registration_path, class: "button"%>
-      <p>C’est gratuit</p>
-    </div>
-  </div>
-  <div class="right-container">
-     <%= image_tag "landing/image-1.jpg", alt: "", class: "first-image" %>
-  </div>
-</section>
-<section class="about-us">
-  <div class="flex-tags">
-    <div class="tags">
-      <% Domaine.all.each do |domaine| %>
-        <%= link_to search_path(tab: "references", domaine: domaine.id), class: "tag-domaine" do %>
-          <span class="color-dot" style="background-color: <%= domaine.couleur %>;"></span>
-          <%= domaine.domaine %>
-        <%end%>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="container">
-     <div class="flex-text padding-container-left">
-      <div>
-        <p class="tag">Un problème ?</p>
-        <h2>Une plateforme née d’un besoin</h2>
+      <!-- Titre -->
+      <div class="text-center lg:text-left space-y-4">
+        <h1 class="text-white font-bold text-[56px] leading-[1.1]">
+          Le monde du design<br class="hidden lg:block"/> accessible à tous
+        </h1>
+        <p class="text-white/80 text-lg tracking-wide uppercase">Le carnet de référence numérique</p>
       </div>
-      <p>Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués. Le manque <span class="medium black">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span><br><br>
-      Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel <span class="medium black">“carnet de références”</span> en <span class="medium black">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
-    </div>
-    <div class="image-container">
-    <%= image_tag "landing/image-2.png", alt: "", class: "image-landing" %>
-    </div>
-  </div>
-  <div class="container">
-    <div class="image-container">
-      <%= image_tag "landing/image-3.png", alt: "", class: "image-landing" %>
-    </div>
-    <div class="flex-text padding-container-right">
-      <div>
-        <p class="tag">Une solution</p>
-        <h2>Un carnet de références numériques</h2>
-      </div>
-      <p>Accède à une base riche de références en constante évolution.  Alimenté directement par la communauté.</p>
-      <div class="flex-stats">
-        <div class="box-stats">
-          <p class="title-stats"><%= Oeuvre.where(validation: true).count %></p>
-          <p class="text-stats">Références</p>
-        </div>
-         <div class="box-stats">
-          <p class="title-stats"><%= Designer.where(validation: true).count %></p>
-          <p class="text-stats">Designers</p>
-        </div>
-         <div class="box-stats">
-          <p class="title-stats">5</p>
-          <p class="text-stats">Modérateurs</p>
-        </div>
+
+      <!-- CTA -->
+      <div class="flex flex-col items-center lg:items-start gap-2">
+        <%= link_to "Démarrer maintenant", new_user_registration_path, 
+          class: "bg-white text-[#202020] px-8 py-3 rounded-2xl font-semibold text-lg shadow hover:bg-gray-100 transition" %>
+        <p class="text-white/70 text-sm">C’est gratuit</p>
       </div>
     </div>
-  </div>
-</section>
-<section class="citation">
-  <p class="citation-text">Omniscient design est une plateforme</p>
-  <p class="citation-adjectif">collaborative</p>
-</section>
-<section class="">
-  <h2>Recherche tes références et tes designers en 2 clics</h2>
-  <p>Le design mérite un lieu qui le respecte, qui le rende compréhensible, et surtout, qui le rende accessible.</p>
 
-</section>
-<section>
-  <div class="container">
-    <%= image_tag "", alt: "" %>
-    <div class="flex-text">
-      <h2>Une ressource vivante, au service de tous</h2>
-      <p>Omniscient Design n’est pas une simple bibliothèque d’images. C’est un outil pédagogique, exploratoire, et collaboratif, pensé autant pour les étudiants que pour les professionnels ou les amateurs passionnés. <br><br>Chaque fiche, chaque créations, chaque designer référencé est une entrée vers une histoire, un contexte, un apprentissage possible.</p>
+    <!-- Colonne droite -->
+    <div class="mt-12 lg:mt-0 lg:ml-16">
+      <%= image_tag "landing/image-1.jpg", alt: "", class: "rounded-2xl shadow-2xl max-w-sm lg:max-w-md" %>
     </div>
   </div>
 </section>
-<%# 
-    <%= javascript_include_tag "controllers/hero_animation", defer: true %> %>
+
+
+<!-- SECTION TAGS -->
+<section class="w-full py-12 px-6 lg:px-12">
+  <div class="flex flex-wrap justify-center gap-3">
+    <% Domaine.all.each do |domaine| %>
+      <%= link_to search_path(tab: "references", domaine: domaine.id), 
+          class: "flex items-center gap-2 px-5 py-2 bg-gray-100 rounded-full text-sm font-medium hover:bg-gray-200 transition" do %>
+        <span class="w-3 h-3 rounded-full" style="background-color: <%= domaine.couleur %>;"></span>
+        <%= domaine.domaine %>
+      <%end%>
+    <% end %>
+  </div>
+</section>
+
+
+<!-- SECTION BESOIN -->
+<section class="w-full py-24 px-6 lg:px-12">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+    <!-- Texte -->
+    <div class="lg:w-1/2 space-y-6">
+      <p class="text-sm uppercase tracking-wide text-gray-500">Un problème ?</p>
+      <h2 class="text-4xl font-bold text-[#202020]">Une plateforme née d’un besoin</h2>
+      <p class="text-gray-700 leading-relaxed text-lg">
+        Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués. 
+        Le manque <span class="font-semibold text-black">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span>
+        <br><br>
+        Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel 
+        <span class="font-semibold text-black">“carnet de références”</span> en 
+        <span class="font-semibold text-black">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
+      </p>
+    </div>
+    <!-- Image -->
+    <div class="lg:w-1/2">
+      <%= image_tag "landing/image-2.png", alt: "", class: "rounded-2xl shadow-lg w-full" %>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION SOLUTION -->
+<section class="w-full bg-gray-50 py-24 px-6 lg:px-12">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+    <!-- Image -->
+    <div class="lg:w-1/2">
+      <%= image_tag "landing/image-3.png", alt: "", class: "rounded-2xl shadow-lg w-full" %>
+    </div>
+    <!-- Texte -->
+    <div class="lg:w-1/2 space-y-6">
+      <p class="text-sm uppercase tracking-wide text-gray-500">Une solution</p>
+      <h2 class="text-4xl font-bold text-[#202020]">Un carnet de références numériques</h2>
+      <p class="text-gray-700 leading-relaxed text-lg">
+        Accède à une base riche de références en constante évolution. Alimenté directement par la communauté.
+      </p>
+      <div class="flex gap-12">
+        <div>
+          <p class="text-4xl font-bold text-[#202020]"><%= Oeuvre.where(validation: true).count %></p>
+          <p class="text-gray-600 text-sm">Références</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold text-[#202020]"><%= Designer.where(validation: true).count %></p>
+          <p class="text-gray-600 text-sm">Designers</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold text-[#202020]">5</p>
+          <p class="text-gray-600 text-sm">Modérateurs</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION CITATION -->
+<section class="bg-[#202020] text-center py-32">
+  <p class="text-2xl text-gray-300">Omniscient design est une plateforme</p>
+  <p class="text-6xl font-bold text-white mt-6">Collaborative</p>
+</section>
+
+
+<!-- SECTION RECHERCHE -->
+<section class="w-full py-24 px-6 lg:px-12 text-center space-y-10">
+  <h2 class="text-4xl font-bold text-[#202020]">Recherche tes références et tes designers en 2 clics</h2>
+  <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+    Le design mérite un lieu qui le respecte, qui le rende compréhensible, et surtout, qui le rende accessible.
+  </p>
+  <%= image_tag "landing/image-4.png", alt: "", class: "rounded-2xl shadow-lg mx-auto max-w-5xl" %>
+</section>
+
+
+<!-- SECTION VIVANTE -->
+<section class="w-full py-24 px-6 lg:px-12">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+    <!-- Image -->
+    <div class="lg:w-1/2">
+      <%= image_tag "landing/image-5.png", alt: "", class: "rounded-2xl shadow-lg w-full" %>
+    </div>
+    <!-- Texte -->
+    <div class="lg:w-1/2 space-y-6">
+      <h2 class="text-4xl font-bold text-[#202020]">Une ressource vivante, au service de tous</h2>
+      <p class="text-lg text-gray-700 leading-relaxed">
+        Omniscient Design n’est pas une simple bibliothèque d’images. 
+        C’est un outil pédagogique, exploratoire, et collaboratif, pensé autant pour les étudiants que pour les professionnels ou les amateurs passionnés. 
+        <br><br>
+        Chaque fiche, chaque création, chaque designer référencé est une entrée vers une histoire, un contexte, un apprentissage possible.
+      </p>
+    </div>
+  </div>
+</section>

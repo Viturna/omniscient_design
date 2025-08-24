@@ -8,26 +8,15 @@
   z-index: 9999;
   height: 100dvh;
   width: calc(100vw - 350px);
-
+  user-select: none;
 }
 
-@media screen and (min-width:769px) and (max-width: 1280px) {
-  #loading {
-    width: 70vw;
-  }
-}
-
-@media screen and (min-width:501px) and (max-width: 768px) {
+@media screen and (min-width:0px) and (max-width: 768px) {
   #loading {
     width: 100vw;
-    height: calc(100dvh - 90px);
   }
-}
-
-@media screen and (min-width:0px) and (max-width: 500px) {
-  #loading {
-    width: 100vw;
-    height: calc(100dvh - 80px);
+  #loading video {
+    width: 30vw;
   }
 }
 
@@ -38,7 +27,7 @@
 }
 
 #loading video {
-  width: 250px;
+  width: 20vw;
   aspect-ratio: 1/1;
 }
 

@@ -82,7 +82,7 @@ input[type=password] {
   border: none;
   stroke: none;
   padding: 0 25px;
-  width: calc(100% - 56px);
+  width: 100%;
   height: 70px;
   border-radius: 5px;
   border: 2px solid #E9E9E9;
@@ -131,7 +131,7 @@ textarea {
   border: none;
   stroke: none;
   padding: 25px;
-  width: calc(100% - 56px);
+  width: 100%;
   height: 120px;
   resize: none;
   border: 2px solid #E9E9E9;
@@ -152,17 +152,6 @@ textarea {
   color: $secondary-color;
 }
 
-@media screen and (min-width:769px) and (max-width: 1024px) {
-
-  select {
-    width: calc(50vw + 30px);
-  }
-
-  textarea {
-    width: 50vw;
-  }
-}
-
 @media screen and (min-width:601px) and (max-width: 768px) {
 
   input[type=text],
@@ -170,7 +159,6 @@ textarea {
   input[type=email],
   input[type=password] {
     padding: 0 15px;
-    width: calc(100% - 36px);
 
     &::placeholder {
       font-size: 15px;
@@ -187,8 +175,7 @@ textarea {
   }
 
   textarea {
-    padding: 0 15px;
-    width: calc(100% - 36px);
+    padding: 15px;
     height: 120px;
     font-size: 15px;
 
@@ -204,8 +191,7 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    padding: 0 15px;
-    width: calc(100% - 36px);
+    padding: 15px;
     height: 60px;
     font-size: 15px;
 
@@ -226,8 +212,7 @@ textarea {
   }
 
   textarea {
-    padding: 0 15px;
-    width: calc(100% - 36px);
+    padding: 15px;
     height: 120px;
     font-size: 15px;
 
@@ -243,8 +228,7 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    padding: 0 15px;
-    width: calc(100% - 36px);
+    padding: 15px;
     height: 55px;
     font-size: 14px;
 
@@ -265,8 +249,7 @@ textarea {
   }
 
   textarea {
-    padding: 0 15px;
-    width: calc(100% - 36px);
+    padding: 15px;
     height: 120px;
     font-size: 14px;
 
@@ -311,6 +294,7 @@ select {
 
 textarea {
   background-color: $secondary-color;
+  color: $text-color;
 }
 
 

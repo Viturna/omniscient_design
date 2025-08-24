@@ -3,8 +3,8 @@
   <div class="header-desktop">
     <div class="first-content-header">
       <%= link_to(root_path, class: "logo-header") do %>
-        <%= image_tag "logo-beta.svg", alt: "", class: "home-index logo-light" %>
-        <%= image_tag "logo-beta-blanc.svg", alt: "", class: "home-index logo-dark" %>
+        <%= image_tag "logo.svg", alt: "", class: "home-index logo-light" %>
+        <%= image_tag "small_logo_white.svg", alt: "", class: "home-index logo-dark" %>
         <p class="name-header">Omniscient <br>Design</p>
       <% end %>
 
@@ -80,9 +80,9 @@
 
         <div class="flex-btn-login">
           <% if user_signed_in? %>
-            <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo_method: :delete}, class: "button button-login dark"%>
+            <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo_method: :delete}, class: "button w-full dark"%>
           <% else %>
-            <%= link_to "Se connecter", new_user_session_path, class: "button button-login dark" %>
+            <%= link_to "Se connecter", new_user_session_path, class: "button dark w-full" %>
           <% end %>
         </div>
       </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_24_105729) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_17_205258) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,6 +86,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_24_105729) do
     t.text "rejection_reason"
     t.string "prenom"
     t.string "nom"
+    t.text "source"
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
   end
@@ -264,6 +265,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_24_105729) do
     t.text "dimension_esthetique"
     t.text "impact_et_message"
     t.text "rejection_reason"
+    t.text "source"
     t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
     t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
     t.index ["user_id"], name: "index_oeuvres_on_user_id"

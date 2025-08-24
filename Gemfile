@@ -119,3 +119,5 @@ gem 'chartkick'
 gem 'groupdate'
 
 
+# CSS
+gem "cssbundling-rails"

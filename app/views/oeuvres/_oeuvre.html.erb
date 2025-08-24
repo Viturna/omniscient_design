@@ -1,4 +1,4 @@
- <%= javascript_include_tag "controllers/savePopup", defer: true %>
+<%= javascript_include_tag "controllers/savePopup", defer: true %>
 <%= javascript_include_tag "controllers/referenceScroll", defer: true %>
 <%= javascript_include_tag "controllers/referenceShare", defer: true %>
 <%= javascript_include_tag "controllers/backBtn", defer: true %>
@@ -70,15 +70,21 @@
     border-top: 1px solid #dee2e6;
     }
 </style>
+<%
+  raw_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp"
+  if asset_exists?(raw_path)
+    image_path = asset_path(raw_path)
+  else
+    image_path = oeuvre.image
+  end
+%>
 <div class="body-show" id="<%= dom_id oeuvre %>">
-  <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
-  <div class="header-show"
-  <% if image_path.present? && asset_exists?(image_path) %>
-   style="background-image: url('<%= asset_path(image_path) %>'); "
-  <% else %>
-   <% Rails.logger.debug("Image not found : #{image_path}") %>
-    style="background-image: url('<%= oeuvre.image%>');"
-  <% end %>>
+  <% if image_path.present? %>
+    <div class="header-show" style="background-image: url('<%= asset_path(image_path) %>'); ">
+    <%else%>
+    <div class="header-show" style="background-color:#FFF; ">
+  <% end %>
+   <img src="<%= image_path %>" alt="<%= oeuvre.nom_oeuvre %>" class="top-img-header">
     <% if oeuvre.validation %>
       <div class="flex-back-btn">
         <button id="back-btn" data-no-popup>
@@ -232,6 +238,23 @@
       <% if oeuvre.impact_et_message.present? %>
         <h2 class="title-description-reference">Impact et message</h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.impact_et_message) %></p>
+      <% end %>
+      <h2 class="title-description-reference">Sources</h2>
+      <p class="text-description-reference italic">Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence.</p>
+      <% if oeuvre.source.present? %>
+        <div class="sources-flex" style="display: flex; flex-wrap: wrap; gap: 64px;">
+          <% JSON.parse(oeuvre.source.to_s).each do |url| %>
+            <% next if url.blank? %>
+            <% domain = URI.parse(url).host rescue url %>
+            <% favicon_url = "https://www.google.com/s2/favicons?domain=#{domain}&sz=64" %>
+            <div class="source-item" style="display: flex; align-items: center; gap: 12px;">
+              <img src="<%= favicon_url %>" alt="favicon" width="34" height="34">
+              <a href="<%= url %>" target="_blank" rel="noopener" style="color: #202020; text-decoration: underline; font-size: 1.2rem;">
+                <%= domain %>
+              </a>
+            </div>
+          <% end %>
+        </div>
       <% end %>
       <h2 class="title-description-reference">Actions</h2>
       <div class="flex-actions">
@@ -514,14 +537,14 @@
 
 
   <!-- Modal image -->
-<div id="imageModal" class="modal">
-    <div class="modal-image">
-      <span id="closeImageModal" style="cursor:pointer;">×</span>
-      <div class="modal-body" style="text-align:center;">
-        <img id="modalImage" src="" alt="Vue agrandie" style="max-width:90%; max-height:90dvh; object-fit: contain;" />
+  <div id="imageModal" class="modal">
+      <div class="modal-image">
+        <span id="closeImageModal" style="cursor:pointer;">×</span>
+        <div class="modal-body" style="text-align:center;">
+          <img id="modalImage" src="" alt="Vue agrandie" style="max-width:100%; max-height:90dvh; object-fit: contain;" />
+        </div>
       </div>
-    </div>
-</div>
+  </div>
 
 
 <script>

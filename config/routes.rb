@@ -99,6 +99,7 @@ end
   get '/search_autocomplete', to: 'search#autocomplete'
   get 'search', to: 'search#search', as: 'search'
   get 'parrainage', to: 'pages#parrainage', as: 'parrainage'
+  get 'kit-presse', to: 'pages#kit-presse', as: 'kit-presse'
   get 'presentation', to: 'pages#presentation', as: 'presentation'
   get 'add_elements', to: 'pages#add_elements', as: 'add_elements'
   get 'profil', to: 'pages#profil', as: 'profil'

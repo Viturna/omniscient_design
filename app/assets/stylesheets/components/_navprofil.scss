@@ -1,14 +1,14 @@
 @import 'abstracts/variables';
 
 .nav-link-profil {
-  width: calc(100% - 40px);
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
   border-radius: 5px;
   font-weight: 500;
-
+  height: 75px;
   &:hover {
     opacity: 0.6;
   }
@@ -29,12 +29,11 @@
 .nav-link-profil.deco {
   justify-content: center;
   color: #E61818;
-  height: 40px;
+  height: 70px;
 }
 
 @media screen and (min-width:426px) and (max-width: 600px) {
   .nav-link-profil {
-    width: calc(100% - 30px);
     padding: 20px 15px;
   }
 
@@ -49,13 +48,12 @@
 
   .nav-link-profil.deco {
     font-size: 16px;
-    height: 30px;
+    height: 60px;
   }
 }
 
 @media screen and (max-width: 425px) {
   .nav-link-profil {
-    width: calc(100% - 30px);
     padding: 20px 15px;
   }
 
@@ -70,7 +68,7 @@
 
   .nav-link-profil.deco {
     font-size: 16px;
-    height: 30px;
+    height: 60px;
   }
 }
 

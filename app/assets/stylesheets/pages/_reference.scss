@@ -8,12 +8,41 @@
 
 .header-show {
   transition: height 0.6s ease, background-color 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+.header-show::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px);
+  transform: scale(1.1);
+  z-index: 0;
+}
+
+.header-show::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: transparent;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+.header-show > * {
+  z-index: 100;
 }
 
 .header-show.small-height {
   height: 38dvh !important;
-  min-height: 300px;
-  z-index: 999;
+  min-height: 320px;
+}
+
+.header-show.small-height::after {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .header-show.small-height::before {
@@ -26,10 +55,16 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
-
+.top-img-header{
+  object-fit: contain;
+}
+.header-show.small-height .top-img-header{
+  z-index: -1;
+}
 .header-top {
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 999 !important;
 }
 
 .header-top.show-header-top {
@@ -76,6 +111,8 @@
 
 .info-card-first-content {
   display: flex;
+  flex-wrap: wrap;
+  padding-right: 24px;
   gap: 24px;
   position: absolute;
   bottom: 50px;
@@ -90,7 +127,7 @@
 }
 
 .text-show.small-height {
-  margin-top: 54dvh; // Ajustez cette valeur selon vos besoins
+  margin-top: 54dvh;
 }
 
 .margin-text-header {
@@ -104,6 +141,7 @@
   flex-direction: column;
   align-items: center;
   transition: margin-top 0.6s ease-in-out;
+  z-index: -1;
 }
 
 .hidden {
@@ -143,7 +181,7 @@
   background-color: rgba(255, 255, 255, 0.3);
   color: #FFF;
   padding: 12px 25px;
-  height: 30px;
+  height: 55px;
   border-radius: 5px;
   font-size: 20px;
 }
@@ -156,7 +194,7 @@
   background-color: rgba(32, 32, 32, 0.4);
   color: $secondary-color;
   padding: 12px 25px;
-  height: 30px;
+  height: 55px;
   border-radius: 5px;
   font-size: 20px;
 }
@@ -191,6 +229,7 @@
 
 .next-card {
   margin-left: 20vw;
+  z-index: -1;
 }
 
 .horizontal-scroll-section {
@@ -413,7 +452,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 25dvh;
+  height: 40dvh;
   background-color: rgba(0, 0, 0, 0.5);
   /* couleur semi-transparente */
   z-index: 999;
@@ -424,8 +463,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 25dvh;
-  position: fixed;
+  height: 100%;
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -437,6 +475,9 @@
 
 .naviguation-buttons {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   gap: 16px;
 }
 
@@ -511,7 +552,7 @@
 
   .flex-info {
     margin-top: 16px;
-    gap: 24px;
+    gap: 16px;
   }
 
   .info-card-dark {
@@ -592,6 +633,9 @@
 }
 
 @media screen and (min-width:426px) and (max-width: 600px) {
+    .flex-back-btn, .flex-right-btn {
+    top: 24px;
+  }
   .body-show {
     padding-bottom: 50px;
   }
@@ -620,7 +664,7 @@
   .header-top {
     display: none;
     position: absolute;
-    bottom: 40px;
+    bottom: 10px;
     left: 5vw;
     width: 100%;
     padding: 10px;
@@ -629,12 +673,13 @@
 
   .flex-info {
     margin-top: 16px;
-    gap: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-right: 5vw;
   }
 
   .info-card {
     padding: 12px 20px;
-    height: 25px;
     font-size: 16px;
   }
 
@@ -724,6 +769,9 @@
 }
 
 @media screen and (max-width: 425px) {
+  .flex-back-btn, .flex-right-btn {
+    top: 24px;
+  }
   .body-show {
     padding-bottom: 50px;
   }
@@ -752,7 +800,7 @@
   .header-top {
     display: none;
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     left: 5vw;
     width: 100%;
     padding: 10px;
@@ -762,13 +810,13 @@
   .flex-info {
     margin-top: 16px;
     gap: 8px;
-    flex-direction: column;
+    flex-wrap: wrap;
+    padding-right: 24px;
   }
 
   .info-card {
     width: fit-content;
     padding: 12px 20px;
-    height: 25px;
     font-size: 16px;
   }
 

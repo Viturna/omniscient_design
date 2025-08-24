@@ -4,7 +4,6 @@
 .list-card {
   background-color: $secondary-color;
   padding: 25px;
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,7 +34,6 @@
 @media screen and (min-width:0px) and (max-width:500px) {
   .list-card {
     font-size: 15px;
-    height: 30px;
     padding: 20px;
 
     svg {
@@ -44,11 +42,6 @@
   }
 }
 
-@media screen and (min-width:501px) and (max-width:800px) {
-  .list-card {
-    height: 30px;
-  }
-}
 
 body.dark-mode {
   .list-card {

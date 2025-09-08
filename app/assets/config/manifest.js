@@ -9,4 +9,3 @@
 //= link_tree ../../javascript .js
 //= link_tree ../../../vendor/javascript .js
 //= link rails-ujs.js
-//= link jquery.min.js

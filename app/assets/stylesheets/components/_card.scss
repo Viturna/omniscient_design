@@ -46,8 +46,8 @@
 }
 
 .card {
-  padding-top: 200px;
-  height: 97dvh;
+  padding-top: 120px;
+  height: 95dvh;
   position: relative;
   width: 50vw;
   scroll-snap-align: start;
@@ -77,7 +77,7 @@
 
 .flex-info-card .info-card-dark {
   scale: 0.9;
-  height: 55px;
+  height: 30px;
   width: fit-content;
 }
 
@@ -130,7 +130,6 @@
 
 
 @media screen and (min-width:769px) and (max-width: 1024px) {
-
   .card {
     width: 60vw;
     padding-top: 180px;

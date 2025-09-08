@@ -46,20 +46,10 @@
     <%= render 'application/favicon' %>
 
     <!-- Stylesheets -->
-    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "media": "all", "data-turbo-track": "reload" %>
 
-
-
-    <% if Rails.env.production? %>
-    <!-- Google Analytics (Consent-based) -->
-    <script type="text/plain" data-cookie-consent="tracking" async src="https://www.googletagmanager.com/gtag/js?id=G-WVD06EPJC3"></script>
-    <script type="text/plain" data-cookie-consent="tracking" defer>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-WVD06EPJC3');
-    </script>
-    <% end %>
+    <!-- Select2 CSS via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 
   </head>
 
@@ -71,42 +61,51 @@
                   else ''
                 end %>
 <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
+<div id="cookie-consent-banner" 
+     data-controller="cookie-consent" 
+     data-cookie-consent-target="banner" 
+     style="display:none;">
+  <div>
+    <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?</p>
+    <button data-action="click->cookie-consent#accept">Accepter</button>
+    <button data-action="click->cookie-consent#decline">Refuser</button>
+  </div>
+</div>
 
-    <div id="cookie-consent-banner" style="display:none;">
-      <div>
-        <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?</p>
-        <button id="accept-cookies">Accepter</button>
-        <button id="decline-cookies">Refuser</button>
-      </div>
-    </div>
 
     <% if notice.present? %>
-      <div class="alert" id="alert">
+      <div class="alert" 
+          data-controller="alert"
+          data-alert-target="close">
         <p><%= notice %></p>
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span class="closebtn" data-alert-target="close">&times;</span>
         <div class="progress-container">
-          <div class="progress-bar" id="progress-bar"></div>
+          <div class="progress-bar" data-alert-target="progress"></div>
         </div>
       </div>
     <% elsif flash.any? %>
       <% flash.each do |key, message| %>
-        <div class="alert <%= key %>" id="alert">
+        <div class="alert <%= key %>" 
+            data-controller="alert"
+            data-alert-target="progress"
+            data-alert-target="close">
           <%= message %>
-          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <span class="closebtn" data-alert-target="close">&times;</span>
           <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-bar" data-alert-target="progress"></div>
           </div>
         </div>
       <% end %>
     <% end %>
+
    
     <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
       <%= render 'layouts/header' %>
     <% end %>
 <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
-<main class="<%= 'main-show' if main_show %>">
+<main class="<%= 'main-show' if main_show %>" data-controller="loading">
 
-     <div id="loading" data-turbo-permanent>
+     <div id="loading" data-loading-target="loading" data-turbo-permanent>
         <div class="loader-bg">      
           <video autoplay loop muted>
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">
@@ -114,12 +113,11 @@
           </video>
         </div>
       </div>
-      <div id="content">
+     <div id="content" data-loading-target="content" style="display: none;">
         <%= yield %>
       </div>
     </main>
     <!-- JavaScript Rails -->
     <%= javascript_importmap_tags %>
   </body>
-
 </html>

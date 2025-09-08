@@ -1,6 +1,6 @@
 <% content_for :title, "Donnez nous vos feedbacks - Omniscient Design" %>
 <% content_for :description, "Fais-nous des retours PERTINENT sur le site pour qu'on puisse avancer plus loins plus vite plus mieux ! Miam les retours on adore ça." %>
-<%= javascript_include_tag "controllers/starRating", defer: true %>
+
 <style>
   label {
     font-weight: 500;
@@ -18,11 +18,8 @@
     justify-content:space-between;
     flex-direction:row-reverse;
   }
-  .star-rating input[type="radio"] {
-    display: none;
-  }
+
   .star-rating label {
-    width: 10vw;
     width: fit-content;
     display: flex;
     text-align:center;
@@ -35,15 +32,11 @@
     cursor: pointer;
     margin: 0;
   }
+
   .flex-label p {
     color: #FFF;
   }
 
-  .star-rating input[type="radio"]:checked ~ label,
-  .star-rating label:hover,
-  .star-rating label:hover ~ label {
-    color: #f5c518;
-  }
   .label-number{
     font-size: 18px;
     line-height:130%;
@@ -78,21 +71,17 @@
     .label-number,.label-text,.question{
       font-size: 16px;
     }
-
-
   }
   @media screen and (min-width:600px) and (max-width:800px) {
-
     .star-rating label {
       font-size: 38px;
     }
-
-      .label-number,.label-text{
-    font-size: 16px;
+    .label-number,.label-text{
+      font-size: 16px;
     }
-
   }
 </style>
+
 <section class="top-header">
   <%= link_to root_path do%>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,6 +92,7 @@
   <h1 class="title-add-elements">Exprimer votre avis</h1>
   <p class="subtitle">En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
 </section>
+
 <section class="grid-1" style="background-color:#202020; color:#FFF; min-height:100vh;">
   <div class="form-feedback">
     <%= form_with(model: @feedback) do |f| %>
@@ -116,6 +106,7 @@
           </ul>
         </div>
       <% end %>
+
       <% [
         [:question_1, "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?*"],
         [:question_2, "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?*"],
@@ -126,72 +117,27 @@
       ].each do |question, label_text| %>
         <div>
           <%= f.label question, label_text, class: "question" %>
-          <div class="star-rating">
-            <%= f.hidden_field question, value: 0 %>
-            <label data-value="5">
-              <div><svg width="47" height="46" viewBox="0 0 47 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_211)">
-                    <path d="M23.5 0L30.5303 15.6304L46.5 17.8365L34.8773 29.0068L37.714 46L23.5 37.2715L9.28408 46L12.1227 29.0068L0.5 17.8365L16.4697 15.6304L23.5 0Z" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-              <div class="flex-label">
-                <p class="label-number">5</p>
-                <p class="label-text">Très bonne</p>
-              </div>
-            </label>
-            <label data-value="4">
-              <div><svg width="47" height="46" viewBox="0 0 47 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_211)">
-                    <path d="M23.5 0L30.5303 15.6304L46.5 17.8365L34.8773 29.0068L37.714 46L23.5 37.2715L9.28408 46L12.1227 29.0068L0.5 17.8365L16.4697 15.6304L23.5 0Z" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-              <div class="flex-label">
-                <p class="label-number">4</p>
-                <p class="label-text">Bonne</p>
-              </div>
-            </label>
-            <label data-value="3">
-              <div><svg width="47" height="46" viewBox="0 0 47 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_211)">
-                    <path d="M23.5 0L30.5303 15.6304L46.5 17.8365L34.8773 29.0068L37.714 46L23.5 37.2715L9.28408 46L12.1227 29.0068L0.5 17.8365L16.4697 15.6304L23.5 0Z" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-              <div class="flex-label">
-                <p class="label-number">3</p>
-                <p class="label-text">Moyenne</p>
-              </div>
-            </label>
-            <label data-value="2">
-              <div>
-                <svg width="47" height="46" viewBox="0 0 47 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_211)">
-                    <path d="M23.5 0L30.5303 15.6304L46.5 17.8365L34.8773 29.0068L37.714 46L23.5 37.2715L9.28408 46L12.1227 29.0068L0.5 17.8365L16.4697 15.6304L23.5 0Z" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-              <div class="flex-label">
-                <p class="label-number">2</p>
-                <p class="label-text">Mauvaise</p>
-              </div>
-            </label>
-            <label data-value="1">
-              <div><svg width="47" height="46" viewBox="0 0 47 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_211)">
-                    <path d="M23.5 0L30.5303 15.6304L46.5 17.8365L34.8773 29.0068L37.714 46L23.5 37.2715L9.28408 46L12.1227 29.0068L0.5 17.8365L16.4697 15.6304L23.5 0Z" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-              <div class="flex-label">
-                <p class="label-number">1</p>
-                <p class="label-text">Très mauvaise</p>
-              </div>
-            </label>
+          <div class="star-rating" data-controller="star-rating">
+            <%= f.hidden_field question, value: @feedback[question] || 0, data: { star_rating_target: "input" } %>
+            <% [["Très mauvaise",1],["Mauvaise",2],["Moyenne",3],["Bonne",4],["Très bonne",5]].reverse.each do |text, value| %>
+              <label data-action="click->star-rating#rate"
+                     data-star-rating-target="star"
+                     data-value="<%= value %>">
+                <div>
+                  <svg width="47" height="46" viewBox="0 0 47 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.5 0L30.5303 15.6304L46.5 17.8365L34.8773 29.0068L37.714 46L23.5 37.2715L9.28408 46L12.1227 29.0068L0.5 17.8365L16.4697 15.6304L23.5 0Z" fill="#ddd"/>
+                  </svg>
+                </div>
+                <div class="flex-label">
+                  <p class="label-number"><%= value %></p>
+                  <p class="label-text"><%= text %></p>
+                </div>
+              </label>
+            <% end %>
           </div>
         </div>
       <% end %>
+
       <div>
         <%= f.label :question_8, "Quels sont, selon vous, les points forts de notre site ?", class: "question" %>
         <%= f.text_area :question_8, placeholder: 'Répondre ici' %>

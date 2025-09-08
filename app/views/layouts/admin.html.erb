@@ -52,11 +52,6 @@
 
     <!-- JavaScript Rails -->
     <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "controllers/loader", defer: true %>
-    <%= javascript_include_tag "controllers/progressBar", defer: true %>
-
-    <!-- Cookie Consent -->
-    <%= javascript_include_tag "controllers/cookies", defer: true %>
   </head>
 
   <body class="admin-layout">
@@ -113,21 +108,26 @@
       </div>
     </div>
 
-    <% if notice.present? %>
-      <div class="alert" id="alert">
+   <% if notice.present? %>
+      <div class="alert" 
+          data-controller="alert"
+          data-alert-target="close">
         <p><%= notice %></p>
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span class="closebtn" data-alert-target="close">&times;</span>
         <div class="progress-container">
-          <div class="progress-bar" id="progress-bar"></div>
+          <div class="progress-bar" data-alert-target="progress"></div>
         </div>
       </div>
     <% elsif flash.any? %>
       <% flash.each do |key, message| %>
-        <div class="alert <%= key %>" id="alert">
+        <div class="alert <%= key %>" 
+            data-controller="alert"
+            data-alert-target="progress"
+            data-alert-target="close">
           <%= message %>
-          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <span class="closebtn" data-alert-target="close">&times;</span>
           <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-bar" data-alert-target="progress"></div>
           </div>
         </div>
       <% end %>

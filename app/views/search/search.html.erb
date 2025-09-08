@@ -3,25 +3,42 @@
 
 <section class="top-bar-search">
   <%= form_with url: search_path, method: :get, local: true do |form| %>
-    <div class="autocomplete">
-      <div class="search-wrapper">
-        <%= form.search_field :query, class: 'search-top-bar', placeholder: 'Rechercher une référence', autocomplete: 'off', id: 'workSearch' %>
-        <button type="button" class="clear-search" id="clearSearch" style="display: none;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12.0019 2.00488C17.5199 2.00488 21.9999 6.48488 21.9999 12.0019C21.9999 17.5199 17.5199 21.9999 12.0019 21.9999C6.48488 21.9999 2.00488 17.5199 2.00488 12.0019C2.00488 6.48488 6.48488 2.00488 12.0019 2.00488ZM12.0019 10.9379L9.28088 8.21588C9.13488 8.06988 8.94188 7.99688 8.74988 7.99688C8.34588 7.99688 7.99988 8.32088 7.99988 8.74588C7.99988 8.93888 8.07288 9.12988 8.21888 9.27688L10.9409 11.9989L8.21288 14.7269C8.06588 14.8739 7.99288 15.0669 7.99288 15.2579C7.99288 15.6849 8.34288 16.0079 8.74388 16.0079C8.93588 16.0079 9.12788 15.9349 9.27388 15.7889L12.0019 13.0609L14.7309 15.7889C14.8769 15.9349 15.0689 16.0079 15.2609 16.0079C15.6619 16.0079 16.0109 15.6849 16.0109 15.2579C16.0109 15.0669 15.9379 14.8739 15.7909 14.7269L13.0639 11.9989L15.7809 9.28188C15.9269 9.13488 15.9999 8.94388 15.9999 8.75088C15.9999 8.32588 15.6539 8.00088 15.2499 8.00088C15.0579 8.00088 14.8649 8.07388 14.7189 8.22088L12.0019 10.9379Z" fill="#202020"/>
-          </svg>
-        </button>
-      </div>
-       <div class="suggestions-box" id="autocompleteResults"></div>
+  <div class="autocomplete" 
+      data-controller="autocomplete" 
+      data-autocomplete-url-value="<%= search_autocomplete_path %>">
+    <div class="search-wrapper">
+      <input type="search" 
+            data-autocomplete-target="field" 
+            data-action="input->autocomplete#search" 
+            class="search-top-bar" 
+            placeholder="Rechercher une référence" 
+            autocomplete="off" 
+            id="workSearch" />
+
+      <button type="button" 
+              data-autocomplete-target="clearBtn" 
+              data-action="click->autocomplete#clear" 
+              class="clear-search" 
+              id="clearSearch" 
+              style="display: none;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M12.0019 2.00488C17.5199 2.00488 21.9999 6.48488 21.9999 12.0019C21.9999 17.5199 17.5199 21.9999 12.0019 21.9999C6.48488 21.9999 2.00488 17.5199 2.00488 12.0019C2.00488 6.48488 6.48488 2.00488 12.0019 2.00488ZM12.0019 10.9379L9.28088 8.21588C9.13488 8.06988 8.94188 7.99688 8.74988 7.99688C8.34588 7.99688 7.99988 8.32088 7.99988 8.74588C7.99988 8.93888 8.07288 9.12988 8.21888 9.27688L10.9409 11.9989L8.21288 14.7269C8.06588 14.8739 7.99288 15.0669 7.99288 15.2579C7.99288 15.6849 8.34288 16.0079 8.74388 16.0079C8.93588 16.0079 9.12788 15.9349 9.27388 15.7889L12.0019 13.0609L14.7309 15.7889C14.8769 15.9349 15.0689 16.0079 15.2609 16.0079C15.6619 16.0079 16.0109 15.6849 16.0109 15.2579C16.0109 15.0669 15.9379 14.8739 15.7909 14.7269L13.0639 11.9989L15.7809 9.28188C15.9269 9.13488 15.9999 8.94388 15.9999 8.75088C15.9999 8.32588 15.6539 8.00088 15.2499 8.00088C15.0579 8.00088 14.8649 8.07388 14.7189 8.22088L12.0019 10.9379Z" fill="#202020"/> </svg>
+      </button>
     </div>
+
+    <div class="suggestions-box" 
+        data-autocomplete-target="results" 
+        id="autocompleteResults"></div>
+  </div>
+
+
   <% end %>
   <div class="top-bar-flex">
-  <div class="circle circle-notif" id="openPopup">
-    <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
-      <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
-    </svg>
-  </div>
+    <div class="circle circle-notif" id="openPopup">
+      <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+        <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+      </svg>
+    </div>
   <%= link_to notifications_path do %>
     <div class="circle circle-notif">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,64 +58,59 @@
 
 <section class="grid-1 searchpage">
   <h1>Rechercher</h1>
-  <div class="tabs">
-    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" data-tab="designers">Designers (<%=Designer.where(validation: true).count%>)</button>
-    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références (<%=Oeuvre.where(validation: true).count%>)</button>
-    <button class="tab <%= 'active' if params[:tab] == 'frise' %>" data-tab="frise">Frise Chronologique</button>
+  <div class="tabs" data-controller="tabs-search">
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" 
+            data-tab="designers" 
+            data-tabs-search-target="tab" 
+            data-action="click->tabs-search#switch">
+      Designers (<%= Designer.where(validation: true).count %>)
+    </button>
+    <button class="tab <%= 'active' if params[:tab] == 'references' %>" 
+            data-tab="references" 
+            data-tabs-search-target="tab" 
+            data-action="click->tabs-search#switch">
+      Références (<%= Oeuvre.where(validation: true).count %>)
+    </button>
+    <button class="tab <%= 'active' if params[:tab] == 'frise' %>" 
+            data-tab="frise" 
+            data-tabs-search-target="tab" 
+            data-action="click->tabs-search#switch">
+      Frise Chronologique
+    </button>
   </div>
+
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
-    <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers" %>
+    <%= form.hidden_field :tab, 
+          id: "activeTab", 
+          value: params[:tab] || "designers", 
+          data: { tabs_search_target: "tabInput" } %>
 
     <h2>Filtres</h2>
 
     <div class="filters">
-      <div class="filter">
-        <label for="domainFilter">Domaine</label>
-        <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] },
-                        { include_blank: false, selected: params[:domaine] },
-                        { multiple: true, class: "select2" } %>
-      </div>
-
-      <div class="filter" id="countryFilterContainer">
-        <label for="paysFilter">Pays</label>
-        <%= form.select :country, @countries.all.map { |p| [p.country, p.id] },
-                        { include_blank: false, selected: params[:country] },
-                        { multiple: true, class: "select2" } %>
-      </div>
-
-      <div class="filter" id="notionsFilterContainer">
+      <div class="filter" data-tabs-search-target="notionsFilter" style="<%= params[:tab] == 'designers' || params[:tab].blank? ? 'display:none;' : 'flex;' %>">
         <label for="notionsFilter">Notions</label>
         <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] },
                         { include_blank: false, selected: params[:notions] },
                         { multiple: true, class: "select2", name: "notions[]" } %>
       </div>
 
-      <div class="filter">
-        <label for="dateFilter">Dates</label>
-        <div class="dropdown">
-          <button type="button" class="dropdown-toggle">Sélectionner une période</button>
-          <div class="dropdown-menu">
-            <label for="startDate">De</label>
-            <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
-
-            <label for="endDate">À</label>
-            <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
-
-            <button type="button" id="applyDateFilter" class="button dark">Appliquer</button>
-          </div>
-        </div>
+      <div class="filter" data-tabs-search-target="countryFilter" style="<%= params[:tab] == 'references' ? 'display:none;' : 'flex;' %>">
+        <label for="paysFilter">Pays</label>
+        <%= form.select :country, @countries.all.map { |p| [p.country, p.id] },
+                        { include_blank: false, selected: params[:country] },
+                        { multiple: true, class: "select2" } %>
       </div>
-    </div>
-    
-  <div class="filter" id="sortFilterContainer" style="margin-top: 24px;">
+
+      <div class="filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">
         <label for="sort">Trier par</label>
-        <select name="sort" id="sortSelect" class="select2">
+        <select name="sort" id="sortSelect" class="select2" data-tabs-search-target="sortSelect">
           <% if params[:tab] == 'references' %>
             <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>>Nom A-Z</option>
             <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>>Nom Z-A</option>
             <option value="oeuvre_asc" <%= 'selected' if params[:sort] == 'oeuvre_asc' %>>Date œuvre (ancien → récent)</option>
             <option value="oeuvre_desc" <%= 'selected' if params[:sort] == 'oeuvre_desc' %>>Date œuvre (récent → ancien)</option>
-          <% elsif params[:tab] == 'designers' || params[:tab].blank? %>
+          <% else %>
             <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>>Nom A-Z</option>
             <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>>Nom Z-A</option>
             <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>>Date naissance (ancien → récent)</option>
@@ -106,14 +118,14 @@
           <% end %>
         </select>
       </div>
-   
-
+    </div>
   <% end %>
 
-
-  <turbo-frame id="search-results">
-    <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'designers' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'designers' %>">
-          <div id="designers-container" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-6 mt-4">
+<turbo-frame id="search-results">
+  <div id="designers" class="content-tab" 
+       data-tabs-search-target="tabContent" 
+       style="<%= params[:tab].blank? || params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
+          <div id="designers-container" class="flex-container">
         <% @designers.each do |designer| %>
           <%= render 'designers/designer_card', designer: designer %>
         <% end %>
@@ -121,8 +133,10 @@
       <%= paginate @designers, params: { tab: 'designers' } %>
     </div>
 
-    <div id="references" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
-        <div id="oeuvres-container" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-6 mt-4">
+      <div id="references" class="content-tab" 
+       data-tabs-search-target="tabContent" 
+       style="<%= params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
+        <div id="oeuvres-container" class="flex-container">
         <% @oeuvres.each do |oeuvre| %>
           <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
         <% end %>
@@ -131,7 +145,9 @@
     </div>
   </turbo-frame>
 
-  <div id="frise" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'frise' %><%= 'display: none;' unless params[:tab] == 'frise' %>">
+  <div id="frise" class="content-tab" 
+     data-tabs-search-target="tabContent" 
+     style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
     <h2>Références</h2>
     <div class="timeline">
       <% @timeline_years.each do |year| %>
@@ -220,53 +236,51 @@
 
 
 <script>
- document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
   function initSelect2() {
     console.log("Initialisation de Select2");
-    $('.select2').select2({
-      placeholder: "Choisir des filtres",
-      allowClear: true
+
+    const selects = $(".select2");
+
+    // Initialiser seulement si pas déjà fait
+    if (selects.length > 0 && !selects.hasClass("select2-hidden-accessible")) {
+      selects.select2({
+        placeholder: "Choisir des filtres",
+        allowClear: true
+      });
+    }
+
+    // Soumettre automatiquement quand un filtre est changé
+    const filterForm = document.getElementById("filterForm");
+
+    function submitFilterForm() {
+      if (!filterForm) return;
+
+      const formData = new FormData(filterForm);
+      const url = new URL(window.location.href);
+
+      formData.forEach((value, key) => {
+        if (value) {
+          url.searchParams.set(key, value);
+        } else {
+          url.searchParams.delete(key); // Nettoyer si vide
+        }
+      });
+
+      window.history.pushState({}, '', url);
+      filterForm.requestSubmit();
+    }
+
+    selects.off("select2:select select2:unselect"); // éviter doublons
+    selects.on("select2:select select2:unselect", function () {
+      console.log("Changement détecté :", $(this).attr("name"), $(this).val());
+      submitFilterForm();
     });
   }
 
-  initSelect2(); // Initialisation au chargement
-
-  // Ré-initialiser Select2 après chaque Turbo navigation
-  document.addEventListener("turbo:load", function () {
-    initSelect2();
-  });
-
-  // Soumettre le formulaire automatiquement quand un filtre est changé
-  const filterForm = document.getElementById("filterForm");
-
-  // Fonction pour soumettre le formulaire avec les filtres mis à jour
-  function submitFilterForm() {
-    const formData = new FormData(filterForm);
-    const url = new URL(window.location.href);
-
-    // On ajoute tous les filtres dans l'URL
-    formData.forEach((value, key) => {
-      if (value) { // Si la valeur n'est pas vide
-        url.searchParams.set(key, value);
-      }
-    });
-
-    // Change l'URL sans recharger la page (pour conserver l'état de l'URL)
-    window.history.pushState({}, '', url);
-
-    // Soumettre le formulaire avec Turbo
-    filterForm.requestSubmit(); // Fonctionne mieux avec Turbo
-
-  }
-$('.select2').on('select2:select', function () {
-  console.log("Sélection détectée :", $(this).attr("name"), $(this).val());
-  submitFilterForm();
+  initSelect2();
 });
-$('.select2').on('select2:unselect', function () {
-  console.log("Suppression détectée :", $(this).attr("name"), $(this).val());
-  submitFilterForm();
-});
-});
+
 
 </script>
 <script>
@@ -355,9 +369,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 </script>
-
-<%= javascript_include_tag "controllers/reset", defer: true %>
-<%= javascript_include_tag "controllers/autocompleteSearch", defer: true %>
-<%= javascript_include_tag "controllers/tabsSearch", defer: true %>
-<%= javascript_include_tag "controllers/friseCounter", defer: true %>
-<%= javascript_include_tag "controllers/dropdownFilter", defer: true %>

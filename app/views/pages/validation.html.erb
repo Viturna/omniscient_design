@@ -1,4 +1,3 @@
-<%= javascript_include_tag "controllers/loadMoreTable", defer: true %>
 <style>
   .modal {
     display: none;
@@ -70,7 +69,7 @@
   <h1>Gestions des contenus</h1>
   <p style="color:#FFF">Total <%= @oeuvres_count +@designers_count %> références</p>
 </section>
-<section class="grid-1">
+<section class="grid-1" data-controller="load-more-table">
   <h2>Références en attente de validation</h2>
   <p>Il y a actuellement <%= @oeuvres_count_val_false %> références en attente de validation</p>
   <div class="table-wrapper">
@@ -86,10 +85,8 @@
       <tbody>
         <% @oeuvres.each do |oeuvre| %>
           <% if !oeuvre.validation %>
-            <tr>
-
-            <td><%= oeuvre.nom_oeuvre %>
-    
+            <tr data-load-more-table-target="row">
+              <td><%= oeuvre.nom_oeuvre %></td>
               <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
               <td>
                 <% if oeuvre.user_id.present? %>
@@ -104,10 +101,8 @@
                 <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
                 <%= link_to "Valider", validate_oeuvre_path(oeuvre), class: "btn btn-green" %>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
-                  data-url="<%= reject_oeuvre_path(oeuvre) %>"
-                  data-title="<%= oeuvre.nom_oeuvre %>">
-                  Refuser
-                </a>
+                   data-url="<%= reject_oeuvre_path(oeuvre) %>"
+                   data-title="<%= oeuvre.nom_oeuvre %>">Refuser</a>
               </td>
             </tr>
           <% end %>
@@ -115,11 +110,12 @@
       </tbody>
     </table>
   </div>
-  <div id="load-more-button-oeuvres">
-    <button class="btn">Voir plus de références</button>
+  <div>
+    <button class="btn"   data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de références</button>
   </div>
 </section>
-<section class="grid-1">
+
+<section class="grid-1" data-controller="load-more-table">
   <h2>Références validées</h2>
   <p>Il y a actuellement <%= @oeuvres_count %> références validées</p>
   <div class="table-wrapper">
@@ -136,7 +132,7 @@
       <tbody>
         <% @oeuvres.each do |oeuvre| %>
           <% if oeuvre.validation %>
-            <tr>
+            <tr data-load-more-table-target="row">
               <td><%= oeuvre.nom_oeuvre %></td>
               <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
               <td>
@@ -158,10 +154,8 @@
                 <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
                 <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
-                  data-url="<%= reject_oeuvre_path(oeuvre) %>"
-                  data-title="<%= oeuvre.nom_oeuvre %>">
-                  Refuser
-                </a>
+                   data-url="<%= reject_oeuvre_path(oeuvre) %>"
+                   data-title="<%= oeuvre.nom_oeuvre %>">Refuser</a>
               </td>
             </tr>
           <% end %>
@@ -169,11 +163,12 @@
       </tbody>
     </table>
   </div>
-  <div id="load-more-button-oeuvres-validated">
-    <button class="btn">Voir plus de références validées</button>
+  <div>
+    <button class="btn"  data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de références validées</button>
   </div>
 </section>
-<section class="grid-1">
+
+<section class="grid-1" data-controller="load-more-table">
   <h2>Designers en attente de validation</h2>
   <p>Il y a actuellement <%= @designers_count_val_false %> designers en attente de validation</p>
   <div class="table-wrapper">
@@ -189,7 +184,7 @@
       <tbody>
         <% @designers.each do |designer| %>
           <% if !designer.validation %>
-            <tr>
+            <tr data-load-more-table-target="row">
               <td><%= designer.nom_designer %></td>
               <td><%= I18n.l(designer.created_at, format: :long) %></td>
               <td>
@@ -206,9 +201,7 @@
                 <%= link_to "Valider", validate_designer_path(designer), class: "btn btn-green" %>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
                    data-url="<%= reject_designer_path(designer) %>"
-                   data-title="<%= designer.nom_designer %>">
-                  Refuser
-                </a>
+                   data-title="<%= designer.nom_designer %>">Refuser</a>
               </td>
             </tr>
           <% end %>
@@ -216,11 +209,12 @@
       </tbody>
     </table>
   </div>
-  <div id="load-more-button-designers">
-    <button class="btn">Voir plus de designers</button>
+  <div>
+    <button class="btn"  data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de designers</button>
   </div>
 </section>
-<section class="grid-1">
+
+<section class="grid-1" data-controller="load-more-table">
   <h2>Designers validés</h2>
   <p>Il y a actuellement <%= @designers_count %> designers validés</p>
   <div class="table-wrapper">
@@ -237,7 +231,7 @@
       <tbody>
         <% @designers.each do |designer| %>
           <% if designer.validation %>
-            <tr>
+            <tr data-load-more-table-target="row">
               <td><%= designer.nom_designer %></td>
               <td><%= I18n.l(designer.created_at, format: :long) %></td>
               <td>
@@ -260,9 +254,7 @@
                 <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
                    data-url="<%= reject_designer_path(designer) %>"
-                   data-title="<%= designer.nom_designer %>">
-                  Refuser
-                </a>
+                   data-title="<%= designer.nom_designer %>">Refuser</a>
               </td>
             </tr>
           <% end %>
@@ -270,10 +262,11 @@
       </tbody>
     </table>
   </div>
-  <div id="load-more-button-designers-validated">
-    <button class="btn">Voir plus de designers validés</button>
+  <div>
+    <button class="btn"  data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de designers validés</button>
   </div>
 </section>
+
 <div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog" aria-labelledby="globalRejectModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

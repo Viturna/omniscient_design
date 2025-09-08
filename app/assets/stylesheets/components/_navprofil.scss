@@ -1,20 +1,20 @@
 @import 'abstracts/variables';
 
 .nav-link-profil {
-  width: 100%;
+ width: calc(100% - 40px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
   border-radius: 5px;
   font-weight: 500;
-  height: 75px;
   &:hover {
     opacity: 0.6;
   }
 }
 
 .nav-link-inner {
+  height: 45px;
   display: flex;
   align-items: center;
   gap: 28px;
@@ -29,12 +29,13 @@
 .nav-link-profil.deco {
   justify-content: center;
   color: #E61818;
-  height: 70px;
+  height: 40px;
 }
 
 @media screen and (min-width:426px) and (max-width: 600px) {
   .nav-link-profil {
     padding: 20px 15px;
+ width: calc(100% - 30px);
   }
 
   .nav-link-profil svg {
@@ -48,12 +49,13 @@
 
   .nav-link-profil.deco {
     font-size: 16px;
-    height: 60px;
+    height: 30px;
   }
 }
 
 @media screen and (max-width: 425px) {
   .nav-link-profil {
+      width: calc(100% - 30px);
     padding: 20px 15px;
   }
 
@@ -68,7 +70,7 @@
 
   .nav-link-profil.deco {
     font-size: 16px;
-    height: 60px;
+    height: 30px;
   }
 }
 

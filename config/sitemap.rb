@@ -1,4 +1,3 @@
-
 SitemapGenerator::Sitemap.sitemaps_path = 'sitemaps/'
 SitemapGenerator::Sitemap.default_host = "https://omniscientdesign.fr"
 

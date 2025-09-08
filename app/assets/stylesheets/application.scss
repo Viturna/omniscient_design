@@ -17,14 +17,17 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+
 /*
- *= require select2
  *= require cookies_eu
  *= require pagination
- */
+*/
+
+
 
 @import 'abstracts/variables';
 
+@import 'base/reset';
 @import 'base/font';
 
 @import 'components/alert';

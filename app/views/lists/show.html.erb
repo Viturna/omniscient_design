@@ -186,7 +186,7 @@
       <div class="flex-title-list">
         <h2>Tout</h2>
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4 mb-8">
+      <div class="flex-card-list">
         <% (@list.designers + @list.oeuvres).sort_by { |item| item.is_a?(Oeuvre) ? item.nom_oeuvre.downcase : item.nom.downcase }.each do |item| %>
           <% if item.is_a?(Designer) %>
             <%= render 'designers/designer_card', designer: item %>
@@ -200,7 +200,7 @@
       <div class="flex-title-list">
         <h2>Les références</h2>
       </div>
-   <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4 mb-8">
+   <div class="flex-card-list">
         <% @list.oeuvres.each do |oeuvre| %>
         <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
         <% end %>
@@ -210,7 +210,7 @@
         <div class="flex-title-list">
         <h2>Les designers </h2>
       </div>
-  <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4 mb-8">
+  <div class="flex-card-list">
         <% @list.designers.each do |designer| %>
           <%= render 'designers/designer_card', designer: designer %>
         <% end %>
@@ -541,4 +541,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<%= javascript_include_tag "controllers/tabsLists", defer: true %>

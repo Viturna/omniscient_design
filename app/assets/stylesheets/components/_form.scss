@@ -82,12 +82,25 @@ input[type=password] {
   border: none;
   stroke: none;
   padding: 0 25px;
-  width: 100%;
+  width: calc(100% - 56px);
   height: 70px;
   border-radius: 5px;
   border: 2px solid #E9E9E9;
   font-weight: 500;
 }
+
+
+@media screen and (min-width:769px) and (max-width: 1024px) {
+
+  select {
+    width: calc(50vw + 30px);
+  }
+
+  textarea {
+    width: 50vw;
+  }
+}
+
 
 select {
   width: 100%;
@@ -103,6 +116,7 @@ select {
 .select2 {
   width: 100% !important;
 }
+
 
 /* Forcer la hauteur du champ */
 .select2-container .select2-selection--single {
@@ -159,7 +173,7 @@ textarea {
   input[type=email],
   input[type=password] {
     padding: 0 15px;
-
+   width: calc(100% - 36px);
     &::placeholder {
       font-size: 15px;
     }
@@ -175,7 +189,8 @@ textarea {
   }
 
   textarea {
-    padding: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 120px;
     font-size: 15px;
 
@@ -191,7 +206,8 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    padding: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 60px;
     font-size: 15px;
 
@@ -212,7 +228,8 @@ textarea {
   }
 
   textarea {
-    padding: 15px;
+    padding: 0 15px;
+    width: calc(100% - 36px);
     height: 120px;
     font-size: 15px;
 
@@ -228,7 +245,8 @@ textarea {
   input[type=date],
   input[type=email],
   input[type=password] {
-    padding: 15px;
+padding: 0 15px;
+    width: calc(100% - 36px);
     height: 55px;
     font-size: 14px;
 
@@ -249,7 +267,8 @@ textarea {
   }
 
   textarea {
-    padding: 15px;
+padding: 0 15px;
+    width: calc(100% - 36px);
     height: 120px;
     font-size: 14px;
 

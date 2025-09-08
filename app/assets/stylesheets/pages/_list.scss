@@ -73,7 +73,7 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  width: calc(100vw - 350px);
+ width: calc(100vw - 350px - 128px);
   padding-right: 128px;
   gap: 24px;
   background-color: $secondary-color;
@@ -91,6 +91,14 @@
   flex-direction: column;
   gap: 24px;
   height: 45vh;
+}
+
+.flex-card-list {
+  margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5vw;
+  padding-bottom: 100px;
 }
 
 @media screen and (max-width: 375px) {
@@ -180,7 +188,7 @@ body.dark-mode {
 
 @media screen and (max-width: 1280px) {
   .bottom-list {
-  width: calc(100vw - 30vw);
+width: calc(100vw - 30vw - 8vw);
   padding-right: 8vw;
 }
   

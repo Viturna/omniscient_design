@@ -5,3 +5,4 @@
 //= link @hotwired--turbo-rails.js
 //= link @rails--actioncable--src.js
 //= link @hotwired--turbo.js
+//= link controllers .js

@@ -93,7 +93,7 @@
     </div>
   </div>
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("turbo:load", () => {
       const container = document.getElementById("cardContainer");
       const loadMoreTrigger = document.getElementById("load-more-trigger");
       const upButton = document.querySelector(".arrow-button.up");
@@ -110,79 +110,94 @@
         const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
 
         fetch(`/designers/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
-          .then((response) => response.text())
-          .then((html) => {
-            if (html.trim() === "") {
-              loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
-            } else {
-              container.insertAdjacentHTML("beforeend", html);
+            .then((response) => response.text())
+            .then((html) => {
+              if (html.trim() === "") {
+                loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
+              } else {
+                container.insertAdjacentHTML("beforeend", html);
 
-              // Mettre à jour l'offset et les IDs chargés
-              loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
-              const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
-              loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
+                // Mettre à jour l'offset et les IDs chargés
+                loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
+                const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
+                loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
 
-              // Assurez-vous que les cartes s'alignent bien
-              validateCardAlignment();
-            }
-            isLoading = false;
-          })
-          .catch((err) => {
-            console.error("Erreur lors du chargement des cartes :", err);
-            isLoading = false;
+                validateCardAlignment();
+              }
+            })
+            .catch((err) => {
+              console.error("Erreur lors du chargement des cartes :", err);
+            })
+            .finally(() => {
+              // ✅ On libère le verrou APRÈS la fin complète de la requête
+              isLoading = false;
+            });
+        }
+
+
+        // Vérification et ajustement de l'alignement des cartes
+        function validateCardAlignment() {
+          const cards = container.querySelectorAll(".card");
+          cards.forEach((card) => {
+            card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
           });
       }
 
-      // Vérification et ajustement de l'alignement des cartes
-      function validateCardAlignment() {
-        const cards = container.querySelectorAll(".card");
-        cards.forEach((card) => {
-          card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
-        });
-      }
-
       // Fonction pour défiler vers le haut ou le bas
-      function scrollByAmount(amount) {
-        container.scrollBy({ top: amount, behavior: "smooth" });
-      }
+        function scrollToCard(direction) {
+          const cards = Array.from(container.querySelectorAll(".card"));
+          const scrollTop = container.scrollTop;
+          const containerHeight = container.clientHeight;
 
-      // Gestion des boutons
-      upButton.addEventListener("click", () => scrollByAmount(-window.innerHeight / 2));
-      downButton.addEventListener("click", () => scrollByAmount(window.innerHeight / 2));
+          // Trouver l'index de la card "active"
+          const currentIndex = cards.findIndex(card => {
+            const cardTop = card.offsetTop;
+            const cardBottom = cardTop + card.offsetHeight;
+            return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
+          });
 
-      // Gestion tactile (mobile-friendly)
-      let touchStartY = 0;
-      let touchEndY = 0;
+          let targetIndex = currentIndex;
+          if (direction === "down" && currentIndex < cards.length - 1) {
+            targetIndex++;
+          } else if (direction === "up" && currentIndex > 0) {
+            targetIndex--;
+          }
 
-      container.addEventListener("touchstart", (e) => {
-        touchStartY = e.touches[0].clientY;
-      }, { passive: true });
-
-      container.addEventListener("touchend", (e) => {
-        if (isScrolling) return; // Ne pas gérer les événements tactiles pendant le défilement
-
-        touchEndY = e.changedTouches[0].clientY;
-        const swipeDistance = touchStartY - touchEndY;
-
-        if (swipeDistance > 50) {
-          // Swipe up
-          scrollByAmount(window.innerHeight / 2);
-        } else if (swipeDistance < -50) {
-          // Swipe down
-          scrollByAmount(-window.innerHeight / 2);
+          if (targetIndex !== currentIndex) {
+            cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         }
-      }, { passive: true });
 
-      // Gestion des touches du clavier
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowUp") {
-          // Flèche Haut
-          scrollByAmount(-window.innerHeight / 2);
-        } else if (e.key === "ArrowDown") {
-          // Flèche Bas
-          scrollByAmount(window.innerHeight / 2);
-        }
-      });
+
+        // Gestion des boutons
+        upButton.addEventListener("click", () => scrollToCard("up"));
+        downButton.addEventListener("click", () => scrollToCard("down"));
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowUp") scrollToCard("up");
+          if (e.key === "ArrowDown") scrollToCard("down");
+        });
+        // Gestion tactile (mobile-friendly)
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        container.addEventListener("touchstart", (e) => {
+          touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        container.addEventListener("touchend", (e) => {
+          if (isScrolling) return;
+
+          touchEndY = e.changedTouches[0].clientY;
+          const swipeDistance = touchStartY - touchEndY;
+
+          if (swipeDistance > 50) {
+            scrollToCard("down");
+          } else if (swipeDistance < -50) {
+            scrollToCard("up");
+          }
+        }, { passive: true });
+
 
       // Ajustement initial
       validateCardAlignment();
@@ -254,7 +269,7 @@
   </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("turbo:load", () => {
     const openPopupButton = document.getElementById("openPopup");
     const closePopupButton = document.getElementById("closePopupSave");
     const popup = document.getElementById("popup");

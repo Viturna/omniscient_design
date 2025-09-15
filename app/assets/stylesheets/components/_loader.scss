@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 #loading {
   position: fixed;
@@ -10,16 +10,9 @@
   width: calc(100vw - 350px);
   user-select: none;
 }
-
-@media screen and (min-width:0px) and (max-width: 768px) {
-  #loading {
-    width: 100vw;
-  }
-  #loading video {
-    width: 30vw;
-  }
+.main-show #loading {
+  width: 100vw;
 }
-
 .loader-bg {
   padding: 24px;
   background-color: $background-color;
@@ -31,9 +24,14 @@
   aspect-ratio: 1/1;
 }
 
-// #content {
-//   display: none;
-// }
+@media screen and (min-width: 0px) and (max-width: 768px) {
+  #loading {
+    width: 100vw;
+  }
+  #loading video {
+    width: 30vw;
+  }
+}
 
 @media screen and (min-width: 0px) and (max-width: 1024px) {
   #loading img {

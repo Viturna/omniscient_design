@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 .bg-img-card {
   position: absolute;
@@ -14,7 +14,6 @@
   object-fit: cover;
   overflow: hidden;
 }
-
 
 .bg-img-card::before {
   content: "";
@@ -32,9 +31,9 @@
   position: relative;
   z-index: 1;
 }
-.img-card{
+.img-card {
   max-width: 100%;
-  max-height:100%;
+  max-height: 100%;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -47,7 +46,7 @@
 
 .card {
   padding-top: 120px;
-  height: 95dvh;
+  height: calc(95dvh - 50px);
   position: relative;
   width: 50vw;
   scroll-snap-align: start;
@@ -64,7 +63,6 @@
   height: 45dvh;
   position: relative;
 }
-
 
 .flex-info-card {
   display: flex;
@@ -128,8 +126,7 @@
   margin-bottom: 3dvh;
 }
 
-
-@media screen and (min-width:769px) and (max-width: 1024px) {
+@media screen and (min-width: 769px) and (max-width: 1024px) {
   .card {
     width: 60vw;
     padding-top: 180px;
@@ -162,7 +159,7 @@
   }
 }
 
-@media screen and (min-width:601px) and (max-width: 768px) {
+@media screen and (min-width: 601px) and (max-width: 768px) {
   .bg-img-card {
     transform: rotate(-4deg);
   }
@@ -221,7 +218,7 @@
   }
 }
 
-@media screen and (min-width:426px) and (max-width: 600px) {
+@media screen and (min-width: 426px) and (max-width: 600px) {
   .flex-info-card {
     padding: 16px 8px;
   }
@@ -243,7 +240,6 @@
     width: 90vw;
     height: calc(100dvh - 280px);
   }
-
 
   .bg-card .date-main {
     transform: rotate(0deg);
@@ -289,7 +285,7 @@
   }
 
   .bg-img-card {
-    transform: rotate(0deg)
+    transform: rotate(0deg);
   }
 
   .bg-card {
@@ -344,9 +340,6 @@
   }
 }
 
-
-
-
 .subtitle-card {
   color: $primary-color;
 
@@ -358,7 +351,6 @@
 .description-card {
   color: $text-color;
 }
-
 
 body.dark-mode {
   .subtitle-card {

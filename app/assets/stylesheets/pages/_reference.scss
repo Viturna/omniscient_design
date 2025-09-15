@@ -232,24 +232,21 @@
   z-index: -1;
 }
 
-.horizontal-scroll-section {
-  margin-right: 32px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-}
 
 .horizontal-scroll-section::-webkit-scrollbar {
   display: none;
 }
+.horizontal-scroll-section {
+  overflow: hidden;
+  width: 100%;
+}
 
 .horizontal-wrapper {
   display: flex;
-  gap: 2rem;
-  padding: 2rem 1rem;
+  gap: 20px;
+   width: max-content;
 }
+
 
 .oeuvre-card {
   flex: 0 0 auto;

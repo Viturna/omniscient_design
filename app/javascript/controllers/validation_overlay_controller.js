@@ -5,30 +5,31 @@ export default class extends Controller {
   static targets = ["validation", "overlay", "overlayBottom"]
 
   connect() {
-    this.hideValidationHandler = this.hideValidation.bind(this)
-    this.seenValidationHandler = this.seenValidation.bind(this)
-
-    window.addEventListener('scroll', this.hideValidationHandler)
-    window.addEventListener('scroll', this.seenValidationHandler)
+    this.onScroll = this.handleScroll.bind(this)
+    window.addEventListener("scroll", this.onScroll)
   }
 
   disconnect() {
-    window.removeEventListener('scroll', this.hideValidationHandler)
-    window.removeEventListener('scroll', this.seenValidationHandler)
+    window.removeEventListener("scroll", this.onScroll)
   }
 
-  hideValidation() {
-    if (this.hasValidationTarget && this.hasOverlayTarget) {
-      this.validationTarget.style.display = 'none'
-      this.overlayTarget.style.display = 'none'
-      window.removeEventListener('scroll', this.hideValidationHandler)
-    }
-  }
+  handleScroll() {
+    // seuil de scroll
+    if (window.scrollY > 60) {
 
-  seenValidation() {
-    if (this.hasOverlayBottomTarget) {
-      this.overlayBottomTarget.style.display = 'block'
-      window.removeEventListener('scroll', this.seenValidationHandler)
+      if (this.hasValidationTarget) {
+        this.validationTarget.style.display = "none"
+      }
+
+      if (this.hasOverlayTarget) {
+        this.overlayTarget.style.display = "none"
+      }
+
+      if (this.hasOverlayBottomTarget) {
+        this.overlayBottomTarget.style.display = "block"
+      }
+
+      window.removeEventListener("scroll", this.onScroll)
     }
   }
 }

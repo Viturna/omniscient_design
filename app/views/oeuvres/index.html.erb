@@ -256,20 +256,25 @@
   </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("turbo:load", function() {
     const openPopupButton = document.getElementById("openPopup");
     const closePopupButton = document.getElementById("closePopup");
     const popup = document.getElementById("popup");
 
-    openPopupButton.addEventListener("click", function() {
-      popup.style.display = "flex";
-    });
+    if (!popup) return;
 
-    closePopupButton.addEventListener("click", function() {
-      popup.style.display = "none";
-    });
+    if (openPopupButton) {
+      openPopupButton.addEventListener("click", function() {
+        popup.style.display = "flex";
+      });
+    }
 
-    // Fermer la popup en cliquant en dehors de celle-ci
+    if (closePopupButton) {
+      closePopupButton.addEventListener("click", function() {
+        popup.style.display = "none";
+      });
+    }
+
     window.addEventListener("click", function(event) {
       if (event.target === popup) {
         popup.style.display = "none";

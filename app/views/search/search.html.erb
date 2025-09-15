@@ -57,8 +57,9 @@
 </section>
 
 <section class="grid-1 searchpage">
+  <turbo-frame id="search-results" data-controller="tabs-search">
   <h1>Rechercher</h1>
-  <div class="tabs" data-controller="tabs-search">
+  <div class="tabs">
     <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" 
             data-tab="designers" 
             data-tabs-search-target="tab" 
@@ -88,18 +89,42 @@
     <h2>Filtres</h2>
 
     <div class="filters">
-      <div class="filter" data-tabs-search-target="notionsFilter" style="<%= params[:tab] == 'designers' || params[:tab].blank? ? 'display:none;' : 'flex;' %>">
+      <div class="filter" 
+        data-tabs-search-target="domainFilter">
+        <label for="domainFilter">Domaine</label>
+        <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] },
+                        { include_blank: false, selected: params[:domaine] },
+                        { multiple: true, class: "select2" } %>
+      </div>
+      <div class="filter" data-tabs-search-target="notionsFilter">
         <label for="notionsFilter">Notions</label>
         <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] },
-                        { include_blank: false, selected: params[:notions] },
+                        { include_blank: "Choisir des notions", selected: params[:notions] },
                         { multiple: true, class: "select2", name: "notions[]" } %>
       </div>
 
-      <div class="filter" data-tabs-search-target="countryFilter" style="<%= params[:tab] == 'references' ? 'display:none;' : 'flex;' %>">
+      <div class="filter" data-tabs-search-target="countryFilter">
         <label for="paysFilter">Pays</label>
         <%= form.select :country, @countries.all.map { |p| [p.country, p.id] },
-                        { include_blank: false, selected: params[:country] },
+                        { include_blank: "Choisir des pays", selected: params[:country] },
                         { multiple: true, class: "select2" } %>
+      </div>
+      <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
+        <label for="dateFilter">Dates</label>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
+            Sélectionner une période
+          </button>
+          <div class="dropdown-menu" data-dropdown-target="menu">
+            <label for="startDate">De</label>
+            <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
+
+            <label for="endDate">À</label>
+            <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
+
+            <button type="button" id="applyDateFilter" class="button dark">Appliquer</button>
+          </div>
+        </div>
       </div>
 
       <div class="filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">
@@ -121,8 +146,7 @@
     </div>
   <% end %>
 
-<turbo-frame id="search-results">
-  <div id="designers" class="content-tab" 
+    <div id="designers" class="content-tab" 
        data-tabs-search-target="tabContent" 
        style="<%= params[:tab].blank? || params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
           <div id="designers-container" class="flex-container">
@@ -143,102 +167,100 @@
       </div>
       <%= paginate @oeuvres, params: { tab: 'references' } %>
     </div>
+
+    <div id="frise" class="content-tab" 
+      data-tabs-search-target="tabContent" 
+      style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
+      <h2>Références</h2>
+      <div class="timeline">
+        <% @timeline_years.each do |year| %>
+          <div class="timeline-item">
+            <div class="oeuvres">
+              <div class="oeuvres-container">
+                <% oeuvres_year = @oeuvres.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
+                <% if oeuvres_year.size > 1 %>
+                <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
+                  <span class="circle-with-number">+<%= oeuvres_year.size %></span>
+                  <div class="hidden-oeuvres" style="display: none;">
+                    <% oeuvres_year.each do |oeuvre| %>
+                      <%= link_to oeuvre, class: "oeuvre-point" do %>
+                        <div class="oeuvre" 
+                            title="<%= oeuvre.nom_oeuvre %>" 
+                            data-year="<%= oeuvre.date_oeuvre %>" 
+                            style="background-image: url('<%= oeuvre.image %>');">
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% else %>
+                <% oeuvres_year.each do |oeuvre| %>
+                  <%= link_to oeuvre, class: "oeuvre-point" do %>
+                    <div class="oeuvre" 
+                        title="<%= oeuvre.nom_oeuvre %>" 
+                        data-year="<%= oeuvre.date_oeuvre %>" 
+                        style="background-image: url('<%= oeuvre.image %>');">
+                    </div>
+                  <% end %>
+                <% end %>
+              <% end %>
+              </div>
+              <div class="oeuvre empty"></div>
+              <div class="year"><%= year %></div>
+            </div>
+          </div>
+        <% end %>
+        <hr class="timeline-hr">
+      </div>
+      <h2>Designers</h2>
+      <div class="timeline">
+        <% @timeline_years.each do |year| %>
+          <div class="timeline-item">
+            <div class="oeuvres">
+              <div class="oeuvres-container">
+                <% designers_year = @designers.select { |designer| designer.date_naissance.to_i == year } %>
+                <% if designers_year.size > 1 %>
+                <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
+                  <span class="circle-with-number">+<%= designers_year.size %></span>
+                  <div class="hidden-oeuvres" style="display: none;">
+                    <% designers_year.each do |designer| %>
+                      <%= link_to designer, class: "oeuvre-point" do %>
+                        <div class="oeuvre" 
+                            title="<%= designer.nom_designer %>" 
+                            data-year="<%= designer.date_naissance %>" 
+                            style="background-image: url('<%= designer.image %>');">
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% else %>
+                <% designers_year.each do |designer| %>
+                  <%= link_to designer, class: "oeuvre-point" do %>
+                    <div class="oeuvre" 
+                        title="<%= designer.nom_designer %>" 
+                        data-year="<%= designer.date_naissance %>" 
+                        style="background-image: url('<%= designer.image %>');">
+                    </div>
+                  <% end %>
+                <% end %>
+              <% end %>
+              </div>
+              <div class="oeuvre empty"></div>
+              <div class="year"><%= year %></div>
+            </div>
+          </div>
+        <% end %>
+        <hr class="timeline-hr">
+      </div>
+    </div>
   </turbo-frame>
-
-  <div id="frise" class="content-tab" 
-     data-tabs-search-target="tabContent" 
-     style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
-    <h2>Références</h2>
-    <div class="timeline">
-      <% @timeline_years.each do |year| %>
-        <div class="timeline-item">
-          <div class="oeuvres">
-            <div class="oeuvres-container">
-              <% oeuvres_year = @oeuvres.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
-              <% if oeuvres_year.size > 1 %>
-              <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
-                <span class="circle-with-number">+<%= oeuvres_year.size %></span>
-                <div class="hidden-oeuvres" style="display: none;">
-                  <% oeuvres_year.each do |oeuvre| %>
-                    <%= link_to oeuvre, class: "oeuvre-point" do %>
-                      <div class="oeuvre" 
-                          title="<%= oeuvre.nom_oeuvre %>" 
-                          data-year="<%= oeuvre.date_oeuvre %>" 
-                          style="background-image: url('<%= oeuvre.image %>');">
-                      </div>
-                    <% end %>
-                  <% end %>
-                </div>
-              </div>
-            <% else %>
-              <% oeuvres_year.each do |oeuvre| %>
-                <%= link_to oeuvre, class: "oeuvre-point" do %>
-                  <div class="oeuvre" 
-                      title="<%= oeuvre.nom_oeuvre %>" 
-                      data-year="<%= oeuvre.date_oeuvre %>" 
-                      style="background-image: url('<%= oeuvre.image %>');">
-                  </div>
-                <% end %>
-              <% end %>
-            <% end %>
-            </div>
-            <div class="oeuvre empty"></div>
-            <div class="year"><%= year %></div>
-          </div>
-        </div>
-      <% end %>
-      <hr class="timeline-hr">
-    </div>
-    <h2>Designers</h2>
-    <div class="timeline">
-      <% @timeline_years.each do |year| %>
-        <div class="timeline-item">
-          <div class="oeuvres">
-            <div class="oeuvres-container">
-              <% designers_year = @designers.select { |designer| designer.date_naissance.to_i == year } %>
-              <% if designers_year.size > 1 %>
-              <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
-                <span class="circle-with-number">+<%= designers_year.size %></span>
-                <div class="hidden-oeuvres" style="display: none;">
-                  <% designers_year.each do |designer| %>
-                    <%= link_to designer, class: "oeuvre-point" do %>
-                      <div class="oeuvre" 
-                          title="<%= designer.nom_designer %>" 
-                          data-year="<%= designer.date_naissance %>" 
-                          style="background-image: url('<%= designer.image %>');">
-                      </div>
-                    <% end %>
-                  <% end %>
-                </div>
-              </div>
-            <% else %>
-              <% designers_year.each do |designer| %>
-                <%= link_to designer, class: "oeuvre-point" do %>
-                  <div class="oeuvre" 
-                      title="<%= designer.nom_designer %>" 
-                      data-year="<%= designer.date_naissance %>" 
-                      style="background-image: url('<%= designer.image %>');">
-                  </div>
-                <% end %>
-              <% end %>
-            <% end %>
-            </div>
-            <div class="oeuvre empty"></div>
-            <div class="year"><%= year %></div>
-          </div>
-        </div>
-      <% end %>
-      <hr class="timeline-hr">
-    </div>
-  </div>
-
 </section>
 
 
 <script>
 document.addEventListener("turbo:load", function () {
   function initSelect2() {
-    console.log("Initialisation de Select2");
 
     const selects = $(".select2");
 
@@ -263,7 +285,7 @@ document.addEventListener("turbo:load", function () {
         if (value) {
           url.searchParams.set(key, value);
         } else {
-          url.searchParams.delete(key); // Nettoyer si vide
+          url.searchParams.delete(key); 
         }
       });
 

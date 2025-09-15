@@ -1,35 +1,27 @@
 import { Controller } from "@hotwired/stimulus"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import gsap from "gsap"
 
 export default class extends Controller {
+    static targets = ["wrapper"]
+
     connect() {
-        console.log("Scroll horizontal controller connecté")
+        this.wrapper = this.wrapperTarget
+        this.wrapper.style.overflow = "hidden" // masque la scrollbar
+        this.wrapper.addEventListener("wheel", this.onWheel.bind(this))
+        console.log("Scroll horizontal connecté")
+    }
 
-        gsap.registerPlugin(ScrollTrigger)
+    onWheel(e) {
+        e.preventDefault() // empêche le scroll vertical par défaut
 
-        const section = this.element.querySelector(".horizontal-scroll-section")
-        const wrapper = this.element.querySelector(".horizontal-wrapper")
+        const scrollAmount = e.deltaY || e.deltaX // récupère le mouvement de la molette
+        const currentX = this.wrapper.scrollLeft
 
-        if (!section || !wrapper) {
-            console.warn("Section ou wrapper introuvable")
-            return
-        }
-
-        // largeur totale du contenu à scroller
-        const totalScroll = wrapper.scrollWidth - window.innerWidth
-
-        gsap.to(wrapper, {
-            x: () => -totalScroll,
-            ease: "none",
-            scrollTrigger: {
-                trigger: section,
-                start: "top top",
-                end: () => "+=" + totalScroll,
-                scrub: true,
-                pin: true,
-                anticipatePin: 1,
-            }
+        // GSAP pour un scroll fluide
+        gsap.to(this.wrapper, {
+            scrollLeft: currentX + scrollAmount,
+            duration: 0.5,
+            ease: "power2.out"
         })
     }
 }

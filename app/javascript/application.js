@@ -8,28 +8,35 @@ import "controllers"
 // jQuery et plugins
 import "jquery"
 window.$ = window.jQuery = window.$ || window.jQuery
+
 import "select2"
 
 import "gsap"
 import "gsap/ScrollTrigger"
 
-// ------------------------
-// FUNCTIONS
-// ------------------------
-function initSelect2() {
-  console.log("Initialisation de Select2")
-  const selects = document.querySelectorAll('.select2')
-  selects.forEach(select => {
-    if (!$(select).hasClass("select2-hidden-accessible")) {
-      $(select).select2()
+
+document.addEventListener("turbo:load", function () {
+
+  $(".select2").select2({
+    placeholder: "Choisir une option",
+    allowClear: true,
+    width: "100%",
+    language: {
+      noResults: function () {
+        return "Aucun résultat trouvé";
+      },
+      searching: function () {
+        return "Recherche en cours…";
+      },
+      inputTooShort: function (args) {
+        return "Veuillez entrer au moins " + (args.minimum - args.input.length) + " caractère(s)";
+      },
+      inputTooLong: function (args) {
+        return "Veuillez supprimer " + (args.input.length - args.maximum) + " caractère(s)";
+      },
+      maximumSelected: function (args) {
+        return "Vous pouvez seulement sélectionner " + args.maximum + " élément(s)";
+      }
     }
   })
-}
-
-// ------------------------
-// EVENT LISTENERS
-// ------------------------
-document.addEventListener("turbo:load", () => {
-  initSelect2()
 })
-document.addEventListener('turbo:before-render', () => toggleLoading(true))

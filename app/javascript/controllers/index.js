@@ -37,14 +37,14 @@ application.register("recaptcha", RecaptchaController)
 import ReferenceScrollController from "./reference_scroll_controller"
 application.register("reference-scroll", ReferenceScrollController)
 
-import ShareController from "./share_controller"
-application.register("share", ShareController)
-
 import SavePopupController from "./save_popup_controller"
-application.register("savePopup", SavePopupController)
+application.register("save-popup", SavePopupController)
 
 import ScrollHorizontalController from "./scroll_horizontal_controller"
 application.register("scroll-horizontal", ScrollHorizontalController)
+
+import ShareController from "./share_controller"
+application.register("share", ShareController)
 
 import ShowPasswordController from "./show_password_controller"
 application.register("show-password", ShowPasswordController)

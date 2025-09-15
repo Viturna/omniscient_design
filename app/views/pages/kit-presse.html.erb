@@ -8,24 +8,24 @@
   <h1>Kit de presse</h1>
   <p class="subtitle">Téléchargez le logo, des screenshots ou encore le dossier de présentation de Omniscient Design pour partager la plateforme</p>
 </section>
-<section class="grid-1 mt-8">
+<section class="grid-1">
 <%= link_to "Télécharger le kit de presse (18,1Mo)", "/kit-presse.zip", 
-    class: "button dark w-fit", 
-    download: "kit-presse.zip" %>
+    class: "button dark button-kit", 
+    download: "kit-presse-omniscient-design.zip" %>
 
   <h2>Logos</h2>
-  <div class="flex gap-12 flex-wrap">
-    <div class="flex flex-col gap-4">
-    <%= image_tag "kit_presse/logo1.svg", alt: "Logo 1", class: "w-32 h-auto" %>
-    <p class="text-sm">4ko</p>
+  <div class="flex-kit">
+    <div class="logo-kit-container">
+    <%= image_tag "kit_presse/logo1.svg", alt: "Logo 1", class: "logo-kit" %>
+    <p >4ko</p>
   </div>
-  <div class="flex flex-col gap-4">
-    <%= image_tag "kit_presse/logo2.svg", alt: "Logo 2", class: "w-32 h-auto" %>
-     <p class="text-sm">4ko</p>
+    <div class="logo-kit-container">
+    <%= image_tag "kit_presse/logo2.svg", alt: "Logo 2", class: "logo-kit" %>
+     <p >4ko</p>
   </div>
-  <div class="flex flex-col gap-4 content-center">
-    <%= image_tag "kit_presse/logo3.svg", alt: "Logo 3", class: "w-48 h-31" %>
-    <p class="text-sm">16ko</p>
+    <div class="logo-kit-container">
+    <%= image_tag "kit_presse/logo3.svg", alt: "Logo 3", class: "logo-kit" %>
+    <p >16ko</p>
   </div>
   </div>
 
@@ -33,42 +33,42 @@
 
 
   <h2>Screenshots</h2>
-  <div class="flex flex-wrap gap-8">
-    <div class="flex flex-col gap-4">
+  <div class="flex-kit">
+    <div class="screen-kit">
       <%= image_tag "kit_presse/screenshot1", 
-  alt: "Screenshot", 
-  class: "w-full max-w-md h-auto border border-black mx-auto" %>
+        alt: "Screenshot", 
+        class: "w-full max-w-md h-auto border border-black mx-auto" %>
 
-        <p class="text-sm">176ko</p>
+        <p >176ko</p>
       </div>
-      <div class="flex flex-col gap-4">
+    <div class="screen-kit">
        <%= image_tag "kit_presse/screenshot2", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
-        <p class="text-sm">397ko</p>
+        <p >397ko</p>
       </div>
-            <div class="flex flex-col gap-4">
+          <div class="screen-kit">
        <%= image_tag "kit_presse/screenshot3", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
-        <p class="text-sm">209ko</p>
+        <p >209ko</p>
       </div>
-            <div class="flex flex-col gap-4">
+          <div class="screen-kit">
        <%= image_tag "kit_presse/screenshot4", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
-        <p class="text-sm">135ko</p>
+        <p >135ko</p>
       </div>
-            <div class="flex flex-col gap-4">
+          <div class="screen-kit">
        <%= image_tag "kit_presse/screenshot5", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
-        <p class="text-sm">164ko</p>
+        <p >164ko</p>
       </div>
-            <div class="flex flex-col gap-4">
+          <div class="screen-kit">
        <%= image_tag "kit_presse/screenshot6", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
-        <p class="text-sm">41ko</p>
+        <p >41ko</p>
       </div>
-            <div class="flex flex-col gap-4">
+          <div class="screen-kit">
        <%= image_tag "kit_presse/screenshot7", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
-        <p class="text-sm">53ko</p>
+        <p >53ko</p>
       </div>
     </div>
   <h2>Dossier de présentation</h2>
-  <div class="flex flex-col gap-4">
-    <%= image_tag "kit_presse/cover-dossier.jpg", alt: "Page de couverture du dossier de présentation", class: "w-64 h-auto" %>
-    <p class="text-sm">18,8Mo</p>
+  <div class="screen-kit">
+    <%= image_tag "kit_presse/cover-dossier.jpg", alt: "Page de couverture du dossier de présentation", class: "kit-dossier-img" %>
+    <p >18,8Mo</p>
   </div>
 </section>

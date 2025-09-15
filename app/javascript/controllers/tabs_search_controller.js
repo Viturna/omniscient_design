@@ -21,9 +21,6 @@ export default class extends Controller {
         url.search = ""
         url.searchParams.set("tab", tabName)
         url.searchParams.set("page", "1")
-
-        const frame = document.getElementById("search-results")
-        if (frame) frame.src = url.toString()
     }
     // Affiche/caché les contenus + filtres
     showTab(tabName) {

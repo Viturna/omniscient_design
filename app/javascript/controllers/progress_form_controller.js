@@ -6,19 +6,25 @@ window.$ = window.jQuery = window.$ || window.jQuery
 
 export default class extends Controller {
   static targets = ["progressBar", "progressPercent"]
-  static values = { select2Selector: { type: String, default: ".select2" } }
 
   connect() {
     this.updateProgress = this.updateProgress.bind(this)
 
     // Inputs natifs
-    this.inputs = this.element.querySelectorAll("input:not([type=hidden]), textarea, select")
+    this.inputs = this.element.querySelectorAll("input:not([type=hidden]), textarea, select, [name^='oeuvre[source]']")
+
     this.inputs.forEach(input => {
       input.addEventListener("input", this.updateProgress)
     })
 
     // Select2
-    this.select2Elements = $(this.select2SelectorValue)
+
+    this.select2Elements = $(this.element).find(".designer-select, .notions-select")
+    this.select2Elements.select2({
+      placeholder: "Sélectionnez...",
+      allowClear: true
+    }).on("change", this.updateProgress)
+
     this.select2Elements.on("change", this.updateProgress)
 
     // Init au chargement

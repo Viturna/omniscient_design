@@ -447,80 +447,7 @@
       </div>
     <% end %>
   </div>
-<div id="saveModal"
-     class="modal"
-     data-save-popup-target="modal"
-     data-action="click->save-popup#backdropClose">
-    <div class="popup-content">
-      <div class="top-popup">
-        <svg class="close-popup"
-           id="closePopupSave"
-           width="34" height="34"
-           viewBox="0 0 34 34"
-           fill="none"
-           xmlns="http://www.w3.org/2000/svg"
-           data-action="click->save-popup#close">
-          <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-        </svg>
-      </div>
-      <div class="flex-title-popup">
-        <p class="title-popup">Ajouter dans une liste</p>
-        <%= link_to 'Créer une liste', new_list_path, class: "popup-link-add" %>
-      </div>
-      <% @lists.each do |list| %>
-        <div class="box-list">
-          <%= link_to list, class: "box-list-left" do %>
-            <div class="box-text-list">
-              <p class="title-list"><%= list.name %></p>
-              <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
-            </div>
-          <% end %>
-          <% if @oeuvre.lists.include?(list) %>
-            <%= link_to remove_oeuvre_list_path(list, oeuvre_id: @oeuvre.id), method: :post, class: "remove-from-list-btn" do %>
-              <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_834_332)">
-                  <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
-                  <path d="M15.4035 22.0475L10.5409 17.1848L8 19.5065L15.4035 26.9102L29.9916 12.3221L27.6695 10L15.4035 22.0475Z" fill="#202020"/>
-                </g>
-                <defs>
-                  <clipPath id="clip0_834_332">
-                    <rect width="37" height="37" fill="white"/>
-                  </clipPath>
-                </defs>
-              </svg>
-            <% end %>
-          <% else %>
-            <%= form_with(url: add_oeuvre_list_path(list), method: "post", local: true) do |form| %>
-              <%= form.hidden_field :artwork_id, value: @oeuvre.id %>
-              <button type="submit" class="add-to-list-btn" style="border:none; background:none;">
-                <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_829_310)">
-                    <path d="M20.35 16.65H27.75V20.35H20.35V27.75H16.65V20.35H9.25V16.65H16.65V9.25H20.35V16.65ZM18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_829_310">
-                      <rect width="37" height="37" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-                <svg class="hover-btn" width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_834_332)">
-                    <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
-                    <path d="M15.4035 22.0475L10.5409 17.1848L8 19.5065L15.4035 26.9102L29.9916 12.3221L27.6695 10L15.4035 22.0475Z" fill="#202020"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_834_332">
-                      <rect width="37" height="37" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-              </button>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  </div>
+
   <div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog" aria-labelledby="globalRejectModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -547,6 +474,76 @@
   </div>
 
 
+      <div id="popup" class="popup">
+        <div class="popup-content">
+          <div class="top-popup">
+            <svg class="close-popup" id="closePopupSave" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+            </svg>
+          </div>
+          <div class="flex-title-popup">
+            <p class="title-popup">Ajouter dans une liste</p>
+            <%= link_to 'Créer une liste', new_list_path, class: "popup-link-add" %>
+          </div>
+          <% @lists.each do |list| %>
+            <div class="field">
+              <div class="box-list">
+                <%= link_to list, class: "box-list-left" do %>
+                  <div class="box-text-list">
+                    <p class="title-list"><%= list.name %></p>
+                    <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
+                  </div>
+                <% end %>
+                <% if @oeuvre.lists.include?(list) %>
+                <%= button_to remove_oeuvre_list_path(list, oeuvre_id: @oeuvre.id),
+                  method: :post,
+                  style: "background: none; border:none;",
+                  data: { confirm: "Êtes-vous sûr de vouloir retirer ce designer ?" } do%>
+                    <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g clip-path="url(#clip0_834_332)">
+                        <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
+                        <path d="M15.4035 22.0475L10.5409 17.1848L8 19.5065L15.4035 26.9102L29.9916 12.3221L27.6695 10L15.4035 22.0475Z" fill="#202020"/>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_834_332">
+                          <rect width="37" height="37" fill="white"/>
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  <% end %>
+                <% else %>
+                  <%= form_with(url: add_oeuvre_list_path(list), method: "post", local: true) do |form| %>
+                    <%= form.hidden_field :oeuvre_id, value: @oeuvre.id %>
+                    <button type="submit" class="add-to-list-btn" style="border:none; background:none;">
+                      <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_829_310)">
+                          <path d="M20.35 16.65H27.75V20.35H20.35V27.75H16.65V20.35H9.25V16.65H16.65V9.25H20.35V16.65ZM18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_829_310">
+                            <rect width="37" height="37" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <svg class="hover-btn" width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_834_332)">
+                          <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
+                          <path d="M15.4035 22.0475L10.5409 17.1848L8 19.5065L15.4035 26.9102L29.9916 12.3221L27.6695 10L15.4035 22.0475Z" fill="#202020"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_834_332">
+                            <rect width="37" height="37" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </button>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
   <!-- Modal image -->
   <div id="imageModal" class="modal">
       <div class="modal-image">
@@ -678,3 +675,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     });
   </script>
+
+
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const openPopupButton = document.getElementById("openPopupSave");
+    const closePopupButton = document.getElementById("closePopupSave");
+    const popup = document.getElementById("popup");
+
+    openPopupButton.addEventListener("click", function() {
+      popup.style.display = "flex";
+    });
+
+    closePopupButton.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
+
+    // Fermer la popup en cliquant en dehors de celle-ci
+    window.addEventListener("click", function(event) {
+      if (event.target === popup) {
+        popup.style.display = "none";
+      }
+    });
+  });
+</script>

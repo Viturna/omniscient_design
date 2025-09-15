@@ -117,7 +117,7 @@
               </div>
             <%end%>
           <%end%>
-          <button id="openPopup" style="border:none; background:none;" data-no-popup>
+          <button id="openPopupSave" style="border:none; background:none;" data-no-popup>
             <div class="circle">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" fill="white"/>
@@ -212,13 +212,6 @@
   <div class="content-show">
     <div class="text-show">
       <div class="title-box-oeuvre">
-        <%# <% if @oeuvre.concepts.any?%>
-        <%# <% @oeuvre.concepts.each do |concept| %>
-          <%# <div class="container-concept"> %>
-          <%# <%= concept.name %>
-          <%# </div> %>
-          <%# <%end%>
-          <%# <%end%>
           <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
           <h1 class="title-card"><%= designer.nom_designer %></h1>
         </div>
@@ -496,7 +489,11 @@
                   </div>
                 <% end %>
                 <% if @designer.lists.include?(list) %>
-                  <%= link_to remove_designer_list_path(list, designer_id: @designer.id), method: :delete, class: "remove-from-list-btn", data: { confirm: 'Êtes-vous sûr de vouloir retirer ce designer de la liste ?' } do %>
+              
+                <%= button_to remove_designer_list_path(list, designer_id: @designer.id),
+                  method: :post,
+                  style: "background: none; border:none;",
+                  data: { confirm: "Êtes-vous sûr de vouloir retirer ce designer ?" } do%>
                     <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <g clip-path="url(#clip0_834_332)">
                         <path d="M18.5 37C13.5935 37 8.88795 35.0509 5.41852 31.5815C1.9491 28.1121 0 23.4065 0 18.5C0 13.5935 1.9491 8.88795 5.41852 5.41852C8.88795 1.9491 13.5935 0 18.5 0C23.4065 0 28.1121 1.9491 31.5815 5.41852C35.0509 8.88795 37 13.5935 37 18.5C37 23.4065 35.0509 28.1121 31.5815 31.5815C28.1121 35.0509 23.4065 37 18.5 37ZM18.5 33.3C22.4252 33.3 26.1896 31.7407 28.9652 28.9652C31.7407 26.1896 33.3 22.4252 33.3 18.5C33.3 14.5748 31.7407 10.8104 28.9652 8.03482C26.1896 5.25928 22.4252 3.7 18.5 3.7C14.5748 3.7 10.8104 5.25928 8.03482 8.03482C5.25928 10.8104 3.7 14.5748 3.7 18.5C3.7 22.4252 5.25928 26.1896 8.03482 28.9652C10.8104 31.7407 14.5748 33.3 18.5 33.3Z" fill="#202020"/>
@@ -644,59 +641,23 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const header = document.querySelector('.header-show');
-  const modal = document.getElementById('imageModal');
-  const modalImg = document.getElementById('modalImage');
-  const closeButtons = [
-    document.getElementById('closeImageModal'),
-    document.getElementById('closePopup'),
-  ];
+  document.addEventListener("turbo:load", () => {
+    const openPopupButton = document.getElementById("openPopupSave");
+    const closePopupButton = document.getElementById("closePopupSave");
+    const popup = document.getElementById("popup");
 
-  if (header) {
-    header.addEventListener('click', (event) => {
-      const target = event.target;
-
-      // 👉 Log pour debug
-      console.log('Clic sur:', target);
-
-      // ❌ Si clic sur bouton ou enfant de bouton → on ne fait rien
-      if (target.closest('button')) {
-        console.log('Clic sur un bouton — popup annulée');
-        return;
-      }
-
-      // ✅ Récupère l'image de fond
-      const style = getComputedStyle(header);
-      const bg = style.backgroundImage;
-      const urlMatch = bg.match(/url\("(.*)"\)/);
-
-      if (urlMatch && urlMatch[1]) {
-        modalImg.src = urlMatch[1];
-      }
-
-      // ✅ Affiche le modal
-      modal.classList.add('show');
-      modal.style.display = 'flex';
-      document.body.classList.add('modal-open');
+    openPopupButton.addEventListener("click", function() {
+      popup.style.display = "flex";
     });
-  }
 
-  // 🔒 Fonction de fermeture
-  function closeModal() {
-    modal.classList.remove('show');
-    modal.style.display = 'none';
-    document.body.classList.remove('modal-open');
-  }
+    closePopupButton.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
 
-  // 🔘 Boutons de fermeture (compatibilité avec les deux IDs)
-  closeButtons.forEach(btn => {
-    if (btn) btn.addEventListener('click', closeModal);
+    window.addEventListener("click", function(event) {
+      if (event.target === popup) {
+        popup.style.display = "none";
+      }
+    });
   });
-
-  // 📤 Clique en dehors de l’image
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
-});
 </script>

@@ -2,7 +2,7 @@
 <% content_for :description, "La page de recherche permet de trouver efficacement et rapidement la référence que tu cherches. Trie les références par domaine, année ou encore pays !" %>
 
 <section class="top-bar-search">
-  <%= form_with url: search_path, method: :get, local: true do |form| %>
+<%= form_with url: search_path, method: :get, data: { turbo: false } do |form| %>
   <div class="autocomplete" 
       data-controller="autocomplete" 
       data-autocomplete-url-value="<%= search_autocomplete_path %>">
@@ -55,9 +55,8 @@
   <% end %>
 </div>
 </section>
+<section class="grid-1 searchpage"  data-controller="tabs-search">
 
-<section class="grid-1 searchpage">
-  <turbo-frame id="search-results" data-controller="tabs-search">
   <h1>Rechercher</h1>
   <div class="tabs">
     <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" 
@@ -224,7 +223,7 @@
                   <span class="circle-with-number">+<%= designers_year.size %></span>
                   <div class="hidden-oeuvres" style="display: none;">
                     <% designers_year.each do |designer| %>
-                      <%= link_to designer, class: "oeuvre-point" do %>
+                         <%= link_to designer,  data: { turbo_frame: "_top" },class: "oeuvre-point" do %>
                         <div class="oeuvre" 
                             title="<%= designer.nom_designer %>" 
                             data-year="<%= designer.date_naissance %>" 
@@ -236,13 +235,14 @@
                 </div>
               <% else %>
                 <% designers_year.each do |designer| %>
-                  <%= link_to designer, class: "oeuvre-point" do %>
-                    <div class="oeuvre" 
-                        title="<%= designer.nom_designer %>" 
-                        data-year="<%= designer.date_naissance %>" 
-                        style="background-image: url('<%= designer.image %>');">
-                    </div>
-                  <% end %>
+                 <%= link_to designer, data: { turbo_frame: "_top" }, class: "oeuvre-point" do %>
+  <div class="oeuvre" 
+       title="<%= designer.nom_designer %>" 
+       data-year="<%= designer.date_naissance %>" 
+       style="background-image: url('<%= designer.image %>');">
+  </div>
+  <% end %>
+
                 <% end %>
               <% end %>
               </div>
@@ -254,10 +254,8 @@
         <hr class="timeline-hr">
       </div>
     </div>
-  </turbo-frame>
+
 </section>
-
-
 <script>
 document.addEventListener("turbo:load", function () {
   function initSelect2() {

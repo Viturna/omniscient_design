@@ -171,7 +171,7 @@ class ListsController < ApplicationController
   end
 
   def add_oeuvre
-    oeuvre = Oeuvre.find(params[:artwork_id])
+    oeuvre = Oeuvre.find(params[:oeuvre_id])
 
     if @list.oeuvres.include?(oeuvre)
       redirect_to request.referer, alert: "Cette référence est déjà dans la liste."
@@ -183,6 +183,7 @@ class ListsController < ApplicationController
       end
     end
   end
+
 
   def add_designer
     designer = Designer.find(params[:designer_id])

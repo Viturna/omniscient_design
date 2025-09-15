@@ -37,9 +37,6 @@ application.register("recaptcha", RecaptchaController)
 import ReferenceScrollController from "./reference_scroll_controller"
 application.register("reference-scroll", ReferenceScrollController)
 
-import SavePopupController from "./save_popup_controller"
-application.register("save-popup", SavePopupController)
-
 import ScrollHorizontalController from "./scroll_horizontal_controller"
 application.register("scroll-horizontal", ScrollHorizontalController)
 

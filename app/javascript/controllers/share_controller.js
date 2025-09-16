@@ -18,7 +18,6 @@ export default class extends Controller {
     event.preventDefault()
     if (!this.hasModalTarget) return console.error("Modal target missing")
     this.modalTarget.style.display = "flex"
-    console.log("Modal opened")
   }
 
   close() {

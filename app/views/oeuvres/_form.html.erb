@@ -95,7 +95,7 @@
   <div id="sources-container">
     <% (@oeuvre.source || "").split("\n").each do |src| %>
       <div class="source-input">
-        <%= form.text_field :source, value: src, name: "oeuvre[source][]" , placeholder: "Ex: https://example.com" %>
+        <%= form.text_field :source, value: src, name: "oeuvre[source][]", placeholder: "Ex: https://example.com" %>
         <button type="button" class="remove-source button small">Supprimer</button>
       </div>
     <% end %>

@@ -95,10 +95,10 @@
   <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> référence(s)</p>
 </section>
 <section class="grid-1">
-   <div class="tabs">
-    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'all' %>" data-tab="all">Tout</button>
-    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" data-tab="designers">Designers</button>
-    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références</button>
+  <div class="tabs" data-controller="tabs">
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'all' %>" data-tabs-target="tab" data-tab="all" data-action="click->tabs#switch">Tout</button>
+    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" data-tabs-target="tab" data-tab="designers" data-action="click->tabs#switch">Designers</button>
+    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tabs-target="tab" data-tab="references" data-action="click->tabs#switch">Références</button>
   </div>
   <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
     <div id="manageUsersPopup" class="popup">
@@ -182,7 +182,9 @@
       <p>Aucune référence trouvée dans cette liste.</p>
     </div>  
   <% else %>
-    <div id="all" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'all' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'all' %>">
+    <div id="all" class="content-tab" 
+     data-tabs-target="tabContent" 
+     style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'all' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'all' %>">
       <div class="flex-title-list">
         <h2>Tout</h2>
       </div>
@@ -196,7 +198,9 @@
         <% end %>
       </div>
     </div>
-    <div id="references" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
+    <div id="references" class="content-tab" 
+     data-tabs-target="tabContent" 
+     style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
       <div class="flex-title-list">
         <h2>Les références</h2>
       </div>
@@ -206,7 +210,9 @@
         <% end %>
       </div>
     </div>
-    <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'designers' %><%= 'display: none;' unless params[:tab] == 'designers' %>">
+    <div id="designers" class="content-tab" 
+     data-tabs-target="tabContent" 
+     style="<%= 'display: block;' if params[:tab] == 'designers' %><%= 'display: none;' unless params[:tab] == 'designers' %>">
         <div class="flex-title-list">
         <h2>Les designers </h2>
       </div>

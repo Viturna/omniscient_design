@@ -17,18 +17,15 @@ export default class extends Controller {
       input.addEventListener("input", this.updateProgress)
     })
 
-    // Select2
-
-    this.select2Elements = $(this.element).find(".designer-select, .notions-select")
-    this.select2Elements.select2({
-      placeholder: "Sélectionnez...",
-      allowClear: true
-    }).on("change", this.updateProgress)
+    this.select2Elements = $(this.element).find(".designer-select, .notions-select");
+    this.select2Elements.on("change", this.updateProgress);
 
     this.select2Elements.on("change", this.updateProgress)
 
     // Init au chargement
     this.updateProgress()
+
+
   }
 
   disconnect() {
@@ -39,6 +36,7 @@ export default class extends Controller {
     if (this.select2Elements) {
       this.select2Elements.off("change", this.updateProgress)
     }
+
   }
 
   updateProgress() {

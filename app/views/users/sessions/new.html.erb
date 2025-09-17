@@ -1,7 +1,7 @@
 <% content_for :title, "Connexion à votre compte - Omniscient Design" %>
 <% content_for :description, "Connectez-vous à votre espace personnel Omniscient Design pour explorer, sauvegarder et partager vos références et designers préférés." %>
 
-<div class="log" style="background-color:#202020; color:#FFF;">
+<div class="log" style="color:#FFF;">
   <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
     <h1>Connexion</h1>
@@ -41,3 +41,8 @@
     </div>
   </section>
 </div>
+
+
+<% content_for :recaptcha_script do %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
+<% end %>

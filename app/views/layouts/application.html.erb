@@ -40,8 +40,7 @@
 
     <!-- reCAPTCHA -->
     <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
-    <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
-    
+
     <!-- Favicon et manifest -->
     <%= render 'application/favicon' %>
 
@@ -60,7 +59,8 @@
                   when 'light-mode' then 'light-mode'
                   else ''
                 end %>
-  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>">
+  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>"    data-controller-name="<%= controller_name %>" 
+      data-action-name="<%= action_name %>">
     <div id="cookie-consent-banner" 
         data-controller="cookie-consent" 
         data-cookie-consent-target="banner" 
@@ -99,7 +99,6 @@
     <% end %>
 <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
 <main class="<%= 'main-show' if main_show %>" data-controller="loading">
-
      <div id="loading" data-loading-target="loading" data-turbo-permanent>
         <div class="loader-bg">      
           <video autoplay loop muted>
@@ -114,5 +113,6 @@
     </main>
     <!-- JavaScript Rails -->
     <%= javascript_importmap_tags %>
+    <%= yield :recaptcha_script %>
   </body>
 </html>

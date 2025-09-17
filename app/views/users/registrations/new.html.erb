@@ -1,7 +1,7 @@
 <% content_for :title, "S'inscrire - Omniscient Design" %>
 <% content_for :description, "Inscris-toi sur Omniscient Design pour devenir un vrai pro dans l'univers du design. Rejoins une communauté de passionnés prête à tout pour rendre le design accessible." %>
 
-<div class="log" style="background-color:#202020; color:#FFF; min-height:100vh;">
+<div class="log" style="color:#FFF; min-height:100vh;">
   <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
     <h1>S’inscrire</h1>
@@ -122,3 +122,8 @@
     });
   });
 </script>
+
+
+<% content_for :recaptcha_script do %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
+<% end %>

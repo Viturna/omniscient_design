@@ -102,7 +102,7 @@
 <% end %>
 
 <script>
-  $(document).ready(function() {
+  document.addEventListener("turbo:load", () => {
     var birthYearInput = document.getElementById("birth-year-input");
     var deathYearInput = document.getElementById("death-year-input");
     var birthYearError = document.getElementById("birth-year-error");
@@ -175,3 +175,8 @@
     });
   });
 </script>
+
+
+<% content_for :recaptcha_script do %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
+<% end %>

@@ -11,7 +11,7 @@ export default class extends Controller {
     this.updateProgress = this.updateProgress.bind(this)
 
     // Inputs natifs
-    this.inputs = this.element.querySelectorAll("input:not([type=hidden]), textarea, select, [name^='oeuvre[source]']")
+    this.inputs = this.element.querySelectorAll("input:not([type=hidden]), textarea, select, [name^='oeuvre[source]']");
 
     this.inputs.forEach(input => {
       input.addEventListener("input", this.updateProgress)
@@ -22,7 +22,6 @@ export default class extends Controller {
 
     this.select2Elements.on("change", this.updateProgress)
 
-    // Init au chargement
     this.updateProgress()
 
 

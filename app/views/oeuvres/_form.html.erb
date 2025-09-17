@@ -1,4 +1,5 @@
-<%= form_with(model: @oeuvre, local: true) do |form| %>
+<%= form_with(model: @oeuvre, local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
+  <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
   <div class="error-message" style="color: red; display: none;"></div>
   <% if @oeuvre.errors.any? %>
     <div style="color: red">
@@ -216,7 +217,7 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("turbo:load", () => {
   const input = document.querySelector('input[type="file"]');
   const preview = document.createElement("img");
   preview.style.maxWidth = "300px";
@@ -238,7 +239,7 @@
 });
 
 </script><script>
-document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("turbo:load", () => {
   const container = document.getElementById("sources-container");
   const addButton = document.getElementById("add-source");
 
@@ -262,3 +263,9 @@ document.addEventListener("DOMContentLoaded", function() {
   document.querySelectorAll(".remove-source").forEach(btn => attachRemoveListener(btn));
 });
 </script>
+
+
+
+<% content_for :recaptcha_script do %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
+<% end %>

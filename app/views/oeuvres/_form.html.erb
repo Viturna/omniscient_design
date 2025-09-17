@@ -25,30 +25,32 @@
 
 <div class="form-step" data-step="2" style="display: none;">
   <h3>Étape 2 : Contexte et Description</h3>
-  <div class="flex-form"> 
-    <%= form.label :designer_ids, "Nom du/des designer(s)" %>
-      <% max_designers = 3 %>
-      <% selected_designers = @oeuvre.designer_ids %>
+  <div class="flex-form">
+    <div data-controller="multi-select" data-multi-select-prefix-value="designer"> 
+      <%= form.label :designer_ids, "Nom du/des designer(s)" %>
+        <% max_designers = 3 %>
+        <% selected_designers = @oeuvre.designer_ids %>
 
-      <% (0...max_designers).each do |index| %>
+        <% (0...max_designers).each do |index| %>
+          <div>
+            <%= form.collection_select :designer_ids,
+              Designer.order(:nom),
+              :id,
+              :nom_designer,
+              { 
+                include_blank: "Aucun designer",
+                prompt: "Lier un/une designer",
+                selected: selected_designers[index] # sélectionne seulement si un designer existe à cet index
+              },
+              { 
+                class: "form-control designer-select",
+                id: "designer_#{index + 1}",
+                name: "oeuvre[designer_ids][]"
+              } %>
+          </div>
+        <% end %>
         <div>
-          <%= form.collection_select :designer_ids,
-            Designer.order(:nom),
-            :id,
-            :nom_designer,
-            { 
-              include_blank: "Aucun designer",
-              prompt: "Lier un/une designer",
-              selected: selected_designers[index] # sélectionne seulement si un designer existe à cet index
-            },
-            { 
-              class: "form-control designer-select",
-              id: "designer_#{index + 1}",
-              name: "oeuvre[designer_ids][]"
-            } %>
-        </div>
-      <% end %>
-      <div>
+      </div>
       <%= form.label :notion_ids, "Notion(s) de la référence" %>
       <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
     </div>

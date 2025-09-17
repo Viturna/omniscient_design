@@ -115,12 +115,14 @@
             Sélectionner une période
           </button>
           <div class="dropdown-menu" data-dropdown-target="menu">
-            <label for="startDate">De</label>
-            <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
-
-            <label for="endDate">À</label>
-            <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
-
+            <div>
+              <label for="startDate">De</label>
+              <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: "Année de début" %>
+            </div>
+            <div>
+              <label for="endDate">À</label>
+              <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: "Année de fin" %>
+            </div>
             <button type="button" id="applyDateFilter" class="button dark">Appliquer</button>
           </div>
         </div>
@@ -156,7 +158,7 @@
       <%= paginate @designers, params: { tab: 'designers' } %>
     </div>
 
-      <div id="references" class="content-tab" 
+     <div id="references" class="content-tab" 
        data-tabs-search-target="tabContent" 
        style="<%= params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
         <div id="oeuvres-container" class="flex-container">
@@ -178,9 +180,9 @@
               <div class="oeuvres-container">
                 <% oeuvres_year = @oeuvres.select { |oeuvre| oeuvre.date_oeuvre.to_i == year } %>
                 <% if oeuvres_year.size > 1 %>
-                <div class="oeuvres-counter" data-count="<%= oeuvres_year.size %>">
-                  <span class="circle-with-number">+<%= oeuvres_year.size %></span>
-                  <div class="hidden-oeuvres" style="display: none;">
+                <div class="oeuvres-counter" data-controller="oeuvres-counter">
+                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= oeuvres_year.size %></span>
+                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
                     <% oeuvres_year.each do |oeuvre| %>
                       <%= link_to oeuvre, class: "oeuvre-point" do %>
                         <div class="oeuvre" 
@@ -219,9 +221,9 @@
               <div class="oeuvres-container">
                 <% designers_year = @designers.select { |designer| designer.date_naissance.to_i == year } %>
                 <% if designers_year.size > 1 %>
-                <div class="oeuvres-counter" data-count="<%= designers_year.size %>">
-                  <span class="circle-with-number">+<%= designers_year.size %></span>
-                  <div class="hidden-oeuvres" style="display: none;">
+                <div class="oeuvres-counter" data-controller="oeuvres-counter">
+                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= designers_year.size %></span>
+                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
                     <% designers_year.each do |designer| %>
                          <%= link_to designer,  data: { turbo_frame: "_top" },class: "oeuvre-point" do %>
                         <div class="oeuvre" 

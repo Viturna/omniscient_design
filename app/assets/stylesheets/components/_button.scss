@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 .button {
   display: block;
@@ -53,14 +53,13 @@
   display: flex;
 
   &:hover {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
   }
 
   &:active {
-    background-color: #1B1B1B;
+    background-color: #1b1b1b;
   }
 }
-
 
 // Circle
 .circle {
@@ -75,11 +74,11 @@
   cursor: pointer;
 
   &:hover {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
   }
 
   &:active {
-    background-color: #1B1B1B;
+    background-color: #1b1b1b;
   }
 }
 
@@ -98,8 +97,6 @@
   width: 60px;
   height: 60px;
   position: relative;
-
-
 }
 
 .notification-counter {
@@ -109,7 +106,7 @@
   align-items: center;
   justify-content: center;
   top: -10px;
-  background-color: #FFF;
+  background-color: #fff;
   color: $primary-color;
   border-radius: 50%;
   font-size: 12px;
@@ -124,7 +121,6 @@
   padding: 4px 8px;
   font-size: 12px;
 }
-
 
 // Retour
 
@@ -151,8 +147,7 @@
   cursor: pointer;
 }
 
-@media screen and (min-width:1025px) and (max-width:1280px) {
-
+@media screen and (min-width: 1025px) and (max-width: 1280px) {
   //ADD
   .button-add {
     font-size: 20px;
@@ -163,10 +158,9 @@
   .large {
     padding: 25px 86px;
   }
-
 }
 
-@media screen and (min-width:601px) and (max-width: 1024px) {
+@media screen and (min-width: 601px) and (max-width: 1024px) {
   .large {
     padding: 21px 64px;
   }
@@ -226,7 +220,7 @@
   }
 }
 
-@media screen and (min-width:426px) and (max-width: 600px) {
+@media screen and (min-width: 426px) and (max-width: 600px) {
   .large {
     padding: 25px 66px;
     width: 100%;
@@ -276,7 +270,7 @@
   }
 }
 
-@media screen and (min-width:376px) and (max-width: 425px) {
+@media screen and (min-width: 376px) and (max-width: 425px) {
   .button {
     width: 100%;
     padding: 20px 15px;
@@ -380,9 +374,7 @@
     padding: 70px 0;
     width: auto;
   }
-
 }
-
 
 .button {
   color: $primary-color;
@@ -391,6 +383,10 @@
   &:hover {
     background-color: $background-color;
   }
+
+  &:active {
+    background-color: #dbdbdb;
+  }
 }
 
 .dark {
@@ -398,11 +394,11 @@
   color: $secondary-color;
 
   &:hover {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
   }
 
   &:active {
-    background-color: #1B1B1B;
+    background-color: #1b1b1b;
   }
 }
 

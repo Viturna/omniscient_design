@@ -106,8 +106,8 @@
 
     // Fonction de chargement des cartes
     function loadMoreCards() {
-      if (isLoading) return; // ✅ déjà en cours, on stoppe
-      isLoading = true;      // ✅ on bloque tout de suite
+      if (isLoading) return;
+      isLoading = true;
 
       const offset = loadMoreTrigger.dataset.offset;
       const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');

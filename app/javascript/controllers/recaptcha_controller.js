@@ -7,11 +7,11 @@ export default class extends Controller {
   connect() {
     this.siteKey = document.querySelector('meta[name="recaptcha-site-key"]').getAttribute('content')
     this.formTarget.addEventListener("submit", (event) => this.handleSubmit(event))
+    console.log("Recaptcha est co")
   }
 
   handleSubmit(event) {
-    event.preventDefault() // Empêche l'envoi immédiat du formulaire
-
+    event.preventDefault()
     if (typeof grecaptcha === "undefined") {
       console.error("reCAPTCHA n'est pas chargé")
       return
@@ -19,7 +19,7 @@ export default class extends Controller {
 
     grecaptcha.execute(this.siteKey, { action: 'submit' }).then((token) => {
       this.tokenTarget.value = token
-      this.formTarget.submit() // Soumet le formulaire après obtention du token
+      this.formTarget.submit()
     })
   }
 }

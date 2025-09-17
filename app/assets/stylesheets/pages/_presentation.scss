@@ -1,22 +1,31 @@
 @import "abstracts/variables";
 
-.logo-top {
-  position: absolute;
-  z-index: 99;
-  left: 5vw;
-  top: 45px;
-  width: 200px;
-}
-
 /* SECTION HERO */
 .od-hero {
   width: 100%;
-  background-color: #202020;
+  background-color: $primary-color;
 
   .od-badge-references {
-    border: 2.5px solid #fff;
+    border: 2.5px solid $secondary-color;
+    background-color: $secondary-color;
     border-radius: 999px;
-    color: $secondary-color;
+    color: $primary-color;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 72px;
+    gap: 8px;
+    &:hover {
+      background-color: #e7e7e7;
+    }
+    &:active {
+      background-color: #dbdbdb;
+      border: 2.5px solid #dbdbdb;
+    }
+  }
+  .od-badge-highlight {
+    font-weight: 600;
   }
 
   &-container {
@@ -39,8 +48,11 @@
   }
 
   &-logo {
-    height: 3.25rem;
+    height: 50px;
     width: auto;
+    position: absolute;
+    left: 8vw;
+    top: 65px;
   }
 
   &-title {
@@ -61,18 +73,15 @@
   }
 
   &-cta {
+    margin-top: 12px;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 16px;
     align-items: center;
-
-    @media (min-width: 1024px) {
-      align-items: flex-start;
-    }
 
     .od-btn-primary {
       background-color: #fff;
-      color: #202020;
+      color: $primary-color;
       padding: 0.75rem 2rem;
       border-radius: 9999px;
       font-weight: 600;
@@ -120,13 +129,13 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 10px 24px;
+    padding: 12px 24px;
     background-color: $secondary-color;
     border-radius: 9999px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
     text-decoration: none;
-    color: #202020;
+    color: $primary-color;
     transition: background 0.3s;
 
     &:hover {
@@ -143,14 +152,14 @@
 }
 
 /* SECTION BESOIN */
-.od-need-section {
+.od-pres-section {
   width: 100%;
-  padding: 6rem 1.5rem;
+  margin-top: 96px;
 
-  .od-need-container {
+  .od-pres-container {
     max-width: 100%;
-    margin: 0 auto;
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
     gap: 4rem;
 
@@ -160,11 +169,12 @@
       align-items: center;
     }
 
-    .od-need-text {
-      width: 100%;
+    .od-pres-text:first-of-type {
+    }
+    .od-pres-text {
+      width: 35vw;
 
       p:first-of-type {
-        font-size: 0.875rem;
         text-transform: uppercase;
         letter-spacing: 1px;
         color: $primary-color;
@@ -173,9 +183,9 @@
 
       h2 {
         padding: 0;
-        margin: 8px 0;
+        margin: 16px 0;
         font-size: 2.25rem;
-        color: #202020;
+        color: $primary-color;
       }
 
       p {
@@ -190,96 +200,37 @@
       }
     }
 
-    .od-need-image {
-      width: 100%;
+    .od-pres-image {
+      width: fit-content;
+      background-color: $secondary-color;
 
       .od-rounded-img {
         border-radius: 8px;
-        width: 100%;
+        width: 48vw;
+
+        &.right {
+          padding: 55px 0 55px 55px;
+        }
+        &.left {
+          padding: 55px 55px 55px 0px;
+        }
       }
     }
   }
 }
 
-/* SECTION SOLUTION */
-.od-solution-section {
-  width: 100%;
-  background-color: #f9fafb;
-  padding: 6rem 1.5rem;
+.od-pres-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 12px;
 
-  .od-solution-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-
-    @media (min-width: 1024px) {
-      flex-direction: row;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .od-solution-image,
-    .od-solution-text {
-      width: 100%;
-    }
-
-    .od-solution-image img {
-      padding: 24px 12px;
-      background-color: $secondary-color;
-    }
-
-    .od-solution-text {
-      p:first-of-type {
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #6b7280;
-      }
-
-      h2 {
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: #202020;
-      }
-
-      p {
-        font-size: 1.125rem;
-        line-height: 1.75rem;
-        color: #374151;
-      }
-
-      .od-solution-stats {
-        display: flex;
-        gap: 3rem;
-
-        div {
-          p:first-of-type {
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: #202020;
-          }
-
-          p:last-of-type {
-            font-size: 0.875rem;
-            color: #6b7280;
-          }
-        }
-      }
-    }
-
-    .od-rounded-img {
-      border-radius: 1rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      width: 100%;
-    }
-  }
+  
 }
 
 /* SECTION CITATION */
 .od-quote-section {
-  background-color: #202020;
+  margin-top: 96px;
+  background-color: $primary-color;
   text-align: center;
   padding: 8rem 0;
 
@@ -307,8 +258,8 @@
 
   h2 {
     font-size: 2.25rem;
-    font-weight: 700;
-    color: #202020;
+    width: 50%;
+    color: $primary-color;
   }
 
   p {
@@ -354,7 +305,7 @@
       h2 {
         font-size: 2.25rem;
         font-weight: 700;
-        color: #202020;
+        color: $primary-color;
       }
 
       p {

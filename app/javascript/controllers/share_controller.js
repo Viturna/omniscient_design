@@ -7,7 +7,6 @@ export default class extends Controller {
   ]
 
   connect() {
-    console.log("Share controller connected")
     if (!this.hasModalTarget) console.warn("No modal target found!")
     this.urlToShare = window.location.href
     this.textToShare = "Découvrez cette œuvre incroyable !"

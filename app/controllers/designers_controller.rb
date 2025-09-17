@@ -4,7 +4,7 @@ class DesignersController < ApplicationController
   before_action :set_designer, only: %i[show edit update destroy cancel validate cancel reject]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
-  # GET /designers or /designers.json
+
   def index
     @designers = Designer.where(validation: true).order("RANDOM()").limit(2)
     @current_page = 'accueil'
@@ -22,8 +22,7 @@ class DesignersController < ApplicationController
 
     render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' }
   end
-  
-  # GET /designers/1 or /designers/1.json
+
   def show
     @domaines = @designer.domaines
     if user_signed_in?
@@ -59,8 +58,10 @@ class DesignersController < ApplicationController
     @designer = Designer.new(designer_params)
     @designer.user = current_user
 
-      if @designer.save
-        update_suivi_references_emises(current_user)
+     token = params[:recaptcha_token]
+
+    if verify_recaptcha(token) && @designer.save
+          update_suivi_references_emises(current_user)
         create_notification(@designer)
         flash[:success] = "Designer créé avec succès."
         redirect_to @designer

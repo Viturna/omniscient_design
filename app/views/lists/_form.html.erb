@@ -54,7 +54,7 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("turbo:load", () => {
     let offsets = { oeuvres: 10, designers: 10 };
 
     function setupLoadMore(buttonId, listId) {
@@ -98,7 +98,7 @@
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("turbo:load", () => {
     const selectedDesigners = new Set();
     const selectedOeuvres = new Set();
 
@@ -172,7 +172,7 @@
   });
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("turbo:load", () => {
     const nameInput = document.getElementById("list-name");
     const submitButton = document.getElementById("submit-list");
 
@@ -223,7 +223,7 @@
     .then(html => container.innerHTML = html);
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+     document.addEventListener("turbo:load", () => {
     setupLiveSearch('designer-search', 'designers-load-more', 'designers');
     setupLiveSearch('oeuvre-search', 'oeuvres-load-more', 'oeuvres');
   });

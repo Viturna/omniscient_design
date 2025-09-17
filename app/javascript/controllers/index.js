@@ -55,8 +55,8 @@ application.register("tabs", TabsController)
 import TabsSearchController from "./tabs_search_controller"
 application.register("tabs-search", TabsSearchController)
 
-import UniqueSelectController from "./unique_select_controller"
-application.register("unique-select", UniqueSelectController)
+import MultiSelectController from "./multi_select_controller"
+application.register("multi-select", MultiSelectController)
 
 import ValidationOverlayController from "./validation_overlay_controller"
 application.register("validation-overlay", ValidationOverlayController)

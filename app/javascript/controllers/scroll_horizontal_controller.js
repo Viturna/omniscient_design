@@ -8,7 +8,6 @@ export default class extends Controller {
         this.wrapper = this.wrapperTarget
         this.wrapper.style.overflow = "hidden" // masque la scrollbar
         this.wrapper.addEventListener("wheel", this.onWheel.bind(this))
-        console.log("Scroll horizontal connecté")
     }
 
     onWheel(e) {

@@ -15,8 +15,7 @@
           <path d="M8 0.5L10.4453 5.93667L16 6.704L11.9573 10.5893L12.944 16.5L8 13.464L3.05533 16.5L4.04267 10.5893L0 6.704L5.55467 5.93667L8 0.5Z" fill="#202020"/>
         </svg>
         <span>
-          <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • 
-          <span class="od-badge-highlight">Voir les références ></span>
+         <span class="od-badge-highlight"> <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • </span>Voir les références >
         </span>
       <% end %>
 
@@ -54,9 +53,9 @@
 </section>
 
 <!-- SECTION BESOIN -->
-<section class="od-need-section">
-  <div class="od-need-container">
-    <div class="od-need-text">
+<section class="od-pres-section">
+  <div class="od-pres-container">
+    <div class="od-pres-text">
       <p>Un problème ?</p>
       <h2>Une plateforme née d’un besoin</h2>
       <p>
@@ -68,23 +67,23 @@
         <span class="od-strong">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
       </p>
     </div>
-    <div class="od-need-image">
-      <%= image_tag "landing/image-2.png", alt: "", class: "od-rounded-img" %>
+    <div class="od-pres-image">
+      <%= image_tag "landing/image-2.png", alt: "", class: "od-rounded-img right" %>
     </div>
   </div>
 </section>
 
-<!-- SECTION SOLUTION -->
-<section class="od-solution-section">
-  <div class="od-solution-container">
-    <div class="od-solution-image">
-      <%= image_tag "landing/image-3.png", alt: "", class: "od-rounded-img" %>
+<!-- SECTION pres -->
+<section class="od-pres-section">
+  <div class="od-pres-container">
+    <div class="od-pres-image">
+      <%= image_tag "landing/image-3.png", alt: "", class: "od-rounded-img left" %>
     </div>
-    <div class="od-solution-text">
-      <p>Une solution</p>
+    <div class="od-pres-text">
+      <p>Une pres</p>
       <h2>Un carnet de références numériques</h2>
       <p>Accède à une base riche de références en constante évolution. Alimenté directement par la communauté.</p>
-      <div class="od-solution-stats">
+      <div class="od-pres-stats">
         <div>
           <p><%= Oeuvre.where(validation: true).count %></p>
           <p>Références</p>

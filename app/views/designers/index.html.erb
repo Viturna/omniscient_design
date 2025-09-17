@@ -129,7 +129,6 @@
               console.error("Erreur lors du chargement des cartes :", err);
             })
             .finally(() => {
-              // ✅ On libère le verrou APRÈS la fin complète de la requête
               isLoading = false;
             });
         }

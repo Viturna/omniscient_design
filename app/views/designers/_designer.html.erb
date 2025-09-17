@@ -320,7 +320,7 @@
     </div>
   <% if designer.validation %>
   <div class="next-card">
-    <% designer_oeuvres = @designer.oeuvres.where(validation: true).limit(3) %>
+    <% designer_oeuvres = @designer.oeuvres.where(validation: true) %>
     <% if designer_oeuvres.any? %>
       <h2 class="title-description-reference">Références du designer</h2>
 
@@ -394,7 +394,7 @@
               </div>
               <div class="naviguation-buttons">
                 <%= link_to "Ajouter un autre designer", add_elements_path, class: "button" %>
-                <%= link_to "Retour", validation_path, class: "button" %>
+                <%= link_to "Retour", add_elements_path_path, class: "button" %>
               </div>
             </div>
           </div>

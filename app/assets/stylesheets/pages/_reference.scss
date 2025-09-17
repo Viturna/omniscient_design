@@ -39,6 +39,7 @@
 .header-show.small-height {
   height: 38dvh !important;
   min-height: 320px;
+  z-index: 999;
 }
 
 .header-show.small-height::after {
@@ -244,9 +245,7 @@
   scroll-behavior: smooth; /* backup si JS désactivé */
   padding-right: 24px;
 }
-// .horizontal-wrapper::-webkit-scrollbar {
-//   display: none; /* masque la scrollbar */
-// }
+
 .oeuvre-card {
   flex: 0 0 auto;
   width: 380px;

@@ -169,7 +169,13 @@
       align-items: center;
     }
 
-    .od-pres-text:first-of-type {
+    .od-pres-text {
+      &.left {
+        padding-left: 8vw;
+      }
+      &.right {
+        padding-right: 8vw;
+      }
     }
     .od-pres-text {
       width: 35vw;
@@ -178,7 +184,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         color: $primary-color;
-        font-weight: 700;
+        font-weight: 600;
       }
 
       h2 {
@@ -223,8 +229,6 @@
   display: flex;
   gap: 3rem;
   margin-top: 12px;
-
-  
 }
 
 /* SECTION CITATION */
@@ -233,6 +237,10 @@
   background-color: $primary-color;
   text-align: center;
   padding: 8rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
 
   p:first-of-type {
     font-size: 1.5rem;
@@ -240,10 +248,9 @@
   }
 
   p:last-of-type {
-    font-size: 4rem;
-    font-weight: 700;
+    font-size: 48px;
+    font-weight: 600;
     color: #fff;
-    margin-top: 1.5rem;
   }
 }
 
@@ -275,50 +282,5 @@
     max-width: 80rem;
     width: 100%;
     margin: 0 auto;
-  }
-}
-
-/* SECTION VIVANTE */
-.od-living-section {
-  width: 100%;
-  padding: 6rem 1.5rem;
-
-  .od-living-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-
-    @media (min-width: 1024px) {
-      flex-direction: row;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .od-living-image,
-    .od-living-text {
-      width: 100%;
-    }
-
-    .od-living-text {
-      h2 {
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: $primary-color;
-      }
-
-      p {
-        font-size: 1.125rem;
-        line-height: 1.75rem;
-        color: #374151;
-      }
-    }
-
-    .od-rounded-img {
-      border-radius: 1rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      width: 100%;
-    }
   }
 }

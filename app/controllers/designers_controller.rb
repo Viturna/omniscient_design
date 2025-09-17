@@ -2,7 +2,7 @@ class DesignersController < ApplicationController
   include RecaptchaHelper
 
   before_action :set_designer, only: %i[show edit update destroy cancel validate cancel reject]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate, :show]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
   def index

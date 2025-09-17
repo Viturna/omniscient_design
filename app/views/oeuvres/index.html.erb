@@ -12,7 +12,7 @@
   }
   #cardContainer {
     position: relative;
-    height: 100dvh; /* Hauteur de l'écran */
+    height: 110dvh; /* Hauteur de l'écran */
     overflow-y: scroll; /* Active le scroll vertical uniquement */
     scroll-snap-type: y mandatory; 
   }
@@ -106,8 +106,8 @@
 
     // Fonction de chargement des cartes
     function loadMoreCards() {
-      if (isLoading) return;
-      isLoading = true;
+      if (isLoading) return; // ✅ déjà en cours, on stoppe
+      isLoading = true;      // ✅ on bloque tout de suite
 
       const offset = loadMoreTrigger.dataset.offset;
       const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');

@@ -12,8 +12,8 @@
   }
   #cardContainer {
     position: relative;
-    height: 110dvh; /* Hauteur de l'écran */
-    overflow-y: scroll; /* Active le scroll vertical uniquement */
+    height: 110dvh;
+    overflow-y: scroll;
     scroll-snap-type: y mandatory; 
   }
   .box-card{
@@ -23,7 +23,7 @@
 
   body {
     margin: 0;
-    overflow: hidden; /* Désactive le scroll global */
+    overflow: hidden;
   }
 </style>
 
@@ -76,6 +76,10 @@
     </p>
 
     <div class="box-card" id="boxCard">
+      <% @oeuvres.each do |o| %>
+        <% Rails.logger.debug "Type chargé : #{o.class.name}" %>
+      <% end %>
+
       <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
     </div>
     <div id="load-more-trigger" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
@@ -106,8 +110,8 @@
 
     // Fonction de chargement des cartes
     function loadMoreCards() {
-      if (isLoading) return; // ✅ déjà en cours, on stoppe
-      isLoading = true;      // ✅ on bloque tout de suite
+      if (isLoading) return;
+      isLoading = true;
 
       const offset = loadMoreTrigger.dataset.offset;
       const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
@@ -121,7 +125,7 @@
             container.insertAdjacentHTML("beforeend", html);
 
             // Mettre à jour l'offset et les IDs chargés
-            loadMoreTrigger.dataset.offset = parseInt(offset) + 2; // ⚡️ ici tu peux passer à +5 si tu veux 5
+            loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
             const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
             loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
 

@@ -16,7 +16,7 @@
   <%= render "form", oeuvre: @oeuvre %>
 </section>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("turbo:load", () => {
     let currentStep = 1;
     const steps = document.querySelectorAll(".form-step");
 

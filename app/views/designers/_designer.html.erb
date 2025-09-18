@@ -6,8 +6,10 @@
   .modal {
   display: none;
   position: fixed;
-  z-index: 1050;
+  z-index: 999;
   left: 0;
+  align-items:center;
+  justify-content:center;
   top: 0;
   width: 100%;
   height: 100%;
@@ -17,7 +19,7 @@
   }
 
   .modal.show {
-  display: block;
+  display: flex;
   }
 
   .modal-dialog {
@@ -31,7 +33,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 85%;
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -45,15 +47,12 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid #dee2e6;
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
   }
 
   .modal-body {
   position: relative;
   flex: 1 1 auto;
-  padding: 1rem;
+  padding: 24px;
   }
 
   .modal-footer {
@@ -63,25 +62,31 @@
   padding: 1rem;
   border-top: 1px solid #dee2e6;
   }
+  #closeImageModal {
+    color: #202020;
+    font-size: 24px;
+  }
 </style>
 
 <%
   raw_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp"
   if asset_exists?(raw_path)
-    image_path = asset_path(raw_path)
+    designer_image_path = asset_path(raw_path)
   else
-    image_path = designer.image
+    designer_image_path = designer.image
   end
 %>
 
 
 <div class="body-show" id="<%= dom_id designer %>" data-controller="reference-scroll share">
-  <% if image_path.present? %>
-    <div class="header-show" style="background-image: url('<%= asset_path(image_path) %>'); ">
+  <% if designer_image_path.present? %>
+    <div class="header-show" style="background-image: url('<%= asset_path(designer_image_path) %>'); ">
     <%else%>
     <div class="header-show" style="background-color:#FFF; ">
   <% end %>
-  <img src="<%= image_path %>" alt="<%= designer.nom_designer %>" class="top-img-header">
+  <% if designer_image_path.present? %>
+    <img src="<%= designer_image_path %>" alt="<%= designer.nom_designer %>" class="top-img-header" id="openImagePopup">
+  <%end%>
     <% if designer.validation %>
       <div class="flex-back-btn">
         <button id="back-btn"
@@ -567,7 +572,7 @@
 
 
       <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener("turbo:load", () => {
         // Ouvrir le modal
         document.querySelectorAll('[data-toggle="modal"]').forEach(function(button) {
           button.addEventListener('click', function(event) {
@@ -604,7 +609,7 @@
           });
         });
         });
-         document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener("turbo:load", () => {
         const modal = document.querySelector('#globalRejectModal');
         const form = document.querySelector('#rejectForm');
         const rejectionField = document.querySelector('#rejectionReasonField');
@@ -629,15 +634,49 @@
 
 
 
-  <!-- Modal image -->
+<!-- Modal image -->
 <div id="imageModal" class="modal">
-    <div class="modal-image">
-      <span id="closeImageModal" style="cursor:pointer;">×</span>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="closeImageModal" style="cursor:pointer;font-size:1.5rem;">&times;</span>
+      </div>
       <div class="modal-body" style="text-align:center;">
-        <img id="modalImage" src="" alt="Vue agrandie" style="max-width:100%; max-height:90dvh; object-fit: contain;" />
+        <img id="modalImage" src="<%= designer_image_path %>" alt="<%= designer.nom_designer %>" style="max-width:100%; height:auto; border-radius:8px;">
       </div>
     </div>
+  </div>
 </div>
+<script>
+  document.addEventListener("turbo:load", () => {
+  const openBtn = document.getElementById("openImagePopup");
+  const modal = document.getElementById("imageModal");
+  const closeBtn = document.getElementById("closeImageModal");
+
+  if (openBtn && modal) {
+    // Ouvrir la modal
+    openBtn.addEventListener("click", () => {
+      modal.style.display = "flex";   // <-- rendre visible
+      modal.classList.add("show");
+    });
+
+    // Fermer avec la croix
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";    // <-- cacher
+      modal.classList.remove("show");
+    });
+
+    // Fermer en cliquant dehors
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        modal.classList.remove("show");
+      }
+    });
+  }
+});
+
+</script>
 
 
 <script>

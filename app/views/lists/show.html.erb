@@ -541,7 +541,7 @@ function loadInitial(type, container) {
   .then(html => container.innerHTML = html);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", () => {
   setupLiveSearch('designer-search', 'designers-load-more', 'designers');
   setupLiveSearch('oeuvre-search', 'oeuvres-load-more', 'oeuvres');
 });

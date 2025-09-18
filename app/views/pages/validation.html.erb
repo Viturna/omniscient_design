@@ -293,7 +293,7 @@
   </div>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("turbo:load", () => {
   // Ouvrir le modal
   document.querySelectorAll('[data-toggle="modal"]').forEach(function(button) {
     button.addEventListener('click', function(event) {
@@ -330,7 +330,7 @@
     });
   });
   });
-   document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener("turbo:load", () => {
   const modal = document.querySelector('#globalRejectModal');
   const form = document.querySelector('#rejectForm');
   const rejectionField = document.querySelector('#rejectionReasonField');

@@ -76,7 +76,7 @@
     <div class="box-card" id="boxCard">
       <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
     </div>
-    <div id="load-more-trigger" data-offset="2" data-loaded-ids="<%= @designers.pluck(:id).join(',') %>"></div>
+    <div id="designers-load-more" data-offset="2" data-loaded-ids="<%= @designers.pluck(:id).join(',') %>"></div>
     <div class="button-nav">
       <button class="arrow-button up">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,7 +95,7 @@
   <script>
     document.addEventListener("turbo:load", () => {
       const container = document.getElementById("cardContainer");
-      const loadMoreTrigger = document.getElementById("load-more-trigger");
+      const loadMoreTrigger = document.getElementById("designers-load-more");
       const upButton = document.querySelector(".arrow-button.up");
       const downButton = document.querySelector(".arrow-button.down");
       let isLoading = false;

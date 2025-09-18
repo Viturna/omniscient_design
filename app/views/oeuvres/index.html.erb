@@ -82,7 +82,7 @@
 
       <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
     </div>
-    <div id="load-more-trigger" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
+    <div id="oeuvres-load-more" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
   </div>
   <div class="button-nav">
     <button class="arrow-button up">
@@ -102,7 +102,7 @@
 <script>
   document.addEventListener("turbo:load", () => {
     const container = document.getElementById("cardContainer");
-    const loadMoreTrigger = document.getElementById("load-more-trigger");
+    const loadMoreTrigger = document.getElementById("oeuvres-load-more");
     const upButton = document.querySelector(".arrow-button.up");
     const downButton = document.querySelector(".arrow-button.down");
     let isLoading = false;

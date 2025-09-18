@@ -6,21 +6,69 @@ export default class extends Controller {
 
   connect() {
     this.debounceTimer = null
+    this.suggestions = []
+    this.activeIndex = -1
+
+    this.fieldTarget.addEventListener("keydown", (event) => this.handleKeydown(event))
+    document.addEventListener("click", (event) => this.closeOnClickOutside(event))
+  }
+
+  handleKeydown(event) {
+    if (!this.suggestions.length) return
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault()
+        this.moveActive(1)
+        break
+      case "ArrowUp":
+        event.preventDefault()
+        this.moveActive(-1)
+        break
+      case "Enter":
+        event.preventDefault()
+        if (this.activeIndex >= 0 && this.activeIndex < this.suggestions.length) {
+          window.location.href = this.suggestions[this.activeIndex].url
+        } else {
+          const query = this.fieldTarget.value.trim()
+          const exactMatch = this.suggestions.find(s => s.name.toLowerCase() === query.toLowerCase())
+          if (exactMatch) window.location.href = exactMatch.url
+          else if (this.suggestions.length) window.location.href = this.suggestions[0].url
+          else this.fieldTarget.closest("form")?.requestSubmit()
+        }
+        break
+      case "Escape":
+        this.resultsTarget.style.display = "none"
+        this.activeIndex = -1
+        break
+    }
+  }
+
+  moveActive(direction) {
+    // retire highlight actuel
+    if (this.activeIndex >= 0 && this.activeIndex < this.suggestions.length) {
+      this.resultsTarget.children[this.activeIndex].classList.remove("active-suggestion")
+    }
+
+    // incrémente ou décrémente
+    this.activeIndex += direction
+    if (this.activeIndex < 0) this.activeIndex = this.suggestions.length - 1
+    if (this.activeIndex >= this.suggestions.length) this.activeIndex = 0
+
+    // ajoute highlight
+    this.resultsTarget.children[this.activeIndex].classList.add("active-suggestion")
+    this.resultsTarget.children[this.activeIndex].scrollIntoView({ block: "nearest" })
   }
 
   search() {
     const query = this.fieldTarget.value.trim()
-
-    // Gérer visibilité du bouton clear
-    if (query.length > 0) {
-      this.clearBtnTarget.style.display = "block"
-    } else {
-      this.clearBtnTarget.style.display = "none"
-    }
+    this.clearBtnTarget.style.display = query.length ? "block" : "none"
 
     if (query.length <= this.minLengthValue) {
       this.resultsTarget.innerHTML = ""
       this.resultsTarget.style.display = "none"
+      this.suggestions = []
+      this.activeIndex = -1
       return
     }
 
@@ -32,18 +80,20 @@ export default class extends Controller {
     this.resultsTarget.innerHTML = ""
     this.resultsTarget.style.display = "none"
     this.clearBtnTarget.style.display = "none"
+    this.suggestions = []
+    this.activeIndex = -1
     this.fieldTarget.focus()
   }
 
   fetchResults(query) {
     fetch(`${this.urlValue}?query=${encodeURIComponent(query)}`)
-      .then(response => {
-        if (!response.ok) throw new Error("Erreur serveur")
-        return response.json()
+      .then(r => {
+        if (!r.ok) throw new Error("Erreur serveur")
+        return r.json()
       })
       .then(data => this.renderResults(data))
-      .catch(error => {
-        console.error("Erreur AJAX :", error)
+      .catch(e => {
+        console.error("Erreur AJAX :", e)
         this.resultsTarget.innerHTML = "<div class='error-msg'>Erreur de chargement</div>"
       })
   }
@@ -51,9 +101,11 @@ export default class extends Controller {
   renderResults(data) {
     this.resultsTarget.innerHTML = ""
     this.resultsTarget.style.display = "block"
+    this.suggestions = []
+    this.activeIndex = -1
 
     const createSection = (sectionData) => {
-      if (!sectionData || sectionData.results.length === 0) return
+      if (!sectionData || !sectionData.results.length) return
 
       const section = document.createElement("div")
       section.classList.add("autocomplete-section")
@@ -63,7 +115,7 @@ export default class extends Controller {
       title.textContent = sectionData.title
       section.appendChild(title)
 
-      sectionData.results.forEach((item) => {
+      sectionData.results.forEach(item => {
         const suggestion = document.createElement("div")
         suggestion.classList.add("suggestion-item")
 
@@ -87,37 +139,31 @@ export default class extends Controller {
           suggestion.appendChild(designer)
         }
 
-        suggestion.addEventListener("click", () => {
-          window.location.href = item.url
-        })
+        suggestion.addEventListener("click", () => window.location.href = item.url)
 
-        section.appendChild(suggestion)
+        this.suggestions.push(item)
+        this.resultsTarget.appendChild(suggestion)
       })
-
-      this.resultsTarget.appendChild(section)
     }
 
     createSection(data.domaines)
     createSection(data.designers)
     createSection(data.oeuvres)
 
-    if (
-      (!data.domaines || data.domaines.results.length === 0) &&
-      (!data.designers || data.designers.results.length === 0) &&
-      (!data.oeuvres || data.oeuvres.results.length === 0)
-    ) {
+    if (!this.suggestions.length) {
       this.resultsTarget.innerHTML = "<div class='no-suggestion'>Aucune suggestion</div>"
     }
   }
 
-  debounce(callback, delay) {
+  debounce(fn, delay) {
     clearTimeout(this.debounceTimer)
-    this.debounceTimer = setTimeout(callback, delay)
+    this.debounceTimer = setTimeout(fn, delay)
   }
 
   closeOnClickOutside(event) {
     if (!event.target.closest(".autocomplete")) {
       this.resultsTarget.style.display = "none"
+      this.activeIndex = -1
     }
   }
 }

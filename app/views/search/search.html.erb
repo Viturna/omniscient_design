@@ -3,31 +3,25 @@
 
 <section class="top-bar-search">
 <%= form_with url: search_path, method: :get, data: { turbo: false } do |form| %>
-  <div class="autocomplete" 
-      data-controller="autocomplete" 
-      data-autocomplete-url-value="<%= search_autocomplete_path %>">
+<div class="autocomplete" data-controller="autocomplete" data-autocomplete-url-value="<%= search_autocomplete_path %>">
     <div class="search-wrapper">
-      <input type="search" 
-            data-autocomplete-target="field" 
-            data-action="input->autocomplete#search" 
-            class="search-top-bar" 
-            placeholder="Rechercher une référence" 
-            autocomplete="off" 
-            id="workSearch" />
+     <input type="search"
+         data-autocomplete-target="field"
+         data-action="input->autocomplete#search"
+         class="search-top-bar"
+         placeholder="Rechercher une référence"
+         autocomplete="off"
+         id="workSearch" />
 
-      <button type="button" 
-              data-autocomplete-target="clearBtn" 
-              data-action="click->autocomplete#clear" 
-              class="clear-search" 
-              id="clearSearch" 
-              style="display: none;">
+      <button type="button"
+          data-autocomplete-target="clearBtn"
+          data-action="click->autocomplete#clear"
+          class="clear-search" style="display:none;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M12.0019 2.00488C17.5199 2.00488 21.9999 6.48488 21.9999 12.0019C21.9999 17.5199 17.5199 21.9999 12.0019 21.9999C6.48488 21.9999 2.00488 17.5199 2.00488 12.0019C2.00488 6.48488 6.48488 2.00488 12.0019 2.00488ZM12.0019 10.9379L9.28088 8.21588C9.13488 8.06988 8.94188 7.99688 8.74988 7.99688C8.34588 7.99688 7.99988 8.32088 7.99988 8.74588C7.99988 8.93888 8.07288 9.12988 8.21888 9.27688L10.9409 11.9989L8.21288 14.7269C8.06588 14.8739 7.99288 15.0669 7.99288 15.2579C7.99288 15.6849 8.34288 16.0079 8.74388 16.0079C8.93588 16.0079 9.12788 15.9349 9.27388 15.7889L12.0019 13.0609L14.7309 15.7889C14.8769 15.9349 15.0689 16.0079 15.2609 16.0079C15.6619 16.0079 16.0109 15.6849 16.0109 15.2579C16.0109 15.0669 15.9379 14.8739 15.7909 14.7269L13.0639 11.9989L15.7809 9.28188C15.9269 9.13488 15.9999 8.94388 15.9999 8.75088C15.9999 8.32588 15.6539 8.00088 15.2499 8.00088C15.0579 8.00088 14.8649 8.07388 14.7189 8.22088L12.0019 10.9379Z" fill="#202020"/> </svg>
       </button>
     </div>
 
-    <div class="suggestions-box" 
-        data-autocomplete-target="results" 
-        id="autocompleteResults"></div>
+    <div class="suggestions-box" data-autocomplete-target="results" id="autocompleteResults"></div>
   </div>
 
 
@@ -259,52 +253,59 @@
 
 </section>
 <script>
-document.addEventListener("turbo:load", function () {
-  function initSelect2() {
+function initSelect2() {
+  $(".select2").each(function () {
+    const $select = $(this);
 
-    const selects = $(".select2");
-
-    // Initialiser seulement si pas déjà fait
-    if (selects.length > 0 && !selects.hasClass("select2-hidden-accessible")) {
-      selects.select2({
-        placeholder: "Choisir des filtres",
-        allowClear: true
-      });
+    // Toujours détruire même si le navigateur restaure la page
+    if ($select.data('select2')) {
+      $select.select2('destroy');
     }
 
-    // Soumettre automatiquement quand un filtre est changé
-    const filterForm = document.getElementById("filterForm");
-
-    function submitFilterForm() {
-      if (!filterForm) return;
-
-      const formData = new FormData(filterForm);
-      const url = new URL(window.location.href);
-
-      formData.forEach((value, key) => {
-        if (value) {
-          url.searchParams.set(key, value);
-        } else {
-          url.searchParams.delete(key); 
-        }
-      });
-
-      window.history.pushState({}, '', url);
-      filterForm.requestSubmit();
-    }
-
-    selects.off("select2:select select2:unselect"); // éviter doublons
-    selects.on("select2:select select2:unselect", function () {
-      console.log("Changement détecté :", $(this).attr("name"), $(this).val());
-      submitFilterForm();
+    $select.select2({
+      placeholder: "Choisir des filtres",
+      allowClear: true,
+      width: "100%"
     });
-  }
 
-  initSelect2();
+    const filterForm = document.getElementById("filterForm");
+    if (filterForm) {
+      $select.off("select2:select select2:unselect");
+      $select.on("select2:select select2:unselect", function () {
+        const formData = new FormData(filterForm);
+        const url = new URL(window.location.href);
+
+        formData.forEach((value, key) => {
+          if (value) {
+            url.searchParams.set(key, value);
+          } else {
+            url.searchParams.delete(key);
+          }
+        });
+
+        window.history.pushState({}, "", url);
+        filterForm.requestSubmit();
+      });
+    }
+  });
+}
+
+// On utilise turbo:load pour la première fois
+document.addEventListener("turbo:load", initSelect2);
+
+// Et turbo:before-cache pour détruire avant que Turbo ne mette la page en cache
+document.addEventListener("turbo:before-cache", () => {
+  $(".select2").each(function () {
+    const $select = $(this);
+    if ($select.data('select2')) {
+      $select.select2('destroy');
+    }
+  });
 });
 
-
 </script>
+
+
 <script>
 document.addEventListener("turbo:load", () => {
   const applyDateFilterBtn = document.getElementById("applyDateFilter");
@@ -370,7 +371,7 @@ document.addEventListener("turbo:load", () => {
   </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("turbo:load", () => {
     const openPopupButton = document.getElementById("openPopup");
     const closePopupButton = document.getElementById("closePopup");
     const popup = document.getElementById("popup");

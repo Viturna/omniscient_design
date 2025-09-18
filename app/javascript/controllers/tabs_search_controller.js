@@ -37,8 +37,9 @@ export default class extends Controller {
 
     applyFiltersDisplay(tabName = new URLSearchParams(window.location.search).get("tab") || "designers") {
         if (this.hasDomainFilterTarget) this.domainFilterTarget.style.display = "flex"
-        if (this.hasCountryFilterTarget) this.countryFilterTarget.style.display = "flex"
-
+        if (this.hasCountryFilterTarget) {
+            this.countryFilterTarget.style.display = ["designers", "frise"].includes(tabName) ? "flex" : "none"
+        }
         if (this.hasNotionsFilterTarget)
             this.notionsFilterTarget.style.display = ["references", "frise"].includes(tabName) ? "flex" : "none"
 

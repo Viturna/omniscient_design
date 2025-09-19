@@ -16,12 +16,15 @@ export default class extends Controller {
         if (this.hasTabInputTarget) this.tabInputTarget.value = tabName
         this.showTab(tabName)
 
-        // Construire une URL ne contenant que le paramètre `tab`
+        // Construire l’URL avec le bon paramètre
         const url = new URL(window.location)
-        url.search = ""
         url.searchParams.set("tab", tabName)
         url.searchParams.set("page", "1")
+
+        // Rediriger (Turbo va recharger côté serveur)
+        Turbo.visit(url.toString())
     }
+
     // Affiche/caché les contenus + filtres
     showTab(tabName) {
         this.tabContentTargets.forEach(tab => tab.style.display = "none")

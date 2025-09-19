@@ -637,22 +637,15 @@
 // /* Frise */
 .timeline {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   padding: 20px;
   overflow-x: auto;
   white-space: nowrap;
-  position: relative;
+  position: relative; /* pour que la ligne se base dessus */
   gap: 54px;
   height: 140px;
   margin: 48px 0;
-}
-
-.timeline-item {
-  display: inline-block;
-  text-align: center;
-  position: relative;
-  width: 50px;
 }
 
 .timeline-hr {
@@ -661,9 +654,18 @@
   left: 0;
   height: 4px;
   background: $primary-color;
-  z-index: -1;
   border: none;
   width: 100%;
+  min-width: 100%;
+  z-index: 0;
+}
+
+.timeline-item {
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  width: 50px;
+  z-index: 1; /* les points passent au-dessus de la ligne */
 }
 
 .year {

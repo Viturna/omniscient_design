@@ -88,9 +88,16 @@ class SearchController < ApplicationController
       redirect_to oeuvre_path(oeuvre) and return
     end
   end
-    # Récupération des œuvres et designers validés pour affichage
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
-    @designers = Designer.where(validation: true).order(:nom).page(params[:page])
+   if params[:tab] == "frise"
+      @oeuvres = Oeuvre.where(validation: true)
+    else
+      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
+    end
+    if params[:tab] == "frise"
+      @designers = Designer.where(validation: true)
+    else
+      @designers = Designer.where(validation: true).order(:nom).page(params[:page])
+    end
 
     if params[:domaine].present?
       filtered_domains = Array(params[:domaine]).reject(&:blank?)  # Convertir en tableau et filtrer

@@ -149,10 +149,13 @@
           <%= render 'designers/designer_card', designer: designer %>
         <% end %>
       </div>
-      <%= paginate @designers, params: { tab: 'designers' } %>
+      <% unless params[:tab] == "frise" %>
+        <%= paginate @designers, params: { tab: 'designers' } %>
+      <% end %>
+
     </div>
 
-     <div id="references" class="content-tab" 
+    <div id="references" class="content-tab" 
        data-tabs-search-target="tabContent" 
        style="<%= params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
         <div id="oeuvres-container" class="flex-container">
@@ -160,7 +163,9 @@
           <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
         <% end %>
       </div>
-      <%= paginate @oeuvres, params: { tab: 'references' } %>
+      <% unless params[:tab] == "frise" %>
+        <%= paginate @oeuvres, params: { tab: 'references' } %>
+      <% end %>
     </div>
 
     <div id="frise" class="content-tab" 
@@ -168,6 +173,7 @@
       style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
       <h2>Références</h2>
       <div class="timeline">
+        <hr class="timeline-hr">
         <% @timeline_years.each do |year| %>
           <div class="timeline-item">
             <div class="oeuvres">
@@ -205,10 +211,10 @@
             </div>
           </div>
         <% end %>
-        <hr class="timeline-hr">
       </div>
       <h2>Designers</h2>
       <div class="timeline">
+        <hr class="timeline-hr">
         <% @timeline_years.each do |year| %>
           <div class="timeline-item">
             <div class="oeuvres">
@@ -232,13 +238,12 @@
               <% else %>
                 <% designers_year.each do |designer| %>
                  <%= link_to designer, data: { turbo_frame: "_top" }, class: "oeuvre-point" do %>
-  <div class="oeuvre" 
-       title="<%= designer.nom_designer %>" 
-       data-year="<%= designer.date_naissance %>" 
-       style="background-image: url('<%= designer.image %>');">
-  </div>
-  <% end %>
-
+                  <div class="oeuvre" 
+                      title="<%= designer.nom_designer %>" 
+                      data-year="<%= designer.date_naissance %>" 
+                      style="background-image: url('<%= designer.image %>');">
+                  </div>
+                  <% end %>
                 <% end %>
               <% end %>
               </div>
@@ -247,7 +252,6 @@
             </div>
           </div>
         <% end %>
-        <hr class="timeline-hr">
       </div>
     </div>
 

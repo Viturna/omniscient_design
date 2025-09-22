@@ -178,8 +178,10 @@
         <% end %>
     </div>
     <div class="header-top">
-      <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
-      <p class="title-card"><%= designer.nom_designer %></p>
+      <div>
+        <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
+        <p class="title-card"><%= designer.nom_designer %></p>
+      </div>
       <div class="flex-info">
         <%= link_to search_path(:tab => "frise", :start_year => designer.date_naissance, :end_year => designer.date_naissance) do %>
           <p class="info-card" data-no-popup>

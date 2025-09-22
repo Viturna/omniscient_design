@@ -60,8 +60,8 @@
       <%= link_to(root_path) do %>
         <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>
       <% end %>
-      <div>
-        <%= link_to "Designers", designers_path %> |
+      <div class="switch-home-mobile">
+        <%= link_to "Designers", designers_path %>
         <%= link_to "Références", oeuvres_path, class: "active" %>
       </div>
       <%= link_to search_path,  aria: { label: "Rechercher" } do %>
@@ -70,10 +70,10 @@
         </svg>
       <%end%>
     </div>
-    <p class="nav-home">
-      <%= link_to "Designers", designers_path %> |
+    <div class="switch-home">
+      <%= link_to "Designers", designers_path %>
       <%= link_to "Références", oeuvres_path, class: "active" %>
-    </p>
+    </div>
 
     <div class="box-card" id="boxCard">
       <% @oeuvres.each do |o| %>

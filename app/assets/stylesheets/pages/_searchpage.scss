@@ -101,9 +101,9 @@
 
 .tab:hover {
   cursor: pointer;
-  color: $primary-color;
+  color: #3c3c3c;
   font-weight: 600;
-  border-bottom: 3px solid $primary-color;
+  border-bottom: 3px solid #3c3c3c;
 }
 
 // filtres
@@ -294,7 +294,7 @@
 
 .select2-container--default
   .select2-results__option--highlighted[aria-selected] {
-  background-color: $primary-color !important;
+  background-color: #3c3c3c !important;
   color: white !important;
   font-weight: 500;
   border-radius: 5px !important;

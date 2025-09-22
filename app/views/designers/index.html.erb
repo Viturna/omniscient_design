@@ -69,10 +69,10 @@
         </svg>
       <%end%>
     </div>
-    <p class="nav-home">
-      <%= link_to "Designers", designers_path, class: "active" %> |
+    <div class="switch-home">
+      <%= link_to "Designers", designers_path, class: "active" %>
       <%= link_to "Références", oeuvres_path %>
-    </p>
+    </div>
     <div class="box-card" id="boxCard">
       <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
     </div>

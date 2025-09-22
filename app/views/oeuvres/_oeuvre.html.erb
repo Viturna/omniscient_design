@@ -167,12 +167,14 @@
       <%end%>
     </div>
     <div class="header-top">
-      <p class="subtitle-card">
-        <% oeuvre.designers.each do |designer| %>
-          <%= link_to designer.nom_designer, designer_path(designer) %><%= ', ' unless designer == oeuvre.designers.last %>
-        <% end %>
-      </p>
-      <p class="title-card"><%= oeuvre.nom_oeuvre %></p>
+      <div>
+        <p class="subtitle-card">
+          <% oeuvre.designers.each do |designer| %>
+            <%= link_to designer.nom_designer, designer_path(designer) %><%= ', ' unless designer == oeuvre.designers.last %>
+          <% end %>
+        </p>
+        <p class="title-card"><%= oeuvre.nom_oeuvre %></p>
+      </div>
       <div class="flex-info">
         <%= link_to search_path(:tab => "frise", :start_year => oeuvre.date_oeuvre, :end_year => oeuvre.date_oeuvre) do %>
           <div class="info-card" data-no-popup>

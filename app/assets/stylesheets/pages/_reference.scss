@@ -37,8 +37,8 @@
 }
 
 .header-show.small-height {
-  height: 38dvh !important;
-  min-height: 320px;
+  height: 34dvh !important;
+  min-height: 265px;
   z-index: 999;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .text-show.small-height {
-  margin-top: 54dvh;
+  margin-top: 48dvh;
 }
 
 .margin-text-header {
@@ -153,7 +153,7 @@
   position: absolute;
   left: 5vw;
   bottom: 20px;
-  padding: 10px;
+  padding: 0 10px 10px 10px;
   z-index: 99;
 }
 
@@ -163,7 +163,10 @@
 }
 
 .header-top.show-header-top {
-  display: block;
+  display: flex;
+  width: calc(100% - 10vw);
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .flex-info {
@@ -183,6 +186,14 @@
   height: 30px;
   border-radius: 5px;
   font-size: 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: $secondary-color;
+    color: $primary-color;
+    & svg path {
+      fill: $primary-color;
+    }
+  }
 }
 
 .info-card-dark {
@@ -196,6 +207,18 @@
   height: 30px;
   border-radius: 5px;
   font-size: 20px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #3c3c3c;
+    color: $secondary-color;
+    & svg path {
+      fill: $secondary-color;
+    }
+  }
+  &:active {
+    background-color: #1b1b1b;
+  }
 }
 
 .small-circle {
@@ -221,7 +244,25 @@
 .button-circle {
   gap: 16px;
   display: flex;
+  cursor: pointer;
   align-items: center;
+
+  &:hover {
+    .circle {
+      background-color: #3c3c3c;
+    }
+    p {
+      color: #3c3c3c;
+    }
+  }
+  &:active {
+    .circle {
+      background-color: #1b1b1b;
+    }
+    p {
+      color: #1b1b1b;
+    }
+  }
 }
 
 .button-circle p {
@@ -530,10 +571,6 @@
     right: 5vw;
   }
 
-  .header-show.small-height {
-    height: 320px !important;
-  }
-
   .header-top {
     display: none;
     position: absolute;
@@ -634,10 +671,6 @@
     height: 75dvh;
   }
 
-  .header-show.small-height {
-    height: 320px !important;
-  }
-
   .content-show {
     margin-top: 50px;
   }
@@ -659,7 +692,11 @@
     padding: 10px;
     z-index: 99;
   }
-
+  .header-top.show-header-top {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
   .flex-info {
     margin-top: 16px;
     flex-wrap: wrap;
@@ -668,12 +705,12 @@
   }
 
   .info-card {
-    padding: 12px 20px;
+    padding: 10px 20px;
     font-size: 16px;
   }
 
   .info-card-dark {
-    padding: 12px 20px;
+    padding: 10px 20px;
     font-size: 16px;
   }
 
@@ -759,6 +796,7 @@
   .flex-back-btn,
   .flex-right-btn {
     top: 24px;
+    gap: 0px;
   }
   .body-show {
     padding-bottom: 50px;
@@ -793,7 +831,11 @@
     padding: 10px;
     z-index: 99;
   }
-
+  .header-top.show-header-top {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
   .flex-info {
     margin-top: 16px;
     gap: 8px;
@@ -803,12 +845,12 @@
 
   .info-card {
     width: fit-content;
-    padding: 12px 20px;
+    padding: 10px 20px;
     font-size: 16px;
   }
 
   .info-card-dark {
-    padding: 12px 20px;
+    padding: 10px 20px;
     font-size: 16px;
   }
 

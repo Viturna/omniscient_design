@@ -59,9 +59,9 @@
   <div class="home-flex" id="cardContainer">
     <div class="nav-home-mobile">
       <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>
-      <div>
-        <%= link_to "Designers", designers_path, class: "active" %> |
-        <%= link_to "Références", oeuvres_path %>
+      <div class="switch-home-mobile">
+        <%= link_to "Designers", designers_path, class: "active"  %>
+        <%= link_to "Références", oeuvres_path%>
       </div>
       <%= link_to search_path,  aria: { label: "Rechercher" } do %>
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">

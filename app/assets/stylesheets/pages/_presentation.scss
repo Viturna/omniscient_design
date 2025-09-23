@@ -159,13 +159,12 @@
   .od-pres-container {
     max-width: 100%;
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
-    gap: 4rem;
+    gap: 32px;
 
     @media (min-width: 1024px) {
       flex-direction: row;
-      gap: 4rem;
+      gap: 32px;
       align-items: center;
     }
 
@@ -231,6 +230,16 @@
   margin-top: 12px;
 }
 
+.od-pres-number {
+  font-size: 32px;
+  font-weight: 600;
+  color: $primary-color;
+}
+.od-pres-text-stat {
+  margin-top: 4px;
+  font-weight: 500;
+  color: $primary-color;
+}
 /* SECTION CITATION */
 .od-quote-section {
   margin-top: 96px;
@@ -242,18 +251,23 @@
   justify-content: center;
   gap: 44px;
 
-  p:first-of-type {
-    font-size: 1.5rem;
-    color: #d1d5db;
-  }
-
-  p:last-of-type {
-    font-size: 48px;
-    font-weight: 600;
-    color: #fff;
+  p {
+    font-size: 24px;
+    color: $secondary-color;
   }
 }
 
+.od-quote-text {
+  font-size: 48px;
+  font-weight: 600;
+  color: #fff;
+}
+.flex-quote {
+  display: flex;
+  gap: 32px;
+  flex-direction: column;
+  align-items: start;
+}
 /* SECTION RECHERCHE */
 .od-search-section {
   width: 100%;

@@ -79,22 +79,24 @@
     <div class="od-pres-image">
       <%= image_tag "landing/image-3.png", alt: "", class: "od-rounded-img left" %>
     </div>
-    <div class="od-pres-text">
-      <p>Une solution</p>
-      <h2>Un carnet de références numériques</h2>
-      <p>Accède à une base riche de références en constante évolution. Alimenté directement par la communauté.</p>
+    <div>
+      <div class="od-pres-text">
+        <p>Une solution</p>
+        <h2>Un carnet de références numériques</h2>
+        <p>Accède à une base riche de références en constante évolution. Alimenté directement par la communauté.</p>
+      </div>
       <div class="od-pres-stats">
         <div>
-          <p><%= Oeuvre.where(validation: true).count %></p>
-          <p>Références</p>
+          <p class="od-pres-number"><%= Oeuvre.where(validation: true).count %></p>
+          <p class="od-pres-text-stat">Références</p>
         </div>
         <div>
-          <p><%= Designer.where(validation: true).count %></p>
-          <p>Designers</p>
+          <p class="od-pres-number"><%= Designer.where(validation: true).count %></p>
+          <p class="od-pres-text-stat">Designers</p>
         </div>
         <div>
-          <p>5</p>
-          <p>Modérateurs</p>
+          <p class="od-pres-number">5</p>
+          <p class="od-pres-text-stat">Modérateurs</p>
         </div>
       </div>
     </div>
@@ -104,13 +106,19 @@
 <!-- SECTION CITATION -->
 <section class="od-quote-section">
   <p>Omniscient design est une plateforme</p>
-  <p>Collaborative</p>
+  <div class="flex-quote">
+  <p class="od-quote-text">Communautaire</p>
+  <p class="od-quote-text">Accessible</p>
+  <p class="od-quote-text">Collaborative</p>
+  <p class="od-quote-text">Éducative</p>
+  <p class="od-quote-text">Riche</p>
+  </div>
 </section>
 
 <!-- SECTION RECHERCHE -->
 <section class="od-search-section">
   <h2>Recherche tes références et tes designers en 2 clics</h2>
-  <p>Le design mérite un lieu qui le respecte, qui le rende compréhensible, et surtout, qui le rende accessible.</p>
+  <p>Grâce à une page de recherches adapter à tes besoins !</p>
   <%= image_tag "landing/image-4.png", alt: "", class: "od-rounded-img od-search-image" %>
 </section>
 
@@ -167,9 +175,6 @@
       </div>
     </div>
 </section>
-
-
-
 <section>
   <div>
     <h2>Besoin d’aide ?</h2>

@@ -1,6 +1,5 @@
-<%= form_with(model: @designer, local: true,
-  data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
-
+<%= form_with(model: @designer, local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
+  <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
  <div class="error-message" style="color: red; display: none;"></div>
   <% if @designer.errors.any? %>
     <div style="color: red">
@@ -98,7 +97,6 @@
       </div>
 
   </div>
-  <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
 <% end %>
 
 <script>

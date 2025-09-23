@@ -175,6 +175,7 @@
 </script>
 
 
+
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>"></script>
 <% end %>

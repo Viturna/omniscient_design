@@ -1,0 +1,214 @@
+<% content_for :title, "Plan du site - Omniscient Design" %>
+<% content_for :description, "Découvrez comment le site est construit pour mieux naviguer dedans." %>
+<style>
+  .plan-links{
+    display:flex;
+    gap:16px;
+    flex-direction:column;
+  }
+  .plan-link{
+    font-weight: 500;
+    font-size: 20px;
+    color: #202020;
+  }
+  .grid-1 a {
+    text-decoration: underline;
+    color: #202020;
+    cursor: pointer;
+  }
+  .plan-sub-links{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+  .plan-sub-link{
+    font-weight: 500;
+    font-size: 18px;
+    color: #202020;
+  }
+  </style>
+
+<section class="top-default-page">
+  <%= link_to root_path do %>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+    </svg>
+  <% end %>
+  <h1>Plan du site</h1>
+</section>
+<section class="grid-1">
+  <h2>Arborescence</h2>
+  <div class="plan-links">
+    <%= link_to "Landing", presentation_path, class: "plan-link" %>
+    <div>
+      <%= link_to "Explorer", oeuvres_path, class: "plan-link" %>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Références", oeuvres_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Designers", designers_path, class: "plan-sub-link" %>
+      </div>
+    </div>
+    <div>
+      <%= link_to "Rechercher", search_path, class: "plan-link" %>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Références", designers_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Designers", designers_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Frise chronologique", designers_path, class: "plan-sub-link" %>
+      </div>
+    </div>
+    <div>
+      <%= link_to "Listes", lists_path, class: "plan-link" %>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Créer une liste", new_list_path, class: "plan-sub-link" %>
+      </div>
+    </div>
+    <div>
+      <%= link_to "Profil", profil_path, class: "plan-link" %>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Mon compte", edit_user_registration_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Mes contributions", user_contributions_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Notifications", notifications_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Accessibilité", "#", class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Rapport de mise à jour", changelog_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Kit de presse", kit_presse_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Signaler un problème", bug_reports_new_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Contacter un administrateur", "mailto:contact@omniscientdesign.fr", class: "plan-sub-link" %>
+      </div>
+      <% if current_user.admin? || current_user.certified? %>
+        <div class="plan-sub-links">
+          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <%= link_to "Validation des références et des designers", validation_path, class: "plan-sub-link" %>
+        </div>
+      <%end%>
+    </div>
+    <div>
+      <%= link_to "Ajouter", add_elements_path, class: "plan-link" %>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Références", new_oeuvre_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Designers", new_designer_path, class: "plan-sub-link" %>
+      </div>
+    </div>
+    <p class="plan-link">Légales</p>
+    <div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Mentions légales", mentionslegales_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= link_to "Politique de confidentialité", politiquedeconfidentialite_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      <%= link_to "CGU", cgu_path, class: "plan-sub-link" %>
+      </div>
+      <div class="plan-sub-links">
+        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.3333 16.333L17.5 12.1663L13.3333 7.99967" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 12.167H10.8333C6.23083 12.167 2.5 8.43616 2.5 3.83366V3.00033" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      <%= link_to "Cookies", cookies_path, class: "plan-sub-link" %>
+      </div>
+    </div>
+   </div>
+</section>

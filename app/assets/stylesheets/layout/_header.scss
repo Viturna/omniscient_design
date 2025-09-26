@@ -7,7 +7,7 @@
   width: 350px;
   height: 100dvh;
   padding: 0 50px;
-  overflow-y: scroll;
+  overflow-y: hidden;
   z-index: 99;
   transition: width 0.3s ease, height 0.3s ease;
   display: flex;
@@ -15,7 +15,11 @@
   justify-content: space-between;
   background-color: #fff;
 }
-
+@media (max-height: 1000px) {
+  .header-desktop {
+    overflow-y: auto; // ou scroll
+  }
+}
 .header-desktop ::-webkit-scrollbar {
   width: 6px;
 }

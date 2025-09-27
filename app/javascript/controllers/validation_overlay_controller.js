@@ -5,6 +5,7 @@ export default class extends Controller {
   static targets = ["validation", "overlay", "overlayBottom"]
 
   connect() {
+    document.addEventListener("turbo:load", () => this.init())
     this.onScroll = this.handleScroll.bind(this)
     window.addEventListener("scroll", this.onScroll)
   }

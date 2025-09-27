@@ -8,6 +8,7 @@ export default class extends Controller {
     ]
 
     connect() {
+        document.addEventListener("turbo:load", () => this.init())
         this.applyFiltersDisplay()
     }
 

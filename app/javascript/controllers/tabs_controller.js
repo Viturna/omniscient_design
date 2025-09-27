@@ -3,6 +3,9 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["tab", "tabInput"]
+  connect() {
+    document.addEventListener("turbo:load", () => this.init())
+  }
 
   switch(event) {
     const tabName = event.currentTarget.dataset.tab

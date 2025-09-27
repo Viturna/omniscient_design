@@ -4,6 +4,10 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["passwordField", "showIcon", "hideIcon"]
 
+  connect() {
+    document.addEventListener("turbo:load", () => this.init())
+  }
+
   toggle() {
     if (this.passwordFieldTarget.type === "password") {
       this.passwordFieldTarget.type = "text"

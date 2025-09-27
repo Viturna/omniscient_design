@@ -4,7 +4,7 @@ export default class extends Controller {
     static targets = ["banner"]
 
     connect() {
-
+        document.addEventListener("turbo:load", () => this.init())
         const consent = localStorage.getItem("cookie-consent")
 
         if (!consent) {

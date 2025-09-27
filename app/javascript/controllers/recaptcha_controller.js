@@ -37,9 +37,11 @@ export default class extends Controller {
       return
     }
 
-    grecaptcha.execute(this.siteKey, { action: 'submit' }).then((token) => {
-      this.tokenTarget.value = token
-      this.formTarget.submit()
+    grecaptcha.ready(() => {
+      grecaptcha.execute(this.siteKey, { action: 'submit' }).then((token) => {
+        this.tokenTarget.value = token
+        this.formTarget.submit()
+      })
     })
   }
 }

@@ -98,7 +98,7 @@
     <% end %>
 <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
 <main class="<%= 'main-show' if main_show %>" data-controller="loading">
-     <div id="loading" data-loading-target="loading" data-turbo-permanent>
+     <div id="loading" data-loading-target="loading">
         <div class="loader-bg">      
           <video autoplay loop muted>
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">

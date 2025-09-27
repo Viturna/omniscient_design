@@ -39,7 +39,7 @@
     <meta name="twitter:image" content="<%= asset_url('logo-od-rs.jpg') %>">
 
     <!-- reCAPTCHA -->
-    <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
+    <meta name="recaptcha-site-key" content="<%= ENV["RECAPTCHA_SITE_KEY"] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
 
     <!-- Favicon et manifest -->
     <%= render 'application/favicon' %>

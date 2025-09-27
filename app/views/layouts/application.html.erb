@@ -100,7 +100,13 @@
 <main class="<%= 'main-show' if main_show %>" data-controller="loading">
      <div id="loading" data-loading-target="loading">
         <div class="loader-bg">      
-          <video autoplay loop muted>
+          <video
+            autoplay
+            loop
+            muted
+            playsinline
+            webkit-playsinline
+            preload="auto">
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">
             Your browser does not support the video tag.
           </video>

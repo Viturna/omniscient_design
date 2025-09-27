@@ -40,6 +40,7 @@
 
     <!-- reCAPTCHA -->
     <meta name="recaptcha-site-key" content="<%= ENV["RECAPTCHA_SITE_KEY"] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>" async defer></script>
 
     <!-- Favicon et manifest -->
     <%= render 'application/favicon' %>

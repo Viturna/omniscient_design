@@ -5,6 +5,7 @@ export default class extends Controller {
   static targets = ["loading", "content"]
 
   connect() {
+    this.init()
     // Initialisation à chaque navigation Turbo (y compris le premier chargement)
     document.addEventListener("turbo:load", () => this.init())
 
@@ -13,8 +14,7 @@ export default class extends Controller {
   }
 
   init() {
-    // On affiche le contenu quand la page est chargée
-    this.showContent()
+    requestAnimationFrame(() => this.showContent())
   }
 
   showLoading() {

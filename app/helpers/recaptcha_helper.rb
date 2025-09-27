@@ -3,7 +3,7 @@ require 'json'
 
 module RecaptchaHelper
   def verify_recaptcha(token)
-    secret_key = Rails.application.credentials.recaptcha[:secret_key]
+    secret_key = ENV["RECAPTCHA_SITE_KEY"]
     uri = URI("https://www.google.com/recaptcha/api/siteverify")
     response = Net::HTTP.post_form(uri, {
       secret: secret_key,

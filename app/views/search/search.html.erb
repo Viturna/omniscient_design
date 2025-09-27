@@ -309,19 +309,6 @@ document.addEventListener("turbo:before-cache", () => {
 
 </script>
 
-
-<script>
-document.addEventListener("turbo:load", () => {
-  const applyDateFilterBtn = document.getElementById("applyDateFilter");
-  const filterForm = document.getElementById("filterForm");
-
-  applyDateFilterBtn.addEventListener("click", function () {
-    console.log("Filtrage appliqué");
-    filterForm.requestSubmit(); 
-  });
-});</script>
-
-
 <div id="popup" class="popup">
   <div class="popup-content">
     <div class="top-popup">
@@ -331,7 +318,6 @@ document.addEventListener("turbo:load", () => {
     </div>
     <div class="popup-inner">
       <p class="title-popup">Omniscient design</p>
-      <p>Nous sommes ravis de vous accueillir dans cette phase importante de notre projet. La bêta est une étape cruciale pour tester le site, identifier les améliorations nécessaires et construire une expérience qui répond à vos attentes.</p>
       <div class="popup-decoration">
         <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
       </div>
@@ -367,7 +353,7 @@ document.addEventListener("turbo:load", () => {
         </svg>
       </div>
       <p class="subtitle-popup">Vos feedbacks</p>
-      <p>En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+      <p>Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
         <%= link_to new_feedback_url, class: "button dark" do %>
         Donner votre avis
         <%end%>

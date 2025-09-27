@@ -144,7 +144,7 @@
  document.addEventListener("turbo:load", () => {
     var oeuvreYearInput = document.getElementById("date-oeuvre-input");
     var oeuvreYearError = document.getElementById("date-oeuvre-error");
-
+  if (!oeuvreYearInput || !oeuvreYearError || !form) return;
     var currentYear = new Date().getFullYear();
 
     function validateYear(year, minYear, maxYear) {
@@ -219,6 +219,7 @@
 <script>
     document.addEventListener("turbo:load", () => {
   const input = document.querySelector('input[type="file"]');
+   if (!input) return;      
   const preview = document.createElement("img");
   preview.style.maxWidth = "300px";
   preview.style.display = "none";
@@ -242,7 +243,7 @@
   document.addEventListener("turbo:load", () => {
   const container = document.getElementById("sources-container");
   const addButton = document.getElementById("add-source");
-
+if (!container || !addButton) return; 
   addButton.addEventListener("click", () => {
     const div = document.createElement("div");
     div.className = "source-input";

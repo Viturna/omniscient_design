@@ -4,7 +4,6 @@ export default class extends Controller {
   static targets = ["row", "button"]
 
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
     this.initialRowsToShow = 10
     this.rowsToShow = this.initialRowsToShow
     this.hideExtraRows()

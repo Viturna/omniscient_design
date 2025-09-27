@@ -108,6 +108,8 @@
 
     var currentYear = new Date().getFullYear();
 
+     if (!birthYearInput || !deathYearInput || !form) return;
+
     function validateYear(year, minYear, maxYear) {
       return !isNaN(year) && year >= minYear && year <= maxYear;
     }

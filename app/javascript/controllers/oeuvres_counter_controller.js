@@ -4,10 +4,6 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
     static targets = ["hiddenOeuvres"]
 
-    connect() {
-        document.addEventListener("turbo:load", () => this.init())
-    }
-
     toggle(event) {
         let hiddenOeuvres = this.hiddenOeuvresTarget
         if (hiddenOeuvres.style.display === "none" || hiddenOeuvres.style.display === "") {

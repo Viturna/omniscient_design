@@ -5,7 +5,6 @@ export default class extends Controller {
     static targets = ["wrapper"]
 
     connect() {
-        document.addEventListener("turbo:load", () => this.init())
         this.wrapper = this.wrapperTarget
         this.wrapper.style.overflow = "hidden" // masque la scrollbar
         this.wrapper.addEventListener("wheel", this.onWheel.bind(this))

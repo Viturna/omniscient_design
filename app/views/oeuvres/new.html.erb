@@ -21,7 +21,7 @@
   document.addEventListener("turbo:load", () => {
     let currentStep = 1;
     const steps = document.querySelectorAll(".form-step");
-
+     if (steps.length === 0) return;    
     // Fonction pour afficher l'étape
     function showStep(step) {
       steps.forEach((el) => (el.style.display = "none"));
@@ -31,6 +31,7 @@
     // Fonction pour afficher les messages d'erreur
     function showError(message) {
       const errorMessageElement = document.querySelector(".error-message");
+      if (!errorMessageElement) return; 
       errorMessageElement.textContent = message;
       errorMessageElement.style.display = "block";  // Afficher le message d'erreur
     }

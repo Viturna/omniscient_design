@@ -674,6 +674,8 @@
     const closePopupButton = document.getElementById("closePopupSave");
     const popup = document.getElementById("popup");
 
+     if (!openPopupButton || !closePopupButton || !popup) return;
+
     openPopupButton.addEventListener("click", function() {
       popup.style.display = "flex";
     });

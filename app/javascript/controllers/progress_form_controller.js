@@ -8,7 +8,6 @@ export default class extends Controller {
   static targets = ["progressBar", "progressPercent"]
 
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
     this.updateProgress = this.updateProgress.bind(this)
 
     // Inputs natifs

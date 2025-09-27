@@ -4,7 +4,6 @@ export default class extends Controller {
   static targets = ["star", "input"]
 
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
     const value = this.inputTarget.value || 0
     this.updateStars(value)
   }

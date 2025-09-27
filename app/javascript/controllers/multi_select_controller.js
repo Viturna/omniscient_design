@@ -5,7 +5,6 @@ export default class extends Controller {
   static values = { prefix: String }
 
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
     this.selects = Array.from(document.querySelectorAll(`select[id^='${this.prefixValue}_']`))
     this.selects.forEach(select => {
       select.addEventListener("change", () => this.updateOptions())

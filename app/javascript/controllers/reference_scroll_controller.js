@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
     this.lastScrollTop = 0
     this.scrollHandler = this.handleScroll.bind(this)
     window.addEventListener("scroll", this.scrollHandler)

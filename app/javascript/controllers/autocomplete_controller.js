@@ -5,8 +5,6 @@ export default class extends Controller {
   static values = { url: String, minLength: { type: Number, default: 2 }, delay: { type: Number, default: 300 } }
 
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
-
     this.debounceTimer = null
     this.suggestions = []
     this.activeIndex = -1

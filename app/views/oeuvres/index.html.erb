@@ -105,6 +105,9 @@
     const loadMoreTrigger = document.getElementById("oeuvres-load-more");
     const upButton = document.querySelector(".arrow-button.up");
     const downButton = document.querySelector(".arrow-button.down");
+
+    if (!container) return;
+
     let isLoading = false;
     let isScrolling = false;
 
@@ -230,7 +233,6 @@
     </div>
     <div class="popup-inner">
       <p class="title-popup">Omniscient design</p>
-      <p>Nous sommes ravis de vous accueillir dans cette phase importante de notre projet. La bêta est une étape cruciale pour tester le site, identifier les améliorations nécessaires et construire une expérience qui répond à vos attentes.</p>
       <div class="popup-decoration">
         <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
       </div>
@@ -266,7 +268,7 @@
         </svg>
       </div>
       <p class="subtitle-popup">Vos feedbacks</p>
-      <p>En pleine phase bêta, vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+      <p>Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
         <%= link_to new_feedback_url, class: "button dark" do %>
         Donner votre avis
         <%end%>
@@ -278,7 +280,7 @@
     const openPopupButton = document.getElementById("openPopup");
     const closePopupButton = document.getElementById("closePopup");
     const popup = document.getElementById("popup");
-
+    if (!openPopupButton || !closePopupButton || !popup) return;
     if (!popup) return;
 
     if (openPopupButton) {

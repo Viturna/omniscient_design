@@ -5,8 +5,6 @@ export default class extends Controller {
   static targets = ["progress", "close"]
 
   connect() {
-    document.addEventListener("turbo:load", () => this.init())
-
     this.countdownDuration = 5000
     this.width = 0
 

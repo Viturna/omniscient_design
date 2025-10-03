@@ -37,7 +37,7 @@
                     <% end %>
                   </div>
                   <div class="info-card-dark">
-                    <%= card.countries.map { |country| country_flag(country.country_numeric) }.join(' ') %>
+                    <span class="flag"><%= card.countries.map { |country| country_flag(country.country_numeric) }.join(' ') %></span>
                   </div>
                 </div>
                 <% if card.domaines.present? %>

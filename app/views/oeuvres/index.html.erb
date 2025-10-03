@@ -29,30 +29,51 @@
 
 <section class="home-page top-bar-search">
   <%= link_to search_path, class: "search-link" do %>
-    <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="Rechercher une référence">
-<% end %>
-<div class="top-bar-flex">
-  <div class="circle circle-notif" id="openPopup">
-    <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
-      <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
-    </svg>
-  </div>
-  <%= link_to notifications_path do %>
-    <div class="circle circle-notif">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20.1825 5.26C19.3238 4.76133 18.7932 3.83333 18.7945 2.83333V2.82933C18.7958 1.26667 17.5438 0 15.9998 0C14.4558 0 13.2038 1.26667 13.2038 2.82933V2.83333C13.2052 3.83467 12.6758 4.76133 11.8158 5.26C5.59317 8.876 9.16917 20.88 2.6665 23.0013V25.3333H29.3332V23.0013C22.8305 20.88 26.4065 8.876 20.1825 5.26ZM15.9998 1.33333C16.7358 1.33333 17.3332 1.932 17.3332 2.66667C17.3332 3.40267 16.7358 4 15.9998 4C15.2638 4 14.6665 3.40267 14.6665 2.66667C14.6665 1.932 15.2638 1.33333 15.9998 1.33333ZM19.9998 28C19.9998 30.1307 18.1438 32 16.0385 32C13.9332 32 11.9998 30.1307 11.9998 28H19.9998Z" fill="white"/>
-      </svg>
-      <% if current_user %>
-        <% if @unread_notifications_count > 0 %>
-          <div class="notification-counter">
-            <div class="notification-badge"><%= @unread_notifications_count %></div>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
+    <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="<%= t('search.placeholder') %>">
   <% end %>
-</div>
+  <div class="top-bar-flex">
+    <div class="circle circle-notif" id="openPopup">
+      <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+        <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <%= link_to notifications_path do %>
+      <div class="circle circle-notif">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.1825 5.26C19.3238 4.76133 18.7932 3.83333 18.7945 2.83333V2.82933C18.7958 1.26667 17.5438 0 15.9998 0C14.4558 0 13.2038 1.26667 13.2038 2.82933V2.83333C13.2052 3.83467 12.6758 4.76133 11.8158 5.26C5.59317 8.876 9.16917 20.88 2.6665 23.0013V25.3333H29.3332V23.0013C22.8305 20.88 26.4065 8.876 20.1825 5.26ZM15.9998 1.33333C16.7358 1.33333 17.3332 1.932 17.3332 2.66667C17.3332 3.40267 16.7358 4 15.9998 4C15.2638 4 14.6665 3.40267 14.6665 2.66667C14.6665 1.932 15.2638 1.33333 15.9998 1.33333ZM19.9998 28C19.9998 30.1307 18.1438 32 16.0385 32C13.9332 32 11.9998 30.1307 11.9998 28H19.9998Z" fill="white"/>
+        </svg>
+        <% if current_user %>
+          <% if @unread_notifications_count > 0 %>
+            <div class="notification-counter">
+              <div class="notification-badge"><%= @unread_notifications_count %></div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+    <button data-controller="lang-switcher" class="lang-switcher" data-action="click->lang-switcher#toggle">
+      <span class="lang-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.82263 6.50977C8.82263 10.8194 6.63857 12.9761 3.94531 12.9761M3.94531 6.50977H10.7736" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4.9209 9.07349C4.9209 11.1649 7.11764 12.8856 10.7737 12.9753M11.7491 19.8036L15.651 11.0244L19.5529 19.8036M18.6749 17.8527H12.6271M6.57333 3.2207L7.34688 3.78842" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+        </span>
+        <span class="lang-label" data-lang-switcher-target="current"><%= I18n.locale.to_s.upcase %></span>
+        <span class="lang-arrow">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.83984 6.80664L9.22632 11.1931L13.6128 6.80664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+        </span>
+        <div class="lang-dropdown" data-lang-switcher-target="dropdown">
+          <%= link_to "FR", url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } %>
+          <%= link_to "EN", url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } %>
+        </div>
+    </button>
+  </div>
+
+
 </section>
 <div id="oeuvres">
   <div class="home-flex" id="cardContainer">
@@ -61,8 +82,8 @@
         <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>
       <% end %>
       <div class="switch-home-mobile">
-        <%= link_to "Designers", designers_path %>
-        <%= link_to "Références", oeuvres_path, class: "active" %>
+        <%= link_to t('global.designers'), designers_path %>
+        <%= link_to t('global.references'), oeuvres_path, class: "active" %>
       </div>
       <%= link_to search_path,  aria: { label: "Rechercher" } do %>
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -71,8 +92,8 @@
       <%end%>
     </div>
     <div class="switch-home">
-      <%= link_to "Designers", designers_path %>
-      <%= link_to "Références", oeuvres_path, class: "active" %>
+      <%= link_to t('global.designers'), designers_path %>
+      <%= link_to t('global.references'), oeuvres_path, class: "active" %>
     </div>
 
     <div class="box-card" id="boxCard">
@@ -232,16 +253,15 @@
       </svg>
     </div>
     <div class="popup-inner">
-      <p class="title-popup">Omniscient design</p>
+      <p class="title-popup"><%= t('mainpopup.title') %></p>
       <div class="popup-decoration">
         <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
       </div>
-      <p class="subtitle-popup">Découvrir le projet</p>
-      <p>Omniscient Design est né de la volonté de centraliser, sur une plateforme unique, toutes les connaissances liées au monde du design. Qu'il s'agisse de design d'objet, de stylisme ou de scénographie, Omniscient Design aspire à rendre chaque travail, chaque projet et chaque référence aussi accessibles et complets que possible.
-      <br><br>
-      Notre mission est de favoriser le partage, l'exploration et l'enrichissement des savoirs dans tous les domaines du design, en mettant à disposition des ressources exhaustives et facilement consultables, que ce soit pour les étudiants, les professionnels ou les passionnés.</p>
+      <p class="subtitle-popup"><%= t('mainpopup.subtitle_project') %></p>
+      <p><%= t('mainpopup.description_project').gsub("\n", "<br>").html_safe %></p>
+
       <%= link_to presentation_url, class: "button dark" do %>
-        En savoir plus
+       <%= t('mainpopup.button_project') %>
       <%end%>
       <div class="popup-decoration">
         <svg width="186" height="46" viewBox="0 0 186 46" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -267,10 +287,10 @@
           </defs>
         </svg>
       </div>
-      <p class="subtitle-popup">Vos feedbacks</p>
-      <p>Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+      <p class="subtitle-popup"><%= t('mainpopup.subtitle_feedback') %></p>
+     <p><%= t('mainpopup.description_feedback') %></p>
         <%= link_to new_feedback_url, class: "button dark" do %>
-        Donner votre avis
+         <%= t('mainpopup.button_feedback') %>
         <%end%>
     </div>
   </div>

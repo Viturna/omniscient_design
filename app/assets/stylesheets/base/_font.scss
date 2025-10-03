@@ -1,45 +1,49 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 @font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 700;
-  src: url('IBMPlexSans-Bold.woff2') format('woff2');
+  src: url("IBMPlexSans-Bold.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 500;
-  src: url('IBMPlexSans-Medium.woff2') format('woff2');
+  src: url("IBMPlexSans-Medium.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
-  src: url('IBMPlexSans-Regular.woff2') format('woff2');
+  src: url("IBMPlexSans-Regular.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 300;
-  src: url('IBMPlexSans-Light.woff2') format('woff2');
+  src: url("IBMPlexSans-Light.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Noto Color Emoji';
+  font-family: "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
-  src: url('NotoColorEmoji-Regular.woff2') format('woff2');
+  src: url("NotoColorEmoji-Regular.woff2") format("woff2");
   font-display: swap;
 }
-
+.flag {
+  font-family: "Noto Color Emoji", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+}
 h1 {
   font-weight: 500;
   font-size: 32px;
@@ -98,11 +102,10 @@ p {
   color: $primary-color;
 }
 
-.italic{
+.italic {
   font-style: italic;
 }
 body.dark-mode {
-
   h1,
   h2,
   h3 {
@@ -116,10 +119,9 @@ body.dark-mode {
   .black {
     color: $primary-color-dark;
   }
-
 }
 
-@media screen and (min-width:426px) and (max-width: 600px) {
+@media screen and (min-width: 426px) and (max-width: 600px) {
   h1 {
     font-size: 26px;
   }

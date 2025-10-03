@@ -117,13 +117,12 @@
 .od-tags-section {
   width: 100%;
   padding: 3rem 1.5rem;
-
-  .od-tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
-  }
+}
+.od-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
 
   .od-tag {
     display: flex;
@@ -150,11 +149,28 @@
     }
   }
 }
-
 /* SECTION BESOIN */
 .od-pres-section {
   width: 100%;
   margin-top: 96px;
+
+  h2 {
+    padding: 0;
+    margin: 16px 0;
+    font-size: 32px;
+    color: $primary-color;
+  }
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: #374151;
+
+    .od-strong {
+      font-weight: 600;
+      color: #000;
+    }
+  }
 
   .od-pres-container {
     max-width: 100%;
@@ -184,24 +200,6 @@
         letter-spacing: 1px;
         color: $primary-color;
         font-weight: 600;
-      }
-
-      h2 {
-        padding: 0;
-        margin: 16px 0;
-        font-size: 2.25rem;
-        color: $primary-color;
-      }
-
-      p {
-        font-size: 1.125rem;
-        line-height: 1.75rem;
-        color: #374151;
-
-        .od-strong {
-          font-weight: 600;
-          color: #000;
-        }
       }
     }
 
@@ -272,30 +270,33 @@
 .od-search-section {
   width: 100%;
   padding: 6rem 1.5rem;
-  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  align-items: center;
+  justify-content: center;
 
   h2 {
-    font-size: 2.25rem;
-    width: 50%;
+    font-size: 32px;
+    width: 35vw;
     color: $primary-color;
+    text-align: center;
   }
 
   p {
     font-size: 1.125rem;
     color: #374151;
-    max-width: 42rem;
     margin: 0 auto;
+    margin-bottom: 48px;
   }
 
   .od-search-image {
-    border-radius: 1rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    max-width: 80rem;
-    width: 100%;
+    width: 80vw;
     margin: 0 auto;
+    margin-top: 64px;
+  }
+
+  .od-tags-container {
+    gap: 86px;
   }
 }
 
@@ -303,7 +304,7 @@
   padding: 96px 8vw;
   background-color: $primary-color;
   h2 {
-    font-size: 1.75rem;
+    font-size: 32px;
   }
   h2,
   p,
@@ -323,6 +324,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 24px;
 
   img {
     width: 10vw;
@@ -336,6 +338,38 @@
   a {
     text-decoration: underline;
     font-weight: 500;
+  }
+}
+
+.flex-pres-picto {
+  display: flex;
+  gap: 86px;
+  justify-content: space-around;
+  .box-pres-picto {
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+
+    p {
+      font-weight: 500;
+      text-align: center;
+    }
+  }
+}
+
+.section-pres-picto {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  padding: 0 7vw;
+  margin-bottom: 96px;
+  width: calc(100% - 14vw);
+
+  h2 {
+    width: 40%;
   }
 }
 

@@ -25,25 +25,17 @@ class OeuvresController < ApplicationController
                      .order("RANDOM()")
                      .offset(offset)
                      .limit(limit)
-    Rails.logger.debug "Offset: #{offset}, Loaded IDs: #{loaded_ids.inspect}"
-    Rails.logger.debug "Oeuvres renvoyées: #{@oeuvres.pluck(:id, :nom_oeuvre)}"
 
     render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' }
   end 
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show
-    if user_signed_in?
-      unless @oeuvre.validation || current_user.admin? || @oeuvre.user == current_user || current_user.certified?
-        redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette référence."
-      end
-      @lists = current_user.lists
-    else
-      unless @oeuvre.validation
-        redirect_to root_path, alert: "Vous n'avez pas l'autorisation d'accéder à cette référence."
-      end
-      @lists = []
+    unless @oeuvre.validation || (user_signed_in? && (current_user.admin? || @oeuvre.user == current_user || current_user.certified?))
+      redirect_to root_path, alert: t('oeuvres.access_denied')
+      return
     end
+    @lists = user_signed_in? ? current_user.lists : []
   end
 
   # GET /oeuvres/new
@@ -70,7 +62,7 @@ class OeuvresController < ApplicationController
       end
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
-      flash[:success] = "Référence créée avec succès."
+      flash[:success] = t('oeuvres.create.success')
       redirect_to @oeuvre
     else
       render :new, status: :unprocessable_entity
@@ -80,83 +72,64 @@ class OeuvresController < ApplicationController
   
 
   # PATCH/PUT /oeuvres/1 or /oeuvres/1.json
-  def update
-    respond_to do |format|
-      if @oeuvre.update(oeuvre_params)
-        format.html { redirect_to oeuvre_url(@oeuvre), notice: "Référence mise à jour" }
-        format.json { render :show, status: :ok, location: @oeuvre }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @oeuvre.errors, status: :unprocessable_entity }
-      end
+   def update
+    if @oeuvre.update(oeuvre_params)
+      redirect_to @oeuvre, notice: t('oeuvres.update.success')
+    else
+      flash.now[:alert] = t('oeuvres.update.failure')
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /oeuvres/1/reject
   def reject
     rejection_reason = params[:rejection_reason].presence || "Sans commentaire"
-    @oeuvre = Oeuvre.find_by(slug: params[:slug])
-
     if @oeuvre
       @rejected_oeuvre = RejectedOeuvre.new(
         nom_oeuvre: @oeuvre.nom_oeuvre,
         user: @oeuvre.user,
         reason: rejection_reason
       )
-
       if @rejected_oeuvre.save
-        if @oeuvre.notions_oeuvres.exists?
-          Rails.logger.info "Suppression des notions associées à l'oeuvre #{@oeuvre.id}"
-          @oeuvre.notions_oeuvres.delete_all
-        end
-
-        # Détruire l'oeuvre
-        handle_destroy(@oeuvre, "La référence a été refusée avec succès.")
+        @oeuvre.notions_oeuvres.delete_all if @oeuvre.notions_oeuvres.exists?
+        handle_destroy(@oeuvre, t('oeuvres.reject.success'))
       else
-        redirect_to validation_path, alert: "Une erreur est survenue lors du refus de la référence."
+        redirect_to validation_path, alert: t('oeuvres.reject.failure')
       end
     else
-      redirect_to validation_path, alert: "Oeuvre non trouvée."
+      redirect_to validation_path, alert: t('oeuvres.reject.not_found')
     end
-
-    Rails.logger.info "CSRF token reçu : #{request.headers['X-CSRF-Token']}"
   end
-
   # DELETE /oeuvres/1 or /oeuvres/1.json
-  def destroy
-    @oeuvre = Oeuvre.find_by(slug: params[:slug])
-    if @oeuvre
-      handle_destroy(@oeuvre, "La référence #{@oeuvre.nom_oeuvre} a été supprimée avec succès.")
+   def destroy
+    if @oeuvre&.destroy
+      create_rejection_notification(@oeuvre)
+      update_suivi_references_refusees(@oeuvre.user)
+      redirect_to validation_path, notice: t('oeuvres.destroy.success', name: @oeuvre.nom_oeuvre)
     else
-      respond_to do |format|
-        format.html { redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression de la référence." }
-        format.json { render json: { error: "Oeuvre non trouvée" }, status: :not_found }
-      end
+      redirect_to validation_path, alert: t('oeuvres.destroy.failure')
     end
   end
-
+  
   def cancel
-    if user_signed_in?
-      if current_user.admin? || @oeuvre.user_id == current_user.id
-        update_suivi_references_refusees(@oeuvre.user)
-        @oeuvre.destroy!
-        flash[:notice] = "La soumission de la référence a été annulée avec succès."
-        redirect_to oeuvres_path
-      else
-        flash[:notice] = "Vous n'avez pas l'autorisation d'annuler cette soumission."
-        redirect_to oeuvres_path
-      end
+    if user_signed_in? && (current_user.admin? || @oeuvre.user_id == current_user.id)
+      update_suivi_references_refusees(@oeuvre.user)
+      @oeuvre.destroy!
+      flash[:notice] = t('oeuvres.cancel.success')
+      redirect_to oeuvres_path
+    else
+      flash[:alert] = t('oeuvres.cancel.failure')
+      redirect_to oeuvres_path
     end
   end
 
-  def validate
+ def validate
     if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@oeuvre)
       update_suivi_references_validees(@oeuvre.user)
-      redirect_to validation_path, notice: "La référence #{@oeuvre.nom_oeuvre} a été validée avec succès."
+      redirect_to validation_path, notice: t('oeuvres.validate.success', name: @oeuvre.nom_oeuvre)
     else
-      Rails.logger.error "Erreur lors de la validation de la référence : #{@oeuvre.errors.full_messages}"
-      redirect_to validation_path, alert: "Échec de validation : #{@oeuvre.errors.full_messages.join(', ')}"
+      redirect_to validation_path, alert: t('oeuvres.validate.failure', errors: @oeuvre.errors.full_messages.join(', '))
     end
   end
 
@@ -192,17 +165,17 @@ class OeuvresController < ApplicationController
       end
     end
   end
-
   def create_notification(oeuvre)
-    message = "Une nouvelle oeuvre est à valider : #{oeuvre.nom_oeuvre}"
-    admins = User.where(role: 'admin')
-    admins.each do |admin|
-      Notification.create(user_id: admin.id, notifiable: oeuvre, message: message)
+    message = t('notifications.new_oeuvre', name: oeuvre.nom_oeuvre)
+    
+    recipients = User.where("role = ? OR certified = ?", 'admin', true)
+
+    recipients.each do |user|
+      Notification.create(user_id: user.id, notifiable: oeuvre, message: message)
     end
   end
-
   def create_validation_notification(oeuvre)
-    message = "La référence #{oeuvre.nom_oeuvre} a été validée. Encore un grand merci pour ta contribution"
+    message = t('notifications.oeuvre_validated', name: oeuvre.nom_oeuvre)
 
     if oeuvre.user_id.present?
       Notification.create(user_id: oeuvre.user_id, notifiable: oeuvre, message: message)
@@ -210,17 +183,18 @@ class OeuvresController < ApplicationController
       Notification.create(notifiable: oeuvre, message: message)
     end
   rescue ActiveRecord::NotNullViolation => e
-    Rails.logger.error("Erreur lors de la création de la notification : #{e.message}")
+    Rails.logger.error(t('notifications.error_creation', error: e.message))
   end
 
   def create_rejection_notification(oeuvre)
     if oeuvre.user_id.present?
-      message = "Votre référence #{oeuvre.nom_oeuvre} a été rejeté(e)."
+      message = t('notifications.oeuvre_rejected', name: oeuvre.nom_oeuvre)
       Notification.create(user_id: oeuvre.user_id, notifiable: oeuvre, message: message)
     else
-      Rails.logger.error "La référence #{oeuvre.id} n'a pas d'utilisateur associé pour la notification de rejet."
+      Rails.logger.error(t('notifications.no_user_for_rejection', oeuvre_id: oeuvre.id))
     end
   end
+
 
   def update_suivi_references_emises(user)
     suivi = user.suivis.first_or_create
@@ -249,7 +223,7 @@ class OeuvresController < ApplicationController
                 Oeuvre.friendly.find(params[:slug])
               end
   rescue ActiveRecord::RecordNotFound
-    redirect_to validation_path, alert: "La référence n'a pas été trouvée."
+   redirect_to validation_path, alert: t('oeuvres.not_found')
   end
 
   def oeuvre_params

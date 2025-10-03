@@ -33,7 +33,6 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 85%;
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -149,7 +148,7 @@
       <% end %>
     <%end%>
     <div class="info-card-first-content">
-          <%= link_to search_path(:tab => "frise", :start_year => oeuvre.date_oeuvre, :end_year => oeuvre.date_oeuvre) do %>
+      <%= link_to search_path(:tab => "frise", :start_year => oeuvre.date_oeuvre, :end_year => oeuvre.date_oeuvre) do %>
         <p class="info-card-dark info-header-show" data-no-popup>
           <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_3261_191)">
@@ -198,7 +197,7 @@
             <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17.8288 6.31757L11.5363 0.80117C10.9595 0.285235 10.2127 0 9.43881 0C8.6649 0 7.91815 0.285235 7.34132 0.80117L1.04884 6.31757C0.71573 6.61549 0.449906 6.98096 0.269073 7.38964C0.0882399 7.79833 -0.00345306 8.24084 9.94149e-05 8.68773V17.8538C9.94149e-05 18.6882 0.331577 19.4885 0.921611 20.0785C1.51164 20.6685 2.3119 21 3.14633 21H15.7313C16.5657 21 17.366 20.6685 17.956 20.0785C18.546 19.4885 18.8775 18.6882 18.8775 17.8538V8.67725C18.8796 8.23212 18.7872 7.79162 18.6064 7.38486C18.4256 6.97809 18.1606 6.61432 17.8288 6.31757ZM11.5363 18.9025H7.34132V13.6588C7.34132 13.3806 7.45181 13.1139 7.64849 12.9172C7.84516 12.7205 8.11192 12.61 8.39006 12.61H10.4876C10.7657 12.61 11.0324 12.7205 11.2291 12.9172C11.4258 13.1139 11.5363 13.3806 11.5363 13.6588V18.9025ZM16.78 17.8538C16.78 18.1319 16.6695 18.3987 16.4729 18.5953C16.2762 18.792 16.0094 18.9025 15.7313 18.9025H13.6338V13.6588C13.6338 12.8244 13.3023 12.0241 12.7123 11.4341C12.1222 10.844 11.322 10.5125 10.4876 10.5125H8.39006C7.55563 10.5125 6.75537 10.844 6.16534 11.4341C5.5753 12.0241 5.24383 12.8244 5.24383 13.6588V18.9025H3.14633C2.86819 18.9025 2.60144 18.792 2.40476 18.5953C2.20808 18.3987 2.09759 18.1319 2.09759 17.8538V8.67725C2.09778 8.52834 2.12967 8.38118 2.19116 8.24556C2.25264 8.10994 2.3423 7.98897 2.45416 7.89069L8.74663 2.38478C8.93802 2.21664 9.18406 2.12392 9.43881 2.12392C9.69355 2.12392 9.93959 2.21664 10.131 2.38478L16.4234 7.89069C16.5353 7.98897 16.625 8.10994 16.6865 8.24556C16.7479 8.38118 16.7798 8.52834 16.78 8.67725V17.8538Z" fill="white"/>
             </svg>
-            Domaine non spécifié
+            <%= t('oeuvres.domaine_non_specifie') %>
           </p>
         <% end %>
       
@@ -215,7 +214,7 @@
         </p>
         <h1 class="title-card"><%= oeuvre.nom_oeuvre %></h1>
       </div>
-        <h2 class="title-description-reference">Notion(s)</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.notions') %></h2>
       <% if oeuvre.notions.any? %>
         <div class="notions-flex">
             <% oeuvre.notions.each do |notion| %>
@@ -225,32 +224,31 @@
             <% end %>
           </div>
         <% else %>
-          <p>Aucune notion n'est associée à cette référence.</p>
+          <p><%= t('oeuvres.no_notion') %></p>
         <% end %>
-      <h2 class="title-description-reference">Présentation générale</h2>
+      <h2 class="title-description-reference"><%= t('oeuvres.presentation_generale') %></h2>
       <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.presentation_generale) %></p>
       <% if oeuvre.contexte_historique.present? %>
-        <h2 class="title-description-reference">Contexte Historique</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.contexte_historique') %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.contexte_historique) %></p>
       <% end %>
       <% if oeuvre.materiaux_et_innovations_techniques.present? %>
-        <h2 class="title-description-reference">Matériaux et innovations techniques</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.materiaux_innovations') %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.materiaux_et_innovations_techniques) %></p>
       <% end %>
       <% if oeuvre.concept_et_inspiration.present? %>
-        <h2 class="title-description-reference">Concept et inspiration</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.concept_inspiration') %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.concept_et_inspiration) %></p>
       <% end %>
       <% if oeuvre.dimension_esthetique.present? %>
-        <h2 class="title-description-reference">Dimension esthétique</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.dimension_esthetique') %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.dimension_esthetique) %></p>
       <% end %>
       <% if oeuvre.impact_et_message.present? %>
-        <h2 class="title-description-reference">Impact et message</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.impact_message') %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.impact_et_message) %></p>
       <% end %>
-      <h2 class="title-description-reference">Sources</h2>
-      <p class="text-description-reference italic">Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence.</p>
+      <h2 class="title-description-reference"><%= t('oeuvres.sources') %></h2>
       <% if oeuvre.source.present? %>
         <div class="sources-flex" style="display: flex; flex-wrap: wrap; gap: 64px;">
           <% JSON.parse(oeuvre.source.to_s).each do |url| %>
@@ -266,7 +264,8 @@
           <% end %>
         </div>
       <% end %>
-      <h2 class="title-description-reference">Actions</h2>
+      <p class="text-description-reference italic"><%= t('oeuvres.source_italic') %></p>
+      <h2 class="title-description-reference"><%= t('oeuvres.actions') %></h2>
       <div class="flex-actions">
         <% if oeuvre.validation %>
           <a href="javascript:void(0)" id="shareButton" class="button-circle" data-action="click->share#open">
@@ -277,7 +276,7 @@
                 </g>
               </svg>
             </div>
-            <p>Partager</p>
+            <p><%= t('oeuvres.partager') %></p>
           </a>
           <%= link_to  new_bug_report_path(url: request.original_url), class: "button-circle" do %>
             <div class="circle">
@@ -285,7 +284,7 @@
                 <path d="M23.0037 41.2739C33.5799 41.2739 42.1665 32.6873 42.1665 22.1111C42.1665 11.5349 33.5799 2.9502 23.0037 2.9502C12.4294 2.9502 3.84277 11.5349 3.84277 22.1111C3.84277 32.6873 12.4294 41.2739 23.0037 41.2739ZM23.0037 25.9406C22.2102 25.9406 21.5662 25.2966 21.5662 24.5031V13.9614C21.5662 13.1679 22.2102 12.5239 23.0037 12.5239C23.7972 12.5239 24.4412 13.1679 24.4412 13.9614V24.5031C24.4412 25.2966 23.7972 25.9406 23.0037 25.9406ZM22.9999 31.6906C21.9419 31.6906 21.0832 30.8319 21.0832 29.7739C21.0832 28.7159 21.9419 27.8573 22.9999 27.8573C24.0579 27.8573 24.9165 28.7159 24.9165 29.7739C24.9165 30.8319 24.0579 31.6906 22.9999 31.6906Z" fill="white"/>
               </svg>
             </div>
-            <p>Signaler une erreur</p>
+            <p><%= t('oeuvres.signaler_erreur') %></p>
           <% end %>
         <% else %>
           <div class="button-circle" >
@@ -296,7 +295,7 @@
                 </g>
               </svg>
             </div>
-            <p>Partager</p>
+            <p><%= t('oeuvres.partager') %></p>
           </div>
           <div class="button-circle">
             <div class="circle">
@@ -304,12 +303,12 @@
                 <path d="M23.0037 41.2739C33.5799 41.2739 42.1665 32.6873 42.1665 22.1111C42.1665 11.5349 33.5799 2.9502 23.0037 2.9502C12.4294 2.9502 3.84277 11.5349 3.84277 22.1111C3.84277 32.6873 12.4294 41.2739 23.0037 41.2739ZM23.0037 25.9406C22.2102 25.9406 21.5662 25.2966 21.5662 24.5031V13.9614C21.5662 13.1679 22.2102 12.5239 23.0037 12.5239C23.7972 12.5239 24.4412 13.1679 24.4412 13.9614V24.5031C24.4412 25.2966 23.7972 25.9406 23.0037 25.9406ZM22.9999 31.6906C21.9419 31.6906 21.0832 30.8319 21.0832 29.7739C21.0832 28.7159 21.9419 27.8573 22.9999 27.8573C24.0579 27.8573 24.9165 28.7159 24.9165 29.7739C24.9165 30.8319 24.0579 31.6906 22.9999 31.6906Z" fill="white"/>
               </svg>
             </div>
-            <p>Signaler une erreur</p>
+            <p><%= t('oeuvres.signaler_erreur') %></p>
           </div>
         <%end%>
       </div>
       <div class="contribution">
-        <h2 class="title-description-reference">Contribution</h2>
+        <h2 class="title-description-reference"><%= t('oeuvres.contribution') %></h2>
         <div class="flex-contributor">
           <div class="box-contributor">
             <% if oeuvre.user_id.present? %>
@@ -318,7 +317,7 @@
             <% else %>
               <span class="contributor">Omniscient Design</span>
             <% end %>
-            <p class="text-contributor">A enrichi votre apprentissage en ajoutant cette référence le <%= I18n.l(oeuvre.created_at, format: :default) %></p>
+            <p class="text-contributor"><%= t('oeuvres.enrichissement') %> <%= I18n.l(oeuvre.created_at, format: :default) %></p>
           </div>
           <div class="vertical-divider"></div>
           <div class="box-contributor">
@@ -328,7 +327,7 @@
             <% else %>
               <span class="contributor">Omniscient Design</span>
             <% end %>
-            <p class="text-contributor">a validé la référence <%= @oeuvre.nom_oeuvre %></p>
+            <p class="text-contributor"><%= t('oeuvres.validation') %> <%= @oeuvre.nom_oeuvre %></p>
           </div>
         </div>
       </div>
@@ -337,7 +336,7 @@
 
   <% if oeuvre.validation %>
     <div class="next-card" data-controller="horizontal-scroll">
-      <h2 class="title-description-reference">Découvrir d'autres références</h2>
+      <h2 class="title-description-reference"><%= t('oeuvres.decouvrir_autres') %></h2>
 
       <div class="horizontal-scroll-section" data-horizontal-scroll-target="section">
         <div class="horizontal-wrapper" data-horizontal-scroll-target="wrapper">
@@ -372,28 +371,28 @@
       <% if current_user.certified? || current_user.admin? %>
         <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
           <div class="naviguation">
-            <p class="naviguation-title">Panneau d'administration</p>
+            <p class="naviguation-title"><%= t('oeuvres.panneau_admin') %></p>
             <div class="naviguation-buttons">
               <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? || current_user.certified?%>
-                <%= link_to 'Valider l\'oeuvre', validate_oeuvre_path(oeuvre), class: 'button'%>
-                <%= link_to 'Modifier l\'oeuvre', edit_oeuvre_path(oeuvre), class: 'button'%>
+                <%= link_to t('oeuvres.valider_oeuvre'), validate_oeuvre_path(oeuvre), class: 'button'%>
+                <%= link_to t('oeuvres.modifier_oeuvre'), edit_oeuvre_path(oeuvre), class: 'button'%>
                 <a href="#" class="button" data-toggle="modal" data-target="#globalRejectModal"
                     data-url="<%= reject_oeuvre_path(oeuvre) %>"
                     data-title="<%= oeuvre.nom_oeuvre %>">
-                  Supprimer la référence
+                 <%= t('oeuvres.supprimer_reference') %>
                 </a>
               <% end %>
             </div>
             <div class="naviguation-buttons">
-              <%= link_to "Ajouter une autre référence", add_elements_path, class: "button" %>
-              <%= link_to "Retour", add_elements_path, class: "button" %>
+              <%= link_to t('oeuvres.ajouter_autre'), add_elements_path, class: "button" %>
+              <%= link_to t('oeuvres.retour'), add_elements_path, class: "button" %>
             </div>
           </div>
         </div>
       <%else%>
         <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
           <div class="naviguation">
-            <p class="naviguation-title">Que souhaitez-vous faire ?</p>
+            <p class="naviguation-title"><%= t('oeuvres.supprimer_reference') %></p>
             <div class="naviguation-buttons">
               <%= link_to "Ajouter une autre référence", add_elements_path, class: "button" %>
               <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? %>

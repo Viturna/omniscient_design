@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   before_action :set_unread_notifications_count
   before_action :check_if_banned
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_locale
+
   def set_theme
     theme = params[:theme]
     cookies[:theme] = theme
@@ -19,19 +21,27 @@ class ApplicationController < ActionController::Base
 
   def check_admin_role
     unless user_signed_in? && current_user.admin?
-      redirect_to root_path, alert: "Vous n'avez pas la permission d'accéder à cette page."
+      redirect_to root_path, alert: I18n.t('user.access.denied_admin')
     end
   end
   def check_certified
     unless user_signed_in? && (current_user.certified? || current_user&.admin?)
-      redirect_to root_path, alert: "Vous n'avez pas la permission d'accéder à cette page."
+      redirect_to root_path, alert: I18n.t('user.access.denied_certified')
     end
   end
   def check_if_banned
     if user_signed_in? && current_user.banned?
       sign_out_and_redirect(current_user)
-      flash[:alert] = 'Votre compte a été banni.'
+      flash[:alert] = I18n.t('user.access.banned')
     end
+  end
+
+   def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def default_url_options
+    { locale: I18n.locale }
   end
 
   protected

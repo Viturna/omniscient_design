@@ -1,6 +1,7 @@
 <section class="grid-1" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; gap:16px">
   <%= image_tag "404.svg", alt: "", class: "home-index" %>
-  <p class="subtitle-top" style="color: #202020;">Erreur 404</p>
-  <h1 class="center">Il semblerait que cette page n’existe pas</h1>
-  <%= link_to 'Retour à l\'accueil', root_path, class: "button dark" %>
+  
+  <p class="subtitle-top" style="color: #202020;"><%= t('errors.404.subtitle') %></p>
+  <h1 class="center"><%= t('errors.404.title') %></h1>
+  <%= link_to t('errors.404.back_home'), root_path, class: "button dark" %>
 </section>

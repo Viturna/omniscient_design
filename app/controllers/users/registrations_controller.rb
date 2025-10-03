@@ -15,7 +15,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         end
       end
       if resource.persisted?
-        flash[:notice] = "Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception."
+        flash[:notice] = I18n.t('user.registration.confirmation_sent')
         return redirect_to confirmation_pending_path
       end
     end
@@ -28,7 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update
     if resource.update_with_password(account_update_params)
-      redirect_to edit_user_registration_path, notice: "Votre profil a été mis à jour avec succès."
+       redirect_to edit_user_registration_path, notice: I18n.t('user.profile.updated')
     else
       clean_up_passwords(resource)
       set_minimum_password_length
@@ -39,13 +39,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :referral_code])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id])
     devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :statut, :etablissement_id])
   end
 
   private
 
   def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :referral_code)
+    params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id)
   end
 end

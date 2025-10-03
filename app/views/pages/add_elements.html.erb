@@ -33,18 +33,18 @@
   }
 </style>
 <section class="grid-1 add-elements">
-  <p class="subtitle-top">Votre contribution</p>
-  <h1 class="title-add-elements">Ajouter des designers ou des références</h1>
-  <p class="subtitle">Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !</p>
+<p class="subtitle-top"><%= t('add_references.subtitle_top') %></p>
+  <h1 class="title-add-elements"><%= t('add_references.main_title') %></h1>
+  <p class="subtitle"><%= t('add_references.subtitle') %></p>
   <div class="add-flex">
     <%= link_to new_designer_path do %>
       <div class="button-add">
-        Designers
+        <%= t('add_references.buttons.designers') %>
       </div>
     <%end%>
     <%= link_to new_oeuvre_path do %>
       <div class="button-add">
-        Références
+         <%= t('add_references.buttons.references') %>
       </div>
     <%end%>
   </div>

@@ -15,6 +15,7 @@
   }
 
   .form-group {
+    margin-top: 8px;
     margin-bottom: 15px;
   }
 
@@ -55,10 +56,14 @@
     justify-content: space-between;
   }
   .input-action {
+    margin-top: 8px;
     display: flex;
     gap: 8px;
     align-items: center;
     justify-content: center;
+  }
+  .input-action input, .input-action select {
+    height: 64px !important;
   }
     .input-action .button{
       margin-top: 0;
@@ -77,8 +82,9 @@
   <%end%>
   <div style="display: flex; align-items: center; gap: 8px;">
     <h1><%= @list.name %></h1>
-    <% if current_user.lists.any? %>
-      <%= link_to edit_list_path(current_user.lists.find_by(slug: params[:slug])) do %>
+
+    <% if current_user.lists.any? ||  @list.editors %>
+   <%= link_to edit_list_path(@list) do %>
         <svg id="editButtonForm" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.37478 17.864L2 20.3215L4.45864 12.9479M9.37478 17.864L18.9842 7.93406C19.4696 7.44758 19.7999 6.82819 19.9336 6.1541C20.0672 5.48 19.9982 4.78142 19.7351 4.14654C19.4721 3.51166 19.0268 2.96894 18.4556 2.58691C17.8844 2.20487 17.2127 2.00064 16.5255 2C15.6035 2.00032 14.7193 2.36641 14.0669 3.01792L4.45864 12.9479M9.37478 17.864L4.45864 12.9479M6.91614 15.4065L14.0542 7.93406M11.6393 5.52597L16.5221 10.3973" stroke="white" stroke-width="2.2978" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -92,13 +98,13 @@
       <% end %>
     <%end%>
   </div>
-  <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> référence(s)</p>
+  <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> <%= t('list.subtitle_reference') %></p>
 </section>
 <section class="grid-1">
   <div class="tabs" data-controller="tabs">
-    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'all' %>" data-tabs-target="tab" data-tab="all" data-action="click->tabs#switch">Tout</button>
-    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" data-tabs-target="tab" data-tab="designers" data-action="click->tabs#switch">Designers</button>
-    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tabs-target="tab" data-tab="references" data-action="click->tabs#switch">Références</button>
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'all' %>" data-tabs-target="tab" data-tab="all" data-action="click->tabs#switch"><%= t('list.all') %></button>
+    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" data-tabs-target="tab" data-tab="designers" data-action="click->tabs#switch"><%= t('list.designers') %></button>
+    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tabs-target="tab" data-tab="references" data-action="click->tabs#switch"><%= t('list.references') %></button>
   </div>
   <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
     <div id="manageUsersPopup" class="popup">
@@ -109,41 +115,44 @@
           </svg>
         </div>
         <div style="padding: 0 32px;">
-          <h2>Partager ma liste</h2>
-          <p>Inviter des éditeurs</p>
+          <h2><%= t('list.share') %></h2>
+          <p><%= t('list.invite_editors') %></p>
           <%= form_with url: invite_editors_list_path(@list), method: :post, local: true do |form| %>
             <div class="form-group">
               <div class="input-action">
-                <%= form.email_field :email, placeholder:"Email de l'utilisateur", class: "form-control email-share" %>
-                <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor']]), {}, class: "form-control" %>
-                <%= form.submit "Inviter", class: "button dark" %>
+                <%= form.email_field :email, placeholder:t('list.email_placeholder'), class: "form-control email-share" %>
+                <%= form.select :role, options_for_select([[t('list.editor'), 'editor'], [t('list.visitor'), 'visitor']]), {}, class: "form-control" %>
+                <%= form.submit t('list.invite'), class: "button dark" %>
               </div>
             </div>
           <% end %>
-          <p>Utilisateurs actuels</p>
-          <ul class="user-list">
-            <% (@list.editors + @list.visitors).uniq.each do |user| %>
-              <li>
-                <div class="flex-share">
-                  <%= user.email %>
-                  <%= form_with url: change_role_list_path(@list, user_id: user.id), method: :post, local: true do |form| %>
-                    <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor'], ['Supprimer', 'remove']], @list.editors.include?(user) ? 'editor' : 'visitor'), {}, class: "form-control", onchange: "this.form.submit();" %>
-                  <% end %>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-          <p>Accessibilité de la liste</p>
+        
+          <p><%= t('list.accessibility') %></p>
           <div class="form-group">
             <%= form_with url: toggle_privacy_list_path(@list), method: :post, local: true, id: 'privacyForm' do |form| %>
-              <%= form.select :privacy, options_for_select([['Privée', 'private'], ['Publique', 'public']], @list.share_token.present? ? 'public' : 'private'), {}, class: "form-control", id: 'privacySelect' %>
+              <%= form.select :privacy, options_for_select([[t('list.private'), 'private'], [t('list.public'), 'public']], @list.share_token.present? ? 'public' : 'private'), {}, class: "form-control", id: 'privacySelect' %>
             <% end %>
           </div>
+          <% if @list.editors.any? || @list.visitors.any? %>
+            <p><%= t('list.current_users') %></p>
+            <ul class="user-list">
+              <% (@list.editors + @list.visitors).uniq.each do |user| %>
+                <li>
+                  <div class="flex-share">
+                    <%= user.email %>
+                    <%= form_with url: change_role_list_path(@list, user_id: user.id), method: :post, local: true do |form| %>
+                      <%= form.select :role, options_for_select([[t('list.editor'), 'editor'], [t('list.visitor'), 'visitor'], [t('list.revoke'), 'remove']], @list.editors.include?(user) ? 'editor' : 'visitor'), {}, class: "form-control", onchange: "this.form.submit();" %>
+                    <% end %>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          <%end%>
           <% if @list.share_token.present? %>
             <div class="input-group">
               <input type="hidden" id="shareLink" value="<%= shared_list_url(@list.share_token) %>" readonly class="form-control">
               <div class="input-group-append">
-                <button class="button dark" type="button" id="copyButton" onclick="copyToClipboard()">Copier le lien</button>
+                <button class="button dark" type="button" id="copyButton" onclick="copyToClipboard()"><%= t('list.copy_link') %></button>
               </div>
             </div>
           <% end %>
@@ -164,10 +173,10 @@
                   copyText.setSelectionRange(0, 99999); // Pour les appareils mobiles
                   document.execCommand("copy");
                   copyText.type = 'hidden'; // Change input type back to hidden
-                  copyButton.innerText = "Lien copié";
+                  copyButton.innerText = "<%= t('list.link_copied') %>";
                   setTimeout(function() {
-                    copyButton.innerText = "Copier le lien";
-                  }, 2000); // Change back to "Copier le lien" after 2 seconds
+                    copyButton.innerText = "<%= t('list.copy_link') %>";
+                  }, 2000)
                 }
           </script>
         </div>
@@ -179,14 +188,14 @@
       <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M36.0056 64.6022C52.5596 64.6022 65.9996 51.1622 65.9996 34.6082C65.9996 18.0542 52.5596 4.61719 36.0056 4.61719C19.4546 4.61719 6.01465 18.0542 6.01465 34.6082C6.01465 51.1622 19.4546 64.6022 36.0056 64.6022ZM36.0056 40.6022C34.7636 40.6022 33.7556 39.5942 33.7556 38.3522V21.8522C33.7556 20.6102 34.7636 19.6022 36.0056 19.6022C37.2476 19.6022 38.2556 20.6102 38.2556 21.8522V38.3522C38.2556 39.5942 37.2476 40.6022 36.0056 40.6022ZM35.9996 49.6022C34.3436 49.6022 32.9996 48.2582 32.9996 46.6022C32.9996 44.9462 34.3436 43.6022 35.9996 43.6022C37.6556 43.6022 38.9996 44.9462 38.9996 46.6022C38.9996 48.2582 37.6556 49.6022 35.9996 49.6022Z" fill="#52525D"/>
       </svg>
-      <p>Aucune référence trouvée dans cette liste.</p>
+      <p><%= t('list.no_references_found') %></p>
     </div>  
   <% else %>
     <div id="all" class="content-tab" 
      data-tabs-target="tabContent" 
      style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'all' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'all' %>">
       <div class="flex-title-list">
-        <h2>Tout</h2>
+        <h2><%= t('list.all') %></h2>
       </div>
       <div class="flex-card-list">
         <% (@list.designers + @list.oeuvres).sort_by { |item| item.is_a?(Oeuvre) ? item.nom_oeuvre.downcase : item.nom.downcase }.each do |item| %>
@@ -202,7 +211,7 @@
      data-tabs-target="tabContent" 
      style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
       <div class="flex-title-list">
-        <h2>Les références</h2>
+        <h2><%= t('list.references') %></h2>
       </div>
    <div class="flex-card-list">
         <% @list.oeuvres.each do |oeuvre| %>
@@ -214,7 +223,7 @@
      data-tabs-target="tabContent" 
      style="<%= 'display: block;' if params[:tab] == 'designers' %><%= 'display: none;' unless params[:tab] == 'designers' %>">
         <div class="flex-title-list">
-        <h2>Les designers </h2>
+        <h2><%= t('list.designers') %></h2>
       </div>
   <div class="flex-card-list">
         <% @list.designers.each do |designer| %>
@@ -225,12 +234,12 @@
   <%end%>
   <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
     <div class="bottom-list">
-      <%= button_to list_path(@list), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" }, class: "button delete" do %>
+      <%= button_to list_path(@list), method: :delete, data: { confirm: t('list.confirm_delete') }, class: "button delete" do %>
         <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
         </svg>
       <% end %>
-      <%= link_to 'Modifier ma liste', '#', id: 'openPopupAdd', class:"button dark" %>
+      <%= link_to t('list.edit_list'), '#', id: 'openPopupAdd', class:"button dark" %>
     </div>
   <%end %>
 </section>
@@ -249,52 +258,52 @@
           <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.38281 0.530273C6.58078 0.291983 7.82269 0.414466 8.95117 0.881836C10.0797 1.34928 11.045 2.14062 11.7236 3.15625C12.4023 4.17191 12.7637 5.36637 12.7637 6.58789V6.58887C12.7653 7.95942 12.3062 9.29104 11.46 10.3691L11.2344 10.6562L11.4932 10.915L14.293 13.7061L14.2939 13.707C14.3325 13.7452 14.3629 13.7908 14.3838 13.8408C14.4046 13.8909 14.416 13.9448 14.416 13.999C14.416 14.0534 14.4047 14.108 14.3838 14.1582C14.3733 14.1832 14.3608 14.2071 14.3457 14.2295L14.2939 14.292L14.292 14.2939C14.2539 14.3324 14.2082 14.3629 14.1582 14.3838C14.108 14.4047 14.0534 14.416 13.999 14.416C13.9448 14.416 13.8909 14.4046 13.8408 14.3838C13.8158 14.3734 13.7919 14.3608 13.7695 14.3457L13.707 14.2939L13.7061 14.293L10.915 11.4932L10.6562 11.2344L10.3691 11.46C9.35826 12.2534 8.12445 12.7067 6.84473 12.7588L6.58887 12.7637H6.58789C5.36637 12.7637 4.17191 12.4023 3.15625 11.7236C2.14062 11.045 1.34928 10.0797 0.881836 8.95117C0.414466 7.82269 0.291983 6.58078 0.530273 5.38281C0.768606 4.18482 1.35699 3.08442 2.2207 2.2207C3.08442 1.35699 4.18482 0.768606 5.38281 0.530273ZM7.63184 1.33789C6.5938 1.13149 5.51787 1.23765 4.54004 1.64258C3.56199 2.0477 2.72585 2.73405 2.1377 3.61426C1.54954 4.49449 1.23536 5.52924 1.23535 6.58789L1.24219 6.85352C1.30786 8.17642 1.86172 9.43201 2.80273 10.373C3.74376 11.3141 4.99938 11.8679 6.32227 11.9336L6.58789 11.9404C7.64655 11.9404 8.68128 11.6262 9.56152 11.0381C10.4416 10.45 11.1281 9.61463 11.5332 8.63672C11.9383 7.65873 12.0444 6.58218 11.8379 5.54395C11.6314 4.50562 11.1216 3.55132 10.373 2.80273C9.62447 2.05417 8.67014 1.54442 7.63184 1.33789Z" fill="#202020" stroke="#202020" stroke-width="0.823492"/>
           </svg>
-          <input type="search" id="designer-search" placeholder="Rechercher des designers" />
+          <input type="search" id="designer-search" placeholder="<%= t('lists.create.designer_search_placeholder') %>" />
         </div>
         <div id="designers-list">
           <% if @selected_designers.present? %>
-            <h3>Designers sélectionnés</h3>
+            <h3><%= t('list.selected_designers') %></h3>
             <div class="flex-card" style="margin-top:32px">
               <%= render partial: 'designers_list', collection: @selected_designers, as: :designer %>
             </div>
           <% end %>
 
           <% if @other_designers.present? %>
-            <h3>Designers</h3>
+            <h3><%= t('list.designers') %></h3>
             <div class="flex-card" id="designers-load-more" style="margin-top:32px">
               <%= render partial: 'designers_list', collection: @other_designers, as: :designer %>
             </div>
           <% else %>
-            <p>Aucun designer disponible.</p>
+            <p><h3><%= t('list.no_designers') %></h3></p>
           <% end %>
         </div>
-        <button type="button" id="load-more-designers" class="button dark" data-type="designers" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>Charger plus de designers</button>
+        <button type="button" id="load-more-designers" class="button dark" data-type="designers" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>><%= t('list.load_more_designers') %></button>
         <%# Références %>
         <div class="search-container" style="margin-top: 64px;">
           <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.38281 0.530273C6.58078 0.291983 7.82269 0.414466 8.95117 0.881836C10.0797 1.34928 11.045 2.14062 11.7236 3.15625C12.4023 4.17191 12.7637 5.36637 12.7637 6.58789V6.58887C12.7653 7.95942 12.3062 9.29104 11.46 10.3691L11.2344 10.6562L11.4932 10.915L14.293 13.7061L14.2939 13.707C14.3325 13.7452 14.3629 13.7908 14.3838 13.8408C14.4046 13.8909 14.416 13.9448 14.416 13.999C14.416 14.0534 14.4047 14.108 14.3838 14.1582C14.3733 14.1832 14.3608 14.2071 14.3457 14.2295L14.2939 14.292L14.292 14.2939C14.2539 14.3324 14.2082 14.3629 14.1582 14.3838C14.108 14.4047 14.0534 14.416 13.999 14.416C13.9448 14.416 13.8909 14.4046 13.8408 14.3838C13.8158 14.3734 13.7919 14.3608 13.7695 14.3457L13.707 14.2939L13.7061 14.293L10.915 11.4932L10.6562 11.2344L10.3691 11.46C9.35826 12.2534 8.12445 12.7067 6.84473 12.7588L6.58887 12.7637H6.58789C5.36637 12.7637 4.17191 12.4023 3.15625 11.7236C2.14062 11.045 1.34928 10.0797 0.881836 8.95117C0.414466 7.82269 0.291983 6.58078 0.530273 5.38281C0.768606 4.18482 1.35699 3.08442 2.2207 2.2207C3.08442 1.35699 4.18482 0.768606 5.38281 0.530273ZM7.63184 1.33789C6.5938 1.13149 5.51787 1.23765 4.54004 1.64258C3.56199 2.0477 2.72585 2.73405 2.1377 3.61426C1.54954 4.49449 1.23536 5.52924 1.23535 6.58789L1.24219 6.85352C1.30786 8.17642 1.86172 9.43201 2.80273 10.373C3.74376 11.3141 4.99938 11.8679 6.32227 11.9336L6.58789 11.9404C7.64655 11.9404 8.68128 11.6262 9.56152 11.0381C10.4416 10.45 11.1281 9.61463 11.5332 8.63672C11.9383 7.65873 12.0444 6.58218 11.8379 5.54395C11.6314 4.50562 11.1216 3.55132 10.373 2.80273C9.62447 2.05417 8.67014 1.54442 7.63184 1.33789Z" fill="#202020" stroke="#202020" stroke-width="0.823492"/>
           </svg>
-          <input type="search" id="oeuvre-search" placeholder="Rechercher des références" />
+          <input type="search" id="oeuvre-search" placeholder="<%= t('lists.create.reference_search_placeholder') %>" />
         </div>
         <div id="oeuvres-list">
           <% if @selected_oeuvres.present? %>
-            <h3>Références sélectionnées</h3>
+            <h3><%= t('list.selected_references') %></h3>
             <div class="flex-card" style="margin-top:32px">
               <%= render partial: 'oeuvres_list', collection: @selected_oeuvres, as: :oeuvre %>
             </div>
           <% end %>
 
           <% if @other_oeuvres.present? %>
-            <h3>Références</h3>
+            <h3><%= t('list.references') %></h3>
             <div class="flex-card" id="oeuvres-load-more" style="margin-top:32px">
               <%= render partial: 'oeuvres_list', collection: @other_oeuvres, as: :oeuvre %>
             </div>
           <% else %>
-            <p>Aucune référence disponible.</p>
+            <p><%= t('list.no_references') %></p>
           <% end %>
         </div>          
         <div style="text-align:center; margin-top:20px;">
-          <button type="button" id="load-more-oeuvres" data-type="oeuvres" class="button dark" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>Charger plus de références</button>
+          <button type="button" id="load-more-oeuvres" data-type="oeuvres" class="button dark" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>><%= t('list.load_more_references') %></button>
         </div>
        <div id="designer_ids_field_container"></div>
       <div id="oeuvre_ids_field_container"></div>
@@ -302,7 +311,7 @@
 
             
       <div class="form-group" style="margin-top: 32px; display: flex; justify-content: end;">
-        <%= form.submit "Modifier ma liste", class: "button large dark" %>
+        <%= form.submit t('list.save_list'), class: "button large dark" %>
       </div>
       </div>
     </div>
@@ -310,34 +319,33 @@
 <% end %>
 
 <script>
-  // Obtenez les éléments des popups et des boutons d'ouverture
   var popupAdd = document.getElementById('popup-add');
   var btnOpenAdd = document.getElementById('openPopupAdd');
   var btnCloseAdd = document.getElementById('closePopupAdd');
 
-  // Ouvrir la popup lorsque le bouton d'ouverture est cliqué
-  btnOpenAdd.onclick = function() {
+  btnOpenAdd.addEventListener('click', function(event) {
+    event.preventDefault();
     popupAdd.style.display = "flex";
     localStorage.setItem('popupOpen', 'true');
-  }
+  });
 
-  // Fermer la popup lorsque le bouton de fermeture est cliqué
-  btnCloseAdd.onclick = function() {
+  btnCloseAdd.addEventListener('click', function(event) {
+    event.preventDefault();
     popupAdd.style.display = "none";
     localStorage.setItem('popupOpen', 'false');
-  }
+  });
 
-  // Fermer la popup lorsque l'utilisateur clique en dehors de la zone de la popup
-  window.onclick = function(event) {
-    if (event.target == popupAdd) {
+  popupAdd.addEventListener('click', function(event) {
+    if (event.target === popupAdd) { // uniquement le background
       popupAdd.style.display = "none";
       localStorage.setItem('popupOpen', 'false');
     }
-  }
+  });
 </script>
 
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("turbo:load", () => {
     var modal = document.getElementById("manageUsersPopup");
     var btn = document.getElementById("manageUsersBtn");
     var span = document.getElementById("closePopupShare");

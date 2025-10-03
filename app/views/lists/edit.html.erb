@@ -29,104 +29,31 @@
       });
     </script>
   </div>
-  <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> référence(s)</p>
+  <p class="subtitle"><%= @list.designers.count + @list.oeuvres.count %> <%= t('list.subtitle_reference') %></p>
 </section>
 <section class="grid-1">
    <div class="tabs">
-    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'all' %>" data-tab="all">Tout</button>
-    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" data-tab="designers">Designers</button>
-    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tab="references">Références</button>
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'all' %>" data-tabs-target="tab" data-tab="all" data-action="click->tabs#switch"><%= t('list.all') %></button>
+    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" data-tabs-target="tab" data-tab="designers" data-action="click->tabs#switch"><%= t('list.designers') %></button>
+    <button class="tab <%= 'active' if params[:tab] == 'references' %>" data-tabs-target="tab" data-tab="references" data-action="click->tabs#switch"><%= t('list.references') %></button>
   </div>
    <%# <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
         <%# <%= link_to 'Ajouter des designers', '#', id: 'openPopupDesigners', class:"button dark" %>
       <%# <%end%>
-  <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
-    <div id="manageUsersPopup" class="popup">
-      <div class="popup-content">
-        <div class="top-popup">
-          <svg class="close-popup" id="closePopupShare" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-          </svg>
-        </div>
-        <div style="padding: 0 32px;">
-          <h2>Partager ma liste</h2>
-          <p>Inviter des éditeurs</p>
-          <%= form_with url: invite_editors_list_path(@list), method: :post, local: true do |form| %>
-            <div class="form-group">
-              <div class="input-action">
-                <%= form.email_field :email, placeholder:"Email de l'utilisateur", class: "form-control email-share" %>
-                <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor']]), {}, class: "form-control" %>
-                <%= form.submit "Inviter", class: "button dark" %>
-              </div>
-            </div>
-          <% end %>
-          <p>Utilisateurs actuels</p>
-          <ul class="user-list">
-            <% (@list.editors + @list.visitors).uniq.each do |user| %>
-              <li>
-                <div class="flex-share">
-                  <%= user.email %>
-                  <%= form_with url: change_role_list_path(@list, user_id: user.id), method: :post, local: true do |form| %>
-                    <%= form.select :role, options_for_select([['Éditeur', 'editor'], ['Visiteur', 'visitor'], ['Supprimer', 'remove']], @list.editors.include?(user) ? 'editor' : 'visitor'), {}, class: "form-control", onchange: "this.form.submit();" %>
-                  <% end %>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-          <p>Accessibilité de la liste</p>
-          <div class="form-group">
-            <%= form_with url: toggle_privacy_list_path(@list), method: :post, local: true, id: 'privacyForm' do |form| %>
-              <%= form.select :privacy, options_for_select([['Privée', 'private'], ['Publique', 'public']], @list.share_token.present? ? 'public' : 'private'), {}, class: "form-control", id: 'privacySelect' %>
-            <% end %>
-          </div>
-          <% if @list.share_token.present? %>
-            <div class="input-group">
-              <input type="hidden" id="shareLink" value="<%= shared_list_url(@list.share_token) %>" readonly class="form-control">
-              <div class="input-group-append">
-                <button class="button dark" type="button" id="copyButton" onclick="copyToClipboard()">Copier le lien</button>
-              </div>
-            </div>
-          <% end %>
-          <script>
-            document.addEventListener('DOMContentLoaded', function() {
-              var privacySelect = document.getElementById('privacySelect');
-              privacySelect.addEventListener('change', function() {
-                document.getElementById('privacyForm').submit();
-              });
-            });
-          </script>
-          <script>
-            function copyToClipboard() {
-                  var copyText = document.getElementById("shareLink");
-                  var copyButton = document.getElementById("copyButton");
-                  copyText.type = 'text'; // Change input type to text to select the value
-                  copyText.select();
-                  copyText.setSelectionRange(0, 99999); // Pour les appareils mobiles
-                  document.execCommand("copy");
-                  copyText.type = 'hidden'; // Change input type back to hidden
-                  copyButton.innerText = "Lien copié";
-                  setTimeout(function() {
-                    copyButton.innerText = "Copier le lien";
-                  }, 2000); // Change back to "Copier le lien" after 2 seconds
-                }
-          </script>
-        </div>
-      </div>
-    </div>
-  <% end %>
+  
    <% if @list.designers.empty? && @list.oeuvres.empty? %>
     <div class="list-empty">
       <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M36.0056 64.6022C52.5596 64.6022 65.9996 51.1622 65.9996 34.6082C65.9996 18.0542 52.5596 4.61719 36.0056 4.61719C19.4546 4.61719 6.01465 18.0542 6.01465 34.6082C6.01465 51.1622 19.4546 64.6022 36.0056 64.6022ZM36.0056 40.6022C34.7636 40.6022 33.7556 39.5942 33.7556 38.3522V21.8522C33.7556 20.6102 34.7636 19.6022 36.0056 19.6022C37.2476 19.6022 38.2556 20.6102 38.2556 21.8522V38.3522C38.2556 39.5942 37.2476 40.6022 36.0056 40.6022ZM35.9996 49.6022C34.3436 49.6022 32.9996 48.2582 32.9996 46.6022C32.9996 44.9462 34.3436 43.6022 35.9996 43.6022C37.6556 43.6022 38.9996 44.9462 38.9996 46.6022C38.9996 48.2582 37.6556 49.6022 35.9996 49.6022Z" fill="#52525D"/>
       </svg>
-      <p>Aucune référence trouvée dans cette liste.</p>
+      <p><%= t('list.no_references_found') %></p>
     </div>  
   <% else %>
   <div id="all" class="content-tab" style="<%= 'display: block;' if params[:tab].blank? || params[:tab] == 'all' %><%= 'display: none;' if params[:tab].present? && params[:tab] != 'all' %>">
     <div class="flex-title-list">
-      <h2>Tout</h2>
+        <h2><%= t('list.all') %></h2>
     </div>
-<div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-6 mt-4">
+<div class="flex-card-list">
       <% (@list.designers + @list.oeuvres).sort_by { |item| item.is_a?(Oeuvre) ? item.nom_oeuvre.downcase : item.nom.downcase }.each do |item| %>
         <% if item.is_a?(Designer) %>
           <%= render 'designers/designer_card', designer: item %>
@@ -138,9 +65,9 @@
   </div>
    <div id="references" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'references' %><%= 'display: none;' unless params[:tab] == 'references' %>">
     <div class="flex-title-list">
-      <h2>Les références</h2>
+      <h2><%= t('list.references') %></h2>
     </div>
-<div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-6 mt-4">
+    <div class="flex-card-list">
       <% @list.oeuvres.each do |oeuvre| %>
       <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
       <% end %>
@@ -148,9 +75,9 @@
   </div>
    <div id="designers" class="content-tab" style="<%= 'display: block;' if params[:tab] == 'designers' %><%= 'display: none;' unless params[:tab] == 'designers' %>">
       <div class="flex-title-list">
-      <h2>Les designers </h2>
+      <h2><%= t('list.designers') %></h2>
     </div>
-<div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-6 mt-4">
+    <div class="flex-card-list">
       <% @list.designers.each do |designer| %>
         <%= render 'designers/designer_card', designer: designer %>
       <% end %>
@@ -158,12 +85,12 @@
   </div>
   <% if user_signed_in? && (current_user == @list.user || @list.editors.include?(current_user)) %>
     <div class="bottom-list">
-      <%= button_to list_path(@list), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" }, class: "button delete" do %>
+      <%= button_to list_path(@list), method: :delete, data: { confirm: t('list.confirm_delete')}, class: "button delete" do %>
         <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
         </svg>
       <% end %>
-      <%= link_to 'Ajouter à ma liste', '#', id: 'openPopupAdd', class:"button dark" %>
+      <%= link_to t('list.edit_list'), '#', id: 'openPopupAdd', class:"button dark" %>
     </div>
   <%end %>
   <%end%>

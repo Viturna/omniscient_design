@@ -4,43 +4,52 @@
 <div class="log" style="color:#FFF;">
   <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
-    <h1>Connexion</h1>
+    <h1><%= t('devise.login.title') %></h1>
     <div class="form">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
+
         <div class="field">
-          <%= f.email_field :email, autocomplete: "email", placeholder: "Email" %>
+          <%= f.email_field :email, autocomplete: "email", placeholder: t('devise.login.email') %>
         </div>
-       <div class="field password-container" data-controller="show-password">
+
+        <div class="field password-container" data-controller="show-password">
           <%= f.password_field :password, 
                 autocomplete: "current-password", 
-                placeholder: "Mot de passe", 
+                placeholder: t('devise.login.password'), 
                 id: "password-field",
                 data: { "show-password-target": "passwordField" } %>
 
           <button type="button" data-action="click->show-password#toggle" class="toggle-password">
-            <svg class="show-password-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
-              </svg>
+            <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="..." fill="#202020"/>
+            </svg>
+            <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="..." fill="#202020"/>
+            </svg>
           </button>
         </div>
 
-        <%= link_to "Mot de passe oublié ?", new_user_password_path, class: "forgot-password" %>
+        <%= link_to t('devise.login.forgot_password'), new_user_password_path, class: "forgot-password" %>
+
         <% if devise_mapping.rememberable? %>
           <div class="field remember-me">
             <%= f.check_box :remember_me %>
-            <%= f.label :remember_me, "Se souvenir de moi" %>
+            <%= f.label :remember_me, t('devise.login.remember_me') %>
           </div>
         <% end %>
+
         <div class="actions">
-          <%= f.submit "Se connecter", class:"button dark btn-login" %>
+          <%= f.submit t('devise.login.submit'), class:"button dark btn-login" %>
         </div>
-        <%= link_to "Vous n'avez pas de compte ? S'inscrire", new_user_registration_path, class: "sign-up-in" %>
-        <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path,  class: "sign-up-in" %>
+
+        <%= link_to t('devise.login.no_account'), new_user_registration_path, class: "sign-up-in" %>
+        <%= link_to t('devise.login.resend_confirmation'), new_user_confirmation_path, class: "sign-up-in" %>
       <% end %>
     </div>
   </section>
 </div>
+
 
 
 <% content_for :recaptcha_script do %>

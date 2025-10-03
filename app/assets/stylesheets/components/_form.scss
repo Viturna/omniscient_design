@@ -159,6 +159,10 @@ textarea {
   color: $secondary-color;
 }
 
+.source-input {
+  flex-direction: row !important;
+}
+
 @media screen and (min-width: 601px) and (max-width: 768px) {
   input[type="text"],
   input[type="date"],

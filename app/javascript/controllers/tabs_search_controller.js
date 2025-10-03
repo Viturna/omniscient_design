@@ -61,17 +61,17 @@ export default class extends Controller {
 
         if (tabName === "references") {
             options = [
-                { text: "Nom A-Z", value: "nom_asc" },
-                { text: "Nom Z-A", value: "nom_desc" },
-                { text: "Date œuvre (ancien → récent)", value: "oeuvre_asc" },
-                { text: "Date œuvre (récent → ancien)", value: "oeuvre_desc" }
+                { text: window.I18nSearchSort.references.nom_asc, value: "nom_asc" },
+                { text: window.I18nSearchSort.references.nom_desc, value: "nom_desc" },
+                { text: window.I18nSearchSort.references.oeuvre_asc, value: "oeuvre_asc" },
+                { text: window.I18nSearchSort.references.oeuvre_desc, value: "oeuvre_desc" }
             ]
         } else if (tabName === "designers") {
             options = [
-                { text: "Nom A-Z", value: "nom_asc" },
-                { text: "Nom Z-A", value: "nom_desc" },
-                { text: "Date naissance (ancien → récent)", value: "naissance_asc" },
-                { text: "Date naissance (récent → ancien)", value: "naissance_desc" }
+                { text: window.I18nSearchSort.designers.nom_asc, value: "nom_asc" },
+                { text: window.I18nSearchSort.designers.nom_desc, value: "nom_desc" },
+                { text: window.I18nSearchSort.designers.naissance_asc, value: "naissance_asc" },
+                { text: window.I18nSearchSort.designers.naissance_desc, value: "naissance_desc" }
             ]
         }
 

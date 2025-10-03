@@ -81,16 +81,15 @@
     }
   }
 </style>
-
 <section class="top-header">
-  <%= link_to root_path do%>
+  <%= link_to root_path do %>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
     </svg>
-  <%end%>
-  <p class="subtitle-top">Votre contribution</p>
-  <h1 class="title-add-elements">Exprimer votre avis</h1>
-  <p class="subtitle">Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !</p>
+  <% end %>
+  <p class="subtitle-top"><%= t('feedback.subtitle_top') %></p>
+  <h1 class="title-add-elements"><%= t('feedback.main_title') %></h1>
+  <p class="subtitle"><%= t('feedback.subtitle') %></p>
 </section>
 
 <section class="grid-1" style="background-color:#202020; color:#FFF; min-height:100vh;">
@@ -108,18 +107,18 @@
       <% end %>
 
       <% [
-        [:question_1, "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?*"],
-        [:question_2, "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?*"],
-        [:question_3, "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?*"],
-        [:question_5, "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?*"],
-        [:question_6, "Sur une échelle de 1 à 5, comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)"],
-        [:question_7, "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?*"]
+        [:question_1, t('feedback.questions.question_1')],
+        [:question_2, t('feedback.questions.question_2')],
+        [:question_3, t('feedback.questions.question_3')],
+        [:question_5, t('feedback.questions.question_5')],
+        [:question_6, t('feedback.questions.question_6')],
+        [:question_7, t('feedback.questions.question_7')]
       ].each do |question, label_text| %>
         <div>
           <%= f.label question, label_text, class: "question" %>
           <div class="star-rating" data-controller="star-rating">
             <%= f.hidden_field question, value: @feedback[question] || 0, data: { star_rating_target: "input" } %>
-            <% [["Très mauvaise",1],["Mauvaise",2],["Moyenne",3],["Bonne",4],["Très bonne",5]].reverse.each do |text, value| %>
+            <% (1..5).reverse_each do |value| %>
               <label data-action="click->star-rating#rate"
                      data-star-rating-target="star"
                      data-value="<%= value %>">
@@ -130,7 +129,7 @@
                 </div>
                 <div class="flex-label">
                   <p class="label-number"><%= value %></p>
-                  <p class="label-text"><%= text %></p>
+                  <p class="label-text"><%= t("feedback.rating_labels.#{value}") %></p>
                 </div>
               </label>
             <% end %>
@@ -138,28 +137,15 @@
         </div>
       <% end %>
 
+      <% (8..12).each do |i| %>
+        <div>
+          <%= f.label "question_#{i}", t("feedback.questions.question_#{i}"), class: "question" %>
+          <%= f.text_area "question_#{i}", placeholder: t('feedback.placeholders.default') %>
+        </div>
+      <% end %>
+
       <div>
-        <%= f.label :question_8, "Quels sont, selon vous, les points forts de notre site ?", class: "question" %>
-        <%= f.text_area :question_8, placeholder: 'Répondre ici' %>
-      </div>
-      <div>
-        <%= f.label :question_9, "Quels sont les aspects que vous aimeriez voir améliorés ?", class: "question" %>
-        <%= f.text_area :question_9, placeholder: 'Répondre ici' %>
-      </div>
-      <div>
-        <%= f.label :question_10, "Avez-vous des suggestions pour améliorer l'expérience utilisateur ?", class: "question" %>
-        <%= f.text_area :question_10, placeholder: 'Répondre ici' %>
-      </div>
-      <div>
-        <%= f.label :question_11, "Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?", class: "question" %>
-        <%= f.text_area :question_11, placeholder: 'Répondre ici' %>
-      </div>
-      <div>
-        <%= f.label :question_12, "Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?", class: "question" %>
-        <%= f.text_area :question_12, placeholder: 'Répondre ici' %>
-      </div>
-      <div>
-        <%= f.submit "Envoyer", class: "button large" %>
+        <%= f.submit t('feedback.submit'), class: "button large" %>
       </div>
     <% end %>
   </div>

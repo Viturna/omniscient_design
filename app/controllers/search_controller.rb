@@ -17,7 +17,7 @@ class SearchController < ApplicationController
 
     render json: {
       domaines: {
-        title: "Domaines",
+        title: t('search.domains'),
         class: "section-title",
         results: domaines.map do |d|
           {
@@ -28,7 +28,7 @@ class SearchController < ApplicationController
         end
       },
       designers: {
-        title: "Designers",
+        title: t('search.designers'),
         class: "section-title",
         results: designers.map do |d|
           {
@@ -39,7 +39,7 @@ class SearchController < ApplicationController
         end
       },
       oeuvres: {
-        title: "Références",
+         title: t('search.references'),
         class: "section-title",
         results: oeuvres.map do |o|
           {
@@ -52,12 +52,13 @@ class SearchController < ApplicationController
     }
     rescue => e
       Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
-      render json: { error: "Erreur serveur" }, status: 500
+      render json: { error: t('search.server_error') }, status: 500
   end
 
 
   def search
     @current_page = 'recherche'
+    per_page = (params[:per_page] || 24).to_i  
     @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
     @notions = Notion.all
     query = params[:query].to_s.strip
@@ -88,16 +89,32 @@ class SearchController < ApplicationController
       redirect_to oeuvre_path(oeuvre) and return
     end
   end
-   if params[:tab] == "frise"
-      @oeuvres = Oeuvre.where(validation: true)
-    else
-      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).page(params[:page])
-    end
-    if params[:tab] == "frise"
-      @designers = Designer.where(validation: true)
-    else
-      @designers = Designer.where(validation: true).order(:nom).page(params[:page])
-    end
+
+  if params[:tab] == "frise"
+ @oeuvres = Oeuvre.where(validation: true)
+                   .select(:id, :nom_oeuvre, :date_oeuvre, :domaine_id, :image, :slug)
+                   .includes(:notions) # si on doit afficher les notions
+                   .order(:date_oeuvre)
+
+  @designers = Designer.where(validation: true)
+                       .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
+                       .includes(:domaines, :countries) # préchargement pour éviter N+1
+                       .order(:date_naissance)
+  else
+    @oeuvres = Oeuvre.where(validation: true)
+                    .select(:id, :nom_oeuvre, :domaine_id, :date_oeuvre, :image, :slug)
+                    .includes(:notions)
+                    .order(:nom_oeuvre)
+                    .page(params[:page])
+                    .per(per_page)
+
+    @designers = Designer.where(validation: true)
+                     .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
+                     .includes(:domaines, :countries)
+                     .order(:nom)
+                     .page(params[:page])
+                     .per(per_page)
+  end
 
     if params[:domaine].present?
       filtered_domains = Array(params[:domaine]).reject(&:blank?)  # Convertir en tableau et filtrer

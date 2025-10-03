@@ -8,13 +8,13 @@
   }
 </style>
 <section class="top-header">
-  <h1>Trier, modifier, créer vos listes</h1>
-  <p class="subtitle">Créez des listes de références pour retrouver facilement vos sources et concentrez-vous sur ce qui compte vraiment.</p>
+ <h1><%= t('lists.title') %></h1>
+  <p class="subtitle"><%= t('lists.subtitle') %></p>
 </section>
 <section class="grid-1">
   <div class="flex-title-list">
-    <h2>Vos listes</h2>
-    <%= link_to 'Créer votre liste', new_list_path, class:"button dark" %>
+    <h2><%= t('lists.your_lists') %></h2>
+    <%= link_to t('lists.create_list'), new_list_path, class:"button dark" %>
   </div>
   <% combined_lists = @lists + @editor_lists + @visitor_lists %>
   <% if combined_lists.any? %>
@@ -26,9 +26,9 @@
               <div>
                 <%= list.name %>
                 <% if list.share_token.present? %>
-                  <p class="share-list">(Liste partagée)</p>
+                   <p class="share-list"><%= t('lists.shared') %></p>
                 <%else%>
-                  <p class="share-list">(Liste privée)</p>
+                 <p class="share-list"><%= t('lists.private') %></p>
                 <%end%>
               </div>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +44,7 @@
       <svg width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M35.5 33.875V50.125M35.5 20.9075L35.5325 20.8718M35.5 68C53.4497 68 68 53.4497 68 35.5C68 17.5503 53.4497 3 35.5 3C17.5503 3 3 17.5503 3 35.5C3 53.4497 17.5503 68 35.5 68Z" stroke="#52525D" stroke-width="4.875" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <p>Aucune liste trouvée pour le moment. Créez-en une pour commencer !</p>
+      <p><%= t('lists.no_list') %></p>
     </div>
   <%end%>
 </section>

@@ -33,7 +33,6 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 85%;
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -170,7 +169,7 @@
         <% designer.countries.each do |country| %>
           <%= link_to search_path(tab: "designers", country: country.id) do %>
             <div class="info-card-dark info-header-show" data-no-popup>
-              <span>
+              <span class="flag">
                 <%= country_flag(country.country_numeric) %>
               </span>
             </div>
@@ -207,7 +206,7 @@
          <% designer.countries.each do |country| %>
           <%= link_to search_path(tab: "designers", country: country.id) do %>
             <div class="info-card" data-no-popup>
-              <span>
+              <span class="flag">
                 <%= country_flag(country.country_numeric) %>
               </span>
             </div>
@@ -241,7 +240,6 @@
           <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.heritage_et_impact) %></p>
         <% end %>
         <h2 class="title-description-reference">Sources</h2>
-        <p class="text-description-reference italic">Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence.</p>
         <% if designer.source.present? %>
           <div class="sources-flex" style="display: flex; flex-wrap: wrap; gap: 64px;">
             <% JSON.parse(designer.source.to_s).each do |url| %>
@@ -257,6 +255,7 @@
             <% end %>
           </div>
         <% end %>
+         <p class="text-description-reference italic">Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence.</p>
         <h2 class="title-description-reference">Actions</h2>
         <div class="flex-actions">
           <% if designer.validation %>

@@ -9,39 +9,41 @@ class UsersController < ApplicationController
   def ban
     if current_user.admin?
       @user.update(banned: true)
-      redirect_to users_path, notice: 'Utilisateur banni avec succès.'
+      redirect_to users_path, notice: I18n.t('user.banned_success', default: 'Utilisateur banni avec succès.')
     else
-      redirect_to users_path, alert: 'Vous n\'avez pas les permissions nécessaires.'
+      redirect_to users_path, alert: I18n.t('user.access.denied_admin', default: "Vous n'avez pas les permissions nécessaires.")
     end
   end
-  def unban
+ def unban
     if current_user.admin? && @user.banned?
       @user.update(banned: false)
-      flash[:notice] = "L'utilisateur a été débanni."
+      flash[:notice] = I18n.t('user.unbanned_success', default: "L'utilisateur a été débanni.")
     else
-      flash[:alert] = "Vous ne pouvez pas débannir cet utilisateur."
-    end
-    redirect_to users_path
-  end
-  def certify
-    user = User.find(params[:id])
-    if user.update(certified: true)
-      flash[:notice] = "#{user.firstname} a été certifié avec succès."
-    else
-      flash[:alert] = "Une erreur est survenue lors de la certification."
+      flash[:alert] = I18n.t('user.unbanned_denied', default: "Vous ne pouvez pas débannir cet utilisateur.")
     end
     redirect_to users_path
   end
 
-  def uncertify
+  def certify
     user = User.find(params[:id])
-    if user.update(certified: false)
-      flash[:notice] = "La certification de #{user.firstname} a été retirée avec succès."
+    if user.update(certified: true)
+      flash[:notice] = I18n.t('user.certified_success', name: user.firstname, default: "#{user.firstname} a été certifié avec succès.")
     else
-      flash[:alert] = "Une erreur est survenue lors du retrait de la certification."
+      flash[:alert] = I18n.t('user.certified_failure', default: "Une erreur est survenue lors de la certification.")
     end
     redirect_to users_path
   end
+
+ def uncertify
+    user = User.find(params[:id])
+    if user.update(certified: false)
+      flash[:notice] = I18n.t('user.uncertified_success', name: user.firstname, default: "La certification de #{user.firstname} a été retirée avec succès.")
+    else
+      flash[:alert] = I18n.t('user.uncertified_failure', default: "Une erreur est survenue lors du retrait de la certification.")
+    end
+    redirect_to users_path
+  end
+
   private
 
   def set_user

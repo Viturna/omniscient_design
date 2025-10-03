@@ -19,6 +19,9 @@ application.register("cookie-consent", CookieConsentController)
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
 
+import LangSwitcherController from "./lang_switcher_controller"
+application.register("lang-switcher", LangSwitcherController)
+
 import LoadMoreTableController from "./load_more_table_controller"
 application.register("load-more-table", LoadMoreTableController)
 
@@ -54,6 +57,10 @@ application.register("tabs", TabsController)
 
 import TabsSearchController from "./tabs_search_controller"
 application.register("tabs-search", TabsSearchController)
+
+import TimelineController from "./timeline_controller"
+application.register("timeline", TimelineController)
+
 
 import MultiSelectController from "./multi_select_controller"
 application.register("multi-select", MultiSelectController)

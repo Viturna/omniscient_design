@@ -11,80 +11,101 @@
     outline: 0;
     background-color: rgba(0, 0, 0, 0.5);
   }
-
-  .modal.show {
-  display: block;
-  }
+  .modal.show { display: block; }
 
   .modal-dialog {
-  position: relative;
-  width: auto;
-  margin: 10px;
-  pointer-events: none;
+    position: relative;
+    width: auto;
+    margin: 10px;
+    pointer-events: none;
   }
-
   .modal-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  pointer-events: auto;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.3rem;
-  outline: 0;
-  }
-
-  .modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid #dee2e6;
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
-  }
-
-  .modal-body {
-  position: relative;
-  flex: 1 1 auto;
-  padding: 1rem;
-  }
-
-  .modal-footer {
+    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 1rem;
-    border-top: 1px solid #dee2e6;
+    flex-direction: column;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0;
   }
+  .modal-header, .modal-footer {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+  .modal-footer { border-top: 1px solid #dee2e6; }
+
+  /* ---- UX ---- */
+  .table-controls {
+    margin-top: 16px;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+  .filter-input,
+  .table-controls select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 180px;
+    height: 50px !important;
+  }
+
+  th.sortable {
+    cursor: pointer;
+    position: relative;
+  }
+  th.sortable::after {
+    content: "⇅";
+    font-size: 0.8em;
+    margin-left: 4px;
+    opacity: 0.4;
+  }
+  th.sortable.asc::after { content: "▲"; opacity: 1; }
+  th.sortable.desc::after { content: "▼"; opacity: 1; }
 </style>
+
 <section class="top-default-page">
   <%= link_to profil_path do %>
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+         xmlns="http://www.w3.org/2000/svg">
       <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
     </svg>
   <% end %>
   <h1>Gestions des contenus</h1>
-  <p style="color:#FFF">Total <%= @oeuvres_count +@designers_count %> références</p>
+  <p style="color:#FFF">Total <%= @oeuvres_count + @designers_count %> références</p>
 </section>
+
+<!-- ========= ŒUVRES EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Références en attente de validation</h2>
   <p>Il y a actuellement <%= @oeuvres_count_val_false %> références en attente de validation</p>
+
+  <div class="table-controls">
+    <input type="text" placeholder="Rechercher une référence..." class="filter-input search-input">
+    <select class="filter-user">
+      <option value="">— Filtrer par utilisateur —</option>
+      <% User.all.each do |u| %>
+        <option value="<%= u.email %>"><%= u.email %></option>
+      <% end %>
+    </select>
+  </div>
+
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>Titre</th>
-          <th>Date d'ajout</th>
-          <th>Ajouté par</th>
+          <th class="sortable">Titre</th>
+          <th class="sortable">Date d'ajout</th>
+          <th class="sortable">Ajouté par</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <% @oeuvres.each do |oeuvre| %>
-          <% if !oeuvre.validation %>
+          <% unless oeuvre.validation %>
             <tr data-load-more-table-target="row">
               <td><%= oeuvre.nom_oeuvre %></td>
               <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
@@ -111,20 +132,33 @@
     </table>
   </div>
   <div>
-    <button class="btn"   data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de références</button>
+    <button class="btn" data-action="click->load-more-table#showMoreRows"
+            data-load-more-table-target="button">Voir plus de références</button>
   </div>
 </section>
 
+<!-- ========= ŒUVRES VALIDÉES ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Références validées</h2>
   <p>Il y a actuellement <%= @oeuvres_count %> références validées</p>
+
+  <div class="table-controls">
+    <input type="text" placeholder="Rechercher..." class="filter-input search-input">
+    <select class="filter-user">
+      <option value="">— Filtrer par utilisateur —</option>
+      <% User.all.each do |u| %>
+        <option value="<%= u.email %>"><%= u.email %></option>
+      <% end %>
+    </select>
+  </div>
+
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>Titre</th>
-          <th>Date d'ajout</th>
-          <th>Ajouté par</th>
+          <th class="sortable">Titre</th>
+          <th class="sortable">Date d'ajout</th>
+          <th class="sortable">Ajouté par</th>
           <th>Validé par</th>
           <th>Action</th>
         </tr>
@@ -164,26 +198,39 @@
     </table>
   </div>
   <div>
-    <button class="btn"  data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de références validées</button>
+    <button class="btn" data-action="click->load-more-table#showMoreRows"
+            data-load-more-table-target="button">Voir plus de références validées</button>
   </div>
 </section>
 
+<!-- ========= DESIGNERS EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Designers en attente de validation</h2>
   <p>Il y a actuellement <%= @designers_count_val_false %> designers en attente de validation</p>
+
+  <div class="table-controls">
+    <input type="text" placeholder="Rechercher un designer..." class="filter-input search-input">
+    <select class="filter-user">
+      <option value="">— Filtrer par utilisateur —</option>
+      <% User.all.each do |u| %>
+        <option value="<%= u.email %>"><%= u.email %></option>
+      <% end %>
+    </select>
+  </div>
+
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>Nom</th>
-          <th>Date d'ajout</th>
-          <th>Ajouté par</th>
+          <th class="sortable">Nom</th>
+          <th class="sortable">Date d'ajout</th>
+          <th class="sortable">Ajouté par</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <% @designers.each do |designer| %>
-          <% if !designer.validation %>
+          <% unless designer.validation %>
             <tr data-load-more-table-target="row">
               <td><%= designer.nom_designer %></td>
               <td><%= I18n.l(designer.created_at, format: :long) %></td>
@@ -210,20 +257,33 @@
     </table>
   </div>
   <div>
-    <button class="btn"  data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de designers</button>
+    <button class="btn" data-action="click->load-more-table#showMoreRows"
+            data-load-more-table-target="button">Voir plus de designers</button>
   </div>
 </section>
 
+<!-- ========= DESIGNERS VALIDÉS ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Designers validés</h2>
   <p>Il y a actuellement <%= @designers_count %> designers validés</p>
+
+  <div class="table-controls">
+    <input type="text" placeholder="Rechercher un designer..." class="filter-input search-input">
+    <select class="filter-user">
+      <option value="">— Filtrer par utilisateur —</option>
+      <% User.all.each do |u| %>
+        <option value="<%= u.email %>"><%= u.email %></option>
+      <% end %>
+    </select>
+  </div>
+
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>Nom</th>
-          <th>Date d'ajout</th>
-          <th>Ajouté par</th>
+          <th class="sortable">Nom</th>
+          <th class="sortable">Date d'ajout</th>
+          <th class="sortable">Ajouté par</th>
           <th>Validé par</th>
           <th>Action</th>
         </tr>
@@ -263,11 +323,13 @@
     </table>
   </div>
   <div>
-    <button class="btn"  data-action="click->load-more-table#showMoreRows" data-load-more-table-target="button">Voir plus de designers validés</button>
+    <button class="btn" data-action="click->load-more-table#showMoreRows"
+            data-load-more-table-target="button">Voir plus de designers validés</button>
   </div>
 </section>
 
-<div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog" aria-labelledby="globalRejectModalLabel" aria-hidden="true">
+<!-- ========= MODAL ========= -->
+<div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -278,7 +340,7 @@
       </div>
       <div class="modal-body">
         <%= form_with url: "", method: :patch, id: "rejectForm", authenticity_token: true do |form| %>
-        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
           <div class="form-group">
             <%= form.label :rejection_reason, "Raison du refus" %>
             <%= form.text_area :rejection_reason, class: "form-control", id: "rejectionReasonField" %>
@@ -292,63 +354,95 @@
     </div>
   </div>
 </div>
+
 <script>
-  document.addEventListener("turbo:load", () => {
-  // Ouvrir le modal
-  document.querySelectorAll('[data-toggle="modal"]').forEach(function(button) {
-    button.addEventListener('click', function(event) {
-      event.preventDefault();
-      const targetModal = document.querySelector(button.getAttribute('data-target'));
-      if (targetModal) {
-        targetModal.classList.add('show');
-        targetModal.style.display = 'block';
-        document.body.classList.add('modal-open');
+document.addEventListener("turbo:load", () => {
+  // ---- Modal ----
+  document.querySelectorAll('[data-toggle="modal"]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const modal = document.querySelector(btn.dataset.target);
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      document.body.classList.add('modal-open');
+      document.getElementById('rejectForm').setAttribute('action', btn.dataset.url);
+      document.querySelector('.modal-title').textContent = 'Refuser : ' + btn.dataset.title;
+      document.getElementById('rejectionReasonField').value = '';
+    });
+  });
+  document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modal = btn.closest('.modal');
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      document.body.classList.remove('modal-open');
+    });
+  });
+
+  // ---- Recherche et filtre ----
+  document.querySelectorAll(".table-controls").forEach(control => {
+    const searchInput = control.querySelector(".search-input");
+    const filterUser = control.querySelector(".filter-user");
+    const table = control.nextElementSibling.querySelector("table");
+    const rows = table.querySelectorAll("tbody tr");
+
+    searchInput?.addEventListener("keyup", () => {
+      const query = searchInput.value.toLowerCase();
+      rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+      });
+    });
+
+    filterUser?.addEventListener("change", () => {
+      const val = filterUser.value.toLowerCase();
+      rows.forEach(row => {
+        const userCell = row.cells[2]?.innerText.toLowerCase();
+        row.style.display = !val || userCell.includes(val) ? "" : "none";
+      });
+    });
+  });
+
+  // ---- Tri ----
+ document.querySelectorAll("th.sortable").forEach(th => {
+    th.addEventListener("click", () => {
+      const table = th.closest("table");
+      const rows = Array.from(table.querySelectorAll("tbody tr"));
+      const idx = th.cellIndex;
+
+      // cycle asc → desc → asc
+      const isAsc = th.classList.contains("asc");
+      const isDesc = th.classList.contains("desc");
+
+      table.querySelectorAll("th.sortable").forEach(h => h.classList.remove("asc","desc"));
+
+      let direction;
+      if (!isAsc && !isDesc) {           // premier clic → desc par défaut
+        direction = "desc";
+        th.classList.add("desc");
+      } else if (isDesc) {               // desc → asc
+        direction = "asc";
+        th.classList.add("asc");
+      } else {                           // asc → desc
+        direction = "desc";
+        th.classList.add("desc");
       }
+
+      rows.sort((a, b) => {
+        const A = a.cells[idx].innerText.trim().toLowerCase();
+        const B = b.cells[idx].innerText.trim().toLowerCase();
+        const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
+        const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
+        if (valA instanceof Date && valB instanceof Date) {
+          return direction === "asc" ? valA - valB : valB - valA;
+        }
+        return direction === "asc"
+          ? String(valA).localeCompare(String(valB))
+          : String(valB).localeCompare(String(valA));
+      });
+
+      rows.forEach(r => table.querySelector("tbody").appendChild(r));
     });
   });
 
-  // Fermer le modal
-  document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(function(button) {
-    button.addEventListener('click', function() {
-      const modal = button.closest('.modal');
-      if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-        document.body.classList.remove('modal-open');
-      }
-    });
-  });
-
-  // Fermer le modal en cliquant en dehors du contenu
-  document.querySelectorAll('.modal').forEach(function(modal) {
-    modal.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-        document.body.classList.remove('modal-open');
-      }
-    });
-  });
-  });
-   document.addEventListener("turbo:load", () => {
-  const modal = document.querySelector('#globalRejectModal');
-  const form = document.querySelector('#rejectForm');
-  const rejectionField = document.querySelector('#rejectionReasonField');
-
-  document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
-    button.addEventListener('click', function () {
-      const url = button.getAttribute('data-url');
-      const title = button.getAttribute('data-title');
-
-      // Mettre à jour l'URL du formulaire
-      form.setAttribute('action', url);
-
-      // Mettre à jour le titre ou d'autres informations (optionnel)
-      modal.querySelector('.modal-title').textContent = `Refuser l'entrée : ${title}`;
-
-      // Réinitialiser les champs si nécessaire
-      rejectionField.value = '';
-    });
-  });
-  });
+});
 </script>

@@ -23,7 +23,7 @@
                   </clipPath>
                 </defs>
               </svg>
-              Explorer
+              <%= t('header.explore') %>
             <% end %>
           </li>
           <li>
@@ -31,7 +31,7 @@
             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z" fill="#52525D"/>
               </svg>
-              Rechercher
+              <%= t('header.search') %>
             <% end %>
           </li>
           <li>
@@ -39,8 +39,7 @@
                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95ZM3.15 24C4.8888 24 6.3 25.4112 6.3 27.15C6.3 28.8888 4.8888 30.3 3.15 30.3C1.4112 30.3 0 28.8888 0 27.15C0 25.4112 1.4112 24 3.15 24ZM36 21.75C36 21.0048 35.3952 20.4 34.65 20.4H10.35C9.6048 20.4 9 21.0048 9 21.75C9 22.4952 9.6048 23.1 10.35 23.1H34.65C35.3952 23.1 36 22.4952 36 21.75ZM3.15 15C4.8888 15 6.3 16.4112 6.3 18.15C6.3 19.8888 4.8888 21.3 3.15 21.3C1.4112 21.3 0 19.8888 0 18.15C0 16.4112 1.4112 15 3.15 15ZM36 14.55C36 13.8048 35.3952 13.2 34.65 13.2H10.35C9.6048 13.2 9 13.8048 9 14.55C9 15.2952 9.6048 15.9 10.35 15.9H34.65C35.3952 15.9 36 15.2952 36 14.55ZM3.15 6C4.8888 6 6.3 7.4112 6.3 9.15C6.3 10.8888 4.8888 12.3 3.15 12.3C1.4112 12.3 0 10.8888 0 9.15C0 7.4112 1.4112 6 3.15 6ZM36 7.35C36 6.6048 35.3952 6 34.65 6H10.35C9.6048 6 9 6.6048 9 7.35C9 8.0952 9.6048 8.7 10.35 8.7H34.65C35.3952 8.7 36 8.0952 36 7.35Z" fill="#52525D"/>
               </svg>
-
-              Listes
+              <%= t('header.lists') %>
             <% end %>
           </li>
           <li>
@@ -55,7 +54,7 @@
                   </clipPath>
                 </defs>
               </svg>
-              Profil
+              <%= t('header.profile') %>
             <% end %>
           </li>
           <li>
@@ -70,8 +69,7 @@
                   </clipPath>
                 </defs>
               </svg>
-
-              Ajouter
+              <%= t('header.add') %>
             <% end %>
           </li>
         </ul>
@@ -80,18 +78,18 @@
 
         <div class="flex-btn-login">
           <% if user_signed_in? %>
-            <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo_method: :delete}, class: "button w-full dark"%>
+            <%= link_to t('header.logout'), destroy_user_session_path, method: :delete, data: { turbo_method: :delete}, class: "button w-full dark"%>
           <% else %>
-            <%= link_to "Se connecter", new_user_session_path, class: "button dark w-full" %>
+            <%= link_to t('header.login'), new_user_session_path, class: "button dark w-full" %>
           <% end %>
         </div>
       </div>
     </div>
 
     <div class="link-header">
-      <%= link_to "Mentions légales", mentionslegales_path, class: "underline"%>
-      <%= link_to "Politique de confidentialité", politiquedeconfidentialite_path, class: "underline"%>
-      <p><%= link_to "CGU", cgu_path, class: "underline"%> | <%= link_to "Cookies", cookies_path, class: "underline"%></p>
+      <%= link_to t('header.legal'), mentionslegales_path, class: "underline"%>
+      <%= link_to t('header.policy'), politiquedeconfidentialite_path, class: "underline"%>
+      <p><%= link_to t('header.terms'), cgu_path, class: "underline"%> | <%= link_to t('header.cookies'), cookies_path, class: "underline"%></p>
       <p>©<%= Time.now.year %> - Omniscient Design</p>
     </div>
   </div>
@@ -113,7 +111,7 @@
           </defs>
         </svg>
 
-          Explorer
+          <%= t('header.explore') %>
         <% end %></li>
 
         <li><%= link_to search_path, class: (@current_page == 'recherche' ? 'active' : '') do %>
@@ -121,7 +119,7 @@
           <path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z" fill="#52525D"/>
         </svg>
 
-          Rechercher
+          <%= t('header.search') %>
         <% end %></li>
 
          <li><%= link_to add_elements_path, class: (@current_page == 'add_elements' ? 'active' : '') do %>
@@ -136,7 +134,7 @@
           </defs>
         </svg>
 
-          Ajouter
+          <%= t('header.add') %>
         <% end %></li>
 
         <li><%= link_to lists_path, class: (@current_page == 'listes' ? 'active' : '') do %>
@@ -144,7 +142,7 @@
           <path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95ZM3.15 24C4.8888 24 6.3 25.4112 6.3 27.15C6.3 28.8888 4.8888 30.3 3.15 30.3C1.4112 30.3 0 28.8888 0 27.15C0 25.4112 1.4112 24 3.15 24ZM36 21.75C36 21.0048 35.3952 20.4 34.65 20.4H10.35C9.6048 20.4 9 21.0048 9 21.75C9 22.4952 9.6048 23.1 10.35 23.1H34.65C35.3952 23.1 36 22.4952 36 21.75ZM3.15 15C4.8888 15 6.3 16.4112 6.3 18.15C6.3 19.8888 4.8888 21.3 3.15 21.3C1.4112 21.3 0 19.8888 0 18.15C0 16.4112 1.4112 15 3.15 15ZM36 14.55C36 13.8048 35.3952 13.2 34.65 13.2H10.35C9.6048 13.2 9 13.8048 9 14.55C9 15.2952 9.6048 15.9 10.35 15.9H34.65C35.3952 15.9 36 15.2952 36 14.55ZM3.15 6C4.8888 6 6.3 7.4112 6.3 9.15C6.3 10.8888 4.8888 12.3 3.15 12.3C1.4112 12.3 0 10.8888 0 9.15C0 7.4112 1.4112 6 3.15 6ZM36 7.35C36 6.6048 35.3952 6 34.65 6H10.35C9.6048 6 9 6.6048 9 7.35C9 8.0952 9.6048 8.7 10.35 8.7H34.65C35.3952 8.7 36 8.0952 36 7.35Z" fill="#52525D"/>
         </svg>
 
-          Listes
+          <%= t('header.lists') %>
         <% end %></li>
 
         <li><%= link_to profil_path, class: (@current_page == 'profil' ? 'active' : '') do %>
@@ -159,10 +157,8 @@
           </defs>
         </svg>
 
-          Profil
+          <%= t('header.profile') %>
         <% end %></li>
-
-       
       </ul>
     </nav>
   </header>

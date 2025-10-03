@@ -4,7 +4,7 @@
 <div class="log" style="color:#FFF; min-height:100vh;">
   <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
-    <h1>S’inscrire</h1>
+    <h1><%= t('devise.registration.title') %></h1>
     <div class="form">
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :post, multipart: true }) do |f| %>
         <% if resource.errors.any? %>
@@ -18,105 +18,122 @@
           </div>
         <% end %>
         <div class="field">
-          <p class="title-boxlog">Informations principales</p>
+          <p class="title-boxlog"><%= t('devise.registration.main_info') %></p>
         </div>
         <div class="field">
-          <%= f.email_field :email, autocomplete: "email", placeholder: "Email*" %>
+          <%= f.email_field :email, autocomplete: "email", placeholder: t('devise.registration.email_placeholder') %>
         </div>
        <div class="field password-container" data-controller="show-password">
-        <%= f.password_field :password, 
-              autocomplete: "new-password", 
-              placeholder: "Mot de passe*", 
-              id: "password-field-1",
-              data: { "show-password-target": "passwordField" } %>
-
+         <%= f.password_field :password,
+                autocomplete: "new-password",
+                placeholder: t('devise.registration.password_placeholder'),
+                id: "password-field-1",
+                data: { "show-password-target": "passwordField" } %>
          <button type="button" 
                 data-action="click->show-password#toggle" class="toggle-password">
-          <svg class="show-password-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
+            </svg>
+            <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="7.64315" y1="28.4933" x2="20.0066" y2="2.2608" stroke="#202020" stroke-width="3"/>
+              <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
             </svg>
         </button>
       </div>
 
       <div class="field password-container" data-controller="show-password">
-        <%= f.password_field :password_confirmation, 
-              autocomplete: "new-password", 
-              placeholder: "Confirmer le mot de passe*", 
-              id: "password-field-2",
-              data: { "show-password-target": "passwordField" } %>
-
+         <%= f.password_field :password_confirmation,
+                autocomplete: "new-password",
+                placeholder: t('devise.registration.password_confirmation_placeholder'),
+                id: "password-field-2",
+                data: { "show-password-target": "passwordField" } %>
         <button type="button" 
                 data-action="click->show-password#toggle" class="toggle-password">
-          <svg class="show-password-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
+            </svg>
+            <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="7.64315" y1="28.4933" x2="20.0066" y2="2.2608" stroke="#202020" stroke-width="3"/>
+              <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
             </svg>
         </button>
       </div>
 
         <div class="field">
-          <p class="title-boxlog">Informations supplémentaires</p>
+          <p class="title-boxlog"><%= t('devise.registration.additional_info') %></p>
         </div>
        
         <div class="field">
-          <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom*" %>
+          <%= f.text_field :firstname, autocomplete: "firstname", placeholder: t('devise.registration.firstname_placeholder') %>
         </div>
-        <div class="field">
-          <%= f.text_field :lastname, autocomplete: "lastname", placeholder: "Nom de famille" %>
-        </div>
-        <div class="field">
-          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: "Pseudo*" %>
-        </div>
-        <div class="field">
-          <%= f.collection_select :statut, 
-        [
-          ["Étudiant", "Étudiant"], 
-          ["Enseignant", "Enseignant"], 
-          ["Entreprise", "Entreprise"],
-          ["Association", "Association"],
-          ["Designer", "Designer"],
-          ["Artiste", "Artiste"],
-           ["Autre", "Autre"],
-        ], :first, :last, { prompt: "Choisissez un statut*" }, { class: "form-control" } %>
 
+        <div class="field">
+          <%= f.text_field :lastname, autocomplete: "lastname", placeholder: t('devise.registration.lastname_placeholder') %>
+        </div>
+
+        <div class="field">
+          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: t('devise.registration.pseudo_placeholder') %>
         </div>
         <div class="field">
+            <%= f.collection_select :statut,
+                  [
+                    [t('devise.registration.status_options.student'), t('devise.registration.status_options.student')],
+                    [t('devise.registration.status_options.teacher'), t('devise.registration.status_options.teacher')],
+                    [t('devise.registration.status_options.company'), t('devise.registration.status_options.company')],
+                    [t('devise.registration.status_options.association'), t('devise.registration.status_options.association')],
+                    [t('devise.registration.status_options.designer'), t('devise.registration.status_options.designer')],
+                    [t('devise.registration.status_options.artist'), t('devise.registration.status_options.artist')],
+                    [t('devise.registration.status_options.other'), t('devise.registration.status_options.other')]
+                  ],
+                  :first,
+                  :last,
+                  { prompt: t('devise.registration.status_prompt') },
+                  { class: "form-control" } %>
+          </div>
+         <div class="field">
           <%= f.collection_select :etablissement_id,
-                          Etablissement.order(:city),
-                          :id,
-                          :all_info,
-                          { include_blank: "Aucun établissement" },
-                          { class: "form-control select2", data: { placeholder: "Rechercher un établissement..." } } %>
+                Etablissement.order(:city),
+                :id,
+                :all_info,
+                { include_blank: t('devise.registration.establishment_blank') },
+                { class: "form-control select2",
+                  data: { placeholder: t('devise.registration.establishment_search') } } %>
         </div>
-        <div class="field">
-          <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
-        </div>
-        <div class="field rgpd">
+        <%# <div class="field">
+          <%= f.text_field :referral_code, placeholder: "Code de parrainage" 
+        </div> %>
+         <div class="field rgpd">
           <%= f.check_box :rgpd_consent, required: true %>
-          <%= f.label :rgpd_consent, ("J'accepte que mes données personnelles soient collectées et traitées conformément à la " + link_to('Politique de confidentialité', politiquedeconfidentialite_path, target: "_blank")).html_safe, class: "rgpd-label" %>
+          <%= f.label :rgpd_consent,
+                (t('devise.registration.rgpd_label', privacy_policy: link_to(t('devise.registration.privacy_policy'), politiquedeconfidentialite_path, target: "_blank"))).html_safe,
+                class: "rgpd-label" %>
         </div>
-        <div class="actions">
-          <%= f.submit "S’inscrire", class:"button dark btn-login" %>
+          <div class="actions">
+          <%= f.submit t('devise.registration.submit'), class: "button dark btn-login" %>
         </div>
-        <%= link_to "Vous avez déjà un compte ? Se connecter", new_user_session_path, class: "sign-up-in" %>
-        <p class="email-confirmation">Déjà inscrit mais pas encore confirmé ? <%= link_to 'Renvoyer l\'email de confirmation', new_user_confirmation_path, class: "sign-up-in"%></p>
+         <%= link_to t('devise.registration.login_link'), new_user_session_path, class: "sign-up-in" %>
+        <p class="email-confirmation">
+          <%= t('devise.registration.resend_confirmation', resend_link: link_to(t('devise.registration.resend_link_text'), new_user_confirmation_path, class: "sign-up-in")).html_safe %>
+        </p>
       <% end %>
     </div>
   </section>
 </div>
+
 <script>
   $(document).ready(function() {
     $('.select2').select2({
-      placeholder: "Rechercher un établissement...",
+      placeholder: "<%= t('devise.registration.establishment_search') %>",
       allowClear: true,
       language: {
         inputTooShort: function() {
-          return "Veuillez entrer plus de caractères...";
+          return "<%= t('devise.registration.select2.input_too_short') %>";
         },
         searching: function() {
-          return "Recherche en cours...";
+          return "<%= t('devise.registration.select2.searching') %>";
         },
         noResults: function() {
-          return "Aucun résultat trouvé";
+          return "<%= t('devise.registration.select2.no_results') %>";
         }
       }
     });

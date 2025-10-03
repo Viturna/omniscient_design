@@ -1,9 +1,113 @@
 fr:
+  meta:
+    default_title: "Omniscient Design"
+    default_description: "Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d'art"
+    all_rights_reserved: "Tous droits réservés"
+  cookies:
+    banner_text: "Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?"
+    accept: "Accepter"
+    decline: "Refuser"
+  loader:
+    unsupported_browser: "Votre navigateur ne supporte pas la vidéo."
+  global:
+    designers: "Designers"
+    references: "Références"
+  header:
+    explore: "Explorer"
+    search: "Rechercher"
+    lists: "Listes"
+    profile: "Profil"
+    add: "Ajouter"
+    login: "Se connecter"
+    logout: "Se déconnecter"
+    legal: "Mentions légales"
+    policy: "Politique de confidentialité"
+    terms: "CGU"
+    cookies: "Cookies"
+  search:
+    placeholder: "Rechercher une référence ou un designer"
+    title: "Rechercher"
+    timeline: "Frise Chronologique"
+    filters: "Filtres"
+    domain: "Domaine"
+    notions: "Notions"
+    choose_notions: "Choisir des notions"
+    country: "Pays"
+    choose_country: "Choisir des pays"
+    dates: "Dates"
+    select_period: "Sélectionner une période"
+    from: "De"
+    to: "À"
+    start_year: "Année de début"
+    end_year: "Année de fin"
+    apply: "Appliquer"
+    sort_by: "Trier par"
+    name_asc: "Nom A → Z"
+    name_desc: "Nom Z → A"
+    birth_old_new: "Naissance ancienne → récente"
+    birth_new_old: "Naissance récente → ancienne"
+    oeuvre_old_new: "Oeuvre ancienne → récente"
+    oeuvre_new_old: "Oeuvre récente → ancienne"
+    sort:
+      name_asc: "Nom A-Z"
+      name_desc: "Nom Z-A"
+      oeuvre_asc: "Date référence (ancien → récent)"
+      oeuvre_desc: "Date référence (récent → ancien)"
+      birth_asc: "Date naissance (ancien → récent)"
+      birth_desc: "Date naissance (récent → ancien)"
+    query_too_short: "La requête est trop courte"
+    domains: "Domaines"
+    designers: "Designers"
+    references: "Références"
+    server_error: "Erreur serveur"
+  mainpopup:
+    title: "Omniscient design"
+    subtitle_project: "Découvrir le projet"
+    description_project: "Omniscient Design est né de la volonté de centraliser, sur une plateforme unique, toutes les connaissances liées au monde du design. Qu'il s'agisse de design d'objet, de stylisme ou de scénographie, Omniscient Design aspire à rendre chaque travail, chaque projet et chaque référence aussi accessibles et complets que possible.\n\nNotre mission est de favoriser le partage, l'exploration et l'enrichissement des savoirs dans tous les domaines du design, en mettant à disposition des ressources exhaustives et facilement consultables, que ce soit pour les étudiants, les professionnels ou les passionnés."
+    button_project: "En savoir plus"
+    subtitle_feedback: "Vos feedbacks"
+    description_feedback: "Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
+    button_feedback: "Donner votre avis"
+  profile:
+    your_profile: "Votre profil"
+    general: "Général"
+    account: "Votre compte"
+    sponsorship: "Parrainage"
+    contributions: "Mes Contributions"
+    notifications: "Notifications"
+    accessibility: "Accessibilité"
+    changelog: "Rapport de mise à jour"
+    press_kit: "Kit de presse"
+    sitemap: "Plan du site"
+    theme: "Thème"
+    system: "Système"
+    light: "Clair"
+    dark: "Sombre"
+    support: "Support"
+    report_issue: "Signaler un problème"
+    contact_admin: "Contacter un administrateur"
+    validation: "Validation"
   date:
     day_names: [Dimanche, Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi]
     abbr_day_names: [dim, lun, mar, mer, jeu, ven, sam]
-    month_names: [~, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Août, Septembre, Octobre, Novembre, Décembre]
-    abbr_month_names: [~, Jan, Fév, Mar, Avr, Mai, Juin, Juil, Aoû, Sep, Oct, Nov, Déc]
+    month_names:
+      [
+        ~,
+        Janvier,
+        Février,
+        Mars,
+        Avril,
+        Mai,
+        Juin,
+        Juillet,
+        Août,
+        Septembre,
+        Octobre,
+        Novembre,
+        Décembre,
+      ]
+    abbr_month_names:
+      [~, Jan, Fév, Mar, Avr, Mai, Juin, Juil, Aoû, Sep, Oct, Nov, Déc]
     order: [day, month, year]
   time:
     formats:
@@ -87,6 +191,51 @@ fr:
       too_long: "est trop long (maximum %{count} caractères)"
       too_short: "est trop court (minimum %{count} caractères)"
       wrong_length: "n'a pas la bonne longueur (doit être de %{count} caractères)"
+      country_already_associated: "Ce designer a déjà ce pays associé."
+      max_countries: "Un designer peut être associé à un maximum de 3 pays."
+      birth_year_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
+      death_year_invalid: "Veuillez entrer une année de décès valide entre 0 et %{current_year}."
+      designer_already_associated: "Ce designer est déjà associé."
+      name_already_taken: "Ce nom d'établissement est déjà pris."
+    403:
+      subtitle: "Erreur 403"
+      title: "Oups ! Vous n'avez pas la permission d'accéder à cette page."
+      back_home: "Retour à l'accueil"
+    500:
+      subtitle: "Erreur 500"
+      title: "Oups ! Une erreur interne du serveur s'est produite."
+      back_home: "Retour à l'accueil"
+    404:
+      subtitle: "Erreur 404"
+      title: "Il semblerait que cette page n’existe pas"
+      back_home: "Retour à l'accueil"
+    422:
+      subtitle: "Erreur 422"
+      title: "Oups ! La requête ne peut pas être traitée."
+      back_home: "Retour à l'accueil"
+  etablissement:
+    academy_prefix: "Académie de"
+  notions_oeuvre:
+    no_association: "pas de notions associées"
+  user:
+    pseudo_taken: "Ce pseudo est déjà pris."
+    invalid_statut: "%{value} n'est pas un statut valide"
+    forbidden_word: "Le %{field} contient un mot interdit."
+    registration:
+      confirmation_sent: "Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception."
+    profile:
+      updated: "Votre profil a été mis à jour avec succès."
+    access:
+      denied_admin: "Vous n'avez pas la permission d'accéder à cette page."
+      denied_certified: "Vous n'avez pas la permission d'accéder à cette page."
+      banned: "Votre compte a été banni."
+    banned_success: "Utilisateur banni avec succès."
+    unbanned_success: "L'utilisateur a été débanni."
+    unbanned_denied: "Vous ne pouvez pas débannir cet utilisateur."
+    certified_success: "%{name} a été certifié avec succès."
+    certified_failure: "Une erreur est survenue lors de la certification."
+    uncertified_success: "La certification de %{name} a été retirée avec succès."
+    uncertified_failure: "Une erreur est survenue lors du retrait de la certification."
   activerecord:
     errors:
       models:
@@ -204,3 +353,559 @@ fr:
       words_connector: ", "
       two_words_connector: " et "
       last_word_connector: ", et "
+  privacy_policy:
+    title: "Politique de confidentialité"
+    last_updated: "Dernière mise à jour : 26/08/2024"
+    introduction:
+      "Cette politique de confidentialité a pour but d’informer les utilisateurs du site :\n
+      \n• Sur la manière dont sont collectées leurs données personnelles. Sont considérées comme des données personnelles, toute information permettant d’identifier un utilisateur, tels que son nom, âge, adresse postale ou email, localisation, ou adresse IP (liste non exhaustive) ;
+      \n• Sur les droits dont ils disposent concernant ces données ;
+      \n• Sur la personne responsable du traitement des données collectées ;
+      \n• Sur les destinataires de ces données ;
+      \n• Sur la politique du site en matière de cookies.
+      \n\n
+      Cette politique complète les mentions légales et les Conditions Générales d’Utilisation consultables à : <a href=\"https://omniscientdesign.fr/mentionslegales\" class=\"black underline\"> target=\"_blank\">https://omniscientdesign.fr/mentionslegales</a> et <a class=\"black underline\"> href=\"https://omniscientdesign.fr/cgu\" target=\"_blank\">https://omniscientdesign.fr/cgu</a>"
+    sections:
+      1:
+        title: "Responsable du traitement des données"
+        content: 'Le responsable du traitement des données est : QUEMERE Edgar<br>Adresse : 49-55 rue Donissan, 33000 Bordeaux<br>Numéro de téléphone : <a href="tel:0695817727" class="black underline">>06 95 81 77 27</a><br>Email : <a href="mailto:edgarquemere2645@gmail.com" class="black underline">>edgarquemere2645@gmail.com</a>'
+      2:
+        title: "Données collectées"
+        content:
+          "Nous collectons différentes données personnelles selon vos interactions avec notre site. Types de données :
+          \n• Données d'identification : nom, prénom, email, téléphone, adresse postale, statut (étudiant, professeur, autre), établissement scolaire.
+          \n• Données de connexion : adresse IP, type de navigateur, fournisseur d’accès Internet, date et heure d’accès, historique de navigation.
+          \n• Données soumises via des formulaires : contenu des messages envoyés via les formulaires ou soumissions de contenu."
+      3:
+        title: "Finalités du traitement"
+        content: "Nous collectons et traitons vos données personnelles pour :
+          \n• Expérience : analyser l’audience et améliorer l’expérience utilisateur.
+          \n• Gestion des comptes utilisateurs : création, maintenance, gestion des comptes.
+          \n• Modération des contenus : vérification et validation des références et designers soumis par les utilisateurs.
+          \n• Communication : envoi d’informations liées au compte et aux activités du site.
+          \n• Sécurité : prévenir et détecter toute activité frauduleuse."
+      4:
+        title: "Base légale du traitement"
+        content: "Le traitement repose sur :
+          \n• Votre consentement lors de la fourniture volontaire d’informations.
+          \n• Notre intérêt légitime à améliorer nos services et assurer la sécurité.
+          \n• Le respect d’une obligation légale lorsque certaines données doivent être conservées pour raisons fiscales ou juridiques."
+      5:
+        title: "Destinataires des données"
+        content:
+          "Vos données personnelles sont strictement confidentielles et accessibles à des tiers uniquement :
+          \n• Sous-traitants : partage avec prestataires (hébergement, maintenance, marketing, etc.) sous notre contrôle.
+          \n• Obligations légales : divulgation si requise par la loi (autorité judiciaire ou administrative)."
+      6:
+        title: "Durée de conservation des données"
+        content:
+          "Nous conservons vos données personnelles uniquement le temps nécessaire aux finalités et conformément à la loi :
+          \n• Données de contact : 3 ans après dernier contact.
+          \n• Données de navigation (cookies) : 13 mois.
+          \n• Données contractuelles : durée de la relation contractuelle, puis archivage légal.
+          \n• Données soumises par les utilisateurs : conservées tant que le contenu reste en ligne ; suppression à la demande ou automatique si contenu non pertinent. Une copie peut être conservée 3 ans pour sécurité ou preuve.
+          \n• Données de connexion : maximum 12 mois pour sécurité, utilisées pour prévenir fraudes ou activités illicites."
+      7:
+        title: "Vos droits"
+        content: "Conformément au RGPD :
+          \n• Droit d'accès : demander l’accès aux données.
+          \n• Droit de rectification : corriger des données inexactes ou incomplètes.
+          \n• Droit à l'effacement : demander la suppression (sous réserve des obligations légales).
+          \n• Droit à la limitation : limiter le traitement dans certains cas.
+          \n• Droit à la portabilité : recevoir vos données dans un format structuré et lisible.
+          \n• Droit d'opposition : s'opposer pour votre situation particulière ou marketing direct.
+          \n
+          \nPour exercer vos droits : <a href=\"mailto:contact@omniscientdesign.fr\" class=\"black underline\">>contact@omniscientdesign.fr</a>"
+      8:
+        title: "Sécurité des données"
+        content: "Nous mettons en œuvre des mesures techniques et organisationnelles pour sécuriser vos données et éviter perte, détournement, altération ou accès non autorisé."
+      9:
+        title: "Politique de l’hébergeur"
+        content: 'Notre hébergeur possède sa propre politique de confidentialité concernant vos données : <a href="https://www.hostinger.fr/politique-de-confidentialite" target="_blank" class="black underline">>https://www.hostinger.fr/politique-de-confidentialite</a>'
+      10:
+        title: "Modifications de la politique"
+        content: "Nous nous réservons le droit de modifier cette politique à tout moment. Les changements prennent effet dès leur publication sur cette page. Nous recommandons de consulter régulièrement cette page."
+      11:
+        title: "Contact"
+        content: 'Pour toute question concernant la politique de confidentialité : <a href="mailto:contact@omniscientdesign.fr" class="black underline">>contact@omniscientdesign.fr</a><br><br>Le respect de vos droits est notre priorité<br>Fondateurs de Omniscient Design'
+  edit_profile:
+    account: "Votre compte"
+    public_profile: "Profil public"
+    public_desc: "Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, veuillez modifier les informations ci-dessous."
+    first_name: "Prénom"
+    last_name: "Nom de famille"
+    username: "Pseudo"
+    password: "Mot de passe"
+    password_hint: "Ne pas remplir si vous ne souhaitez pas le changer"
+    password_confirmation: "Confirmer mot de passe"
+    private_profile: "Profil privé"
+    email: "Email"
+    status: "Statut"
+    choose_status: "Choisissez un statut*"
+    student: "Étudiant"
+    teacher: "Enseignant"
+    company: "Entreprise"
+    association: "Association"
+    designer: "Designer"
+    artist: "Artiste"
+    other: "Autre"
+    institution: "Établissement"
+    choose_institution: "Choisissez un établissement"
+    current_password: "Mot de passe actuel"
+    current_password_hint: "entrer votre mot de passe pour modifier votre profil"
+    update_button: "Mettre à jour"
+    delete_account: "Supprimer votre compte"
+    confirm_delete: "Êtes-vous sûr ?"
+  contributions:
+    subtitle_top: "Votre contribution"
+    title: "Suivi de mes contributions"
+    description_html: "Ici, vous pouvez consulter toutes vos participations au sein d’Omniscient Design.<br>Suivez en détail vos contenus en attente de validation et ceux déjà publiés. Gardez un œil sur les interactions et les retours générés par vos contributions.<br>Merci de contribuer à enrichir notre univers collaboratif !"
+    added_references: "Mes références ajoutées"
+    added_designers: "Mes designers ajouté(e)s"
+    ref_name: "Nom de la référence"
+    designer_name: "Nom du designer"
+    date_added: "Date d'ajout"
+    status: "Statut"
+    comment: "Commentaire"
+    validated: "Validée"
+    rejected: "Refusée"
+    pending: "En attente"
+    no_references: "Vous n'avez ajouté aucune référence pour le moment."
+    no_designers: "Vous n'avez ajouté aucun designer pour le moment."
+  press:
+    subtitle_top: "Presse"
+    title: "Kit de presse"
+    description: "Téléchargez le logo, des captures d’écran ou encore le dossier de présentation d’Omniscient Design pour partager la plateforme."
+    download_button: "Télécharger le kit de presse (18,1 Mo)"
+    logos: "Logos"
+    screenshots: "Captures d’écran"
+    presentation_folder: "Dossier de présentation"
+    file_size:
+      logo1: "4 ko"
+      logo2: "4 ko"
+      logo3: "16 ko"
+      screenshot1: "176 ko"
+      screenshot2: "397 ko"
+      screenshot3: "209 ko"
+      screenshot4: "135 ko"
+      screenshot5: "164 ko"
+      screenshot6: "41 ko"
+      screenshot7: "53 ko"
+      dossier: "18,8 Mo"
+  bug_report:
+    subtitle_top: "Votre contribution"
+    title: "Signaler un problème"
+    description: "Si vous rencontrez un problème avec notre site, une fonctionnalité ou un service, nous vous invitons à nous en informer afin que nous puissions résoudre rapidement la situation."
+    help_title: "Votre aide nous est précieuse"
+    placeholder_description: "Description du problème"
+    placeholder_url: "URL où se situe le bug (ou lien vers une image)"
+    submit_button: "Envoyer"
+    errors_title:
+      one: "%{count} erreur empêche l’envoi du rapport :"
+      other: "%{count} erreurs empêchent l’envoi du rapport :"
+    create:
+      success: "Votre signalement a été soumis avec succès."
+    destroy:
+      success: "Le rapport de bug a été supprimé avec succès."
+    update_status:
+      success: "Le statut du rapport de bug a été mis à jour avec succès."
+      error: "Erreur lors de la mise à jour du statut."
+    access:
+      denied: "Vous n'êtes pas autorisé à accéder à cette page."
+  lists:
+    title: "Trier, modifier, créer vos listes"
+    subtitle: "Créez des listes de références pour retrouver facilement vos sources et concentrez-vous sur ce qui compte vraiment."
+    your_lists: "Vos listes"
+    create_list: "Créer votre liste"
+    shared: "(Liste partagée)"
+    private: "(Liste privée)"
+    no_list: "Aucune liste trouvée pour le moment. Créez-en une pour commencer !"
+    create:
+      title: "Créer une liste"
+      name_placeholder: "Nom de la liste"
+      designers_title: "Designers"
+      designer_search_placeholder: "Rechercher des designers"
+      no_designers: "Aucun designer disponible."
+      load_more_designers: "Charger plus de designers"
+      references_title: "Références"
+      reference_search_placeholder: "Rechercher des références"
+      no_references: "Aucune référence disponible."
+      load_more_references: "Charger plus de références"
+      designers_selected: "%{count} designers sélectionnés"
+      references_selected: "%{count} références sélectionnées"
+      submit_button: "Créer la liste"
+  list:
+    share: "Partager ma liste"
+    invite_editors: "Inviter des éditeurs"
+    invite: "Inviter"
+    editor: "Éditeur"
+    visitor: "Visiteur"
+    public: "Publique"
+    private: "Privée"
+    email_placeholder: "Email de l'utilisateur"
+    current_users: "Utilisateurs actuels"
+    accessibility: "Accessibilité de la liste"
+    subtitle_reference: "référence(s)"
+    private: "Privée"
+    public: "Publique"
+    revoke: "Révoquer l'accès"
+    copy_link: "Copier le lien"
+    link_copied: "Lien copié"
+    references: "Références"
+    designers: "Designers"
+    all: "Tout"
+    selected_designers: "Designers sélectionnés"
+    selected_references: "Références sélectionnées"
+    no_designers: "Aucun designer disponible."
+    no_references: "Aucune référence disponible."
+    confirm_delete: "Êtes-vous sûr de vouloir supprimer cette liste ?"
+    edit_list: "Modifier ma liste"
+    load_more_designers: "Charger plus de designers"
+    load_more_references: "Charger plus de références"
+    no_references_found: "Aucune référence trouvée dans cette liste."
+    save_list: "Enregistrer la liste"
+  add_references:
+    subtitle_top: "Votre contribution"
+    main_title: "Ajouter des designers ou des références"
+    subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+    buttons:
+      designers: "Designers"
+      references: "Références"
+  feedback:
+    title: "Exprimer votre avis - Omniscient Design"
+    description: "Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design."
+    subtitle_top: "Votre contribution"
+    main_title: "Exprimer votre avis"
+    subtitle: "Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
+    questions:
+      question_1: "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?*"
+      question_2: "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?*"
+      question_3: "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?*"
+      question_5: "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?*"
+      question_6: "Sur une échelle de 1 à 5, comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)"
+      question_7: "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?*"
+      question_8: "Quels sont, selon vous, les points forts de notre site ?"
+      question_9: "Quels sont les aspects que vous aimeriez voir améliorés ?"
+      question_10: "Avez-vous des suggestions pour améliorer l'expérience utilisateur ?"
+      question_11: "Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?"
+      question_12: "Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?"
+    rating_labels:
+      1: "Très mauvaise"
+      2: "Mauvaise"
+      3: "Moyenne"
+      4: "Bonne"
+      5: "Très bonne"
+    placeholders:
+      default: "Répondre ici"
+    submit: "Envoyer"
+  add_designer:
+    subtitle_top: "Votre contribution"
+    main_title: "Ajouter un/une designer"
+    subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+    progress:
+      percent: "%{percent}%"
+    steps:
+      1:
+        title: "Étape 1 : Identité"
+        prenom: "Prénom"
+        prenom_placeholder: "Ex : Gustave"
+        nom: "Nom"
+        nom_placeholder: "Ex : Eiffel"
+      2:
+        title: "Étape 2 : Informations clés"
+        date_naissance: "Année de naissance"
+        date_naissance_placeholder: "Ex : 1832"
+        date_deces: "Année de décès (optionnel)"
+        date_deces_placeholder: "Ex : 1923"
+        country: "Pays"
+        country_placeholder: "Sélectionner un pays"
+        country_blank: "Aucun pays"
+      3:
+        title: "Étape 3 : Contexte et Description"
+        presentation_generale: "Présentation générale (Min. 200 caractères)"
+        presentation_generale_placeholder: "Ex : Gustave Eiffel, ingénieur et entrepreneur français..."
+        formation_et_influences: "Formation et influences (Min. 200 caractères)"
+        formation_et_influences_placeholder: "Ex : Issu d’une famille bourgeoise..."
+        style_ou_philosophie: "Style ou philosophie (Min. 200 caractères)"
+        style_ou_philosophie_placeholder: "Ex : Le travail de Gustave Eiffel se distingue par..."
+        creations_majeures: "Ses créations majeures (Min. 200 caractères)"
+        creations_majeures_placeholder: "Ex : La tour Eiffel (1889) : Conçue pour..."
+        heritage_et_impact: "Héritage et impact (Min. 200 caractères)"
+        heritage_et_impact_placeholder: "Ex : Gustave Eiffel a redéfini les standards..."
+      4:
+        title: "Étape 4 : Image"
+        image: "Url de l'image"
+        image_placeholder: "https://url-de-l-image.fr"
+    buttons:
+      next: "Suivant"
+      prev: "Précédent"
+      submit: "Envoyer"
+    errors:   
+      designer_exists: "Ce designer existe déjà et est validé."
+      nom_required: "Veuillez entrer le nom du designer."
+      birth_year_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
+      death_year_invalid: "Veuillez entrer une année de décès valide entre 0 et %{current_year}."
+    select2:
+      placeholder: "Rechercher un pays..."
+      inputTooShort: "Veuillez entrer plus de caractères..."
+      searching: "Recherche en cours..."
+      noResults: "Aucun résultat trouvé"
+  add_oeuvre:
+    subtitle_top: "Votre contribution"
+    main_title: "Ajouter une référence"
+    subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et notre équipe les validera pour les intégrer à notre base de données."
+    progress:
+      percent: "%{percent}%"
+    steps:
+      1:
+        title: "Étape 1 : La référence"
+        nom_oeuvre: "Nom de la référence"
+        nom_oeuvre_placeholder: "Ex : La petite fille au ballon"
+      2:
+        title: "Étape 2 : Contexte et description"
+        designer_ids: "Nom du/des designer(s)"
+        designer_placeholder: "Rechercher un/une designer…"
+        designer_blank: "Aucun designer"
+        designer_prompt: "Lier un/une designer"
+        notion_ids: "Notion(s) de la référence"
+        notion_placeholder: "Rechercher des notions…"
+        domaine_id: "Domaine de la référence"
+      3:
+        title: "Étape 3 : Contexte et description"
+        presentation_generale: "Présentation générale (Min. 200 caractères)"
+        presentation_generale_placeholder: "Ex : La petite fille au ballon est l’une des œuvres les plus emblématiques de Banksy…"
+        contexte_historique: "Contexte historique (Min. 200 caractères)"
+        contexte_historique_placeholder: "Ex : La petite fille au ballon est apparue pour la première fois sur un mur de Londres en 2002…"
+        materiaux_et_innovations_techniques: "Matériaux et innovations techniques (Min. 200 caractères)"
+        materiaux_et_innovations_techniques_placeholder: "Ex : Banksy utilise la technique du pochoir…"
+        concept_et_inspiration: "Concept et inspiration (Min. 200 caractères)"
+        concept_et_inspiration_placeholder: "Ex : Le concept de La petite fille au ballon est à la fois simple et profond…"
+        dimension_esthetique: "Dimension esthétique (Min. 200 caractères)"
+        dimension_esthetique_placeholder: "Ex : L’esthétique de La petite fille au ballon est marquée par sa simplicité…"
+        impact_et_message: "Impact et message (Min. 200 caractères)"
+        impact_et_message_placeholder: "Ex : La petite fille au ballon est devenue un symbole de l’espoir…"
+        source: "Source(s)"
+        source_placeholder: "Ex : https://example.com"
+        add_source_button: "Ajouter un lien"
+      4:
+        title: "Étape 4 : Date et image"
+        date_oeuvre: "Date de la référence"
+        date_oeuvre_placeholder: "Ex : 2002"
+        image: "Image(s)"
+    buttons:
+      next: "Suivant"
+      prev: "Précédent"
+      submit: "Envoyer"
+    select2:
+      placeholder_designer: "Rechercher un/une designer…"
+      placeholder_notion: "Rechercher des notions…"
+      inputTooShort: "Veuillez entrer plus de caractères…"
+      searching: "Recherche en cours…"
+      noResults: "Aucun résultat trouvé"
+    errors:
+      date_oeuvre_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
+  edit:
+    subtitle_top: "Votre contribution"
+    edit_reference_title: "Modifier une référence"
+    edit_designer_title: "Modifier un designer"
+    description: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+  notifications:
+    title: "Vos notifications"
+    today: "Aujourd'hui"
+    last_7_days: "7 derniers jours"
+    last_30_days: "30 derniers jours"
+    previous: "Auparavant"
+    none: "Aucune notification."
+    new_oeuvre: "Une nouvelle œuvre est à valider : %{name}"
+    oeuvre_validated: "La référence %{name} a été validée. Encore un grand merci pour ta contribution."
+    oeuvre_rejected: "Votre référence %{name} a été rejetée."
+    no_user_for_rejection: "La référence %{oeuvre_id} n'a pas d'utilisateur associé pour la notification de rejet."
+    new_designer: "Un nouveau designer est à valider : %{name}"
+    designer_validated: "Le designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
+    designer_rejected: "Votre designer %{name} a été rejeté(e)."
+    no_user_for_rejection_designer: "Le designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
+  email_confirmation:
+    heading: "Confirmez votre email"
+    message_html: "Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour activer votre compte.<br>Si vous ne recevez pas l'email, vérifiez votre dossier spam ou %{resend_link}."
+    resend: "demandez un nouvel envoi"
+    back_home: "Retour à l'accueil"
+  devise:
+    login:
+      title: "Connexion"
+      email: "Email"
+      password: "Mot de passe"
+      forgot_password: "Mot de passe oublié ?"
+      remember_me: "Se souvenir de moi"
+      submit: "Se connecter"
+      no_account: "Vous n'avez pas de compte ? S'inscrire"
+      resend_confirmation: "Renvoyer l'email de confirmation"  
+    registration:
+      title: "S’inscrire"
+      main_info: "Informations principales"
+      email_placeholder: "Email*"
+      password_placeholder: "Mot de passe*"
+      password_confirmation_placeholder: "Confirmer le mot de passe*"
+      additional_info: "Informations supplémentaires"
+      firstname_placeholder: "Prénom*"
+      lastname_placeholder: "Nom de famille"
+      pseudo_placeholder: "Pseudo*"
+      status_prompt: "Choisissez un statut*"
+      status_options:
+        student: "Étudiant"
+        teacher: "Enseignant"
+        company: "Entreprise"
+        association: "Association"
+        designer: "Designer"
+        artist: "Artiste"
+        other: "Autre"
+      establishment_blank: "Aucun établissement"
+      establishment_search: "Rechercher un établissement..."
+      rgpd_label: "J'accepte que mes données personnelles soient collectées et traitées conformément à la %{privacy_policy}"
+      privacy_policy: "Politique de confidentialité"
+      submit: "S’inscrire"
+      login_link: "Vous avez déjà un compte ? Se connecter"
+      resend_confirmation: "Déjà inscrit mais pas encore confirmé ? %{resend_link}"
+      resend_link_text: "Renvoyer l'email de confirmation"
+      select2:
+        input_too_short: "Veuillez entrer plus de caractères..."
+        searching: "Recherche en cours..."
+        no_results: "Aucun résultat trouvé"
+    password_reset:
+      title: "Mot de passe oublié ?"
+      email_placeholder: "Email"
+      submit: "Recevoir les instructions"
+    confirmation:
+      title: "Recevoir l'email de confirmation"
+      email_placeholder: "Email"
+      submit: "Renvoyer l'email"
+      login_link: "Se connecter"
+  designer:
+    create:
+      success: "Designer créé avec succès."
+      failure: "Veuillez corriger les erreurs avant de soumettre à nouveau."
+    update:
+      success: "Designer mis à jour avec succès."
+      failure: "Erreur lors de la mise à jour du designer."
+    destroy:
+      success: "Le designer %{name} a été supprimé avec succès."
+    cancel:
+      success: "La soumission du designer a été annulée avec succès."
+      denied: "Vous n'avez pas l'autorisation d'annuler cette soumission."
+    validate:
+      success: "Le/La designer %{name} a été validé(e) avec succès."
+      failure: "Une erreur s'est produite lors de la validation du designer."
+    reject:
+      success: "Le designer a été refusé avec succès."
+      failure: "Une erreur s'est produite lors du refus du designer."
+      no_comment: "Sans commentaire"
+    access:
+      denied: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
+    not_found: "Designer non trouvé."
+  feedback:
+    create:
+      success: "Votre feedback a été enregistré avec succès."
+      failure: "Une erreur s'est produite. Veuillez vérifier le formulaire et réessayer."
+    destroy:
+      success: "Le feedback a été supprimé avec succès."
+    already_submitted: "Vous avez déjà soumis un feedback."
+  lists:
+    access_denied: "Cette liste n'existe pas ou n'est pas partagée."
+    create:
+      success: "Liste créée avec succès."
+    update:
+      success: "Liste mise à jour avec succès."
+    destroy:
+      success: "Liste supprimée avec succès."
+    add:
+      designer:
+        success: "Designer ajouté avec succès."
+        failure: "Impossible d'ajouter le designer."
+        exists: "Ce designer est déjà dans la liste."
+      oeuvre:
+        success: "Référence ajoutée avec succès."
+        failure: "Impossible d'ajouter la référence."
+        exists: "Cette référence est déjà dans la liste."
+    remove:
+      designer:
+        success: "Designer retiré avec succès."
+        failure: "Erreur lors du retrait du designer."
+      oeuvre:
+        success: "Référence retirée avec succès."
+        failure: "Erreur lors du retrait de la référence."
+      user:
+        success: "Utilisateur supprimé avec succès."
+        failure: "Erreur lors de la suppression de l'utilisateur."
+    privacy:
+      public: "La liste est maintenant publique."
+      private: "La liste est maintenant privée."
+    invite:
+      success: "Utilisateur invité avec succès."
+      failure: "Utilisateur introuvable."
+    role:
+      remove:
+        success: "Utilisateur supprimé avec succès."
+        failure: "Erreur lors de la suppression de l'utilisateur."
+      editor: "Utilisateur désigné comme éditeur."
+      visitor: "Utilisateur désigné comme visiteur."
+      invalid: "Rôle invalide."
+    not_found: "Liste introuvable ou accès refusé."
+    shared_message: "La liste %{name} a été partagée avec vous."
+  oeuvres:
+    notions: "Notion(s)"
+    presentation_generale: "Présentation générale"
+    contexte_historique: "Contexte Historique"
+    materiaux_innovations: "Matériaux et innovations techniques"
+    concept_inspiration: "Concept et inspiration"
+    dimension_esthetique: "Dimension esthétique"
+    impact_message: "Impact et message"
+    sources: "Sources"
+    source_italic: "Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence."
+    actions: "Actions"
+    partager: "Partager"
+    signaler_erreur: "Signaler une erreur"
+    contribution: "Contribution"
+    enrichissement: "A enrichi votre apprentissage en ajoutant cette référence le"
+    validation: "a validé la référence"
+    decouvrir_autres: "Découvrir d'autres références"
+    panneau_admin: "Panneau d'administration"
+    valider_oeuvre: "Valider l'oeuvre"
+    modifier_oeuvre: "Modifier l'oeuvre"
+    supprimer_reference: "Supprimer la référence"
+    ajouter_autre: "Ajouter une autre référence"
+    retour: "Retour"
+    que_souhaitez_faire: "Que souhaitez-vous faire ?"
+    annuler_soumission: "Annuler la soumission"
+    retour_accueil: "Retour à l'accueil"
+    merci_contribution: "Merci pour votre contribution !"
+    en_cours_traitement: "Votre fiche est actuellement en cours de traitement. Veuillez noter que ce processus peut prendre quelques jours. Vous serez informé(e) via votre compte dès que celle-ci sera traitée."
+    refuser_entree: "Refuser l'entrée"
+    raison_refus: "Raison du refus"
+    annuler: "Annuler"
+    creer_liste: "Créer une liste"
+    references: "Références"
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Vous n'avez pas l'autorisation d'accéder à cette référence."
+    create:
+      success: "Référence créée avec succès."
+      failure: "Impossible de créer la référence. Veuillez corriger les erreurs et réessayer."
+    update:
+      success: "Référence mise à jour avec succès."
+      failure: "Impossible de mettre à jour la référence. Veuillez corriger les erreurs et réessayer."
+    destroy:
+      success: "La référence %{name} a été supprimée avec succès."
+      failure: "Une erreur est survenue lors de la suppression de la référence."
+      not_found: "Référence introuvable."
+    cancel:
+      success: "La soumission de la référence a été annulée avec succès."
+      failure: "Vous n'avez pas l'autorisation d'annuler cette soumission."
+    validate:
+      success: "La référence %{name} a été validée avec succès."
+      failure: "Échec de la validation : %{errors}"
+    reject:
+      success: "La référence a été refusée avec succès."
+      failure: "Une erreur est survenue lors du refus de la référence."
+      not_found: "Référence introuvable."
+    not_found: "La référence n'a pas été trouvée."
+  theme:
+    updated: "Thème mis à jour avec succès."

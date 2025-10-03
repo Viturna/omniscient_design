@@ -1,9 +1,10 @@
 <%= form_with(model: @oeuvre, local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
   <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
   <div class="error-message" style="color: red; display: none;"></div>
+
   <% if @oeuvre.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(@oeuvre.errors.count, "erreur") %> interdit à cette référence d'être enregistré :</h2>
+      <h2><%= t('errors.title', count: @oeuvre.errors.count) %></h2>
       <ul>
         <% @oeuvre.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -11,24 +12,27 @@
       </ul>
     </div>
   <% end %>
-<div class="form-step" data-step="1">
-  <h3>Étape 1 : La référence</h3>
-  <div class="flex-form"> 
-    <div>
-      <%= form.label :nom_oeuvre, "Nom de la référence" %>
-      <%= form.text_field :nom_oeuvre, placeholder: "Ex: La petite fille au ballon" %>
+
+  <!-- Étape 1 -->
+  <div class="form-step" data-step="1">
+    <h3><%= t('add_oeuvre.steps.1.title') %></h3>
+    <div class="flex-form"> 
+      <div>
+        <%= form.label :nom_oeuvre, t('add_oeuvre.steps.1.nom_oeuvre') %>
+        <%= form.text_field :nom_oeuvre, placeholder: t('add_oeuvre.steps.1.nom_oeuvre_placeholder') %>
+      </div>
+    </div>
+    <div class="flex-btn-add" style="justify-content: flex-end;">
+      <button type="button" class="next-step button large"><%= t('add_oeuvre.buttons.next') %></button>
     </div>
   </div>
-  <div class="flex-btn-add" style="justify-content: flex-end;">
-    <button type="button" class="next-step button large">Suivant</button>
-  </div>
-</div>
 
-<div class="form-step" data-step="2" style="display: none;">
-  <h3>Étape 2 : Contexte et Description</h3>
-  <div class="flex-form">
-    <div data-controller="multi-select" data-multi-select-prefix-value="designer"> 
-      <%= form.label :designer_ids, "Nom du/des designer(s)" %>
+  <!-- Étape 2 -->
+  <div class="form-step" data-step="2" style="display: none;">
+    <h3><%= t('add_oeuvre.steps.2.title') %></h3>
+    <div class="flex-form">
+      <div data-controller="multi-select" data-multi-select-prefix-value="designer"> 
+        <%= form.label :designer_ids, t('add_oeuvre.steps.2.designer_ids') %>
         <% max_designers = 3 %>
         <% selected_designers = @oeuvre.designer_ids %>
 
@@ -39,9 +43,9 @@
               :id,
               :nom_designer,
               { 
-                include_blank: "Aucun designer",
-                prompt: "Lier un/une designer",
-                selected: selected_designers[index] # sélectionne seulement si un designer existe à cet index
+                include_blank: t('add_oeuvre.steps.2.designer_blank'),
+                prompt: t('add_oeuvre.steps.2.designer_prompt'),
+                selected: selected_designers[index]
               },
               { 
                 class: "form-control designer-select",
@@ -50,96 +54,107 @@
               } %>
           </div>
         <% end %>
-        <div>
       </div>
-      <%= form.label :notion_ids, "Notion(s) de la référence" %>
+
+      <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
       <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
-    </div>
-    <div>
-      <%= form.label :domaine_id, "Domaine de la référence" %>
-      <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
-    </div>
-  </div>
-  <div class="flex-btn-add">
-    <button type="button" class="prev-step button large">Précédent</button>
-    <button type="button" class="next-step button large">Suivant</button>
-  </div>
-</div>
 
-<div class="form-step" data-step="3" style="display: none;">
-  <h3>Étape 3 : Contexte et Description</h3>
-  <div class="flex-form"> 
-    <div>
-      <%= form.label :presentation_generale, "Présentation générale (Min. 200 caractères)" %>
-      <%= form.text_area :presentation_generale, placeholder: "Ex : La petite fille au ballon est l'une des œuvres les plus emblématiques de Banksy, un artiste britannique connu pour ses œuvres de street art et ses messages politiques et sociaux percutants. Cette image représente une petite fille qui tend la main vers un ballon rouge en forme de cœur qui flotte juste au-dessus d'elle, symbolisant l'espoir, l'innocence et le rêve. L'œuvre est caractérisée par sa simplicité visuelle et sa force émotionnelle, qui ont contribué à la rendre universellement reconnaissable et à en faire un symbole d'aspiration et de perte." %>
-    </div>
-    <div>
-      <%= form.label :contexte_historique, "Contexte historique (Min. 200 caractères)" %>
-      <%= form.text_area :contexte_historique, placeholder: "Ex : La petite fille au ballon est apparue pour la première fois sur un mur de Londres en 2002. Banksy, qui a commencé sa carrière dans les années 1990, est reconnu pour ses interventions urbaines qui remettent en question les conventions sociales et politiques. Cette œuvre, comme beaucoup d'autres de Banksy, a été réalisée de manière anonyme et est devenue rapidement une icône de la culture de rue. Elle représente un contraste frappant entre la vulnérabilité de l'enfance et l'idée de quelque chose d'inaccessible ou de perdu, ce qui en fait une métaphore puissante de l'espoir et de l'évasion." %>
-    </div>
-    <div>
-      <%= form.label :materiaux_et_innovations_techniques, "Matériaux et innovations techniques (Min. 200 caractères)" %>
-      <%= form.text_area :materiaux_et_innovations_techniques, placeholder: "Ex : Banksy utilise généralement la technique du pochoir pour créer ses œuvres, ce qui lui permet de travailler rapidement et de rester anonyme. La petite fille au ballon n'échappe pas à cette règle, combinant des lignes nettes et un minimalisme caractéristique. Le rouge du ballon, qui contraste avec le noir et le blanc du reste de l'image, attire l'attention du spectateur et symbolise la passion, l'amour ou le désir. L'utilisation du mur comme toile permet à Banksy de dialoguer directement avec l'espace urbain, créant une interaction entre l'œuvre et son environnement." %>
-    </div>
-    <div>
-      <%= form.label :concept_et_inspiration, "Concept et inspiration(Min. 200 caractères)" %>
-      <%= form.text_area :concept_et_inspiration, placeholder: "Ex : Le concept de La petite fille au ballon est à la fois simple et profond. Le ballon rouge représente un rêve ou un désir qui flotte juste hors de portée, un symbole d'innocence, de fragilité et de l'espoir de quelque chose de meilleur. La petite fille qui tend la main vers le ballon est un symbole de vulnérabilité et d'aspiration. Banksy a souvent parlé de son désir de mettre en lumière les aspects cachés ou négligés de la société, et cette œuvre ne fait pas exception. L'image peut être interprétée comme un commentaire sur la perte, le désir et l'espoir dans un monde où beaucoup de choses semblent inaccessibles." %>
-    </div>
-    <div>
-      <%= form.label :dimension_esthetique, "Dimension esthétique (Min. 200 caractères)" %>
-      <%= form.text_area :dimension_esthetique, placeholder: "Ex : L'esthétique de La petite fille au ballon est marquée par sa simplicité et son contraste. L'œuvre est essentiellement en noir et blanc, à l'exception du ballon rouge qui capte immédiatement le regard. Cette utilisation du minimalisme permet à Banksy de transmettre un message fort tout en maintenant une certaine pureté visuelle. L'image est dessinée de manière à provoquer une réflexion émotionnelle, en soulignant l'innocence de la fille et la nature éphémère du ballon. La composition est également équilibrée de telle sorte que le spectateur est naturellement attiré vers le ballon, accentuant ainsi l'idée de désir et de perte." %>
-    </div>
-    <div>
-      <%= form.label :impact_et_message, "Impact et message (Min. 200 caractères)" %>
-      <%= form.text_area :impact_et_message, placeholder: "Ex : La petite fille au ballon est plus qu'une simple œuvre d'art ; elle est devenue un symbole de l'espoir et de la fragilité. L'image a été largement reproduite et interprétée, souvent vue comme un symbole de l'espoir dans des situations désespérées. En 2018, l'œuvre a été vendue aux enchères et a été partiellement détruite par un mécanisme caché, ce qui a ajouté une dimension supplémentaire de réflexion sur la consommation de l'art et la valeur de l'œuvre dans un monde axé sur le marché de l'art. Cet événement a renforcé le message de Banksy sur le contraste entre l'art, sa valeur perçue et sa signification réelle. La petite fille au ballon incite à la réflexion sur la nature des rêves, des aspirations et des pertes dans un monde souvent complexe et imprévisible." %>
-    </div>
-    <div>
-  <%= form.label :source, "Source(s)" %>
-  <div id="sources-container">
-    <% (@oeuvre.source || "").split("\n").each do |src| %>
-      <div class="source-input">
-        <%= form.text_field :source, value: src, name: "oeuvre[source][]", placeholder: "Ex: https://example.com" %>
-        <button type="button" class="remove-source button small">Supprimer</button>
+      <div>
+        <%= form.label :domaine_id, t('add_oeuvre.steps.2.domaine_id') %>
+        <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
       </div>
-    <% end %>
-    <% if (@oeuvre.source || "").empty? %>
-      <div class="source-input">
-        <%= form.text_field :source, name: "oeuvre[source][]", placeholder: "Ex: https://example.com" %>
-        <button type="button" class="remove-source button small">Supprimer</button>
+    </div>
+    <div class="flex-btn-add">
+      <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
+      <button type="button" class="next-step button large"><%= t('add_oeuvre.buttons.next') %></button>
+    </div>
+  </div>
+
+  <!-- Étape 3 -->
+  <div class="form-step" data-step="3" style="display: none;">
+    <h3><%= t('add_oeuvre.steps.3.title') %></h3>
+    <div class="flex-form"> 
+      <div>
+        <%= form.label :presentation_generale, t('add_oeuvre.steps.3.presentation_generale') %>
+        <%= form.text_area :presentation_generale, placeholder: t('add_oeuvre.steps.3.presentation_generale_placeholder') %>
       </div>
-    <% end %>
-  </div>
-  <button type="button" id="add-source" class="button small">Ajouter un lien</button>
-</div>
 
-  </div>
-  <div class="flex-btn-add">
-    <button type="button" class="prev-step button large">Précédent</button>
-    <button type="button" class="next-step button large">Suivant</button>
-  </div>
-</div>
+      <div>
+        <%= form.label :contexte_historique, t('add_oeuvre.steps.3.contexte_historique') %>
+        <%= form.text_area :contexte_historique, placeholder: t('add_oeuvre.steps.3.contexte_historique_placeholder') %>
+      </div>
 
-<div class="form-step" data-step="4" style="display: none;">
-  <h3>Étape 4 : Date et Image</h3>
-  <div class="flex-form"> 
-    <div>
+      <div>
+        <%= form.label :materiaux_et_innovations_techniques, t('add_oeuvre.steps.3.materiaux_et_innovations_techniques') %>
+        <%= form.text_area :materiaux_et_innovations_techniques, placeholder: t('add_oeuvre.steps.3.materiaux_et_innovations_techniques_placeholder') %>
+      </div>
 
-      <%= form.label :date_oeuvre, "Date de la référence" %>
-      <%= form.text_field :date_oeuvre, placeholder: "Ex : 2002", id: "date-oeuvre-input" %>
-      <div id="date-oeuvre-error"></div>
+      <div>
+        <%= form.label :concept_et_inspiration, t('add_oeuvre.steps.3.concept_et_inspiration') %>
+        <%= form.text_area :concept_et_inspiration, placeholder: t('add_oeuvre.steps.3.concept_et_inspiration_placeholder') %>
+      </div>
+
+      <div>
+        <%= form.label :dimension_esthetique, t('add_oeuvre.steps.3.dimension_esthetique') %>
+        <%= form.text_area :dimension_esthetique, placeholder: t('add_oeuvre.steps.3.dimension_esthetique_placeholder') %>
+      </div>
+
+      <div>
+        <%= form.label :impact_et_message, t('add_oeuvre.steps.3.impact_et_message') %>
+        <%= form.text_area :impact_et_message, placeholder: t('add_oeuvre.steps.3.impact_et_message_placeholder') %>
+      </div>
+
+      <div>
+        <%= form.label :source, t('add_oeuvre.steps.3.source') %>
+        <div id="sources-container">
+          <% (@oeuvre.source || []).each do |src| %>
+            <div class="source-input">
+              <%= text_field_tag "oeuvre[source][]", src, placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
+              <button type="button" class="remove-source button small"><svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
+        </svg>/button>
+            </div>
+          <% end %>
+
+          <% if (@oeuvre.source || []).empty? %>
+            <div class="source-input">
+              <%= text_field_tag "oeuvre[source][]", "", placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
+              <button type="button" class="remove-source button small"><svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
+        </svg></button>
+            </div>
+          <% end %>
+        </div>
+        <button type="button" id="add-source" class="button small"><%= t('add_oeuvre.steps.3.add_source_button') %></button>
+      </div>
     </div>
-     <div>
-       <%= form.label :image, "Image(s)" %>
-      <%= form.file_field :image, accept: "image/*", direct_upload: true %>
+    <div class="flex-btn-add">
+      <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
+      <button type="button" class="next-step button large"><%= t('add_oeuvre.buttons.next') %></button>
     </div>
   </div>
-  <div class="flex-btn-add">
-    <button type="button" class="prev-step button large">Précédent</button>
-    <%= form.submit "Envoyer", class: "button large" %>
-  </div>
-</div>
 
+  <!-- Étape 4 -->
+  <div class="form-step" data-step="4" style="display: none;">
+    <h3><%= t('add_oeuvre.steps.4.title') %></h3>
+    <div class="flex-form"> 
+      <div>
+        <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
+        <%= form.text_field :date_oeuvre, placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), id: "date-oeuvre-input" %>
+        <div id="date-oeuvre-error"></div>
+      </div>
+      <div>
+        <%= form.label :image, t('add_oeuvre.steps.4.image') %>
+        <%= form.file_field :image, accept: "image/*", direct_upload: true %>
+      </div>
+    </div>
+    <div class="flex-btn-add">
+      <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
+      <%= form.submit t('add_oeuvre.buttons.submit'), class: "button large" %>
+    </div>
+  </div>
 <% end %>
+
 <script>
  document.addEventListener("turbo:load", () => {
     var oeuvreYearInput = document.getElementById("date-oeuvre-input");
@@ -239,17 +254,21 @@
   });
 });
 
-</script><script>
-  document.addEventListener("turbo:load", () => {
+</script>
+<script>
+ document.addEventListener("turbo:load", () => {
   const container = document.getElementById("sources-container");
   const addButton = document.getElementById("add-source");
-if (!container || !addButton) return; 
+  if (!container || !addButton) return;
+
   addButton.addEventListener("click", () => {
     const div = document.createElement("div");
     div.className = "source-input";
     div.innerHTML = `
       <input type="text" name="oeuvre[source][]" placeholder="Ex: https://example.com" />
-      <button type="button" class="remove-source button small">Supprimer</button>
+      <button type="button" class="remove-source button small"><svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
+        </svg></button>
     `;
     container.appendChild(div);
     attachRemoveListener(div.querySelector(".remove-source"));
@@ -263,6 +282,7 @@ if (!container || !addButton) return;
 
   document.querySelectorAll(".remove-source").forEach(btn => attachRemoveListener(btn));
 });
+
 </script>
 
 

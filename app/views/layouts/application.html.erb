@@ -1,76 +1,66 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<%= I18n.locale %>">
   <head>
-    <!-- Balises pour les navigateurs -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KS23M7LQ');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Sécurité et CSRF protection -->
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <!-- SEO et indexation -->
     <meta name="robots" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
     <meta name="googlebot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
     <meta name="bingbot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
     <%= tag :link, rel: 'canonical', href: request.original_url.split('?').first %>
 
-    <!-- META -->
-    <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design" %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d\'art' %>">
+    <title><%= content_for?(:title) ? yield(:title) : t('meta.default_title') %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
     <meta name="theme-color" content="#ffffff">
-    <meta name="copyright" content="© Omniscient Design - Tous droits réservés.">
+    <meta name="copyright" content="© Omniscient Design - <%= t('meta.all_rights_reserved') %>">
 
-    <!-- Open Graph (Facebook, LinkedIn, etc.) -->
-    <meta property="og:locale" content="fr_FR">
+    <meta property="og:locale" content="<%= I18n.locale %>">
     <meta property="og:site_name" content="Omniscient Design">
-    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : 'Omniscient Design' %>">
-    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d\'art' %>">
+    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : t('meta.default_title') %>">
+    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:type" content="website">
     <meta property="og:image" content="<%= asset_url('logo-od-rs.jpg') %>">
 
-    <!-- Twitter Cards -->
     <meta name="twitter:site" content="@OmniscientDesign">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Omniscient Design' %>">
-    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d\'art' %>">
+    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : t('meta.default_title') %>">
+    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
     <meta name="twitter:url" content="<%= request.original_url %>">
     <meta name="twitter:image" content="<%= asset_url('logo-od-rs.jpg') %>">
 
-    <!-- reCAPTCHA -->
-    <meta name="recaptcha-site-key" content="<%= ENV["RECAPTCHA_SITE_KEY"] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
-    <!-- Favicon et manifest -->
+    <meta name="recaptcha-site-key" content="<%= ENV['RECAPTCHA_SITE_KEY'] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
     <%= render 'application/favicon' %>
 
-    <!-- Stylesheets -->
-    <%= stylesheet_link_tag "application", "media": "all", "data-turbo-track": "reload" %>
-
-    <!-- Select2 CSS via CDN -->
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
-
   </head>
 
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
+  <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
 
-  <% body_class = case theme
-                  when 'dark-mode' then 'dark-mode'
-                  when 'light-mode' then 'light-mode'
-                  else ''
-                end %>
-  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>"    data-controller-name="<%= controller_name %>" 
-      data-action-name="<%= action_name %>">
-    <div id="cookie-consent-banner" 
-        data-controller="cookie-consent" 
-        data-cookie-consent-target="banner" 
-        style="display:none;">
+  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner" style="display:none;">
       <div>
-        <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?</p>
-        <button data-action="click->cookie-consent#accept">Accepter</button>
-        <button data-action="click->cookie-consent#decline">Refuser</button>
+        <p><%= t('cookies.banner_text') %></p>
+        <button data-action="click->cookie-consent#accept"><%= t('cookies.accept') %></button>
+        <button data-action="click->cookie-consent#decline"><%= t('cookies.decline') %></button>
       </div>
     </div>
-
 
     <% if notice.present? %>
       <div class="alert" data-controller="alert">
@@ -92,31 +82,26 @@
       <% end %>
     <% end %>
 
-   
     <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
       <%= render 'layouts/header' %>
     <% end %>
-<% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
-<main class="<%= 'main-show' if main_show %>" data-controller="loading">
-     <div id="loading" data-loading-target="loading">
-        <div class="loader-bg">      
-          <video
-            autoplay
-            loop
-            muted
-            playsinline
-            webkit-playsinline
-            preload="auto">
+
+    <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
+    <main class="<%= 'main-show' if main_show %>" data-controller="loading">
+      <div id="loading" data-loading-target="loading">
+        <div class="loader-bg">
+          <video autoplay loop muted playsinline webkit-playsinline preload="auto">
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">
-            Your browser does not support the video tag.
+            <%= t('loader.unsupported_browser') %>
           </video>
         </div>
       </div>
-     <div id="content" data-loading-target="content" style="display: none;">
+
+      <div id="content" data-loading-target="content" style="display: none;">
         <%= yield %>
       </div>
     </main>
-    <!-- JavaScript Rails -->
+
     <%= javascript_importmap_tags %>
     <%= yield :recaptcha_script %>
   </body>

@@ -266,7 +266,47 @@ en:
       load_more_references: "Load more references"
       designers_selected: "%{count} designers selected"
       references_selected: "%{count} references selected"
+      access_denied: "This list does not exist or is not shared."
       submit_button: "Create list"
+      success: "List created successfully."
+    update:
+      success: "List updated successfully."
+    destroy:
+      success: "List deleted successfully."
+    add:
+      designer:
+        success: "Designer added successfully."
+        failure: "Unable to add the designer."
+        exists: "This designer is already in the list."
+      oeuvre:
+        success: "Reference added successfully."
+        failure: "Unable to add the reference."
+        exists: "This reference is already in the list."
+    remove:
+      designer:
+        success: "Designer removed successfully."
+        failure: "Error removing the designer."
+      oeuvre:
+        success: "Reference removed successfully."
+        failure: "Error removing the reference."
+      user:
+        success: "User removed successfully."
+        failure: "Error removing the user."
+    privacy:
+      public: "The list is now public."
+      private: "The list is now private."
+    invite:
+      success: "User invited successfully."
+      failure: "User not found."
+    role:
+      remove:
+        success: "User removed successfully."
+        failure: "Error removing the user."
+      editor: "User assigned as editor."
+      visitor: "User assigned as visitor."
+      invalid: "Invalid role."
+    not_found: "List not found or access denied."
+    shared_message: "The list %{name} has been shared with you."
   list:
     share: "Share my list"
     invite_editors: "Invite editors"
@@ -610,48 +650,6 @@ en:
     destroy:
       success: "The feedback was successfully deleted."
     already_submitted: "You have already submitted feedback."
-  lists:
-    access_denied: "This list does not exist or is not shared."
-    create:
-      success: "List created successfully."
-    update:
-      success: "List updated successfully."
-    destroy:
-      success: "List deleted successfully."
-    add:
-      designer:
-        success: "Designer added successfully."
-        failure: "Unable to add the designer."
-        exists: "This designer is already in the list."
-      oeuvre:
-        success: "Reference added successfully."
-        failure: "Unable to add the reference."
-        exists: "This reference is already in the list."
-    remove:
-      designer:
-        success: "Designer removed successfully."
-        failure: "Error removing the designer."
-      oeuvre:
-        success: "Reference removed successfully."
-        failure: "Error removing the reference."
-      user:
-        success: "User removed successfully."
-        failure: "Error removing the user."
-    privacy:
-      public: "The list is now public."
-      private: "The list is now private."
-    invite:
-      success: "User invited successfully."
-      failure: "User not found."
-    role:
-      remove:
-        success: "User removed successfully."
-        failure: "Error removing the user."
-      editor: "User assigned as editor."
-      visitor: "User assigned as visitor."
-      invalid: "Invalid role."
-    not_found: "List not found or access denied."
-    shared_message: "The list %{name} has been shared with you."
   oeuvres:
     notions: "Notion(s)"
     presentation_generale: "General presentation"

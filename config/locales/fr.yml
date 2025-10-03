@@ -534,6 +534,46 @@ fr:
       designers_selected: "%{count} designers sélectionnés"
       references_selected: "%{count} références sélectionnées"
       submit_button: "Créer la liste"
+      access_denied: "Cette liste n'existe pas ou n'est pas partagée."
+      success: "Liste créée avec succès."
+    update:
+      success: "Liste mise à jour avec succès."
+    destroy:
+      success: "Liste supprimée avec succès."
+    add:
+      designer:
+        success: "Designer ajouté avec succès."
+        failure: "Impossible d'ajouter le designer."
+        exists: "Ce designer est déjà dans la liste."
+      oeuvre:
+        success: "Référence ajoutée avec succès."
+        failure: "Impossible d'ajouter la référence."
+        exists: "Cette référence est déjà dans la liste."
+    remove:
+      designer:
+        success: "Designer retiré avec succès."
+        failure: "Erreur lors du retrait du designer."
+      oeuvre:
+        success: "Référence retirée avec succès."
+        failure: "Erreur lors du retrait de la référence."
+      user:
+        success: "Utilisateur supprimé avec succès."
+        failure: "Erreur lors de la suppression de l'utilisateur."
+    privacy:
+      public: "La liste est maintenant publique."
+      private: "La liste est maintenant privée."
+    invite:
+      success: "Utilisateur invité avec succès."
+      failure: "Utilisateur introuvable."
+    role:
+      remove:
+        success: "Utilisateur supprimé avec succès."
+        failure: "Erreur lors de la suppression de l'utilisateur."
+      editor: "Utilisateur désigné comme éditeur."
+      visitor: "Utilisateur désigné comme visiteur."
+      invalid: "Rôle invalide."
+    not_found: "Liste introuvable ou accès refusé."
+    shared_message: "La liste %{name} a été partagée avec vous."
   list:
     share: "Partager ma liste"
     invite_editors: "Inviter des éditeurs"
@@ -808,48 +848,6 @@ fr:
     destroy:
       success: "Le feedback a été supprimé avec succès."
     already_submitted: "Vous avez déjà soumis un feedback."
-  lists:
-    access_denied: "Cette liste n'existe pas ou n'est pas partagée."
-    create:
-      success: "Liste créée avec succès."
-    update:
-      success: "Liste mise à jour avec succès."
-    destroy:
-      success: "Liste supprimée avec succès."
-    add:
-      designer:
-        success: "Designer ajouté avec succès."
-        failure: "Impossible d'ajouter le designer."
-        exists: "Ce designer est déjà dans la liste."
-      oeuvre:
-        success: "Référence ajoutée avec succès."
-        failure: "Impossible d'ajouter la référence."
-        exists: "Cette référence est déjà dans la liste."
-    remove:
-      designer:
-        success: "Designer retiré avec succès."
-        failure: "Erreur lors du retrait du designer."
-      oeuvre:
-        success: "Référence retirée avec succès."
-        failure: "Erreur lors du retrait de la référence."
-      user:
-        success: "Utilisateur supprimé avec succès."
-        failure: "Erreur lors de la suppression de l'utilisateur."
-    privacy:
-      public: "La liste est maintenant publique."
-      private: "La liste est maintenant privée."
-    invite:
-      success: "Utilisateur invité avec succès."
-      failure: "Utilisateur introuvable."
-    role:
-      remove:
-        success: "Utilisateur supprimé avec succès."
-        failure: "Erreur lors de la suppression de l'utilisateur."
-      editor: "Utilisateur désigné comme éditeur."
-      visitor: "Utilisateur désigné comme visiteur."
-      invalid: "Rôle invalide."
-    not_found: "Liste introuvable ou accès refusé."
-    shared_message: "La liste %{name} a été partagée avec vous."
   oeuvres:
     notions: "Notion(s)"
     presentation_generale: "Présentation générale"

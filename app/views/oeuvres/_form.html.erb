@@ -61,7 +61,11 @@
 
       <div>
         <%= form.label :domaine_id, t('add_oeuvre.steps.2.domaine_id') %>
-        <%= form.select :domaine_id, options_from_collection_for_select(Domaine.all, :id, :domaine) %>
+        <%= form.select :domaine_id,
+        options_from_collection_for_select(Domaine.all, :id, :domaine, @oeuvre.domaine_id),
+        { include_blank: "Sélectionnez un domaine" },
+        class: "form-control" %>
+
       </div>
     </div>
     <div class="flex-btn-add">

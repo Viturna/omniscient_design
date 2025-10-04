@@ -709,3 +709,72 @@ en:
     not_found: "The reference could not be found."
   theme:
     updated: "Theme updated successfully."
+  mailer:
+    confirmation:
+      welcome: "Thank you and welcome to Omniscient Design,"
+      greeting: "Hello"
+      title: "ACCOUNT VERIFICATION"
+      body_intro: "Thank you for signing up on our site! We need to verify your email address to activate your account."
+      body_action: "Please click the link below to confirm your account:"
+      button: "Confirm my account"
+      ignore: "If you did not create an account with us, you can ignore this message."
+      signature: "See you soon,"
+      team: "The Team"
+      od: "Omniscient Design"
+      legales: "Legal Notice"
+      politique: "Privacy Policy"
+      cgu: "Terms of Use"
+      all_rights_reserved: "©%{year} Omniscient Design — All rights reserved"
+    reset_password:
+      top: "It looks like you’ve lost your password."
+      title: "Password Reset"
+      greeting: "Hello"
+      body_intro: "We received a request to reset the password for your account. If you did not request this, please ignore this message."
+      body_action: "To reset your password, click the link below:"
+      validity_html: "This link is valid for <span class='semibold'>%{hours} hours</span>. After it expires, you will need to submit a new reset request if you still need help."
+      help_html: "If you need further assistance or have questions, feel free to contact our technical support at <span class=\"semibold\">%{email}</span>."
+      signature: "Remember to note down your password,"
+      team: "The Team"
+      od: "Omniscient Design"
+      legales: "Legal Notice"
+      politique: "Privacy Policy"
+      cgu: "Terms of Use"
+      all_rights_reserved: "©%{year} Omniscient Design — All rights reserved"
+    email_changed:
+      top: "It looks like you’ve changed your email address."
+      title: "Email Address Change"
+      greeting: "Hello"
+      in_progress_html: |
+        We’re contacting you to let you know that your email address is being updated.<br>
+        The new email address will be: <strong class="black">%{new_email}</strong>.<br>
+        Please follow the instructions sent to this new address to confirm the change.
+      changed_html: |
+        We’re informing you that your email address has been successfully updated.<br>
+        The new address associated with your account is:
+        <strong class="black">%{new_email}</strong>.
+      ignore: "If you did not request this change, please contact our support immediately."
+      signature: "Thank you for your attention,"
+      team: "The Team"
+      od: "Omniscient Design"
+      legales: "Legal Notice"
+      politique: "Privacy Policy"
+      cgu: "Terms of Use"
+      all_rights_reserved: "©%{year} Omniscient Design — All rights reserved"
+    list_editor:
+      subject: "Invitation to join the %{list} list"
+      top: "%{name} has invited you"
+      title: "Invitation to join the list"
+      greeting: "Hello"
+      body_intro: "You’ve been invited to edit the list: “%{list_name}”."
+      body_action: "%{inviter} has assigned you the role of <strong>%{role}</strong>."
+      ignore: "If you were not expecting this invitation, you can simply ignore this message."
+      signature: "Thank you for contributing to the Omniscient Design community,"
+      team: "The Team"
+      od: "Omniscient Design"
+      legales: "Legal Notice"
+      politique: "Privacy Policy"
+      cgu: "Terms of Use"
+      all_rights_reserved: "©%{year} Omniscient Design — All rights reserved"
+      roles:
+        editor: "Editor"
+        visitor: "Visitor"

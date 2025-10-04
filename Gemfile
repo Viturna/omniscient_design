@@ -72,3 +72,5 @@ gem 'terser'
 gem 'kaminari'
 gem 'chartkick'
 gem 'groupdate'
+
+gem "premailer-rails", "~> 1.12"

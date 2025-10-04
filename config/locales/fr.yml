@@ -930,6 +930,7 @@ fr:
       body_intro: "Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte. Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer ce message."
       body_action: "Pour réinitialiser votre mot de passe, cliquez sur le lien ci-dessous :"
       validity_html: "Ce lien est valable pendant <span class='semibold'>%{hours} heures</span>. Après expiration, vous devrez faire une nouvelle demande de réinitialisation si vous avez toujours besoin d'aide."
+      button: "Réinitialiser mon mot de passe"
       help_html: "Si vous avez besoin d'aide supplémentaire ou si vous avez des questions, n'hésitez pas à contacter notre support technique à <span class=\"semibold\">%{email}</span>."
       signature: "Pensez à noter votre mot de passe,"
       team: "L’équipe"

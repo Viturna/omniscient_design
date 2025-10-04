@@ -75,20 +75,8 @@
           <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: t('devise.registration.pseudo_placeholder') %>
         </div>
         <div class="field">
-            <%= f.collection_select :statut,
-                  [
-                    [t('devise.registration.status_options.student'), t('devise.registration.status_options.student')],
-                    [t('devise.registration.status_options.teacher'), t('devise.registration.status_options.teacher')],
-                    [t('devise.registration.status_options.company'), t('devise.registration.status_options.company')],
-                    [t('devise.registration.status_options.association'), t('devise.registration.status_options.association')],
-                    [t('devise.registration.status_options.designer'), t('devise.registration.status_options.designer')],
-                    [t('devise.registration.status_options.artist'), t('devise.registration.status_options.artist')],
-                    [t('devise.registration.status_options.other'), t('devise.registration.status_options.other')]
-                  ],
-                  :first,
-                  :last,
-                  { prompt: t('devise.registration.status_prompt') },
-                  { class: "form-control" } %>
+           <%= f.select :statut, User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] } %>
+
           </div>
          <div class="field">
           <%= f.collection_select :etablissement_id,

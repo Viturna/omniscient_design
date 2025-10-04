@@ -180,23 +180,28 @@ class ListsController < ApplicationController
   end
 
   def invite_editors
-    user = User.find_by(email: params[:email])
-    role = params[:role]
+    invited_user = User.find_by(email: params[:email])
+    role         = params[:role]
 
-    if user
+    if invited_user
       if role == 'editor'
-        @list.editors << user unless @list.editors.include?(user)
+        @list.editors << invited_user unless @list.editors.include?(invited_user)
       elsif role == 'visitor'
-        @list.visitors << user unless @list.visitors.include?(user)
+        @list.visitors << invited_user unless @list.visitors.include?(invited_user)
       end
-      create_share_notification(@list)
+
       @list.update(share_token: SecureRandom.hex(10)) unless @list.share_token.present?
-      ListMailer.invite_editor(@list, user).deliver_now
+      create_share_notification(@list)
+
+      # current_user est l’invitant
+      ListMailer.invite_editor(@list, invited_user, current_user, role).deliver_now
+
       redirect_to @list, notice: I18n.t('lists.invite.success')
     else
       redirect_to @list, alert: I18n.t('lists.invite.failure')
     end
   end
+
 
   def change_role
     user = User.find(params[:user_id])

@@ -907,3 +907,72 @@ fr:
     not_found: "La référence n'a pas été trouvée."
   theme:
     updated: "Thème mis à jour avec succès."
+  mailer:
+    confirmation:
+      welcome: "Merci et bienvenue chez Omniscient Design,"
+      greeting: "Bonjour"
+      title: "VALIDATION DE VOTRE COMPTE"
+      body_intro: "Merci de vous être inscrit sur notre site ! Nous avons besoin de vérifier votre adresse e-mail pour activer votre compte."
+      body_action: "Veuillez cliquer sur le lien ci-dessous pour confirmer votre compte :"
+      button: "Confirmer mon compte"
+      ignore: "Si vous n'avez pas créé de compte avec nous, vous pouvez ignorer ce message."
+      signature: "À bientôt,"
+      team: "L’équipe"
+      od: "Omniscient Design"
+      legales: "Mentions légales"
+      politique: "Politique de confidentialité"
+      cgu: "CGU"
+      all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
+    reset_password:
+      top: "Il semblerait que vous ayez perdu votre mot de passe."
+      title: "réinitialisation du mot de passe"
+      greeting: "Bonjour"
+      body_intro: "Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte. Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer ce message."
+      body_action: "Pour réinitialiser votre mot de passe, cliquez sur le lien ci-dessous :"
+      validity_html: "Ce lien est valable pendant <span class='semibold'>%{hours} heures</span>. Après expiration, vous devrez faire une nouvelle demande de réinitialisation si vous avez toujours besoin d'aide."
+      help_html: "Si vous avez besoin d'aide supplémentaire ou si vous avez des questions, n'hésitez pas à contacter notre support technique à <span class=\"semibold\">%{email}</span>."
+      signature: "Pensez à noter votre mot de passe,"
+      team: "L’équipe"
+      od: "Omniscient Design"
+      legales: "Mentions légales"
+      politique: "Politique de confidentialité"
+      cgu: "CGU"
+      all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
+    email_changed:
+      top: "Il semblerait que vous ayez changé votre email."
+      title: "Changement d’adresse e-mail"
+      greeting: "Bonjour"
+      in_progress_html: |
+        Nous vous contactons pour vous informer que votre adresse e-mail est en cours de modification.<br>
+        La nouvelle adresse e-mail sera : <strong class="black">%{new_email}</strong>.<br>
+        Veuillez suivre les instructions envoyées à cette nouvelle adresse pour confirmer le changement.
+      changed_html: |
+        Nous vous informons que votre adresse e-mail a été modifiée avec succès.<br>
+        La nouvelle adresse associée à votre compte est :
+        <strong class="black">%{new_email}</strong>.
+      ignore: "Si vous n’avez pas demandé ce changement, veuillez contacter notre support immédiatement."
+      signature: "Merci pour votre attention,"
+      team: "L’équipe"
+      od: "Omniscient Design"
+      legales: "Mentions légales"
+      politique: "Politique de confidentialité"
+      cgu: "CGU"
+      all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
+    list_editor:
+      subject: "Invitation à rejoindre la liste %{list}"
+      top: "%{name} vous à invité.e"
+      title: "Invitation à rejoindre la liste"
+      greeting: "Bonjour"
+      body_intro: "Vous avez été invité·e à éditer la liste : « %{list_name} »."
+      body_action: "%{inviter} vous a attribué le rôle de <strong>%{role}</strong>."
+      ignore: "Si vous n’attendiez pas cette invitation, vous pouvez simplement ignorer ce message."
+      signature: "Merci de contribuer à la vie d’Omniscient Design,"
+      team: "L’équipe"
+      od: "Omniscient Design"
+      legales: "Mentions légales"
+      politique: "Politique de confidentialité"
+      cgu: "CGU"
+      all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
+      roles:
+        editor: "Éditeur"
+        visitor: "Visiteur"

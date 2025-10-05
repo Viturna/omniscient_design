@@ -61,9 +61,13 @@
                 <path d="M4.83984 6.80664L9.22632 11.1931L13.6128 6.80664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
         </span>
-        <div class="lang-dropdown" data-lang-switcher-target="dropdown">
-          <%= link_to "FR", url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } %>
-          <%= link_to "EN", url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } %>
+         <div class="lang-dropdown" data-lang-switcher-target="dropdown">
+          <%= link_to url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } do %>
+            <span class="flag">🇫🇷</span> FR
+          <% end %>
+          <%= link_to url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } do %>
+            <span class="flag">🇬🇧</span> EN
+          <% end %>
         </div>
     </button>
   </div>

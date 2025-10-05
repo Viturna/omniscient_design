@@ -565,6 +565,7 @@ fr:
     invite:
       success: "Utilisateur invité avec succès."
       failure: "Utilisateur introuvable."
+      cannot_self: "Vous ne pouvez pas vous inviter vous-même dans votre propre liste."
     role:
       remove:
         success: "Utilisateur supprimé avec succès."
@@ -732,6 +733,7 @@ fr:
         date_oeuvre: "Date de la référence"
         date_oeuvre_placeholder: "Ex : 2002"
         image: "Image(s)"
+        image_placeholder: "https://url-de-l-image.fr"
     buttons:
       next: "Suivant"
       prev: "Précédent"

@@ -151,7 +151,7 @@
       </div>
       <div>
         <%= form.label :image, t('add_oeuvre.steps.4.image') %>
-        <%= form.file_field :image, accept: "image/*", direct_upload: true %>
+        <%= form.text_field :image, placeholder: t('add_oeuvre.steps.4.image_placeholder')%>
       </div>
     </div>
     <div class="flex-btn-add">

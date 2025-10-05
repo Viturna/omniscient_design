@@ -23,82 +23,84 @@
   </section>
 </div>
 <script>
-  document.addEventListener("turbo:load", () => {
-    let currentStep = 1;
-    const steps = document.querySelectorAll(".form-step");
-     if (steps.length === 0) return;    
-    // Fonction pour afficher l'étape
-    function showStep(step) {
-      steps.forEach((el) => (el.style.display = "none"));
-      document.querySelector(`[data-step="${step}"]`).style.display = "block";
-    }
+ document.addEventListener("turbo:load", () => {
+  let currentStep = 1;
+  const steps = document.querySelectorAll(".form-step");
+  if (steps.length === 0) return;
 
-    // Fonction pour afficher les messages d'erreur
-    function showError(message) {
-      const errorMessageElement = document.querySelector(".error-message");
-      if (!errorMessageElement) return; 
-      errorMessageElement.textContent = message;
-      errorMessageElement.style.display = "block";  // Afficher le message d'erreur
-    }
+  const errorMessageElement = document.querySelector(".error-message");
 
-    // Fonction pour cacher les messages d'erreur
-    function hideError() {
-      const errorMessageElement = document.querySelector(".error-message");
-      errorMessageElement.style.display = "none";  // Cacher le message d'erreur
-    }
+  function showStep(step) {
+    steps.forEach(el => (el.style.display = "none"));
+    document.querySelector(`[data-step="${step}"]`).style.display = "block";
+  }
 
-    // Gérer l'événement de changement d'étape
-    document.querySelectorAll(".next-step").forEach((button) => {
-      button.addEventListener("click", function () {
-        if (currentStep === 1) {
-          const nomOeuvre = document.querySelector("input[name='oeuvre[nom_oeuvre]']").value;
-          
-          // Vérifier si le champ est vide
-          if (nomOeuvre.trim() === "") {
-            showError("Veuillez entrer un nom de référence.");  // Afficher le message d'erreur
-            return;  // Ne pas aller à l'étape suivante si le champ est vide
+  function showError(message) {
+    if (!errorMessageElement) return;
+    errorMessageElement.textContent = message;
+    errorMessageElement.style.display = "block";
+  }
+
+  function hideError() {
+    if (!errorMessageElement) return;
+    errorMessageElement.textContent = "";
+    errorMessageElement.style.display = "none";
+  }
+
+  document.querySelectorAll(".next-step").forEach(button => {
+    button.addEventListener("click", async () => {
+      // Étape 1 : vérifier le nom
+      if (currentStep === 1) {
+        const nomOeuvre = document.querySelector("input[name='oeuvre[nom_oeuvre]']").value.trim();
+
+        if (nomOeuvre === "") {
+          showError("Veuillez entrer un nom de référence.");
+          return; // bloque la navigation
+        }
+
+        hideError();
+
+        try {
+          const response = await fetch(`/oeuvres/check_existence?nom_oeuvre=${encodeURIComponent(nomOeuvre)}`);
+          const data = await response.json();
+
+          if (data.exists) {
+            if (data.edit_path) {
+              window.location.href = data.edit_path;
+            } else {
+              showError("Cette référence existe déjà et est validée.");
+            }
+            return; // bloque la navigation
           }
 
-          // Masquer les messages d'erreur si le champ est valide
-          hideError();
-
-          fetch(`/oeuvres/check_existence?nom_oeuvre=${encodeURIComponent(nomOeuvre)}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.exists) {
-                if (data.edit_path) {
-                  window.location.href = data.edit_path; // Redirige vers l'édition si pas validé
-                } else {
-                  showError("Cette référence existe déjà et est validée.");
-                }
-              } else {
-                currentStep++;
-                if (currentStep > steps.length) {
-                  currentStep = steps.length;
-                }
-                showStep(currentStep);
-              }
-            });
-        } else {
+          // Si tout est ok, passer à l'étape suivante
           currentStep++;
-          if (currentStep > steps.length) {
-            currentStep = steps.length;
-          }
           showStep(currentStep);
-        }
-      });
-    });
 
-    document.querySelectorAll(".prev-step").forEach((button) => {
-      button.addEventListener("click", function () {
-        currentStep--;
-        if (currentStep < 1) {
-          currentStep = 1;
+        } catch (err) {
+          console.error("Erreur réseau:", err);
+          // Optionnel : on peut bloquer ou laisser passer
+          showError("Impossible de vérifier la référence pour le moment.");
         }
+
+      } else {
+        // Pour les autres étapes sans validation
+        currentStep++;
+        if (currentStep > steps.length) currentStep = steps.length;
         showStep(currentStep);
-      });
+      }
     });
-
-    showStep(currentStep);
   });
+
+  document.querySelectorAll(".prev-step").forEach(button => {
+    button.addEventListener("click", () => {
+      currentStep--;
+      if (currentStep < 1) currentStep = 1;
+      showStep(currentStep);
+    });
+  });
+
+  showStep(currentStep);
+});
+
 </script>

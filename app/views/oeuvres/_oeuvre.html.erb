@@ -457,7 +457,7 @@
           </div>
           <div class="flex-title-popup">
             <p class="title-popup">Ajouter dans une liste</p>
-            <%= link_to 'Créer une liste', new_list_path, class: "popup-link-add" %>
+            <%= link_to 'Créer une liste', new_list_path(oeuvre_id: @oeuvre.id), class: "popup-link-add" %>
           </div>
           <% @lists.each do |list| %>
             <div class="field">

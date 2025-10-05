@@ -55,183 +55,142 @@
   </div>
 <% end %>
 
+<!-- ===================== JS ======================= -->
 
 <script>
-    document.addEventListener("turbo:load", () => {
-    let offsets = { oeuvres: 10, designers: 10 };
+document.addEventListener("turbo:load", () => {
+  let offsets = { oeuvres: 10, designers: 10 };
 
-    function setupLoadMore(buttonId, listId) {
-      const button = document.getElementById(buttonId);
-      if (button) {
-        button.addEventListener("click", function(e) {
-          e.preventDefault();
-          const type = this.dataset.type;
-          const slug = this.dataset.slug;
-          const offset = offsets[type];
-          let url = `/lists/load_more_${type}?offset=${offset}`;
+  function setupLoadMore(buttonId) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
 
-          if (slug) {
-            url += `&slug=${slug}`;
+    button.addEventListener("click", e => {
+      e.preventDefault();
+      const type = button.dataset.type;
+      const slug = button.dataset.slug;
+      const offset = offsets[type];
+
+      let url = `/lists/load_more_${type}?offset=${offset}`;
+      if (slug) url += `&slug=${slug}`;
+
+      fetch(url, { headers: { 'Accept': 'text/html' }})
+        .then(r => r.text())
+        .then(html => {
+          if (html.trim() !== "") {
+            document.getElementById(`${type}-load-more`).insertAdjacentHTML("beforeend", html);
+            offsets[type] += 10;
+          } else {
+            button.disabled = true;
+            button.innerText = "Plus de résultats";
           }
+        })
+        .catch(err => console.error(err));
+    });
+  }
 
-          fetch(url, {
-            headers: {
-              'Accept': 'text/html'
-            }
-          })
-          .then(response => response.text())
-          .then(html => {
-            if (html.trim() !== "") {
-              document.getElementById(`${type}-load-more`).insertAdjacentHTML("beforeend", html);
-
-              offsets[type] += 10;
-            } else {
-              this.disabled = true;
-              this.innerText = "Plus de résultats";
-            }
-          })
-          .catch(error => console.error(`Erreur lors du chargement des ${type}:`, error));
-        });
-      }
-    }
-
-    setupLoadMore("load-more-oeuvres", "oeuvres-load-more");
-    setupLoadMore("load-more-designers", "designers-load-more");
-  });
+  setupLoadMore("load-more-oeuvres");
+  setupLoadMore("load-more-designers");
+});
 </script>
 
 <script>
 document.addEventListener("turbo:load", () => {
   const selectedDesigners = new Set();
-  const selectedOeuvres = new Set();
+  const selectedOeuvres   = new Set();
 
-  // Récupération des templates traduits depuis la vue
   const footer = document.querySelector('.form-footer');
   const designerTemplate = footer.dataset.designersSelected;
-  const oeuvreTemplate = footer.dataset.referencesSelected;
+  const oeuvreTemplate   = footer.dataset.referencesSelected;
 
-  // Met à jour les champs cachés et les compteurs
   function updateHiddenFields() {
-    document.getElementById('designer_ids_field').value = Array.from(selectedDesigners).join(',');
-    document.getElementById('oeuvre_ids_field').value = Array.from(selectedOeuvres).join(',');
+    document.getElementById('designer_ids_field').value = [...selectedDesigners].join(',');
+    document.getElementById('oeuvre_ids_field').value   = [...selectedOeuvres].join(',');
   }
-
   function updateCounters() {
-    document.getElementById('designer-count').innerText = designerTemplate.replace('%{count}', selectedDesigners.size);
-    document.getElementById('oeuvre-count').innerText = oeuvreTemplate.replace('%{count}', selectedOeuvres.size);
+    document.getElementById('designer-count').innerText =
+        designerTemplate.replace('%{count}', selectedDesigners.size);
+    document.getElementById('oeuvre-count').innerText =
+        oeuvreTemplate.replace('%{count}', selectedOeuvres.size);
   }
 
-  // Fonction pour rendre les cartes sélectionnables
   function setupSelectableCards(containerId, type) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.addEventListener('click', (event) => {
-      const card = event.target.closest('.check-box-wrapper');
-      if (!card || !container.contains(card)) return;
+    container.addEventListener('click', e => {
+      const card = e.target.closest('.check-box-wrapper');
+      if (!card) return;
+      const id = card.dataset.id;
+      if (!id) return;
 
-      const itemId = card.dataset.id;
-      if (!itemId) return;
-
-      if (type === 'designer') {
-        if (selectedDesigners.has(itemId)) {
-          selectedDesigners.delete(itemId);
-          card.classList.remove('selected');
-        } else {
-          selectedDesigners.add(itemId);
-          card.classList.add('selected');
-        }
-      } else if (type === 'oeuvre') {
-        if (selectedOeuvres.has(itemId)) {
-          selectedOeuvres.delete(itemId);
-          card.classList.remove('selected');
-        } else {
-          selectedOeuvres.add(itemId);
-          card.classList.add('selected');
-        }
+      const set = (type === 'designer') ? selectedDesigners : selectedOeuvres;
+      if (set.has(id)) {
+        set.delete(id);
+        card.classList.remove('selected');
+      } else {
+        set.add(id);
+        card.classList.add('selected');
       }
-
-      updateHiddenFields();
-      updateCounters();
+      updateHiddenFields(); updateCounters();
     });
   }
 
-  // Initialisation des sélections existantes (si rechargement)
   function initializeSelections() {
-    document.querySelectorAll('#designers-list .check-box-wrapper.selected').forEach(card => {
-      const itemId = card.dataset.id;
-      if (itemId) selectedDesigners.add(itemId);
-    });
-
-    document.querySelectorAll('#oeuvres-list .check-box-wrapper.selected').forEach(card => {
-      const itemId = card.dataset.id;
-      if (itemId) selectedOeuvres.add(itemId);
-    });
-
-    updateHiddenFields();
-    updateCounters();
+    document.querySelectorAll('#designers-list .check-box-wrapper.selected')
+      .forEach(c => selectedDesigners.add(c.dataset.id));
+    document.querySelectorAll('#oeuvres-list .check-box-wrapper.selected')
+      .forEach(c => selectedOeuvres.add(c.dataset.id));
+    updateHiddenFields(); updateCounters();
   }
 
-  // Setup
-  setupSelectableCards('designers-list', 'designer');
-  setupSelectableCards('oeuvres-list', 'oeuvre');
+  setupSelectableCards('designers-list','designer');
+  setupSelectableCards('oeuvres-list','oeuvre');
   initializeSelections();
 });
 </script>
+
 <script>
-    document.addEventListener("turbo:load", () => {
-    const nameInput = document.getElementById("list-name");
-    const submitButton = document.getElementById("submit-list");
-
-    function toggleSubmitButton() {
-      submitButton.disabled = nameInput.value.trim() === "";
-    }
-
-    nameInput.addEventListener("input", toggleSubmitButton);
-
-    toggleSubmitButton();
-  });
+document.addEventListener("turbo:load", () => {
+  const nameInput = document.getElementById("list-name");
+  const submitBtn = document.getElementById("submit-list");
+  const toggle = () => submitBtn.disabled = nameInput.value.trim() === "";
+  nameInput.addEventListener("input", toggle);
+  toggle();
+});
 </script>
 
 <script>
-  function setupLiveSearch(inputId, listContainerId, type) {
-    const input = document.getElementById(inputId);
-    const listContainer = document.getElementById(listContainerId);
-    const loadMoreButton = document.getElementById(`load-more-${type}`);
+function setupLiveSearch(inputId, listId, type) {
+  const input = document.getElementById(inputId);
+  const container = document.getElementById(listId);
+  const loadMoreBtn = document.getElementById(`load-more-${type}`);
 
-    input.addEventListener('input', function () {
-      const query = this.value.trim();
-
-      if (query.length < 2) {
-        // Si champ vide ou trop court, recharge les premiers éléments
-        loadInitial(type, listContainer);
-        if (loadMoreButton) loadMoreButton.style.display = 'inline-block';
-        return;
-      }
-
-      fetch(`/lists/search_items?q=${encodeURIComponent(query)}&type=${type}`, {
-        headers: { 'Accept': 'text/html' }
-      })
-      .then(response => response.text())
+  input.addEventListener('input', function () {
+    const q = this.value.trim();
+    if (q.length < 2) {
+      loadInitial(type, container);
+      if (loadMoreBtn) loadMoreBtn.style.display = 'inline-block';
+      return;
+    }
+    fetch(`/lists/search_items?q=${encodeURIComponent(q)}&type=${type}`,
+          { headers: { 'Accept': 'text/html' }})
+      .then(r => r.text())
       .then(html => {
-        listContainer.innerHTML = html;
-        if (loadMoreButton) loadMoreButton.style.display = 'none'; // Cache le bouton
-      })
-      .catch(err => console.error(`Erreur recherche ${type}:`, err));
-    });
-  }
-
-  // Recharge les 10 premiers en cas d'effacement
-  function loadInitial(type, container) {
-    fetch(`/lists/load_more_${type}?offset=0`, {
-      headers: { 'Accept': 'text/html' }
-    })
-    .then(response => response.text())
-    .then(html => container.innerHTML = html);
-  }
-
-     document.addEventListener("turbo:load", () => {
-    setupLiveSearch('designer-search', 'designers-load-more', 'designers');
-    setupLiveSearch('oeuvre-search', 'oeuvres-load-more', 'oeuvres');
+        container.innerHTML = html;
+        if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+      });
   });
+}
+function loadInitial(type, container) {
+  fetch(`/lists/load_more_${type}?offset=0`,
+        { headers: { 'Accept': 'text/html' }})
+    .then(r => r.text())
+    .then(html => container.innerHTML = html);
+}
+
+document.addEventListener("turbo:load", () => {
+  setupLiveSearch('designer-search','designers-load-more','designers');
+  setupLiveSearch('oeuvre-search','oeuvres-load-more','oeuvres');
+});
 </script>

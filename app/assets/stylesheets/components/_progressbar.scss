@@ -22,5 +22,6 @@
   top: 50%;
   transform: translateY(-50%);
   font-weight: bold;
-  color: #202020;
+  color: #ffffff; /* couleur par défaut si fond sombre */
+  mix-blend-mode: difference; /* le texte s’inverse automatiquement selon le fond */
 }

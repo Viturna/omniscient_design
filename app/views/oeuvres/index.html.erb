@@ -67,8 +67,12 @@
               </svg>
         </span>
         <div class="lang-dropdown" data-lang-switcher-target="dropdown">
-          <%= link_to "FR", url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } %>
-          <%= link_to "EN", url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } %>
+          <%= link_to url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } do %>
+            <span class="flag">🇫🇷</span> FR
+          <% end %>
+          <%= link_to url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } do %>
+            <span class="flag">🇬🇧</span> EN
+          <% end %>
         </div>
     </button>
   </div>

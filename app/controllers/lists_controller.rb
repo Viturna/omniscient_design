@@ -73,10 +73,32 @@ class ListsController < ApplicationController
   def new
     @current_page = 'listes'
     @list = current_user.lists.build
-    @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10)
-    @designers = Designer.where(validation: true).order(:nom).limit(10)
-    @domaines = Domaine.all
+
+    # convertir en tableau
+    @oeuvres   = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10).to_a
+    @designers = Designer.where(validation: true).order(:nom).limit(10).to_a
+    @domaines  = Domaine.all
+
+    # --- PRE-SELECTION oeuvre ---
+    if params[:oeuvre_id].present?
+      selected_oeuvre = Oeuvre.find_by(id: params[:oeuvre_id], validation: true)
+      if selected_oeuvre
+        @oeuvres.unshift(selected_oeuvre) unless @oeuvres.include?(selected_oeuvre)
+        @selected_oeuvre_ids = [selected_oeuvre.id]
+      end
+    end
+
+    # --- PRE-SELECTION designer ---
+    if params[:designer_id].present?
+      selected_designer = Designer.find_by(id: params[:designer_id], validation: true)
+      if selected_designer
+        @designers.unshift(selected_designer) unless @designers.include?(selected_designer)
+        @selected_designer_ids = [selected_designer.id]
+      end
+    end
   end
+
+
 
   def create
     @list = current_user.lists.build(list_params)
@@ -241,6 +263,39 @@ class ListsController < ApplicationController
         I18n.t('lists.remove.user.failure')
       end
     redirect_to @list, notice: notice
+  end
+
+  def load_more_oeuvres
+    if params[:slug].present?
+      @list = List.friendly.find_by(slug: params[:slug])
+  
+      unless @list
+        head :not_found and return
+      end
+  
+      # on pourrait ici charger seulement les oeuvres rattachées à la liste
+      @oeuvres = @list.oeuvres.offset(params[:offset]).limit(10)
+    else
+      # mode création ➔ on affiche toutes les oeuvres validées
+      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(10)
+    end
+  
+    render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+  end
+  def load_more_designers
+    if params[:slug].present?
+      @list = List.friendly.find_by(slug: params[:slug])
+  
+      unless @list
+        head :not_found and return
+      end
+  
+      @designers = @list.designers.offset(params[:offset]).limit(10)
+    else
+      @designers = Designer.where(validation: true).order(:nom).offset(params[:offset]).limit(10)
+    end
+  
+    render partial: 'designers_list', collection: @designers, as: :designer
   end
 
   private

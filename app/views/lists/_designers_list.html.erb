@@ -1,5 +1,8 @@
-<div class="check-box-wrapper <%= 'selected' if defined?(@selected_designer_ids) && @selected_designer_ids.include?(designer.id) %>" data-id="<%= designer.id %>">
-  <%= check_box_tag "designer_ids[]", designer.id, false, class: 'hidden-check', id: "designer_#{designer.id}", disabled: true %>
+<div class="check-box-wrapper <%= 'selected' if defined?(@selected_designer_ids) && @selected_designer_ids.include?(designer.id) %>"
+     data-id="<%= designer.id %>">
+  <%= check_box_tag "designer_ids[]", designer.id,
+      (defined?(@selected_designer_ids) && @selected_designer_ids.include?(designer.id)),
+      class: 'hidden-check', id: "designer_#{designer.id}", disabled: true %>
   <label for="designer_#{designer.id}">
     <% thumb_path = "designers/thumbs/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
     <% if asset_exists?(thumb_path) %>

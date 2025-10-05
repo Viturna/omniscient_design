@@ -57,9 +57,9 @@ class OeuvresController < ApplicationController
     @oeuvre.user = current_user
 
     if @oeuvre.save
-      if params[:oeuvre][:image].present?
-        @oeuvre.image.attach(params[:oeuvre][:image])
-      end
+      # if params[:oeuvre][:image].present?
+      #   @oeuvre.image.attach(params[:oeuvre][:image])
+      # end
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
       flash[:success] = t('oeuvres.create.success')

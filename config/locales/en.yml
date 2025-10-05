@@ -298,6 +298,7 @@ en:
     invite:
       success: "User invited successfully."
       failure: "User not found."
+      cannot_self: "You cannot invite yourself to your own list."
     role:
       remove:
         success: "User removed successfully."

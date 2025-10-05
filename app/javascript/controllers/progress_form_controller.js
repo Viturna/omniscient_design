@@ -10,59 +10,57 @@ export default class extends Controller {
   connect() {
     this.updateProgress = this.updateProgress.bind(this)
 
-    // Inputs natifs
-    this.inputs = this.element.querySelectorAll("input:not([type=hidden]), textarea, select, [name^='oeuvre[source]']");
-
-    this.inputs.forEach(input => {
-      input.addEventListener("input", this.updateProgress)
+    // boutons next / prev
+    const stepButtons = this.element.querySelectorAll(".next-step, .prev-step")
+    stepButtons.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        this.changeStep(e.target)
+      })
     })
 
-    this.select2Elements = $(this.element).find(".designer-select, .notions-select");
-    this.select2Elements.on("change", this.updateProgress);
-
+    // select2
+    this.select2Elements = $(this.element).find(".designer-select, .notions-select")
     this.select2Elements.on("change", this.updateProgress)
 
+    // initial update
     this.updateProgress()
-
-
   }
 
   disconnect() {
-    this.inputs.forEach(input => {
-      input.removeEventListener("input", this.updateProgress)
-    })
+    const stepButtons = this.element.querySelectorAll(".next-step, .prev-step")
+    stepButtons.forEach(btn => btn.removeEventListener("click", this.changeStep))
 
     if (this.select2Elements) {
       this.select2Elements.off("change", this.updateProgress)
     }
-
   }
 
-  updateProgress() {
-    let filledInputs = 0
-    let totalInputs = this.inputs.length
+  changeStep(button) {
+    const currentStep = button.closest(".form-step")
+    const currentStepNum = parseInt(currentStep.dataset.step)
+    const nextStepNum = button.classList.contains("next-step") ? currentStepNum + 1 : currentStepNum - 1
 
-    // Inputs classiques
-    this.inputs.forEach(input => {
-      if (input.type === "checkbox" || input.type === "radio") {
-        if (input.checked) filledInputs++
-      } else if (input.value.trim() !== "") {
-        filledInputs++
-      }
-    })
+    const steps = this.element.querySelectorAll(".form-step")
+    steps.forEach(step => step.style.display = "none")
 
-    // Inputs select2
-    if (this.select2Elements) {
-      totalInputs += this.select2Elements.length
-      this.select2Elements.each(function () {
-        if ($(this).val() && $(this).val().length > 0) {
-          filledInputs++
-        }
+    const nextStep = this.element.querySelector(`.form-step[data-step='${nextStepNum}']`)
+    if (nextStep) nextStep.style.display = "block"
+
+    this.updateProgress(nextStepNum)
+  }
+
+  updateProgress(currentStepIndex = null) {
+    const steps = this.element.querySelectorAll(".form-step")
+    const totalSteps = steps.length
+
+    if (currentStepIndex === null) {
+      // fallback si pas passé en argument
+      steps.forEach((step, idx) => {
+        if (step.style.display !== "none") currentStepIndex = idx + 1
       })
     }
 
-    // Progression
-    const progressPercent = totalInputs > 0 ? Math.round((filledInputs / totalInputs) * 100) : 0
+    const progressPercent = Math.round((currentStepIndex / totalSteps) * 100)
 
     if (this.hasProgressBarTarget) {
       this.progressBarTarget.style.width = `${progressPercent}%`

@@ -31,21 +31,42 @@ class SearchController < ApplicationController
         title: t('search.designers'),
         class: "section-title",
         results: designers.map do |d|
+          thumb_path = Rails.root.join(
+            "app/assets/images/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
+          )
+
+          img_url = if File.exist?(thumb_path)
+                      "/assets/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
+                    else
+                      d.image
+                    end
+
           {
             name: d.nom_designer,
             url: designer_path(d),
-            img: "/assets/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
+            img: img_url
           }
         end
       },
+
       oeuvres: {
-         title: t('search.references'),
+        title: t('search.references'),
         class: "section-title",
         results: oeuvres.map do |o|
+          thumb_path = Rails.root.join(
+            "app/assets/images/oeuvres/thumbs/#{remove_accents_and_special_chars(o.nom_oeuvre)}.webp"
+          )
+
+          img_url = if File.exist?(thumb_path)
+                      "/assets/oeuvres/thumbs/#{remove_accents_and_special_chars(o.nom_oeuvre)}.webp"
+                    else
+                      o.image
+                    end
+
           {
             name: o.nom_oeuvre,
             url: oeuvre_path(o),
-            img: "/assets/oeuvres/thumbs/#{remove_accents_and_special_chars(o.nom_oeuvre)}.webp"
+            img: img_url
           }
         end
       }

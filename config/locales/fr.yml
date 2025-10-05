@@ -24,6 +24,29 @@ fr:
     policy: "Politique de confidentialité"
     terms: "CGU"
     cookies: "Cookies"
+  footer:
+    tagline: "\"Le monde du Design à portée de mains.\""
+    navigation: "Naviguation"
+    landing: "Landing"
+    explore: "Explorer"
+    search: "Rechercher"
+    list: "Listes"
+    profile: "Profil"
+    add: "Ajouter"
+    login: "Connexion"
+    sitemap: "Plan du site"
+    social: "Réseaux"
+    linkedin: "LinkedIn"
+    instagram: "Instagram"
+    tiktok: "Tiktok"
+    contact: "Prendre contact"
+    email: "contact@omniscientdesign.fr"
+    goup: "Revenir en haut"
+    legal: "Mentions légales"
+    politique: "Politique de confidentialité"
+    cgu: "CGU"
+    cookie: "Cookies"
+    copyright: "©2025 Omniscient Design - Tous droits réservés"
   search:
     placeholder: "Rechercher une référence ou un designer"
     title: "Rechercher"
@@ -639,6 +662,12 @@ fr:
     placeholders:
       default: "Répondre ici"
     submit: "Envoyer"
+    create:
+      success: "Votre feedback a été enregistré avec succès."
+      failure: "Une erreur s'est produite. Veuillez vérifier le formulaire et réessayer."
+    destroy:
+      success: "Le feedback a été supprimé avec succès."
+    already_submitted: "Vous avez déjà soumis un feedback."
   add_designer:
     subtitle_top: "Votre contribution"
     main_title: "Ajouter un/une designer"
@@ -843,13 +872,6 @@ fr:
     access:
       denied: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
     not_found: "Designer non trouvé."
-  feedback:
-    create:
-      success: "Votre feedback a été enregistré avec succès."
-      failure: "Une erreur s'est produite. Veuillez vérifier le formulaire et réessayer."
-    destroy:
-      success: "Le feedback a été supprimé avec succès."
-    already_submitted: "Vous avez déjà soumis un feedback."
   oeuvres:
     notions: "Notion(s)"
     presentation_generale: "Présentation générale"

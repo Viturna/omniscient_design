@@ -24,6 +24,29 @@ en:
     policy: "Privacy policy"
     terms: "Terms of Use"
     cookies: "Cookies"
+  footer:
+    tagline: "\"The world of Design at your fingertips.\""
+    navigation: "Navigation"
+    landing: "Landing"
+    explore: "Explore"
+    search: "Search"
+    list: "Lists"
+    profile: "Profile"
+    add: "Add"
+    login: "Login"
+    sitemap: "Sitemap"
+    social: "Social"
+    linkedin: "LinkedIn"
+    instagram: "Instagram"
+    tiktok: "Tiktok"
+    contact: "Contact us"
+    email: "contact@omniscientdesign.fr"
+    goup: "Back to top"
+    legal: "Legal notice"
+    politique: "Privacy policy"
+    cgu: "Terms of Use"
+    cookie: "Cookies"
+    copyright: "©2025 Omniscient Design - All rights reserved"
   search:
     placeholder: "Search for a reference or a designer"
     title: "Search"
@@ -372,6 +395,12 @@ en:
     placeholders:
       default: "Write your answer here"
     submit: "Send"
+    create:
+      success: "Your feedback has been successfully submitted."
+      failure: "An error occurred. Please check the form and try again."
+    destroy:
+      success: "The feedback was successfully deleted."
+    already_submitted: "You have already submitted feedback."
   add_designer:
     subtitle_top: "Your contribution"
     main_title: "Add a designer"
@@ -644,13 +673,6 @@ en:
     access:
       denied: "You are not authorized to access this reference."
     not_found: "Designer not found."
-  feedback:
-    create:
-      success: "Your feedback has been successfully submitted."
-      failure: "An error occurred. Please check the form and try again."
-    destroy:
-      success: "The feedback was successfully deleted."
-    already_submitted: "You have already submitted feedback."
   oeuvres:
     notions: "Notion(s)"
     presentation_generale: "General presentation"

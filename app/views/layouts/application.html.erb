@@ -112,7 +112,7 @@
     <% unless excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) } %>
     <!-- Footer -->
      <% large_footer = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
-    <footer class="footer <%= 'large-footer' if main_show %>">
+    <footer class="footer <%= 'large-footer' if main_show %>" data-loading-target="footer">
       <div class="footer-top">
         <div class="footer-brand">
            <%= link_to(root_path, class: "footer-logo") do %>

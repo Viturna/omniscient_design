@@ -65,7 +65,9 @@ body {
   font-family: "IBM Plex Sans";
   overflow-x: hidden;
 }
-
+[data-loading-target="footer"] {
+  display: none;
+}
 main {
   margin-left: 350px;
   width: calc(100vw - 350px);

@@ -49,7 +49,7 @@
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
 
-  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>">
+  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -87,7 +87,7 @@
     <% end %>
 
     <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
-    <main class="<%= 'main-show' if main_show %>" data-controller="loading">
+    <main class="<%= 'main-show' if main_show %>">
       <div id="loading" data-loading-target="loading">
         <div class="loader-bg">
           <video autoplay loop muted playsinline webkit-playsinline preload="auto">

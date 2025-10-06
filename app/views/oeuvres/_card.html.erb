@@ -8,7 +8,18 @@
 %>
 <%= link_to oeuvre_path(card.slug) do %>
   <div class="card" data-id="<%= card.id %>">
-    <div class="bg-card" style="background-color: <%= card.domaine.couleur %>;">
+    <% if card.domaines.size == 1 %>
+        <%# Un seul domaine, utilisez sa couleur %>
+        <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>;">
+        <% elsif %>
+          <%# Plusieurs domaines, créez un dégradé %>
+          <% colors = card.domaines.map(&:couleur).join(', ') %>
+          <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
+        <% else %>
+          <%# Aucun domaine, utilisez une couleur par défaut %>
+          <div class="bg-card" style="background-color: #ccc;">
+          <% end %>
+        
       <% if image_path.present? %>
         <div class="bg-img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
           <div class="flex-info-card">

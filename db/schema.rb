@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_17_205258) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_06_220441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -271,6 +271,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_17_205258) do
     t.index ["user_id"], name: "index_oeuvres_on_user_id"
   end
 
+  create_table "oeuvres_domaines", id: false, force: :cascade do |t|
+    t.bigint "oeuvre_id", null: false
+    t.bigint "domaine_id", null: false
+    t.index ["domaine_id"], name: "index_oeuvres_domaines_on_domaine_id"
+    t.index ["oeuvre_id", "domaine_id"], name: "index_oeuvres_domaines_on_oeuvre_id_and_domaine_id", unique: true
+    t.index ["oeuvre_id"], name: "index_oeuvres_domaines_on_oeuvre_id"
+  end
+
   create_table "referrals", force: :cascade do |t|
     t.integer "referrer_id"
     t.integer "referee_id"
@@ -360,6 +368,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_17_205258) do
   add_foreign_key "notions_oeuvres", "oeuvres"
   add_foreign_key "oeuvres", "domaines"
   add_foreign_key "oeuvres", "users"
+  add_foreign_key "oeuvres_domaines", "domaines"
+  add_foreign_key "oeuvres_domaines", "oeuvres"
   add_foreign_key "rejected_designers", "users"
   add_foreign_key "rejected_oeuvres", "users"
   add_foreign_key "suivis", "users"

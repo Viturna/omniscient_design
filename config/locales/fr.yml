@@ -776,6 +776,12 @@ fr:
     progress:
       percent: "%{percent}%"
     steps:
+      0: 
+        title: "Critères d’acceptation des œuvres et designers"
+        subtitle: "Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants."
+        warning: "Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée."
+        authenticity_title: "1. Originalité et Authenticité"
+        authenticity_text: "- Chaque référence doit être originale, conçue par son auteur. \n - Chaque référence doit être clairement sourcés."
       1:
         title: "Étape 1 : La référence"
         nom_oeuvre: "Nom de la référence"
@@ -815,6 +821,7 @@ fr:
     buttons:
       next: "Suivant"
       prev: "Précédent"
+      accept: "Accepter"
       submit: "Envoyer"
     select2:
       placeholder_designer: "Rechercher un/une designer…"

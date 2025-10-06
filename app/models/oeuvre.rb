@@ -5,7 +5,8 @@ class Oeuvre < ApplicationRecord
   
   validates :nom_oeuvre, uniqueness: true, presence: true
 
-  belongs_to :domaine
+  has_many :oeuvres_domaines, dependent: :destroy
+  has_many :domaines, through: :oeuvres_domaines
 
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items

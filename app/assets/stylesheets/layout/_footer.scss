@@ -135,18 +135,38 @@
   .footer-top,
   .footer-bottom {
     width: calc(100% - 8vw - 350px);
-    padding: 48px 4vw;
+  }
+  .footer-top {
+    padding: 64px 4vw;
   }
   .footer-bottom {
     gap: 16px;
+    padding: 36px 4vw;
     flex-wrap: wrap;
+  }
+  .tagline {
+    width: 70%;
   }
   .footer-brand .logo {
     width: 180px;
   }
-
+  .back-top {
+    font-size: 16px !important;
+    padding: 16px 28px;
+  }
   .footer-title {
     font-size: 20px;
+  }
+  .footer-bottom {
+    .legal {
+      a {
+        font-size: 17px;
+      }
+    }
+
+    p {
+      font-size: 17px;
+    }
   }
   .large-footer .footer-bottom,
   .large-footer .footer-top {

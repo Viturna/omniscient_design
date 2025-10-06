@@ -39,7 +39,8 @@
 <section class="grid-1 profil">
   <h2><%= t('edit_profile.public_profile') %></h2>
   <p class="desc-profil"><%= t('edit_profile.public_desc') %></p>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true, data: { turbo: false } }) do |f| %>
+
     <div class="flex-form" style="margin-top: 32px;">
       <%= render "users/shared/error_messages", resource: resource %>
       <div class="field">
@@ -158,21 +159,22 @@
     </div>
   <% end %>
   <div display="flex">
-   <%= button_to t('edit_profile.delete_account'), registration_path(resource_name),
-      data: { confirm: t('edit_profile.confirm_delete') }, method: :delete,
+<%= button_to t('edit_profile.delete_account'), registration_path(resource_name),
+      data: { turbo: false, confirm: t('edit_profile.confirm_delete') }, method: :delete,
       class: "button delete delete-account" %>
+
 
   </div>
 </section>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-  const removeProfileImageBtn = document.getElementById('remove-profile-image-btn');
-  const removeProfileImageCheckbox = document.getElementById('user_remove_profile_image');
-  const form = removeProfileImageBtn.closest('form');
+  document.addEventListener("turbo:load", () => {
+    const removeProfileImageBtn = document.getElementById('remove-profile-image-btn');
+    const removeProfileImageCheckbox = document.getElementById('user_remove_profile_image');
+    const form = removeProfileImageBtn.closest('form');
 
-  removeProfileImageBtn.addEventListener('click', function() {
-    removeProfileImageCheckbox.checked = true;
-    form.submit();
-  });
+    removeProfileImageBtn.addEventListener('click', function() {
+      removeProfileImageCheckbox.checked = true;
+      form.submit();
+    });
   });
 </script>

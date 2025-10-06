@@ -114,7 +114,7 @@ class SearchController < ApplicationController
   if params[:tab] == "frise"
  @oeuvres = Oeuvre.where(validation: true)
                    .select(:id, :nom_oeuvre, :date_oeuvre, :domaine_id, :image, :slug)
-                   .includes(:notions) # si on doit afficher les notions
+                   .includes(:notions, :designers)
                    .order(:date_oeuvre)
 
   @designers = Designer.where(validation: true)
@@ -145,12 +145,18 @@ class SearchController < ApplicationController
       end
     end    
 
-    if params[:country].present?
-      countries = Array(params[:country]).reject(&:blank?) 
+   if params[:country].present?
+      countries = Array(params[:country]).reject(&:blank?)
       if countries.any?
         @designers = @designers.joins(:countries).where(countries: { id: countries })
+
+        # ==> nouvelles lignes pour filtrer les oeuvres
+        designer_ids = @designers.pluck(:id)
+        @oeuvres     = @oeuvres.joins(:designers)
+                              .where(designers: { id: designer_ids })
       end
     end
+
     
     if params[:notions].present?
       notion_ids = Array(params[:notions]).reject(&:blank?)

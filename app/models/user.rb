@@ -9,7 +9,8 @@ class User < ApplicationRecord
   attribute :banned, :boolean, default: false
 
   # Statuts valides
-  STATUTS = %w[student teacher company association designer artist other]
+  STATUTS = %w[Student Teacher Company Association Designer Artist Other Étudiant Enseignant Entreprise Artiste Autre]
+
   # Validations
   validates :rgpd_consent, acceptance: true
   validates :pseudo, presence: true, uniqueness: { message: I18n.t('user.pseudo_taken') }

@@ -45,8 +45,8 @@
 }
 
 .card {
-  padding-top: 120px;
-  height: 95dvh;
+  padding-top: 190px;
+  height: calc(100dvh - 190px);
   position: relative;
   width: 50vw;
   scroll-snap-align: start;
@@ -130,7 +130,8 @@
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .card {
     width: 60vw;
-    padding-top: 90px;
+    padding-top: 180px;
+    height: calc(100dvh - 180px);
   }
 
   .bg-card {
@@ -171,7 +172,8 @@
 
   .card {
     width: 80vw;
-    padding-top: 50px;
+    padding-top: 70px;
+    height: calc(100dvh - 70px);
   }
 
   .bg-card {
@@ -234,6 +236,7 @@
 
   .card {
     padding-top: 10px;
+    height: calc(100dvh - 10px);
     width: 90vw;
   }
 
@@ -295,6 +298,7 @@
 
   .card {
     padding-top: 0px;
+    height: 100dvh;
     width: 90vw;
   }
 

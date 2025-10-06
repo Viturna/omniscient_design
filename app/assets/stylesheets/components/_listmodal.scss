@@ -1,7 +1,7 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 .modal-content {
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   margin: 0 auto;
   padding: 0 50px;
   padding-bottom: 24px;
@@ -22,18 +22,35 @@
 .check-box-wrapper {
   width: 18%;
   aspect-ratio: 1/1;
-}
+  position: relative;
+  &.selected {
+    opacity: 0.5;
 
-.check-box-wrapper.selected {
-  opacity: 0.5;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40%;
+      height: 40%;
+      transform: translate(-50%, -50%);
+      background-image: url("data:image/svg+xml;utf8,\
+      <svg width='76' height='73' viewBox='0 0 76 73' fill='none' xmlns='http://www.w3.org/2000/svg'>\
+      <path d='M69 33.4961V36.5186C68.996 43.527 66.7266 50.3463 62.5303 55.9595C58.334 61.5727 52.4357 65.6791 45.7149 67.6663C38.9941 69.6534 31.8111 69.4148 25.237 66.986C18.663 64.5572 13.0501 60.0684 9.23562 54.1891C5.42112 48.3097 3.60932 41.3548 4.07045 34.3616C4.53158 27.3684 7.24092 20.7117 11.7944 15.3841C16.3479 10.0565 22.5015 6.34359 29.3376 4.79908C36.1737 3.25456 43.3259 3.9612 49.7275 6.8136' stroke='white' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/>\
+      <path d='M72.25 7.26895L36.5 43.0189L26.75 33.2689' stroke='white' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/>\
+      </svg>");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+    }
+  }
 }
-
 .card-list-add {
   width: 100%;
   aspect-ratio: 1/1;
   display: flex;
   align-items: end;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e9e9e9;
   border-radius: 5px;
   position: relative;
   background-color: rgba(255, 255, 255, 0.8);
@@ -56,7 +73,7 @@
 
 .card-checked {
   opacity: 0.5;
-  border: 3px solid #E9E9E9;
+  border: 3px solid #e9e9e9;
 }
 
 .hidden {
@@ -100,7 +117,7 @@
   z-index: 1;
 }
 
-@media screen and (min-width:769px) and (max-width: 1024px) {
+@media screen and (min-width: 769px) and (max-width: 1024px) {
   .check-box-wrapper {
     width: 23%;
     aspect-ratio: 1/1;
@@ -109,11 +126,9 @@
   .search-container {
     width: 40vw;
   }
-
 }
 
-@media screen and (min-width:600px) and (max-width: 768px) {
-
+@media screen and (min-width: 600px) and (max-width: 768px) {
   .modal-content {
     padding: 0 20px 32px 20px;
     width: 90vw;
@@ -142,11 +157,9 @@
   .search-container input[type="search"] {
     height: 60px;
   }
-
 }
 
-@media screen and (min-width:425px) and (max-width: 601px) {
-
+@media screen and (min-width: 425px) and (max-width: 601px) {
   .modal-content {
     padding: 0 20px 32px 20px;
     width: 85vw;
@@ -185,11 +198,9 @@
     width: 17px;
     height: 17px;
   }
-
 }
 
-@media screen and (min-width:0px) and (max-width: 426px) {
-
+@media screen and (min-width: 0px) and (max-width: 426px) {
   .modal-content {
     padding: 0 15px 32px 15px;
     width: 85vw;
@@ -228,5 +239,4 @@
     width: 16px;
     height: 16px;
   }
-
 }

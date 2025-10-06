@@ -10,12 +10,11 @@
       height: calc(100dvh - 50px); /* Ajuster la hauteur pour les petits écrans */
     }
   }
-  #cardContainer {
+ #cardContainer {
     position: relative;
-    height: 110dvh; /* Hauteur de l'écran */
-    overflow-y: scroll; /* Active le scroll vertical uniquement */
-    scroll-snap-type: y mandatory; /* Active le snap pour le défilement vertical */
-    -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory; 
   }
   .box-card{
     display: flex;
@@ -121,6 +120,9 @@
   <script>
     document.addEventListener("turbo:load", () => {
       const container = document.getElementById("cardContainer");
+      if (container) {
+        container.scrollTop = 0;
+      }
       const loadMoreTrigger = document.getElementById("designers-load-more");
       const upButton = document.querySelector(".arrow-button.up");
       const downButton = document.querySelector(".arrow-button.down");

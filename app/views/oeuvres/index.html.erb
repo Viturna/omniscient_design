@@ -12,7 +12,7 @@
   }
   #cardContainer {
     position: relative;
-    height: 110dvh;
+    height: 100dvh;
     overflow-y: scroll;
     scroll-snap-type: y mandatory; 
   }
@@ -132,6 +132,12 @@
     const downButton = document.querySelector(".arrow-button.down");
 
     if (!container) return;
+     container.scrollTop = 0;
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => {
+    container.scrollTop = 0;
+  });
+
 
     let isLoading = false;
     let isScrolling = false;
@@ -241,13 +247,14 @@
       const { scrollTop, scrollHeight, clientHeight } = container;
       isScrolling = true;
 
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
+      if (scrollTop + clientHeight >= scrollHeight) {
         loadMoreCards();
       }
 
       setTimeout(() => (isScrolling = false), 100);
     }, { passive: true });
   });
+  
 </script>
 <div id="popup" class="popup">
   <div class="popup-content">

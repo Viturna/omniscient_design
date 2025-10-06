@@ -103,13 +103,12 @@
     </main>
     <% excluded_pages = [
       {controller: 'lists',      actions: %w[show edit index new]},
-      {controller: 'oeuvres',    actions: %w[index new]},
-      {controller: 'designers',  actions: %w[index new]},
+      {controller: 'oeuvres',    actions: %w[index new edit]},
+      {controller: 'designers',  actions: %w[index new edit]},
       {controller: 'pages',      actions: %w[add_elements]},
       {controller: 'feedbacks',  actions: %w[new]},
       {controller: 'notifications',  actions: %w[index]}
     ] %>
-
     <% unless excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) } %>
     <!-- Footer -->
      <% large_footer = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
@@ -171,12 +170,12 @@
           <a href="mailto:contact@omniscientdesign.fr"><%=t('footer.email')%></a>
         </div>
       </div>
-      <button class="back-top button">
+      <a href="#" class="back-top button">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M23.7491 13.3314C23.7491 13.3314 18.493 7.60254 16.4466 5.37132C16.2762 5.18422 16.0522 5.09131 15.8282 5.09131C15.6042 5.09131 15.3802 5.18422 15.2098 5.37132C13.1634 7.60127 7.9096 13.3289 7.9096 13.3289C7.74042 13.5134 7.65641 13.7565 7.65641 13.9996C7.65758 14.2427 7.74275 14.4871 7.91426 14.6742C8.25611 15.0471 8.80798 15.0484 9.1475 14.6793L14.9532 8.34585V27.0458C14.9532 27.5727 15.3452 28.0004 15.8282 28.0004C16.3112 28.0004 16.7032 27.5727 16.7032 27.0458V8.34585L22.5124 14.6818C22.8496 15.0497 23.4003 15.0471 23.7421 14.6742C23.9136 14.4871 24 14.2427 24 13.9996C24.0012 13.7565 23.9171 13.516 23.7491 13.3314Z" fill="#202020"/>
             </svg>
             <%=t('footer.goup')%>
-          </button>
+          </a>
 
       <div class="footer-bottom">
         <p><%=t('footer.copyright')%></p>

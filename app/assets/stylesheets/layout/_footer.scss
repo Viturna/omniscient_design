@@ -77,6 +77,8 @@
   position: absolute;
   right: 4vw;
   top: 332px;
+  color: $primary-color !important;
+  text-decoration: underline;
 }
 
 // =========================
@@ -112,11 +114,18 @@
     font-weight: 400;
   }
 }
+.socials a {
+  text-decoration: none !important;
+}
+.socials a:hover {
+  opacity: 80%;
+}
 .large-footer .footer-bottom,
 .large-footer .footer-top {
   margin-left: 0;
   width: calc(100% - 12vw);
 }
+
 // =========================
 // RESPONSIVE
 // =========================

@@ -121,23 +121,38 @@
       </div>
 
       <!-- Dates -->
-      <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
-        <label for="dateFilter"><%= t('search.dates') %></label>
-        <div class="dropdown">
-          <button type="button" class="dropdown-toggle" data-dropdown-target="toggle"><%= t('search.select_period') %></button>
-          <div class="dropdown-menu" data-dropdown-target="menu">
-            <div>
-              <label for="startDate"><%= t('search.from') %></label>
-              <%= form.number_field :start_year, value: params[:start_year], class: "date-filter", placeholder: t('search.start_year') %>
-            </div>
-            <div>
-              <label for="endDate"><%= t('search.to') %></label>
-              <%= form.number_field :end_year, value: params[:end_year], class: "date-filter", placeholder: t('search.end_year') %>
-            </div>
-            <button type="button" id="applyDateFilter" class="button dark"><%= t('search.apply') %></button>
+     <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
+      <label for="dateFilter"><%= t('search.dates') %></label>
+      <div class="dropdown">
+        <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
+          <%= t('search.select_period') %>
+        </button>
+        <div class="dropdown-menu" data-dropdown-target="menu">
+          <div>
+            <label for="startDate"><%= t('search.from') %></label>
+            <%= form.number_field :start_year,
+                value: params[:start_year],
+                class: "date-filter",
+                id: "startDate",
+                placeholder: t('search.start_year') %>
           </div>
+          <div>
+            <label for="endDate"><%= t('search.to') %></label>
+            <%= form.number_field :end_year,
+                value: params[:end_year],
+                class: "date-filter",
+                id: "endDate",
+                placeholder: t('search.end_year') %>
+          </div>
+
+          <!-- Le bouton qui applique le filtre -->
+          <button type="button" id="applyDateFilter" class="button dark">
+            <%= t('search.apply') %>
+          </button>
         </div>
       </div>
+    </div>
+
 
       <!-- Sort -->
       <div class="filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">

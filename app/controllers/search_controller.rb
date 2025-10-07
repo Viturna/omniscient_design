@@ -119,7 +119,7 @@ class SearchController < ApplicationController
 
   @designers = Designer.where(validation: true)
                        .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
-                       .includes(:domaines, :countries) # préchargement pour éviter N+1
+                       .includes(:domaines, :countries)
                        .order(:date_naissance)
   else
     @oeuvres = Oeuvre.where(validation: true)

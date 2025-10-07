@@ -410,3 +410,7 @@ document.addEventListener("turbo:load", () => {
     }
   }
 </script>
+<script>
+  window.loaderVideoPath = "<%= asset_path('loader.webm') %>"
+  window.loaderUnsupportedText = "<%= j t('loader.unsupported_browser') %>"
+</script>

@@ -1,3 +1,4 @@
+// app/javascript/controllers/tabs_search_controller.js
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -8,32 +9,58 @@ export default class extends Controller {
     ]
 
     connect() {
+        // applique les filtres au chargement initial
         this.applyFiltersDisplay()
     }
 
+    /**
+     * Géré au clic sur un onglet.
+     * Si on reste sur le même onglet => switch local.
+     * Sinon => affiche un loader puis Turbo.visit(url).
+     */
     switch(event) {
+        event.preventDefault()
         const tabName = event.currentTarget.dataset.tab
-        if (this.hasTabInputTarget) this.tabInputTarget.value = tabName
-        this.showTab(tabName)
 
-        // Construire l’URL avec le bon paramètre
+        if (this.hasTabInputTarget) {
+            this.tabInputTarget.value = tabName
+        }
+
+        const currentTab = new URL(window.location).searchParams.get("tab") || "designers"
+
+        if (tabName === currentTab) {
+            this.showTabLocally(tabName)
+            return
+        }
+
+        // feedback immédiat sur le bouton
+        this.tabTargets.forEach(tab => tab.classList.remove("active"))
+        event.currentTarget.classList.add("active")
+
+        // affiche le loader
+        this.showLoadingOverlay()
+
+        // construit l’URL et déclenche le rechargement côté serveur
         const url = new URL(window.location)
         url.searchParams.set("tab", tabName)
         url.searchParams.set("page", "1")
 
-        // Rediriger (Turbo va recharger côté serveur)
         Turbo.visit(url.toString())
+
+
     }
 
-    // Affiche/caché les contenus + filtres
-    showTab(tabName) {
-        this.tabContentTargets.forEach(tab => tab.style.display = "none")
-        const activeContent = this.tabContentTargets.find(tab => tab.id === tabName)
-        if (activeContent) activeContent.style.display = "block"
+    /**
+     * Affichage local si on reste sur le même onglet
+     */
+    showTabLocally(tabName) {
+        this.tabContentTargets.forEach(tab => {
+            tab.style.display = (tab.id === tabName) ? "block" : "none"
+        })
 
-        this.tabTargets.forEach(tab => tab.classList.remove("active"))
-        const activeButton = this.tabTargets.find(tab => tab.dataset.tab === tabName)
-        if (activeButton) activeButton.classList.add("active")
+        this.tabTargets.forEach(tab => {
+            tab.classList.toggle("active", tab.dataset.tab === tabName)
+        })
 
         this.applyFiltersDisplay(tabName)
     }
@@ -49,6 +76,7 @@ export default class extends Controller {
         if (this.hasSortFilterTarget && this.hasSortSelectTarget)
             this.updateSortOptions(tabName)
     }
+
     updateSortOptions(tabName) {
         if (tabName === "frise") {
             if (this.hasSortFilterTarget) this.sortFilterTarget.style.display = "none"
@@ -88,4 +116,41 @@ export default class extends Controller {
         }
     }
 
+    /**
+     * Loader vidéo plein écran bloquant jusqu’au turbo:load complet
+     */
+    showLoadingOverlay() {
+        // retire tout overlay existant
+        const old = document.getElementById("search-loading-overlay")
+        if (old) old.remove()
+
+        const overlay = document.createElement("div")
+        overlay.id = "search-loading-overlay"
+        overlay.setAttribute("aria-hidden", "true")
+        overlay.style.cssText = `
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,0.9);
+      z-index:9999;
+      pointer-events:auto;
+      cursor:wait;
+    `
+        overlay.innerHTML = `
+      <video autoplay loop muted playsinline webkit-playsinline preload="auto"
+             style="max-width:200px;max-height:200px;pointer-events:none;">
+        <source src="${window.loaderVideoPath}" type="video/webm">
+        ${window.loaderUnsupportedText || "Votre navigateur ne supporte pas la vidéo."}
+      </video>
+    `
+
+        document.body.appendChild(overlay)
+
+        // Supprime l’overlay seulement quand la nouvelle page est prête
+        document.addEventListener("turbo:load", () => {
+            overlay.remove()
+        }, { once: true })
+    }
 }

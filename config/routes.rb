@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     get "feedbacks", to: "dashboard#feedbacks"
   end
 
-  # ---- AUTH ----
+  get 'frise/oeuvres', to: 'search#frise_oeuvres'
  
 
   # ---- LOCALISATION ----

@@ -6,7 +6,7 @@ class ListsController < ApplicationController
     :remove_designer, :remove_oeuvre,
     :add_oeuvre, :add_designer
   ]
-
+  
   def index
     @lists = current_user.lists
     @editor_lists = current_user.editable_lists
@@ -96,6 +96,8 @@ class ListsController < ApplicationController
         @selected_designer_ids = [selected_designer.id]
       end
     end
+
+    
   end
 
 

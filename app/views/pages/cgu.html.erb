@@ -10,6 +10,44 @@
   <h1>Conditions Générales d'Utilisation (CGU)</h1>
 </section>
 <section class="grid-1">
+ <!-- Script AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2941773271062587"
+          crossorigin="anonymous"></script>
+
+  <!-- Bloc pub -->
+ <ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-6r+di+5g-2m-8y"
+     data-ad-client="ca-pub-2941773271062587"
+     data-ad-slot="7247194614"
+     data-adtest="on"></ins>
+
+
+  <!-- Initialisation AdSense -->
+  <script>
+    function initAds() {
+      var ads = document.querySelectorAll('.adsbygoogle');
+      ads.forEach(function(ad) {
+        if (!ad.dataset.adsInitialized) {
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            ad.dataset.adsInitialized = true; // marque comme initialisé
+          } catch(e) {
+            console.warn("Erreur AdSense:", e);
+          }
+        }
+      });
+    }
+
+    // Pour pages classiques
+    window.addEventListener('load', initAds);
+
+    // Pour Turbo/Hotwire
+    document.addEventListener('turbo:load', initAds);
+    
+  </script>
+
   <p class="black medium">Dernière mise à jour : 26/08/2024</p>
   <p style="margin-top:24px">
     Bienvenue sur le site <a href="https://omniscientdesign.fr" class="black underline" target="_blank">https://omniscientdesign.fr</a> (ci-après "le Site"). En accédant au Site et en utilisant nos services, vous acceptez sans réserve les présentes Conditions Générales d'Utilisation (CGU). Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser le Site.

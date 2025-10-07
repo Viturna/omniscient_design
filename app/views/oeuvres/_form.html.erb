@@ -59,14 +59,16 @@
       <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
       <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
 
-      <div>
-        <%= form.label :domaine_id, t('add_oeuvre.steps.2.domaine_id') %>
-        <%= form.select :domaine_id,
-        options_from_collection_for_select(Domaine.all, :id, :domaine, @oeuvre.domaine_id),
-        { include_blank: "Sélectionnez un domaine" },
-        class: "form-control" %>
-
+     <div>
+        <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
+        <%= form.collection_select :domaine_ids, 
+            Domaine.order(:domaine), 
+            :id, 
+            :domaine, 
+            { include_blank: false, selected: @oeuvre.domaine_ids }, 
+            { class: "form-control domaine-select", multiple: true, name: "oeuvre[domaine_ids][]" } %>
       </div>
+
     </div>
     <div class="flex-btn-add">
       <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
@@ -199,41 +201,34 @@
   });
 </script>
 <script>
- document.addEventListener("turbo:load", () => {
-    // Configuration pour les designers
-    $('.designer-select').select2({
-      placeholder: "Rechercher un/une designer...",
-      allowClear: true,
-      language: {
-        inputTooShort: function() {
-          return "Veuillez entrer plus de caractères...";
-        },
-        searching: function() {
-          return "Recherche en cours...";
-        },
-        noResults: function() {
-          return "Aucun résultat trouvé";
-        }
-      }
-    });
+  document.addEventListener("turbo:load", () => {
 
-    // Configuration pour les concepts
-    $('.notions-select').select2({
-      placeholder: "Rechercher des notions...",
-      allowClear: true,
-      language: {
-        inputTooShort: function() {
-          return "Veuillez entrer plus de caractères...";
-        },
-        searching: function() {
-          return "Recherche en cours...";
-        },
-        noResults: function() {
-          return "Aucun résultat trouvé";
-        }
+  function initSelect2(selector, placeholder) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+      if ($(el).hasClass("select2-hidden-accessible")) {
+        $(el).select2('destroy'); // supprime l'ancienne instance
       }
+      $(el).select2({
+        placeholder: placeholder,
+        allowClear: true,
+        width: '100%',
+        language: {
+          inputTooShort: function() { return "Veuillez entrer plus de caractères..."; },
+          searching: function() { return "Recherche en cours..."; },
+          noResults: function() { return "Aucun résultat trouvé"; }
+        }
+      });
     });
-  });
+  }
+
+  // Initialisation designers
+  initSelect2('.designer-select', 'Rechercher un/une designer...');
+
+  // Initialisation notions
+  initSelect2('.notions-select', 'Rechercher des notions...');
+  initSelect2('.domaine-select', 'Sélectionnez un domaine...');
+});
 </script>
 
 

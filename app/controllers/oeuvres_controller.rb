@@ -31,11 +31,20 @@ class OeuvresController < ApplicationController
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show
+    @domaines = @oeuvre.domaines
     unless @oeuvre.validation || (user_signed_in? && (current_user.admin? || @oeuvre.user == current_user || current_user.certified?))
       redirect_to root_path, alert: t('oeuvres.access_denied')
       return
     end
     @lists = user_signed_in? ? current_user.lists : []
+
+     @domaine_oeuvres = Oeuvre
+                       .joins(:domaines)
+                       .where(domaines: { id: @domaines.ids })
+                       .where(validation: true)
+                       .where.not(id: @oeuvre.id)
+                       .order("RANDOM()")
+                       .limit(5)
   end
 
   # GET /oeuvres/new
@@ -230,7 +239,7 @@ class OeuvresController < ApplicationController
     params.require(:oeuvre).permit(
       :nom_oeuvre, :date_oeuvre, :presentation_generale, :contexte_historique,
       :materiaux_et_innovations_techniques, :concept_et_inspiration,
-      :dimension_esthetique, :impact_et_message, :image, :domaine_id, :recaptcha_token, source: [], designer_ids: [], concept_ids: [], notion_ids: []
+      :dimension_esthetique, :impact_et_message, :image, :recaptcha_token, source: [], designer_ids: [], concept_ids: [], notion_ids: [],  :domaine_ids => []
     )
   end
 end

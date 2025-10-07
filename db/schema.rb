@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_06_220441) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_07_072501) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -244,7 +244,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_220441) do
   end
 
   create_table "oeuvres", force: :cascade do |t|
-    t.text "domaine"
     t.text "nom_designer"
     t.integer "date_naissance"
     t.text "pays"
@@ -253,7 +252,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_220441) do
     t.text "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "domaine_id"
     t.boolean "validation", default: false
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
@@ -266,7 +264,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_220441) do
     t.text "impact_et_message"
     t.text "rejection_reason"
     t.text "source"
-    t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
     t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
     t.index ["user_id"], name: "index_oeuvres_on_user_id"
   end
@@ -366,7 +363,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_220441) do
   add_foreign_key "notifications", "users"
   add_foreign_key "notions_oeuvres", "notions"
   add_foreign_key "notions_oeuvres", "oeuvres"
-  add_foreign_key "oeuvres", "domaines"
   add_foreign_key "oeuvres", "users"
   add_foreign_key "oeuvres_domaines", "domaines"
   add_foreign_key "oeuvres_domaines", "oeuvres"

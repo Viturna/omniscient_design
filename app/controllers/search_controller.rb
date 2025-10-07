@@ -113,8 +113,8 @@ class SearchController < ApplicationController
 
   if params[:tab] == "frise"
  @oeuvres = Oeuvre.where(validation: true)
-                   .select(:id, :nom_oeuvre, :date_oeuvre, :domaine_id, :image, :slug)
-                   .includes(:notions, :designers)
+                   .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
+                   .includes(:notions, :designers, :domaines,)
                    .order(:date_oeuvre)
 
   @designers = Designer.where(validation: true)
@@ -123,8 +123,8 @@ class SearchController < ApplicationController
                        .order(:date_naissance)
   else
     @oeuvres = Oeuvre.where(validation: true)
-                    .select(:id, :nom_oeuvre, :domaine_id, :date_oeuvre, :image, :slug)
-                    .includes(:notions)
+                    .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
+                    .includes(:notions, :domaines)
                     .order(:nom_oeuvre)
                     .page(params[:page])
                     .per(per_page)
@@ -138,12 +138,13 @@ class SearchController < ApplicationController
   end
 
     if params[:domaine].present?
-      filtered_domains = Array(params[:domaine]).reject(&:blank?)  # Convertir en tableau et filtrer
+      filtered_domains = Array(params[:domaine]).reject(&:blank?)
       if filtered_domains.any?
-        @oeuvres = @oeuvres.where(domaine_id: filtered_domains)
+        @oeuvres = @oeuvres.joins(:domaines).where(domaines: { id: filtered_domains })
         @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
       end
-    end    
+    end
+
 
    if params[:country].present?
       countries = Array(params[:country]).reject(&:blank?)

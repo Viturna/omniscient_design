@@ -1,27 +1,36 @@
 <%
+  # Détermination de l'image
   raw_path = "oeuvres/desktop/#{remove_accents_and_special_chars(card.nom_oeuvre)}.webp"
-  if asset_exists?(raw_path)
-    image_path = asset_path(raw_path)
-  else
-    image_path = card.image
-  end
+  image_path = asset_exists?(raw_path) ? asset_path(raw_path) : card.image
 %>
+
 <%= link_to oeuvre_path(card.slug) do %>
   <div class="card" data-id="<%= card.id %>">
-    <% if card.domaines.size == 1 %>
-        <%# Un seul domaine, utilisez sa couleur %>
+
+    <%# --------- Couleur de fond --------- %>
+    <% if card.domaines.any? %>
+      <% if card.domaines.size == 1 %>
+        <!-- Un seul domaine → couleur unie -->
         <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>;">
-        <% elsif %>
-          <%# Plusieurs domaines, créez un dégradé %>
-          <% colors = card.domaines.map(&:couleur).join(', ') %>
-          <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
-        <% else %>
-          <%# Aucun domaine, utilisez une couleur par défaut %>
-          <div class="bg-card" style="background-color: #ccc;">
-          <% end %>
-        
+      <% else %>
+        <!-- Plusieurs domaines → dégradé -->
+        <% colors = card.domaines.map(&:couleur).join(', ') %>
+        <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
+      <% end %>
+    <% else %>
+      <!-- Aucun domaine → couleur par défaut -->
+      <div class="bg-card" style="background-color: #ccc;">
+    <% end %>
+
+      <%# --------- Image de fond --------- %>
       <% if image_path.present? %>
-        <div class="bg-img-card" style="background-image: url('<%= asset_path(image_path) %>'); background-repeat: no-repeat; background-position: center center; background-size: cover;">
+        <div class="bg-img-card"
+             style="background-image: url('<%= image_path %>');
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-size: cover;">
+
+          <%# --------- Infos de l’œuvre --------- %>
           <div class="flex-info-card">
             <div class="info-card-dark">
               <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,10 +40,16 @@
               </svg>
               <%= card.date_oeuvre %>
             </div>
-            <% if card.domaine.present? %>
-              <div class="info-card-dark">
-                <div class="small-circle" style="background-color: <%= card.domaine.couleur %>;"></div>
-                <%= card.domaine.domaine %>
+
+            <%# --------- Domaines --------- %>
+            <% if card.domaines.present? %>
+              <div class="domaine-flex-card">
+                <% card.domaines.each do |domaine| %>
+                  <div class="info-card-dark">
+                    <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
+                    <%= domaine.domaine %>
+                  </div>
+                <% end %>
               </div>
             <% else %>
               <div class="info-card-dark">
@@ -44,11 +59,17 @@
                 Domaine non spécifié
               </div>
             <% end %>
-          </div>
-           <img src="<%= image_path %>" alt="<%= card.nom_oeuvre %>" class="img-card">
-        </div>
-      <%end%>
-    </div>
+          </div> <!-- fin flex-info-card -->
+
+          <img src="<%= image_path %>"
+               alt="<%= card.nom_oeuvre %>"
+               class="img-card">
+        </div> <!-- fin bg-img-card -->
+      <% end %>
+
+    </div> <!-- fin bg-card -->
+
+    <%# --------- Texte en dessous de la carte --------- %>
     <div class="container-text-card">
       <p class="subtitle-card">
         <%= card.designers.map(&:nom_designer).join(', ') %>
@@ -56,5 +77,6 @@
       <h2 class="title-card"><%= card.nom_oeuvre %></h2>
       <p class="description-card description-card-home"><%= card.presentation_generale %></p>
     </div>
-  </div>
-<%end%>
+
+  </div> <!-- fin .card -->
+<% end %>

@@ -76,7 +76,7 @@ p {
 }
 
 .underline {
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
 
 .date {
@@ -99,7 +99,7 @@ p {
 }
 
 .black {
-  color: $primary-color;
+  color: $primary-color !important;
 }
 
 .italic {

@@ -6,7 +6,7 @@
       <div class="card-oeuvre" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position: center center;">
       <% end %>
       <div class="inner-card-oeuvre">
-        <p class="domaine-card-oeuvre"><%= oeuvre.domaine.domaine %></p>
+        <p class="domaine-card-oeuvre"><%= oeuvre.domaines.map(&:domaine).join(', ') %></p>
         <p class="title-card-oeuvre"><%= oeuvre.nom_oeuvre %></p>
       </div>
     </div>

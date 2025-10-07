@@ -47,8 +47,8 @@
 
   .tagline {
     font-size: 18px;
+    margin-bottom: 24px;
     color: $secondary-color;
-    margin-bottom: 82px;
   }
 }
 
@@ -113,6 +113,9 @@
     font-size: 18px;
     font-weight: 400;
   }
+}
+.socials {
+  margin-top: 82px;
 }
 .socials a {
   text-decoration: none !important;

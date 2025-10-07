@@ -24,6 +24,7 @@ fr:
     policy: "Politique de confidentialité"
     terms: "CGU"
     cookies: "Cookies"
+    donation: "Soutenir le projet"
   footer:
     tagline: "\"Le monde du Design à portée de mains.\""
     navigation: "Naviguation"
@@ -46,6 +47,7 @@ fr:
     politique: "Politique de confidentialité"
     cgu: "CGU"
     cookie: "Cookies"
+    donation: "Soutenir le projet"
     copyright: "©2025 Omniscient Design - Tous droits réservés"
   search:
     placeholder: "Rechercher une référence ou un designer"

@@ -50,7 +50,25 @@
 
       <div>
         <%= form.label :country, t('add_designer.steps.2.country') %>
-        <%= form.collection_select :country_1, Country.order(:country), :id, :country, { include_blank: t('add_designer.steps.2.country_blank'), prompt: t('add_designer.steps.2.country_placeholder'), selected: @country_1 }, { class: "form-control select2", data: { placeholder: t('add_designer.select2.placeholder') }, id: "country_1", name: "designer[country_ids][]" } %>
+        <%= form.collection_select :country_1, Country.order(:country), :id, :country,
+              { include_blank: t('add_designer.steps.2.country_blank'), prompt: t('add_designer.steps.2.country_placeholder'), selected: @country_1 },
+              { class: "form-control country-select select2", data: { placeholder: t('add_designer.select2.placeholder') }, id: "country_1", name: "designer[country_ids][]" } %>
+      </div>
+         <div>
+        <%= form.label :country, t('add_designer.steps.2.country') %>
+        <%= form.collection_select :country_2, Country.order(:country), :id, :country,
+              { include_blank: t('add_designer.steps.2.country_blank'), prompt: t('add_designer.steps.2.country_placeholder'), selected: @country_2 },
+              { class: "form-control country-select select2", data: { placeholder: t('add_designer.select2.placeholder') }, id: "country_2", name: "designer[country_ids][]" } %>
+      </div>
+
+      <div>
+        <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
+        <%= form.collection_select :domaine_ids, 
+            Domaine.order(:domaine), 
+            :id, 
+            :domaine, 
+            { include_blank: false, selected: @designer.domaine_ids }, 
+            { class: "form-control domaine-select", multiple: true, name: "designer[domaine_ids][]" } %>
       </div>
     </div>
     <div class="flex-btn-add">
@@ -173,26 +191,34 @@
     });
   });
 </script>
-<script>
-  $(document).ready(function() {
-    $('.select2').select2({
-      placeholder: "Rechercher un pays...",
-      allowClear: true,
-      language: {
-        inputTooShort: function() {
-          return "Veuillez entrer plus de caractères...";
-        },
-        searching: function() {
-          return "Recherche en cours...";
-        },
-        noResults: function() {
-          return "Aucun résultat trouvé";
-        }
-      }
-    });
-  });
-</script>
 
+<script>
+  document.addEventListener("turbo:load", () => {
+
+  function initSelect2(selector, placeholder) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+      if ($(el).hasClass("select2-hidden-accessible")) {
+        $(el).select2('destroy'); // supprime l'ancienne instance
+      }
+      $(el).select2({
+        placeholder: placeholder,
+        allowClear: true,
+        width: '100%',
+        language: {
+          inputTooShort: function() { return "Veuillez entrer plus de caractères..."; },
+          searching: function() { return "Recherche en cours..."; },
+          noResults: function() { return "Aucun résultat trouvé"; }
+        }
+      });
+    });
+  }
+
+  // Initialisation designers
+  initSelect2('.country-select', 'Rechercher un pays...');
+  initSelect2('.domaine-select', 'Sélectionnez un domaine...');
+});
+</script>
 <script>
  document.addEventListener("turbo:load", () => {
   const container = document.getElementById("sources-container");

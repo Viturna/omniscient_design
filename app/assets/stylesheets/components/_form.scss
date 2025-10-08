@@ -308,7 +308,20 @@ textarea {
   background-color: $secondary-color;
   color: $text-color;
 }
-
+.rules-add-hr {
+  margin: 24px 0;
+}
+.form-step p {
+  color: $secondary-color;
+}
+.form-step ul li {
+  margin: 16px 0;
+}
+.form-step h4 {
+  margin: 32px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
 body.dark-mode {
   input.search-top-bar {
     background-color: $secondary-color-dark;

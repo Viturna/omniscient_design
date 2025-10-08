@@ -12,9 +12,70 @@
       </ul>
     </div>
   <% end %>
-
-  <!-- Étape 1 -->
+   <!-- Étape 1 : Règlement -->
   <div class="form-step" data-step="1">
+    <h3>Critères d’acceptation des œuvres et designers</h3>
+    <p>
+     Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants.
+      <br><br>
+    <span style="font-weight:500;">⚠️ Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée.</span>
+    </p>
+    <hr class="rules-add-hr">
+
+    <h4>1. Originalité et Authenticité</h4>
+    <ul>
+      <li>Chaque référence doit être <strong>originale</strong>, conçue par son auteur.</li>
+      <li>Chaque référence doit être clairement sourcée.</li>
+    </ul>
+
+    <h4>2. Qualité visuelle</h4>
+    <ul>
+      <li>Images <strong>nettes</strong>et en <strong>haute résolution</strong>.</li>
+      <li>Formats acceptés : PNG, JPG, WEBP.</li>
+      <li>Aucune image <strong>floue</strong> ou <strong>pixelisée</strong> ne sera acceptée.</li>
+    </ul>
+
+    <h4>3. Respect des droits d’auteur</h4>
+    <ul>
+      <li>Vous devez avoir les <strong>droits d’utilisation complets</strong> sur tous les éléments partagés.</li>
+      <li>Pas d’infraction aux droits d’auteur.</li>
+    </ul>
+
+    <h4>4. Description détaillée</h4>
+    <ul>
+      <li>Fournir des descriptions complètes (artiste, technique, contexte...).</li>
+      <li>Le texte doit être rédigé correctement, <strong>sans fautes d’orthographe</strong> majeures ni langage familier.</li>
+      <li>Les descriptions doivent être <strong>factuelles</strong> et <strong>neutres</strong>, sans jugement ni prise de parti.</li>
+    </ul>
+
+    <h4>5. Pertinence et cohérence</h4>
+    <ul>
+      <li>Doit être pertinente pour la communauté et ne pas dupliquer du contenu existant.</li>
+    </ul>
+
+    <h4>6. Contenu responsable</h4>
+    <ul>
+      <li>Pas de contenu discriminatoire, violent, politique, religieux ou trollesque.</li>
+    </ul>
+
+    <p>Soumettre une référence sur omniscientdesign.fr signifie que vous acceptez pleinement ces conditions et vous engagez à les respecter.</p>
+
+    <div style="margin-top:48px;">
+      <label style="font-weight: 500;">
+        <input type="checkbox" id="accept-rules-checkbox">
+        J’ai lu et j’accepte le règlement ci-dessus
+      </label>
+    </div>
+
+    <div class="flex-btn-add" style="justify-content:flex-end; margin-top:1rem;">
+      <button type="button" class="next-step button large" id="btn-next-rules" disabled>
+        <%= t('add_oeuvre.buttons.next') %>
+      </button>
+    </div>
+  </div>
+
+  <!-- Étape 2 -->
+  <div class="form-step" data-step="2" style="display:none;">
     <h3><%= t('add_oeuvre.steps.1.title') %></h3>
     <div class="flex-form"> 
       <div>
@@ -27,8 +88,8 @@
     </div>
   </div>
 
-  <!-- Étape 2 -->
-  <div class="form-step" data-step="2" style="display: none;">
+  <!-- Étape 3 -->
+  <div class="form-step" data-step="3" style="display: none;">
     <h3><%= t('add_oeuvre.steps.2.title') %></h3>
     <div class="flex-form">
       <div data-controller="multi-select" data-multi-select-prefix-value="designer"> 
@@ -76,8 +137,8 @@
     </div>
   </div>
 
-  <!-- Étape 3 -->
-  <div class="form-step" data-step="3" style="display: none;">
+  <!-- Étape 4 -->
+  <div class="form-step" data-step="4" style="display: none;">
     <h3><%= t('add_oeuvre.steps.3.title') %></h3>
     <div class="flex-form"> 
       <div>
@@ -142,8 +203,8 @@
     </div>
   </div>
 
-  <!-- Étape 4 -->
-  <div class="form-step" data-step="4" style="display: none;">
+  <!-- Étape 5 -->
+  <div class="form-step" data-step="5" style="display: none;">
     <h3><%= t('add_oeuvre.steps.4.title') %></h3>
     <div class="flex-form"> 
       <div>
@@ -287,6 +348,43 @@
 </script>
 
 
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const checkbox = document.getElementById("accept-rules-checkbox");
+      const nextBtn  = document.getElementById("btn-next-rules");
+
+      if(checkbox && nextBtn){
+        checkbox.addEventListener("change", () => {
+          nextBtn.disabled = !checkbox.checked;
+        });
+      }
+
+      // Navigation étapes
+      document.querySelectorAll(".next-step").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const current = btn.closest(".form-step");
+          const next = current.nextElementSibling;
+          if(next){
+            current.style.display = "none";
+            next.style.display = "block";
+          }
+        });
+      });
+
+      document.querySelectorAll(".prev-step").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const current = btn.closest(".form-step");
+          const prev = current.previousElementSibling;
+          if(prev){
+            current.style.display = "none";
+            prev.style.display = "block";
+          }
+        });
+      });
+    });
+  </script>
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>
+
+

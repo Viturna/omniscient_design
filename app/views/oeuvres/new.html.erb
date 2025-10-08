@@ -50,7 +50,7 @@
   document.querySelectorAll(".next-step").forEach(button => {
     button.addEventListener("click", async () => {
       // Étape 1 : vérifier le nom
-      if (currentStep === 1) {
+      if (currentStep === 2) {
         const nomOeuvre = document.querySelector("input[name='oeuvre[nom_oeuvre]']").value.trim();
 
         if (nomOeuvre === "") {

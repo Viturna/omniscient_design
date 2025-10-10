@@ -17,7 +17,11 @@
     <!-- Pays -->
     <div class="filter">
       <label for="list_country"><%= t('search.country') %></label>
-      <%= form.select :country, @countries.all.map { |c| [c.country, c.id] }, { include_blank: t('search.choose_country') }, { multiple: true, class: "select2" } %>
+    <%= form.select :country,
+      @countries.map { |c| [c.country, c.id] },
+      { include_blank: t('search.choose_country'),
+        selected: @selected_country_ids },
+      { multiple: true, class: "select2", id: "list_country" } %>
     </div>
 
     <!-- Dates -->
@@ -126,6 +130,15 @@ document.addEventListener("turbo:load", () => {
       let url = `/lists/load_more_${type}?offset=${offset}`;
       if (slug) url += `&slug=${slug}`;
 
+      // on récupère aussi les filtres actuels dans l’URL
+      const currentParams = new URLSearchParams(window.location.search);
+      currentParams.forEach((v, k) => {
+        if (k !== 'offset' && k !== 'slug') {
+          url += `&${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+        }
+      });
+
+
       fetch(url, { headers: { 'Accept': 'text/html' }})
         .then(r => r.text())
         .then(html => {
@@ -134,7 +147,7 @@ document.addEventListener("turbo:load", () => {
             offsets[type] += 10;
           } else {
             button.disabled = true;
-            button.innerText = "Plus de résultats";
+            button.innerText = "Fin des résultats";
           }
         })
         .catch(err => console.error(err));
@@ -249,91 +262,35 @@ document.addEventListener("turbo:load", () => {
 
 
 <script>
-  function initSelect2() {
-    $(".select2").each(function () {
-      const $select = $(this);
+ document.addEventListener("turbo:load", () => {
+  const filterForm = document.getElementById("filterForm");
+  if (!filterForm) return;
 
-      // Toujours détruire même si le navigateur restaure la page
-      if ($select.data('select2')) {
-        $select.select2('destroy');
-      }
-
-      $select.select2({
-        placeholder: "Choisir des filtres",
-        allowClear: true,
-        width: "100%"
-      });
-
-      const filterForm = document.getElementById("filterForm");
-      if (filterForm) {
-        $select.off("select2:select select2:unselect");
-        $select.on("select2:select select2:unselect", function () {
-          const formData = new FormData(filterForm);
-          const url = new URL(window.location.href);
-
-          formData.forEach((value, key) => {
-            if (value) {
-              url.searchParams.set(key, value);
-            } else {
-              url.searchParams.delete(key);
-            }
-          });
-
-          window.history.pushState({}, "", url);
-          filterForm.requestSubmit();
-        });
-      }
-    });
-  function initFilters() {
-  $(".select2").each(function () {
-    const $select = $(this);
-
-    // reset au cas où
-    if ($select.data('select2')) {
-      $select.select2('destroy');
-    }
-
-    $select.select2({
-      placeholder: "Choisir",
-      allowClear: true,
-      width: "100%"
-    });
-
-    const filterForm = document.getElementById("filterForm");
-    if (!filterForm) return;
-
-    // On écoute select / unselect
-    $select.on("select2:select select2:unselect", function () {
-      const formData = new FormData(filterForm);
-      const url = new URL(window.location.href);
-
-      // Nettoyer avant de remettre
-      url.search = "";
-
-      formData.forEach((value, key) => {
-        if (value) {
-          // ⚠️ pour gérer multiples valeurs (domaine[], notions[], etc.)
-          url.searchParams.append(key, value);
-        }
-      });
-
-      // met à jour l’URL
-      window.history.pushState({}, "", url);
-
-      // soumet le form => ça recharge la page avec les bons filtres
-      filterForm.requestSubmit();
-    });
+  $(".select2").select2({
+    placeholder: "Choisir des filtres",
+    allowClear: true,
+    width: "100%"
   });
-}
 
-document.addEventListener("turbo:load", initFilters);
+  $(".select2").on("select2:select select2:unselect", function () {
+    const formData = new FormData(filterForm);
+    const url = new URL(window.location.href);
 
-// très important : nettoyer avant mise en cache
-document.addEventListener("turbo:before-cache", () => {
-  $(".select2").each(function () {
-    if ($(this).data('select2')) {
-      $(this).select2('destroy');
-    }
+    // Nettoie tous les params pour remettre à zéro
+    url.search = "";
+
+    // Parcours tous les champs du formulaire
+    formData.forEach((value, key) => {
+      if (!value) return;
+      // ⚠️ Si multiple select => append toutes les valeurs
+      url.searchParams.append(key, value);
+    });
+
+    // Met à jour l’URL sans recharger la page
+    window.history.pushState({}, "", url);
+
+    // Recharge Turbo avec les filtres appliqués
+    Turbo.visit(url.toString());
   });
 });
 

@@ -112,15 +112,15 @@ class SearchController < ApplicationController
   end
 
   if params[:tab] == "frise"
- @oeuvres = Oeuvre.where(validation: true)
-                   .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
-                   .includes(:notions, :designers, :domaines,)
-                   .order(:date_oeuvre)
+    @oeuvres = Oeuvre.where(validation: true)
+                    .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
+                    .includes(:notions, :designers, :domaines,)
+                    .order(:date_oeuvre)
 
-  @designers = Designer.where(validation: true)
-                       .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
-                       .includes(:domaines, :countries)
-                       .order(:date_naissance)
+    @designers = Designer.where(validation: true)
+                        .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
+                        .includes(:domaines, :countries)
+                        .order(:date_naissance)
   else
     @oeuvres = Oeuvre.where(validation: true)
                     .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
@@ -137,28 +137,26 @@ class SearchController < ApplicationController
                      .per(per_page)
   end
 
-    if params[:domaine].present?
-      filtered_domains = Array(params[:domaine]).reject(&:blank?)
-      if filtered_domains.any?
-        @oeuvres = @oeuvres.joins(:domaines).where(domaines: { id: filtered_domains })
-        @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
-      end
+  if params[:domaine].present?
+    filtered_domains = Array(params[:domaine]).reject(&:blank?)
+    if filtered_domains.any?
+      @oeuvres = @oeuvres.joins(:domaines).where(domaines: { id: filtered_domains })
+      @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
     end
+  end
 
-
-   if params[:country].present?
-      countries = Array(params[:country]).reject(&:blank?)
-      if countries.any?
-        @designers = @designers.joins(:countries).where(countries: { id: countries })
+  if params[:country].present?
+    countries = Array(params[:country]).reject(&:blank?)
+    if countries.any?
+      @designers = @designers.joins(:countries).where(countries: { id: countries })
 
         # ==> nouvelles lignes pour filtrer les oeuvres
-        designer_ids = @designers.pluck(:id)
-        @oeuvres     = @oeuvres.joins(:designers)
+      designer_ids = @designers.pluck(:id)
+      @oeuvres     = @oeuvres.joins(:designers)
                               .where(designers: { id: designer_ids })
-      end
     end
+  end
 
-    
     if params[:notions].present?
       notion_ids = Array(params[:notions]).reject(&:blank?)
       if notion_ids.any?

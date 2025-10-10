@@ -74,32 +74,26 @@ class ListsController < ApplicationController
     @current_page = 'listes'
     @list = current_user.lists.build
 
-    # convertir en tableau
-    @oeuvres   = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10).to_a
-    @designers = Designer.where(validation: true).order(:nom).limit(10).to_a
     @domaines  = Domaine.all
+    @countries = Country.where(id: DesignerCountry.select(:country_id)).order(:country)
 
-    # --- PRE-SELECTION oeuvre ---
-    if params[:oeuvre_id].present?
-      selected_oeuvre = Oeuvre.find_by(id: params[:oeuvre_id], validation: true)
-      if selected_oeuvre
-        @oeuvres.unshift(selected_oeuvre) unless @oeuvres.include?(selected_oeuvre)
-        @selected_oeuvre_ids = [selected_oeuvre.id]
-      end
+    oeuvres_scope, designers_scope = filtered_scopes
+
+    @selected_oeuvre_ids  = [params[:oeuvre_id]].compact
+    @selected_designer_ids = [params[:designer_id]].compact
+
+    @oeuvres   = oeuvres_scope.order(:nom_oeuvre).limit(10).to_a
+    @designers = designers_scope.order(:nom).limit(10).to_a
+
+    # injecte les pré-sélectionnés en tête
+    Oeuvre.where(id: @selected_oeuvre_ids).each do |o|
+      @oeuvres.unshift(o) unless @oeuvres.map(&:id).include?(o.id)
+    end
+    Designer.where(id: @selected_designer_ids).each do |d|
+      @designers.unshift(d) unless @designers.map(&:id).include?(d.id)
     end
 
-    # --- PRE-SELECTION designer ---
-    if params[:designer_id].present?
-      selected_designer = Designer.find_by(id: params[:designer_id], validation: true)
-      if selected_designer
-        @designers.unshift(selected_designer) unless @designers.include?(selected_designer)
-        @selected_designer_ids = [selected_designer.id]
-      end
-    end
-
-    
   end
-
 
 
   def create
@@ -267,40 +261,90 @@ class ListsController < ApplicationController
     redirect_to @list, notice: notice
   end
 
-  def load_more_oeuvres
-    if params[:slug].present?
-      @list = List.friendly.find_by(slug: params[:slug])
-  
-      unless @list
-        head :not_found and return
-      end
-  
-      # on pourrait ici charger seulement les oeuvres rattachées à la liste
-      @oeuvres = @list.oeuvres.offset(params[:offset]).limit(10)
-    else
-      # mode création ➔ on affiche toutes les oeuvres validées
-      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).offset(params[:offset]).limit(10)
-    end
-  
-    render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+ def load_more_oeuvres
+  offset = params[:offset].to_i
+  if params[:slug].present?
+    @list = List.friendly.find_by(slug: params[:slug])
+    @oeuvres = @list.oeuvres.offset(offset).limit(10)
+  else
+    oeuvres_scope, = filtered_scopes
+    @oeuvres = oeuvres_scope.order(:nom_oeuvre).offset(offset).limit(10)
   end
-  def load_more_designers
-    if params[:slug].present?
-      @list = List.friendly.find_by(slug: params[:slug])
-  
-      unless @list
-        head :not_found and return
-      end
-  
-      @designers = @list.designers.offset(params[:offset]).limit(10)
-    else
-      @designers = Designer.where(validation: true).order(:nom).offset(params[:offset]).limit(10)
-    end
-  
-    render partial: 'designers_list', collection: @designers, as: :designer
+  render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+end
+
+def load_more_designers
+  offset = params[:offset].to_i
+  if params[:slug].present?
+    @list = List.friendly.find_by(slug: params[:slug])
+    @designers = @list.designers.offset(offset).limit(10)
+  else
+    _, designers_scope = filtered_scopes
+    @designers = designers_scope.order(:nom).offset(offset).limit(10)
   end
+  render partial: 'designers_list', collection: @designers, as: :designer
+end
+
 
   private
+
+ def filtered_scopes
+  oeuvres   = Oeuvre.where(validation: true)
+  designers = Designer.where(validation: true)
+
+  # ----- années -----
+  if params[:start_year].present? && params[:end_year].present?
+    sy, ey = params[:start_year].to_i, params[:end_year].to_i
+    if sy > 0 && ey > 0 && sy <= ey
+      designers = designers.where(date_naissance: sy..ey)
+      oeuvres   = oeuvres.where(date_oeuvre: sy..ey)
+    end
+  end
+
+  # ----- domaines -----
+    # ----- domaines -----
+  domaines_params = params.dig(:list, :domaine)   # <--- cette ligne manquait
+  if domaines_params.present?
+    domaine_ids = Array(domaines_params).reject(&:blank?)
+
+    designers = designers.joins(:domaines)
+                         .where(domaines: { id: domaine_ids })
+                         .distinct
+
+    oeuvres   = oeuvres.joins(:domaines)
+                       .where(domaines: { id: domaine_ids })
+                       .distinct
+  end
+
+
+  # ----- notions -----
+  notions_params = params[:notions] || params.dig(:list, :notions)
+  if notions_params.present?
+    notion_ids = Array(notions_params).reject(&:blank?)
+    designers  = designers.joins(:notions).where(notions: { id: notion_ids }).distinct
+    oeuvres    = oeuvres.joins(:notions).where(notions: { id: notion_ids }).distinct
+  end
+
+  # ----- pays -----
+countries_params = params[:country] || params.dig(:list, :country)
+if countries_params.present?
+  country_ids = Array(countries_params).reject(&:blank?)
+
+  # pour les designers
+  designers = designers.joins(:designer_countries)
+                       .where(designer_countries: { country_id: country_ids })
+                       .distinct
+
+  # pour les oeuvres
+  oeuvres = oeuvres.joins(designers: :designer_countries)
+                   .where(designer_countries: { country_id: country_ids })
+                   .distinct
+end
+
+
+  [oeuvres, designers]
+end
+
 
   def set_list
     @list = List.friendly.find_by(slug: params[:slug])

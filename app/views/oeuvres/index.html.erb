@@ -25,6 +25,11 @@
     margin: 0;
     overflow: hidden;
   }
+  .ad-container {
+  width: 100%;
+  text-align: center;
+  margin: 20px 0;
+}
 </style>
 
 <section class="home-page top-bar-search">
@@ -100,7 +105,7 @@
       <%= link_to t('global.designers'), designers_path %>
       <%= link_to t('global.references'), oeuvres_path, class: "active" %>
     </div>
-
+ 
     <div class="box-card" id="boxCard">
       <% @oeuvres.each do |o| %>
         <% Rails.logger.debug "Type chargé : #{o.class.name}" %>

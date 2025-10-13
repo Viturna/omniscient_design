@@ -1,62 +1,62 @@
 <%= form_with(model: @list, local: true, data: { turbo: true }, id: "filterForm") do |form| %>
   <%= form.text_field :name, placeholder: t('lists.create.name_placeholder'), id: "list-name" %>
    <h2><%= t('lists.create.filters') %></h2>
-  <div class="filters">
+  <%# <div class="filters">
     <!-- Domaine -->
     <div class="filter">
-      <label for="list_domaine"><%= t('search.domain') %></label>
-      <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, { include_blank: t('search.choose_domain') }, { multiple: true, class: "select2", id: "list_domaine" } %>
+      <label for="list_domaine"><%= t('search.domain') </label>
+      <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, { include_blank: t('search.choose_domain') }, { multiple: true, class: "select2", id: "list_domaine" } 
     </div>
 
     <!-- Notions -->
     <div class="filter">
-      <label for="list_notions"><%= t('search.notions') %></label>
-      <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, { include_blank: t('search.choose_notions') }, { multiple: true, class: "select2", name: "notions[]" } %>
+      <label for="list_notions"><%= t('search.notions') </label>
+      <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, { include_blank: t('search.choose_notions') }, { multiple: true, class: "select2", name: "notions[]" } 
     </div>
 
     <!-- Pays -->
     <div class="filter">
-      <label for="list_country"><%= t('search.country') %></label>
+      <label for="list_country"><%= t('search.country') </label>
     <%= form.select :country,
       @countries.map { |c| [c.country, c.id] },
       { include_blank: t('search.choose_country'),
         selected: @selected_country_ids },
-      { multiple: true, class: "select2", id: "list_country" } %>
+      { multiple: true, class: "select2", id: "list_country" } %
     </div>
 
     <!-- Dates -->
      <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
-      <label for="dateFilter"><%= t('search.dates') %></label>
+      <label for="dateFilter"><%= t('search.dates') </label>
       <div class="dropdown">
         <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
-          <%= t('search.select_period') %>
+          <%= t('search.select_period') 
         </button>
         <div class="dropdown-menu" data-dropdown-target="menu">
           <div>
-            <label for="startDate"><%= t('search.from') %></label>
+            <label for="startDate"><%= t('search.from') </label>
             <%= form.number_field :start_year,
                 value: params[:start_year],
                 class: "date-filter",
                 id: "startDate",
-                placeholder: t('search.start_year') %>
+                placeholder: t('search.start_year') 
           </div>
           <div>
-            <label for="endDate"><%= t('search.to') %></label>
+            <label for="endDate"><%= t('search.to') </label>
             <%= form.number_field :end_year,
                 value: params[:end_year],
                 class: "date-filter",
                 id: "endDate",
-                placeholder: t('search.end_year') %>
+                placeholder: t('search.end_year') 
           </div>
 
           <!-- Le bouton qui applique le filtre -->
           <button type="button" id="applyDateFilter" class="button dark">
-            <%= t('search.apply') %>
+            <%= t('search.apply') 
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </div> %>
 
   <h2 style="margin-top:32px" class="title"><%= t('lists.create.designers_title') %></h2>
  

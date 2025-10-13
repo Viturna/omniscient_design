@@ -1,12 +1,14 @@
 class Oeuvre < ApplicationRecord
   extend FriendlyId
   include MeiliSearch::Rails
+
   friendly_id :nom_oeuvre, use: :slugged
-  
+
   validates :nom_oeuvre, uniqueness: true, presence: true
 
-  has_many :oeuvres_domaines, dependent: :destroy
+ has_many :oeuvres_domaines, class_name: "OeuvresDomaine", foreign_key: "oeuvre_id", dependent: :delete_all
   has_many :domaines, through: :oeuvres_domaines
+
 
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items
@@ -18,13 +20,17 @@ class Oeuvre < ApplicationRecord
 
   has_many :notions_oeuvres, class_name: 'NotionsOeuvre', dependent: :destroy
   has_many :notions, through: :notions_oeuvres
+
   attr_accessor :rejection_reason
 
   serialize :source, Array, coder: JSON
 
+  before_save :auto_translate_content, if: -> { I18n.locale == :fr }
+
   def validated?
     validation == true
   end
+
   def image_variant
     return unless image.attached? && image.content_type&.start_with?('image/')
 
@@ -33,10 +39,9 @@ class Oeuvre < ApplicationRecord
     nil
   end
 
-  private
-
+  # ---- MeiliSearch ----
   def reindex_meili
-    self.class.reindex 
+    self.class.reindex
     self.meilisearch_index.add_documents([self])
   end
 

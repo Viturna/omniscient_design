@@ -310,7 +310,41 @@
 });
 
 </script>
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const checkbox = document.getElementById("accept-rules-checkbox");
+      const nextBtn  = document.getElementById("btn-next-rules");
 
+      if(checkbox && nextBtn){
+        checkbox.addEventListener("change", () => {
+          nextBtn.disabled = !checkbox.checked;
+        });
+      }
+
+      // Navigation étapes
+      document.querySelectorAll(".next-step").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const current = btn.closest(".form-step");
+          const next = current.nextElementSibling;
+          if(next){
+            current.style.display = "none";
+            next.style.display = "block";
+          }
+        });
+      });
+
+      document.querySelectorAll(".prev-step").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const current = btn.closest(".form-step");
+          const prev = current.previousElementSibling;
+          if(prev){
+            current.style.display = "none";
+            prev.style.display = "block";
+          }
+        });
+      });
+    });
+  </script>
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

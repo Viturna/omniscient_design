@@ -5,6 +5,7 @@ class Designer < ApplicationRecord
   # after_commit :reindex_searchkick, if: :validated?
   # after_destroy :remove_from_searchkick
 
+
   validates :nom, presence: true
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year

@@ -239,6 +239,7 @@ class DesignersController < ApplicationController
       :heritage_et_impact,
       :image,
       :recaptcha_token,
+      domaine_ids: [],
       country_ids: [],
       source: [],
     )

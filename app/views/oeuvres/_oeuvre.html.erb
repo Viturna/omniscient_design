@@ -222,7 +222,7 @@
           <p><%= t('oeuvres.no_notion') %></p>
         <% end %>
       <h2 class="title-description-reference"><%= t('oeuvres.presentation_generale') %></h2>
-      <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.presentation_generale) %></p>
+      <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.presentation_generale.presence) %></p>
       <% if oeuvre.contexte_historique.present? %>
         <h2 class="title-description-reference"><%= t('oeuvres.contexte_historique') %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.contexte_historique) %></p>
@@ -523,7 +523,7 @@
           <span id="closeImageModal" style="cursor:pointer;font-size:1.5rem;">&times;</span>
         </div>
         <div class="modal-body" style="text-align:center;">
-          <img id="modalImage" src="<%= reference_image_path %>" alt="<%= oeuvre.nom_oeuvre %>" style="max-width:100%; height:auto; border-radius:8px;">
+          <img id="modalImage" src="<%= reference_image_path %>" alt="<%= oeuvre.nom_oeuvre %>" style="max-width:100%; max-height:80dvh; height:auto; border-radius:8px;">
         </div>
       </div>
     </div>

@@ -62,8 +62,8 @@ module ApplicationHelper
     normalized_str
   end
   
-
   def linkify_designer_names_and_oeuvres(text)
+      return "" if text.blank? 
     designers = Designer.where(validation: true)
     oeuvres = Oeuvre.where(validation: true)
 
@@ -90,6 +90,7 @@ module ApplicationHelper
 
     text.html_safe
   end
+
   def current_theme
     cookies&.[](:theme).presence || 'system'
   end

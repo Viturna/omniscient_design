@@ -6,7 +6,7 @@ class Oeuvre < ApplicationRecord
 
   validates :nom_oeuvre, uniqueness: true, presence: true
 
- has_many :oeuvres_domaines, class_name: "OeuvresDomaine", foreign_key: "oeuvre_id", dependent: :delete_all
+  has_many :oeuvres_domaines, class_name: "OeuvresDomaine", foreign_key: "oeuvre_id", dependent: :delete_all
   has_many :domaines, through: :oeuvres_domaines
 
 
@@ -24,8 +24,6 @@ class Oeuvre < ApplicationRecord
   attr_accessor :rejection_reason
 
   serialize :source, Array, coder: JSON
-
-  before_save :auto_translate_content, if: -> { I18n.locale == :fr }
 
   def validated?
     validation == true

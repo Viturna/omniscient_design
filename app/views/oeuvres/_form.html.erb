@@ -4,7 +4,6 @@
 
   <% if @oeuvre.errors.any? %>
     <div style="color: red">
-      <h2><%= t('errors.title', count: @oeuvre.errors.count) %></h2>
       <ul>
         <% @oeuvre.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -120,7 +119,7 @@
       <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
       <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
 
-     <div>
+  <div>
         <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
         <%= form.collection_select :domaine_ids, 
             Domaine.order(:domaine), 

@@ -17,6 +17,18 @@ module ApplicationHelper
     end
   end
 
+  def show_footer?
+    excluded_pages = [
+      {controller: 'lists',      actions: %w[show edit index new]},
+      {controller: 'oeuvres',    actions: %w[index new edit]},
+      {controller: 'designers',  actions: %w[index new edit]},
+      {controller: 'pages',      actions: %w[add_elements]},
+      {controller: 'feedbacks',  actions: %w[new]},
+      {controller: 'notifications',  actions: %w[index]}
+    ]
+    !excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) }
+  end
+  
   def asset_exists?(path)
     if Rails.application.assets
       Rails.application.assets.find_asset(path).present?

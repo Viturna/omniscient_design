@@ -103,94 +103,87 @@
         <%= yield %>
       </div>
     </main>
-    <% excluded_pages = [
-      {controller: 'lists',      actions: %w[show edit index new]},
-      {controller: 'oeuvres',    actions: %w[index new edit]},
-      {controller: 'designers',  actions: %w[index new edit]},
-      {controller: 'pages',      actions: %w[add_elements]},
-      {controller: 'feedbacks',  actions: %w[new]},
-      {controller: 'notifications',  actions: %w[index]}
-    ] %>
-    <% unless excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) } %>
-    <!-- Footer -->
-     <% large_footer = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
-    <footer class="footer <%= 'large-footer' if main_show %>" data-loading-target="footer">
-      <div class="footer-top">
-        <div class="footer-brand">
-           <%= link_to(root_path, class: "footer-logo") do %>
-            <img src="/assets/logo-white.svg" alt="Omniscient Design" class="logo" />
-          <%end%>
-          <p class="tagline"><%=t('footer.tagline')%></p>
-              <%= link_to t('footer.donation'), "https://fr.tipeee.com/le-site-omniscient-design/", target: "_blank", class: "underline medium"%>
-          <div class="socials">
-            <a href="https://www.instagram.com/omniscientdesign_/" target="_blank">
-                <svg width="43" height="44" viewBox="0 0 43 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.8272 4.0918H28.7181C34.3909 4.0918 39 8.70089 39 14.3736V29.2645C39 31.9914 37.9167 34.6067 35.9885 36.5349C34.0603 38.4631 31.445 39.5463 28.7181 39.5463H13.8272C8.1545 39.5463 3.54541 34.9373 3.54541 29.2645V14.3736C3.54541 11.6467 4.62867 9.03149 6.55689 7.10327C8.4851 5.17506 11.1003 4.0918 13.8272 4.0918ZM13.4727 7.63725C11.7801 7.63725 10.1569 8.30962 8.96006 9.50644C7.76323 10.7033 7.09086 12.3265 7.09086 14.0191V29.6191C7.09086 33.1468 9.94496 36.0009 13.4727 36.0009H29.0727C30.7652 36.0009 32.3885 35.3285 33.5853 34.1317C34.7821 32.9349 35.4545 31.3116 35.4545 29.6191V14.0191C35.4545 10.4913 32.6004 7.63725 29.0727 7.63725H13.4727ZM30.5795 10.2963C31.1672 10.2963 31.7308 10.5298 32.1464 10.9454C32.562 11.3609 32.7954 11.9246 32.7954 12.5123C32.7954 13.0999 32.562 13.6636 32.1464 14.0791C31.7308 14.4947 31.1672 14.7282 30.5795 14.7282C29.9918 14.7282 29.4282 14.4947 29.0126 14.0791C28.5971 13.6636 28.3636 13.0999 28.3636 12.5123C28.3636 11.9246 28.5971 11.3609 29.0126 10.9454C29.4282 10.5298 29.9918 10.2963 30.5795 10.2963ZM21.2727 12.9554C23.6235 12.9554 25.878 13.8893 27.5402 15.5515C29.2025 17.2138 30.1363 19.4683 30.1363 21.8191C30.1363 24.1699 29.2025 26.4244 27.5402 28.0866C25.878 29.7489 23.6235 30.6827 21.2727 30.6827C18.9219 30.6827 16.6674 29.7489 15.0051 28.0866C13.3429 26.4244 12.409 24.1699 12.409 21.8191C12.409 19.4683 13.3429 17.2138 15.0051 15.5515C16.6674 13.8893 18.9219 12.9554 21.2727 12.9554ZM21.2727 16.5009C19.8622 16.5009 18.5095 17.0612 17.5122 18.0585C16.5148 19.0559 15.9545 20.4086 15.9545 21.8191C15.9545 23.2295 16.5148 24.5822 17.5122 25.5796C18.5095 26.5769 19.8622 27.1373 21.2727 27.1373C22.6832 27.1373 24.0359 26.5769 25.0332 25.5796C26.0306 24.5822 26.5909 23.2295 26.5909 21.8191C26.5909 20.4086 26.0306 19.0559 25.0332 18.0585C24.0359 17.0612 22.6832 16.5009 21.2727 16.5009Z" fill="white"/>
-                </svg>
-              </a>
-              <a href="https://www.linkedin.com/company/omniscient-design/" target="_blank">
-                <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M34.409 5.86426C35.3494 5.86426 36.2512 6.2378 36.9161 6.9027C37.581 7.5676 37.9545 8.4694 37.9545 9.40971V34.2279C37.9545 35.1682 37.581 36.07 36.9161 36.7349C36.2512 37.3998 35.3494 37.7733 34.409 37.7733H9.59086C8.65055 37.7733 7.74875 37.3998 7.08385 36.7349C6.41895 36.07 6.04541 35.1682 6.04541 34.2279V9.40971C6.04541 8.4694 6.41895 7.5676 7.08385 6.9027C7.74875 6.2378 8.65055 5.86426 9.59086 5.86426H34.409ZM33.5227 33.3415V23.9461C33.5227 22.4134 32.9138 20.9434 31.83 19.8596C30.7462 18.7759 29.2763 18.167 27.7436 18.167C26.2368 18.167 24.4818 19.0888 23.6309 20.4715V18.5038H18.685V33.3415H23.6309V24.602C23.6309 23.237 24.73 22.1202 26.095 22.1202C26.7532 22.1202 27.3844 22.3816 27.8499 22.8471C28.3153 23.3125 28.5768 23.9438 28.5768 24.602V33.3415H33.5227ZM12.9236 15.7206C13.7135 15.7206 14.471 15.4069 15.0295 14.8483C15.588 14.2898 15.9018 13.5323 15.9018 12.7424C15.9018 11.0938 14.5722 9.74653 12.9236 9.74653C12.129 9.74653 11.367 10.0622 10.8052 10.624C10.2433 11.1859 9.92768 11.9479 9.92768 12.7424C9.92768 14.3911 11.275 15.7206 12.9236 15.7206ZM15.3877 33.3415V18.5038H10.4772V33.3415H15.3877Z" fill="white"/>
-                </svg>
-              </a>
-              <a href="https://www.tiktok.com/@omniscientdesign_?_t=ZN-90GUtYty67y&_r=1" target="_blank">
-                <svg width="43" height="44" viewBox="0 0 43 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M29.8818 10.8633C28.6703 9.47978 28.0026 7.70328 28.0027 5.86426H22.525V27.8461C22.4836 29.0359 21.9817 30.1632 21.1251 30.99C20.2685 31.8168 19.1242 32.2786 17.9336 32.2779C15.4164 32.2779 13.3246 30.2215 13.3246 27.6688C13.3246 24.6197 16.2673 22.3329 19.2986 23.2724V17.6706C13.1827 16.8552 7.8291 21.6061 7.8291 27.6688C7.8291 33.572 12.7218 37.7733 17.9159 37.7733C23.4823 37.7733 28.0027 33.2529 28.0027 27.6688V16.5183C30.224 18.1135 32.8908 18.9694 35.6255 18.9647V13.487C35.6255 13.487 32.2927 13.6465 29.8818 10.8633Z" fill="white"/>
-                </svg>
-              </a>
+    <% if show_footer? %>
+      <!-- Footer -->
+      <% large_footer = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
+      <footer class="footer <%= 'large-footer' if main_show %>" data-loading-target="footer">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <%= link_to(root_path, class: "footer-logo") do %>
+              <img src="/assets/logo-white.svg" alt="Omniscient Design" class="logo" />
+            <%end%>
+            <p class="tagline"><%=t('footer.tagline')%></p>
+                <%= link_to t('footer.donation'), "https://fr.tipeee.com/le-site-omniscient-design/", target: "_blank", class: "underline medium"%>
+            <div class="socials">
+              <a href="https://www.instagram.com/omniscientdesign_/" target="_blank">
+                  <svg width="43" height="44" viewBox="0 0 43 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.8272 4.0918H28.7181C34.3909 4.0918 39 8.70089 39 14.3736V29.2645C39 31.9914 37.9167 34.6067 35.9885 36.5349C34.0603 38.4631 31.445 39.5463 28.7181 39.5463H13.8272C8.1545 39.5463 3.54541 34.9373 3.54541 29.2645V14.3736C3.54541 11.6467 4.62867 9.03149 6.55689 7.10327C8.4851 5.17506 11.1003 4.0918 13.8272 4.0918ZM13.4727 7.63725C11.7801 7.63725 10.1569 8.30962 8.96006 9.50644C7.76323 10.7033 7.09086 12.3265 7.09086 14.0191V29.6191C7.09086 33.1468 9.94496 36.0009 13.4727 36.0009H29.0727C30.7652 36.0009 32.3885 35.3285 33.5853 34.1317C34.7821 32.9349 35.4545 31.3116 35.4545 29.6191V14.0191C35.4545 10.4913 32.6004 7.63725 29.0727 7.63725H13.4727ZM30.5795 10.2963C31.1672 10.2963 31.7308 10.5298 32.1464 10.9454C32.562 11.3609 32.7954 11.9246 32.7954 12.5123C32.7954 13.0999 32.562 13.6636 32.1464 14.0791C31.7308 14.4947 31.1672 14.7282 30.5795 14.7282C29.9918 14.7282 29.4282 14.4947 29.0126 14.0791C28.5971 13.6636 28.3636 13.0999 28.3636 12.5123C28.3636 11.9246 28.5971 11.3609 29.0126 10.9454C29.4282 10.5298 29.9918 10.2963 30.5795 10.2963ZM21.2727 12.9554C23.6235 12.9554 25.878 13.8893 27.5402 15.5515C29.2025 17.2138 30.1363 19.4683 30.1363 21.8191C30.1363 24.1699 29.2025 26.4244 27.5402 28.0866C25.878 29.7489 23.6235 30.6827 21.2727 30.6827C18.9219 30.6827 16.6674 29.7489 15.0051 28.0866C13.3429 26.4244 12.409 24.1699 12.409 21.8191C12.409 19.4683 13.3429 17.2138 15.0051 15.5515C16.6674 13.8893 18.9219 12.9554 21.2727 12.9554ZM21.2727 16.5009C19.8622 16.5009 18.5095 17.0612 17.5122 18.0585C16.5148 19.0559 15.9545 20.4086 15.9545 21.8191C15.9545 23.2295 16.5148 24.5822 17.5122 25.5796C18.5095 26.5769 19.8622 27.1373 21.2727 27.1373C22.6832 27.1373 24.0359 26.5769 25.0332 25.5796C26.0306 24.5822 26.5909 23.2295 26.5909 21.8191C26.5909 20.4086 26.0306 19.0559 25.0332 18.0585C24.0359 17.0612 22.6832 16.5009 21.2727 16.5009Z" fill="white"/>
+                  </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/omniscient-design/" target="_blank">
+                  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M34.409 5.86426C35.3494 5.86426 36.2512 6.2378 36.9161 6.9027C37.581 7.5676 37.9545 8.4694 37.9545 9.40971V34.2279C37.9545 35.1682 37.581 36.07 36.9161 36.7349C36.2512 37.3998 35.3494 37.7733 34.409 37.7733H9.59086C8.65055 37.7733 7.74875 37.3998 7.08385 36.7349C6.41895 36.07 6.04541 35.1682 6.04541 34.2279V9.40971C6.04541 8.4694 6.41895 7.5676 7.08385 6.9027C7.74875 6.2378 8.65055 5.86426 9.59086 5.86426H34.409ZM33.5227 33.3415V23.9461C33.5227 22.4134 32.9138 20.9434 31.83 19.8596C30.7462 18.7759 29.2763 18.167 27.7436 18.167C26.2368 18.167 24.4818 19.0888 23.6309 20.4715V18.5038H18.685V33.3415H23.6309V24.602C23.6309 23.237 24.73 22.1202 26.095 22.1202C26.7532 22.1202 27.3844 22.3816 27.8499 22.8471C28.3153 23.3125 28.5768 23.9438 28.5768 24.602V33.3415H33.5227ZM12.9236 15.7206C13.7135 15.7206 14.471 15.4069 15.0295 14.8483C15.588 14.2898 15.9018 13.5323 15.9018 12.7424C15.9018 11.0938 14.5722 9.74653 12.9236 9.74653C12.129 9.74653 11.367 10.0622 10.8052 10.624C10.2433 11.1859 9.92768 11.9479 9.92768 12.7424C9.92768 14.3911 11.275 15.7206 12.9236 15.7206ZM15.3877 33.3415V18.5038H10.4772V33.3415H15.3877Z" fill="white"/>
+                  </svg>
+                </a>
+                <a href="https://www.tiktok.com/@omniscientdesign_?_t=ZN-90GUtYty67y&_r=1" target="_blank">
+                  <svg width="43" height="44" viewBox="0 0 43 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M29.8818 10.8633C28.6703 9.47978 28.0026 7.70328 28.0027 5.86426H22.525V27.8461C22.4836 29.0359 21.9817 30.1632 21.1251 30.99C20.2685 31.8168 19.1242 32.2786 17.9336 32.2779C15.4164 32.2779 13.3246 30.2215 13.3246 27.6688C13.3246 24.6197 16.2673 22.3329 19.2986 23.2724V17.6706C13.1827 16.8552 7.8291 21.6061 7.8291 27.6688C7.8291 33.572 12.7218 37.7733 17.9159 37.7733C23.4823 37.7733 28.0027 33.2529 28.0027 27.6688V16.5183C30.224 18.1135 32.8908 18.9694 35.6255 18.9647V13.487C35.6255 13.487 32.2927 13.6465 29.8818 10.8633Z" fill="white"/>
+                  </svg>
+                </a>
+            </div>
+          </div>
+          <div>
+          </div>
+          <!-- Navigation -->
+          <div class="footer-nav">
+            <p class="footer-title"><%=t('footer.navigation')%></p>
+            <ul>
+              <li><%= link_to t('footer.landing'), presentation_path%></li>
+              <li><%= link_to t('footer.explore'), root_path%></li>
+              <li><%= link_to t('footer.search'), search_path%></li>
+              <li><%= link_to t('footer.list'), lists_path%></li>
+              <li><%= link_to t('footer.profile'), profil_path%></li>
+              <li><%= link_to t('footer.add'), add_elements_path%></li>
+              <li><%= link_to t('footer.login'), new_user_session_path%></li>
+              <li><%= link_to t('footer.sitemap'), plan_site_path%></li>
+            </ul>
+          </div>
+
+          <!-- Réseaux -->
+          <div class="footer-nav">
+            <p class="footer-title"><%=t('footer.social')%></p>
+            <ul>
+              <li><a href="https://www.linkedin.com/company/omniscient-design/" target="_blank"><%=t('footer.linkedin')%></a></li>
+              <li><a href="https://www.instagram.com/omniscientdesign_/" target="_blank"><%=t('footer.instragram')%></a></li>
+              <li><a href="https://www.tiktok.com/@omniscientdesign_?_t=ZN-90GUtYty67y&_r=1" target="_blank"><%=t('footer.tiktok')%></a></li>
+            </ul>
+          </div>
+
+          <!-- Contact -->
+          <div class="footer-contact">
+            <p class="footer-title"><%=t('footer.contact')%></p>
+            <a href="mailto:contact@omniscientdesign.fr"><%=t('footer.email')%></a>
           </div>
         </div>
-        <div>
-        </div>
-        <!-- Navigation -->
-        <div class="footer-nav">
-          <p class="footer-title"><%=t('footer.navigation')%></p>
-          <ul>
-            <li><%= link_to t('footer.landing'), presentation_path%></li>
-            <li><%= link_to t('footer.explore'), root_path%></li>
-            <li><%= link_to t('footer.search'), search_path%></li>
-            <li><%= link_to t('footer.list'), lists_path%></li>
-            <li><%= link_to t('footer.profile'), profil_path%></li>
-            <li><%= link_to t('footer.add'), add_elements_path%></li>
-            <li><%= link_to t('footer.login'), new_user_session_path%></li>
-            <li><%= link_to t('footer.sitemap'), plan_site_path%></li>
+        <a href="#" class="back-top button">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.7491 13.3314C23.7491 13.3314 18.493 7.60254 16.4466 5.37132C16.2762 5.18422 16.0522 5.09131 15.8282 5.09131C15.6042 5.09131 15.3802 5.18422 15.2098 5.37132C13.1634 7.60127 7.9096 13.3289 7.9096 13.3289C7.74042 13.5134 7.65641 13.7565 7.65641 13.9996C7.65758 14.2427 7.74275 14.4871 7.91426 14.6742C8.25611 15.0471 8.80798 15.0484 9.1475 14.6793L14.9532 8.34585V27.0458C14.9532 27.5727 15.3452 28.0004 15.8282 28.0004C16.3112 28.0004 16.7032 27.5727 16.7032 27.0458V8.34585L22.5124 14.6818C22.8496 15.0497 23.4003 15.0471 23.7421 14.6742C23.9136 14.4871 24 14.2427 24 13.9996C24.0012 13.7565 23.9171 13.516 23.7491 13.3314Z" fill="#202020"/>
+              </svg>
+              <%=t('footer.goup')%>
+            </a>
+
+        <div class="footer-bottom">
+          <p><%=t('footer.copyright')%></p>
+          <ul class="legal">
+            <li><a href="#"><%=t('footer.legal')%></a></li>
+            <li><a href="#"><%=t('footer.politique')%></a></li>
+            <li><a href="#"><%=t('footer.cgu')%></a></li>
+            <li><a href="#"><%=t('footer.cookie')%></a></li>
           </ul>
         </div>
+      </footer>
+      <%end%>
 
-        <!-- Réseaux -->
-        <div class="footer-nav">
-          <p class="footer-title"><%=t('footer.social')%></p>
-          <ul>
-            <li><a href="https://www.linkedin.com/company/omniscient-design/" target="_blank"><%=t('footer.linkedin')%></a></li>
-            <li><a href="https://www.instagram.com/omniscientdesign_/" target="_blank"><%=t('footer.instragram')%></a></li>
-            <li><a href="https://www.tiktok.com/@omniscientdesign_?_t=ZN-90GUtYty67y&_r=1" target="_blank"><%=t('footer.tiktok')%></a></li>
-          </ul>
-        </div>
-
-        <!-- Contact -->
-        <div class="footer-contact">
-          <p class="footer-title"><%=t('footer.contact')%></p>
-          <a href="mailto:contact@omniscientdesign.fr"><%=t('footer.email')%></a>
-        </div>
-      </div>
-      <a href="#" class="back-top button">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M23.7491 13.3314C23.7491 13.3314 18.493 7.60254 16.4466 5.37132C16.2762 5.18422 16.0522 5.09131 15.8282 5.09131C15.6042 5.09131 15.3802 5.18422 15.2098 5.37132C13.1634 7.60127 7.9096 13.3289 7.9096 13.3289C7.74042 13.5134 7.65641 13.7565 7.65641 13.9996C7.65758 14.2427 7.74275 14.4871 7.91426 14.6742C8.25611 15.0471 8.80798 15.0484 9.1475 14.6793L14.9532 8.34585V27.0458C14.9532 27.5727 15.3452 28.0004 15.8282 28.0004C16.3112 28.0004 16.7032 27.5727 16.7032 27.0458V8.34585L22.5124 14.6818C22.8496 15.0497 23.4003 15.0471 23.7421 14.6742C23.9136 14.4871 24 14.2427 24 13.9996C24.0012 13.7565 23.9171 13.516 23.7491 13.3314Z" fill="#202020"/>
-            </svg>
-            <%=t('footer.goup')%>
-          </a>
-
-      <div class="footer-bottom">
-        <p><%=t('footer.copyright')%></p>
-        <ul class="legal">
-          <li><a href="#"><%=t('footer.legal')%></a></li>
-          <li><a href="#"><%=t('footer.politique')%></a></li>
-          <li><a href="#"><%=t('footer.cgu')%></a></li>
-          <li><a href="#"><%=t('footer.cookie')%></a></li>
-        </ul>
-      </div>
-    </footer>
-    <%end%>
 
     <%= javascript_importmap_tags %>
     <%= yield :recaptcha_script %>

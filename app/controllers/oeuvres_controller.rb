@@ -66,9 +66,6 @@ class OeuvresController < ApplicationController
     @oeuvre.user = current_user
 
     if @oeuvre.save
-      # if params[:oeuvre][:image].present?
-      #   @oeuvre.image.attach(params[:oeuvre][:image])
-      # end
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
       flash[:success] = t('oeuvres.create.success')
@@ -235,11 +232,29 @@ class OeuvresController < ApplicationController
    redirect_to validation_path, alert: t('oeuvres.not_found')
   end
 
-  def oeuvre_params
-    params.require(:oeuvre).permit(
-      :nom_oeuvre, :date_oeuvre, :presentation_generale, :contexte_historique,
-      :materiaux_et_innovations_techniques, :concept_et_inspiration,
-      :dimension_esthetique, :impact_et_message, :image, :recaptcha_token, source: [], designer_ids: [], concept_ids: [], notion_ids: [],  :domaine_ids => []
-    )
+ def oeuvre_params
+  permitted = params.require(:oeuvre).permit(
+    :nom_oeuvre,
+    :presentation_generale,
+    :contexte_historique,
+    :materiaux_et_innovations_techniques,
+    :concept_et_inspiration,
+    :dimension_esthetique,
+    :impact_et_message,
+    :date_oeuvre,
+    :image,
+    designer_ids: [],
+    notion_ids: [],
+    domaine_ids: [],
+    source: []
+  )
+
+  [:designer_ids, :notion_ids, :domaine_ids, :source].each do |key|
+    permitted[key] = permitted[key].reject(&:blank?) if permitted[key]
   end
+
+  permitted
+end
+
+
 end

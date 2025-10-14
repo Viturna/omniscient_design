@@ -6,7 +6,7 @@ class Oeuvre < ApplicationRecord
 
   validates :nom_oeuvre, uniqueness: true, presence: true
 
-  has_many :oeuvres_domaines, class_name: "OeuvresDomaine", foreign_key: "oeuvre_id", dependent: :delete_all
+  has_many :oeuvres_domaines, dependent: :destroy
   has_many :domaines, through: :oeuvres_domaines
 
 

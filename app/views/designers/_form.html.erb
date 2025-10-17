@@ -112,16 +112,34 @@
 
       <div>
         <%= form.label :country, t('add_designer.steps.2.country') %>
-        <%= form.collection_select :country_1, Country.order(:country), :id, :country,
-              { include_blank: t('add_designer.steps.2.country_blank'), prompt: t('add_designer.steps.2.country_placeholder'), selected: @country_1 },
-              { class: "form-control country-select select2", data: { placeholder: t('add_designer.select2.placeholder') }, id: "country_1", name: "designer[country_ids][]" } %>
+        <%= form.collection_select :country_1,
+              Country.order(:country),
+              :id,
+              :country,
+              { prompt: t('add_designer.steps.2.country_placeholder') },
+              {
+                class: "form-control country-select select2",
+                data: { placeholder: t('add_designer.select2.placeholder') },
+                id: "country_1",
+                name: "designer[country_ids][]"
+              } %>
       </div>
-         <div>
+
+      <div>
         <%= form.label :country, t('add_designer.steps.2.country') %>
-        <%= form.collection_select :country_2, Country.order(:country), :id, :country,
-              { include_blank: t('add_designer.steps.2.country_blank'), prompt: t('add_designer.steps.2.country_placeholder'), selected: @country_2 },
-              { class: "form-control country-select select2", data: { placeholder: t('add_designer.select2.placeholder') }, id: "country_2", name: "designer[country_ids][]" } %>
+        <%= form.collection_select :country_2,
+              Country.order(:country),
+              :id,
+              :country,
+              { prompt: t('add_designer.steps.2.country_placeholder') },
+              {
+                class: "form-control country-select select2",
+                data: { placeholder: t('add_designer.select2.placeholder') },
+                id: "country_2",
+                name: "designer[country_ids][]"
+              } %>
       </div>
+
 
       <div>
         <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
@@ -197,7 +215,35 @@
     </div>
   </div>
 <% end %>
+<script>
+ document.addEventListener("turbo:load", () => {
+  const container = document.getElementById("sources-container");
+  const addButton = document.getElementById("add-source");
+  if (!container || !addButton) return;
 
+  addButton.addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.className = "source-input";
+    div.innerHTML = `
+      <input type="text" name="oeuvre[source][]" placeholder="Ex: https://example.com" />
+      <button type="button" class="remove-source button small"><svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
+        </svg></button>
+    `;
+    container.appendChild(div);
+    attachRemoveListener(div.querySelector(".remove-source"));
+  });
+
+  function attachRemoveListener(button) {
+    button.addEventListener("click", () => {
+      button.parentNode.remove();
+    });
+  }
+
+  document.querySelectorAll(".remove-source").forEach(btn => attachRemoveListener(btn));
+});
+
+</script>
 
 <script>
   document.addEventListener("turbo:load", () => {
@@ -284,35 +330,7 @@
   initSelect2('.domaine-select', 'Sélectionnez un domaine...');
 });
 </script>
-<script>
- document.addEventListener("turbo:load", () => {
-  const container = document.getElementById("sources-container");
-  const addButton = document.getElementById("add-source");
-  if (!container || !addButton) return;
 
-  addButton.addEventListener("click", () => {
-    const div = document.createElement("div");
-    div.className = "source-input";
-    div.innerHTML = `
-      <input type="text" name="oeuvre[source][]" placeholder="Ex: https://example.com" />
-      <button type="button" class="remove-source button small"><svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
-        </svg></button>
-    `;
-    container.appendChild(div);
-    attachRemoveListener(div.querySelector(".remove-source"));
-  });
-
-  function attachRemoveListener(button) {
-    button.addEventListener("click", () => {
-      button.parentNode.remove();
-    });
-  }
-
-  document.querySelectorAll(".remove-source").forEach(btn => attachRemoveListener(btn));
-  });
-
-</script>
   <script>
     document.addEventListener("turbo:load", () => {
       const checkbox = document.getElementById("accept-rules-checkbox");

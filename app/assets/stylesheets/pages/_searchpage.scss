@@ -218,14 +218,17 @@
 }
 
 .select2-selection__rendered {
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   gap: 4px;
   overflow-x: auto !important;
   scrollbar-width: thin;
   scrollbar-color: #999 #f0f0f0;
 }
-
+.select2-container--default .select2-selection--multiple {
+  overflow: hidden !important;
+  overflow-x: scroll !important;
+}
 .select2-selection__rendered::-webkit-scrollbar {
   height: 4px;
 }

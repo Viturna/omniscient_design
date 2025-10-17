@@ -356,3 +356,13 @@ body.dark-mode {
     border-color: $background-color-dark;
   }
 }
+
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__choice__remove {
+  background-color: #202020 !important;
+  color: #fff !important;
+  right: 0 !important;
+  left: auto !important;
+  border: none !important;
+}

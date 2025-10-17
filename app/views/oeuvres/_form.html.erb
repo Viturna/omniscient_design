@@ -345,43 +345,69 @@
 });
 
 </script>
+<script>
+document.addEventListener("turbo:load", () => {
+  const checkbox = document.getElementById("accept-rules-checkbox");
+  const nextBtn  = document.getElementById("btn-next-rules");
+  const steps = document.querySelectorAll(".form-step");
 
+  // 🔹 Si déjà accepté dans la session → on saute l'étape 1 directement
+  if (sessionStorage.getItem("rulesAccepted") === "true") {
+    const step1 = document.querySelector('.form-step[data-step="1"]');
+    const step2 = document.querySelector('.form-step[data-step="2"]');
+    if (step1 && step2) {
+      step1.style.display = "none";
+      step2.style.display = "block";
+    }
+  }
 
-  <script>
-    document.addEventListener("turbo:load", () => {
-      const checkbox = document.getElementById("accept-rules-checkbox");
-      const nextBtn  = document.getElementById("btn-next-rules");
-
-      if(checkbox && nextBtn){
-        checkbox.addEventListener("change", () => {
-          nextBtn.disabled = !checkbox.checked;
-        });
-      }
-
-      // Navigation étapes
-      document.querySelectorAll(".next-step").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const current = btn.closest(".form-step");
-          const next = current.nextElementSibling;
-          if(next){
-            current.style.display = "none";
-            next.style.display = "block";
-          }
-        });
-      });
-
-      document.querySelectorAll(".prev-step").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const current = btn.closest(".form-step");
-          const prev = current.previousElementSibling;
-          if(prev){
-            current.style.display = "none";
-            prev.style.display = "block";
-          }
-        });
-      });
+  // 🔹 Gestion du bouton "Accepter" pour activer le bouton suivant
+  if (checkbox && nextBtn) {
+    checkbox.addEventListener("change", () => {
+      nextBtn.disabled = !checkbox.checked;
     });
-  </script>
+
+    nextBtn.addEventListener("click", () => {
+      if (checkbox.checked) {
+        // On enregistre l'acceptation dans la session
+        sessionStorage.setItem("rulesAccepted", "true");
+
+        // On passe à l'étape suivante
+        const step1 = document.querySelector('.form-step[data-step="1"]');
+        const step2 = document.querySelector('.form-step[data-step="2"]');
+        if (step1 && step2) {
+          step1.style.display = "none";
+          step2.style.display = "block";
+        }
+      }
+    });
+  }
+
+  // 🔹 Navigation entre étapes
+  document.querySelectorAll(".next-step").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const current = btn.closest(".form-step");
+      const next = current.nextElementSibling;
+      if (next) {
+        current.style.display = "none";
+        next.style.display = "block";
+      }
+    });
+  });
+
+  document.querySelectorAll(".prev-step").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const current = btn.closest(".form-step");
+      const prev = current.previousElementSibling;
+      if (prev) {
+        current.style.display = "none";
+        prev.style.display = "block";
+      }
+    });
+  });
+});
+</script>
+
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

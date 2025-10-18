@@ -4,18 +4,23 @@ class List < ApplicationRecord
 
   belongs_to :user
   validates :name, presence: true
+
+  # ListItems pour designers et oeuvres
   has_many :list_items, dependent: :destroy
   has_many :oeuvres, through: :list_items, source: :listable, source_type: 'Oeuvre'
   has_many :designers, through: :list_items, source: :listable, source_type: 'Designer'
 
-
-  before_create :generate_share_token
-  has_many :list_editors
+  # Éditeurs et visiteurs
+  has_many :list_editors, dependent: :destroy
   has_many :editors, through: :list_editors, source: :user
 
-  has_many :list_visitors
+  has_many :list_visitors, dependent: :destroy
   has_many :visitors, through: :list_visitors, source: :user
+
+  # Callbacks pour le partage
+  before_create :generate_share_token
   before_save :store_previous_share_token, if: :share_token_changed?
+
   private
 
   def generate_share_token

@@ -5,7 +5,7 @@ class Oeuvre < ApplicationRecord
   friendly_id :nom_oeuvre, use: :slugged
 
   validates :nom_oeuvre, uniqueness: true, presence: true
-
+    
   has_many :oeuvres_domaines, dependent: :destroy
   has_many :domaines, through: :oeuvres_domaines
 

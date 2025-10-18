@@ -74,7 +74,6 @@ class OeuvresController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
   
 
   # PATCH/PUT /oeuvres/1 or /oeuvres/1.json
@@ -88,24 +87,39 @@ class OeuvresController < ApplicationController
   end
 
   # PATCH/PUT /oeuvres/1/reject
-  def reject
-    rejection_reason = params[:rejection_reason].presence || "Sans commentaire"
-    if @oeuvre
-      @rejected_oeuvre = RejectedOeuvre.new(
-        nom_oeuvre: @oeuvre.nom_oeuvre,
-        user: @oeuvre.user,
-        reason: rejection_reason
-      )
-      if @rejected_oeuvre.save
-        @oeuvre.notions_oeuvres.delete_all if @oeuvre.notions_oeuvres.exists?
-        handle_destroy(@oeuvre, t('oeuvres.reject.success'))
-      else
-        redirect_to validation_path, alert: t('oeuvres.reject.failure')
-      end
-    else
-      redirect_to validation_path, alert: t('oeuvres.reject.not_found')
-    end
+ # PATCH/PUT /oeuvres/:slug/reject
+def reject
+  rejection_reason = params[:rejection_reason].presence || I18n.t('oeuvre.reject.no_comment')
+  @oeuvre = Oeuvre.friendly.find_by(slug: params[:slug])
+
+  unless @oeuvre
+    redirect_to validation_path, alert: I18n.t('oeuvres.not_found') and return
   end
+
+  ActiveRecord::Base.transaction do
+    # Création du rejet
+    @rejected_oeuvre = RejectedOeuvre.create!(
+      nom_oeuvre: @oeuvre.nom_oeuvre,
+      user: @oeuvre.user,
+      reason: rejection_reason
+    )
+
+    # Nettoyage des associations
+    @oeuvre.notions_oeuvres.delete_all if @oeuvre.notions_oeuvres.exists?
+    @oeuvre.oeuvres_domaines.delete_all if @oeuvre.oeuvres_domaines.exists?
+    @oeuvre.designers_oeuvres.delete_all if @oeuvre.designers_oeuvres.exists?
+
+    # Mise à jour de la raison du rejet
+    @oeuvre.update!(rejection_reason: rejection_reason, validation: false)
+
+    handle_destroy(@oeuvre, I18n.t('oeuvres.reject.success'))
+  rescue => e
+    Rails.logger.error("Erreur rejet œuvre : #{e.message}")
+    redirect_to validation_path, alert: I18n.t('oeuvres.reject.failure')
+  end
+end
+
+
   # DELETE /oeuvres/1 or /oeuvres/1.json
    def destroy
     if @oeuvre&.destroy

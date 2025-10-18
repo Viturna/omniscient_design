@@ -49,6 +49,9 @@ application.register("share", ShareController)
 import ShowPasswordController from "./show_password_controller"
 application.register("show-password", ShowPasswordController)
 
+import SourcesController from "./sources_controller"
+application.register("sources", SourcesController)
+
 import StarRatingController from "./star_rating_controller"
 application.register("star-rating", StarRatingController)
 

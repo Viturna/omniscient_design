@@ -68,8 +68,6 @@ class DesignersController < ApplicationController
 
   def update
     @designer = Designer.friendly.find(params[:slug])
-    country_ids = [params[:designer][:country_1], params[:designer][:country_2], params[:designer][:country_3]].reject(&:blank?)
-    @designer.country_ids = country_ids
 
     if @designer.update(designer_params)
       flash[:success] = I18n.t('designer.update.success')
@@ -91,26 +89,32 @@ class DesignersController < ApplicationController
   end
 
   def reject
-    rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
-    @designer = Designer.find_by(slug: params[:slug])
+  rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
+  @designer = Designer.find_by(slug: params[:slug])
 
-    if @designer
-      @rejected_designer = RejectedDesigner.new(
-        nom: @designer.nom,
-        prenom: @designer.prenom,
-        user: @designer.user,
-        reason: rejection_reason
-      )
-      if @rejected_designer.save
-        @designer.update(rejection_reason: rejection_reason)
-        handle_destroy(@designer, I18n.t('designer.reject.success'))
-      else
-        redirect_to validation_path, alert: I18n.t('designer.reject.failure')
-      end
-    else
-      redirect_to validation_path, alert: I18n.t('designer.not_found')
-    end
+  unless @designer
+    redirect_to validation_path, alert: I18n.t('designer.not_found') and return
   end
+
+  ActiveRecord::Base.transaction do
+    @rejected_designer = RejectedDesigner.create!(
+      nom: @designer.nom,
+      prenom: @designer.prenom,
+      user: @designer.user,
+      reason: rejection_reason
+    )
+
+    @designer.designers_domaines.destroy_all
+    @designer.update!(rejection_reason: rejection_reason)
+
+    handle_destroy(@designer, I18n.t('designer.reject.success'))
+  rescue => e
+    Rails.logger.error("Erreur rejet designer : #{e.message}")
+    redirect_to validation_path, alert: I18n.t('designer.reject.failure')
+  end
+end
+
+
 
   def cancel
     if user_signed_in?

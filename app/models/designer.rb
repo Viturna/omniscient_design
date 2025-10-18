@@ -1,10 +1,10 @@
+
 class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
 
   # after_commit :reindex_searchkick, if: :validated?
   # after_destroy :remove_from_searchkick
-
 
   validates :nom, presence: true
   validate :valid_death_year, if: -> { date_deces.present? }
@@ -15,7 +15,7 @@ class Designer < ApplicationRecord
   has_many :countries, through: :designer_countries
   validates :countries, length: { maximum: 3,
                                   message: I18n.t('errors.messages.max_countries') }
-
+ 
   has_many :designers_domaines, dependent: :destroy
   has_many :domaines, through: :designers_domaines
   
@@ -25,6 +25,7 @@ class Designer < ApplicationRecord
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
 
   serialize :source, Array, coder: JSON
+
   attr_accessor :rejection_reason
 
   def nom_designer

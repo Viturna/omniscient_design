@@ -16,8 +16,9 @@ class Designer < ApplicationRecord
   validates :countries, length: { maximum: 3,
                                   message: I18n.t('errors.messages.max_countries') }
  
-  has_many :designers_domaines, dependent: :destroy
+ has_many :designers_domaines, dependent: :destroy, foreign_key: :designer_id
   has_many :domaines, through: :designers_domaines
+
   
   has_many :list_items, as: :listable
   has_many :lists, through: :list_items

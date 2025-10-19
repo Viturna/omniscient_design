@@ -88,7 +88,7 @@ class DesignersController < ApplicationController
     end
   end
 
-  def reject
+ def reject
   rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
   @designer = Designer.find_by(slug: params[:slug])
 
@@ -97,14 +97,14 @@ class DesignersController < ApplicationController
   end
 
   ActiveRecord::Base.transaction do
-    @rejected_designer = RejectedDesigner.create!(
+    RejectedDesigner.create!(
       nom: @designer.nom,
       prenom: @designer.prenom,
       user: @designer.user,
       reason: rejection_reason
     )
 
-    @designer.designers_domaines.destroy_all
+    @designer.designers_domaines&.destroy_all
     @designer.update!(rejection_reason: rejection_reason)
 
     handle_destroy(@designer, I18n.t('designer.reject.success'))

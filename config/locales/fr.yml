@@ -853,6 +853,7 @@ fr:
     designer_validated: "Le designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
     designer_rejected: "Votre designer %{name} a été rejeté(e)."
     no_user_for_rejection_designer: "Le designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
+    new_user_registered: "Nouvel utilisateur inscrit : %{name}"
   email_confirmation:
     heading: "Confirmez votre email"
     message_html: "Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour activer votre compte.<br>Si vous ne recevez pas l'email, vérifiez votre dossier spam ou %{resend_link}."

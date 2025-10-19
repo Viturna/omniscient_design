@@ -20,42 +20,24 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="copyright" content="© Omniscient Design - Tous droits réservés.">
 
-    <!-- reCAPTCHA -->
-    <meta name="recaptcha-site-key" content="<%= Rails.application.credentials.dig(:recaptcha, :site_key) %>">
-
     <!-- Favicon et manifest -->
     <%= render 'application/favicon' %>
 
     <!-- Stylesheets -->
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script> <!-- Ajout du defer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" 
-      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" 
-      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer" defer></script> <!-- Ajout du defer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" 
-      integrity="sha384-JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk" 
-      crossorigin="anonymous" defer></script> <!-- Ajout du defer -->
-    
-        
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-
-    <!-- JavaScript Rails -->
-    <%= javascript_importmap_tags %>
   </head>
 
-  <body class="admin-layout">
+ <body data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading">
     <header>
+        <div class="header-desktop">
       <div class="first-content-header admin-header">
         <%= link_to root_path, class: "logo-header" do %>
           <%= image_tag "logo-beta.svg", alt: "", class: "logo-light" %>
@@ -98,19 +80,96 @@
        <div class="link-header">
           <p>©<%= Time.now.year %> - Omniscient Design</p>
         </div>
+      </div>
     </header>
-    <div id="cookie-consent-banner" style="display:none;">
+    <div class="header-mobile">
+       <header>
+        <nav class="nav-header">
+          <ul>
+            <li>
+              <%= link_to admin_root_path, class: ("active" if @current_page == "dashboard") do %>
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z" fill="#52525D"/>
+              </svg>
+
+              Dashboard
+              <% end %>
+            </li>
+
+            <li>
+              <%= link_to admin_suivi_references_path, class: ("active" if @current_page == "suivi_references") do %>
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_3257_181)">
+                  <path d="M17.9991 0C27.934 0 36 8.06602 36 18.0009C36 27.934 27.934 36 17.9991 36C8.06602 36 0 27.934 0 18.0009C0 8.06602 8.06602 0 17.9991 0ZM16.6542 16.6542H10.3526C9.6072 16.6542 9.00225 17.2591 9.00225 18.0045C9.00225 18.7499 9.6072 19.3549 10.3526 19.3549H16.6542V25.6602C16.6542 26.4056 17.2591 27.0106 18.0045 27.0106C18.7499 27.0106 19.3548 26.4056 19.3548 25.6602V19.3549H25.661C26.4064 19.3549 27.0114 18.7499 27.0114 18.0045C27.0114 17.2591 26.4064 16.6542 25.661 16.6542H19.3548V10.348C19.3548 9.60257 18.7499 8.99762 18.0045 8.99762C17.2591 8.99762 16.6542 9.60257 16.6542 10.348V16.6542Z" fill="#52525D"/>
+                </g>
+                <defs>
+                  <clipPath id="clip0_3257_181">
+                    <rect width="36" height="36" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
+
+                Suivi réfs
+              <% end %>
+            </li>
+
+            <li>
+              <%= link_to bug_reports_path, class: ("active" if @current_page == "bug_reports") do %>
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95ZM3.15 24C4.8888 24 6.3 25.4112 6.3 27.15C6.3 28.8888 4.8888 30.3 3.15 30.3C1.4112 30.3 0 28.8888 0 27.15C0 25.4112 1.4112 24 3.15 24ZM36 21.75C36 21.0048 35.3952 20.4 34.65 20.4H10.35C9.6048 20.4 9 21.0048 9 21.75C9 22.4952 9.6048 23.1 10.35 23.1H34.65C35.3952 23.1 36 22.4952 36 21.75ZM3.15 15C4.8888 15 6.3 16.4112 6.3 18.15C6.3 19.8888 4.8888 21.3 3.15 21.3C1.4112 21.3 0 19.8888 0 18.15C0 16.4112 1.4112 15 3.15 15ZM36 14.55C36 13.8048 35.3952 13.2 34.65 13.2H10.35C9.6048 13.2 9 13.8048 9 14.55C9 15.2952 9.6048 15.9 10.35 15.9H34.65C35.3952 15.9 36 15.2952 36 14.55ZM3.15 6C4.8888 6 6.3 7.4112 6.3 9.15C6.3 10.8888 4.8888 12.3 3.15 12.3C1.4112 12.3 0 10.8888 0 9.15C0 7.4112 1.4112 6 3.15 6ZM36 7.35C36 6.6048 35.3952 6 34.65 6H10.35C9.6048 6 9 6.6048 9 7.35C9 8.0952 9.6048 8.7 10.35 8.7H34.65C35.3952 8.7 36 8.0952 36 7.35Z" fill="#52525D"/>
+              </svg>
+
+                Rapports bugs
+              <% end %>
+            </li>
+
+            <li>
+              <%= link_to users_path, class: ("active" if @current_page == "users") do %>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_3257_178)">
+                    <path d="M28.5 10.5015C28.5 16.299 23.799 21.0015 18 21.0015C12.201 21.0015 7.5 16.299 7.5 10.5015C7.5 4.701 12.201 0 18 0C23.799 0 28.5 4.701 28.5 10.5015ZM26.103 21.2715C23.844 22.977 21.042 24.0015 18 24.0015C14.955 24.0015 12.1515 22.974 9.8895 21.2685C3.7815 23.958 0 32.3325 0 36H36C36 32.3655 32.1 23.991 26.103 21.2715Z" fill="#52525D"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3257_178">
+                      <rect width="36" height="36" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+
+                Utilisateurs
+              <% end %>
+            </li>
+
+             <li>
+              <%= link_to feedbacks_path, class: ("active" if @current_page == "feedbacks") do %>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_3257_178)">
+                    <path d="M28.5 10.5015C28.5 16.299 23.799 21.0015 18 21.0015C12.201 21.0015 7.5 16.299 7.5 10.5015C7.5 4.701 12.201 0 18 0C23.799 0 28.5 4.701 28.5 10.5015ZM26.103 21.2715C23.844 22.977 21.042 24.0015 18 24.0015C14.955 24.0015 12.1515 22.974 9.8895 21.2685C3.7815 23.958 0 32.3325 0 36H36C36 32.3655 32.1 23.991 26.103 21.2715Z" fill="#52525D"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_3257_178">
+                      <rect width="36" height="36" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+
+                Feedbacks
+              <% end %>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </div>
+  <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner" style="display:none;">
       <div>
-        <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?</p>
-        <button id="accept-cookies">Accepter</button>
-        <button id="decline-cookies">Tout refuser</button>
+        <p><%= t('cookies.banner_text') %></p>
+        <button data-action="click->cookie-consent#accept"><%= t('cookies.accept') %></button>
+        <button data-action="click->cookie-consent#decline"><%= t('cookies.decline') %></button>
       </div>
     </div>
 
    <% if notice.present? %>
-      <div class="alert" 
-          data-controller="alert"
-          data-alert-target="close">
+      <div class="alert" data-controller="alert">
         <p><%= notice %></p>
         <span class="closebtn" data-alert-target="close">&times;</span>
         <div class="progress-container">
@@ -119,10 +178,7 @@
       </div>
     <% elsif flash.any? %>
       <% flash.each do |key, message| %>
-        <div class="alert <%= key %>" 
-            data-controller="alert"
-            data-alert-target="progress"
-            data-alert-target="close">
+        <div class="alert <%= key %>" data-controller="alert">
           <%= message %>
           <span class="closebtn" data-alert-target="close">&times;</span>
           <div class="progress-container">
@@ -131,18 +187,23 @@
         </div>
       <% end %>
     <% end %>
+
     <main class="admin-main">
-       <div id="loading">
-        <div class="loader-bg">      
-          <video autoplay loop muted>
+      <div id="loading" data-loading-target="loading">
+        <div class="loader-bg">
+          <video autoplay loop muted playsinline webkit-playsinline preload="auto">
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">
-            Your browser does not support the video tag.
+            <%= t('loader.unsupported_browser') %>
           </video>
         </div>
       </div>
-      <div id="content">
+      <div id="content" data-loading-target="content" style="display: none;">
         <%= yield %>
       </div>
     </main>
+
+
+    <%= javascript_importmap_tags %>
+    <%= yield :recaptcha_script %>
   </body>
 </html>

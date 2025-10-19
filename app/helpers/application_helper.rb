@@ -24,7 +24,11 @@ module ApplicationHelper
       {controller: 'designers',  actions: %w[index new edit]},
       {controller: 'pages',      actions: %w[add_elements]},
       {controller: 'feedbacks',  actions: %w[new]},
-      {controller: 'notifications',  actions: %w[index]}
+      {controller: 'notifications',  actions: %w[index]},
+      {controller: 'registrations',  actions: %w[new edit]},
+      {controller: 'passwords',  actions: %w[new edit]},
+      {controller: 'confirmations',  actions: %w[new]},
+      {controller: 'sessions',  actions: %w[new]}
     ]
     !excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) }
   end

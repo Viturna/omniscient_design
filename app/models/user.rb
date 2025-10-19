@@ -58,7 +58,9 @@ class User < ApplicationRecord
   def banned?
     banned
   end
-
+  def full_name
+    "#{firstname} #{lastname}".strip
+  end
   private
 
   # Génération d’un code de parrainage unique

@@ -4,73 +4,101 @@
   <meta charset="UTF-8" />
 </head>
 <body style="margin:0; padding:0; background-color:#f4f4f4; font-family:Arial, sans-serif;">
-  <div class="container" style="max-width:680px; margin:40px auto; background:#ffffff; border-radius:12px; padding:40px;">
+  <table align="center" width="680" cellpadding="0" cellspacing="0" style="margin:40px auto; background:#ffffff; border-radius:12px;">
+    <tr>
+      <td style="padding:40px;">
 
-    <!-- Logo -->
-    <a href="https://omniscientdesign.fr" target="_blank" style="text-decoration:none; color:#202020;">
-      <table cellpadding="0" cellspacing="0">
-        <tr>
-          <td><img src="https://omniscientdesign.fr/assets/mail-logo.png" alt="Omniscient Design" width="55" style="display:block; border:0;" /></td>
-          <td style="padding-left:12px; font-size:24px; font-weight:600; color:#202020;">Omniscient<br/>Design</td>
-        </tr>
-      </table>
-    </a>
+        <!-- Logo -->
+        <a href="https://omniscientdesign.fr" target="_blank" style="text-decoration:none; color:#202020;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td><img src="https://omniscientdesign.fr/assets/mail-logo.png" alt="Omniscient Design" width="55" style="display:block; border:0;" /></td>
+              <td style="padding-left:12px; font-size:24px; font-weight:600; color:#202020;">
+                Omniscient<br/>Design
+              </td>
+            </tr>
+          </table>
+        </a>
 
-    <!-- Texte d’introduction -->
-    <p style="margin:30px 0 10px 0;"><%= t("mailer.email_changed.top") %></p>
-    <h2 class="title" style="font-size:28px; text-transform:uppercase; margin:0 0 20px 0; color:#202020;">
-      <%= t("mailer.email_changed.title") %>
-    </h2>
-
-    <!-- Salutation -->
-    <p style="font-size:16px; line-height:1.5; color:#52525D;">
-      <%= t("mailer.email_changed.greeting") %>
-      <strong class="black" style="color:#202020;"><%= @email %></strong>,
-    </p>
-
-    <!-- Contenu dynamique selon état -->
-    <% if @resource.try(:unconfirmed_email?) %>
-      <p style="font-size:16px; line-height:1.5; color:#52525D;">
-        <%= t("mailer.email_changed.in_progress_html", new_email: @resource.unconfirmed_email).html_safe %>
-      </p>
-    <% else %>
-      <p style="font-size:16px; line-height:1.5; color:#52525D;">
-        <%= t("mailer.email_changed.changed_html", new_email: @resource.email).html_safe %>
-      </p>
-    <% end %>
-
-    <p style="font-size:16px; line-height:1.5; color:#52525D;">
-      <%= t("mailer.email_changed.ignore").html_safe %>
-    </p>
-
-    <!-- Signature -->
-    <p style="font-style:italic; color:#202020; margin-top:30px;">
-      <%= t("mailer.email_changed.signature") %><br>
-      <span class="signature"><%= t("mailer.email_changed.team") %> <a href="https://omniscientdesign.fr" target="_blank" style="color:#202020;"><%= t("mailer.email_changed.od") %></a></span>
-    </p>
-
-    <!-- Footer -->
-    <div class="footer" style="background-color:#F8F8F8; border-radius:12px; padding:30px; margin-top:30px; text-align:center;">
-      <div class="social-icons" style="margin-bottom:24px;">
-        <a href="https://omniscientdesign.fr" target="_blank"><img src="https://omniscientdesign.fr/assets/link.png" alt="Site" width="30" style="display:inline-block; margin-right:10px;"></a>
-        <a href="https://www.instagram.com/omniscientdesign_/" target="_blank"><img src="https://omniscientdesign.fr/assets/instagram.png" alt="Instagram" width="40" style="display:inline-block; margin-right:10px;"></a>
-        <a href="https://www.linkedin.com/company/omniscient-design/" target="_blank"><img src="https://omniscientdesign.fr/assets/linkedin.png" alt="LinkedIn" width="40" style="display:inline-block; margin-right:10px;"></a>
-        <a href="https://www.tiktok.com/@omniscientdesign_" target="_blank"><img src="https://omniscientdesign.fr/assets/tiktok.png" alt="TikTok" width="40" style="display:inline-block; margin-right:10px;"></a>
-        <a href="mailto:contact@omniscientdesign.fr" target="_blank"><img src="https://omniscientdesign.fr/assets/mail.png" alt="Email" width="40" style="display:inline-block;"></a>
-      </div>
-
-      <div class="footer-col" style="margin-top:10px;">
-        <div class="flex-footer-link" style="margin-bottom:10px;">
-          <a class="footer-link-mail" href="https://omniscientdesign.fr/mentionslegales" target="_blank" style="color:#202020; text-decoration:underline; margin-right:10px;"><%= t("mailer.email_changed.legales") %></a> 
-          <a class="footer-link-mail" href="https://omniscientdesign.fr/politiquedeconfidentialite" target="_blank" style="color:#202020; text-decoration:underline; margin-right:10px;"><%= t("mailer.email_changed.politique") %></a>
-          <a class="footer-link-mail" href="https://omniscientdesign.fr/cgu" target="_blank" style="color:#202020; text-decoration:underline;"><%= t("mailer.email_changed.cgu") %></a>
-        </div>
-        <p style="font-size:14px; color:#202020; margin:0;">
-          <%= t("mailer.email_changed.all_rights_reserved", year: Time.current.year) %>
+        <!-- Texte d’introduction -->
+        <p style="margin:30px 0 10px 0; font-size:16px; line-height:1.5; color:#52525D;">
+          <%= t("mailer.email_changed.top") %>
         </p>
-      </div>
-    </div>
 
-  </div>
+        <!-- Titre -->
+        <h2 style="font-size:28px; text-transform:uppercase; margin:0 0 20px 0; color:#202020;">
+          <%= t("mailer.email_changed.title") %>
+        </h2>
+
+        <!-- Salutation -->
+        <p style="font-size:16px; line-height:1.5; color:#52525D;">
+          <%= t("mailer.email_changed.greeting") %> <strong color="#202020"><%= @email %></strong>,
+        </p>
+
+        <% if @resource.try(:unconfirmed_email?) %>
+          <p style="font-size:16px; line-height:1.5; color:#52525D;">
+            <%= t("mailer.email_changed.in_progress_html", new_email: @resource.unconfirmed_email).html_safe %>
+          </p>
+        <% else %>
+          <p style="font-size:16px; line-height:1.5; color:#52525D;">
+            <%= t("mailer.email_changed.changed_html", new_email: @resource.email).html_safe %>
+          </p>
+        <% end %>
+
+        <p style="font-size:16px; line-height:1.5; color:#52525D;">
+          <%= t("mailer.email_changed.ignore").html_safe %>
+        </p>
+
+        <!-- Signature -->
+        <p style="font-style:italic; color:#202020; margin-top:30px;">
+         <%= t("mailer.email_changed.signature") %><br/>
+          <strong>
+            <%= t("mailer.email_changed.team") %>
+            <a href="https://omniscientdesign.fr" target="_blank" style="color:#202020;">
+              <%= t("mailer.email_changed.od") %>
+            </a>
+          </strong>
+        </p>
+
+        <!-- Footer -->
+        <table align="center" cellpadding="0" cellspacing="0" width="100%"
+               style="background-color:#F8F8F8; border-radius:12px; padding:30px; margin-top:30px;">
+          <tr>
+            <td align="center">
+
+              <!-- Réseaux sociaux -->
+              <table align="center" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                <tr>
+                  <td><a href="https://omniscientdesign.fr/" target="_blank"><img src="https://omniscientdesign.fr/assets/link.png" alt="Site" width="30" style="display:block;border:0;"></a></td>
+                  <td style="width:10px;"></td>
+                  <td><a href="https://www.instagram.com/omniscientdesign_/" target="_blank"><img src="https://omniscientdesign.fr/assets/instagram.png" alt="Instagram" width="40" style="display:block;border:0;"></a></td>
+                  <td style="width:10px;"></td>
+                  <td><a href="https://www.linkedin.com/company/omniscient-design/" target="_blank"><img src="https://omniscientdesign.fr/assets/linkedin.png" alt="LinkedIn" width="40" style="display:block;border:0;"></a></td>
+                  <td style="width:10px;"></td>
+                  <td><a href="https://www.tiktok.com/@omniscientdesign_" target="_blank"><img src="https://omniscientdesign.fr/assets/tiktok.png" alt="TikTok" width="40" style="display:block;border:0;"></a></td>
+                  <td style="width:10px;"></td>
+                  <td><a href="mailto:contact@omniscientdesign.fr"><img src="https://omniscientdesign.fr/assets/mail.png" alt="Email" width="40" style="display:block;border:0;"></a></td>
+                </tr>
+              </table>
+
+              <!-- Liens légaux -->
+              <p style="text-align:center; font-size:14px; margin:0 0 16px 0; color:#202020;">
+                <a href="https://omniscientdesign.fr/mentionslegales" style="color:#202020; text-decoration:underline;"><%= t("mailer.email_changed.legales") %></a> |
+                <a href="https://omniscientdesign.fr/politiquedeconfidentialite" style="color:#202020; text-decoration:underline;"><%= t("mailer.email_changed.politique") %></a> |
+                <a href="https://omniscientdesign.fr/cgu" style="color:#202020; text-decoration:underline;"><%= t("mailer.email_changed.cgu") %></a>
+              </p>
+
+              <!-- Copyright -->
+              <p style="text-align:center; font-size:14px; color:#202020; margin:0;">
+                <%= t("mailer.email_changed.all_rights_reserved", year: Time.current.year) %>
+              </p>
+
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

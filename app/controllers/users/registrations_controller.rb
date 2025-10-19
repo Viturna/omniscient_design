@@ -15,6 +15,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         end
       end
       if resource.persisted?
+        create_admin_notification_for_signup(resource)
         flash[:notice] = I18n.t('user.registration.confirmation_sent')
         return redirect_to confirmation_pending_path
       end
@@ -44,6 +45,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+  def create_admin_notification_for_signup(user)
+    message = I18n.t('notifications.new_user_registered', name: user.full_name, default: "Nouvel utilisateur inscrit : #{user.full_name}")
+
+    recipients = User.where("role = ? OR certified = ?", 'admin', true)
+
+    recipients.each do |recipient|
+      Notification.create!(
+        user: recipient,
+        notifiable: user,
+        message: message
+      )
+    end
+  end
 
   def sign_up_params
     params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id)

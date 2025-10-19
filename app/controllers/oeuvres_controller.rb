@@ -86,7 +86,7 @@ class OeuvresController < ApplicationController
     end
   end
 
-  # PATCH/PUT /oeuvres/1/reject
+
  # PATCH/PUT /oeuvres/:slug/reject
 def reject
   rejection_reason = params[:rejection_reason].presence || I18n.t('oeuvre.reject.no_comment')

@@ -27,11 +27,11 @@
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
 
     <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   </head>
 
@@ -39,11 +39,12 @@
     <header>
         <div class="header-desktop">
       <div class="first-content-header admin-header">
-        <%= link_to root_path, class: "logo-header" do %>
-          <%= image_tag "logo-beta.svg", alt: "", class: "logo-light" %>
-          <%= image_tag "logo-beta-blanc.svg", alt: "", class: "logo-dark" %>
-          <p class="name-header">Omniscient <br> Admin</p>
+        <%= link_to(root_path, class: "logo-header") do %>
+          <%= image_tag "logo.svg", alt: "", class: "home-index logo-light" %>
+          <%= image_tag "small_logo_white.svg", alt: "", class: "home-index logo-dark" %>
+          <p class="name-header">Omniscient <br>Admin</p>
         <% end %>
+
 
         <nav class="nav-header">
           <ul>

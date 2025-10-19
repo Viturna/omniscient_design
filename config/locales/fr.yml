@@ -796,7 +796,7 @@ fr:
         designer_prompt: "Lier un/une designer"
         notion_ids: "Notion(s) de la référence"
         notion_placeholder: "Rechercher des notions…"
-        domaine_id: "Domaine de la référence"
+        domaine_id: "Domaine(s)"
       3:
         title: "Étape 3 : Contexte et description"
         presentation_generale: "Présentation générale (Min. 200 caractères)"

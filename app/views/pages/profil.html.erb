@@ -24,14 +24,14 @@
 <section class="grid-1">
 
   <!-- Pub Google -->
-<div class="ad-container" style="min-width:250px; width:100%; text-align:center;">
+<%# <div class="ad-container" style="min-width:250px; width:100%; text-align:center;">
   <ins class="adsbygoogle"
        style="display:block; width:100%; height:auto;"
        data-ad-client="ca-pub-2941773271062587"
        data-ad-slot="7247194614"
        data-ad-format="auto"
        data-full-width-responsive="true"></ins>
-</div>
+</div> %>
 
     <div class="flex-profils">
     <h2><%= t('profile.general') %></h2>
@@ -136,15 +136,15 @@
         <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
       </svg>
     <%end%>
-
-    <h2><%= t('profile.theme') %></h2>
+<%# 
+    <h2><%= t('profile.theme') %</h2>
     <div class="theme-switcher">
       <select id="theme-select">
-        <option value="system"><%= t('profile.system') %></option>
-        <option value="light"><%= t('profile.light') %></option>
-        <option value="dark"><%= t('profile.dark') %></option>
+        <option value="system"><%= t('profile.system') %</option>
+        <option value="light"><%= t('profile.light') %</option>
+        <option value="dark"><%= t('profile.dark') %</option>
       </select>
-    </div>
+    </div> %>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {

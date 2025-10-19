@@ -88,26 +88,39 @@ class DesignersController < ApplicationController
     end
   end
 
- def reject
+# PATCH/PUT /designers/:slug/reject
+def reject
   rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
-  @designer = Designer.find_by(slug: params[:slug])
+  @designer = Designer.friendly.find_by(slug: params[:slug])
 
   unless @designer
     redirect_to validation_path, alert: I18n.t('designer.not_found') and return
   end
 
   ActiveRecord::Base.transaction do
+    # Création du rejet
     RejectedDesigner.create!(
       nom: @designer.nom,
       prenom: @designer.prenom,
-      user: @designer.user,
+      user: @designer.user, # peut être nil
       reason: rejection_reason
     )
 
-    @designer.designers_domaines&.destroy_all
-    @designer.update!(rejection_reason: rejection_reason)
+    # Suppression des associations
+    @designer.designers_domaines.delete_all if @designer.respond_to?(:designers_domaines)
+    @designer.designers_notions.delete_all if @designer.respond_to?(:designers_notions)
+    @designer.designers_countries.delete_all if @designer.respond_to?(:designers_countries)
+    @designer.designers_oeuvres.delete_all if @designer.respond_to?(:designers_oeuvres)
 
-    handle_destroy(@designer, I18n.t('designer.reject.success'))
+    # Mise à jour de la raison du rejet et validation
+    @designer.update!(rejection_reason: rejection_reason, validation: false)
+
+    if @designer.user.present?
+      handle_destroy(@designer, I18n.t('designer.reject.success'))
+    else
+      Rails.logger.warn("Le designer #{@designer.id} n'a pas d'utilisateur associé pour la notification de rejet.")
+      redirect_to validation_path, notice: I18n.t('designer.reject.success') and return
+    end
   rescue => e
     Rails.logger.error("Erreur rejet designer : #{e.message}")
     redirect_to validation_path, alert: I18n.t('designer.reject.failure')

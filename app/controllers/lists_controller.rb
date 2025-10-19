@@ -284,6 +284,28 @@ def load_more_designers
   end
   render partial: 'designers_list', collection: @designers, as: :designer
 end
+def search_items
+  query = params[:q].to_s.strip
+  type  = params[:type]
+
+  case type
+  when 'designers'
+    @designers = Designer.where(validation: true)
+                         .where("nom ILIKE :q OR prenom ILIKE :q", q: "%#{query}%")
+                         .limit(10)
+    render partial: 'designers_list', collection: @designers, as: :designer
+
+  when 'oeuvres'
+    @oeuvres = Oeuvre.where(validation: true)
+                     .where("nom_oeuvre ILIKE ?", "%#{query}%")
+                     .limit(10)
+    render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+
+  else
+    render plain: ""
+  end
+end
+
 
 
   private

@@ -157,16 +157,21 @@ class SearchController < ApplicationController
     end
   end
 
-    if params[:notions].present?
-      notion_ids = Array(params[:notions]).reject(&:blank?)
-      if notion_ids.any?
-        @oeuvres = @oeuvres
-          .joins(:notions)
-          .where(notions: { id: notion_ids })
-          .group('oeuvres.id')
-          .having('COUNT(DISTINCT notions.id) = ?', notion_ids.size)
-      end
-    end
+if params[:notions].present?
+  notion_ids = Array(params[:notions]).reject(&:blank?)
+  if notion_ids.any?
+    # Supprime les includes qui polluent la requête
+    @oeuvres = @oeuvres.except(:includes)
+
+    @oeuvres = @oeuvres
+      .joins(:notions)
+      .where(notions: { id: notion_ids })
+      .group('oeuvres.id')
+      .select('oeuvres.*')
+      .having('COUNT(DISTINCT notions.id) = ?', notion_ids.size)
+  end
+end
+
 
     if params[:start_year].present? && params[:end_year].present?
       start_year = params[:start_year].to_i

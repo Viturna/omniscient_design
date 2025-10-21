@@ -617,7 +617,7 @@ fr:
     add:
       designer:
         success: "Designer ajouté avec succès."
-        failure: "Impossible d'ajouter le designer."
+        failure: "Impossible d'ajouter le/la designer."
         exists: "Ce designer est déjà dans la liste."
       oeuvre:
         success: "Référence ajoutée avec succès."
@@ -850,9 +850,9 @@ fr:
     oeuvre_rejected: "Votre référence %{name} a été rejetée."
     no_user_for_rejection: "La référence %{oeuvre_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_designer: "Un nouveau designer est à valider : %{name}"
-    designer_validated: "Le designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
+    designer_validated: "Le/La designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
     designer_rejected: "Votre designer %{name} a été rejeté(e)."
-    no_user_for_rejection_designer: "Le designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
+    no_user_for_rejection_designer: "Le/La designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_user_registered: "Nouvel utilisateur inscrit : %{name}"
   email_confirmation:
     heading: "Confirmez votre email"
@@ -867,7 +867,7 @@ fr:
       success: "Designer mis à jour avec succès."
       failure: "Erreur lors de la mise à jour du designer."
     destroy:
-      success: "Le designer %{name} a été supprimé avec succès."
+      success: "Le/La designer %{name} a été supprimé avec succès."
     cancel:
       success: "La soumission du designer a été annulée avec succès."
       denied: "Vous n'avez pas l'autorisation d'annuler cette soumission."
@@ -875,7 +875,7 @@ fr:
       success: "Le/La designer %{name} a été validé(e) avec succès."
       failure: "Une erreur s'est produite lors de la validation du designer."
     reject:
-      success: "Le designer a été refusé avec succès."
+      success: "Le/La designer a été refusé avec succès."
       failure: "Une erreur s'est produite lors du refus du designer."
       no_comment: "Sans commentaire"
     access:

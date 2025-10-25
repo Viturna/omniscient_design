@@ -1,30 +1,49 @@
+# Fichier : config/sitemap.rb
+
 SitemapGenerator::Sitemap.sitemaps_path = 'sitemaps/'
 SitemapGenerator::Sitemap.default_host = "https://omniscientdesign.fr"
 
 SitemapGenerator::Sitemap.create do
-  # Pages statiques utiles pour SEO
-  add '/', priority: 1.0, changefreq: 'daily'
-  add '/presentation', priority: 0.7, changefreq: 'monthly'
-  add '/add_elements', priority: 0.7, changefreq: 'monthly'
-  add '/parrainage', priority: 0.5, changefreq: 'monthly'
-  add '/mentionslegales', priority: 0.5, changefreq: 'monthly'
-  add '/cookies', priority: 0.5, changefreq: 'monthly'
-  add '/politiquedeconfidentialite', priority: 0.5, changefreq: 'monthly'
-  add '/cgu', priority: 0.5, changefreq: 'monthly'
-  add '/changelog', priority: 0.5, changefreq: 'monthly'
-  add '/search'priority: 0.7, changefreq: 'monthly'
-  add '/contributions', priority: 0.5, changefreq: 'monthly'
 
-  # Page de connexion
-  add '/users/sign_in'priority: 0.8, changefreq: 'monthly'
+  # --- PAGES PRINCIPALES (Contenu dynamique & forte priorité) ---
 
-  # Designers dynamiques
+  # Page d'accueil (Oeuvres#index)
+  add root_path, priority: 1.0, changefreq: 'daily'
+
+  # Index des Designers
+  add designers_path, priority: 0.9, changefreq: 'daily'
+
+  # Frise chronologique
+  add frise_oeuvres_path, priority: 0.8, changefreq: 'daily'
+
+
+  # --- CONTENU DYNAMIQUE (Les "objets" de votre site) ---
+
   Designer.find_each do |designer|
     add designer_path(designer), lastmod: designer.updated_at, priority: 0.8, changefreq: 'weekly'
   end
 
-  # Œuvres dynamiques
+
   Oeuvre.find_each do |oeuvre|
     add oeuvre_path(oeuvre), lastmod: oeuvre.updated_at, priority: 0.8, changefreq: 'weekly'
   end
+  
+
+  # --- PAGES "STATIQUES" (Contenu de présentation) ---
+
+  add presentation_path, priority: 0.7, changefreq: 'monthly'
+  add add_elements_path, priority: 0.7, changefreq: 'monthly'
+  add parrainage_path, priority: 0.5, changefreq: 'monthly'
+  add changelog_path, priority: 0.5, changefreq: 'monthly'
+  add kit_presse_path, priority: 0.4, changefreq: 'monthly'
+  add plan_site_path, priority: 0.4, changefreq: 'monthly'
+
+  # --- PAGES LÉGALES (Basse priorité) ---
+  
+  add mentionslegales_path, priority: 0.2, changefreq: 'yearly'
+  add cookies_path, priority: 0.2, changefreq: 'yearly'
+  add politiquedeconfidentialite_path, priority: 0.2, changefreq: 'yearly'
+  add cgu_path, priority: 0.2, changefreq: 'yearly'
+  
+  
 end

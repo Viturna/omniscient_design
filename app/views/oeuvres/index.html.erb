@@ -14,7 +14,7 @@
     position: relative;
     height: 100dvh;
     overflow-y: scroll;
-    scroll-snap-type: y mandatory; 
+    scroll-snap-type: y mandatory;
   }
   .box-card{
     display: flex;
@@ -28,7 +28,14 @@
   .ad-container {
   width: 100%;
   text-align: center;
-  margin: 20px 0;
+  min-height: 90dvh;
+}
+.ad-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Assurez-vous qu'elle a la même classe/taille que vos vraies cartes */
+  scroll-snap-align: start;
 }
 </style>
 
@@ -57,29 +64,7 @@
         <% end %>
       </div>
     <% end %>
-    <%# <button data-controller="lang-switcher" class="lang-switcher" data-action="click->lang-switcher#toggle">
-    <span class="lang-icon">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.82263 6.50977C8.82263 10.8194 6.63857 12.9761 3.94531 12.9761M3.94531 6.50977H10.7736" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M4.9209 9.07349C4.9209 11.1649 7.11764 12.8856 10.7737 12.9753M11.7491 19.8036L15.651 11.0244L19.5529 19.8036M18.6749 17.8527H12.6271M6.57333 3.2207L7.34688 3.78842" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-      </span>
-      <span class="lang-label" data-lang-switcher-target="current"><%= I18n.locale.to_s.upcase </span>
-      <span class="lang-arrow">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.83984 6.80664L9.22632 11.1931L13.6128 6.80664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-      </span>
-      <div class="lang-dropdown" data-lang-switcher-target="dropdown">
-          <%= link_to url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } do 
-            <span class="flag">🇫🇷</span> FR
-          <% end 
-          <%= link_to url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } do 
-            <span class="flag">🇬🇧</span> EN
-          <% end 
-      </div>
-  </button> %>
+  
   </div>
 
 
@@ -105,14 +90,39 @@
       <%= link_to t('global.designers'), designers_path %>
       <%= link_to t('global.references'), oeuvres_path, class: "active" %>
     </div>
- 
-    <div class="box-card" id="boxCard">
-      <% @oeuvres.each do |o| %>
-        <% Rails.logger.debug "Type chargé : #{o.class.name}" %>
-      <% end %>
 
-      <%= render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' } %>
-    </div>
+    <div class="box-card" id="boxCard">
+  <% @oeuvres.each do |o| %>
+    <% Rails.logger.debug "Type chargé : #{o.class.name}" %>
+  <% end %>
+  <%# ====================================================== %>
+  <%# === DÉBUT DE L'INTÉGRATION DE LA PUB === %>
+  <%# ====================================================== %>
+
+  <%# 1. On définit la fréquence - Utilisation d'une variable locale (minuscule) %>
+  <% items_per_ad = 5 %>
+
+  <%# 2. On boucle sur les oeuvres initiales avec un index %>
+  <% @oeuvres.each_with_index do |oeuvre, index| %>
+
+    <%# 3. On insère le partial de pub toutes les 5 cartes (sauf à 0) - Utilisation de la variable locale %>
+    <% if index > 0 && index % items_per_ad == 0 %>
+      <%#
+      # On appelle un partial séparé pour la pub.
+      # Vous devez créer le fichier 'app/views/oeuvres/_ad_card.html.erb'
+      # (Il doit contenir votre code AdSense dans une div avec class="card ad-card")
+      %>
+      <%= render partial: 'oeuvres/ad_card' %>
+    <% end %>
+
+    <%# 4. On rend la carte d'oeuvre normale %>
+    <%= render partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' } %>
+
+  <% end %>
+  <%# ====================================================== %>
+  <%# === FIN DE L'INTÉGRATION DE LA PUB === %>
+  <%# ====================================================== %>
+</div>
     <div id="oeuvres-load-more" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
   </div>
   <div class="button-nav">
@@ -131,136 +141,117 @@
   </div>
 </div>
 <script>
-  document.addEventListener("turbo:load", () => {
-    const container = document.getElementById("cardContainer");
-    const loadMoreTrigger = document.getElementById("oeuvres-load-more");
-    const upButton = document.querySelector(".arrow-button.up");
-    const downButton = document.querySelector(".arrow-button.down");
+document.addEventListener("turbo:load", () => {
+const container = document.getElementById("cardContainer");
+const loadMoreTrigger = document.getElementById("oeuvres-load-more");
+const upButton = document.querySelector(".arrow-button.up");
+const downButton = document.querySelector(".arrow-button.down");
+if (!container) return;
+container.scrollTop = 0;
+window.scrollTo(0, 0);
+requestAnimationFrame(() => {
+container.scrollTop = 0;
+});
+let isLoading = false;
+let isScrolling = false;
+// Fonction de chargement des cartes
+function loadMoreCards() {
+if (isLoading) return;
+isLoading = true;
+const offset = loadMoreTrigger.dataset.offset;
+const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
+fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
+.then((response) => response.text())
+.then((html) => {
+if (html.trim() === "") {
+loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
+} else {
+container.insertAdjacentHTML("beforeend", html);
+// Mettre à jour l'offset et les IDs chargés
+loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
+const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
+loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
+validateCardAlignment();
+}
+})
+.catch((err) => {
+console.error("Erreur lors du chargement des cartes :", err);
+})
+.finally(() => {
+// ✅ On libère le verrou APRÈS la fin complète de la requête
+isLoading = false;
+});
+}
+// Vérification et ajustement de l'alignement des cartes
+function validateCardAlignment() {
+const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
+cards.forEach((card) => {
+card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
+});
+}
+// Fonction pour défiler vers le haut ou le bas
+function scrollToCard(direction) {
+// ======================================================
+// === CORRECTION DU BUG JAVASCRIPT ===
+// ======================================================
+// On doit sélectionner .card ET .ad-card, comme dans validateCardAlignment
+const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
+// ======================================================
 
-    if (!container) return;
-     container.scrollTop = 0;
-  window.scrollTo(0, 0);
-  requestAnimationFrame(() => {
-    container.scrollTop = 0;
-  });
+const scrollTop = container.scrollTop;
+const containerHeight = container.clientHeight;
+// Trouver l'index de la card "active"
+const currentIndex = cards.findIndex(card => {
+const cardTop = card.offsetTop;
+const cardBottom = cardTop + card.offsetHeight;
+return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
+});
+let targetIndex = currentIndex;
+if (direction === "down" && currentIndex < cards.length - 1) {
+targetIndex++;
+} else if (direction === "up" && currentIndex > 0) {
+targetIndex--;
+}
+if (targetIndex !== currentIndex) {
+cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+}
+}
+// Gestion des boutons
+upButton.addEventListener("click", () => scrollToCard("up"));
+downButton.addEventListener("click", () => scrollToCard("down"));
+document.addEventListener("keydown", (e) => {
+if (e.key === "ArrowUp") scrollToCard("up");
+if (e.key === "ArrowDown") scrollToCard("down");
+});
+// Gestion tactile (mobile-friendly)
+let touchStartY = 0;
+let touchEndY = 0;
+container.addEventListener("touchstart", (e) => {
+touchStartY = e.touches[0].clientY;
+}, { passive: true });
+container.addEventListener("touchend", (e) => {
+if (isScrolling) return;
+touchEndY = e.changedTouches[0].clientY;
+const swipeDistance = touchStartY - touchEndY;
+if (swipeDistance > 50) {
+scrollToCard("down");
+} else if (swipeDistance < -50) {
+scrollToCard("up");
+}
+}, { passive: true });
+// Ajustement initial
+validateCardAlignment();
+// Écouteur de défilement pour le chargement infini
+container.addEventListener("scroll", () => {
+const { scrollTop, scrollHeight, clientHeight } = container;
+isScrolling = true;
+if (scrollTop + clientHeight >= scrollHeight) {
+loadMoreCards();
+}
+setTimeout(() => (isScrolling = false), 100);
+}, { passive: true });
+});
 
-
-    let isLoading = false;
-    let isScrolling = false;
-
-    // Fonction de chargement des cartes
-    function loadMoreCards() {
-      if (isLoading) return;
-      isLoading = true;
-
-      const offset = loadMoreTrigger.dataset.offset;
-      const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
-
-      fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
-        .then((response) => response.text())
-        .then((html) => {
-          if (html.trim() === "") {
-            loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
-          } else {
-            container.insertAdjacentHTML("beforeend", html);
-
-            // Mettre à jour l'offset et les IDs chargés
-            loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
-            const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
-            loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
-
-            validateCardAlignment();
-          }
-        })
-        .catch((err) => {
-          console.error("Erreur lors du chargement des cartes :", err);
-        })
-        .finally(() => {
-          // ✅ On libère le verrou APRÈS la fin complète de la requête
-          isLoading = false;
-        });
-    }
-
-    // Vérification et ajustement de l'alignement des cartes
-    function validateCardAlignment() {
-      const cards = container.querySelectorAll(".card");
-      cards.forEach((card) => {
-        card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
-      });
-    }
-
-    // Fonction pour défiler vers le haut ou le bas
-    function scrollToCard(direction) {
-      const cards = Array.from(container.querySelectorAll(".card"));
-      const scrollTop = container.scrollTop;
-      const containerHeight = container.clientHeight;
-
-      // Trouver l'index de la card "active"
-      const currentIndex = cards.findIndex(card => {
-        const cardTop = card.offsetTop;
-        const cardBottom = cardTop + card.offsetHeight;
-        return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
-      });
-
-      let targetIndex = currentIndex;
-      if (direction === "down" && currentIndex < cards.length - 1) {
-        targetIndex++;
-      } else if (direction === "up" && currentIndex > 0) {
-        targetIndex--;
-      }
-
-      if (targetIndex !== currentIndex) {
-        cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-
-
-    // Gestion des boutons
-    upButton.addEventListener("click", () => scrollToCard("up"));
-    downButton.addEventListener("click", () => scrollToCard("down"));
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowUp") scrollToCard("up");
-      if (e.key === "ArrowDown") scrollToCard("down");
-    });
-    // Gestion tactile (mobile-friendly)
-    let touchStartY = 0;
-    let touchEndY = 0;
-
-    container.addEventListener("touchstart", (e) => {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    container.addEventListener("touchend", (e) => {
-      if (isScrolling) return;
-
-      touchEndY = e.changedTouches[0].clientY;
-      const swipeDistance = touchStartY - touchEndY;
-
-      if (swipeDistance > 50) {
-        scrollToCard("down");
-      } else if (swipeDistance < -50) {
-        scrollToCard("up");
-      }
-    }, { passive: true });
-
-
-    // Ajustement initial
-    validateCardAlignment();
-
-    // Écouteur de défilement pour le chargement infini
-    container.addEventListener("scroll", () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      isScrolling = true;
-
-      if (scrollTop + clientHeight >= scrollHeight) {
-        loadMoreCards();
-      }
-
-      setTimeout(() => (isScrolling = false), 100);
-    }, { passive: true });
-  });
-  
 </script>
 <div id="popup" class="popup">
   <div class="popup-content">
@@ -276,7 +267,6 @@
       </div>
       <p class="subtitle-popup"><%= t('mainpopup.subtitle_project') %></p>
       <p><%= t('mainpopup.description_project').gsub("\n", "<br>").html_safe %></p>
-
       <%= link_to presentation_url, class: "button dark" do %>
        <%= t('mainpopup.button_project') %>
       <%end%>
@@ -313,29 +303,27 @@
   </div>
 </div>
 <script>
-  document.addEventListener("turbo:load", function() {
-    const openPopupButton = document.getElementById("openPopup");
-    const closePopupButton = document.getElementById("closePopup");
-    const popup = document.getElementById("popup");
-    if (!openPopupButton || !closePopupButton || !popup) return;
-    if (!popup) return;
-
-    if (openPopupButton) {
-      openPopupButton.addEventListener("click", function() {
-        popup.style.display = "flex";
-      });
-    }
-
-    if (closePopupButton) {
-      closePopupButton.addEventListener("click", function() {
-        popup.style.display = "none";
-      });
-    }
-
-    window.addEventListener("click", function(event) {
-      if (event.target === popup) {
-        popup.style.display = "none";
-      }
-    });
-  });
+document.addEventListener("turbo:load", function() {
+const openPopupButton = document.getElementById("openPopup");
+const closePopupButton = document.getElementById("closePopup");
+const popup = document.getElementById("popup");
+if (!openPopupButton || !closePopupButton || !popup) return;
+if (!popup) return;
+if (openPopupButton) {
+openPopupButton.addEventListener("click", function() {
+popup.style.display = "flex";
+});
+}
+if (closePopupButton) {
+closePopupButton.addEventListener("click", function() {
+popup.style.display = "none";
+});
+}
+window.addEventListener("click", function(event) {
+if (event.target === popup) {
+popup.style.display = "none";
+}
+});
+});
 </script>
+

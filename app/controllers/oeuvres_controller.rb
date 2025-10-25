@@ -26,8 +26,21 @@ class OeuvresController < ApplicationController
                      .offset(offset)
                      .limit(limit)
 
-    render partial: 'oeuvres/card', collection: @oeuvres, as: :card, locals: { class_name: 'card' }
-  end 
+    items_per_ad = 5
+    html_output = "" 
+
+    @oeuvres.each_with_index do |oeuvre, i|
+      global_index = offset + i
+      
+      if global_index > 0 && global_index % items_per_ad == 0
+        html_output += render_to_string(partial: 'oeuvres/ad_card', locals: {})
+      end
+      
+      html_output += render_to_string(partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' })
+    end
+    
+    render html: html_output.html_safe
+  end
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show

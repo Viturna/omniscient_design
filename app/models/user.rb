@@ -29,7 +29,7 @@ class User < ApplicationRecord
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
 
   has_many :bug_reports
-  has_many :lists
+  has_many :lists, dependent: :destroy
   has_many :oeuvres
   has_many :designers
   has_many :notifications, dependent: :destroy
@@ -37,14 +37,14 @@ class User < ApplicationRecord
   has_many :feedbacks
   has_many :suivis, dependent: :destroy
 
-  has_many :list_editors
+  has_many :list_editors, dependent: :destroy
   has_many :editable_lists, through: :list_editors, source: :list
 
-  has_many :list_visitors
+  has_many :list_visitors, dependent: :destroy
   has_many :visitor_lists, through: :list_visitors, source: :list
 
-  has_many :rejected_oeuvres
-  has_many :rejected_designers
+  has_many :rejected_oeuvres, dependent: :destroy
+  has_many :rejected_designers, dependent: :destroy
 
   # Méthodes
   def certified?

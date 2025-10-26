@@ -52,4 +52,6 @@ log/development.log
 
 /config/credentials/production.key
 
-.lock
+*.lock
+Gemfile.lock
+Gemfile.lock

@@ -48,9 +48,13 @@
             <td><%= bug_report.user.email %></td>
             <td><%= l(bug_report.created_at, format: :long) %></td>
             <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
-              <% end %>
+           <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+  <%= select_tag :status,
+        options_for_select(BugReport.statuses.map { |k, v| [v, k] }, bug_report.status),
+        class: 'status-select',
+        onchange: 'this.form.submit()' %>
+<% end %>
+
             </td>
             <td>
               <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
@@ -85,8 +89,11 @@
             <td><%= bug_report.user.email %></td>
             <td><%= l(bug_report.created_at, format: :long) %></td>
             <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+             <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status,
+                      options_for_select(BugReport.statuses.keys.map { |k| [BugReport.statuses[k], k] }, bug_report.status),
+                      class: 'status-select',
+                      onchange: 'this.form.submit()' %>
               <% end %>
             </td>
             <td>
@@ -122,8 +129,11 @@
             <td><%= bug_report.user.email %></td>
             <td><%= l(bug_report.created_at, format: :long) %></td>
             <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+             <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status,
+                      options_for_select(BugReport.statuses.keys.map { |k| [BugReport.statuses[k], k] }, bug_report.status),
+                      class: 'status-select',
+                      onchange: 'this.form.submit()' %>
               <% end %>
             </td>
             <td>
@@ -159,8 +169,11 @@
             <td><%= bug_report.user.email %></td>
             <td><%= l(bug_report.created_at, format: :long) %></td>
             <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status, options_for_select(BugReport::STATUSES, bug_report.status), class: 'status-select', onchange: 'this.form.submit()' %>
+             <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
+                <%= select_tag :status,
+                      options_for_select(BugReport.statuses.keys.map { |k| [BugReport.statuses[k], k] }, bug_report.status),
+                      class: 'status-select',
+                      onchange: 'this.form.submit()' %>
               <% end %>
             </td>
             <td>

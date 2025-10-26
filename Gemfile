@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby '3.3.4'
 
-gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+gem "rails"
 
 # Asset pipeline (pour CSS/images, pas pour JS)
 gem "sprockets-rails"
@@ -21,7 +21,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 gem "webrick", ">= 1.8.2"
-gem "rack", ">= 3.1.14"
+gem "rack", ">= 3.1.18"
 gem "nokogiri", ">= 1.18.8"
 gem "rack-rewrite"
 
@@ -74,3 +74,9 @@ gem 'chartkick'
 gem 'groupdate'
 
 gem "premailer-rails", "~> 1.12"
+
+
+# Secu
+gem 'rack-attack'
+gem 'brakeman', require: false
+gem 'bundler-audit', require: false

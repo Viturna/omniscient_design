@@ -25,7 +25,7 @@ class Designer < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
 
-  serialize :source, Array, coder: JSON
+attribute :source, :json, default: []
 
   attr_accessor :rejection_reason
 

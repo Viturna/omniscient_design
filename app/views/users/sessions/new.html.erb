@@ -6,7 +6,7 @@
   <section class="box-log">
     <h1><%= t('devise.login.title') %></h1>
     <div class="form">
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
         <div class="field">

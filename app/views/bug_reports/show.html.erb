@@ -17,7 +17,7 @@
   </p>
   <p>
     <strong>URL:</strong>
-    <%= link_to @bug_report.url, @bug_report.url %>
+<%= link_to(@bug_report.url, @bug_report.url, rel: "noopener noreferrer", target: "_blank") %>
   </p>
   <p>
     <strong>Status:</strong>

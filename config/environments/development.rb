@@ -63,7 +63,8 @@ Rails.application.configure do
     user_name: ENV["MAILJET_API_KEY"],
     password: ENV["MAILJET_SECRET_KEY"],
     authentication: :plain,
-    enable_starttls_auto: true
+    enable_starttls_auto: true,
+    openssl_verify_mode:  "none" 
   }
 
 

@@ -22,13 +22,15 @@ class BugReportsController < ApplicationController
   def index
     @current_page = 'bug_reports'
     @bug_reports_all = BugReport.all
-    @bug_reports_todo = BugReport.where(status: 'À faire')
-    @bug_reports_in_progress = BugReport.where(status: 'En cours')
-    @bug_reports_resolved = BugReport.where(status: 'Corrigé')
+    @bug_reports_todo = BugReport.where(status: BugReport.statuses["a_faire"])
+    @bug_reports_in_progress = BugReport.where(status: BugReport.statuses["en_cours"])
+    @bug_reports_resolved = BugReport.where(status: BugReport.statuses["corrige"])
+
   end
 
   def show
     @current_page = 'profil'
+    @bug_report = BugReport.find(params[:id])
   end
 
   def destroy
@@ -36,13 +38,14 @@ class BugReportsController < ApplicationController
     redirect_to bug_reports_path, notice: I18n.t('bug_report.destroy.success')
   end
 
-  def update_status
-    if @bug_report.update(status: params[:status])
-      redirect_to bug_reports_path, notice: I18n.t('bug_report.update_status.success')
-    else
-      redirect_to bug_reports_path, alert: I18n.t('bug_report.update_status.error')
-    end
+def update_status
+  if @bug_report.update(status: params[:status])
+    redirect_to bug_reports_path, notice: I18n.t('bug_report.update_status.success')
+  else
+    redirect_to bug_reports_path, alert: I18n.t('bug_report.update_status.error')
   end
+end
+
 
   private
 

@@ -23,7 +23,7 @@ class Oeuvre < ApplicationRecord
 
   attr_accessor :rejection_reason
 
-  serialize :source, Array, coder: JSON
+attribute :source, :json, default: []
 
   def validated?
     validation == true

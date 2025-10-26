@@ -51,7 +51,3 @@ log/development.log
 /node_modules
 
 /config/credentials/production.key
-
-*.lock
-Gemfile.lock
-Gemfile.lock

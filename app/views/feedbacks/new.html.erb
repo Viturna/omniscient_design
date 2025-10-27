@@ -52,9 +52,7 @@
     align-items: center;
     flex-direction: column;
   }
-  .button{
-    margin-top: 32px;
-  }
+
    @media screen and (min-width:0px) and (max-width:600px) {
     .star-rating{
       align-items:center;
@@ -145,7 +143,7 @@
       <% end %>
 
       <div>
-        <%= f.submit t('feedback.submit'), class: "button large" %>
+        <%= f.submit t('feedback.submit'), class: "button large", style: "margin-top: 32px;" %>
       </div>
     <% end %>
   </div>

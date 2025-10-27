@@ -9,7 +9,7 @@ class User < ApplicationRecord
   attribute :banned, :boolean, default: false
 
   # Statuts valides
-  STATUTS = %w[Student Teacher Company Association Designer Artist Other Étudiant Enseignant Entreprise Artiste Autre]
+  STATUTS = %w[etudiant enseignant entreprise artiste autre]
 
   # Validations
   validates :rgpd_consent, acceptance: true

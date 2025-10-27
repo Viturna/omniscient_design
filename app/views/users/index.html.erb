@@ -35,6 +35,7 @@
           <th>Confirmé</th>
           <th>Certifié</th>
           <th>Date de création</th>
+          <th>Via</th>
         </tr>
       </thead>
       <tbody>
@@ -46,45 +47,45 @@
             <td><%= user.pseudo %></td>
             <td><%= user.statut %></td>
             <td><%= user.etablissement&.name %></td>
-           <td>
-            <% if current_user.admin? %>
-              <% if user.banned? %>
-                <%= link_to unban_user_path(user),
-                            data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir débannir cet utilisateur ?" },
-                            class: "btn btn-success btn-sm" do %>
-                  <i class="fa fa-unlock"></i> Débannir
-                <% end %>
-              <% else %>
-                <%= link_to ban_user_path(user),
-                            data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir bannir cet utilisateur ?" },
-                            class: "btn btn-danger btn-sm" do %>
-                  <i class="fa fa-ban"></i> Bannir l'utilisateur
+            <td>
+              <% if current_user.admin? %>
+                <% if user.banned? %>
+                  <%= link_to unban_user_path(user),
+                              data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir débannir cet utilisateur ?" },
+                              class: "btn btn-success btn-sm" do %>
+                    <i class="fa fa-unlock"></i> Débannir
+                  <% end %>
+                <% else %>
+                  <%= link_to ban_user_path(user),
+                              data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir bannir cet utilisateur ?" },
+                              class: "btn btn-danger btn-sm" do %>
+                    <i class="fa fa-ban"></i> Bannir l'utilisateur
+                  <% end %>
                 <% end %>
               <% end %>
-            <% end %>
-          </td>
+            </td>
             <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
-         <td>
-  <% if current_user.admin? %>
-    <% if user.certified? %>
-      <%= link_to uncertify_user_path(user),
-                  data: { turbo_method: :patch, turbo_confirm: 'Retirer la certification de cet utilisateur ?' },
-                  class: "btn btn-warning btn-sm" do %>
-        Décertifier
-      <% end %>
-    <% else %>
-      <%= link_to certify_user_path(user),
-                  data: { turbo_method: :patch, turbo_confirm: 'Certifier cet utilisateur ?' },
-                  class: "btn btn-primary btn-sm" do %>
-        Certifier
-      <% end %>
-    <% end %>
-  <% else %>
-    <%= user.certified? ? 'Oui' : 'Non' %>
-  <% end %>
-</td>
-
+            <td>
+                <% if current_user.admin? %>
+                  <% if user.certified? %>
+                    <%= link_to uncertify_user_path(user),
+                                data: { turbo_method: :patch, turbo_confirm: 'Retirer la certification de cet utilisateur ?' },
+                                class: "btn btn-warning btn-sm" do %>
+                      Décertifier
+                    <% end %>
+                  <% else %>
+                    <%= link_to certify_user_path(user),
+                                data: { turbo_method: :patch, turbo_confirm: 'Certifier cet utilisateur ?' },
+                                class: "btn btn-primary btn-sm" do %>
+                      Certifier
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <%= user.certified? ? 'Oui' : 'Non' %>
+                <% end %>
+            </td>
             <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
+            <td><%= user.how_did_you_hear %></td>
           </tr>
         <% end %>
       </tbody>

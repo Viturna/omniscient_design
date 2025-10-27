@@ -1,4 +1,8 @@
 @import "abstracts/variables";
+label {
+  font-size: 16px;
+  color: $secondary-color;
+}
 // Recherche
 
 input.search-top-bar {
@@ -73,7 +77,11 @@ input[type="search"]::-webkit-search-cancel-button {
 .field {
   width: 100%;
 }
-
+.input-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 input[type="text"],
 input[type="date"],
 input[type="email"],

@@ -40,6 +40,9 @@ application.register("recaptcha", RecaptchaController)
 import ReferenceScrollController from "./reference_scroll_controller"
 application.register("reference-scroll", ReferenceScrollController)
 
+import RegistrationController from "./registration_controller"
+application.register("registration", RegistrationController)
+
 import ScrollHorizontalController from "./scroll_horizontal_controller"
 application.register("scroll-horizontal", ScrollHorizontalController)
 

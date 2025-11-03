@@ -1,6 +1,6 @@
 class Oeuvre < ApplicationRecord
   extend FriendlyId
-  include MeiliSearch::Rails
+
 
   friendly_id :nom_oeuvre, use: :slugged
 
@@ -23,27 +23,10 @@ class Oeuvre < ApplicationRecord
 
   attr_accessor :rejection_reason
 
-attribute :source, :json, default: []
+  attribute :source, :json, default: []
 
   def validated?
     validation == true
   end
 
-  def image_variant
-    return unless image.attached? && image.content_type&.start_with?('image/')
-
-    image.variant(resize_to_limit: [500, 500]).processed
-  rescue ActiveStorage::InvariableError
-    nil
-  end
-
-  # ---- MeiliSearch ----
-  def reindex_meili
-    self.class.reindex
-    self.meilisearch_index.add_documents([self])
-  end
-
-  def remove_from_meili
-    self.meilisearch_index.delete_document(self.id)
-  end
 end

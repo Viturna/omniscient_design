@@ -2,10 +2,39 @@ class UsersController < ApplicationController
     layout 'admin', only: [:index]
   before_action :set_user, only: [:ban, :unban]
   before_action :check_admin_role, only: [:index, :certify, :uncertify]
-  def index
-    @current_page = 'users'
-    @users = User.all.order(:created_at)
-  end
+
+def index
+  @current_page = 'users'
+
+  # 1. Requête de base (inclut :etablissement pour la table et les stats)
+  users_scope = User.includes(:etablissement)
+
+  # 2. Calcul des statistiques (efficace, via la BDD)
+  @stats_etablissements = users_scope.joins(:etablissement)
+                                     .group('etablissements.name')
+                                     .count
+                                     .sort_by { |_name, count| -count } # Tri par count desc
+
+  @stats_source = users_scope.where.not(how_did_you_hear: [nil, ''])
+                             .group(:how_did_you_hear)
+                             .count
+                             .sort_by { |_source, count| -count }
+
+  @stats_status = users_scope.where.not(statut: [nil, ''])
+                             .group(:statut)
+                             .count
+                             .sort_by { |_status, count| -count }
+
+  @stats_certified_count = users_scope.where(certified: true).count
+  @stats_banned_count = users_scope.where(banned: true).count
+
+  # 3. Pagination pour la table (avec l'ordre)
+  @users = users_scope.order(created_at: :asc)
+                      .page(params[:page]).per(25)
+
+  # 4. Données pour la carte (tous les users avec des coordonnées)
+  @users_for_map = users_scope.where.not(etablissements: { latitude: nil, longitude: nil })
+end
   def ban
     if current_user.admin?
       @user.update(banned: true)

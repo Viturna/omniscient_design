@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 .top-default-page {
   display: flex;
@@ -16,7 +16,7 @@
 }
 .table-wrapper {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: scroll;
 }
 
 table {
@@ -68,17 +68,36 @@ tr:hover {
 }
 
 .btn-green {
-  background-color: #3EBC68;
+  background-color: #3ebc68;
 
   &:hover {
-    background-color: #1A843E;
+    background-color: #1a843e;
   }
 }
 
 .btn-orange {
-  background-color: #F2AD22;
+  background-color: #f2ad22;
 
   &:hover {
-    background-color: #D49A26;
+    background-color: #d49a26;
   }
+}
+
+th.sortable {
+  cursor: pointer;
+  position: relative;
+}
+th.sortable::after {
+  content: "⇅";
+  font-size: 0.8em;
+  margin-left: 4px;
+  opacity: 0.4;
+}
+th.sortable.asc::after {
+  content: "▲";
+  opacity: 1;
+}
+th.sortable.desc::after {
+  content: "▼";
+  opacity: 1;
 }

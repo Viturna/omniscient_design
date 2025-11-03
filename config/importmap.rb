@@ -14,9 +14,5 @@ pin "select2", to: "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/sele
 pin "gsap", to: "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js"
 pin "gsap/ScrollTrigger", to: "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js"
 
-# Chartkick + Chart.js
-pin "chartkick", to: "https://ga.jspm.io/npm:chartkick@5.0.1/dist/chartkick.js"
-pin "Chart", to: "https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"
-
 # ActionCable
 pin "@rails/actioncable/src", to: "@rails--actioncable--src.js" # @8.0.201

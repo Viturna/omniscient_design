@@ -67,7 +67,6 @@ gem 'sendgrid-ruby'
 gem 'responsive_image_tag'
 gem 'cookies_eu'
 gem 'cloudinary'
-gem 'meilisearch-rails'
 gem 'terser'
 gem 'kaminari'
 gem 'chartkick'
@@ -80,3 +79,7 @@ gem "premailer-rails", "~> 1.12"
 gem 'rack-attack'
 gem 'brakeman', require: false
 gem 'bundler-audit', require: false
+
+# S3
+gem 'aws-sdk-s3', require: false
+gem "active_storage_validations", "~> 3.0"

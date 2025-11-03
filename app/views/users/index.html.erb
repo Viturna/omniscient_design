@@ -1,26 +1,75 @@
 <style>
   #map {
+    margin-bottom: 40px; /* Réduit pour laisser place aux stats */
+  }
+
+  /* Nouveaux styles pour les statistiques */
+  .stats-container {
     margin-bottom: 80px;
+    padding: 0 8vw;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .stat-box {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .stat-box h3 {
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+  .stat-box ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+  .stat-box li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .stat-box li:last-child {
+    border-bottom: none;
+  }
+  .stat-box li span:first-child {
+    color: #333;
+  }
+  .stat-box li span:last-child {
+    font-weight: bold;
+    color: #202020; /* Couleur accentuée pour le nombre */
+  }
+
+  /* Style pour les stats simples (certifié/banni) */
+  .stat-box.simple-stat {
+    text-align: center;
+  }
+  .stat-box.simple-stat .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+  }
+  .stat-box.simple-stat .stat-total {
+    color: #666;
+    font-size: 0.9rem;
   }
 </style>
 <section class="top-default-page">
-   <%= link_to root_path, class: ("active" if @current_page == "users") do %>
-   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_3256_104)">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
-          </g>
-          <defs>
-            <clipPath id="clip0_3256_104">
-              <rect width="36" height="36" fill="white"/>
-            </clipPath>
-          </defs>
-        </svg>
-   <% end %>
+  <%= link_to root_path, class: ("active" if @current_page == "users") do %>
+  <% end %>
   <h1>Liste des membres</h1>
 </section>
 <section class="grid-1">
   <h2>Membres inscrits sur le site</h2>
-  <p>Il y a actuellement <%= @users.count %> membres sur le site</p>
+  <p>Il y a actuellement <%= @users.total_count %> membres sur le site</p>
   <div class="table-wrapper" >
     <table id="members-table">
       <thead>
@@ -29,13 +78,13 @@
           <th>Nom de famille</th>
           <th>Email</th>
           <th>Pseudo</th>
-          <th>Statut</th>
-          <th>Établissement</th>
-          <th>BAN</th>
-          <th>Confirmé</th>
-          <th>Certifié</th>
-          <th>Date de création</th>
-          <th>Via</th>
+          <th class="sortable">Statut</th>
+          <th class="sortable">Établissement</th>
+          <th class="sortable">Via</th>
+          <th class="sortable">Confirmé</th>
+          <th class="sortable">Certifié</th>
+          <th class="sortable">BAN</th>
+          <th class="sortable">Date de création</th>
         </tr>
       </thead>
       <tbody>
@@ -47,92 +96,222 @@
             <td><%= user.pseudo %></td>
             <td><%= user.statut %></td>
             <td><%= user.etablissement&.name %></td>
+            <td><%= user.how_did_you_hear %></td>
+            <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
+            <td>
+              <% if current_user.admin? %>
+                <% if user.certified? %>
+                  <%= link_to uncertify_user_path(user),
+                    data: { turbo_method: :patch, turbo_confirm: 'Retirer la certification de cet utilisateur ?' },
+
+                    class: "btn btn-warning btn-sm" do %>
+                    Décertifier
+                  <% end %>
+                <% else %>
+                  <%= link_to certify_user_path(user),
+                      data: { turbo_method: :patch, turbo_confirm: 'Certifier cet utilisateur ?' },
+
+                      class: "btn btn-primary btn-sm" do %>
+                    Certifier
+                  <% end %>
+                <% end %>
+              <% else %>
+                <%= user.certified? ? 'Oui' : 'Non' %>
+              <% end %>
+            </td>
             <td>
               <% if current_user.admin? %>
                 <% if user.banned? %>
                   <%= link_to unban_user_path(user),
-                              data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir débannir cet utilisateur ?" },
-                              class: "btn btn-success btn-sm" do %>
+                  data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir débannir cet utilisateur ?" },
+
+                  class: "btn btn-success btn-sm" do %>
                     <i class="fa fa-unlock"></i> Débannir
                   <% end %>
                 <% else %>
                   <%= link_to ban_user_path(user),
-                              data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir bannir cet utilisateur ?" },
-                              class: "btn btn-danger btn-sm" do %>
+                  data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir bannir cet utilisateur ?" },
+
+                  class: "btn btn-danger btn-sm" do %>
                     <i class="fa fa-ban"></i> Bannir l'utilisateur
                   <% end %>
                 <% end %>
               <% end %>
             </td>
-            <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
-            <td>
-                <% if current_user.admin? %>
-                  <% if user.certified? %>
-                    <%= link_to uncertify_user_path(user),
-                                data: { turbo_method: :patch, turbo_confirm: 'Retirer la certification de cet utilisateur ?' },
-                                class: "btn btn-warning btn-sm" do %>
-                      Décertifier
-                    <% end %>
-                  <% else %>
-                    <%= link_to certify_user_path(user),
-                                data: { turbo_method: :patch, turbo_confirm: 'Certifier cet utilisateur ?' },
-                                class: "btn btn-primary btn-sm" do %>
-                      Certifier
-                    <% end %>
-                  <% end %>
-                <% else %>
-                  <%= user.certified? ? 'Oui' : 'Non' %>
-                <% end %>
-            </td>
             <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
-            <td><%= user.how_did_you_hear %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
+  <div class="pagination-controls" style="margin-top: 20px; text-align: center;">
+    <%= paginate @users %>
+  </div>
   <h2>Carte des membres par géolocalisation</h2>
-  <div id="map" style="height: 400px;"></div>
+  <div id="map" style="height: 600px;"></div>
+</section>
+<section class="stats-container">
+  <h2>Statistiques des membres</h2>
+  <div class="stats-grid">
+    <div class="stat-box simple-stat">
+      <h3>Membres Certifiés</h3>
+      <div class="stat-number"><%= @stats_certified_count %></div>
+      <div class="stat-total">sur <%= @users.total_count %> membres</div>
+    </div>
+    <div class="stat-box simple-stat">
+      <h3>Membres Bannis</h3>
+      <div class="stat-number"><%= @stats_banned_count %></div>
+      <div class="stat-total">sur <%= @users.total_count %> membres</div>
+    </div>
+    <div class="stat-box">
+      <h3>Répartition par Statut</h3>
+      <ul>
+        <% @stats_status.each do |statut, count| %>
+          <li>
+            <span><%= statut.presence || 'Non défini' %></span>
+            <span><%= count %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="stat-box">
+      <h3>Source d'acquisition</h3>
+      <ul>
+        <% @stats_source.each do |source, count| %>
+          <li>
+            <span><%= source.presence || 'Non défini' %></span>
+            <span><%= count %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="stat-box">
+      <h3>Top Établissements</h3>
+      <ul>
+        <% @stats_etablissements.first(10).each do |name, count| %>
+          <li>
+            <span><%= name %></span>
+            <span><%= count %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 </section>
 <script>
+  let map;
 
   document.addEventListener("turbo:load", () => {
-  // Construction sécurisée des coordonnées utilisateurs
-  const userLocations = [
-    <% @users.each do |user| %>
-      <% if user.etablissement&.latitude.present? && user.etablissement&.longitude.present? %>
-        {
-          name: '<%= j user.firstname %> <%= j user.lastname %>',
-          latlng: [<%= user.etablissement.latitude.to_f %>, <%= user.etablissement.longitude.to_f %>]
-        },
-      <% end %>
-    <% end %>
-  ];
 
-  console.log("User locations:", userLocations); // Debug
+    const mapElement = document.getElementById('map');
 
-  // Initialisation de la carte centrée sur la France
-  var map = L.map('map').setView([46.603354, 1.888334], 5);
-
-  // TileLayer OpenStreetMap
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-
-  // Création du cluster de marqueurs
-  var markers = L.markerClusterGroup();
-
-  // Ajout des marqueurs
-  userLocations.forEach(function(user) {
-    if (user.latlng.length === 2) { // Vérifie que la coordonnée est correcte
-      var marker = L.marker(user.latlng)
-        .bindPopup(`<strong>${user.name}</strong>`);
-      markers.addLayer(marker);
+    if (map) {
+      map.remove();
+      map = null;
     }
-  });
 
-  // Ajout du cluster à la carte
-  map.addLayer(markers);
-});
+    if (!mapElement) {
+      return;
+    }
+
+    // @users_for_map contient bien TOUS les utilisateurs
+    const userLocations = [
+      <% @users_for_map.each do |user| %>
+        <% if user.etablissement&.latitude.present? && user.etablissement&.longitude.present? %>
+          {
+            name: '<%= j user.firstname %> <%= j user.lastname %>',
+            latlng: [<%= user.etablissement.latitude.to_f %>, <%= user.etablissement.longitude.to_f %>]
+          },
+        <% end %>
+      <% end %>
+    ];
+
+    map = L.map('map').setView([46.603354, 1.888334], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var markers = L.markerClusterGroup();
+
+    userLocations.forEach(function(user) {
+      if (user.latlng.length === 2) {
+        var marker = L.marker(user.latlng)
+          .bindPopup(`<strong>${user.name}</strong>`);
+        markers.addLayer(marker);
+      }
+    });
+
+    map.addLayer(markers);
+
+    setTimeout(() => {
+      if (map) {
+        map.invalidateSize();
+      }
+    }, 1);
+
+  });
+</script>
+<script>
+  document.addEventListener("turbo:load", () => {
+    document.querySelectorAll("table").forEach(table => {
+      const originalRows = Array.from(table.querySelectorAll("tbody tr")).map(tr => tr.cloneNode(true));
+
+      table.querySelectorAll("th.sortable").forEach(th => {
+        th.dataset.state = "none";
+
+        th.addEventListener("click", () => {
+          const tbody = table.querySelector("tbody");
+          const rows = Array.from(tbody.querySelectorAll("tr"));
+          const idx = th.cellIndex;
+
+          // Cycle d'état
+          let newState;
+          if (th.dataset.state === "none") newState = "asc";
+          else if (th.dataset.state === "asc") newState = "desc";
+          else newState = "none";
+
+          // Reset des autres colonnes
+          table.querySelectorAll("th.sortable").forEach(h => {
+            if (h !== th) h.dataset.state = "none";
+            h.classList.remove("asc", "desc");
+          });
+
+          // Appliquer le nouvel état visuel
+          th.dataset.state = newState;
+          if (newState === "asc") th.classList.add("asc");
+          if (newState === "desc") th.classList.add("desc");
+
+          // Appliquer le tri ou reset selon l'état
+          if (newState === "none") {
+            // 🔄 Reset à l'ordre initial
+            tbody.innerHTML = "";
+            originalRows.forEach(r => tbody.appendChild(r.cloneNode(true)));
+            return;
+          }
+
+          // 🔼🔽 Tri selon l'état
+          rows.sort((a, b) => {
+            const A = a.cells[idx].innerText.trim().toLowerCase();
+            const B = b.cells[idx].innerText.trim().toLowerCase();
+            const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
+            const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
+
+            if (valA instanceof Date && valB instanceof Date) {
+              return newState === "asc" ? valA - valB : valB - valA;
+            }
+
+            return newState === "asc"
+              ? String(valA).localeCompare(String(valB))
+              : String(valB).localeCompare(String(valA));
+          });
+
+          // Réinjection des lignes triées
+          tbody.innerHTML = "";
+          rows.forEach(r => tbody.appendChild(r));
+        });
+      });
+    });
+  });
 </script>

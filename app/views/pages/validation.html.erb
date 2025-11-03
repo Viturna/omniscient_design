@@ -52,21 +52,7 @@
     min-width: 180px;
     height: 50px !important;
   }
-
-  th.sortable {
-    cursor: pointer;
-    position: relative;
-  }
-  th.sortable::after {
-    content: "⇅";
-    font-size: 0.8em;
-    margin-left: 4px;
-    opacity: 0.4;
-  }
-  th.sortable.asc::after { content: "▲"; opacity: 1; }
-  th.sortable.desc::after { content: "▼"; opacity: 1; }
 </style>
-
 <section class="top-default-page">
   <%= link_to profil_path do %>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
@@ -77,12 +63,10 @@
   <h1>Gestions des contenus</h1>
   <p style="color:#FFF">Total <%= @oeuvres_count + @designers_count %> références</p>
 </section>
-
 <!-- ========= ŒUVRES EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Références en attente de validation</h2>
   <p>Il y a actuellement <%= @oeuvres_count_val_false %> références en attente de validation</p>
-
   <div class="table-controls">
     <input type="text" placeholder="Rechercher une référence..." class="filter-input search-input">
     <select class="filter-user">
@@ -92,7 +76,6 @@
       <% end %>
     </select>
   </div>
-
   <div class="table-wrapper">
     <table>
       <thead>
@@ -133,15 +116,13 @@
   </div>
   <div>
     <button class="btn" data-action="click->load-more-table#showMoreRows"
-            data-load-more-table-target="button">Voir plus de références</button>
+      data-load-more-table-target="button">Voir plus de références</button>
   </div>
 </section>
-
 <!-- ========= ŒUVRES VALIDÉES ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Références validées</h2>
   <p>Il y a actuellement <%= @oeuvres_count %> références validées</p>
-
   <div class="table-controls">
     <input type="text" placeholder="Rechercher..." class="filter-input search-input">
     <select class="filter-user">
@@ -151,7 +132,6 @@
       <% end %>
     </select>
   </div>
-
   <div class="table-wrapper">
     <table>
       <thead>
@@ -199,15 +179,13 @@
   </div>
   <div>
     <button class="btn" data-action="click->load-more-table#showMoreRows"
-            data-load-more-table-target="button">Voir plus de références validées</button>
+      data-load-more-table-target="button">Voir plus de références validées</button>
   </div>
 </section>
-
 <!-- ========= DESIGNERS EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Designers en attente de validation</h2>
   <p>Il y a actuellement <%= @designers_count_val_false %> designers en attente de validation</p>
-
   <div class="table-controls">
     <input type="text" placeholder="Rechercher un designer..." class="filter-input search-input">
     <select class="filter-user">
@@ -217,7 +195,6 @@
       <% end %>
     </select>
   </div>
-
   <div class="table-wrapper">
     <table>
       <thead>
@@ -258,15 +235,13 @@
   </div>
   <div>
     <button class="btn" data-action="click->load-more-table#showMoreRows"
-            data-load-more-table-target="button">Voir plus de designers</button>
+      data-load-more-table-target="button">Voir plus de designers</button>
   </div>
 </section>
-
 <!-- ========= DESIGNERS VALIDÉS ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Designers validés</h2>
   <p>Il y a actuellement <%= @designers_count %> designers validés</p>
-
   <div class="table-controls">
     <input type="text" placeholder="Rechercher un designer..." class="filter-input search-input">
     <select class="filter-user">
@@ -276,7 +251,6 @@
       <% end %>
     </select>
   </div>
-
   <div class="table-wrapper">
     <table>
       <thead>
@@ -324,10 +298,9 @@
   </div>
   <div>
     <button class="btn" data-action="click->load-more-table#showMoreRows"
-            data-load-more-table-target="button">Voir plus de designers validés</button>
+      data-load-more-table-target="button">Voir plus de designers validés</button>
   </div>
 </section>
-
 <!-- ========= MODAL ========= -->
 <div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -354,95 +327,94 @@
     </div>
   </div>
 </div>
-
 <script>
-document.addEventListener("turbo:load", () => {
-  // ---- Modal ----
-  document.querySelectorAll('[data-toggle="modal"]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const modal = document.querySelector(btn.dataset.target);
-      modal.classList.add('show');
-      modal.style.display = 'block';
-      document.body.classList.add('modal-open');
-      document.getElementById('rejectForm').setAttribute('action', btn.dataset.url);
-      document.querySelector('.modal-title').textContent = 'Refuser : ' + btn.dataset.title;
-      document.getElementById('rejectionReasonField').value = '';
+  document.addEventListener("turbo:load", () => {
+    // ---- Modal ----
+    document.querySelectorAll('[data-toggle="modal"]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const modal = document.querySelector(btn.dataset.target);
+        modal.classList.add('show');
+        modal.style.display = 'block';
+        document.body.classList.add('modal-open');
+        document.getElementById('rejectForm').setAttribute('action', btn.dataset.url);
+        document.querySelector('.modal-title').textContent = 'Refuser : ' + btn.dataset.title;
+        document.getElementById('rejectionReasonField').value = '';
+      });
     });
-  });
-  document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const modal = btn.closest('.modal');
-      modal.classList.remove('show');
-      modal.style.display = 'none';
-      document.body.classList.remove('modal-open');
-    });
-  });
-
-  // ---- Recherche et filtre ----
-  document.querySelectorAll(".table-controls").forEach(control => {
-    const searchInput = control.querySelector(".search-input");
-    const filterUser = control.querySelector(".filter-user");
-    const table = control.nextElementSibling.querySelector("table");
-    const rows = table.querySelectorAll("tbody tr");
-
-    searchInput?.addEventListener("keyup", () => {
-      const query = searchInput.value.toLowerCase();
-      rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+    document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modal = btn.closest('.modal');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
       });
     });
 
-    filterUser?.addEventListener("change", () => {
-      const val = filterUser.value.toLowerCase();
-      rows.forEach(row => {
-        const userCell = row.cells[2]?.innerText.toLowerCase();
-        row.style.display = !val || userCell.includes(val) ? "" : "none";
+    // ---- Recherche et filtre ----
+    document.querySelectorAll(".table-controls").forEach(control => {
+      const searchInput = control.querySelector(".search-input");
+      const filterUser = control.querySelector(".filter-user");
+      const table = control.nextElementSibling.querySelector("table");
+      const rows = table.querySelectorAll("tbody tr");
+
+      searchInput?.addEventListener("keyup", () => {
+        const query = searchInput.value.toLowerCase();
+        rows.forEach(row => {
+          row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+        });
+      });
+
+      filterUser?.addEventListener("change", () => {
+        const val = filterUser.value.toLowerCase();
+        rows.forEach(row => {
+          const userCell = row.cells[2]?.innerText.toLowerCase();
+          row.style.display = !val || userCell.includes(val) ? "" : "none";
+        });
       });
     });
-  });
 
-  // ---- Tri ----
- document.querySelectorAll("th.sortable").forEach(th => {
-    th.addEventListener("click", () => {
-      const table = th.closest("table");
-      const rows = Array.from(table.querySelectorAll("tbody tr"));
-      const idx = th.cellIndex;
+    // ---- Tri ----
+   document.querySelectorAll("th.sortable").forEach(th => {
+      th.addEventListener("click", () => {
+        const table = th.closest("table");
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        const idx = th.cellIndex;
 
-      // cycle asc → desc → asc
-      const isAsc = th.classList.contains("asc");
-      const isDesc = th.classList.contains("desc");
+        // cycle asc → desc → asc
+        const isAsc = th.classList.contains("asc");
+        const isDesc = th.classList.contains("desc");
 
-      table.querySelectorAll("th.sortable").forEach(h => h.classList.remove("asc","desc"));
+        table.querySelectorAll("th.sortable").forEach(h => h.classList.remove("asc","desc"));
 
-      let direction;
-      if (!isAsc && !isDesc) {           // premier clic → desc par défaut
-        direction = "desc";
-        th.classList.add("desc");
-      } else if (isDesc) {               // desc → asc
-        direction = "asc";
-        th.classList.add("asc");
-      } else {                           // asc → desc
-        direction = "desc";
-        th.classList.add("desc");
-      }
-
-      rows.sort((a, b) => {
-        const A = a.cells[idx].innerText.trim().toLowerCase();
-        const B = b.cells[idx].innerText.trim().toLowerCase();
-        const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
-        const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
-        if (valA instanceof Date && valB instanceof Date) {
-          return direction === "asc" ? valA - valB : valB - valA;
+        let direction;
+        if (!isAsc && !isDesc) {           // premier clic → desc par défaut
+          direction = "desc";
+          th.classList.add("desc");
+        } else if (isDesc) {               // desc → asc
+          direction = "asc";
+          th.classList.add("asc");
+        } else {                           // asc → desc
+          direction = "desc";
+          th.classList.add("desc");
         }
-        return direction === "asc"
-          ? String(valA).localeCompare(String(valB))
-          : String(valB).localeCompare(String(valA));
+
+        rows.sort((a, b) => {
+          const A = a.cells[idx].innerText.trim().toLowerCase();
+          const B = b.cells[idx].innerText.trim().toLowerCase();
+          const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
+          const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
+          if (valA instanceof Date && valB instanceof Date) {
+            return direction === "asc" ? valA - valB : valB - valA;
+          }
+          return direction === "asc"
+            ? String(valA).localeCompare(String(valB))
+            : String(valB).localeCompare(String(valA));
+        });
+
+        rows.forEach(r => table.querySelector("tbody").appendChild(r));
       });
-
-      rows.forEach(r => table.querySelector("tbody").appendChild(r));
     });
-  });
 
-});
+  });
 </script>

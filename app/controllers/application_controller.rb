@@ -10,6 +10,11 @@ class ApplicationController < ActionController::Base
     redirect_back(fallback_location: root_path)
   end
   
+  helper_method :native_app?
+
+  def native_app?
+    request.user_agent.to_s.include?("Turbo Native")
+  end
   private
 
   def set_unread_notifications_count

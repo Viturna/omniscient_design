@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
     get "suivi_references", to: "dashboard#suivi_references"
+    get "suivi_lists", to: "dashboard#suivi_lists"
     get "feedbacks", to: "dashboard#feedbacks"
   end
 

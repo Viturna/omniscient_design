@@ -1,0 +1,141 @@
+<style>
+  .pagination-controls {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .pagination-controls nav {
+    display: inline-block;
+  }
+</style>
+<section class="top-default-page">
+  <%= link_to root_path, class: ("active" if @current_page == "users") do %>
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_3256_104)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_3256_104">
+          <rect width="36" height="36" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  <% end %>
+  <h1>Rapport des listes</h1>
+</section>
+<section class="grid-1">
+  <h2>Statistiques globales</h2>
+  <ul>
+    <li><strong>Total des listes créées :</strong> <%= @total_lists %></li>
+    <li><strong>Utilisateurs ayant créé une liste :</strong> <%= @users_with_lists %></li>
+    <li><strong>Total des visiteurs invités :</strong> <%= @total_visitors %></li>
+    <li><strong>Total des éditeurs invités :</strong> <%= @total_editors %></li>
+  </ul>
+  <hr>
+  <h2>Classement des créateurs de listes</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Email</th>
+        <th class="sortable">Nombre de listes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @top_creators.each do |user| %>
+        <tr>
+          <td><%= "#{user.firstname} #{user.lastname}" %></td>
+          <td><%= user.email %></td>
+          <td><%= user.lists_count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="pagination-controls">
+    <%= paginate @top_creators, param_name: :creators_page %>
+  </div>
+  <hr>
+  <h2>Classement des utilisateurs les plus invités</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Email</th>
+        <th class="sortable">Nombre d’invitations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @top_invited.each do |user| %>
+        <tr>
+          <td><%= "#{user.firstname} #{user.lastname}" %></td>
+          <td><%= user.email %></td>
+          <td><%= user.invites_count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="pagination-controls">
+    <%= paginate @top_invited, param_name: :invited_page %>
+  </div>
+</section>
+<script>
+  document.addEventListener("turbo:load", () => {
+    document.querySelectorAll("table").forEach(table => {
+      const originalRows = Array.from(table.querySelectorAll("tbody tr")).map(tr => tr.cloneNode(true));
+
+      table.querySelectorAll("th.sortable").forEach(th => {
+        th.dataset.state = "none";
+
+        th.addEventListener("click", () => {
+          const tbody = table.querySelector("tbody");
+          const rows = Array.from(tbody.querySelectorAll("tr"));
+          const idx = th.cellIndex;
+
+          // Cycle d'état
+          let newState;
+          if (th.dataset.state === "none") newState = "asc";
+          else if (th.dataset.state === "asc") newState = "desc";
+          else newState = "none";
+
+          // Reset des autres colonnes
+          table.querySelectorAll("th.sortable").forEach(h => {
+            if (h !== th) h.dataset.state = "none";
+            h.classList.remove("asc", "desc");
+          });
+
+          // Appliquer le nouvel état visuel
+          th.dataset.state = newState;
+          if (newState === "asc") th.classList.add("asc");
+          if (newState === "desc") th.classList.add("desc");
+
+          // Appliquer le tri ou reset selon l'état
+          if (newState === "none") {
+            // 🔄 Reset à l'ordre initial
+            tbody.innerHTML = "";
+            originalRows.forEach(r => tbody.appendChild(r.cloneNode(true)));
+            return;
+          }
+
+          // 🔼🔽 Tri selon l'état
+          rows.sort((a, b) => {
+            const A = a.cells[idx].innerText.trim().toLowerCase();
+            const B = b.cells[idx].innerText.trim().toLowerCase();
+            const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
+            const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
+
+            if (valA instanceof Date && valB instanceof Date) {
+              return newState === "asc" ? valA - valB : valB - valA;
+            }
+
+            return newState === "asc"
+              ? String(valA).localeCompare(String(valB))
+              : String(valB).localeCompare(String(valA));
+          });
+
+          // Réinjection des lignes triées
+          tbody.innerHTML = "";
+          rows.forEach(r => tbody.appendChild(r));
+        });
+      });
+    });
+  });
+</script>

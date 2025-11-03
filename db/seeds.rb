@@ -198,13 +198,13 @@ csv_oeuvres.each do |row|
     image: row['image']
   )
 
-  # Association du domaine
-  domaine = Domaine.find_or_create_by(domaine: row['domaine'])
-  if domaine.nil?
-    puts "Erreur : Le domaine '#{row['domaine']}' n'existe pas."
-    next
-  end
-  oeuvre.domaine = domaine
+  # # Association du domaine
+  # domaine = Domaine.find_or_create_by(domaine: row['domaine'])
+  # if domaine.nil?
+  #   puts "Erreur : Le domaine '#{row['domaine']}' n'existe pas."
+  #   next
+  # end
+  # oeuvre.domaine = domaine
   # Initialisation des designers supplémentaires
   designers = []
   

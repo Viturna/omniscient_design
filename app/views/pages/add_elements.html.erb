@@ -33,9 +33,15 @@
   }
 </style>
 <section class="grid-1 add-elements">
-<p class="subtitle-top"><%= t('add_references.subtitle_top') %></p>
+  <p class="subtitle-top"><%= t('add_references.subtitle_top') %></p>
   <h1 class="title-add-elements"><%= t('add_references.main_title') %></h1>
-  <p class="subtitle"><%= t('add_references.subtitle') %></p>
+  <p class="subtitle">
+    <%= t('add_references.subtitle') %>
+    <%= t('add_references.contributions_html', 
+        link: link_to(t('add_references.contributions_link_text'), 
+                      user_contributions_path, 
+                      class: "semi-bold underline")) %>
+  </p>
   <div class="add-flex">
     <%= link_to new_designer_path do %>
       <div class="button-add">
@@ -44,7 +50,7 @@
     <%end%>
     <%= link_to new_oeuvre_path do %>
       <div class="button-add">
-         <%= t('add_references.buttons.references') %>
+        <%= t('add_references.buttons.references') %>
       </div>
     <%end%>
   </div>

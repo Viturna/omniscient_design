@@ -20,6 +20,10 @@
     border-radius: 8px;
     padding: 20px;
   }
+  .stat-box.etablissements{
+    margin-top: 20px;
+    width: 97%;
+  }
   .stat-box h3 {
     margin-top: 0;
     border-bottom: 2px solid #eee;
@@ -185,17 +189,17 @@
         <% end %>
       </ul>
     </div>
-    <div class="stat-box">
-      <h3>Top Établissements</h3>
-      <ul>
-        <% @stats_etablissements.first(10).each do |name, count| %>
-          <li>
-            <span><%= name %></span>
-            <span><%= count %></span>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+  </div>
+  <div class="stat-box etablissements">
+    <h3>Top Établissements</h3>
+    <ul>
+      <% @stats_etablissements.each do |name, count| %>
+        <li>
+          <span><%= name %></span>
+          <span><%= count %></span>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </section>
 <script>

@@ -1,16 +1,16 @@
 <section class="top-default-page">
-   <%= link_to root_path, class: ("active" if @current_page == "users") do %>
-   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_3256_104)">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
-          </g>
-          <defs>
-            <clipPath id="clip0_3256_104">
-              <rect width="36" height="36" fill="white"/>
-            </clipPath>
-          </defs>
-        </svg>
-   <% end %>
+  <%= link_to root_path, class: ("active" if @current_page == "users") do %>
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_3256_104)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_3256_104">
+          <rect width="36" height="36" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  <% end %>
   <h1>Liste des feedbacks</h1>
 </section>
 <section class="grid-1">
@@ -51,7 +51,9 @@
             <td><%= feedback.question_11 %></td>
             <td><%= feedback.question_12 %></td>
             <td>
-              <%= link_to 'Supprimer', feedback_path(feedback), method: :delete, data: { confirm: 'Êtes-vous sûr de vouloir supprimer ce feedback?' } %>
+              <%= link_to 'Supprimer', feedback_path(feedback), 
+              data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' }, 
+              class: 'btn btn-danger' %>
             </td>
           </tr>
         <% end %>

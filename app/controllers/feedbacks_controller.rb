@@ -2,7 +2,7 @@ class FeedbacksController < ApplicationController
   before_action :authenticate_user!
   before_action :check_feedback_submission, only: [:new, :create]
   before_action :set_feedback, only: [:destroy]
-  before_action :check_admin_role, only: [:index]
+  before_action :check_admin_role, only: [:index, :destroy]
   layout 'admin', only: [:index]
 
   def index

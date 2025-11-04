@@ -690,6 +690,8 @@ fr:
     subtitle_top: "Votre contribution"
     main_title: "Ajouter des designers ou des références"
     subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+    contributions_html: "Vous pouvez consulter vos contributions %{link}."
+    contributions_link_text: "en cliquant ici"
     buttons:
       designers: "Designers"
       references: "Références"

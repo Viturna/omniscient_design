@@ -195,7 +195,7 @@
             <div class="image-upload-field" 
                data-controller="image-preview" 
                style="display: flex; gap: 10px; flex-direction: column;">
-              <% if image_form.object.file.attached? %>
+              <% if image_form.object.persisted? && image_form.object.file.attached? %>
                 <div class="existing-image-preview" style="position: relative; width: 100%; height: 400px;">
                   <%= image_tag image_form.object.file, style: "width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" %>
                   <div class="image-delete-overlay">

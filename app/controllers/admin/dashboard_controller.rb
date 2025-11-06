@@ -14,6 +14,7 @@ class Admin::DashboardController <  ApplicationController
 
 
   def suivi_lists
+    @current_page = 'suivi_lists'
     # --- Statistiques globales (inchangées) ---
     @total_lists = List.count
     @users_with_lists = User.joins(:lists).distinct.count

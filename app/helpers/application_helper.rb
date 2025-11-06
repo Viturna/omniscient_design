@@ -33,13 +33,14 @@ module ApplicationHelper
     !excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) }
   end
   
-  def asset_exists?(path)
-    if Rails.application.assets
-      Rails.application.assets.find_asset(path).present?
-    else
-      Rails.application.assets_manifest.find_sources(path).present?
-    end
+def asset_exists?(path)
+  if Rails.configuration.assets.compile
+    Rails.application.assets.find_asset(path).present?
+  else
+    Rails.application.assets_manifest.assets[path].present?
   end
+end
+
 
   def link_to_add_fields(name, f, association)
     new_object = f.object.send(association).klass.new

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_27_170242) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_06_190718) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -268,6 +268,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_27_170242) do
     t.index ["oeuvre_id"], name: "index_notions_oeuvres_on_oeuvre_id"
   end
 
+  create_table "oeuvre_images", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "credit"
+    t.bigint "oeuvre_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oeuvre_id"], name: "index_oeuvre_images_on_oeuvre_id"
+  end
+
   create_table "oeuvres", force: :cascade do |t|
     t.text "concept_et_inspiration"
     t.text "contexte_historique"
@@ -275,7 +283,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_27_170242) do
     t.integer "date_naissance"
     t.integer "date_oeuvre"
     t.text "dimension_esthetique"
-    t.text "image"
     t.text "impact_et_message"
     t.text "materiaux_et_innovations_techniques"
     t.text "nom_designer"
@@ -389,6 +396,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_27_170242) do
   add_foreign_key "notifications", "users"
   add_foreign_key "notions_oeuvres", "notions"
   add_foreign_key "notions_oeuvres", "oeuvres"
+  add_foreign_key "oeuvre_images", "oeuvres"
   add_foreign_key "oeuvres", "users"
   add_foreign_key "oeuvres_domaines", "domaines"
   add_foreign_key "oeuvres_domaines", "oeuvres"

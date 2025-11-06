@@ -63,12 +63,16 @@ class OeuvresController < ApplicationController
   # GET /oeuvres/new
   def new
     @oeuvre = Oeuvre.new
+    (3 - @oeuvre.oeuvre_images.count).times { @oeuvre.oeuvre_images.build }
+
     @current_page = 'add_elements'
     @selected_designers = [] 
   end
 
   # GET /oeuvres/1/edit
   def edit
+    (3 - @oeuvre.oeuvre_images.count).times { @oeuvre.oeuvre_images.build }
+
     @current_page = 'add_elements'
     @selected_designers = @oeuvre.designers.pluck(:id)
   end
@@ -84,6 +88,7 @@ class OeuvresController < ApplicationController
       flash[:success] = t('oeuvres.create.success')
       redirect_to @oeuvre
     else
+      (3 - @oeuvre.oeuvre_images.count).times { @oeuvre.oeuvre_images.build }
       render :new, status: :unprocessable_entity
     end
   end
@@ -182,6 +187,38 @@ end
   
   
   private
+  def update_image_credits(oeuvre, params)
+    # 1. Mettre à jour les crédits des images EXISTANTES
+    if params[:oeuvre][:existing_image_credits]
+      params[:oeuvre][:existing_image_credits].each do |blob_id, credit_text|
+        # On trouve le blob (le fichier) et on met à jour ses metadata
+        blob = ActiveStorage::Blob.find_by(id: blob_id)
+        blob&.update(metadata: { credit: credit_text.presence })
+      end
+    end
+
+    # 2. Mettre à jour les crédits des NOUVELLES images
+    if params[:oeuvre][:new_image_credits]
+      # On récupère les NOUVEAUX attachements (créés lors du @oeuvre.save)
+      # On les trie par ID pour espérer matcher l'ordre du formulaire
+      new_attachments = oeuvre.images_attachments
+                              .where.not(id: oeuvre.images.map(&:id)) # Exclut les anciens
+                              .order(:id) # On suppose que l'ordre de création = ordre du form
+                              
+      new_credits = params[:oeuvre][:new_image_credits]
+
+      # On associe chaque crédit à chaque nouvel attachement
+      new_attachments.each_with_index do |attachment, index|
+        credit_text = new_credits[index]
+        if credit_text.present?
+          attachment.blob.update(metadata: { credit: credit_text })
+        end
+      end
+    end
+  rescue => e
+    Rails.logger.error "ERREUR update_image_credits: #{e.message}"
+  end
+
   def handle_destroy(oeuvre, success_message)
     if oeuvre.destroy
       create_rejection_notification(oeuvre)
@@ -269,11 +306,16 @@ end
     :dimension_esthetique,
     :impact_et_message,
     :date_oeuvre,
-    :image,
     designer_ids: [],
     notion_ids: [],
     domaine_ids: [],
-    source: []
+    source: [],
+    oeuvre_images_attributes: [
+        :id,    
+        :file, 
+        :credit,
+        :_destroy
+      ]
   )
 
   [:designer_ids, :notion_ids, :domaine_ids, :source].each do |key|

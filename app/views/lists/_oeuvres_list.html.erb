@@ -1,11 +1,10 @@
 <div class="check-box-wrapper <%= 'selected' if defined?(@selected_oeuvre_ids) && @selected_oeuvre_ids.include?(oeuvre.id) %>" data-id="<%= oeuvre.id %>">
   <%= check_box_tag "oeuvre_ids[]", oeuvre.id, (defined?(@selected_oeuvre_ids) && @selected_oeuvre_ids.include?(oeuvre.id)), class: 'hidden-check', id: "oeuvre_#{oeuvre.id}", disabled: true %>
-  <label for="oeuvre_#{oeuvre.id}">
-    <% thumb_path = "oeuvres/thumbs/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
-    <% if asset_exists?(thumb_path) %>
-      <div class="card-list-add" style="background-image: url('<%= asset_path(thumb_path) %>');  background-size: cover; background-position: center;">
+  <label for="oeuvre_<%= oeuvre.id %>">
+    <% if oeuvre.oeuvre_images.first&.file&.attached? %>
+      <div class="card-list-add" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb)) %>');  background-size: cover; background-position: center;">
       <% else %>
-        <div class="card-list-add" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position: center;">
+        <div class="card-list-add" style="background: #F3F3F3;">
         <% end %>
         <div class="default-overlay"></div>
         <p class="card-title-add"><%= truncate(oeuvre.nom_oeuvre, length: 20, omission: '...') %></p>

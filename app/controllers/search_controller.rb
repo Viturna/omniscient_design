@@ -1,6 +1,9 @@
 class SearchController < ApplicationController
-    include ApplicationHelper
-   def autocomplete
+  include ApplicationHelper
+  # 1. AJOUT : Nécessaire pour utiliser url_for
+  include Rails.application.routes.url_helpers
+
+  def autocomplete
     query = params[:query].to_s.strip
 
     if query.length < 2
@@ -8,12 +11,17 @@ class SearchController < ApplicationController
     end
 
     domaines = Domaine.where("domaine ILIKE ?", "%#{query}%").limit(5)
+    
     designers = Designer.where(validation: true).where(
       "prenom ILIKE :q OR nom ILIKE :q OR (prenom || ' ' || nom) ILIKE :q OR (nom || ' ' || prenom) ILIKE :q",
       q: "%#{query}%"
     ).limit(5)
 
-    oeuvres = Oeuvre.where(validation: true).where("nom_oeuvre ILIKE ?", "%#{query}%").limit(5)
+    # 2. MODIFIÉ : On pré-charge les associations pour la performance
+    oeuvres = Oeuvre.where(validation: true)
+                    .where("nom_oeuvre ILIKE ?", "%#{query}%")
+                    .includes(oeuvre_images: { file_attachment: :blob }, designers: [])
+                    .limit(5)
 
     render json: {
       domaines: {
@@ -22,7 +30,7 @@ class SearchController < ApplicationController
         results: domaines.map do |d|
           {
             name: d.domaine,
-              url: search_path(tab: 'frise', domaine: [d.id]),
+            url: search_path(tab: 'frise', domaine: [d.id]),
             svg: "/assets/domaines/#{d.svg}"
           }
         end
@@ -31,16 +39,15 @@ class SearchController < ApplicationController
         title: t('search.designers'),
         class: "section-title",
         results: designers.map do |d|
+          # NOTE: Logique 'designer' conservée telle quelle
           thumb_path = Rails.root.join(
             "app/assets/images/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
           )
-
           img_url = if File.exist?(thumb_path)
                       "/assets/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
                     else
                       d.image
                     end
-
           {
             name: d.nom_designer,
             url: designer_path(d),
@@ -49,34 +56,40 @@ class SearchController < ApplicationController
         end
       },
 
+      # 3. MODIFIÉ : Remplacement de l'ancienne logique par Active Storage
       oeuvres: {
         title: t('search.references'),
         class: "section-title",
         results: oeuvres.map do |o|
-          thumb_path = Rails.root.join(
-            "app/assets/images/oeuvres/thumbs/#{remove_accents_and_special_chars(o.nom_oeuvre)}.webp"
-          )
+          
+          first_image = o.oeuvre_images.first
+          thumb_url = nil
 
-          img_url = if File.exist?(thumb_path)
-                      "/assets/oeuvres/thumbs/#{remove_accents_and_special_chars(o.nom_oeuvre)}.webp"
-                    else
-                      o.image
-                    end
+          if first_image&.file&.attached?
+            begin
+              # On génère l'URL pour le variant :thumb
+              thumb_url = url_for(first_image.file.variant(:thumb))
+            rescue ActiveStorage::FileNotFoundError => e
+              # Si le fichier est cassé (comme dans vos logs), on ne plante pas
+              Rails.logger.error "[Autocomplete] Fichier manquant pour Oeuvre ID #{o.id}: #{e.message}"
+            end
+          end
 
           {
             name: o.nom_oeuvre,
             url: oeuvre_path(o),
-            img: img_url
+            thumb: thumb_url, # <- C'est la clé que votre JS attend
+            designer: o.designers.map(&:nom_designer).join(', ') # <- Votre JS gère ça
           }
         end
       }
     }
-    rescue => e
-      Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
-      render json: { error: t('search.server_error') }, status: 500
+  rescue => e
+    Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
+    render json: { error: t('search.server_error') }, status: 500
   end
 
-
+  # ... (Le reste de votre fichier (méthode 'search') reste inchangé) ...
   def search
     @current_page = 'recherche'
     per_page = (params[:per_page] || 24).to_i  
@@ -113,7 +126,7 @@ class SearchController < ApplicationController
 
   if params[:tab] == "frise"
     @oeuvres = Oeuvre.where(validation: true)
-                    .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
+                    .select(:id, :nom_oeuvre, :date_oeuvre, :slug)
                     .includes(:notions, :designers, :domaines,)
                     .order(:date_oeuvre)
 
@@ -123,7 +136,7 @@ class SearchController < ApplicationController
                         .order(:date_naissance)
   else
     @oeuvres = Oeuvre.where(validation: true)
-                    .select(:id, :nom_oeuvre, :date_oeuvre, :image, :slug)
+                    .select(:id, :nom_oeuvre, :date_oeuvre, :slug)
                     .includes(:notions, :domaines)
                     .order(:nom_oeuvre)
                     .page(params[:page])

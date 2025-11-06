@@ -6,6 +6,88 @@
   flex-direction: column;
 }
 
+.slider-slides {
+  position: absolute;
+  z-index: 2;
+  inset: 0; /* Raccourci pour top/left/right/bottom: 0 */
+}
+
+/* 2. Style des slides (basé sur ton .top-img-header) */
+.slider-slides .top-img-header {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* On garde ton object-fit: contain */
+  object-fit: contain;
+
+  /* Logique du fondu */
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+/* 3. La slide active est visible */
+.slider-slides .top-img-header.active {
+  opacity: 1;
+}
+
+/* 4. Flèches de navigation */
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+.slider-nav svg {
+  scale: 0.7;
+}
+.slider-nav:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+.slider-nav.prev {
+  left: 5vw;
+}
+.slider-nav.next {
+  right: 5vw;
+}
+.header-show.small-height .slider-nav {
+  display: none;
+}
+/* 5. Points de pagination */
+.slider-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100; /* Respecte ton z-index */
+  display: flex;
+  gap: 10px;
+}
+.slider-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease;
+}
+.slider-dot.active {
+  background: white;
+}
+
 .header-show {
   transition: height 0.6s ease, background-color 0.3s ease;
   overflow: hidden;
@@ -39,7 +121,7 @@
 .header-show.small-height {
   height: 34dvh !important;
   min-height: 265px;
-  z-index: 999;
+  z-index: 909;
 }
 
 .header-show.small-height::after {
@@ -91,6 +173,7 @@
 }
 
 .header-show {
+  position: relative;
   display: flex;
   justify-content: center;
   width: 100vw;
@@ -953,11 +1036,64 @@ body.dark-mode {
   position: absolute;
   right: 2.5vw;
   top: 24px;
-  z-index: 1;
+  z-index: 999;
+  cursor: pointer;
   font-size: 48px;
 }
 
+// Images modal
+
 #imageModal {
+  display: none;
+  position: fixed;
+  z-index: 998;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+
   align-items: center;
   justify-content: center;
+}
+
+#imageModal.show {
+  display: flex;
+}
+
+#closeImageModal:hover {
+  color: #bbb;
+}
+
+.modal-content-image {
+  overflow: hidden;
+
+  /* Responsive */
+  max-width: 90vw;
+  max-height: 90vh;
+
+  display: flex;
+  gap: 32px;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* L'image elle-même */
+#modalImage {
+  width: auto;
+  height: auto;
+  max-width: 100%; /* S'adapte au conteneur */
+  max-height: 80vh; /* Garde de la place pour le crédit */
+  display: block;
+}
+
+/* 4. Le fond blanc pour le crédit */
+.modal-image-credit {
+  background-color: #fff;
+  padding: 12px 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  border-radius: 8px;
+  width: fit-content;
 }

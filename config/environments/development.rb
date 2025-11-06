@@ -21,7 +21,7 @@ Rails.application.configure do
   # Enable/disable caching. By default caching is disabled.
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :minio_images
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
@@ -76,4 +76,11 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  config.hosts.clear
+  config.hosts << /[a-z0-9\-]+\.ngrok\-free\.app/
+  config.hosts << "localhost"
+  config.hosts << "127.0.0.1"
+
+  config.log_level = :debug
 end

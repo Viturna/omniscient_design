@@ -1,7 +1,43 @@
 <% content_for :title, "Explorer le carnet de références - Omniscient Design" %>
 <% content_for :description, "Explorez notre collection de références : images, concepts, typographies. Un répertoire unique avec des infos sur les travaux ." %>
-
 <style>
+  .refonte-alert {
+    position: sticky;
+    top: 0;
+    background-color: #ffffffff;
+    color: #202020;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    scroll-snap-align: start;
+  }
+  .refonte-alert-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+    text-align: left;
+  }
+  .refonte-alert-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    color: #202020;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .refonte-alert-close:hover {
+    opacity: 1;
+  }
   @media screen and (max-width: 320px) {
     .top-bar-search {
       display: none;
@@ -28,16 +64,15 @@
   .ad-container {
   width: 100%;
   text-align: center;
-}
-.ad-card {
+  }
+  .ad-card {
   display: flex;
   align-items: center;
   justify-content: center;
   /* Assurez-vous qu'elle a la même classe/taille que vos vraies cartes */
   scroll-snap-align: start;
-}
+  }
 </style>
-
 <section class="home-page top-bar-search">
   <%= link_to search_path, class: "search-link" do %>
     <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="<%= t('search.placeholder') %>">
@@ -63,12 +98,8 @@
         <% end %>
       </div>
     <% end %>
-  
   </div>
-
-
 </section>
-
 <div id="oeuvres">
   <div class="home-flex" id="cardContainer">
     <div class="nav-home-mobile">
@@ -89,39 +120,40 @@
       <%= link_to t('global.designers'), designers_path %>
       <%= link_to t('global.references'), oeuvres_path, class: "active" %>
     </div>
-
+    <div class="refonte-alert" id="refonteAlert">
+      <div class="refonte-alert-content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+        <span><strong>Maintenance :</strong> Une opération de refonte des images est en cours sur les références. Elles reviennent bientôt !</span>
+      </div>
+      <button class="refonte-alert-close" id="closeRefonteAlert" title="Fermer">×</button>
+    </div>
     <div class="box-card" id="boxCard">
-  <% @oeuvres.each do |o| %>
-    <% Rails.logger.debug "Type chargé : #{o.class.name}" %>
-  <% end %>
-  <%# ====================================================== %>
-  <%# === DÉBUT DE L'INTÉGRATION DE LA PUB === %>
-  <%# ====================================================== %>
-
-  <%# 1. On définit la fréquence - Utilisation d'une variable locale (minuscule) %>
-  <% items_per_ad = 5 %>
-
-  <%# 2. On boucle sur les oeuvres initiales avec un index %>
-  <% @oeuvres.each_with_index do |oeuvre, index| %>
-
-    <%# 3. On insère le partial de pub toutes les 5 cartes (sauf à 0) - Utilisation de la variable locale %>
-    <% if index > 0 && index % items_per_ad == 0 %>
-      <%#
+      <% @oeuvres.each do |o| %>
+        <% Rails.logger.debug "Type chargé : #{o.class.name}" %>
+      <% end %>
+      <%# ====================================================== %>
+      <%# === DÉBUT DE L'INTÉGRATION DE LA PUB === %>
+      <%# ====================================================== %>
+      <%# 1. On définit la fréquence - Utilisation d'une variable locale (minuscule) %>
+      <% items_per_ad = 5 %>
+      <%# 2. On boucle sur les oeuvres initiales avec un index %>
+      <% @oeuvres.each_with_index do |oeuvre, index| %>
+        <%# 3. On insère le partial de pub toutes les 5 cartes (sauf à 0) - Utilisation de la variable locale %>
+        <% if index > 0 && index % items_per_ad == 0 %>
+          <%#
       # On appelle un partial séparé pour la pub.
       # Vous devez créer le fichier 'app/views/oeuvres/_ad_card.html.erb'
       # (Il doit contenir votre code AdSense dans une div avec class="card ad-card")
       %>
-      <%= render partial: 'oeuvres/ad_card' %>
-    <% end %>
-
-    <%# 4. On rend la carte d'oeuvre normale %>
-    <%= render partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' } %>
-
-  <% end %>
-  <%# ====================================================== %>
-  <%# === FIN DE L'INTÉGRATION DE LA PUB === %>
-  <%# ====================================================== %>
-</div>
+          <%= render partial: 'oeuvres/ad_card' %>
+        <% end %>
+        <%# 4. On rend la carte d'oeuvre normale %>
+        <%= render partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' } %>
+      <% end %>
+      <%# ====================================================== %>
+      <%# === FIN DE L'INTÉGRATION DE LA PUB === %>
+      <%# ====================================================== %>
+    </div>
     <div id="oeuvres-load-more" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
   </div>
   <div class="button-nav">
@@ -140,117 +172,116 @@
   </div>
 </div>
 <script>
-document.addEventListener("turbo:load", () => {
-const container = document.getElementById("cardContainer");
-const loadMoreTrigger = document.getElementById("oeuvres-load-more");
-const upButton = document.querySelector(".arrow-button.up");
-const downButton = document.querySelector(".arrow-button.down");
-if (!container) return;
-container.scrollTop = 0;
-window.scrollTo(0, 0);
-requestAnimationFrame(() => {
-container.scrollTop = 0;
-});
-let isLoading = false;
-let isScrolling = false;
-// Fonction de chargement des cartes
-function loadMoreCards() {
-if (isLoading) return;
-isLoading = true;
-const offset = loadMoreTrigger.dataset.offset;
-const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
-fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
-.then((response) => response.text())
-.then((html) => {
-if (html.trim() === "") {
-loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
-} else {
-container.insertAdjacentHTML("beforeend", html);
-// Mettre à jour l'offset et les IDs chargés
-loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
-const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
-loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
-validateCardAlignment();
-}
-})
-.catch((err) => {
-console.error("Erreur lors du chargement des cartes :", err);
-})
-.finally(() => {
-// ✅ On libère le verrou APRÈS la fin complète de la requête
-isLoading = false;
-});
-}
-// Vérification et ajustement de l'alignement des cartes
-function validateCardAlignment() {
-const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
-cards.forEach((card) => {
-card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
-});
-}
-// Fonction pour défiler vers le haut ou le bas
-function scrollToCard(direction) {
-// ======================================================
-// === CORRECTION DU BUG JAVASCRIPT ===
-// ======================================================
-// On doit sélectionner .card ET .ad-card, comme dans validateCardAlignment
-const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
-// ======================================================
+  document.addEventListener("turbo:load", () => {
+  const container = document.getElementById("cardContainer");
+  const loadMoreTrigger = document.getElementById("oeuvres-load-more");
+  const upButton = document.querySelector(".arrow-button.up");
+  const downButton = document.querySelector(".arrow-button.down");
+  if (!container) return;
+  container.scrollTop = 0;
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => {
+  container.scrollTop = 0;
+  });
+  let isLoading = false;
+  let isScrolling = false;
+  // Fonction de chargement des cartes
+  function loadMoreCards() {
+  if (isLoading) return;
+  isLoading = true;
+  const offset = loadMoreTrigger.dataset.offset;
+  const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
+  fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
+  .then((response) => response.text())
+  .then((html) => {
+  if (html.trim() === "") {
+  loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
+  } else {
+  container.insertAdjacentHTML("beforeend", html);
+  // Mettre à jour l'offset et les IDs chargés
+  loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
+  const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
+  loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
+  validateCardAlignment();
+  }
+  })
+  .catch((err) => {
+  console.error("Erreur lors du chargement des cartes :", err);
+  })
+  .finally(() => {
+  // ✅ On libère le verrou APRÈS la fin complète de la requête
+  isLoading = false;
+  });
+  }
+  // Vérification et ajustement de l'alignement des cartes
+  function validateCardAlignment() {
+  const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
+  cards.forEach((card) => {
+  card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
+  });
+  }
+  // Fonction pour défiler vers le haut ou le bas
+  function scrollToCard(direction) {
+  // ======================================================
+  // === CORRECTION DU BUG JAVASCRIPT ===
+  // ======================================================
+  // On doit sélectionner .card ET .ad-card, comme dans validateCardAlignment
+  const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
+  // ======================================================
 
-const scrollTop = container.scrollTop;
-const containerHeight = container.clientHeight;
-// Trouver l'index de la card "active"
-const currentIndex = cards.findIndex(card => {
-const cardTop = card.offsetTop;
-const cardBottom = cardTop + card.offsetHeight;
-return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
-});
-let targetIndex = currentIndex;
-if (direction === "down" && currentIndex < cards.length - 1) {
-targetIndex++;
-} else if (direction === "up" && currentIndex > 0) {
-targetIndex--;
-}
-if (targetIndex !== currentIndex) {
-cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
-}
-}
-// Gestion des boutons
-upButton.addEventListener("click", () => scrollToCard("up"));
-downButton.addEventListener("click", () => scrollToCard("down"));
-document.addEventListener("keydown", (e) => {
-if (e.key === "ArrowUp") scrollToCard("up");
-if (e.key === "ArrowDown") scrollToCard("down");
-});
-// Gestion tactile (mobile-friendly)
-let touchStartY = 0;
-let touchEndY = 0;
-container.addEventListener("touchstart", (e) => {
-touchStartY = e.touches[0].clientY;
-}, { passive: true });
-container.addEventListener("touchend", (e) => {
-if (isScrolling) return;
-touchEndY = e.changedTouches[0].clientY;
-const swipeDistance = touchStartY - touchEndY;
-if (swipeDistance > 50) {
-scrollToCard("down");
-} else if (swipeDistance < -50) {
-scrollToCard("up");
-}
-}, { passive: true });
-// Ajustement initial
-validateCardAlignment();
-// Écouteur de défilement pour le chargement infini
-container.addEventListener("scroll", () => {
-const { scrollTop, scrollHeight, clientHeight } = container;
-isScrolling = true;
-if (scrollTop + clientHeight >= scrollHeight) {
-loadMoreCards();
-}
-setTimeout(() => (isScrolling = false), 100);
-}, { passive: true });
-});
-
+  const scrollTop = container.scrollTop;
+  const containerHeight = container.clientHeight;
+  // Trouver l'index de la card "active"
+  const currentIndex = cards.findIndex(card => {
+  const cardTop = card.offsetTop;
+  const cardBottom = cardTop + card.offsetHeight;
+  return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
+  });
+  let targetIndex = currentIndex;
+  if (direction === "down" && currentIndex < cards.length - 1) {
+  targetIndex++;
+  } else if (direction === "up" && currentIndex > 0) {
+  targetIndex--;
+  }
+  if (targetIndex !== currentIndex) {
+  cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  }
+  // Gestion des boutons
+  upButton.addEventListener("click", () => scrollToCard("up"));
+  downButton.addEventListener("click", () => scrollToCard("down"));
+  document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowUp") scrollToCard("up");
+  if (e.key === "ArrowDown") scrollToCard("down");
+  });
+  // Gestion tactile (mobile-friendly)
+  let touchStartY = 0;
+  let touchEndY = 0;
+  container.addEventListener("touchstart", (e) => {
+  touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  container.addEventListener("touchend", (e) => {
+  if (isScrolling) return;
+  touchEndY = e.changedTouches[0].clientY;
+  const swipeDistance = touchStartY - touchEndY;
+  if (swipeDistance > 50) {
+  scrollToCard("down");
+  } else if (swipeDistance < -50) {
+  scrollToCard("up");
+  }
+  }, { passive: true });
+  // Ajustement initial
+  validateCardAlignment();
+  // Écouteur de défilement pour le chargement infini
+  container.addEventListener("scroll", () => {
+  const { scrollTop, scrollHeight, clientHeight } = container;
+  isScrolling = true;
+  if (scrollTop + clientHeight >= scrollHeight) {
+  loadMoreCards();
+  }
+  setTimeout(() => (isScrolling = false), 100);
+  }, { passive: true });
+  });
 </script>
 <div id="popup" class="popup">
   <div class="popup-content">
@@ -267,62 +298,74 @@ setTimeout(() => (isScrolling = false), 100);
       <p class="subtitle-popup"><%= t('mainpopup.subtitle_project') %></p>
       <p><%= t('mainpopup.description_project').gsub("\n", "<br>").html_safe %></p>
       <%= link_to presentation_url, class: "button dark" do %>
-       <%= t('mainpopup.button_project') %>
+        <%= t('mainpopup.button_project') %>
       <%end%>
       <div class="popup-decoration">
         <svg width="186" height="46" viewBox="0 0 186 46" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_3317_340)">
-          <path d="M23 0L30.0303 15.6304L46 17.8365L34.3773 29.0068L37.214 46L23 37.2715L8.78408 46L11.6227 29.0068L0 17.8365L15.9697 15.6304L23 0Z" fill="white"/>
+            <path d="M23 0L30.0303 15.6304L46 17.8365L34.3773 29.0068L37.214 46L23 37.2715L8.78408 46L11.6227 29.0068L0 17.8365L15.9697 15.6304L23 0Z" fill="white"/>
           </g>
           <g clip-path="url(#clip1_3317_340)">
-          <path d="M93 0L100.03 15.6304L116 17.8365L104.377 29.0068L107.214 46L93 37.2715L78.7841 46L81.6227 29.0068L70 17.8365L85.9697 15.6304L93 0Z" fill="white"/>
+            <path d="M93 0L100.03 15.6304L116 17.8365L104.377 29.0068L107.214 46L93 37.2715L78.7841 46L81.6227 29.0068L70 17.8365L85.9697 15.6304L93 0Z" fill="white"/>
           </g>
           <g clip-path="url(#clip2_3317_340)">
-          <path d="M163 0L170.03 15.6304L186 17.8365L174.377 29.0068L177.214 46L163 37.2715L148.784 46L151.623 29.0068L140 17.8365L155.97 15.6304L163 0Z" fill="white"/>
+            <path d="M163 0L170.03 15.6304L186 17.8365L174.377 29.0068L177.214 46L163 37.2715L148.784 46L151.623 29.0068L140 17.8365L155.97 15.6304L163 0Z" fill="white"/>
           </g>
           <defs>
-          <clipPath id="clip0_3317_340">
-          <rect width="46" height="46" fill="white"/>
-          </clipPath>
-          <clipPath id="clip1_3317_340">
-          <rect width="46" height="46" fill="white" transform="translate(70)"/>
-          </clipPath>
-          <clipPath id="clip2_3317_340">
-          <rect width="46" height="46" fill="white" transform="translate(140)"/>
-          </clipPath>
+            <clipPath id="clip0_3317_340">
+              <rect width="46" height="46" fill="white"/>
+            </clipPath>
+            <clipPath id="clip1_3317_340">
+              <rect width="46" height="46" fill="white" transform="translate(70)"/>
+            </clipPath>
+            <clipPath id="clip2_3317_340">
+              <rect width="46" height="46" fill="white" transform="translate(140)"/>
+            </clipPath>
           </defs>
         </svg>
       </div>
       <p class="subtitle-popup"><%= t('mainpopup.subtitle_feedback') %></p>
-     <p><%= t('mainpopup.description_feedback') %></p>
-        <%= link_to new_feedback_url, class: "button dark" do %>
-         <%= t('mainpopup.button_feedback') %>
-        <%end%>
+      <p><%= t('mainpopup.description_feedback') %></p>
+      <%= link_to new_feedback_url, class: "button dark" do %>
+        <%= t('mainpopup.button_feedback') %>
+      <%end%>
     </div>
   </div>
 </div>
 <script>
-document.addEventListener("turbo:load", function() {
-const openPopupButton = document.getElementById("openPopup");
-const closePopupButton = document.getElementById("closePopup");
-const popup = document.getElementById("popup");
-if (!openPopupButton || !closePopupButton || !popup) return;
-if (!popup) return;
-if (openPopupButton) {
-openPopupButton.addEventListener("click", function() {
-popup.style.display = "flex";
-});
-}
-if (closePopupButton) {
-closePopupButton.addEventListener("click", function() {
-popup.style.display = "none";
-});
-}
-window.addEventListener("click", function(event) {
-if (event.target === popup) {
-popup.style.display = "none";
-}
-});
-});
+  document.addEventListener("turbo:load", function() {
+  const openPopupButton = document.getElementById("openPopup");
+  const closePopupButton = document.getElementById("closePopup");
+  const popup = document.getElementById("popup");
+  if (!openPopupButton || !closePopupButton || !popup) return;
+  if (!popup) return;
+  if (openPopupButton) {
+  openPopupButton.addEventListener("click", function() {
+  popup.style.display = "flex";
+  });
+  }
+  if (closePopupButton) {
+  closePopupButton.addEventListener("click", function() {
+  popup.style.display = "none";
+  });
+  }
+  window.addEventListener("click", function(event) {
+  if (event.target === popup) {
+  popup.style.display = "none";
+  }
+  });
+  });
 </script>
+<script>
+  document.addEventListener("turbo:load", function() {
+    const alertElement = document.getElementById("refonteAlert");
+    const closeButton = document.getElementById("closeRefonteAlert");
 
+    // S'ils n'existent pas sur la page, on ne fait rien
+    if (!alertElement || !closeButton) return;
+
+    closeButton.addEventListener("click", function() {
+      alertElement.style.display = "none";
+    });
+  });
+</script>

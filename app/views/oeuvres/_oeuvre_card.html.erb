@@ -1,13 +1,12 @@
 <%= link_to oeuvre do %>
-  <% image_path = "oeuvres/desktop/#{remove_accents_and_special_chars(oeuvre.nom_oeuvre)}.webp" %>
-  <% if image_path.present? && asset_exists?(image_path) %>
-    <div class="card-oeuvre" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position: center center;">
+  <% if oeuvre.oeuvre_images.first&.file&.attached? %>
+    <div class="card-oeuvre" style="background: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb)) %>'); background-size: cover; background-position: center center;">
     <% else %>
-      <div class="card-oeuvre" style="background: url('<%= asset_path(oeuvre.image) %>'); background-size: cover; background-position: center center;">
+      <div class="card-oeuvre" style="background: #F3F3F3;">
       <% end %>
       <div class="inner-card-oeuvre">
         <p class="domaine-card-oeuvre"><%= oeuvre.domaines.map(&:domaine).join(', ') %></p>
         <p class="title-card-oeuvre"><%= oeuvre.nom_oeuvre %></p>
       </div>
     </div>
-  <%end%>
+  <% end %>

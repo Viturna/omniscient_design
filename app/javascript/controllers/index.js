@@ -19,6 +19,9 @@ application.register("cookie-consent", CookieConsentController)
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
 
+import ImagePreviewController from "./image_preview_controller"
+application.register("image-preview", ImagePreviewController)
+
 import LangSwitcherController from "./lang_switcher_controller"
 application.register("lang-switcher", LangSwitcherController)
 
@@ -52,6 +55,9 @@ application.register("share", ShareController)
 import ShowPasswordController from "./show_password_controller"
 application.register("show-password", ShowPasswordController)
 
+import SliderController from "./slider_controller"
+application.register("slider", SliderController)
+
 import SourcesController from "./sources_controller"
 application.register("sources", SourcesController)
 
@@ -66,7 +72,6 @@ application.register("tabs-search", TabsSearchController)
 
 import TimelineController from "./timeline_controller"
 application.register("timeline", TimelineController)
-
 
 import MultiSelectController from "./multi_select_controller"
 application.register("multi-select", MultiSelectController)

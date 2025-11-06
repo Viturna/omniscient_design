@@ -1,7 +1,10 @@
 class Oeuvre < ApplicationRecord
   extend FriendlyId
 
-
+  has_many :oeuvre_images, dependent: :destroy
+  accepts_nested_attributes_for :oeuvre_images, allow_destroy: true, 
+                                reject_if: :all_blank, 
+                                limit: 3
   friendly_id :nom_oeuvre, use: :slugged
 
   validates :nom_oeuvre, uniqueness: true, presence: true
@@ -25,6 +28,7 @@ class Oeuvre < ApplicationRecord
 
   attribute :source, :json, default: []
 
+  
   def validated?
     validation == true
   end

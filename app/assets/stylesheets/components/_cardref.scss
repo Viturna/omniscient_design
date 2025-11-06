@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 .card-ref {
   overflow: hidden;
@@ -7,7 +7,7 @@
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: end;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e9e9e9;
   border-radius: 5px;
   position: relative;
 }
@@ -58,7 +58,7 @@
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: end;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e9e9e9;
   border-radius: 5px;
   position: relative;
 }
@@ -90,10 +90,9 @@
   .card-list {
     width: 40vw;
   }
-
 }
 
-@media screen and (min-width:351px) and (max-width: 600px) {
+@media screen and (min-width: 351px) and (max-width: 600px) {
   .card-ref {
     width: calc(50% - 16px);
   }
@@ -122,7 +121,7 @@
   }
 }
 
-@media screen and (min-width:601px) and (max-width: 768px) {
+@media screen and (min-width: 601px) and (max-width: 768px) {
   .card-ref {
     width: calc(35% - 2.5vw);
   }
@@ -151,7 +150,7 @@
   }
 }
 
-@media screen and (min-width:769px) and (max-width: 1024px) {
+@media screen and (min-width: 769px) and (max-width: 1024px) {
   .card-ref {
     width: calc(50% - 0.6vw);
   }
@@ -180,7 +179,7 @@
   }
 }
 
-@media screen and (min-width:1025px) and (max-width: 1280px) {
+@media screen and (min-width: 1025px) and (max-width: 1280px) {
   .card-ref {
     width: calc(33% - 0.5vw);
   }
@@ -204,7 +203,6 @@
   }
 }
 
-
 .card-title {
   color: $secondary-color;
 }
@@ -212,5 +210,146 @@
 body.dark-mode {
   .card-title {
     color: $secondary-color-dark;
+  }
+}
+
+// Mettez ceci dans votre fichier .scss (par ex: _card_slider.scss)
+
+// Dans votre fichier .scss (par ex: _card_slider.scss ou _card.scss)
+
+.card-slider-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+// NOUVEAU: Le fond flou
+// Il se place derrière l'image nette
+.card-slider-blurred-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2; // Derrière l'image, devant le bg-color
+
+  // Style pour le fond flou (appliqué par le JS)
+  background-size: cover; // Toujours en cover
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(15px) brightness(0.9); // Flou + léger assombrissement
+  transform: scale(1.15); // Zoom pour cacher les bords flous
+  opacity: 0.7; // Optionnel: pour l'atténuer
+}
+
+// Le conteneur des slides nettes
+.card-slider-slides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3; // Devant le fond flou
+}
+
+// MODIFIÉ: L'image nette
+.card-slide-image {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain; // <-- LA MODIFICATION CLÉ
+
+  object-position: center;
+
+  // Ceci force un fond transparent au cas où l'image aurait
+  // des parties transparentes (ex: PNG), pour voir le flou derrière
+  background-color: transparent;
+
+  &.active {
+    display: block;
+  }
+}
+
+// Les infos doivent être par-dessus tout
+.flex-info-card {
+  position: relative;
+  z-index: 10; // Devant le z-index: 3 des slides
+}
+
+// La nav doit être par-dessus tout
+.card-slider-nav,
+.card-slider-dots {
+  z-index: 11; // Devant tout
+}
+
+// (Le reste de votre CSS pour .card-slider-nav, .card-slider-dots, etc. reste inchangé)
+
+// Navigation (Flèches)
+.card-slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 11; // Au-dessus de tout
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  // CORRECTION : pas de ':' et utiliser la syntaxe SCSS/CSS correcte
+  &.prev {
+    left: 10px;
+  }
+  &.next {
+    right: 10px;
+  }
+
+  // CORRECTION : espace, pas de ':'
+  svg {
+    width: 12px;
+    stroke: white;
+  }
+}
+
+// Navigation (Points)
+.card-slider-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  display: flex;
+  gap: 8px;
+}
+
+.card-slider-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  // CORRECTION : pas d'espace
+  &.active {
+    background-color: white;
   }
 }

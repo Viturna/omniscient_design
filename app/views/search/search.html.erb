@@ -1,32 +1,28 @@
 <% content_for :title, "Rechercher des références et des designers - Omniscient Design" %>
 <% content_for :description, "La page de recherche permet de trouver efficacement et rapidement la référence que tu cherches. Trie les références par domaine, année ou encore pays !" %>
-
 <section class="top-bar-search">
- <%= form_with url: search_path, method: :get, local: true do |form| %>
+  <%= form_with url: search_path, method: :get, local: true do |form| %>
     <div class="autocomplete" data-controller="autocomplete" data-autocomplete-url-value="<%= search_autocomplete_path %>">
       <div class="search-wrapper">
         <input type="search"
                data-autocomplete-target="field"
                data-action="input->autocomplete#search"
-               class="search-top-bar"
-               placeholder="<%= t('search.placeholder') %>"
-               autocomplete="off"
-               id="workSearch" />
-
+        class="search-top-bar"
+        placeholder="<%= t('search.placeholder') %>"
+        autocomplete="off"
+        id="workSearch" />
         <button type="button"
                 data-autocomplete-target="clearBtn"
                 data-action="click->autocomplete#clear"
-                class="clear-search" style="display:none;">
+          class="clear-search" style="display:none;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12.0019 2.00488C17.5199 2.00488 21.9999 6.48488 21.9999 12.0019C21.9999 17.5199 17.5199 21.9999 12.0019 21.9999C6.48488 21.9999 2.00488 17.5199 2.00488 12.0019C2.00488 6.48488 6.48488 2.00488 12.0019 2.00488ZM12.0019 10.9379L9.28088 8.21588C9.13488 8.06988 8.94188 7.99688 8.74988 7.99688C8.34588 7.99688 7.99988 8.32088 7.99988 8.74588C7.99988 8.93888 8.07288 9.12988 8.21888 9.27688L10.9409 11.9989L8.21288 14.7269C8.06588 14.8739 7.99288 15.0669 7.99288 15.2579C7.99288 15.6849 8.34288 16.0079 8.74388 16.0079C8.93588 16.0079 9.12788 15.9349 9.27388 15.7889L12.0019 13.0609L14.7309 15.7889C14.8769 15.9349 15.0689 16.0079 15.2609 16.0079C15.6619 16.0079 16.0109 15.6849 16.0109 15.2579C16.0109 15.0669 15.9379 14.8739 15.7909 14.7269L13.0639 11.9989L15.7809 9.28188C15.9269 9.13488 15.9999 8.94388 15.9999 8.75088C15.9999 8.32588 15.6539 8.00088 15.2499 8.00088C15.0579 8.00088 14.8649 8.07388 14.7189 8.22088L12.0019 10.9379Z" fill="#202020"/>
           </svg>
         </button>
       </div>
-
       <div class="suggestions-box" data-autocomplete-target="results" id="autocompleteResults"></div>
     </div>
   <% end %>
-
   <div class="top-bar-flex">
     <div class="circle circle-notif" id="openPopup">
       <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +30,6 @@
         <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
       </svg>
     </div>
-
     <%= link_to notifications_path do %>
       <div class="circle circle-notif">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +42,7 @@
         <% end %>
       </div>
     <% end %>
-     <%# <button data-controller="lang-switcher" class="lang-switcher" data-action="click->lang-switcher#toggle">
+    <%# <button data-controller="lang-switcher" class="lang-switcher" data-action="click->lang-switcher#toggle">
     <span class="lang-icon">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8.82263 6.50977C8.82263 10.8194 6.63857 12.9761 3.94531 12.9761M3.94531 6.50977H10.7736" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
@@ -72,11 +67,8 @@
   </button> %>
   </div>
 </section>
-
-
 <section class="grid-1 searchpage" data-controller="tabs-search">
   <h1><%= t('search.title') %></h1>
-
   <div class="tabs">
     <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" 
             data-tab="designers" 
@@ -99,7 +91,6 @@
   </div>
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers", data: { tabs_search_target: "tabInput" } %>
-
     <h2><%= t('search.filters') %></h2>
     <div class="filters">
       <!-- Domaine -->
@@ -107,310 +98,304 @@
         <label for="domainFilter"><%= t('search.domain') %></label>
         <%= form.select :domaine, Domaine.all.map { |d| [d.domaine, d.id] }, { include_blank: false, selected: params[:domaine] }, { multiple: true, class: "select2" } %>
       </div>
-
       <!-- Notions -->
       <div class="filter" data-tabs-search-target="notionsFilter">
         <label for="notionsFilter"><%= t('search.notions') %></label>
         <%= form.select :notions, Notion.all.map { |n| [n.name, n.id] }, { include_blank: t('search.choose_notions'), selected: params[:notions] }, { multiple: true, class: "select2", name: "notions[]" } %>
       </div>
-
       <!-- Country -->
       <div class="filter" data-tabs-search-target="countryFilter">
         <label for="paysFilter"><%= t('search.country') %></label>
         <%= form.select :country, @countries.all.map { |p| [p.country, p.id] }, { include_blank: t('search.choose_country'), selected: params[:country] }, { multiple: true, class: "select2" } %>
       </div>
-
       <!-- Dates -->
-     <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
-      <label for="dateFilter"><%= t('search.dates') %></label>
-      <div class="dropdown">
-        <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
-          <%= t('search.select_period') %>
-        </button>
-        <div class="dropdown-menu" data-dropdown-target="menu">
-          <div>
-            <label for="startDate"><%= t('search.from') %></label>
-            <%= form.number_field :start_year,
+      <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
+        <label for="dateFilter"><%= t('search.dates') %></label>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
+            <%= t('search.select_period') %>
+          </button>
+          <div class="dropdown-menu" data-dropdown-target="menu">
+            <div>
+              <label for="startDate"><%= t('search.from') %></label>
+              <%= form.number_field :start_year,
                 value: params[:start_year],
                 class: "date-filter",
                 id: "startDate",
                 placeholder: t('search.start_year') %>
-          </div>
-          <div>
-            <label for="endDate"><%= t('search.to') %></label>
-            <%= form.number_field :end_year,
+            </div>
+            <div>
+              <label for="endDate"><%= t('search.to') %></label>
+              <%= form.number_field :end_year,
                 value: params[:end_year],
                 class: "date-filter",
                 id: "endDate",
                 placeholder: t('search.end_year') %>
+            </div>
+            <!-- Le bouton qui applique le filtre -->
+            <button type="button" id="applyDateFilter" class="button dark">
+              <%= t('search.apply') %>
+            </button>
           </div>
-
-          <!-- Le bouton qui applique le filtre -->
-          <button type="button" id="applyDateFilter" class="button dark">
-            <%= t('search.apply') %>
-          </button>
         </div>
       </div>
-    </div>
-
-
       <!-- Sort -->
       <div class="filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">
         <label for="sort"><%= t('search.sort_by') %></label>
         <select name="sort" id="sortSelect" class="select2" data-tabs-search-target="sortSelect">
           <% if params[:tab] == 'references' %>
             <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
-            <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
-            <option value="oeuvre_asc" <%= 'selected' if params[:sort] == 'oeuvre_asc' %>><%= t('search.oeuvre_old_new') %></option>
-            <option value="oeuvre_desc" <%= 'selected' if params[:sort] == 'oeuvre_desc' %>><%= t('search.oeuvre_new_old') %></option>
-          <% else %>
-            <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
-            <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
-            <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>><%= t('search.birth_old_new') %></option>
-            <option value="naissance_desc" <%= 'selected' if params[:sort] == 'naissance_desc' %>><%= t('search.birth_new_old') %></option>
-          <% end %>
-        </select>
-      </div>
-    </div>
-  <% end %>
-
-  <!-- Tabs Content (Designers / References / Timeline) -->
-  <div id="designers" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
-    <div id="designers-container" class="flex-container">
-      <% @designers.each do |designer| %>
-        <%= render 'designers/designer_card', designer: designer %>
-      <% end %>
-    </div>
-    <% unless params[:tab] == "frise" %>
-      <%= paginate @designers, params: { tab: 'designers' } %>
-    <% end %>
-  </div>
-
-  <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
-    <div id="oeuvres-container" class="flex-container">
-      <% @oeuvres.each do |oeuvre| %>
-        <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
-      <% end %>
-    </div>
-    <% unless params[:tab] == "frise" %>
-      <%= paginate @oeuvres, params: { tab: 'references' } %>
-    <% end %>
-  </div>
-
-  <div id="frise" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
-    <h2><%= t('global.references') %></h2>
-    <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
-      <%# <hr class="timeline-hr"> %>
-      <% @timeline_years.each do |year| %>
-        <div class="timeline-item">
-          <div class="oeuvres">
-            <div class="oeuvres-container">
-              <% oeuvres_year = @oeuvres.select { |o| o.date_oeuvre.to_i == year } %>
-              <% if oeuvres_year.size > 1 %>
-                <div class="oeuvres-counter" data-controller="oeuvres-counter">
-                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= oeuvres_year.size %></span>
-                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
-                    <% oeuvres_year.each do |oeuvre| %>
-                      <%= link_to oeuvre, class: "oeuvre-point" do %>
-                        <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-image: url('<%= oeuvre.image %>');"></div>
+              <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
+                <option value="oeuvre_asc" <%= 'selected' if params[:sort] == 'oeuvre_asc' %>><%= t('search.oeuvre_old_new') %></option>
+                  <option value="oeuvre_desc" <%= 'selected' if params[:sort] == 'oeuvre_desc' %>><%= t('search.oeuvre_new_old') %></option>
+                  <% else %>
+                    <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
+                      <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
+                        <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>><%= t('search.birth_old_new') %></option>
+                          <option value="naissance_desc" <%= 'selected' if params[:sort] == 'naissance_desc' %>><%= t('search.birth_new_old') %></option>
+                          <% end %>
+                        </select>
+                      </div>
+                    </div>
+                  <% end %>
+                  <!-- Tabs Content (Designers / References / Timeline) -->
+                  <div id="designers" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
+                    <div id="designers-container" class="flex-container">
+                      <% @designers.each do |designer| %>
+                        <%= render 'designers/designer_card', designer: designer %>
                       <% end %>
+                    </div>
+                    <% unless params[:tab] == "frise" %>
+                      <%= paginate @designers, params: { tab: 'designers' } %>
                     <% end %>
                   </div>
-                </div>
-              <% else %>
-                <% oeuvres_year.each do |oeuvre| %>
-                  <%= link_to oeuvre, class: "oeuvre-point" do %>
-                    <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-image: url('<%= oeuvre.image %>');"></div>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </div>
-            <div class="oeuvre empty"></div>
-            <div class="year"><%= year %></div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-
-    <h2><%= t('global.designers') %></h2>
-    <div class="timeline"  data-tabs-search-target="timeline" data-controller="timeline">
-      <%# <hr class="timeline-hr"> %>
-      <% @timeline_years.each do |year| %>
-        <div class="timeline-item">
-          <div class="oeuvres">
-            <div class="oeuvres-container">
-              <% designers_year = @designers.select { |d| d.date_naissance.to_i == year } %>
-              <% if designers_year.size > 1 %>
-                <div class="oeuvres-counter" data-controller="oeuvres-counter">
-                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= designers_year.size %></span>
-                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
-                    <% designers_year.each do |designer| %>
-                      <%= link_to designer, data: { turbo_frame: "_top" }, class: "oeuvre-point" do %>
-                        <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= designer.image %>');"></div>
+                  <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
+                    <div id="oeuvres-container" class="flex-container">
+                      <% @oeuvres.each do |oeuvre| %>
+                        <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
                       <% end %>
+                    </div>
+                    <% unless params[:tab] == "frise" %>
+                      <%= paginate @oeuvres, params: { tab: 'references' } %>
                     <% end %>
                   </div>
+                  <div id="frise" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
+                    <h2><%= t('global.references') %></h2>
+                    <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                      <%# <hr class="timeline-hr"> %>
+                      <% @timeline_years.each do |year| %>
+                        <div class="timeline-item">
+                          <div class="oeuvres">
+                            <div class="oeuvres-container">
+                              <% oeuvres_year = @oeuvres.select { |o| o.date_oeuvre.to_i == year } %>
+                              <% if oeuvres_year.size > 1 %>
+                                <div class="oeuvres-counter" data-controller="oeuvres-counter">
+                                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= oeuvres_year.size %></span>
+                                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
+                                    <% oeuvres_year.each do |oeuvre| %>
+                                      <%= link_to oeuvre, class: "oeuvre-point" do %>
+                                        <% if oeuvre.oeuvre_images.first&.file&.attached? %>
+                                          <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb))  %>');"></div>
+                                        <% else %>
+                                          <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-color: #D9D9D9;"></div>
+                                        <% end %>
+                                      <% end %>
+                                    <% end %>
+                                  </div>
+                                </div>
+                              <% else %>
+                                <% oeuvres_year.each do |oeuvre| %>
+                                  <%= link_to oeuvre, class: "oeuvre-point" do %>
+                                    <% if oeuvre.oeuvre_images.first&.file&.attached? %>
+                                      <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb))  %>');"></div>
+                                    <% else %>
+                                      <%# Fallback : une div vide avec une couleur ou sans image %>
+                                      <div class="oeuvre" title="<%= oeuvre.nom_oeuvre %>" data-year="<%= oeuvre.date_oeuvre %>" style="background-color: #D9D9D9;"></div>
+                                    <% end %>
+                                  <% end %>
+                                <% end %>
+                              <% end %>
+                            </div>
+                            <div class="oeuvre empty"></div>
+                            <div class="year"><%= year %></div>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                    <h2><%= t('global.designers') %></h2>
+                    <div class="timeline"  data-tabs-search-target="timeline" data-controller="timeline">
+                      <%# <hr class="timeline-hr"> %>
+                      <% @timeline_years.each do |year| %>
+                        <div class="timeline-item">
+                          <div class="oeuvres">
+                            <div class="oeuvres-container">
+                              <% designers_year = @designers.select { |d| d.date_naissance.to_i == year } %>
+                              <% if designers_year.size > 1 %>
+                                <div class="oeuvres-counter" data-controller="oeuvres-counter">
+                                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= designers_year.size %></span>
+                                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
+                                    <% designers_year.each do |designer| %>
+                                      <%= link_to designer, data: { turbo_frame: "_top" }, class: "oeuvre-point" do %>
+                                        <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= designer.image %>');"></div>
+                                      <% end %>
+                                    <% end %>
+                                  </div>
+                                </div>
+                              <% else %>
+                                <% designers_year.each do |designer| %>
+                                  <%= link_to designer, data: { turbo_frame: "_top" }, class: "oeuvre-point" do %>
+                                    <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= designer.image %>');"></div>
+                                  <% end %>
+                                <% end %>
+                              <% end %>
+                            </div>
+                            <div class="oeuvre empty"></div>
+                            <div class="year"><%= year %></div>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </section>
+                <script>
+                  function initSelect2() {
+                    $(".select2").each(function () {
+                      const $select = $(this);
+
+                      // Toujours détruire même si le navigateur restaure la page
+                      if ($select.data('select2')) {
+                        $select.select2('destroy');
+                      }
+
+                      $select.select2({
+                        placeholder: "Choisir des filtres",
+                        allowClear: true,
+                        width: "100%"
+                      });
+
+                      const filterForm = document.getElementById("filterForm");
+                      if (filterForm) {
+                        $select.off("select2:select select2:unselect");
+                        $select.on("select2:select select2:unselect", function () {
+                          const formData = new FormData(filterForm);
+                          const url = new URL(window.location.href);
+
+                          formData.forEach((value, key) => {
+                            if (value) {
+                              url.searchParams.set(key, value);
+                            } else {
+                              url.searchParams.delete(key);
+                            }
+                          });
+
+                          window.history.pushState({}, "", url);
+                          filterForm.requestSubmit();
+                        });
+                      }
+                    });
+                  }
+
+                  // On utilise turbo:load pour la première fois
+                  document.addEventListener("turbo:load", initSelect2);
+
+                  // Et turbo:before-cache pour détruire avant que Turbo ne mette la page en cache
+                  document.addEventListener("turbo:before-cache", () => {
+                    $(".select2").each(function () {
+                      const $select = $(this);
+                      if ($select.data('select2')) {
+                        $select.select2('destroy');
+                      }
+                    });
+                  });
+                </script>
+                <div id="popup" class="popup">
+                  <div class="popup-content">
+                    <div class="top-popup">
+                      <svg class="close-popup" id="closePopup" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+                      </svg>
+                    </div>
+                    <div class="popup-inner">
+                      <p class="title-popup"><%= t('mainpopup.title') %></p>
+                      <div class="popup-decoration">
+                        <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
+                      </div>
+                      <p class="subtitle-popup"><%= t('mainpopup.subtitle_project') %></p>
+                      <p><%= t('mainpopup.description_project').gsub("\n", "<br>").html_safe %></p>
+                      <%= link_to presentation_url, class: "button dark" do %>
+                        <%= t('mainpopup.button_project') %>
+                      <%end%>
+                      <div class="popup-decoration">
+                        <svg width="186" height="46" viewBox="0 0 186 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <g clip-path="url(#clip0_3317_340)">
+                            <path d="M23 0L30.0303 15.6304L46 17.8365L34.3773 29.0068L37.214 46L23 37.2715L8.78408 46L11.6227 29.0068L0 17.8365L15.9697 15.6304L23 0Z" fill="white"/>
+                          </g>
+                          <g clip-path="url(#clip1_3317_340)">
+                            <path d="M93 0L100.03 15.6304L116 17.8365L104.377 29.0068L107.214 46L93 37.2715L78.7841 46L81.6227 29.0068L70 17.8365L85.9697 15.6304L93 0Z" fill="white"/>
+                          </g>
+                          <g clip-path="url(#clip2_3317_340)">
+                            <path d="M163 0L170.03 15.6304L186 17.8365L174.377 29.0068L177.214 46L163 37.2715L148.784 46L151.623 29.0068L140 17.8365L155.97 15.6304L163 0Z" fill="white"/>
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_3317_340">
+                              <rect width="46" height="46" fill="white"/>
+                            </clipPath>
+                            <clipPath id="clip1_3317_340">
+                              <rect width="46" height="46" fill="white" transform="translate(70)"/>
+                            </clipPath>
+                            <clipPath id="clip2_3317_340">
+                              <rect width="46" height="46" fill="white" transform="translate(140)"/>
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </div>
+                      <p class="subtitle-popup"><%= t('mainpopup.subtitle_feedback') %></p>
+                      <p><%= t('mainpopup.description_feedback') %></p>
+                      <%= link_to new_feedback_url, class: "button dark" do %>
+                        <%= t('mainpopup.button_feedback') %>
+                      <%end%>
+                    </div>
+                  </div>
                 </div>
-              <% else %>
-                <% designers_year.each do |designer| %>
-                  <%= link_to designer, data: { turbo_frame: "_top" }, class: "oeuvre-point" do %>
-                    <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= designer.image %>');"></div>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </div>
-            <div class="oeuvre empty"></div>
-            <div class="year"><%= year %></div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</section>
+                <script>
+                  document.addEventListener("turbo:load", () => {
+                      const openPopupButton = document.getElementById("openPopup");
+                      const closePopupButton = document.getElementById("closePopup");
+                      const popup = document.getElementById("popup");
 
-<script>
-  function initSelect2() {
-    $(".select2").each(function () {
-      const $select = $(this);
+                      openPopupButton.addEventListener("click", function() {
+                        popup.style.display = "flex";
+                      });
 
-      // Toujours détruire même si le navigateur restaure la page
-      if ($select.data('select2')) {
-        $select.select2('destroy');
-      }
+                      closePopupButton.addEventListener("click", function() {
+                        popup.style.display = "none";
+                      });
 
-      $select.select2({
-        placeholder: "Choisir des filtres",
-        allowClear: true,
-        width: "100%"
-      });
-
-      const filterForm = document.getElementById("filterForm");
-      if (filterForm) {
-        $select.off("select2:select select2:unselect");
-        $select.on("select2:select select2:unselect", function () {
-          const formData = new FormData(filterForm);
-          const url = new URL(window.location.href);
-
-          formData.forEach((value, key) => {
-            if (value) {
-              url.searchParams.set(key, value);
-            } else {
-              url.searchParams.delete(key);
-            }
-          });
-
-          window.history.pushState({}, "", url);
-          filterForm.requestSubmit();
-        });
-      }
-    });
-  }
-
-  // On utilise turbo:load pour la première fois
-  document.addEventListener("turbo:load", initSelect2);
-
-  // Et turbo:before-cache pour détruire avant que Turbo ne mette la page en cache
-  document.addEventListener("turbo:before-cache", () => {
-    $(".select2").each(function () {
-      const $select = $(this);
-      if ($select.data('select2')) {
-        $select.select2('destroy');
-      }
-    });
-  });
-
-</script>
-
-<div id="popup" class="popup">
-  <div class="popup-content">
-    <div class="top-popup">
-      <svg class="close-popup" id="closePopup" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-      </svg>
-    </div>
-    <div class="popup-inner">
-      <p class="title-popup"><%= t('mainpopup.title') %></p>
-      <div class="popup-decoration">
-        <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
-      </div>
-      <p class="subtitle-popup"><%= t('mainpopup.subtitle_project') %></p>
-      <p><%= t('mainpopup.description_project').gsub("\n", "<br>").html_safe %></p>
-      <%= link_to presentation_url, class: "button dark" do %>
-       <%= t('mainpopup.button_project') %>
-      <%end%>
-      <div class="popup-decoration">
-        <svg width="186" height="46" viewBox="0 0 186 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_3317_340)">
-          <path d="M23 0L30.0303 15.6304L46 17.8365L34.3773 29.0068L37.214 46L23 37.2715L8.78408 46L11.6227 29.0068L0 17.8365L15.9697 15.6304L23 0Z" fill="white"/>
-          </g>
-          <g clip-path="url(#clip1_3317_340)">
-          <path d="M93 0L100.03 15.6304L116 17.8365L104.377 29.0068L107.214 46L93 37.2715L78.7841 46L81.6227 29.0068L70 17.8365L85.9697 15.6304L93 0Z" fill="white"/>
-          </g>
-          <g clip-path="url(#clip2_3317_340)">
-          <path d="M163 0L170.03 15.6304L186 17.8365L174.377 29.0068L177.214 46L163 37.2715L148.784 46L151.623 29.0068L140 17.8365L155.97 15.6304L163 0Z" fill="white"/>
-          </g>
-          <defs>
-          <clipPath id="clip0_3317_340">
-          <rect width="46" height="46" fill="white"/>
-          </clipPath>
-          <clipPath id="clip1_3317_340">
-          <rect width="46" height="46" fill="white" transform="translate(70)"/>
-          </clipPath>
-          <clipPath id="clip2_3317_340">
-          <rect width="46" height="46" fill="white" transform="translate(140)"/>
-          </clipPath>
-          </defs>
-        </svg>
-      </div>
-      <p class="subtitle-popup"><%= t('mainpopup.subtitle_feedback') %></p>
-     <p><%= t('mainpopup.description_feedback') %></p>
-        <%= link_to new_feedback_url, class: "button dark" do %>
-         <%= t('mainpopup.button_feedback') %>
-        <%end%>
-    </div>
-  </div>
-</div>
-<script>
-document.addEventListener("turbo:load", () => {
-    const openPopupButton = document.getElementById("openPopup");
-    const closePopupButton = document.getElementById("closePopup");
-    const popup = document.getElementById("popup");
-
-    openPopupButton.addEventListener("click", function() {
-      popup.style.display = "flex";
-    });
-
-    closePopupButton.addEventListener("click", function() {
-      popup.style.display = "none";
-    });
-
-    // Fermer la popup en cliquant en dehors de celle-ci
-    window.addEventListener("click", function(event) {
-      if (event.target === popup) {
-        popup.style.display = "none";
-      }
-    });
-  });
-</script>
-
-
-<script>
-  window.I18nSearchSort = {
-    designers: {
-      nom_asc: "<%= t('search.name_asc') %>",
-      nom_desc: "<%= t('search.name_desc') %>",
-      naissance_asc: "<%= t('search.birth_old_new') %>",
-      naissance_desc: "<%= t('search.birth_new_old') %>"
-    },
-    references: {
-      nom_asc: "<%= t('search.name_asc') %>",
-      nom_desc: "<%= t('search.name_desc') %>",
-      oeuvre_asc: "<%= t('search.oeuvre_old_new') %>",
-      oeuvre_desc: "<%= t('search.oeuvre_new_old') %>"
-    }
-  }
-</script>
-<script>
-  window.loaderVideoPath = "<%= asset_path('loader.webm') %>"
-  window.loaderUnsupportedText = "<%= j t('loader.unsupported_browser') %>"
-</script>
+                      // Fermer la popup en cliquant en dehors de celle-ci
+                      window.addEventListener("click", function(event) {
+                        if (event.target === popup) {
+                          popup.style.display = "none";
+                        }
+                      });
+                    });
+                </script>
+                <script>
+                  window.I18nSearchSort = {
+                    designers: {
+                      nom_asc: "<%= t('search.name_asc') %>",
+                      nom_desc: "<%= t('search.name_desc') %>",
+                      naissance_asc: "<%= t('search.birth_old_new') %>",
+                      naissance_desc: "<%= t('search.birth_new_old') %>"
+                    },
+                    references: {
+                      nom_asc: "<%= t('search.name_asc') %>",
+                      nom_desc: "<%= t('search.name_desc') %>",
+                      oeuvre_asc: "<%= t('search.oeuvre_old_new') %>",
+                      oeuvre_desc: "<%= t('search.oeuvre_new_old') %>"
+                    }
+                  }
+                </script>
+                <script>
+                  window.loaderVideoPath = "<%= asset_path('loader.webm') %>"
+                  window.loaderUnsupportedText = "<%= j t('loader.unsupported_browser') %>"
+                </script>

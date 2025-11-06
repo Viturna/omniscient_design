@@ -10,7 +10,7 @@ class OeuvreImage < ApplicationRecord
   validates :file,
             attached: true,
             content_type: ['image/png', 'image/jpeg', 'image/webp'],
-            size: { less_than: 3.megabytes, message: 'doit faire moins de 3 Mo' }
+            size: { less_than: 5.megabytes, message: 'doit faire moins de 3 Mo' }
 
   after_commit :convert_to_webp, on: [:create, :update]
 

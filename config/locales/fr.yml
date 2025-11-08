@@ -965,6 +965,11 @@ fr:
       politique: "Politique de confidentialité"
       cgu: "CGU"
       all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
+    reconfirmation:
+      welcome: "Un petit rappel..."
+      title: "Finalisez votre inscription"
+      body: "Oups ! Il semble que vous n'ayez pas encore confirmé votre adresse e-mail. C'est la dernière étape pour activer votre compte et accéder à toutes les fonctionnalités d'Omniscient Design.<br/><br/>Veuillez cliquer sur le bouton ci-dessous pour valider votre inscription."
+      button: "Je valide mon compte"
     reset_password:
       top: "Il semblerait que vous ayez perdu votre mot de passe."
       title: "réinitialisation du mot de passe"

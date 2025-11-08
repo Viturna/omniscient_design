@@ -70,17 +70,17 @@
 <section class="grid-1 searchpage" data-controller="tabs-search">
   <h1><%= t('search.title') %></h1>
   <div class="tabs">
-    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'designers' %>" 
-            data-tab="designers" 
-            data-tabs-search-target="tab" 
-            data-action="click->tabs-search#switch">
-      <%= t('global.designers') %> (<%= Designer.where(validation: true).count %>)
-    </button>
-    <button class="tab <%= 'active' if params[:tab] == 'references' %>" 
+    <button class="tab <%= 'active' if params[:tab].blank? || params[:tab] == 'references' %>" 
             data-tab="references" 
             data-tabs-search-target="tab" 
             data-action="click->tabs-search#switch">
       <%= t('global.references') %> (<%= Oeuvre.where(validation: true).count %>)
+    </button>
+    <button class="tab <%= 'active' if params[:tab] == 'designers' %>" 
+            data-tab="designers" 
+            data-tabs-search-target="tab" 
+            data-action="click->tabs-search#switch">
+      <%= t('global.designers') %> (<%= Designer.where(validation: true).count %>)
     </button>
     <button class="tab <%= 'active' if params[:tab] == 'frise' %>" 
             data-tab="frise" 
@@ -90,7 +90,7 @@
     </button>
   </div>
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
-    <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "designers", data: { tabs_search_target: "tabInput" } %>
+    <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "references", data: { tabs_search_target: "tabInput" } %>
     <h2><%= t('search.filters') %></h2>
     <div class="filters">
       <!-- Domaine -->
@@ -159,17 +159,7 @@
                     </div>
                   <% end %>
                   <!-- Tabs Content (Designers / References / Timeline) -->
-                  <div id="designers" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
-                    <div id="designers-container" class="flex-container">
-                      <% @designers.each do |designer| %>
-                        <%= render 'designers/designer_card', designer: designer %>
-                      <% end %>
-                    </div>
-                    <% unless params[:tab] == "frise" %>
-                      <%= paginate @designers, params: { tab: 'designers' } %>
-                    <% end %>
-                  </div>
-                  <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
+                  <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
                     <div id="oeuvres-container" class="flex-container">
                       <% @oeuvres.each do |oeuvre| %>
                         <%= render 'oeuvres/oeuvre_card', oeuvre: oeuvre %>
@@ -177,6 +167,16 @@
                     </div>
                     <% unless params[:tab] == "frise" %>
                       <%= paginate @oeuvres, params: { tab: 'references' } %>
+                    <% end %>
+                  </div>
+                  <div id="designers" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
+                    <div id="designers-container" class="flex-container">
+                      <% @designers.each do |designer| %>
+                        <%= render 'designers/designer_card', designer: designer %>
+                      <% end %>
+                    </div>
+                    <% unless params[:tab] == "frise" %>
+                      <%= paginate @designers, params: { tab: 'designers' } %>
                     <% end %>
                   </div>
                   <div id="frise" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">

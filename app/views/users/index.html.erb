@@ -99,6 +99,7 @@
           <th class="sortable">Certifié</th>
           <th class="sortable">BAN</th>
           <th class="sortable">Date de création</th>
+          <th class="sortable">Inscrit depuis</th>
         </tr>
       </thead>
       <tbody>
@@ -111,7 +112,26 @@
             <td><%= user.statut %></td>
             <td><%= user.etablissement&.name %></td>
             <td><%= user.how_did_you_hear %></td>
-            <td><%= user.confirmed? ? 'Oui' : 'Non' %></td>
+            <td>
+              <% if user.confirmed? %>
+                <span style="color: green; font-weight: bold;">Oui</span>
+              <% else %>
+                Non 
+                <% if user.admin_relance_sent? %>
+                  <button class="btn btn-sm btn-outline-secondary" style="margin-left: 5px;" disabled title="Relance déjà envoyée">
+                    Relancé
+                  </button>
+                <% else %>
+                  <%= button_to admin_resend_confirmation_user_path(user), 
+                    method: :post, 
+                    class: "btn btn-sm btn-outline-primary", 
+                    style: "margin-left: 5px;",
+                    title: "Renvoyer l'email de confirmation" do %>
+                    Relancer
+                  <% end %>
+                <% end %>
+              <% end %>
+            </td>
             <td>
               <% if current_user.admin? %>
                 <% if user.certified? %>
@@ -153,6 +173,7 @@
               <% end %>
             </td>
             <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
+            <td><%= pluralize((Date.today - user.created_at.to_date).to_i, 'jour.s') %></td>
           </tr>
         <% end %>
       </tbody>

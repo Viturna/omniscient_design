@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :users, only: :omniauth_callbacks, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
   # ---- ADMIN ----
   namespace :admin do
     get 'suivi_references/index'
@@ -16,7 +19,7 @@ Rails.application.routes.draw do
   end
 
   get 'frise/oeuvres', to: 'search#frise_oeuvres'
- 
+
 
   # ---- LOCALISATION ----
   scope "(:locale)", locale: /fr|en/ do
@@ -25,7 +28,7 @@ Rails.application.routes.draw do
     root 'oeuvres#index'
 
     # Routes Devise
-    devise_for :users, controllers: {
+    devise_for :users, skip: :omniauth_callbacks, controllers: {
       sessions: 'users/sessions',
       registrations: 'users/registrations',
       passwords: 'users/passwords'
@@ -42,6 +45,7 @@ Rails.application.routes.draw do
         patch :unban
         patch :certify
         patch :uncertify
+        post :admin_resend_confirmation
       end
     end
     resources :notifications, only: [:index, :show, :destroy]

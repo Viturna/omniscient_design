@@ -83,3 +83,10 @@ gem 'bundler-audit', require: false
 # S3
 gem 'aws-sdk-s3', require: false
 gem "active_storage_validations", "~> 3.0"
+
+# Google AUTH
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
+
+# Apple AUTH
+gem 'omniauth-apple'

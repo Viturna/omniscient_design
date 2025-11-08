@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_06_190718) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -346,6 +346,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_190718) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin_relance_sent", default: false, null: false
     t.boolean "banned"
     t.boolean "certified"
     t.datetime "confirmation_sent_at"
@@ -360,6 +361,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_190718) do
     t.string "how_did_you_hear"
     t.string "lastname"
     t.string "profile_image"
+    t.string "provider"
     t.string "pseudo"
     t.string "referral_code"
     t.datetime "remember_created_at"
@@ -368,6 +370,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_06_190718) do
     t.boolean "rgpd_consent"
     t.string "role"
     t.string "statut"
+    t.string "uid"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

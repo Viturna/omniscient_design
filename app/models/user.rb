@@ -3,7 +3,8 @@ class User < ApplicationRecord
 
   # Devise
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+         :recoverable, :rememberable, :validatable, :confirmable,
+         :omniauthable, omniauth_providers: [:google_oauth2, :apple]
 
   # Attributs
   attribute :banned, :boolean, default: false
@@ -46,7 +47,19 @@ class User < ApplicationRecord
   has_many :rejected_oeuvres, dependent: :destroy
   has_many :rejected_designers, dependent: :destroy
 
-  # Méthodes
+  # --- Méthodes ---
+
+  # Méthode standard Devise pour retrouver un utilisateur via OmniAuth
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first
+  end
+
+  # Surcharge Devise : le mot de passe n'est pas requis si l'utilisateur vient d'un provider (Google)
+  def password_required?
+    return false if provider.present?
+    super
+  end
+
   def certified?
     self.certified
   end
@@ -58,9 +71,11 @@ class User < ApplicationRecord
   def banned?
     banned
   end
+
   def full_name
     "#{firstname} #{lastname}".strip
   end
+
   private
 
   # Génération d’un code de parrainage unique

@@ -5,6 +5,7 @@ class Admin::DashboardController <  ApplicationController
   def index
     @current_page = 'dashboard'
     @users = User.all
+    @nb_etablissements_actifs = User.joins(:etablissement).distinct.count('etablissements.id')
   end
 
   def suivi_references

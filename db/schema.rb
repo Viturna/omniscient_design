@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_10_205011) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_10_232502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -379,6 +379,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_10_205011) do
     t.index ["studio_id"], name: "index_studio_countries_on_studio_id"
   end
 
+  create_table "studio_images", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "credit"
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["studio_id"], name: "index_studio_images_on_studio_id"
+  end
+
   create_table "studios", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "creations_majeures"
@@ -488,6 +496,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_10_205011) do
   add_foreign_key "rejected_oeuvres", "users"
   add_foreign_key "studio_countries", "countries"
   add_foreign_key "studio_countries", "studios"
+  add_foreign_key "studio_images", "studios"
   add_foreign_key "studios", "users"
   add_foreign_key "studios", "users", column: "validated_by_user_id"
   add_foreign_key "studios_domaines", "domaines"

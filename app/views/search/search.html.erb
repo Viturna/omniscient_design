@@ -86,7 +86,7 @@
           data-tab="studios" 
           data-tabs-search-target="tab" 
           data-action="click->tabs-search#switch">
-      <%= t('global.studios', default: 'Studios') %> (<%= @studios.total_count %>)
+      <%= t('global.studios', default: 'Studios') %> (<%= Studio.where(validation: true).count %>)
     </button>
     <button class="tab <%= 'active' if params[:tab] == 'frise' %>" 
             data-tab="frise" 
@@ -198,7 +198,6 @@
                   <div id="frise" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
                     <h2><%= t('global.references') %></h2>
                     <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
-                      <%# <hr class="timeline-hr"> %>
                       <% @timeline_years.each do |year| %>
                         <div class="timeline-item">
                           <div class="oeuvres">
@@ -240,7 +239,6 @@
                     </div>
                     <h2><%= t('global.designers') %></h2>
                     <div class="timeline"  data-tabs-search-target="timeline" data-controller="timeline">
-                      <%# <hr class="timeline-hr"> %>
                       <% @timeline_years.each do |year| %>
                         <div class="timeline-item">
                           <div class="oeuvres">
@@ -270,6 +268,48 @@
                                     <% else %>
                                       <%# Fallback : une div vide avec une couleur ou sans image %>
                                       <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
+                                    <% end %>
+                                  <% end %>
+                                <% end %>
+                              <% end %>
+                            </div>
+                            <div class="oeuvre empty"></div>
+                            <div class="year"><%= year %></div>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                    <h2>Studios</h2>
+                    <div class="timeline"  data-tabs-search-target="timeline" data-controller="timeline">
+                      <% @timeline_years.each do |year| %>
+                        <div class="timeline-item">
+                          <div class="oeuvres">
+                            <div class="oeuvres-container">
+                              <% studios_year = @studios.select { |d| d.date_creation.to_i == year } %>
+                              <% if studios_year.size > 1 %>
+                                <div class="oeuvres-counter" data-controller="oeuvres-counter">
+                                  <span class="circle-with-number" data-action="click->oeuvres-counter#toggle">+<%= studios_year.size %></span>
+                                  <div class="hidden-oeuvres" data-oeuvres-counter-target="hiddenOeuvres" style="display: none;">
+                                    <% studios_year.each do |studio| %>
+                                      <%= link_to studio, class: "oeuvre-point" do %>
+                                        <% if studio.studio_images.first&.file&.attached? %>
+                                          <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
+                                        <% else %>
+                                          <%# Fallback : une div vide avec une couleur ou sans image %>
+                                          <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
+                                        <% end %>
+                                      <% end %>
+                                    <% end %>
+                                  </div>
+                                </div>
+                              <% else %>
+                                <% studios_year.each do |studio| %>
+                                  <%= link_to studio, class: "oeuvre-point" do %>
+                                    <% if studio.studio_images.first&.file&.attached? %>
+                                      <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
+                                    <% else %>
+                                      <%# Fallback : une div vide avec une couleur ou sans image %>
+                                      <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
                                     <% end %>
                                   <% end %>
                                 <% end %>

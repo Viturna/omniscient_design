@@ -4,6 +4,7 @@ class Studio < ApplicationRecord
 
   validates :nom, presence: true
 
+  has_many :studio_images, dependent: :destroy
 
   has_many :studios_domaines, dependent: :destroy
   has_many :domaines, through: :studios_domaines

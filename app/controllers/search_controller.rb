@@ -166,7 +166,7 @@ class SearchController < ApplicationController
                         .order(:date_naissance)
                       
     @studios = Studio.where(validation: true)
-                        .select(:id, :nom, :date_creation, :slug)
+                        .select(:id, :nom, :date_creation,:image, :slug)
                         .includes(:domaines, :countries)
                         .order(:date_creation)
   else

@@ -1,0 +1,111 @@
+<div data-controller="progress-form">
+  <section class="top-header">
+    <%= link_to add_elements_path do %>
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+      </svg>
+    <% end %>
+    <p class="subtitle-top"><%= t('add_studio.subtitle_top', default: "Contribuer") %></p>
+    <h1><%= t('add_studio.main_title', default: "Ajouter un studio") %></h1>
+    <p class="subtitle"><%= t('add_studio.subtitle', default: "Partagez un studio de design marquant.") %></p>
+    <div class="progress-container-form">
+      <div class="progress-bar-form" data-progress-form-target="progressBar"></div>
+      <span class="progress-percent-form" data-progress-form-target="progressPercent">0%</span>
+    </div>
+  </section>
+  <section class="grid-1" style="background-color:#202020; color:#FFF; min-height: 100vh;">
+    <%= render "form", studio: @studio %>
+  </section>
+</div>
+<script>
+  document.addEventListener("turbo:load", () => {
+    let currentStep = 1;
+    const steps = document.querySelectorAll(".form-step");
+    if (steps.length === 0) return;
+
+    function showStep(step) {
+      steps.forEach((el) => (el.style.display = "none"));
+      const stepElement = document.querySelector(`[data-step="${step}"]`);
+      if (stepElement) stepElement.style.display = "block";
+    }
+
+    function showError(message) {
+      const errorMessageElement = document.querySelector(".error-message");
+      if (!errorMessageElement) return;
+      errorMessageElement.textContent = message;
+      errorMessageElement.style.display = "block";
+    }
+
+    function hideError() {
+      const errorMessageElement = document.querySelector(".error-message");
+      if (errorMessageElement) errorMessageElement.style.display = "none";
+    }
+
+    // Navigation SUIVANT
+    document.querySelectorAll(".next-step").forEach((button) => {
+      button.addEventListener("click", function () {
+        // Étape 2 : Vérification du nom du studio
+        if (currentStep === 2) {
+          const nomInput = document.querySelector("input[name='studio[nom]']");
+          if (!nomInput) { // Sécurité si l'input n'existe pas sur la page
+             currentStep++;
+             showStep(currentStep);
+             return;
+          }
+          const nom = nomInput.value.trim();
+
+          if (nom === "") {
+            showError("Veuillez entrer le nom du studio.");
+            return;
+          }
+
+          hideError();
+
+          // AJAX : Vérifier si le studio existe déjà
+          fetch(`/studios/check_existence?nom=${encodeURIComponent(nom)}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.exists) {
+                if (data.edit_path) {
+                  // Si existe mais non validé -> on propose de l'éditer
+                  window.location.href = data.edit_path;
+                } else {
+                  // Si existe et validé -> erreur bloquante
+                  showError("Ce studio existe déjà et est validé.");
+                }
+              } else {
+                // N'existe pas -> on continue
+                currentStep++;
+                if (currentStep > steps.length) currentStep = steps.length;
+                showStep(currentStep);
+              }
+            })
+            .catch(error => {
+               console.error("Erreur lors de la vérification d'existence:", error);
+               // En cas d'erreur technique, on laisse passer (ou on affiche un message générique)
+               currentStep++;
+               showStep(currentStep);
+            });
+
+        } else {
+          // Autres étapes -> passage simple
+          currentStep++;
+          if (currentStep > steps.length) currentStep = steps.length;
+          showStep(currentStep);
+        }
+      });
+    });
+
+    // Navigation PRÉCÉDENT
+    document.querySelectorAll(".prev-step").forEach((button) => {
+      button.addEventListener("click", function () {
+        currentStep--;
+        if (currentStep < 1) currentStep = 1;
+        showStep(currentStep);
+      });
+    });
+
+    // Initialisation
+    showStep(currentStep);
+  });
+</script>

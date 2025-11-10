@@ -9,6 +9,7 @@ class List < ApplicationRecord
   has_many :list_items, dependent: :destroy
   has_many :oeuvres, through: :list_items, source: :listable, source_type: 'Oeuvre'
   has_many :designers, through: :list_items, source: :listable, source_type: 'Designer'
+  has_many :studios, through: :list_items, source: :listable, source_type: 'Studio'
 
   # Éditeurs et visiteurs
   has_many :list_editors, dependent: :destroy

@@ -84,104 +84,126 @@
 <section class="grid-1">
   <h2>Membres inscrits sur le site</h2>
   <p>Il y a actuellement <%= @users.total_count %> membres sur le site</p>
-  <div class="table-wrapper" >
-    <table id="members-table">
-      <thead>
-        <tr>
-          <th>Prénom</th>
-          <th>Nom de famille</th>
-          <th>Email</th>
-          <th>Pseudo</th>
-          <th class="sortable">Statut</th>
-          <th class="sortable">Établissement</th>
-          <th class="sortable">Via</th>
-          <th class="sortable">Confirmé</th>
-          <th class="sortable">Certifié</th>
-          <th class="sortable">BAN</th>
-          <th class="sortable">Date de création</th>
-          <th class="sortable">Inscrit depuis</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
+  <div class="search-bar-container" style="margin-bottom: 20px;">
+    <%= form_with url: users_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px;" do |f| %>
+      <%= f.text_field :query, 
+            value: params[:query], 
+            placeholder: "Rechercher par nom, email, établissement...", 
+            class: "form-control" %>
+      <%= f.submit "Rechercher", class: "btn btn-primary" %>
+      <% if params[:query].present? %>
+        <%= link_to "Effacer", users_path, class: "btn btn-secondary" %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= turbo_frame_tag "members_table" do %>
+    <div class="table-wrapper" >
+      <table id="members-table">
+        <thead>
           <tr>
-            <td><%= user.firstname %></td>
-            <td><%= user.lastname %></td>
-            <td><%= user.email %></td>
-            <td><%= user.pseudo %></td>
-            <td><%= user.statut %></td>
-            <td><%= user.etablissement&.name %></td>
-            <td><%= user.how_did_you_hear %></td>
-            <td>
-              <% if user.confirmed? %>
-                <span style="color: green; font-weight: bold;">Oui</span>
-              <% else %>
-                Non 
-                <% if user.admin_relance_sent? %>
-                  <button class="btn btn-sm btn-outline-secondary" style="margin-left: 5px;" disabled title="Relance déjà envoyée">
-                    Relancé
-                  </button>
+            <th>Prénom</th>
+            <th>Nom de famille</th>
+            <th>Email</th>
+            <th>Pseudo</th>
+            <th class="sortable">Statut</th>
+            <th class="sortable">Établissement</th>
+            <th class="sortable">Niveau d'études</th>
+            <th class="sortable">Via</th>
+            <th class="sortable">Confirmé</th>
+            <th class="sortable">Certifié</th>
+            <th class="sortable">BAN</th>
+            <th class="sortable">Date de création</th>
+            <th class="sortable">Inscrit depuis</th>
+            <th class="sortable">Total Visites</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= user.firstname %></td>
+              <td><%= user.lastname %></td>
+              <td><%= user.email %></td>
+              <td><%= user.pseudo %></td>
+              <td><%= user.statut %></td>
+              <td><%= user.etablissement&.name %></td>
+              <td><%= user.study_level %></td>
+              <td><%= user.how_did_you_hear %></td>
+              <td>
+                <% if user.confirmed? %>
+                  <span style="color: green; font-weight: bold;">Oui</span>
                 <% else %>
-                  <%= button_to admin_resend_confirmation_user_path(user), 
+                  Non 
+                  <% if user.admin_relance_sent? %>
+                    <button class="btn btn-sm btn-outline-secondary" style="margin-left: 5px;" disabled title="Relance déjà envoyée">
+                      Relancé
+                    </button>
+                  <% else %>
+                    <%= button_to admin_resend_confirmation_user_path(user), 
                     method: :post, 
                     class: "btn btn-sm btn-outline-primary", 
                     style: "margin-left: 5px;",
                     title: "Renvoyer l'email de confirmation" do %>
-                    Relancer
+                      Relancer
+                    <% end %>
                   <% end %>
                 <% end %>
-              <% end %>
-            </td>
-            <td>
-              <% if current_user.admin? %>
-                <% if user.certified? %>
-                  <%= link_to uncertify_user_path(user),
+              </td>
+              <td>
+                <% if current_user.admin? %>
+                  <% if user.certified? %>
+                    <%= link_to uncertify_user_path(user),
                     data: { turbo_method: :patch, turbo_confirm: 'Retirer la certification de cet utilisateur ?' },
 
                     class: "btn btn-warning btn-sm" do %>
-                    Décertifier
-                  <% end %>
-                <% else %>
-                  <%= link_to certify_user_path(user),
+                      Décertifier
+                    <% end %>
+                  <% else %>
+                    <%= link_to certify_user_path(user),
                       data: { turbo_method: :patch, turbo_confirm: 'Certifier cet utilisateur ?' },
 
                       class: "btn btn-primary btn-sm" do %>
-                    Certifier
+                      Certifier
+                    <% end %>
                   <% end %>
+                <% else %>
+                  <%= user.certified? ? 'Oui' : 'Non' %>
                 <% end %>
-              <% else %>
-                <%= user.certified? ? 'Oui' : 'Non' %>
-              <% end %>
-            </td>
-            <td>
-              <% if current_user.admin? %>
-                <% if user.banned? %>
-                  <%= link_to unban_user_path(user),
+              </td>
+              <td>
+                <% if current_user.admin? %>
+                  <% if user.banned? %>
+                    <%= link_to unban_user_path(user),
                   data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir débannir cet utilisateur ?" },
 
                   class: "btn btn-success btn-sm" do %>
-                    <i class="fa fa-unlock"></i> Débannir
-                  <% end %>
-                <% else %>
-                  <%= link_to ban_user_path(user),
+                      <i class="fa fa-unlock"></i> Débannir
+                    <% end %>
+                  <% else %>
+                    <%= link_to ban_user_path(user),
                   data: { turbo_method: :patch, turbo_confirm: "Êtes-vous sûr de vouloir bannir cet utilisateur ?" },
 
                   class: "btn btn-danger btn-sm" do %>
-                    <i class="fa fa-ban"></i> Bannir l'utilisateur
+                      <i class="fa fa-ban"></i> Bannir l'utilisateur
+                    <% end %>
                   <% end %>
                 <% end %>
-              <% end %>
-            </td>
-            <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
-            <td><%= pluralize((Date.today - user.created_at.to_date).to_i, 'jour.s') %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-  <div class="pagination-controls" style="margin-top: 20px; text-align: center;">
-    <%= paginate @users %>
-  </div>
+              </td>
+              <td><%= user.created_at.strftime('%d/%m/%Y') %></td>
+              <td><%= pluralize((Date.today - user.created_at.to_date).to_i, 'jour.s') %></td>
+              <td>
+                <%= link_to user.daily_visits.size, user_visits_path(user),
+      style: "text-decoration: underline; color: inherit;",
+      title: "Voir le détail des visites",
+      data: { turbo_frame: "_top" } %>  </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination-controls" style="margin-top: 20px; text-align: center;">
+      <%= paginate @users %>
+    </div>
+  <%end%>
   <h2>Carte des membres par géolocalisation</h2>
   <div id="map" style="height: 600px;"></div>
 </section>

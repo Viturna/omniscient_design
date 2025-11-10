@@ -1,14 +1,28 @@
-<div class="card ad-card">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2941773271062587"
-       crossorigin="anonymous"></script>
-  <ins class="adsbygoogle"
-       style="display:block; min-height:90dvh"
-       data-ad-format="fluid"
-       data-ad-layout-key="-6i+ei+43-7l-j"
-       data-ad-client="ca-pub-2941773271062587"
-       data-ad-slot="4470518656"></ins>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-
-</div>
+<% ad ||= ads_data.sample %>
+<%= link_to ad[:link], target: "_blank", class: "ad-card-link" do %>
+  <div class="card ad-card">
+    <div class="bg-card">
+      <div class="bg-img-card card-slider-wrapper">
+        <div class="card-slider-slides">
+          <div class="card-slide-image active" style="background-color: <%= ad[:bg_color] %>; background-image: url('<%= asset_path(ad[:image]) %>'); background-size: contain; background-position: center; height: 100%; width: 100%; background-repeat: no-repeat;"></div>
+        </div>
+        <div class="flex-info-card ads">
+          <div class="info-card-dark">
+            <div class="small-circle" style="background-color: #FFF;"></div>
+            Sponsorisé
+          </div>
+          <div class="button">
+            En savoir plus →
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-text-card">
+      <p class="subtitle-card">
+        Sponsorisé
+      </p>
+      <h2 class="title-card"><%= ad[:title] %></h2>
+      <p class="description-card description-card-home"><%= ad[:description] %></p>
+    </div>
+  </div>
+<% end %>

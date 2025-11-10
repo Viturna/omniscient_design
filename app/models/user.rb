@@ -9,9 +9,48 @@ class User < ApplicationRecord
   # Attributs
   attribute :banned, :boolean, default: false
 
+  validates :password, format: {
+    with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}\z/,
+    message: "doit contenir au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial"
+  }, if: :password_required?
   # Statuts valides
   STATUTS = %w[etudiant enseignant entreprise artiste autre]
 
+  STUDY_LEVELS = [
+    'Seconde Générale/Techno',
+    'Seconde Professionnelle',
+    'Première Générale',
+    'Première Générale (Option Arts)',
+    'Première STD2A',
+    'Première Professionnelle',
+    'Terminale Générale',
+    'Terminale Générale (Option Arts)',
+    'Terminale STD2A',
+    'Terminale Professionnelle',
+    'BMA (Brevet des Métiers d\'Art)',
+    'Classe Prépa (CPGE)',
+    'DNMADE Année 1',
+    'DNMADE Année 2',
+    'DNMADE Année 3',
+    'BTS Année 1',
+    'BTS Année 2',
+    'BUT Année 1',
+    'BUT Année 2',
+    'BUT Année 3',
+    'Licence 1',
+    'Licence 2',
+    'Licence 3',
+    'Licence Professionnelle',
+    'DSAA Année 1',
+    'DSAA Année 2',
+    'Master 1 (Université/École)',
+    'Master 2 (Université/École)',
+    'Diplôme Supérieur d\'École d\'Art (Bac+5)',
+    'Mastère Spécialisé (Bac+6)',
+    'Doctorat',
+    'Autre'
+  ]
+  validates :study_level, inclusion: { in: STUDY_LEVELS, message: "n'est pas valide" }, if: -> { statut == 'etudiant' && study_level.present? }
   # Validations
   validates :rgpd_consent, acceptance: true
   validates :pseudo, presence: true, uniqueness: { message: I18n.t('user.pseudo_taken') }
@@ -21,21 +60,22 @@ class User < ApplicationRecord
 
   validate :no_ban_words_in_names
 
+  has_many :daily_visits, dependent: :destroy
   # Associations
   belongs_to :etablissement, optional: true
 
-  has_one :referral, foreign_key: 'referee_id'
-  has_many :referrals_as_referrer, class_name: 'Referral', foreign_key: 'referrer_id'
-  has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id'
+  has_one :referral, foreign_key: 'referee_id', dependent: :destroy
+  has_many :referrals_as_referrer, class_name: 'Referral', foreign_key: 'referrer_id', dependent: :destroy
+  has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id', dependent: :destroy
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
 
-  has_many :bug_reports
+  has_many :bug_reports, dependent: :nullify
   has_many :lists, dependent: :destroy
-  has_many :oeuvres
-  has_many :designers
+  has_many :oeuvres, dependent: :nullify
+  has_many :designers, dependent: :nullify
   has_many :notifications, dependent: :destroy
 
-  has_many :feedbacks
+  has_many :feedbacks, dependent: :nullify
   has_many :suivis, dependent: :destroy
 
   has_many :list_editors, dependent: :destroy

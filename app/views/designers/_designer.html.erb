@@ -1,123 +1,128 @@
 <style>
-  .popup .popup-content form{
-  padding: 0px;
+  .popup .popup-content form {
+    padding: 0px;
   }
-  /* filepath: app/assets/stylesheets/application.scss */
+  /* Styles pour les Modals natifs */
   .modal {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  align-items:center;
-  justify-content:center;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  outline: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0;
+    background-color: rgba(0, 0, 0, 0.5);
   }
-
-  .modal.show {
-  display: flex;
-  }
-
+  .modal.show { display: flex; }
   .modal-dialog {
-  position: relative;
-  width: auto;
-  margin: 10px;
-  pointer-events: none;
+    position: relative;
+    width: auto;
+    margin: 10px;
+    pointer-events: none;
   }
-
   .modal-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  pointer-events: auto;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.3rem;
-  outline: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0;
   }
-
   .modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
   }
-
   .modal-body {
-  position: relative;
-  flex: 1 1 auto;
-  padding: 24px;
+    position: relative;
+    flex: 1 1 auto;
+    padding: 24px;
   }
-
   .modal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 1rem;
-  border-top: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
   }
   #closeImageModal {
     color: #202020;
     font-size: 24px;
   }
 </style>
-<%
-  raw_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp"
-  if asset_exists?(raw_path)
-    designer_image_path = asset_path(raw_path)
-  else
-    designer_image_path = designer.image
-  end
-%>
 <div class="body-show" id="<%= dom_id designer %>" data-controller="reference-scroll share">
-  <% if designer_image_path.present? %>
-    <div class="header-show" style="background-image: url('<%= asset_path(designer_image_path) %>'); ">
-    <%else%>
+  <% if designer.designer_images.any? %>
+    <div class="header-show" style="background-image: url('<%= url_for(designer.designer_images.first.file) %>');" data-controller="slider" data-slider-update-background-value="true">
+    <% else %>
       <div class="header-show" style="background-color:#FFF; ">
       <% end %>
-      <% if designer_image_path.present? %>
-        <img src="<%= designer_image_path %>" alt="<%= designer.nom_designer %>" class="top-img-header" id="openImagePopup">
-      <%end%>
+      <div class="slider-slides">
+        <% if designer.designer_images.any? %>
+          <% designer.designer_images.each_with_index do |designer_image, index| %>
+            <img src="<%= url_for(designer_image.file) %>" 
+                 alt="<%= designer.nom_designer %> - Image <%= index + 1 %>" 
+                 class="top-img-header image-modal-trigger <%= 'active' if index == 0 %>" 
+                 data-slider-target="slide">
+          <% end %>
+        <% else %>
+        <% end %>
+      </div>
+      <% if designer.designer_images.count > 1 %>
+        <button class="slider-nav prev" data-action="click->slider#prev" title="Précédent">
+          <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
+          </svg>
+        </button>
+        <button class="slider-nav next" data-action="click->slider#next" title="Suivant">
+          <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
+          </svg>
+        </button>
+        <div class="slider-dots">
+          <% designer.designer_images.each_with_index do |designer_image, index| %>
+            <button class="slider-dot <%= 'active' if index == 0 %>" 
+                    data-action="click->slider#switchSlide" 
+              data-slider-index-value="<%= index %>" 
+              data-slider-target="dot"></button>
+          <% end %>
+        </div>
+      <% end %>
       <% if designer.validation %>
         <div class="flex-back-btn">
           <button id="back-btn"
-          data-controller="back" 
-          data-back-fallback-url-value="https://omniscient-design.fr/designers" 
-          data-action="click->back#handleClick" data-no-popup>
+                  data-controller="back" 
+                  data-back-fallback-url-value="https://omniscient-design.fr/designers" 
+                  data-action="click->back#handleClick" 
+            data-no-popup>
             <div class="circle-back">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
-              </svg>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/></svg>
             </div>
           </button>
           <%= link_to designers_path do %>
             <button id="home-btn" data-no-popup>
               <div class="circle-back">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_197)">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C24.8307 0 32 7.16933 32 16C32 24.8307 24.8307 32 16 32C7.16933 32 0 24.8307 0 16C0 7.16933 7.16933 0 16 0ZM17.968 19.94C19.2853 19.4 20.3107 18.3253 20.7893 16.9853L24 8L15.104 11.1827C13.7627 11.6627 12.6893 12.6907 12.1493 14.008L8.06267 24L17.968 19.94ZM17.8053 14.2253C18.54 14.96 18.54 16.1533 17.8053 16.8867C17.0707 17.6213 15.8787 17.6213 15.144 16.8867C14.4093 16.1533 14.4093 14.96 15.144 14.2253C15.8787 13.4907 17.0707 13.4907 17.8053 14.2253Z" fill="white"/>
-                  </g>
-                </svg>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_3261_197)"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C24.8307 0 32 7.16933 32 16C32 24.8307 24.8307 32 16 32C7.16933 32 0 24.8307 0 16C0 7.16933 7.16933 0 16 0ZM17.968 19.94C19.2853 19.4 20.3107 18.3253 20.7893 16.9853L24 8L15.104 11.1827C13.7627 11.6627 12.6893 12.6907 12.1493 14.008L8.06267 24L17.968 19.94ZM17.8053 14.2253C18.54 14.96 18.54 16.1533 17.8053 16.8867C17.0707 17.6213 15.8787 17.6213 15.144 16.8867C14.4093 16.1533 14.4093 14.96 15.144 14.2253C15.8787 13.4907 17.0707 13.4907 17.8053 14.2253Z" fill="white"/></g></svg>
               </div>
             </button>
-          <%end%>
+          <% end %>
         </div>
-        <% unless !user_signed_in? %>
+        <% if user_signed_in? %>
           <div class="flex-right-btn">
             <% if current_user.certified? %>
-              <%= link_to edit_designer_path(designer) do%>
+              <%= link_to edit_designer_path(designer) do %>
                 <div class="circle" data-no-popup>
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.9998 8.00054C15.5305 8.00054 15.9998 8.46988 15.9998 9.00054C15.9998 9.55254 15.5518 10.0005 14.9998 10.0005C12.9932 10.0005 4.6665 10.0005 4.6665 10.0005V26.0005H27.3332V14.3339C27.3332 13.7819 27.7812 13.3339 28.3332 13.3339C28.8852 13.3339 29.3332 13.7819 29.3332 14.3339V26.6672C29.3332 27.4952 28.6372 28.0005 27.9998 28.0005H3.99984C3.35984 28.0005 2.6665 27.4952 2.6665 26.6672V9.33388C2.6665 8.69254 3.17317 8.00054 3.99984 8.00054H14.9998ZM12.3185 16.7019C10.9252 20.7059 10.6678 21.3019 10.6678 21.8219C10.6678 22.4099 11.1812 22.6565 11.5038 22.6565C11.8665 22.6565 12.9812 22.2552 16.6092 20.9912L12.3185 16.7019ZM13.5025 15.5165L17.7958 19.8099L29.0065 8.60988C29.2238 8.39254 29.3332 8.10721 29.3332 7.82054C29.3332 7.53654 29.2238 7.25121 29.0065 7.03254C28.2332 6.26188 27.0625 5.08988 26.2878 4.31788C26.0705 4.10054 25.7852 3.99121 25.4998 3.99121C25.2158 3.99121 24.9292 4.10054 24.7105 4.31788L13.5025 15.5165Z" fill="white"/>
-                  </svg>
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.9998 8.00054C15.5305 8.00054 15.9998 8.46988 15.9998 9.00054C15.9998 9.55254 15.5518 10.0005 14.9998 10.0005C12.9932 10.0005 4.6665 10.0005 4.6665 10.0005V26.0005H27.3332V14.3339C27.3332 13.7819 27.7812 13.3339 28.3332 13.3339C28.8852 13.3339 29.3332 13.7819 29.3332 14.3339V26.6672C29.3332 27.4952 28.6372 28.0005 27.9998 28.0005H3.99984C3.35984 28.0005 2.6665 27.4952 2.6665 26.6672V9.33388C2.6665 8.69254 3.17317 8.00054 3.99984 8.00054H14.9998ZM12.3185 16.7019C10.9252 20.7059 10.6678 21.3019 10.6678 21.8219C10.6678 22.4099 11.1812 22.6565 11.5038 22.6565C11.8665 22.6565 12.9812 22.2552 16.6092 20.9912L12.3185 16.7019ZM13.5025 15.5165L17.7958 19.8099L29.0065 8.60988C29.2238 8.39254 29.3332 8.10721 29.3332 7.82054C29.3332 7.53654 29.2238 7.25121 29.0065 7.03254C28.2332 6.26188 27.0625 5.08988 26.2878 4.31788C26.0705 4.10054 25.7852 3.99121 25.4998 3.99121C25.2158 3.99121 24.9292 4.10054 24.7105 4.31788L13.5025 15.5165Z" fill="white"/></svg>
                 </div>
-              <%end%>
-            <%end%>
+              <% end %>
+            <% end %>
             <button id="openPopupSave" style="border:none; background:none;" data-no-popup>
               <div class="circle">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -127,28 +132,24 @@
             </button>
           </div>
         <% end %>
-      <%else%>
+      <% else %>
         <div class="circle-back" data-no-popup>
           <svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M31 14.3252L1.86772 14.3252M1.86772 14.3252L12.7923 26.6504M1.86772 14.3252L12.7923 2" stroke="white" stroke-width="2" stroke-linecap="square"/>
           </svg>
         </div>
-        <% unless !user_signed_in? %>
+        <% if user_signed_in? %>
           <div class="circle-save" data-no-popup>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" fill="white"/>
             </svg>
           </div>
         <% end %>
-      <%end%>
+      <% end %>
       <div class="info-card-first-content">
         <%= link_to search_path(:tab => "frise", :start_year => designer.date_naissance, :end_year => designer.date_naissance) do %>
           <p class="info-card-dark info-header-show" data-no-popup>
-            <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clip-path="url(#clip0_3261_191)">
-                <path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/>
-              </g>
-            </svg>
+            <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_3261_191)"><path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/></g></svg>
             <%= designer.date_naissance %>
             <% if designer.date_deces %>
               - <%= designer.date_deces %>
@@ -166,9 +167,7 @@
         <% designer.countries.each do |country| %>
           <%= link_to search_path(tab: "designers", country: country.id) do %>
             <div class="info-card-dark info-header-show" data-no-popup>
-              <span class="flag">
-                <%= country_flag(country.country_numeric) %>
-              </span>
+              <span class="flag"><%= country_flag(country.country_numeric) %></span>
             </div>
           <% end %>
         <% end %>
@@ -181,17 +180,13 @@
         <div class="flex-info">
           <%= link_to search_path(:tab => "frise", :start_year => designer.date_naissance, :end_year => designer.date_naissance) do %>
             <p class="info-card" data-no-popup>
-              <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_3261_191)">
-                  <path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/>
-                </g>
-              </svg>
+              <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_3261_191)"><path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/></g></svg>
               <%= designer.date_naissance %>
               <% if designer.date_deces %>
                 - <%= designer.date_deces %>
               <% end %>
             </p>
-          <%end%>
+          <% end %>
           <% @domaines.each do |domaine| %>
             <%= link_to search_path(:tab => "designers", :domaine => domaine.id) do %>
               <div class="info-card" data-no-popup>
@@ -252,11 +247,10 @@
             <% end %>
           </div>
         <% end %>
-        <%# <p class="text-description-reference italic">Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence.</p> %>
         <h2 class="title-description-reference">Actions</h2>
         <div class="flex-actions">
           <% if designer.validation %>
-            <a href="#" id="shareButton" class="button-circle" data-action="click->share#open">
+            <a href="javascript:void(0)" id="shareButton" class="button-circle" data-action="click->share#open">
               <div class="circle">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_3261_208)">
@@ -266,34 +260,13 @@
               </div>
               <p>Partager</p>
             </a>
-            <%= link_to  new_bug_report_path(url: request.original_url), class: "button-circle" do %>
+            <%= link_to new_bug_report_path(url: request.original_url), class: "button-circle" do %>
               <div class="circle">
-                <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M23.0037 41.2739C33.5799 41.2739 42.1665 32.6873 42.1665 22.1111C42.1665 11.5349 33.5799 2.9502 23.0037 2.9502C12.4294 2.9502 3.84277 11.5349 3.84277 22.1111C3.84277 32.6873 12.4294 41.2739 23.0037 41.2739ZM23.0037 25.9406C22.2102 25.9406 21.5662 25.2966 21.5662 24.5031V13.9614C21.5662 13.1679 22.2102 12.5239 23.0037 12.5239C23.7972 12.5239 24.4412 13.1679 24.4412 13.9614V24.5031C24.4412 25.2966 23.7972 25.9406 23.0037 25.9406ZM22.9999 31.6906C21.9419 31.6906 21.0832 30.8319 21.0832 29.7739C21.0832 28.7159 21.9419 27.8573 22.9999 27.8573C24.0579 27.8573 24.9165 28.7159 24.9165 29.7739C24.9165 30.8319 24.0579 31.6906 22.9999 31.6906Z" fill="white"/>
-                </svg>
+                <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.0037 41.2739C33.5799 41.2739 42.1665 32.6873 42.1665 22.1111C42.1665 11.5349 33.5799 2.9502 23.0037 2.9502C12.4294 2.9502 3.84277 11.5349 3.84277 22.1111C3.84277 32.6873 12.4294 41.2739 23.0037 41.2739ZM23.0037 25.9406C22.2102 25.9406 21.5662 25.2966 21.5662 24.5031V13.9614C21.5662 13.1679 22.2102 12.5239 23.0037 12.5239C23.7972 12.5239 24.4412 13.1679 24.4412 13.9614V24.5031C24.4412 25.2966 23.7972 25.9406 23.0037 25.9406ZM22.9999 31.6906C21.9419 31.6906 21.0832 30.8319 21.0832 29.7739C21.0832 28.7159 21.9419 27.8573 22.9999 27.8573C24.0579 27.8573 24.9165 28.7159 24.9165 29.7739C24.9165 30.8319 24.0579 31.6906 22.9999 31.6906Z" fill="white"/></svg>
               </div>
               <p>Signaler une erreur</p>
             <% end %>
-          <% else %>
-            <div class="button-circle">
-              <div class="circle">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3261_208)">
-                    <path d="M8.33333 11.6667C12.935 11.6667 16.6667 15.3983 16.6667 20C16.6667 24.6017 12.935 28.3333 8.33333 28.3333C3.73167 28.3333 0 24.6017 0 20C0 15.3983 3.73167 11.6667 8.33333 11.6667ZM26.87 31.775C26.7483 32.2767 26.6667 32.7933 26.6667 33.3333C26.6667 37.015 29.6517 40 33.3333 40C37.015 40 40 37.015 40 33.3333C40 29.6517 37.015 26.6667 33.3333 26.6667C31.3917 26.6667 29.66 27.51 28.4417 28.835L19.295 23.9567C18.9117 25.0167 18.38 26.005 17.7233 26.8967L26.87 31.775ZM40 6.66667C40 2.985 37.015 0 33.3333 0C29.6517 0 26.6667 2.985 26.6667 6.66667C26.6667 7.20667 26.7483 7.72333 26.87 8.225L17.7233 13.1033C18.3817 13.995 18.9117 14.9817 19.295 16.0433L28.4417 11.165C29.66 12.49 31.3917 13.3333 33.3333 13.3333C37.015 13.3333 40 10.3483 40 6.66667Z" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-              <p>Partager</p>
-            </div>
-            <div class="button-circle">
-              <div class="circle">
-                <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M23.0037 41.2739C33.5799 41.2739 42.1665 32.6873 42.1665 22.1111C42.1665 11.5349 33.5799 2.9502 23.0037 2.9502C12.4294 2.9502 3.84277 11.5349 3.84277 22.1111C3.84277 32.6873 12.4294 41.2739 23.0037 41.2739ZM23.0037 25.9406C22.2102 25.9406 21.5662 25.2966 21.5662 24.5031V13.9614C21.5662 13.1679 22.2102 12.5239 23.0037 12.5239C23.7972 12.5239 24.4412 13.1679 24.4412 13.9614V24.5031C24.4412 25.2966 23.7972 25.9406 23.0037 25.9406ZM22.9999 31.6906C21.9419 31.6906 21.0832 30.8319 21.0832 29.7739C21.0832 28.7159 21.9419 27.8573 22.9999 27.8573C24.0579 27.8573 24.9165 28.7159 24.9165 29.7739C24.9165 30.8319 24.0579 31.6906 22.9999 31.6906Z" fill="white"/>
-                </svg>
-              </div>
-              <p>Signaler une erreur</p>
-            </div>
-          <%end%>
+          <% end %>
         </div>
         <div class="contribution">
           <h2 class="title-description-reference">Contribution</h2>
@@ -307,16 +280,14 @@
               <% end %>
               <p class="text-contributor">A enrichi votre apprentissage en ajoutant ce/cette designer le <%= I18n.l(designer.created_at, format: :default) %></p>
             </div>
-            <div class="vertical-divider"></div>
-            <div class="box-contributor">
-              <% if @designer.validated_by_user_id.present? %>
+            <% if @designer.validated_by_user_id.present? %>
+              <div class="vertical-divider"></div>
+              <div class="box-contributor">
                 <% user = User.find_by(id: @designer.validated_by_user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
-              <% else %>
-                <span class="contributor">Omniscient Design</span>
-              <% end %>
-              <p class="text-contributor">a validé le/la designer <%= @designer.nom_designer %></p>
-            </div>
+                <p class="text-contributor">a validé le/la designer <%= @designer.nom_designer %></p>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -334,7 +305,7 @@
                     <% if oeuvre.oeuvre_images.first&.file&.attached? %>
                       <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb)) %>');">
                       <% else %>
-                        <div class="oeuvre-card-image" style="">
+                        <div class="oeuvre-card-image" style="background-color: #EEE;">
                         <% end %>
                         <div class="oeuvre-card-content">
                           <p class="oeuvre-designer"><%= oeuvre.designers.map(&:nom_designer).join(', ') %></p>
@@ -355,10 +326,10 @@
                 <%= link_to designer do %>
                   <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
                   <div class="oeuvre-card">
-                    <% if asset_exists?(image_path) %>
-                      <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(image_path) %>');">
+                    <% if designer.designer_images.first&.file&.attached? %>
+                      <div class="oeuvre-card-image" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb)) %>');">
                       <% else %>
-                        <div class="oeuvre-card-image" style="background-image: url('<%= asset_path(designer.image) %>');">
+                        <div class="oeuvre-card-image" style="background-color: #EEE;">
                         <% end %>
                         <div class="oeuvre-card-content">
                           <p class="oeuvre-designer">
@@ -376,17 +347,17 @@
         <% end %>
         <div data-controller="validation-overlay">
           <% if !designer.validation %>
-            <% if current_user.certified? || current_user.admin? %>
+            <% if current_user&.certified? || current_user&.admin? %>
               <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
                 <div class="naviguation">
                   <p class="naviguation-title">Panneau d'administration</p>
                   <div class="naviguation-buttons">
-                    <% if user_signed_in? && current_user.id == designer.user_id || current_user.admin? || current_user.certified?%>
+                    <% if user_signed_in? && (current_user.id == designer.user_id || current_user.admin? || current_user.certified?) %>
                       <%= link_to 'Valider le designer', validate_designer_path(designer), class: 'button'%>
                       <%= link_to 'Modifier le designer', edit_designer_path(designer), class: 'button'%>
                       <a href="#" class="button" data-toggle="modal" data-target="#globalRejectModal"
-                  data-url="<%= reject_designer_path(designer) %>"
-                  data-title="<%= designer.nom_designer %>">
+                         data-url="<%= reject_designer_path(designer) %>"
+                         data-title="<%= designer.nom_designer %>">
                         Supprimer le designer
                       </a>
                     <% end %>
@@ -397,20 +368,20 @@
                   </div>
                 </div>
               </div>
-            <%else%>
+            <% else %>
               <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
                 <div class="naviguation">
                   <p class="naviguation-title">Que souhaitez-vous faire ?</p>
                   <div class="naviguation-buttons">
                     <%= link_to "Ajouter un autre designer", add_elements_path, class: "button" %>
-                    <% if user_signed_in? && current_user.id == designer.user_id || current_user.admin? %>
+                    <% if user_signed_in? && (current_user.id == designer.user_id || current_user.admin?) %>
                       <%= link_to 'Annuler la soumission', cancel_designer_path(designer), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de ce designer ?' } %>
                     <% end %>
                     <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
                   </div>
                 </div>
               </div>
-            <%end%>
+            <% end %>
             <div class="validation" id="validation" data-validation-overlay-target="validation">
               <%= image_tag "logo-white.svg", alt: "", class:"logo-overlay" %>
               <svg width="76" height="73" viewBox="0 0 76 73" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -425,11 +396,9 @@
                 <path d="M27.8206 31L15.4103 42L3.00009 31" stroke="white" stroke-width="3.0207" stroke-linecap="square"/>
               </svg>
             </div>
-            <div class="overlay" id="overlay" data-validation-overlay-target="overlay">
-            </div>
+            <div class="overlay" id="overlay" data-validation-overlay-target="overlay"></div>
           <% end %>
         </div>
-        <%# Popup %>
         <div id="shareModal" class="popup" data-share-target="modal" data-action="click->share#backdropClose">
           <div class="popup-content">
             <div class="top-popup">
@@ -443,24 +412,16 @@
             </div>
             <div class="share-options">
               <button id="shareX" class="share-button" title="Partager sur X" data-action="click->share#shareX" data-share-target="x">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.751 3H20.818L14.118 10.625L22 21H15.828L10.995 14.707L5.464 21H2.394L9.561 12.845L2 3H8.328L12.698 8.752L17.751 3ZM16.675 19.172H18.375L7.404 4.732H5.58L16.675 19.172Z" fill="white"/>
-                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.751 3H20.818L14.118 10.625L22 21H15.828L10.995 14.707L5.464 21H2.394L9.561 12.845L2 3H8.328L12.698 8.752L17.751 3ZM16.675 19.172H18.375L7.404 4.732H5.58L16.675 19.172Z" fill="white"/></svg>
               </button>
               <button id="shareMessages" class="share-button" data-action="click->share#shareMessages" data-share-target="messages" title="Partager par Message">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 2H4C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM17 14H7C6.45 14 6 13.55 6 13C6 12.45 6.45 12 7 12H17C17.55 12 18 12.45 18 13C18 13.55 17.55 14 17 14ZM17 11H7C6.45 11 6 10.55 6 10C6 9.45 6.45 9 7 9H17C17.55 9 18 9.45 18 10C18 10.55 17.55 11 17 11ZM17 8H7C6.45 8 6 7.55 6 7C6 6.45 6.45 6 7 6H17C17.55 6 18 6.45 18 7C18 7.55 17.55 8 17 8Z" fill="white"/>
-                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM17 14H7C6.45 14 6 13.55 6 13C6 12.45 6.45 12 7 12H17C17.55 12 18 12.45 18 13C18 13.55 17.55 14 17 14ZM17 11H7C6.45 11 6 10.55 6 10C6 9.45 6.45 9 7 9H17C17.55 9 18 9.45 18 10C18 10.55 17.55 11 17 11ZM17 8H7C6.45 8 6 7.55 6 7C6 6.45 6.45 6 7 6H17C17.55 6 18 6.45 18 7C18 7.55 17.55 8 17 8Z" fill="white"/></svg>
               </button>
               <button id="shareEmail" data-action="click->share#shareEmail" data-share-target="email" class="share-button" title="Partager par Email">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
-                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/></svg>
               </button>
               <button id="shareWhatsApp" data-action="click->share#shareWhatsApp" data-share-target="whatsapp" class="share-button" title="Partager sur WhatsApp">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19.05 4.91006C18.1332 3.98399 17.0412 3.24973 15.8377 2.75011C14.6341 2.25049 13.3432 1.99552 12.04 2.00006C6.58005 2.00006 2.13005 6.45006 2.13005 11.9101C2.13005 13.6601 2.59005 15.3601 3.45005 16.8601L2.05005 22.0001L7.30005 20.6201C8.75005 21.4101 10.38 21.8301 12.04 21.8301C17.5 21.8301 21.9501 17.3801 21.9501 11.9201C21.9501 9.27006 20.92 6.78006 19.05 4.91006ZM12.04 20.1501C10.56 20.1501 9.11005 19.7501 7.84005 19.0001L7.54005 18.8201L4.42005 19.6401L5.25005 16.6001L5.05005 16.2901C4.2278 14.977 3.79119 13.4593 3.79005 11.9101C3.79005 7.37006 7.49005 3.67006 12.03 3.67006C14.23 3.67006 16.3 4.53006 17.85 6.09006C18.6175 6.85402 19.2257 7.76272 19.6394 8.76348C20.0531 9.76425 20.2641 10.8372 20.26 11.9201C20.28 16.4601 16.58 20.1501 12.04 20.1501ZM16.56 13.9901C16.31 13.8701 15.09 13.2701 14.87 13.1801C14.64 13.1001 14.48 13.0601 14.31 13.3001C14.14 13.5501 13.67 14.1101 13.53 14.2701C13.39 14.4401 13.24 14.4601 12.99 14.3301C12.74 14.2101 11.94 13.9401 11 13.1001C10.26 12.4401 9.77005 11.6301 9.62005 11.3801C9.48005 11.1301 9.60005 11.0001 9.73005 10.8701C9.84005 10.7601 9.98005 10.5801 10.1 10.4401C10.22 10.3001 10.27 10.1901 10.35 10.0301C10.43 9.86006 10.39 9.72006 10.33 9.60006C10.27 9.48006 9.77005 8.26006 9.57005 7.76006C9.37005 7.28006 9.16005 7.34006 9.01005 7.33006H8.53005C8.36005 7.33006 8.10005 7.39006 7.87005 7.64006C7.65005 7.89006 7.01005 8.49006 7.01005 9.71006C7.01005 10.9301 7.90005 12.1101 8.02005 12.2701C8.14005 12.4401 9.77005 14.9401 12.25 16.0101C12.84 16.2701 13.3 16.4201 13.66 16.5301C14.25 16.7201 14.79 16.6901 15.22 16.6301C15.7 16.5601 16.69 16.0301 16.89 15.4501C17.1 14.8701 17.1 14.3801 17.03 14.2701C16.96 14.1601 16.81 14.1101 16.56 13.9901Z" fill="white"/>
-                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.05 4.91006C18.1332 3.98399 17.0412 3.24973 15.8377 2.75011C14.6341 2.25049 13.3432 1.99552 12.04 2.00006C6.58005 2.00006 2.13005 6.45006 2.13005 11.9101C2.13005 13.6601 2.59005 15.3601 3.45005 16.8601L2.05005 22.0001L7.30005 20.6201C8.75005 21.4101 10.38 21.8301 12.04 21.8301C17.5 21.8301 21.9501 17.3801 21.9501 11.9201C21.9501 9.27006 20.92 6.78006 19.05 4.91006ZM12.04 20.1501C10.56 20.1501 9.11005 19.7501 7.84005 19.0001L7.54005 18.8201L4.42005 19.6401L5.25005 16.6001L5.05005 16.2901C4.2278 14.977 3.79119 13.4593 3.79005 11.9101C3.79005 7.37006 7.49005 3.67006 12.03 3.67006C14.23 3.67006 16.3 4.53006 17.85 6.09006C18.6175 6.85402 19.2257 7.76272 19.6394 8.76348C20.0531 9.76425 20.2641 10.8372 20.26 11.9201C20.28 16.4601 16.58 20.1501 12.04 20.1501ZM16.56 13.9901C16.31 13.8701 15.09 13.2701 14.87 13.1801C14.64 13.1001 14.48 13.0601 14.31 13.3001C14.14 13.5501 13.67 14.1101 13.53 14.2701C13.39 14.4401 13.24 14.4601 12.99 14.3301C12.74 14.2101 11.94 13.9401 11 13.1001C10.26 12.4401 9.77005 11.6301 9.62005 11.3801C9.48005 11.1301 9.60005 11.0001 9.73005 10.8701C9.84005 10.7601 9.98005 10.5801 10.1 10.4401C10.22 10.3001 10.27 10.1901 10.35 10.0301C10.43 9.86006 10.39 9.72006 10.33 9.60006C10.27 9.48006 9.77005 8.26006 9.57005 7.76006C9.37005 7.28006 9.16005 7.34006 9.01005 7.33006H8.53005C8.36005 7.33006 8.10005 7.39006 7.87005 7.64006C7.65005 7.89006 7.01005 8.49006 7.01005 9.71006C7.01005 10.9301 7.90005 12.1101 8.02005 12.2701C8.14005 12.4401 9.77005 14.9401 12.25 16.0101C12.84 16.2701 13.3 16.4201 13.66 16.5301C14.25 16.7201 14.79 16.6901 15.22 16.6301C15.7 16.5601 16.69 16.0301 16.89 15.4501C17.1 14.8701 17.1 14.3801 17.03 14.2701C16.96 14.1601 16.81 14.1101 16.56 13.9901Z" fill="white"/></svg>
               </button>
             </div>
             <input type="text" id="shareLink" data-share-target="link" value="" hidden readonly>
@@ -560,67 +521,6 @@
             </div>
           </div>
         </div>
-        <script>
-          document.addEventListener("turbo:load", () => {
-          // Ouvrir le modal
-          document.querySelectorAll('[data-toggle="modal"]').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-              event.preventDefault();
-              const targetModal = document.querySelector(button.getAttribute('data-target'));
-              if (targetModal) {
-                targetModal.classList.add('show');
-                targetModal.style.display = 'block';
-                document.body.classList.add('modal-open');
-              }
-            });
-          });
-
-          // Fermer le modal
-          document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(function(button) {
-            button.addEventListener('click', function() {
-              const modal = button.closest('.modal');
-              if (modal) {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
-                document.body.classList.remove('modal-open');
-              }
-            });
-          });
-
-          // Fermer le modal en cliquant en dehors du contenu
-          document.querySelectorAll('.modal').forEach(function(modal) {
-            modal.addEventListener('click', function(event) {
-              if (event.target === modal) {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
-                document.body.classList.remove('modal-open');
-              }
-            });
-          });
-          });
-          document.addEventListener("turbo:load", () => {
-          const modal = document.querySelector('#globalRejectModal');
-          const form = document.querySelector('#rejectForm');
-          const rejectionField = document.querySelector('#rejectionReasonField');
-
-          document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
-            button.addEventListener('click', function () {
-              const url = button.getAttribute('data-url');
-              const title = button.getAttribute('data-title');
-
-              // Mettre à jour l'URL du formulaire
-              form.setAttribute('action', url);
-
-              // Mettre à jour le titre ou d'autres informations (optionnel)
-              modal.querySelector('.modal-title').textContent = `Refuser l'entrée : ${title}`;
-
-              // Réinitialiser les champs si nécessaire
-              rejectionField.value = '';
-            });
-          });
-          });
-        </script>
-        <!-- Modal image -->
         <div id="imageModal" class="modal">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -628,59 +528,114 @@
                 <span id="closeImageModal" style="cursor:pointer;font-size:1.5rem;">&times;</span>
               </div>
               <div class="modal-body" style="text-align:center;">
-                <img id="modalImage" src="<%= designer_image_path %>" alt="<%= designer.nom_designer %>" style="max-width:100%; max-height:80dvh; height:auto; border-radius:8px;">
+                <%# <img id="modalImage" src="<%= designer_image_path %>" alt="<%= designer.nom_designer %>" style="max-width:100%; max-height:80dvh; height:auto; border-radius:8px;"> %>
               </div>
             </div>
           </div>
         </div>
         <script>
           document.addEventListener("turbo:load", () => {
-          const openBtn = document.getElementById("openImagePopup");
-          const modal = document.getElementById("imageModal");
-          const closeBtn = document.getElementById("closeImageModal");
+            // --- 1. MODALS GÉNÉRIQUES (pour Reject) ---
+            const modalTriggers = document.querySelectorAll('[data-toggle="modal"]');
+            const closeButtons = document.querySelectorAll('.modal .close, .modal .btn-secondary');
+            const modals = document.querySelectorAll('.modal');
 
-          if (openBtn && modal) {
-            // Ouvrir la modal
-            openBtn.addEventListener("click", () => {
-              modal.style.display = "flex";   // <-- rendre visible
-              modal.classList.add("show");
+            modalTriggers.forEach(button => {
+              // Nettoyage des anciens listeners pour éviter les multiples déclenchements
+              const newButton = button.cloneNode(true);
+              button.parentNode.replaceChild(newButton, button);
+
+              newButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                const targetSelector = this.getAttribute('data-target');
+                const targetModal = document.querySelector(targetSelector);
+                if (targetModal) {
+                  targetModal.classList.add('show');
+                  targetModal.style.display = 'block';
+                  document.body.classList.add('modal-open');
+                }
+              });
             });
 
-            // Fermer avec la croix
-            closeBtn.addEventListener("click", () => {
-              modal.style.display = "none";    // <-- cacher
-              modal.classList.remove("show");
+            closeButtons.forEach(button => {
+              button.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                if (modal) {
+                  modal.classList.remove('show');
+                  modal.style.display = 'none';
+                  document.body.classList.remove('modal-open');
+                }
+              });
             });
 
-            // Fermer en cliquant dehors
-            modal.addEventListener("click", (e) => {
-              if (e.target === modal) {
-                modal.style.display = "none";
-                modal.classList.remove("show");
-              }
+            modals.forEach(modal => {
+              modal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                  this.classList.remove('show');
+                  this.style.display = 'none';
+                  document.body.classList.remove('modal-open');
+                }
+              });
             });
-          }
+
+            // --- 2. LOGIQUE MODAL REJECT SPÉCIFIQUE ---
+            const modalReject = document.querySelector('#globalRejectModal');
+            const formReject = document.querySelector('#rejectForm');
+            const rejectionField = document.querySelector('#rejectionReasonField');
+
+            if (modalReject && formReject) {
+              document.querySelectorAll('[data-toggle="modal"][data-target="#globalRejectModal"]').forEach(button => {
+                button.addEventListener('click', function () {
+                  const url = this.getAttribute('data-url');
+                  const title = this.getAttribute('data-title');
+                  formReject.setAttribute('action', url);
+                  modalReject.querySelector('.modal-title').textContent = `Refuser l'entrée : ${title}`;
+                  if (rejectionField) rejectionField.value = '';
+                });
+              });
+            }
+
+            // --- 3. LOGIQUE IMAGE POPUP ---
+            const openBtn = document.getElementById("openImagePopup");
+            const imageModal = document.getElementById("imageModal");
+            const closeBtn = document.getElementById("closeImageModal");
+
+            if (openBtn && imageModal && closeBtn) {
+              openBtn.addEventListener("click", () => {
+                imageModal.style.display = "flex";
+                imageModal.classList.add("show");
+              });
+              closeBtn.addEventListener("click", () => {
+                imageModal.style.display = "none";
+                imageModal.classList.remove("show");
+              });
+              imageModal.addEventListener("click", (e) => {
+                if (e.target === imageModal) {
+                  imageModal.style.display = "none";
+                  imageModal.classList.remove("show");
+                }
+              });
+            }
+
+            // --- 4. LOGIQUE SAVE POPUP (LISTES) ---
+            const openPopupSave = document.getElementById("openPopupSave");
+            const closePopupSave = document.getElementById("closePopupSave");
+            const popupSave = document.getElementById("popup");
+
+            if (openPopupSave && closePopupSave && popupSave) {
+              openPopupSave.addEventListener("click", () => {
+                popupSave.style.display = "flex";
+              });
+              closePopupSave.addEventListener("click", () => {
+                popupSave.style.display = "none";
+              });
+              window.addEventListener("click", (event) => {
+                if (event.target === popupSave) {
+                  popupSave.style.display = "none";
+                }
+              });
+            }
           });
         </script>
-        <script>
-          document.addEventListener("turbo:load", () => {
-            const openPopupButton = document.getElementById("openPopupSave");
-            const closePopupButton = document.getElementById("closePopupSave");
-            const popup = document.getElementById("popup");
-             if (!openPopupButton || !closePopupButton || !popup) return;
-
-            openPopupButton.addEventListener("click", function() {
-              popup.style.display = "flex";
-            });
-
-            closePopupButton.addEventListener("click", function() {
-              popup.style.display = "none";
-            });
-
-            window.addEventListener("click", function(event) {
-              if (event.target === popup) {
-                popup.style.display = "none";
-              }
-            });
-          });
-        </script>
+      </div>
+      ```

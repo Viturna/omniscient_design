@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :check_if_banned
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale
+  before_action :track_visit, if: :user_signed_in?
 
   def set_theme
     theme = params[:theme]
@@ -39,6 +40,23 @@ class ApplicationController < ActionController::Base
       sign_out_and_redirect(current_user)
       flash[:alert] = I18n.t('user.access.banned')
     end
+  end
+
+  def track_visit
+    # 1. On définit la durée d'inactivité qui déclenche une nouvelle visite (ex: 30 min)
+    timeout = 30.minutes
+
+    # 2. On récupère l'heure de sa dernière action (stockée dans son cookie de session)
+    last_activity = session[:last_activity_at]
+
+    # 3. Si c'est sa première action OU s'il était inactif depuis plus de 30 min
+    if last_activity.nil? || last_activity.to_time < timeout.ago
+      # => C'est une nouvelle visite, on l'enregistre dans la DB
+      DailyVisit.create(user: current_user, visited_on: Date.current)
+    end
+
+    # 4. On met à jour l'heure de dernière activité pour la prochaine requête
+    session[:last_activity_at] = Time.current
   end
 
    def set_locale

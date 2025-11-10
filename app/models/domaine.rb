@@ -6,4 +6,6 @@ class Domaine < ApplicationRecord
   has_many :oeuvres_domaines
   has_many :oeuvres, through: :oeuvres_domaines
 
+  has_many :studios_domaines, dependent: :destroy
+  has_many :studios, through: :studios_domaines
 end

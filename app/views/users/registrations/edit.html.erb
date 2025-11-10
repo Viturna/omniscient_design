@@ -27,6 +27,49 @@
   body.dark-mode hr{
     border: 1px solid #FFF;
   }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+
+
+  .modal-content p {
+    margin-bottom: 24px;
+  }
+
+  .modal-content textarea {
+    width: calc(100% - 24px);
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    margin-bottom: 24px;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+  }
 </style>
 <section class="top-default-page">
   <%= link_to profil_path do%>
@@ -61,7 +104,7 @@
   <h2><%= t('edit_profile.public_profile') %></h2>
   <p class="desc-profil"><%= t('edit_profile.public_desc') %></p>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true, data: { turbo: false } }) do |f| %>
-    <div class="flex-form" style="margin-top: 32px;">
+    <div class="flex-form" style="margin-top: 32px;" data-controller="registration" data-registration-triggers-value='["etudiant", "enseignant"]'>
       <%= render "users/shared/error_messages", resource: resource %>
       <div class="field">
         <%= f.label t('edit_profile.first_name') %>
@@ -78,6 +121,34 @@
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
+      <hr>
+      <h2><%= t('edit_profile.private_profile') %></h2>
+      <div class="field">
+        <%= f.label t('edit_profile.email') %>
+        <%= f.email_field :email, autocomplete: "email" %>
+      </div>
+      <div class="field">
+        <%= f.label t('edit_profile.status') %>
+        <%= f.select :statut,
+          User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
+            { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
+            { class: "role-select form-control",
+              required: true,
+              data: { 
+                action: "change->registration#toggleEstablishment select2:select->registration#toggleEstablishment",
+                registration_target: "statutSelect" 
+             } } %>
+      </div>
+      <div class="field" data-registration-target="establishmentField" 
+              style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
+        <%= f.label :etablissement_id, t('edit_profile.institution') %>
+        <%= f.collection_select :etablissement_id,
+        Etablissement.order(:city),
+        :id,
+        :all_info,
+        { prompt: t('edit_profile.choose_institution') },
+        { class: 'form-control etablissement-select' } %>
+      </div>
       <div class="field">
         <%= f.label t('edit_profile.password') %>
         <i>(<%= t('edit_profile.password_hint') %>)</i>
@@ -95,101 +166,125 @@
               <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
             </svg>
           </button>
-        </button>
+        </div>
+        <i>Votre mot de passe doit comporter au moins 6 caractères, incluant une majuscule, une minuscule, un chiffre et un caractère spécial.</i>
       </div>
-      <% if @minimum_password_length %>
-        <em><%= @minimum_password_length %> characters minimum</em>
-      <% end %>
-    </div>
-    <div class="field ">
-      <%= f.label t('edit_profile.password_confirmation') %>
-      <div class="password-container" data-controller="show-password">
-        <%= f.password_field :password_confirmation, 
+      <div class="field ">
+        <%= f.label t('edit_profile.password_confirmation') %>
+        <i>(<%= t('edit_profile.password_hint') %>)</i>
+        <div class="password-container" data-controller="show-password">
+          <%= f.password_field :password_confirmation, 
         autocomplete: "new-password", 
         id: "password-field-2", 
         data: { "show-password-target": "passwordField" } %>
-        <button type="button" 
+          <button type="button" 
           data-action="click->show-password#toggle" class="toggle-password">
-          <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
-          </svg>
-          <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="7.64315" y1="28.4933" x2="20.0066" y2="2.2608" stroke="#202020" stroke-width="3"/>
-            <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
-          </svg>
-        </button>
+            <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
+            </svg>
+            <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="7.64315" y1="28.4933" x2="20.0066" y2="2.2608" stroke="#202020" stroke-width="3"/>
+              <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
-    <hr>
-    <h2><%= t('edit_profile.private_profile') %></h2>
-    <div class="field">
-      <%= f.label t('edit_profile.email') %>
-      <%= f.email_field :email, autocomplete: "email" %>
-    </div>
-    <div class="field">
-      <%= f.label t('edit_profile.status') %>
-      <%= f.select :statut,
-          User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
-            { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
-            { class: "role-select form-control",
-              required: true,
-              data: { 
-                action: "change->registration#toggleEstablishment select2:select->registration#toggleEstablishment",
-                registration_target: "statutSelect" 
-             } } %>
-    </div>
-    <div class="field">
-      <%= f.label :etablissement_id, t('edit_profile.institution') %>
-      <%= f.collection_select :etablissement_id,
-        Etablissement.order(:city),
-        :id,
-        :all_info,
-        { prompt: t('edit_profile.choose_institution') },
-        { class: 'form-control' } %>
-    </div>
-    <hr>
-    <div class="field">
-      <%= f.label :current_password, t('edit_profile.current_password') %>
-      <i><%= t('edit_profile.current_password_hint') %></i>
-      <div class="password-container" data-controller="show-password">
-        <%= f.password_field :current_password, 
+      <% if !resource.provider.present? %>
+        <hr>
+        <div class="field">
+          <%= f.label :current_password, t('edit_profile.current_password') %>
+          <i><%= t('edit_profile.current_password_hint') %></i>
+          <div class="password-container" data-controller="show-password">
+            <%= f.password_field :current_password, 
         autocomplete: "current-password", 
-        required: true, 
         id: "password-field-3", 
         data: { "show-password-target": "passwordField" } %>
-        <button type="button" 
+            <button type="button" 
           data-action="click->show-password#toggle"
-          class="toggle-password">
-          <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
-          </svg>
-          <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="7.64315" y1="28.4933" x2="20.0066" y2="2.2608" stroke="#202020" stroke-width="3"/>
-            <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
-          </svg>
-        </button>
+              class="toggle-password">
+              <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/>
+              </svg>
+              <svg class="hide-password-icon" data-show-password-target="hideIcon" style="display: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="7.64315" y1="28.4933" x2="20.0066" y2="2.2608" stroke="#202020" stroke-width="3"/>
+                <path d="M22.1016 8.34375C25.0132 9.96161 27.4726 12.565 29.1494 15.3242C29.2719 15.5321 29.333 15.7668 29.333 16C29.333 16.2334 29.272 16.4688 29.1494 16.6768C26.392 21.2141 21.521 25.334 15.9971 25.334C15.3793 25.334 14.7692 25.2778 14.168 25.1768L15.9795 21.333C15.9863 21.333 15.9932 21.334 16 21.334C18.9439 21.3339 21.333 18.9439 21.333 16C21.3329 14.7041 20.8691 13.5162 20.0996 12.5918L22.1016 8.34375ZM15.9971 6.66699C17.1437 6.66699 18.2615 6.84701 19.3389 7.16895L17.5781 10.9053C17.0793 10.7508 16.5494 10.667 16 10.667C13.0561 10.667 10.6672 13.0561 10.667 16C10.667 17.864 11.6252 19.5052 13.0752 20.459L11.2617 24.3047C7.797 22.8028 4.8234 19.8435 2.8584 16.6895C2.73049 16.4775 2.66602 16.2386 2.66602 16C2.66607 15.7615 2.73143 15.5225 2.85938 15.3105C5.67402 10.7906 10.5598 6.66706 15.9971 6.66699ZM19.0859 14.7422C19.2445 15.1305 19.333 15.5549 19.333 16C19.333 17.494 18.3484 18.7594 16.9932 19.1826L19.0859 14.7422ZM16 12.667C16.244 12.667 16.4818 12.6933 16.7109 12.7432L13.9414 18.6201C13.1659 18.0094 12.667 17.0629 12.667 16C12.6672 14.1601 14.1601 12.667 16 12.667Z" fill="#202020"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      <%end%>
+      <div class="actions">
+        <%= f.submit  t('edit_profile.update_button'), class: "button large maj dark" %>
       </div>
     </div>
-    <div class="actions">
-      <%= f.submit  t('edit_profile.update_button'), class: "button large maj dark" %>
-    </div>
+  <% end %>
+  <div display="flex">
+    <button type="button" class="button delete delete-account" id="open-delete-modal">
+      <%= t('edit_profile.delete_account') %>
+    </button>
   </div>
-<% end %>
-<div display="flex">
-  <%= button_to t('edit_profile.delete_account'), registration_path(resource_name),
-      data: { turbo: false, confirm: t('edit_profile.confirm_delete') }, method: :delete,
-      class: "button delete delete-account" %>
-</div>
 </section>
+<div id="delete-account-modal" class="modal-overlay" style="display: none;">
+  <div class="modal-content profil">
+    <h3>Nous sommes tristes de vous voir partir 😢</h3>
+    <p>Pourriez-vous nous dire pourquoi vous supprimez votre compte ? Cela nous aide à nous améliorer.</p>
+    <%= form_with(url: registration_path(resource_name), method: :delete, local: true, data: { turbo: false }) do |f| %>
+      <div class="field">
+        <%= f.label :delete_reason, "Raison du départ (optionnel)", style: "margin-bottom: 8px; display: block;" %>
+        <%= f.text_area :delete_reason, rows: 4, class: "form-control", placeholder: "J'ai trouvé une meilleure alternative, je ne l'utilise plus..." %>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="button dark" id="close-delete-modal">Annuler</button>
+        <%= f.submit "Confirmer la suppression définitive", class: "button delete large" %>
+      </div>
+    <% end %>
+  </div>
+</div>
 <script>
   document.addEventListener("turbo:load", () => {
-    const removeProfileImageBtn = document.getElementById('remove-profile-image-btn');
-    const removeProfileImageCheckbox = document.getElementById('user_remove_profile_image');
-    const form = removeProfileImageBtn.closest('form');
-
-    removeProfileImageBtn.addEventListener('click', function() {
-      removeProfileImageCheckbox.checked = true;
-      form.submit();
+  function initSelect2(selector, placeholder) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+      if ($(el).hasClass("select2-hidden-accessible")) {
+        $(el).select2('destroy'); // supprime l'ancienne instance
+      }
+      $(el).select2({
+        placeholder: placeholder,
+        allowClear: true,
+        width: '100%',
+        language: {
+          inputTooShort: function() { return "Veuillez entrer plus de caractères..."; },
+          searching: function() { return "Recherche en cours..."; },
+          noResults: function() { return "Aucun résultat trouvé"; }
+        }
+      });
     });
+  }
+
+  initSelect2('.etablissement-select', 'Rechercher un établissement...');
+
+
+  const modal = document.getElementById('delete-account-modal');
+  const openBtn = document.getElementById('open-delete-modal');
+  const closeBtn = document.getElementById('close-delete-modal');
+
+  if (modal && openBtn && closeBtn) {
+    openBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.style.display = 'none';
+    });
+
+    // Fermer si on clique en dehors du contenu de la modale
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  }
   });
 </script>

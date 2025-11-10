@@ -15,6 +15,7 @@
 
 .box-log {
   padding: 0px 8vw;
+  margin-top: 15dvh;
 }
 
 .box-log h1 {
@@ -139,6 +140,13 @@
   color: #fff;
 }
 
+.flex-login-oauth {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .log {
     padding-bottom: 96px;
@@ -160,6 +168,9 @@
 
   .title-boxlog {
     font-size: 18px;
+  }
+  .flex-login-oauth {
+    flex-direction: column;
   }
 }
 
@@ -199,6 +210,9 @@
 
   .title-boxlog {
     font-size: 18px;
+  }
+  .flex-login-oauth {
+    flex-direction: column;
   }
 }
 
@@ -250,6 +264,9 @@
 
   .title-boxlog {
     font-size: 18px;
+  }
+  .flex-login-oauth {
+    flex-direction: column;
   }
 }
 

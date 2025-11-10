@@ -22,6 +22,7 @@ module ApplicationHelper
       {controller: 'lists',      actions: %w[show edit index new]},
       {controller: 'oeuvres',    actions: %w[index new edit]},
       {controller: 'designers',  actions: %w[index new edit]},
+      {controller: 'studios',  actions: %w[index new edit]},
       {controller: 'pages',      actions: %w[add_elements]},
       {controller: 'feedbacks',  actions: %w[new]},
       {controller: 'notifications',  actions: %w[index]},
@@ -32,14 +33,54 @@ module ApplicationHelper
     ]
     !excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) }
   end
-  
-def asset_exists?(path)
-  if Rails.configuration.assets.compile
-    Rails.application.assets.find_asset(path).present?
-  else
-    Rails.application.assets_manifest.assets[path].present?
+
+  def ads_data
+    [
+      {
+        link: "https://fr.tipeee.com/le-site-omniscient-design",
+        image: "ads/tipee.jpg",
+        bg_color: "#E04A52",
+        title: "Soutenez le projet !",
+        description: "Aidez-nous à maintenir le site gratuit pour tous."
+      },
+      {
+        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
+        image: "ads/create_account.png", # Assure-toi d'avoir cette image
+        bg_color: "#C13584", # Exemple couleur Instagram
+        title: "Suivez-nous sur Instagram",
+        description: "Ne manquez aucune actualité et inspiration design."
+      },
+     {
+        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
+        image: "ads/feedbacks.png", # Assure-toi d'avoir cette image
+        bg_color: "#C13584", # Exemple couleur Instagram
+        title: "Suivez-nous sur Instagram",
+        description: "Ne manquez aucune actualité et inspiration design."
+      },
+      {
+        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
+        image: "ads/social_media.png", # Assure-toi d'avoir cette image
+        bg_color: "#C13584", # Exemple couleur Instagram
+        title: "Suivez-nous sur Instagram",
+        description: "Ne manquez aucune actualité et inspiration design."
+      },
+       {
+        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
+        image: "ads/your-ads.png", # Assure-toi d'avoir cette image
+        bg_color: "#C13584", # Exemple couleur Instagram
+        title: "Suivez-nous sur Instagram",
+        description: "Ne manquez aucune actualité et inspiration design."
+      },
+    ]
   end
-end
+  
+  def asset_exists?(path)
+    if Rails.configuration.assets.compile
+      Rails.application.assets.find_asset(path).present?
+    else
+      Rails.application.assets_manifest.assets[path].present?
+    end
+  end
 
 
   def link_to_add_fields(name, f, association)

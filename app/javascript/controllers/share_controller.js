@@ -9,7 +9,7 @@ export default class extends Controller {
   connect() {
     if (!this.hasModalTarget) console.warn("No modal target found!")
     this.urlToShare = window.location.href
-    this.textToShare = "Découvrez cette œuvre incroyable !"
+    this.textToShare = "Découvrez cette référence incroyable !"
     if (this.hasLinkTarget) this.linkTarget.value = this.urlToShare
   }
 
@@ -38,7 +38,7 @@ export default class extends Controller {
   }
 
   shareEmail() {
-    window.open(`mailto:?subject=${encodeURIComponent("Découvrez cette œuvre !")}&body=${encodeURIComponent(this.textToShare + " " + this.urlToShare)}`, "_self")
+    window.open(`mailto:?subject=${encodeURIComponent("Découvrez cette référence !")}&body=${encodeURIComponent(this.textToShare + " " + this.urlToShare)}`, "_self")
   }
 
   shareWhatsApp() {

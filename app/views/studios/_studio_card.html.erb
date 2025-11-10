@@ -1,0 +1,23 @@
+<%= link_to studio do %>
+  <% image_path = "studios/desktop/#{remove_accents_and_special_chars(studio.nom)}.webp" %>
+  <% if image_path.present? && asset_exists?(image_path) %>
+    <div class="card-designer" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position:center center;">
+    <% else %>
+      <%# Fallback sur l'image externe si l'image locale n'existe pas %>
+      <div class="card-designer" style="background: url('<%= asset_path(studio.image) %>'); background-size: cover; background-position:center;">
+      <% end %>
+      <div class="inner-card-designer">
+        <% if studio.respond_to?(:countries) %>
+          <% studio.countries.each do |country| %>
+            <p class="country-card-designer">
+              <span class="flag"><%= country_flag(country.country_numeric) %></span>
+              <%= country.country %>
+            </p>
+          <% end %>
+        <% end %>
+        <p class="title-card-designer">
+          <%= studio.nom %>
+        </p>
+      </div>
+    </div>
+  <% end %>

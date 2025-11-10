@@ -43,14 +43,17 @@ class OeuvreImage < ApplicationRecord
         c.quality compression_quality
       end
       
-      filename = "#{original_blob.filename.base}-#{SecureRandom.hex(4)}.webp"
+      random_name = SecureRandom.hex(10)
+      filename = "#{random_name}.webp"
+      
       webp_tempfile = Tempfile.new([filename, ".webp"], Rails.root.join("tmp"))
       img.write(webp_tempfile.path)
 
       new_blob = ActiveStorage::Blob.create_and_upload!(
         io: webp_tempfile,
         filename: filename,
-        content_type: "image/webp"
+        content_type: "image/webp",
+         key: "references/#{filename}"
       )
       
       self.file_attachment.update_column(:blob_id, new_blob.id)

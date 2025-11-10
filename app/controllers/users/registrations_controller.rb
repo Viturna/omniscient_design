@@ -15,9 +15,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
         resource.provider = data['provider']
         resource.uid = data['uid']
 
-        # Optionnel : Générer un mot de passe temporaire pour passer les validations Devise
-        # si votre modèle User impose la présence d'un mot de passe.
-        # resource.password = Devise.friendly_token[0, 20]
       end
     end
   end
@@ -59,8 +56,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update
-    # Permet aux utilisateurs OAuth de mettre à jour leur profil sans mot de passe actuel
-    # si ils n'essaient pas de changer leur mot de passe.
     if resource.provider.present? && account_update_params[:password].blank?
       params[:user].delete(:current_password)
       resource.update_without_password(account_update_params)
@@ -77,22 +72,46 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def destroy
+    delete_reason = params[:delete_reason]
+    
+    notify_admins_of_deletion(resource, delete_reason)
+
+    super
+  end
+  
+
   protected
 
   def configure_permitted_parameters
-    # Provider et UID sont essentiels ici pour que le formulaire 'new' puisse les soumettre à 'create'
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :how_did_you_hear, :provider, :uid])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :statut, :etablissement_id, :how_did_you_hear])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :how_did_you_hear, :study_level, :provider, :uid])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :statut, :etablissement_id, :how_did_you_hear, :study_level])
   end
 
+  def after_inactive_sign_up_path_for(resource)
+    new_user_session_path(verification_sent: true)
+  end
   private
 
   def create_admin_notification_for_signup(user)
-    # ... (votre code existant inchangé)
     message = I18n.t('notifications.new_user_registered', name: user.full_name, default: "Nouvel utilisateur inscrit : #{user.full_name}")
     recipients = User.where("role = ? OR certified = ?", 'admin', true)
     recipients.each do |recipient|
       Notification.create!(user: recipient, notifiable: user, message: message)
     end
+  end
+
+  def notify_admins_of_deletion(user, reason)
+    reason_text = reason.present? ? reason : "Aucune raison spécifiée."
+    
+    message = "Compte supprimé : #{user.full_name} (ID: #{user.id}). Raison du départ : #{reason_text}"
+
+    recipients = User.where("role = ? OR certified = ?", 'admin', true)
+    
+    recipients.each do |recipient|
+      Notification.create(user: recipient, notifiable: recipient, message: message)
+    end
+  rescue => e
+    Rails.logger.error "Erreur lors de la notification de suppression de compte : #{e.message}"
   end
 end

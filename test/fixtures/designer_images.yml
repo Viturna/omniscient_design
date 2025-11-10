@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  designer: one
+  credit: MyString
+
+two:
+  designer: two
+  credit: MyString

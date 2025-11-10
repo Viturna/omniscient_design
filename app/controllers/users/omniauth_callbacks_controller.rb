@@ -39,11 +39,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to edit_user_registration_path
       end
     else
-      # Cas : L'utilisateur n'est PAS connecté (Connexion ou Inscription classique)
       if @user&.persisted?
-        # Le compte existe, on le connecte
-        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
-        sign_in_and_redirect @user, event: :authentication
+       if !@user.confirmed?
+          redirect_to new_user_session_path(verification_sent: true)
+        else
+          flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
+          sign_in_and_redirect @user, event: :authentication
+        end
       else
         # Nouvel utilisateur, on stocke les infos pour le formulaire d'inscription
         session['devise.omniauth_data'] = auth.except('extra')

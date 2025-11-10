@@ -5,35 +5,48 @@ class UsersController < ApplicationController
 
   def index
     @current_page = 'users'
+    
+    # 1. Scope de base
+    users_scope = User.includes(:etablissement, :daily_visits)
 
-    # 1. Requête de base (inclut :etablissement pour la table et les stats)
-    users_scope = User.includes(:etablissement)
+    # 2. Filtrage si recherche
+    if params[:query].present?
+      sql_query = <<~SQL
+        users.firstname ILIKE :query OR
+        users.lastname ILIKE :query OR
+        users.email ILIKE :query OR
+        users.pseudo ILIKE :query OR
+        etablissements.name ILIKE :query
+      SQL
+      
+      # On met à jour le scope avec le filtre
+      users_scope = users_scope.left_outer_joins(:etablissement)
+                               .where(sql_query, query: "%#{params[:query]}%")
+    end
 
-    # 2. Calcul des statistiques (efficace, via la BDD)
-    @stats_etablissements = users_scope.joins(:etablissement)
-                                      .group('etablissements.name')
-                                      .count
-                                      .sort_by { |_name, count| -count } # Tri par count desc
+    # 3. Calcul des stats (sur le scope filtré ou total, selon votre besoin. 
+    # Ici je les laisse sur le TOTAL pour que les stats globales ne changent pas avec la recherche, 
+    # mais vous pouvez utiliser 'users_scope' si vous voulez que les stats reflètent la recherche).
+    # Pour des stats globales, on garde une variable séparée :
+    all_users_scope = User.includes(:etablissement) 
 
-    @stats_source = users_scope.where.not(how_did_you_hear: [nil, ''])
-                              .group(:how_did_you_hear)
-                              .count
-                              .sort_by { |_source, count| -count }
+    @stats_etablissements = all_users_scope.joins(:etablissement).group('etablissements.name').count.sort_by { |_, c| -c }
+    @stats_source = all_users_scope.where.not(how_did_you_hear: [nil, '']).group(:how_did_you_hear).count.sort_by { |_, c| -c }
+    @stats_status = all_users_scope.where.not(statut: [nil, '']).group(:statut).count.sort_by { |_, c| -c }
+    @stats_certified_count = all_users_scope.where(certified: true).count
+    @stats_banned_count = all_users_scope.where(banned: true).count
 
-    @stats_status = users_scope.where.not(statut: [nil, ''])
-                              .group(:statut)
-                              .count
-                              .sort_by { |_status, count| -count }
-
-    @stats_certified_count = users_scope.where(certified: true).count
-    @stats_banned_count = users_scope.where(banned: true).count
-
-    # 3. Pagination pour la table (avec l'ordre)
+    # 4. Pagination et ordre final pour la table (sur le scope filtré)
     @users = users_scope.order(created_at: :asc)
                         .page(params[:page]).per(25)
 
-    # 4. Données pour la carte (tous les users avec des coordonnées)
+    # 5. Données pour la carte (sur le total ou filtré, au choix. Ici filtré pour que la carte suive la recherche)
     @users_for_map = users_scope.where.not(etablissements: { latitude: nil, longitude: nil })
+  end
+  
+  def visits
+    @user = User.find(params[:id])
+    @visits = @user.daily_visits.order(created_at: :desc).page(params[:page]).per(50)
   end
   def ban
     if current_user.admin?

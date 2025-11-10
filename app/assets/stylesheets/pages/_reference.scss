@@ -61,9 +61,11 @@
 .slider-nav.next {
   right: 5vw;
 }
-.header-show.small-height .slider-nav {
+.header-show.small-height .slider-nav,
+.header-show.small-height .slider-dots {
   display: none;
 }
+
 /* 5. Points de pagination */
 .slider-dots {
   position: absolute;
@@ -114,10 +116,9 @@
   transition: background-color 0.3s ease;
 }
 
-.header-show > * {
-  z-index: 100;
+.header-show.small-height .slider-slides {
+  z-index: -1;
 }
-
 .header-show.small-height {
   height: 34dvh !important;
   min-height: 265px;
@@ -125,7 +126,7 @@
 }
 
 .header-show.small-height::after {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .header-show.small-height::before {
@@ -752,7 +753,9 @@
   .header-show {
     height: 75dvh;
   }
-
+  .header-show.small-height {
+    height: auto;
+  }
   .content-show {
     margin-top: 50px;
   }
@@ -889,9 +892,8 @@
   }
 
   .header-show.small-height {
-    height: 320px !important;
+    height: auto;
   }
-
   .content-show {
     margin-top: 50px;
   }

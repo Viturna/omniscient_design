@@ -1,15 +1,14 @@
 <% content_for :title, "S'inscrire - Omniscient Design" %>
 <% content_for :description, "Inscris-toi sur Omniscient Design pour devenir un vrai pro dans l'univers du design. Rejoins une communauté de passionnés prête à tout pour rendre le design accessible." %>
 <div class="log" style="color:#FFF; min-height:100vh;">
-  <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
-    <h1><%= t('devise.registration.title') %></h1>
     <div class="form"  data-controller="registration"
      data-registration-triggers-value='["etudiant", "enseignant"]'>
+      <h1 style="margin-top:0;"><%= t('devise.registration.title') %></h1>
       <div class="field input-flex">
         <p class="title-boxlog"><%= t('devise.registration.main_info') %></p>
       </div>
-      <div style="margin-bottom: 20px; display: flex; flex-direction: row; gap: 10px;">
+      <div class="flex-login-oauth">
         <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, class: "button", style: "width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: 500;" do %>
           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M18.541 9.67468C18.541 9.0039 18.4808 8.35892 18.369 7.73975H9.45972V11.3989H14.5507C14.3315 12.5814 13.665 13.5832 12.6631 14.254V16.6275H15.7203C17.509 14.9807 18.541 12.5556 18.541 9.67468Z" fill="#4285F4"/>
@@ -76,6 +75,7 @@
                 </svg>
               </button>
             </div>
+            <i style="margin-bottom: 16px;">Votre mot de passe doit comporter au moins 6 caractères, incluant une majuscule, une minuscule, un chiffre et un caractère spécial.</i>
           </div>
           <div class="field input-flex" data-controller="show-password">
             <%= f.label :password_confirmation, t('devise.registration.label_password_confirmation') %>
@@ -122,28 +122,35 @@
           <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: t('devise.registration.pseudo_placeholder') %>
         </div>
         <div class="field input-flex">
-          <%= f.label :statut, t('devise.registration.label_statut') %>
+          <%= f.label t('edit_profile.status') %>
           <%= f.select :statut,
-                        User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
-                        { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
-                        { class: "role-select form-control",
-                          required: true,
-                          data: { 
-                            action: "change->registration#toggleEstablishment select2:select->registration#toggleEstablishment",
-                            registration_target: "statutSelect" 
-                          } } %>
+          User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
+            { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
+            { class: "role-select form-control",
+              required: true,
+              data: {
+                # CORRECTION ICI : Une seule action vers la nouvelle méthode unifiée
+                action: "change->registration#toggleFields",
+                registration_target: "statutSelect"
+              } } %>
         </div>
-        <div class="field input-flex" 
-              data-registration-target="establishmentField" 
-              style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
-          <%= f.label :etablissement_id, t('devise.registration.label_etablissement') %>
+        <div class="field input-flex" data-registration-target="establishmentField"
+              style="<%= resource.statut == 'etudiant' || resource.statut == 'enseignant' ? '' : 'display: none;' %>">
+          <%= f.label :etablissement_id, t('edit_profile.institution') %>
           <%= f.collection_select :etablissement_id,
-                Etablissement.order(:city),
-                :id,
-                :all_info,
-                { include_blank: t('devise.registration.establishment_blank') },
-                { class: "form-control etablissement-select",
-                  data: { placeholder: t('devise.registration.establishment_search') } } %>
+        Etablissement.order(:city),
+        :id,
+        :all_info,
+        { prompt: t('edit_profile.choose_institution') },
+        { class: 'form-control etablissement-select' } %>
+        </div>
+        <div class="field input-flex" data-registration-target="studentField"
+              style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
+          <%= f.label :study_level, "Niveau d'étude" %>
+          <%= f.select :study_level,
+            User::STUDY_LEVELS,
+            { include_blank: "Sélectionnez votre niveau scolaire" },
+            { class: "form-control level-select" } %>
         </div>
         <div class="field input-flex">
           <%= f.label :how_did_you_hear, t('devise.registration.label_how_did_you_hear') %>
@@ -182,7 +189,6 @@
 </div>
 <script>
   document.addEventListener("turbo:load", () => {
-  // ... (votre code JavaScript Select2 inchangé)
   function initSelect2(selector, placeholder) {
     const elements = document.querySelectorAll(selector);
     elements.forEach(el => {
@@ -204,6 +210,7 @@
 
   initSelect2('.etablissement-select', 'Rechercher un établissement...');
   initSelect2('.hear-select', 'Comment avez-vous connu le site ?');
+  initSelect2('.level-select', 'Sélectionnez votre niveau scolaire');
 
   });
 </script>

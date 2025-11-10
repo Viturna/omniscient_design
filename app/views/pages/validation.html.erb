@@ -61,7 +61,7 @@
     </svg>
   <% end %>
   <h1>Gestions des contenus</h1>
-  <p style="color:#FFF">Total <%= @oeuvres_count + @designers_count %> références</p>
+  <p style="color:#FFF">Total <%= @oeuvres_count + @designers_count + @studios_count %> références</p>
 </section>
 <!-- ========= ŒUVRES EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
@@ -299,6 +299,123 @@
   <div>
     <button class="btn" data-action="click->load-more-table#showMoreRows"
       data-load-more-table-target="button">Voir plus de designers validés</button>
+  </div>
+</section>
+<section class="grid-1" data-controller="load-more-table">
+  <h2>Studios en attente de validation</h2>
+  <p>Il y a actuellement <%= @studios_count_val_false %> studios en attente de validation</p>
+  <div class="table-controls">
+    <input type="text" placeholder="Rechercher un studio..." class="filter-input search-input">
+    <select class="filter-user">
+      <option value="">— Filtrer par utilisateur —</option>
+      <% User.all.each do |u| %>
+        <option value="<%= u.email %>"><%= u.email %></option>
+      <% end %>
+    </select>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable">Nom</th>
+          <th class="sortable">Date d'ajout</th>
+          <th class="sortable">Ajouté par</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @studios.each do |studio| %>
+          <% unless studio.validation %>
+            <tr data-load-more-table-target="row">
+              <td><%= studio.nom %></td>
+              <td><%= I18n.l(studio.created_at, format: :long) %></td>
+              <td>
+                <% if studio.user_id.present? %>
+                  <% user = User.find_by(id: studio.user_id) %>
+                  <%= user.present? ? user.email : "Omniscient Design" %>
+                <% else %>
+                  Omniscient Design
+                <% end %>
+              </td>
+              <td style="display: flex; flex-direction:column;">
+                <%= link_to "Voir", studio_path(studio), class: "btn" %>
+                <%= link_to "Modifier", edit_studio_path(studio), class: "btn btn-orange" %>
+                <%= link_to "Valider", validate_studio_path(studio), class: "btn btn-green" %>
+                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
+                   data-url="<%= reject_studio_path(studio) %>"
+                   data-title="<%= studio.nom %>">Refuser</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <button class="btn" data-action="click->load-more-table#showMoreRows"
+      data-load-more-table-target="button">Voir plus de studios</button>
+  </div>
+</section>
+<section class="grid-1" data-controller="load-more-table">
+  <h2>Studios validés</h2>
+  <p>Il y a actuellement <%= @studios_count %> studios validés</p>
+  <div class="table-controls">
+    <input type="text" placeholder="Rechercher un studio..." class="filter-input search-input">
+    <select class="filter-user">
+      <option value="">— Filtrer par utilisateur —</option>
+      <% User.all.each do |u| %>
+        <option value="<%= u.email %>"><%= u.email %></option>
+      <% end %>
+    </select>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable">Nom</th>
+          <th class="sortable">Date d'ajout</th>
+          <th class="sortable">Ajouté par</th>
+          <th>Validé par</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @studios.each do |studio| %>
+          <% if studio.validation %>
+            <tr data-load-more-table-target="row">
+              <td><%= studio.nom %></td>
+              <td><%= I18n.l(studio.created_at, format: :long) %></td>
+              <td>
+                <% if studio.user_id.present? %>
+                  <% user = User.find_by(id: studio.user_id) %>
+                  <%= user.present? ? user.email : "Omniscient Design" %>
+                <% else %>
+                  Omniscient Design
+                <% end %>
+              </td>
+              <td>
+                <% if studio.validated_by_user_id.present? %>
+                  <%= User.find(studio.validated_by_user_id).email %>
+                <% else %>
+                  Utilisateur inconnu
+                <% end %>
+              </td>
+              <td style="display: flex; flex-direction:column;">
+                <%= link_to "Voir", studio_path(studio), class: "btn" %>
+                <%= link_to "Modifier", edit_studio_path(studio), class: "btn btn-orange" %>
+                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
+                   data-url="<%= reject_studio_path(studio) %>"
+                   data-title="<%= studio.nom %>">Refuser</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <button class="btn" data-action="click->load-more-table#showMoreRows"
+      data-load-more-table-target="button">Voir plus de studios validés</button>
   </div>
 </section>
 <!-- ========= MODAL ========= -->

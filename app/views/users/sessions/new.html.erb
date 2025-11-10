@@ -1,11 +1,67 @@
+<style>
+  /* Styles spécifiques pour cette popup */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .popup-content-verification {
+    background-color: #fff;
+    color: #202020;
+    padding: 32px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: popIn 0.3s ease-out;
+  }
+
+  .popup-header {
+    margin-bottom: 24px;
+  }
+
+  .verification-icon {
+    margin-bottom: 16px;
+  }
+
+  .popup-header h3 {
+    margin: 0;
+    color: #202020;
+    font-size: 24px;
+  }
+
+  .popup-body p {
+    margin: 8px 0;
+    line-height: 1.5;
+    color: #202020;
+  }
+
+  #close-verification-popup {
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
 <% content_for :title, "Connexion à votre compte - Omniscient Design" %>
 <% content_for :description, "Connectez-vous à votre espace personnel Omniscient Design pour explorer, sauvegarder et partager vos références et designers préférés." %>
 <div class="log" style="color:#FFF;">
-  <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
-    <h1><%= t('devise.login.title') %></h1>
     <div class="form">
-      <div style="margin-bottom: 20px; display: flex; flex-direction: row; gap: 10px;">
+      <h1 style="margin-top:0;"><%= t('devise.login.title') %></h1>
+      <div class="flex-login-oauth">
         <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, class: "button", style: "width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: 500;" do %>
           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M18.541 9.67468C18.541 9.0039 18.4808 8.35892 18.369 7.73975H9.45972V11.3989H14.5507C14.3315 12.5814 13.665 13.5832 12.6631 14.254V16.6275H15.7203C17.509 14.9807 18.541 12.5556 18.541 9.67468Z" fill="#4285F4"/>
@@ -75,3 +131,43 @@
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>
+<div id="verification-popup" class="popup-overlay" style="display: none;">
+  <div class="popup-content-verification">
+    <div class="popup-header">
+      <svg class="verification-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6ZM20 6L12 11L4 6H20ZM20 18H4V8L12 13L20 8V18Z" fill="#202020"/>
+      </svg>
+      <h3>Vérifiez votre boîte mail</h3>
+    </div>
+    <div class="popup-body">
+      <p>Votre inscription a été prise en compte !</p>
+      <p>Un lien de confirmation vous a été envoyé par email. <strong>Vous devez cliquer dessus avant de pouvoir vous connecter.</strong></p>
+      <p style="font-size: 0.9em; opacity: 0.7; margin-top: 16px;">Pensez à vérifier vos spams si vous ne le trouvez pas.</p>
+    </div>
+    <button id="close-verification-popup" class="button dark">J'ai compris</button>
+  </div>
+</div>
+<script>
+  document.addEventListener("turbo:load", () => {
+    // On vérifie si l'URL contient le paramètre 'verification_sent=true'
+    const urlParams = new URLSearchParams(window.location.search);
+    const verificationSent = urlParams.get('verification_sent');
+
+    const verificationPopup = document.getElementById('verification-popup');
+    const closeBtn = document.getElementById('close-verification-popup');
+
+    if (verificationSent === 'true' && verificationPopup) {
+      // Afficher la popup
+      verificationPopup.style.display = 'flex';
+
+      // Nettoyer l'URL pour que la popup ne revienne pas si on rafraîchit la page
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+
+      // Gérer la fermeture
+      closeBtn.addEventListener('click', () => {
+        verificationPopup.style.display = 'none';
+      });
+    }
+  });
+</script>

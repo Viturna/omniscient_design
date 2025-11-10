@@ -42,7 +42,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2941773271062587"
      crossorigin="anonymous"></script>
- 
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
@@ -78,11 +77,11 @@
       <% end %>
     <% end %>
     <% unless native_app? %>
-      <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers]) && action_name == 'show') %>
+      <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[oeuvres designers studios]) && action_name == 'show') %>
         <%= render 'layouts/header' %>
       <% end %>
     <% end %>
-    <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
+    <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers' || controller_name == 'studios') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
     <main class="<%= 'main-show' if main_show %>">
       <div id="loading" data-loading-target="loading">
         <div class="loader-bg">
@@ -99,7 +98,7 @@
     <% unless native_app? %>
       <% if show_footer? %>
         <!-- Footer -->
-        <% large_footer = (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
+        <% large_footer = (controller_name == 'oeuvres' || controller_name == 'designers' || controller_name == 'studios') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
         <footer class="footer <%= 'large-footer' if main_show %>" data-loading-target="footer">
           <div class="footer-top">
             <div class="footer-brand">

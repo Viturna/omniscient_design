@@ -1,46 +1,63 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "token"]
+  static targets = ["token"]
 
   connect() {
-    document.addEventListener("turbo:load", () => this.initRecaptcha())
+    this.initRecaptcha()
   }
 
   initRecaptcha() {
-    const allowedPages = [
-      { controller: "designers", action: "new" },
-      { controller: "registrations", action: "new" },
-      { controller: "sessions", action: "new" }
-    ]
-
-    const currentController = document.body.dataset.controllerName
-    const currentAction = document.body.dataset.actionName
-
-    const isAllowed = allowedPages.some(
-      page => page.controller === currentController && page.action === currentAction
-    )
-    if (!isAllowed) return
-
     const metaTag = document.querySelector('meta[name="recaptcha-site-key"]')
-    if (!metaTag) return
+    if (!metaTag) {
+      console.error("Meta tag recaptcha-site-key not found")
+      return
+    }
     this.siteKey = metaTag.getAttribute('content')
 
-    if (!this.hasFormTarget) return
+    // On s'assure de ne pas avoir de doublons d'écouteurs
+    if (this.submitHandler) {
+      this.element.removeEventListener("submit", this.submitHandler)
+    }
+    this.submitHandler = this.handleSubmit.bind(this)
+    this.element.addEventListener("submit", this.submitHandler)
+  }
 
-    // Supprime un éventuel listener précédent pour éviter les doublons
-    this.formTarget.removeEventListener("submit", this.handleSubmit)
-    this.formTarget.addEventListener("submit", (event) => this.handleSubmit(event))
+  disconnect() {
+    if (this.submitHandler) {
+      this.element.removeEventListener("submit", this.submitHandler)
+    }
   }
 
   handleSubmit(event) {
+    // Si le token est déjà rempli, on laisse le formulaire se soumettre normalement
+    if (this.tokenTarget.value) return
+
+    // Sinon, on empêche la soumission et on lance reCAPTCHA
     event.preventDefault()
-    if (typeof grecaptcha === "undefined") return
+    event.stopImmediatePropagation() // Important pour bloquer d'autres scripts potentiels
+
+    if (typeof grecaptcha === "undefined") {
+      console.error("reCAPTCHA n'est pas chargé.")
+      // Fallback : on soumet sans token si reCAPTCHA ne charge pas (risque de spam, mais ne bloque pas l'user)
+      this.element.submit()
+      return
+    }
 
     grecaptcha.ready(() => {
       grecaptcha.execute(this.siteKey, { action: 'submit' }).then((token) => {
         this.tokenTarget.value = token
-        this.formTarget.submit()
+        // On relance la soumission maintenant que le token est là
+        // Utiliser requestSubmit() si possible pour déclencher les validations natives, sinon submit()
+        if (typeof this.element.requestSubmit === 'function') {
+          this.element.requestSubmit()
+        } else {
+          this.element.submit()
+        }
+      }, (error) => {
+        console.error("Erreur reCAPTCHA execution:", error)
+        // En cas d'erreur, on essaie quand même de soumettre
+        this.element.submit()
       })
     })
   }

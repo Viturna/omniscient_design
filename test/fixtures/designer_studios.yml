@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  designer: one
+  studio: one
+  date_entree: 1
+  date_sortie: 1
+
+two:
+  designer: two
+  studio: two
+  date_entree: 1
+  date_sortie: 1

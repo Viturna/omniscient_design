@@ -36,6 +36,8 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'users/sign_out', to: 'users/sessions#destroy'
+      get 'users/oauth_reauthentication', to: 'users/registrations#oauth_reauthentication', as: :oauth_reauthentication
+      get 'users/:id/visits', to: 'users#visits', as: :user_visits
     end
     # Tes routes publiques
     resources :feedbacks, only: [:new, :create, :index, :destroy]
@@ -62,9 +64,13 @@ Rails.application.routes.draw do
         delete 'remove_user'
         post 'toggle_privacy'
         get :load_more_oeuvres
+        post 'add_studio'
+        post 'remove_studio'
+        get :load_more_studios
       end
       get :load_more_oeuvres, on: :collection
       get :load_more_designers, on: :collection
+      get :load_more_studios
       collection do
         get :search_items
       end
@@ -86,6 +92,19 @@ Rails.application.routes.draw do
     end
 
     resources :designers, param: :slug do
+      collection do
+        get 'load_more'
+        get 'check_existence'
+      end
+      member do
+        get :validate
+        delete 'cancel'
+        delete :destroy
+        patch :reject
+      end
+    end
+
+    resources :studios, param: :slug do
       collection do
         get 'load_more'
         get 'check_existence'

@@ -1,0 +1,20 @@
+<div class="check-box-wrapper <%= 'selected' if defined?(@selected_studio_ids) && @selected_studio_ids.include?(studio.id) %>"
+     data-id="<%= studio.id %>">
+  <%= check_box_tag "studio_ids[]", studio.id,
+      (defined?(@selected_studio_ids) && @selected_studio_ids.include?(studio.id)),
+      class: 'hidden-check', id: "studio_#{studio.id}", disabled: true %>
+  <label for="studio_#{studio.id}">
+    <%
+       thumb_path = "studios/thumbs/#{remove_accents_and_special_chars(studio.nom)}.webp"
+    %>
+    <% if asset_exists?(thumb_path) %>
+      <div class="card-list-add" style="background-image: url('<%= asset_path(thumb_path) %>'); background-size: cover; background-position: center;">
+      <% else %>
+        <% Rails.logger.debug("Studio image not found : #{thumb_path}") %>
+        <div class="card-list-add" style="background: url('<%= asset_path(studio.image) %>'); background-size: cover; background-position: center;">
+        <% end %>
+        <div class="default-overlay"></div>
+        <p class="card-title-add"><%= truncate(studio.nom, length: 25, omission: '...') %></p>
+      </div>
+    </label>
+  </div>

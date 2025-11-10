@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nom: MyString
+  presentation_generale: MyText
+  date_creation: 1
+  date_fin: 1
+  creations_majeures: MyText
+  formation_et_influences: MyText
+  heritage_et_impact: MyText
+  style_ou_philosophie: MyText
+  image: MyText
+  source: MyText
+  slug: MyString
+  validation: false
+  rejection_reason: MyText
+  user: one
+  validated_by_user: one
+
+two:
+  nom: MyString
+  presentation_generale: MyText
+  date_creation: 1
+  date_fin: 1
+  creations_majeures: MyText
+  formation_et_influences: MyText
+  heritage_et_impact: MyText
+  style_ou_philosophie: MyText
+  image: MyText
+  source: MyText
+  slug: MyString
+  validation: false
+  rejection_reason: MyText
+  user: two
+  validated_by_user: two

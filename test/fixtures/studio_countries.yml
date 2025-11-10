@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  studio: one
+  country: one
+
+two:
+  studio: two
+  country: two

@@ -22,9 +22,8 @@
   </div>
 </section>
 <section class="grid-1">
-
   <!-- Pub Google -->
-<%# <div class="ad-container" style="min-width:250px; width:100%; text-align:center;">
+  <%# <div class="ad-container" style="min-width:250px; width:100%; text-align:center;">
   <ins class="adsbygoogle"
        style="display:block; width:100%; height:auto;"
        data-ad-client="ca-pub-2941773271062587"
@@ -32,12 +31,11 @@
        data-ad-format="auto"
        data-full-width-responsive="true"></ins>
 </div> %>
-
-    <div class="flex-profils">
+  <div class="flex-profils">
     <h2><%= t('profile.general') %></h2>
     <%= link_to edit_user_registration_path, class: "nav-link-profil" do %>
       <div class="nav-link-inner">
-       <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_3484_159)">
             <path d="M27.1667 14.1678C27.1667 18.677 23.5103 22.3345 19 22.3345C14.4897 22.3345 10.8333 18.677 10.8333 14.1678C10.8333 9.65633 14.4897 6 19 6C23.5103 6 27.1667 9.65633 27.1667 14.1678ZM25.3023 22.5445C23.5453 23.871 21.366 24.6678 19 24.6678C16.6317 24.6678 14.4512 23.8687 12.6918 22.5422C7.94117 24.634 5 31.1475 5 34H33C33 31.1732 29.9667 24.6597 25.3023 22.5445Z" fill="#202020"/>
           </g>
@@ -74,9 +72,9 @@
     <%end%>
     <%= link_to notifications_path, class: "nav-link-profil" do %>
       <div class="nav-link-inner">
-       <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M23.3265 10.6025C22.5752 10.1662 22.1108 9.35417 22.1132 8.47917V8.47567C22.1132 7.10833 21.0177 6 19.6667 6C18.3157 6 17.2202 7.10833 17.2202 8.47567V8.47917C17.2225 9.35533 16.7582 10.1662 16.0068 10.6025C10.5608 13.7665 13.6898 24.27 8 26.1262V28.1667H31.3333V26.1262C25.6435 24.27 28.7725 13.7665 23.3265 10.6025ZM19.6667 7.16667C20.3107 7.16667 20.8333 7.6905 20.8333 8.33333C20.8333 8.97733 20.3107 9.5 19.6667 9.5C19.0227 9.5 18.5 8.97733 18.5 8.33333C18.5 7.6905 19.0227 7.16667 19.6667 7.16667ZM23.1667 30.5C23.1667 32.3643 21.5427 34 19.7005 34C17.8583 34 16.1667 32.3643 16.1667 30.5H23.1667Z" fill="#202020"/>
-      </svg>
+        <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.3265 10.6025C22.5752 10.1662 22.1108 9.35417 22.1132 8.47917V8.47567C22.1132 7.10833 21.0177 6 19.6667 6C18.3157 6 17.2202 7.10833 17.2202 8.47567V8.47917C17.2225 9.35533 16.7582 10.1662 16.0068 10.6025C10.5608 13.7665 13.6898 24.27 8 26.1262V28.1667H31.3333V26.1262C25.6435 24.27 28.7725 13.7665 23.3265 10.6025ZM19.6667 7.16667C20.3107 7.16667 20.8333 7.6905 20.8333 8.33333C20.8333 8.97733 20.3107 9.5 19.6667 9.5C19.0227 9.5 18.5 8.97733 18.5 8.33333C18.5 7.6905 19.0227 7.16667 19.6667 7.16667ZM23.1667 30.5C23.1667 32.3643 21.5427 34 19.7005 34C17.8583 34 16.1667 32.3643 16.1667 30.5H23.1667Z" fill="#202020"/>
+        </svg>
         <%= t('profile.notifications') %>
       </div>
       <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,9 +123,9 @@
             <path d="M32.0003 9.33308C31.9986 9.00681 31.9176 8.68586 31.7643 8.39785C31.611 8.10984 31.39 7.8634 31.1203 7.67974L21.787 1.33308C21.459 1.10893 21.071 0.989017 20.6737 0.989017C20.2764 0.989017 19.8883 1.10893 19.5603 1.33308L11.7603 7.07974C11.6441 7.16429 11.5041 7.20983 11.3603 7.20983C11.2166 7.20983 11.0766 7.16429 10.9603 7.07974L3.187 1.33308C2.88528 1.11044 2.52704 0.977106 2.15318 0.948296C1.77931 0.919485 1.40488 0.996358 1.07261 1.17014C0.740335 1.34392 0.463609 1.60761 0.274011 1.93112C0.0844136 2.25463 -0.0104195 2.62492 0.000334646 2.99974V22.6664C0.00207468 22.9927 0.0830796 23.3136 0.236376 23.6016C0.389672 23.8896 0.610667 24.1361 0.880335 24.3197L10.2137 30.6664C10.5417 30.8906 10.9297 31.0105 11.327 31.0105C11.7243 31.0105 12.1123 30.8906 12.4403 30.6664L20.2137 24.9464C20.3299 24.8619 20.4699 24.8163 20.6137 24.8163C20.7574 24.8163 20.8974 24.8619 21.0137 24.9464L28.8137 30.6664C29.1599 30.9145 29.5744 31.0496 30.0003 31.0531C30.2635 31.0549 30.5243 31.0043 30.7678 30.9044C31.0112 30.8046 31.2324 30.6573 31.4185 30.4712C31.6046 30.2852 31.7518 30.064 31.8517 29.8205C31.9516 29.5771 32.0021 29.3162 32.0003 29.0531V9.33308ZM12.667 10.0397C12.6648 9.93588 12.688 9.83304 12.7344 9.74012C12.7809 9.6472 12.8493 9.56699 12.9337 9.50641L18.8003 5.11974C18.8526 5.08795 18.9125 5.07113 18.9737 5.07113C19.0348 5.07113 19.0948 5.08795 19.147 5.11974C19.1919 5.1394 19.2319 5.16871 19.2641 5.20558C19.2964 5.24245 19.3201 5.28598 19.3337 5.33308V21.9597C19.3358 22.0636 19.3127 22.1664 19.2662 22.2594C19.2198 22.3523 19.1514 22.4325 19.067 22.4931L13.2003 26.8797C13.1481 26.9115 13.0881 26.9284 13.027 26.9284C12.9659 26.9284 12.9059 26.9115 12.8537 26.8797C12.8088 26.8601 12.7688 26.8308 12.7365 26.7939C12.7043 26.757 12.6805 26.7135 12.667 26.6664V10.0397ZM2.667 4.97308C2.66561 4.90948 2.68245 4.84681 2.71552 4.79247C2.7486 4.73813 2.79653 4.69439 2.85367 4.66641C2.90589 4.63462 2.96586 4.6178 3.027 4.6178C3.08814 4.6178 3.14811 4.63462 3.20033 4.66641L9.73367 9.47974C9.81571 9.54254 9.88237 9.62321 9.92858 9.71562C9.97478 9.80803 9.99932 9.90976 10.0003 10.0131V26.6664C10.0005 26.7264 9.98448 26.7853 9.95398 26.8369C9.92347 26.8885 9.87961 26.931 9.827 26.9597C9.77389 26.9889 9.71427 27.0042 9.65367 27.0042C9.59307 27.0042 9.53345 26.9889 9.48033 26.9597L2.96033 22.4931C2.86996 22.4334 2.79584 22.3522 2.74464 22.2568C2.69344 22.1614 2.66676 22.0547 2.667 21.9464V4.97308ZM29.3337 27.0264C29.3351 27.09 29.3182 27.1527 29.2851 27.207C29.2521 27.2614 29.2041 27.3051 29.147 27.3331C29.0948 27.3649 29.0348 27.3817 28.9737 27.3817C28.9125 27.3817 28.8526 27.3649 28.8003 27.3331L22.267 22.5597C22.185 22.4969 22.1183 22.4163 22.0721 22.3239C22.0259 22.2315 22.0013 22.1297 22.0003 22.0264V5.33308C22.0002 5.27311 22.0162 5.21422 22.0467 5.16259C22.0772 5.11097 22.1211 5.06853 22.1737 5.03974C22.2268 5.01057 22.2864 4.99527 22.347 4.99527C22.4076 4.99527 22.4672 5.01057 22.5203 5.03974L29.0403 9.47974C29.1307 9.53942 29.2048 9.62061 29.256 9.71604C29.3072 9.81146 29.3339 9.91812 29.3337 10.0264V27.0264Z" fill="#202020"/>
           </g>
           <defs>
-          <clipPath id="clip0_5125_1111">
-          <rect width="32" height="32" fill="white"/>
-          </clipPath>
+            <clipPath id="clip0_5125_1111">
+              <rect width="32" height="32" fill="white"/>
+            </clipPath>
           </defs>
         </svg>
         <%= t('profile.sitemap') %>
@@ -136,7 +134,7 @@
         <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
       </svg>
     <%end%>
-<%# 
+    <%# 
     <h2><%= t('profile.theme') %</h2>
     <div class="theme-switcher">
       <select id="theme-select">
@@ -145,40 +143,38 @@
         <option value="dark"><%= t('profile.dark') %</option>
       </select>
     </div> %>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const themeSelect = document.getElementById("theme-select");
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const themeSelect = document.getElementById("theme-select");
-
-      function setTheme(theme) {
-        if (theme === "system") {
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
-        } else {
-          document.documentElement.setAttribute("data-theme", theme);
+        function setTheme(theme) {
+          if (theme === "system") {
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+          } else {
+            document.documentElement.setAttribute("data-theme", theme);
+          }
         }
-      }
 
-      // Load theme from localStorage
-      const savedTheme = localStorage.getItem("theme") || "system";
-      themeSelect.value = savedTheme;
-      setTheme(savedTheme);
+        // Load theme from localStorage
+        const savedTheme = localStorage.getItem("theme") || "system";
+        themeSelect.value = savedTheme;
+        setTheme(savedTheme);
 
-      // Listen to user selection
-      themeSelect.addEventListener("change", () => {
-        const selected = themeSelect.value;
-        localStorage.setItem("theme", selected);
-        setTheme(selected);
+        // Listen to user selection
+        themeSelect.addEventListener("change", () => {
+          const selected = themeSelect.value;
+          localStorage.setItem("theme", selected);
+          setTheme(selected);
+        });
+
+
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+          if (localStorage.getItem("theme") === "system") {
+            setTheme("system");
+          }
+        });
       });
-
-
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-        if (localStorage.getItem("theme") === "system") {
-          setTheme("system");
-        }
-      });
-    });
-
     </script>
     <h2><%= t('profile.support') %></h2>
     <%= link_to new_bug_report_path, class: "nav-link-profil" do %>
@@ -207,7 +203,6 @@
         <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
       </svg>
     </a>
-    
     <% if current_user.admin? || current_user.certified? %>
       <h2><%= t('profile.validation') %></h2>
       <%= link_to validation_path, class: "nav-link-profil" do %>
@@ -242,5 +237,5 @@
     <%= link_to changelog_path do %>
       <p class="version">version 1.1.0</p>
     <%end%>
-    </div>
-  </section>
+  </div>
+</section>

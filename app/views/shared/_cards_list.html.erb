@@ -1,0 +1,7 @@
+<% (items || []).each do |item| %>
+  <% if item.is_a?(Designer) %>
+    <%= render partial: 'designers/card', locals: { card: item } %>
+  <% elsif item.is_a?(Studio) %>
+    <%= render partial: 'studios/card', locals: { studio: item } %>
+  <% end %>
+<% end %>

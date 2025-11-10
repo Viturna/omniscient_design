@@ -22,6 +22,10 @@ class SearchController < ApplicationController
                     .where("nom_oeuvre ILIKE ?", "%#{query}%")
                     .includes(oeuvre_images: { file_attachment: :blob }, designers: [])
                     .limit(5)
+              
+    studios = Studio.where(validation: true)
+                    .where("nom ILIKE ?", "%#{query}%")
+                    .limit(5)
 
     render json: {
       domaines: {
@@ -39,15 +43,17 @@ class SearchController < ApplicationController
         title: t('search.designers'),
         class: "section-title",
         results: designers.map do |d|
-          # NOTE: Logique 'designer' conservée telle quelle
-          thumb_path = Rails.root.join(
-            "app/assets/images/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
-          )
-          img_url = if File.exist?(thumb_path)
-                      "/assets/designers/thumbs/#{remove_accents_and_special_chars(d.nom_designer)}.webp"
-                    else
-                      d.image
-                    end
+         first_image = o.designer_images.first
+          thumb_url = nil
+
+          if first_image&.file&.attached?
+            begin
+              thumb_url = url_for(first_image.file.variant(:thumb))
+            rescue ActiveStorage::FileNotFoundError => e
+              # Si le fichier est cassé (comme dans vos logs), on ne plante pas
+              Rails.logger.error "[Autocomplete] Fichier manquant pour Designer ID #{o.id}: #{e.message}"
+            end
+          end
           {
             name: d.nom_designer,
             url: designer_path(d),
@@ -82,6 +88,24 @@ class SearchController < ApplicationController
             designer: o.designers.map(&:nom_designer).join(', ') # <- Votre JS gère ça
           }
         end
+      },
+      studios: {
+        title: t('search.studios', default: "Studios"), # Assurez-vous d'avoir la trad
+        class: "section-title",
+        results: studios.map do |s|
+          # Gestion de l'image studio (similaire à designer)
+          thumb_path = Rails.root.join("app/assets/images/studios/thumbs/#{remove_accents_and_special_chars(s.nom)}.webp")
+          img_url = if File.exist?(thumb_path)
+                      "/assets/studios/thumbs/#{remove_accents_and_special_chars(s.nom)}.webp"
+                    else
+                      s.image # ou une image par défaut
+                    end
+          {
+            name: s.nom,
+            url: studio_path(s),
+            img: img_url
+          }
+        end
       }
     }
   rescue => e
@@ -89,11 +113,13 @@ class SearchController < ApplicationController
     render json: { error: t('search.server_error') }, status: 500
   end
 
-  # ... (Le reste de votre fichier (méthode 'search') reste inchangé) ...
   def search
     @current_page = 'recherche'
     per_page = (params[:per_page] || 24).to_i  
-    @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
+    @countries = Country.where(id: DesignerCountry.select(:country_id))
+                        .or(Country.where(id: StudioCountry.select(:country_id)))
+                        .distinct
+                        .order(:country)
     @notions = Notion.all
     query = params[:query].to_s.strip
   
@@ -113,6 +139,11 @@ class SearchController < ApplicationController
       )
       .first
 
+    studio = Studio.where(validation: true).where("nom ILIKE ?", query).first
+
+    if studio
+      redirect_to studio_path(studio) and return
+    end
     # Si on a un designer dont le nom/prénom correspond quasi-exactement, on redirige vers lui
     if designer && (oeuvre.nil? || query.length <= designer.nom.length)
       redirect_to designer_path(designer) and return
@@ -123,17 +154,21 @@ class SearchController < ApplicationController
       redirect_to oeuvre_path(oeuvre) and return
     end
   end
-
   if params[:tab] == "frise"
     @oeuvres = Oeuvre.where(validation: true)
                     .select(:id, :nom_oeuvre, :date_oeuvre, :slug)
-                    .includes(:notions, :designers, :domaines,)
+                    .includes(:notions, :designers, :domaines)
                     .order(:date_oeuvre)
 
     @designers = Designer.where(validation: true)
-                        .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
+                        .select(:id, :nom, :prenom, :date_naissance, :slug)
                         .includes(:domaines, :countries)
                         .order(:date_naissance)
+                      
+    @studios = Studio.where(validation: true)
+                        .select(:id, :nom, :date_creation, :slug)
+                        .includes(:domaines, :countries)
+                        .order(:date_creation)
   else
     @oeuvres = Oeuvre.where(validation: true)
                     .select(:id, :nom_oeuvre, :date_oeuvre, :slug)
@@ -143,11 +178,18 @@ class SearchController < ApplicationController
                     .per(per_page)
 
     @designers = Designer.where(validation: true)
-                     .select(:id, :nom, :prenom, :date_naissance, :image, :slug)
+                     .select(:id, :nom, :prenom, :date_naissance, :slug)
                      .includes(:domaines, :countries)
                      .order(:nom)
                      .page(params[:page])
                      .per(per_page)
+
+    @studios = Studio.where(validation: true)
+                        .select(:id, :nom, :date_creation, :image, :slug)
+                        .includes(:domaines, :countries)
+                        .order(:nom)
+                        .page(params[:page])
+                        .per(per_page)
   end
 
   if params[:domaine].present?
@@ -155,6 +197,7 @@ class SearchController < ApplicationController
     if filtered_domains.any?
       @oeuvres = @oeuvres.joins(:domaines).where(domaines: { id: filtered_domains })
       @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
+      @studios = @studios.joins(:domaines).where(domaines: { id: filtered_domains })
     end
   end
 
@@ -162,8 +205,7 @@ class SearchController < ApplicationController
     countries = Array(params[:country]).reject(&:blank?)
     if countries.any?
       @designers = @designers.joins(:countries).where(countries: { id: countries })
-
-        # ==> nouvelles lignes pour filtrer les oeuvres
+      @studios = @studios.joins(:countries).where(countries: { id: countries })
       designer_ids = @designers.pluck(:id)
       @oeuvres     = @oeuvres.joins(:designers)
                               .where(designers: { id: designer_ids })
@@ -203,6 +245,9 @@ end
         start_year =  1880
         end_year = Time.now.year
         @timeline_years = (start_year..end_year).to_a
+      if start_year > 0 && end_year > 0 && start_year <= end_year
+         @studios = @studios.where("date_creation >= ? AND (date_fin IS NULL OR date_fin <= ?)", start_year, end_year)
+       end
     end
   
     case params[:sort]

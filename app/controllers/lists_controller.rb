@@ -1,10 +1,10 @@
 class ListsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_list, only: [
+before_action :set_list, only: [
     :show, :edit, :update, :destroy, :invite_editors,
     :change_role, :remove_user, :toggle_privacy,
-    :remove_designer, :remove_oeuvre,
-    :add_oeuvre, :add_designer
+    :remove_designer, :remove_oeuvre, :remove_studio,
+    :add_oeuvre, :add_designer, :add_studio 
   ]
   
   def index
@@ -16,7 +16,9 @@ class ListsController < ApplicationController
 
   def show
     @current_page = 'listes'
-    @countries = Country.where(id: DesignerCountry.select(:country_id).distinct)
+    @countries = Country.where(id: DesignerCountry.select(:country_id))
+                        .or(Country.where(id: StudioCountry.select(:country_id)))
+                        .distinct.order(:country)
     @notions = Notion.all
 
     # Designers
@@ -26,6 +28,13 @@ class ListsController < ApplicationController
                                .where.not(id: selected_designer_ids)
                                .order(:nom)
                                .page(params[:designers_page]).per(10)
+
+    selected_studio_ids = @list.studio_ids
+    @selected_studios = Studio.where(id: selected_studio_ids, validation: true).order(:nom)
+    @other_studios = Studio.where(validation: true)
+                           .where.not(id: selected_studio_ids)
+                           .order(:nom)
+                           .page(params[:studios_page]).per(10)
 
     # Œuvres
     selected_oeuvre_ids = @list.oeuvre_ids
@@ -56,6 +65,13 @@ class ListsController < ApplicationController
                                  .order(:nom)
                                  .page(params[:designers_page]).per(10)
 
+      selected_studio_ids = @list.studio_ids
+      @selected_studios = Studio.where(id: selected_studio_ids, validation: true).order(:nom)
+      @other_studios = Studio.where(validation: true)
+                             .where.not(id: selected_studio_ids)
+                             .order(:nom)
+                             .page(params[:studios_page]).per(10)
+
       # Œuvres
       selected_oeuvre_ids = @list.oeuvre_ids
       @selected_oeuvres = Oeuvre.where(id: selected_oeuvre_ids, validation: true).order(:nom_oeuvre)
@@ -77,13 +93,15 @@ class ListsController < ApplicationController
     @domaines  = Domaine.all
     @countries = Country.where(id: DesignerCountry.select(:country_id)).order(:country)
 
-    oeuvres_scope, designers_scope = filtered_scopes
+    oeuvres_scope, designers_scope, studios_scope = filtered_scopes
 
     @selected_oeuvre_ids  = [params[:oeuvre_id]].compact
     @selected_designer_ids = [params[:designer_id]].compact
+    @selected_studio_ids   = [params[:studio_id]].compact
 
     @oeuvres   = oeuvres_scope.order(:nom_oeuvre).limit(10).to_a
     @designers = designers_scope.order(:nom).limit(10).to_a
+    @studios   = studios_scope.order(:nom).limit(10).to_a
 
     # injecte les pré-sélectionnés en tête
     Oeuvre.where(id: @selected_oeuvre_ids).each do |o|
@@ -91,6 +109,9 @@ class ListsController < ApplicationController
     end
     Designer.where(id: @selected_designer_ids).each do |d|
       @designers.unshift(d) unless @designers.map(&:id).include?(d.id)
+    end
+    Studio.where(id: @selected_studio_ids).each do |s|
+      @studios.unshift(s) unless @studios.map(&:id).include?(s.id)
     end
 
   end
@@ -105,6 +126,11 @@ class ListsController < ApplicationController
         @list.designers = Designer.where(id: designer_ids)
       end
 
+      if params[:studio_ids].present?
+        studio_ids = params[:studio_ids].split(',').map(&:to_i)
+        @list.studios = Studio.where(id: studio_ids)
+      end
+
       if params[:oeuvre_ids].present?
         oeuvre_ids = params[:oeuvre_ids].split(',').map(&:to_i)
         @list.oeuvres = Oeuvre.where(id: oeuvre_ids)
@@ -114,9 +140,11 @@ class ListsController < ApplicationController
     else
       @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10)
       @designers = Designer.where(validation: true).order(:nom).limit(10)
+      @studios = Studio.where(validation: true).order(:nom).limit(10)
       @domaines = Domaine.all
 
       @selected_designer_ids = params[:designer_ids].to_s.split(',').map(&:to_i)
+      @selected_studio_ids   = params[:studio_ids].to_s.split(',').map(&:to_i)
       @selected_oeuvre_ids = params[:oeuvre_ids].to_s.split(',').map(&:to_i)
 
       render :new
@@ -159,6 +187,15 @@ class ListsController < ApplicationController
              end
     redirect_to request.referer, notice: notice
   end
+  def remove_studio
+    studio = Studio.find(params[:studio_id])
+    notice = if @list.studios.delete(studio)
+               I18n.t('lists.remove.studio.success', default: "Studio retiré de la liste")
+             else
+               I18n.t('lists.remove.studio.failure', default: "Erreur lors du retrait du studio")
+             end
+    redirect_to request.referer, notice: notice
+  end
 
   def add_oeuvre
     oeuvre = Oeuvre.find(params[:oeuvre_id])
@@ -185,7 +222,18 @@ class ListsController < ApplicationController
       end
     end
   end
-
+  def add_studio
+    studio = Studio.find(params[:studio_id])
+    if @list.studios.include?(studio)
+      redirect_to request.referer, alert: I18n.t('lists.add.studio.exists', default: "Ce studio est déjà dans la liste")
+    else
+      if @list.studios << studio
+        redirect_to request.referer, notice: I18n.t('lists.add.studio.success', default: "Studio ajouté à la liste")
+      else
+        redirect_to request.referer, alert: I18n.t('lists.add.studio.failure', default: "Erreur lors de l'ajout du studio")
+      end
+    end
+  end
   def toggle_privacy
     if params[:privacy] == 'public'
       @list.update(share_token: @list.previous_share_token || SecureRandom.hex(10))
@@ -284,27 +332,43 @@ def load_more_designers
   end
   render partial: 'designers_list', collection: @designers, as: :designer
 end
-def search_items
-  query = params[:q].to_s.strip
-  type  = params[:type]
-
-  case type
-  when 'designers'
-    @designers = Designer.where(validation: true)
-                         .where("nom ILIKE :q OR prenom ILIKE :q", q: "%#{query}%")
-                         .limit(10)
-    render partial: 'designers_list', collection: @designers, as: :designer
-
-  when 'oeuvres'
-    @oeuvres = Oeuvre.where(validation: true)
-                     .where("nom_oeuvre ILIKE ?", "%#{query}%")
-                     .limit(10)
-    render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
-
-  else
-    render plain: ""
+def load_more_studios
+    offset = params[:offset].to_i
+    if params[:slug].present?
+      @list = List.friendly.find_by(slug: params[:slug])
+      @studios = @list.studios.offset(offset).limit(10)
+    else
+      _, _, studios_scope = filtered_scopes
+      @studios = studios_scope.order(:nom).offset(offset).limit(10)
+    end
+    # Assurez-vous d'avoir le partial _studios_list.html.erb
+    render partial: 'studios_list', collection: @studios, as: :studio
   end
-end
+  def search_items
+    query = params[:q].to_s.strip
+    type  = params[:type]
+
+    case type
+    when 'designers'
+      @designers = Designer.where(validation: true)
+                          .where("nom ILIKE :q OR prenom ILIKE :q", q: "%#{query}%")
+                          .limit(10)
+      render partial: 'designers_list', collection: @designers, as: :designer
+    when 'studios'
+      @studios = Studio.where(validation: true)
+                       .where("nom ILIKE ?", "%#{query}%")
+                       .limit(10)
+      render partial: 'studios_list', collection: @studios, as: :studio
+    when 'oeuvres'
+      @oeuvres = Oeuvre.where(validation: true)
+                      .where("nom_oeuvre ILIKE ?", "%#{query}%")
+                      .limit(10)
+      render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+
+    else
+      render plain: ""
+    end
+  end
 
 
 
@@ -313,30 +377,27 @@ end
  def filtered_scopes
   oeuvres   = Oeuvre.where(validation: true)
   designers = Designer.where(validation: true)
-
+  studios   = Studio.where(validation: true)
   # ----- années -----
   if params[:start_year].present? && params[:end_year].present?
     sy, ey = params[:start_year].to_i, params[:end_year].to_i
     if sy > 0 && ey > 0 && sy <= ey
       designers = designers.where(date_naissance: sy..ey)
+      studios   = studios.where(date_creation: sy..ey)
       oeuvres   = oeuvres.where(date_oeuvre: sy..ey)
     end
   end
 
   # ----- domaines -----
-    # ----- domaines -----
-  domaines_params = params.dig(:list, :domaine)   # <--- cette ligne manquait
-  if domaines_params.present?
-    domaine_ids = Array(domaines_params).reject(&:blank?)
-
-    designers = designers.joins(:domaines)
-                         .where(domaines: { id: domaine_ids })
-                         .distinct
-
-    oeuvres   = oeuvres.joins(:domaines)
-                       .where(domaines: { id: domaine_ids })
-                       .distinct
-  end
+  domaines_params = params.dig(:list, :domaine)
+    if domaines_params.present?
+      domaine_ids = Array(domaines_params).reject(&:blank?)
+      if domaine_ids.any?
+        designers = designers.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+        studios   = studios.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+        oeuvres   = oeuvres.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+      end
+    end
 
 
   # ----- notions -----
@@ -348,23 +409,19 @@ end
   end
 
   # ----- pays -----
-countries_params = params[:country] || params.dig(:list, :country)
-if countries_params.present?
-  country_ids = Array(countries_params).reject(&:blank?)
-
-  # pour les designers
-  designers = designers.joins(:designer_countries)
-                       .where(designer_countries: { country_id: country_ids })
-                       .distinct
-
-  # pour les oeuvres
-  oeuvres = oeuvres.joins(designers: :designer_countries)
-                   .where(designer_countries: { country_id: country_ids })
-                   .distinct
-end
+  countries_params = params[:country] || params.dig(:list, :country)
+    if countries_params.present?
+      country_ids = Array(countries_params).reject(&:blank?)
+      if country_ids.any?
+        designers = designers.joins(:designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+        # Si StudioCountry existe :
+        studios   = studios.joins(:studio_countries).where(studio_countries: { country_id: country_ids }).distinct
+        oeuvres   = oeuvres.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+      end
+    end
 
 
-  [oeuvres, designers]
+  [oeuvres, designers, studios]
 end
 
 
@@ -374,7 +431,7 @@ end
   end
 
   def list_params
-    params.require(:list).permit(:name, designer_ids: [], oeuvre_ids: [])
+    params.require(:list).permit(:name, designer_ids: [], studio_ids: [], oeuvre_ids: [])
   end
 
   def create_share_notification(list)

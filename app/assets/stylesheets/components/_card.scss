@@ -79,6 +79,11 @@
   width: fit-content;
 }
 
+.flex-info-card.ads {
+  align-items: end;
+  height: 89%;
+}
+
 .domaine-flex-card {
   display: flex;
   flex-direction: column;

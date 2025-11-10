@@ -1,8 +1,8 @@
 <div class="log" style="color:#FFF; min-height:100vh;">
   <%= image_tag "logo-white.svg", alt: "", class: "logo-log" %>
   <section class="box-log">
-    <h1><%= t('devise.confirmation.title') %></h1>
     <div class="form">
+      <h1 style="margin-top: 0;"><%= t('devise.confirmation.title') %></h1>
       <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
         <div class="field">

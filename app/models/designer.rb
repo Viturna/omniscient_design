@@ -3,9 +3,6 @@ class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
 
-  # after_commit :reindex_searchkick, if: :validated?
-  # after_destroy :remove_from_searchkick
-
   validates :nom, presence: true
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year
@@ -25,7 +22,15 @@ class Designer < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
 
-attribute :source, :json, default: []
+  has_many :designer_studios
+  has_many :studios, through: :designer_studios
+
+  attribute :source, :json, default: []
+
+  has_many :designer_images, dependent: :destroy
+  accepts_nested_attributes_for :designer_images, allow_destroy: true, 
+                                reject_if: :all_blank, 
+                                limit: 3
 
   attr_accessor :rejection_reason
 
@@ -38,13 +43,6 @@ attribute :source, :json, default: []
   end
 
   private
-
-  def reindex_searchkick
-    reindex
-  end
-  def remove_from_searchkick
-    self.class.search_index.remove(self)
-  end
 
   def valid_birth_year
     if date_naissance.present?

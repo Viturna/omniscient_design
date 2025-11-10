@@ -21,8 +21,7 @@ module OmniscientDesign
     config.exceptions_app = self.routes
 
     config.assets.paths << Rails.root.join("app/assets/stylesheets")
-
-    config.action_controller.forgery_protection_origin_check = false
+    
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

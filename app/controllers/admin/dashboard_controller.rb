@@ -6,6 +6,21 @@ class Admin::DashboardController <  ApplicationController
     @current_page = 'dashboard'
     @users = User.all
     @nb_etablissements_actifs = User.joins(:etablissement).distinct.count('etablissements.id')
+
+    # 7 derniers jours
+    visits_7d = DailyVisit.where('visited_on >= ?', 7.days.ago)
+    unique_users_7d = visits_7d.distinct.count(:user_id)
+    @avg_visits_7d = unique_users_7d > 0 ? (visits_7d.count.to_f / unique_users_7d).round(1) : 0
+
+    # 30 derniers jours (Mois)
+    visits_30d = DailyVisit.where('visited_on >= ?', 30.days.ago)
+    unique_users_30d = visits_30d.distinct.count(:user_id)
+    @avg_visits_30d = unique_users_30d > 0 ? (visits_30d.count.to_f / unique_users_30d).round(1) : 0
+
+    # 12 derniers mois (Année)
+    visits_12m = DailyVisit.where('visited_on >= ?', 12.months.ago)
+    unique_users_12m = visits_12m.distinct.count(:user_id)
+    @avg_visits_12m = unique_users_12m > 0 ? (visits_12m.count.to_f / unique_users_12m).round(1) : 0
   end
 
   def suivi_references

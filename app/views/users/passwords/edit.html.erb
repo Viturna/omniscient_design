@@ -1,7 +1,7 @@
 <div class="log" style="background-color:#202020; color:#FFF; min-height:100vh;">
   <section class="box-log">
-    <h1>Changer votre mot de passe</h1>
     <div class="form">
+      <h1 style="margin-top:0;">Changer votre mot de passe</h1>
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
         <% if resource.errors.any? %>
           <div id="error_explanation">
@@ -28,6 +28,7 @@
             </svg>
           </button>
         </div>
+        <i>Votre mot de passe doit comporter au moins 6 caractères, incluant une majuscule, une minuscule, un chiffre et un caractère spécial.</i>
         <div class="field password-container" data-controller="show-password">
           <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmer le mot de passe", id: "password-field-2", data: { "show-password-target": "passwordField" } %>
           <button type="button" 

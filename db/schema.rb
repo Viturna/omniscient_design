@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_10_205011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,6 +59,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "daily_visits", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.date "visited_on", null: false
+    t.index ["user_id"], name: "index_daily_visits_on_user_id"
+    t.index ["visited_on"], name: "index_daily_visits_on_visited_on"
+  end
+
   create_table "designer_countries", force: :cascade do |t|
     t.bigint "country_id", null: false
     t.datetime "created_at", null: false
@@ -68,6 +77,25 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
     t.index ["designer_id"], name: "index_designer_countries_on_designer_id"
   end
 
+  create_table "designer_images", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "credit"
+    t.bigint "designer_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["designer_id"], name: "index_designer_images_on_designer_id"
+  end
+
+  create_table "designer_studios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "date_entree"
+    t.integer "date_sortie"
+    t.bigint "designer_id", null: false
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["designer_id"], name: "index_designer_studios_on_designer_id"
+    t.index ["studio_id"], name: "index_designer_studios_on_studio_id"
+  end
+
   create_table "designers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "creations_majeures"
@@ -75,7 +103,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
     t.integer "date_naissance"
     t.text "formation_et_influences"
     t.text "heritage_et_impact"
-    t.text "image"
     t.string "nom"
     t.string "prenom"
     t.text "presentation_generale"
@@ -121,6 +148,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
     t.text "domaine"
     t.string "svg"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "domaines_studios", id: false, force: :cascade do |t|
+    t.bigint "domaine_id", null: false
+    t.bigint "studio_id", null: false
+    t.index ["domaine_id", "studio_id"], name: "index_domaines_studios_on_domaine_id_and_studio_id"
+    t.index ["studio_id", "domaine_id"], name: "index_domaines_studios_on_studio_id_and_domaine_id"
   end
 
   create_table "etablissements", force: :cascade do |t|
@@ -335,6 +369,48 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
     t.index ["user_id"], name: "index_rejected_oeuvres_on_user_id"
   end
 
+  create_table "studio_countries", force: :cascade do |t|
+    t.bigint "country_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country_id"], name: "index_studio_countries_on_country_id"
+    t.index ["studio_id", "country_id"], name: "index_studio_countries_on_studio_id_and_country_id", unique: true
+    t.index ["studio_id"], name: "index_studio_countries_on_studio_id"
+  end
+
+  create_table "studios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "creations_majeures"
+    t.integer "date_creation"
+    t.integer "date_fin"
+    t.text "formation_et_influences"
+    t.text "heritage_et_impact"
+    t.text "image"
+    t.string "nom"
+    t.text "presentation_generale"
+    t.text "rejection_reason"
+    t.string "slug"
+    t.text "source"
+    t.text "style_ou_philosophie"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "validated_by_user_id"
+    t.boolean "validation"
+    t.index ["slug"], name: "index_studios_on_slug", unique: true
+    t.index ["user_id"], name: "index_studios_on_user_id"
+    t.index ["validated_by_user_id"], name: "index_studios_on_validated_by_user_id"
+  end
+
+  create_table "studios_domaines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "domaine_id", null: false
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domaine_id"], name: "index_studios_domaines_on_domaine_id"
+    t.index ["studio_id"], name: "index_studios_domaines_on_studio_id"
+  end
+
   create_table "suivis", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "nb_references_emises", default: 0, null: false
@@ -370,6 +446,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
     t.boolean "rgpd_consent"
     t.string "role"
     t.string "statut"
+    t.string "study_level"
     t.string "uid"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
@@ -382,8 +459,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bug_reports", "users"
+  add_foreign_key "daily_visits", "users"
   add_foreign_key "designer_countries", "countries"
   add_foreign_key "designer_countries", "designers"
+  add_foreign_key "designer_images", "designers"
+  add_foreign_key "designer_studios", "designers"
+  add_foreign_key "designer_studios", "studios"
   add_foreign_key "designers", "users"
   add_foreign_key "designers_domaines", "designers"
   add_foreign_key "designers_domaines", "domaines"
@@ -405,5 +486,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_08_000458) do
   add_foreign_key "oeuvres_domaines", "oeuvres"
   add_foreign_key "rejected_designers", "users"
   add_foreign_key "rejected_oeuvres", "users"
+  add_foreign_key "studio_countries", "countries"
+  add_foreign_key "studio_countries", "studios"
+  add_foreign_key "studios", "users"
+  add_foreign_key "studios", "users", column: "validated_by_user_id"
+  add_foreign_key "studios_domaines", "domaines"
+  add_foreign_key "studios_domaines", "studios"
   add_foreign_key "suivis", "users"
 end

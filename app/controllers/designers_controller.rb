@@ -42,11 +42,14 @@ class DesignersController < ApplicationController
   def new
     @designer = Designer.new
     @current_page = 'add_elements'
+    # AJOUT : Construit 3 champs d'images vides pour le formulaire
+    3.times { @designer.designer_images.build }
   end
 
   def edit
     @current_page = 'add_elements'
-    @country_1, @country_2, @country_3 = @designer.country_ids[0..2]
+    # AJOUT : Construit des champs d'images supplémentaires jusqu'à 3
+    (3 - @designer.designer_images.count).times { @designer.designer_images.build }
   end
 
   def create
@@ -62,23 +65,26 @@ class DesignersController < ApplicationController
     else
       @countries = Country.order(:country)
       flash.now[:alert] = I18n.t('designer.create.failure')
+      # Assure que les champs d'image sont reconstruits en cas d'erreur
+      (3 - @designer.designer_images.count).times { @designer.designer_images.build }
       render :new, status: :unprocessable_entity
     end
   end
 
   def update
-    @designer = Designer.friendly.find(params[:slug])
-
     if @designer.update(designer_params)
       flash[:success] = I18n.t('designer.update.success')
       redirect_to @designer
     else
       @countries = Country.order(:country)
       flash.now[:alert] = I18n.t('designer.update.failure')
+      # Assure que les champs d'image sont reconstruits en cas d'erreur
+      (3 - @designer.designer_images.count).times { @designer.designer_images.build }
       render :edit, status: :unprocessable_entity
     end
   end
 
+  # ... (actions destroy, reject, cancel, validate, check_existence inchangées) ...
   def destroy
     @designer = Designer.find_by(slug: params[:slug])
     if @designer
@@ -88,46 +94,37 @@ class DesignersController < ApplicationController
     end
   end
 
-# PATCH/PUT /designers/:slug/reject
-def reject
-  rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
-  @designer = Designer.friendly.find_by(slug: params[:slug])
+  def reject
+    rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
+    @designer = Designer.friendly.find_by(slug: params[:slug])
 
-  unless @designer
-    redirect_to validation_path, alert: I18n.t('designer.not_found') and return
-  end
-
-  ActiveRecord::Base.transaction do
-    # Création du rejet
-    RejectedDesigner.create!(
-      nom: @designer.nom,
-      prenom: @designer.prenom,
-      user: @designer.user, # peut être nil
-      reason: rejection_reason
-    )
-
-    # Suppression des associations
-    @designer.designers_domaines.delete_all if @designer.respond_to?(:designers_domaines)
-    @designer.designers_notions.delete_all if @designer.respond_to?(:designers_notions)
-    @designer.designers_countries.delete_all if @designer.respond_to?(:designers_countries)
-    @designer.designers_oeuvres.delete_all if @designer.respond_to?(:designers_oeuvres)
-
-    # Mise à jour de la raison du rejet et validation
-    @designer.update!(rejection_reason: rejection_reason, validation: false)
-
-    if @designer.user.present?
-      handle_destroy(@designer, I18n.t('designer.reject.success'))
-    else
-      Rails.logger.warn("Le designer #{@designer.id} n'a pas d'utilisateur associé pour la notification de rejet.")
-      redirect_to validation_path, notice: I18n.t('designer.reject.success') and return
+    unless @designer
+      redirect_to validation_path, alert: I18n.t('designer.not_found') and return
     end
-  rescue => e
-    Rails.logger.error("Erreur rejet designer : #{e.message}")
-    redirect_to validation_path, alert: I18n.t('designer.reject.failure')
+
+    ActiveRecord::Base.transaction do
+      RejectedDesigner.create!(
+        nom: @designer.nom,
+        prenom: @designer.prenom,
+        user: @designer.user,
+        reason: rejection_reason
+      )
+      @designer.designers_domaines.delete_all if @designer.respond_to?(:designers_domaines)
+      @designer.designer_countries.delete_all if @designer.respond_to?(:designer_countries)
+      @designer.designers_oeuvres.delete_all if @designer.respond_to?(:designers_oeuvres)
+      @designer.update!(rejection_reason: rejection_reason, validation: false)
+
+      if @designer.user.present?
+        handle_destroy(@designer, I18n.t('designer.reject.success'))
+      else
+        Rails.logger.warn("Le designer #{@designer.id} n'a pas d'utilisateur associé pour la notification de rejet.")
+        redirect_to validation_path, notice: I18n.t('designer.reject.success') and return
+      end
+    rescue => e
+      Rails.logger.error("Erreur rejet designer : #{e.message}")
+      redirect_to validation_path, alert: I18n.t('designer.reject.failure')
+    end
   end
-end
-
-
 
   def cancel
     if user_signed_in?
@@ -163,6 +160,7 @@ end
     end
   end
 
+
   private
 
   def handle_destroy(designer, success_message)
@@ -190,7 +188,6 @@ end
 
   def update_suivi_references_validees(user)
     return unless user
-
     suivi = user.suivis.first_or_create
     suivi.increment(:nb_references_validees)
     suivi.save
@@ -201,12 +198,10 @@ end
     suivi.increment(:nb_references_refusees)
     suivi.save
   end
+  
   def create_notification(designer)
     message = t('notifications.new_designer', name: designer.nom_designer)
-    
-    # Récupérer les admins et les users certifiés
     recipients = User.where("role = ? OR certified = ?", 'admin', true)
-
     recipients.each do |user|
       Notification.create(user_id: user.id, notifiable: designer, message: message)
     end
@@ -214,7 +209,6 @@ end
 
   def create_validation_notification(designer)
     message = t('notifications.designer_validated', name: designer.nom_designer)
-
     if designer.user_id.present?
       Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
     else
@@ -234,11 +228,7 @@ end
   end
 
   def set_designer
-    @designer = if params[:id]
-                Designer.friendly.find(params[:id])
-              else
-                Designer.friendly.find(params[:slug])
-              end
+    @designer = Designer.friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound
     redirect_to validation_path, alert: "Designer n'a pas été trouvée."
   end
@@ -254,11 +244,13 @@ end
       :style_ou_philosophie,
       :creations_majeures,
       :heritage_et_impact,
-      :image,
+      :image, # C'est l'ancien champ image URL, on le garde
       :recaptcha_token,
       domaine_ids: [],
       country_ids: [],
       source: [],
+      # AJOUT : Permet les attributs pour les images uploadées
+      designer_images_attributes: [:id, :file, :credit, :_destroy]
     )
   end
 end

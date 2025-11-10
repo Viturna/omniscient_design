@@ -102,12 +102,9 @@
       <button class="refonte-alert-close" id="closeRefonteAlert" title="Fermer">×</button>
     </div>
     <div class="box-card" id="boxCard">
-      <%= render partial: 'shared/cards_list', locals: { items: @items } %>
+      <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
     </div>
-    <div id="infinite-scroll-trigger" 
-         data-loaded-designer-ids="<%= @items.select { |i| i.is_a?(Designer) }.map(&:id).join(',') %>"
-         data-loaded-studio-ids="<%= @items.select { |i| i.is_a?(Studio) }.map(&:id).join(',') %>">
-    </div>
+    <div id="designers-load-more" data-offset="2" data-loaded-ids="<%= @designers.pluck(:id).join(',') %>"></div>
     <div class="button-nav">
       <button class="arrow-button up">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">

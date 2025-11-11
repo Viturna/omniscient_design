@@ -100,9 +100,10 @@
     <div class="field">
       <%= form.label :image, "Image Desktop (principale)" %>
       <%= form.file_field :image, class: "form-control" %>
-      <% if ad.image.attached? %>
-        <div class="image-preview">
-          <%= image_tag ad.image.variant(resize_to_limit: [200, 200]) %>
+      <% if ad.image.attached? && ad.persisted? %>
+        <div class="image-preview" style="margin-top: 15px;">
+          <p style="margin: 0 0 5px 0;">Aperçu de l'image actuelle :</p>
+          <%= image_tag ad.image.variant(resize_to_limit: [300, 300]) %>
         </div>
       <% end %>
     </div>
@@ -110,9 +111,10 @@
       <%= form.label :image_mobile, "Image Mobile (optionnelle)" %>
       <i>Sera utilisée sur les écrans de moins de 800px.</i>
       <%= form.file_field :image_mobile, class: "form-control" %>
-      <% if ad.image_mobile.attached? %>
-        <div class="image-preview">
-          <%= image_tag ad.image_mobile.variant(resize_to_limit: [200, 200]) %>
+      <% if ad.image_mobile.attached? && ad.persisted? %>
+        <div class="image-preview" style="margin-top: 15px;">
+          <p style="margin: 0 0 5px 0;">Aperçu de l'image actuelle :</p>
+          <%= image_tag ad.image_mobile.variant(resize_to_limit: [300, 300]) %>
         </div>
       <% end %>
     </div>

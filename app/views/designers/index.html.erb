@@ -94,17 +94,29 @@
       <%= link_to t('global.designers'), designers_path, class: "active" %>
       <%= link_to t('global.references'), oeuvres_path %>
     </div>
-    <div class="refonte-alert" id="refonteAlert">
+    <%# <div class="refonte-alert" id="refonteAlert">
       <div class="refonte-alert-content">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
         <span><strong>Maintenance :</strong> Une opération de refonte des images est en cours sur les designers. Elles reviennent bientôt !</span>
       </div>
       <button class="refonte-alert-close" id="closeRefonteAlert" title="Fermer">×</button>
-    </div>
+    </div> %>
     <div class="box-card" id="boxCard">
-      <%= render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' } %>
+      <% @items.each do |item| %>
+        <% if item.is_a?(Designer) %>
+          <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
+        <% elsif item.is_a?(Hash) %>
+          <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
+        <% end %>
+      <% end %>
     </div>
-    <div id="designers-load-more" data-offset="2" data-loaded-ids="<%= @designers.pluck(:id).join(',') %>"></div>
+    <div id="designers-load-more" 
+         data-offset="<%= @items.count { |i| i.is_a?(Designer) } %>"
+         data-loaded-ids="<%= @items.select { |i| i.is_a?(Designer) }.map(&:id).join(',') %>"
+         data-ad-index="0"
+         data-items-until-next-ad="<%= @items_until_next_ad %>"
+         data-ads-order="<%= @ads_order_string %>">
+    </div>
     <div class="button-nav">
       <button class="arrow-button up">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,109 +142,132 @@
       const upButton = document.querySelector(".arrow-button.up");
       const downButton = document.querySelector(".arrow-button.down");
 
-      if (!container) return;
+      if (!container || !loadMoreTrigger) return;
 
       let isLoading = false;
       let isScrolling = false;
 
-      // Fonction de chargement des cartes
+      // --- SCROLL INFINI (MIS À JOUR POUR JSON + PUBS) ---
       function loadMoreCards() {
         if (isLoading) return;
         isLoading = true;
 
-        const offset = loadMoreTrigger.dataset.offset;
-        const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
+        // Récupère les données actuelles depuis les attributs data-*
+        let offset = parseInt(loadMoreTrigger.dataset.offset) || 0;
+        let loadedIds = loadMoreTrigger.dataset.loadedIds || '';
+        let itemsUntilNextAd = loadMoreTrigger.dataset.itemsUntilNextAd;
+        let adIndex = loadMoreTrigger.dataset.adIndex;
+        let adsOrder = loadMoreTrigger.dataset.adsOrder; // Récupère l'ordre
 
-        fetch(`/designers/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
-            .then((response) => response.text())
-            .then((html) => {
-              if (html.trim() === "") {
-                loadMoreTrigger.style.display = "none"; // Cache le bouton si aucun contenu
-              } else {
-                container.insertAdjacentHTML("beforeend", html);
+        // Construit l'URL avec tous les paramètres
+        const url = `/designers/load_more?offset=${offset}&loaded_ids=${loadedIds}&items_until_next_ad=${itemsUntilNextAd}&ad_index=${adIndex}&ads_order=${adsOrder}`;
 
-                // Mettre à jour l'offset et les IDs chargés
-                loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
-                const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(card => card.dataset.id);
-                loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
+        fetch(url, {
+          headers: {
+            'Accept': 'application/json' // Important : on attend du JSON
+          }
+        })
+        .then(response => response.json()) // On parse la réponse JSON
+        .then(data => {
+          if (data.html.trim() === "") {
+            loadMoreTrigger.style.display = "none"; // Plus rien à charger
+          } else {
+            // Insère le nouveau HTML (qui contient designers ET pubs)
+            container.querySelector('#boxCard').insertAdjacentHTML("beforeend", data.html);
 
-                validateCardAlignment();
-              }
-            })
-            .catch((err) => {
-              console.error("Erreur lors du chargement des cartes :", err);
-            })
-            .finally(() => {
-              isLoading = false;
-            });
-        }
+            // Met à jour les compteurs sur le trigger pour le prochain appel
+            loadMoreTrigger.dataset.itemsUntilNextAd = data.items_until_next_ad;
+            loadMoreTrigger.dataset.adIndex = data.ad_index;
 
+            // Met à jour l'offset et les IDs chargés
+            const currentCards = Array.from(container.querySelectorAll('.card:not(.ad-card)'));
+            const allLoadedIds = currentCards.map(c => c.dataset.id).filter(id => id);
 
-        // Vérification et ajustement de l'alignement des cartes
-        function validateCardAlignment() {
-          const cards = container.querySelectorAll(".card");
-          cards.forEach((card) => {
-            card.style.marginBottom = "10px"; // Assure un espacement cohérent entre les cartes
-          });
+            loadMoreTrigger.dataset.offset = allLoadedIds.length;
+            loadMoreTrigger.dataset.loadedIds = allLoadedIds.join(',');
+
+            validateCardAlignment();
+          }
+        })
+        .catch((err) => {
+          console.error("Erreur lors du chargement des cartes :", err);
+        })
+        .finally(() => {
+          isLoading = false;
+        });
       }
 
-      // Fonction pour défiler vers le haut ou le bas
-        function scrollToCard(direction) {
-          const cards = Array.from(container.querySelectorAll(".card"));
-          const scrollTop = container.scrollTop;
-          const containerHeight = container.clientHeight;
+      function validateCardAlignment() {
+        container.querySelectorAll(".card, .ad-card").forEach((card) => {
+          card.style.marginBottom = "10px";
+        });
+      }
 
-          // Trouver l'index de la card "active"
-          const currentIndex = cards.findIndex(card => {
-            const cardTop = card.offsetTop;
-            const cardBottom = cardTop + card.offsetHeight;
-            return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
-          });
+      // --- NAVIGATION VERTICALE (Boutons, Clavier) ---
+      function scrollToCard(direction) {
+        const cards = Array.from(container.querySelectorAll(".card, .ad-card")); // Inclut les pubs
+        const scrollTop = container.scrollTop;
+        const containerHeight = container.clientHeight;
 
-          let targetIndex = currentIndex;
-          if (direction === "down" && currentIndex < cards.length - 1) {
-            targetIndex++;
-          } else if (direction === "up" && currentIndex > 0) {
-            targetIndex--;
-          }
+        const currentIndex = cards.findIndex(card => {
+          const cardTop = card.offsetTop;
+          const cardBottom = cardTop + card.offsetHeight;
+          return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
+        });
 
-          if (targetIndex !== currentIndex) {
-            cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
-          }
+        let targetIndex = currentIndex;
+        if (direction === "down" && currentIndex < cards.length - 1) {
+          targetIndex++;
+        } else if (direction === "up" && currentIndex > 0) {
+          targetIndex--;
         }
 
+        if (targetIndex !== currentIndex) {
+          cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
 
-        // Gestion des boutons
+      if (upButton && downButton) {
         upButton.addEventListener("click", () => scrollToCard("up"));
         downButton.addEventListener("click", () => scrollToCard("down"));
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") scrollToCard("up");
+        if (e.key === "ArrowDown") scrollToCard("down");
+      });
 
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "ArrowUp") scrollToCard("up");
-          if (e.key === "ArrowDown") scrollToCard("down");
-        });
-        // Gestion tactile (mobile-friendly)
-        let touchStartY = 0;
-        let touchEndY = 0;
+      // --- GESTION UNIFIÉE DES TOUCHES (Vertical + Horizontal) ---
+      let touchStartX = 0;
+      let touchStartY = 0;
 
-        container.addEventListener("touchstart", (e) => {
-          touchStartY = e.touches[0].clientY;
-        }, { passive: true });
+      container.addEventListener("touchstart", (e) => {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].screenX; // Ajout pour swipe horizontal
+      }, { passive: true });
 
-        container.addEventListener("touchend", (e) => {
-          if (isScrolling) return;
+      container.addEventListener("touchend", (e) => {
+        if (isScrolling) return;
 
-          touchEndY = e.changedTouches[0].clientY;
-          const swipeDistance = touchStartY - touchEndY;
+        touchEndY = e.changedTouches[0].clientY;
+        const touchEndX = e.changedTouches[0].screenX;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
 
-          if (swipeDistance > 50) {
-            scrollToCard("down");
-          } else if (swipeDistance < -50) {
-            scrollToCard("up");
-          }
-        }, { passive: true });
+        // Si mouvement horizontal dominant -> Navigation entre pages
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+           // Swipe GAUCHE -> aller vers Oeuvres
+           if (deltaX < 0) {
+               window.location.href = '<%= oeuvres_path %>';
+           }
+        }
+        // Sinon si mouvement vertical dominant -> Navigation entre cartes
+        else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
+           if (deltaY > 0) scrollToCard("up"); // Swipe vers le bas
+           else scrollToCard("down"); // Swipe vers le haut
+        }
+      }, { passive: true });
 
 
-      // Ajustement initial
       validateCardAlignment();
 
       // Écouteur de défilement pour le chargement infini
@@ -240,7 +275,7 @@
         const { scrollTop, scrollHeight, clientHeight } = container;
         isScrolling = true;
 
-        if (scrollTop + clientHeight >= scrollHeight - 100) {
+        if (!isLoading && scrollTop + clientHeight >= scrollHeight - 300) {
           loadMoreCards();
         }
 

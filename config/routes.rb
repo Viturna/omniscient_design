@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   }
   # ---- ADMIN ----
   namespace :admin do
+    resources :ads
     get 'suivi_references/index'
     get 'validation/index'
     get 'feedbacks/index'

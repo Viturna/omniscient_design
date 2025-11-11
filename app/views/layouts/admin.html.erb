@@ -56,6 +56,7 @@
               <li><%= link_to "Suivi listes", admin_suivi_lists_path, class: ("active" if @current_page == "suivi_lists") %></li>
               <li><%= link_to "Suivi références", admin_suivi_references_path, class: ("active" if @current_page == "suivi_references") %></li>
               <li><%= link_to "Rapports de bug", bug_reports_path, class: ("active" if @current_page == "bug_reports") %></li>
+              <li><%= link_to "Ads", admin_ads_path, class: ("active" if @current_page == "ads") %></li>
               <li>
                 <%= link_to feedbacks_path, class: ("active" if @current_page == "feedbacks") do %>
                   Feedbacks

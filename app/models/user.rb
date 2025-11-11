@@ -17,15 +17,17 @@ class User < ApplicationRecord
   STATUTS = %w[etudiant enseignant entreprise artiste autre]
 
   STUDY_LEVELS = [
-    'Seconde Générale/Techno',
+    'Seconde Générale/Techno (Hors STD2A)',
     'Seconde Professionnelle',
     'Première Générale',
+    'Première Techno (Hors STD2A)',
     'Première Générale (Option Arts)',
     'Première STD2A',
     'Première Professionnelle',
-    'Terminale Générale',
     'Terminale Générale (Option Arts)',
     'Terminale STD2A',
+    'Terminale Générale',
+    'Terminale Techno (Hors STD2A)',
     'Terminale Professionnelle',
     'BMA (Brevet des Métiers d\'Art)',
     'Classe Prépa (CPGE)',

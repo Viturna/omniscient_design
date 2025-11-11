@@ -34,45 +34,23 @@ module ApplicationHelper
     !excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) }
   end
 
-  def ads_data
-    [
-      {
-        link: "https://fr.tipeee.com/le-site-omniscient-design",
-        image: "ads/tipee.jpg",
-        bg_color: "#E04A52",
-        title: "Soutenez le projet !",
-        description: "Aidez-nous à maintenir le site gratuit pour tous."
-      },
-      {
-        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
-        image: "ads/create_account.png", # Assure-toi d'avoir cette image
-        bg_color: "#C13584", # Exemple couleur Instagram
-        title: "Suivez-nous sur Instagram",
-        description: "Ne manquez aucune actualité et inspiration design."
-      },
-     {
-        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
-        image: "ads/feedbacks.png", # Assure-toi d'avoir cette image
-        bg_color: "#C13584", # Exemple couleur Instagram
-        title: "Suivez-nous sur Instagram",
-        description: "Ne manquez aucune actualité et inspiration design."
-      },
-      {
-        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
-        image: "ads/social_media.png", # Assure-toi d'avoir cette image
-        bg_color: "#C13584", # Exemple couleur Instagram
-        title: "Suivez-nous sur Instagram",
-        description: "Ne manquez aucune actualité et inspiration design."
-      },
-       {
-        link: "https://www.instagram.com/omniscient.design/", # Exemple lien réseaux
-        image: "ads/your-ads.png", # Assure-toi d'avoir cette image
-        bg_color: "#C13584", # Exemple couleur Instagram
-        title: "Suivez-nous sur Instagram",
-        description: "Ne manquez aucune actualité et inspiration design."
-      },
-    ]
+def ads_data
+  ads_from_db = Ad.currently_active.with_attached_image.with_attached_image_mobile
+
+  ads_from_db.map do |ad|
+    mobile_url = ad.image_mobile.attached? ? url_for(ad.image_mobile) : url_for(ad.image)
+    desktop_url = ad.image.attached? ? url_for(ad.image) : nil
+
+    {
+      id: ad.id,
+      link: ad.link,
+      image_desktop_url: desktop_url,
+      image_mobile_url: mobile_url,
+      title: ad.title,
+      description: ad.description
+    }
   end
+end
   
   def asset_exists?(path)
     if Rails.configuration.assets.compile

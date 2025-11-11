@@ -1,0 +1,83 @@
+<style>
+  /* Ajoute ceci à ton CSS admin si tu n'as pas de styles de table */
+  .admin-ads-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  .admin-ads-table th, .admin-ads-table td { padding: 12px 15px; border: 1px solid #ddd; text-align: left; vertical-align: middle; }
+  .admin-ads-table thead { background-color: #f4f4f4; }
+  .admin-ads-table img { max-width: 100px; height: auto; border-radius: 4px; }
+  .admin-ads-table .actions { display: flex; gap: 10px; }
+  .status-active { color: green; font-weight: bold; }
+  .status-inactive { color: #999; }
+</style>
+<section class="top-default-page">
+  <%= link_to root_path, class: ("active" if @current_page == "users") do %>
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_3256_104)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_3256_104">
+          <rect width="36" height="36" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  <% end %>
+  <h1>Gestion des Publicités</h1>
+</section>
+<section class="grid-1">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Tableau de gestion</h2>
+    <%= link_to "Créer une nouvelle pub", new_admin_ad_path, class: "button dark" %>
+  </div>
+  <div class="table-wrapper">
+    <table class="admin-ads-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Titre</th>
+          <th>Statut</th>
+          <th>Période d'affichage</th>
+          <th>Lien</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ads.each do |ad| %>
+          <tr>
+            <td>
+              <% if ad.image.attached? %>
+                <%= image_tag ad.image.variant(resize_to_limit: [100, 100]) %>
+              <% else %>
+                (Aucune)
+              <% end %>
+            </td>
+            <td><%= ad.title %></td>
+            <td>
+              <% if ad.currently_running? %>
+                <span class="status-active">Actif</span>
+              <% else %>
+                <span class="status-inactive">Inactif</span>
+              <% end %>
+            </td>
+            <td>
+              <% if ad.start_date.present? || ad.end_date.present? %>
+                <%# Affiche la date formatée ou un texte par défaut %>
+                <%= ad.start_date&.strftime('%d/%m/%Y') || 'Dès que possible' %>
+                au
+                <%= ad.end_date&.strftime('%d/%m/%Y') || 'Indéfini' %>
+              <% else %>
+                Permanent
+              <% end %>
+            </td>
+            <td><%= link_to ad.link, ad.link, target: "_blank", style: "word-break: break-all;" %></td>
+            <td class="actions">
+              <%= link_to "Modifier", edit_admin_ad_path(ad), class: "btn btn-sm btn-primary" %>
+              <%= link_to "Supprimer", admin_ad_path(ad), 
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette publicité ?" },
+                    class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,19 +1,24 @@
-<% ad ||= ads_data.sample %>
+<% return unless local_assigns.key?(:ad) && ad.present? %>
 <%= link_to ad[:link], target: "_blank", class: "ad-card-link" do %>
   <div class="card ad-card">
-    <div class="bg-card">
-      <div class="bg-img-card card-slider-wrapper">
+    <div class="bg-card" style="background-color: #52525D;">
+      <div class="bg-img-card card-slider-wrapper" 
+           data-controller="slider" 
+           data-slider-update-background-value="true">
+        <div class="card-slider-blurred-bg" data-slider-target="background"></div>
         <div class="card-slider-slides">
-          <div class="card-slide-image active" style="background-color: <%= ad[:bg_color] %>; background-image: url('<%= asset_path(ad[:image]) %>'); background-size: contain; background-position: center; height: 100%; width: 100%; background-repeat: no-repeat;"></div>
+          <picture>
+            <source media="(max-width: 760px)" 
+                    srcset="<%= ad[:image_mobile_url] %>">
+            <source media="(min-width: 761px)" 
+                    srcset="<%= ad[:image_desktop_url] %>">
+            <img src="<%= ad[:image_desktop_url] %>" 
+                 class="card-slide-image active" 
+                 data-slider-target="slide"
+                 alt="<%= ad[:title] %>" />
+          </picture>
         </div>
         <div class="flex-info-card ads">
-          <div class="info-card-dark">
-            <div class="small-circle" style="background-color: #FFF;"></div>
-            Sponsorisé
-          </div>
-          <div class="button">
-            En savoir plus →
-          </div>
         </div>
       </div>
     </div>

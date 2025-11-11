@@ -1,16 +1,38 @@
 class DesignersController < ApplicationController
   include RecaptchaHelper
+  include ApplicationHelper
 
   before_action :set_designer, only: %i[show edit update destroy cancel validate reject]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
+  AD_FREQUENCY_RANGE = 4..7
+  AD_FIRST_POSITION_RANGE = 3..5
+
   def index
-    @designers = Designer.where(validation: true).order("RANDOM()").limit(2)
+    designers = Designer.where(validation: true).order("RANDOM()").limit(10)
     @current_page = 'accueil'
+
+    # --- NOUVELLE LOGIQUE D'INSERTION DE PUBS ---
+    ads = ads_data.shuffle
+    @ads_order_string = ads.map { |ad| ad[:id] }.join(',') # Sauvegarde l'ordre
+    
+    @items = []
+    ad_index = 0
+    @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
+
+    designers.each do |designer|
+      @items << designer
+      @items_until_next_ad -= 1
+      if @items_until_next_ad == 0 && ads.present?
+        @items << ads[ad_index % ads.length]
+        ad_index += 1
+        @items_until_next_ad = rand(AD_FREQUENCY_RANGE)
+      end
+    end
   end
 
-  def load_more
+def load_more
     offset = params[:offset].to_i
     limit = 2
     loaded_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
@@ -18,10 +40,52 @@ class DesignersController < ApplicationController
     @designers = Designer.where(validation: true)
                          .where.not(id: loaded_ids)
                          .order("RANDOM()")
-                         .offset(offset)
+                         # .offset(offset) # On n'utilise plus l'offset
                          .limit(limit)
 
-    render partial: 'designers/card', collection: @designers, as: :card, locals: { class_name: 'card' }
+    # --- LOGIQUE DE PUB POUR LOAD_MORE ---
+    items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
+    ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
+    ads = ads_data.shuffle
+
+    html_output = "" 
+
+    @designers = Designer.where(validation: true)
+                         .where.not(id: loaded_ids)
+                         .order("RANDOM()")
+                         .limit(limit)
+
+    items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
+    ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
+
+    # --- LOGIQUE DE PUB MISE À JOUR (NE PLUS MÉLANGER) ---
+    if params[:ads_order].present?
+      ordered_ad_ids = params[:ads_order].split(',')
+      ads_hashes = ads_data
+      ads = ads_hashes.sort_by { |ad| ordered_ad_ids.index(ad[:id].to_s) }
+    else
+      ads = []
+    end
+    # --- FIN LOGIQUE ---
+
+    html_output = "" 
+    @designers.each do |designer|
+      html_output += render_to_string(partial: 'designers/card', locals: { card: designer, class_name: 'card' }, formats: [:html])
+      
+      items_until_next_ad -= 1
+      if items_until_next_ad == 0 && ads.present?
+        current_ad = ads[ad_index % ads.length]
+        html_output += render_to_string(partial: 'oeuvres/ad_card', locals: { ad: current_ad }, formats: [:html])
+        ad_index += 1
+        items_until_next_ad = rand(AD_FREQUENCY_RANGE)
+      end
+    end
+    
+    render json: { 
+      html: html_output.html_safe, 
+      items_until_next_ad: items_until_next_ad,
+      ad_index: ad_index
+    }
   end
 
   def show

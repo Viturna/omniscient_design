@@ -1,21 +1,39 @@
 class OeuvresController < ApplicationController
   include RecaptchaHelper
+  include ApplicationHelper
 
   before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
   before_action :authenticate_user!, except: [:index, :load_more, :show]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
+
+
+  AD_FREQUENCY_RANGE = 4..7
+  AD_FIRST_POSITION_RANGE = 3..5
   # GET /oeuvres or /oeuvres.json
-  def index
-    @oeuvres = Oeuvre.where(validation: true).limit(2).order("RANDOM()")
+def index
+    oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
     @current_page = 'accueil'
-    if user_signed_in?
-      @lists = current_user.lists
-    else
-      @lists = []
+    @lists = user_signed_in? ? current_user.lists : []
+
+    ads = ads_data.shuffle
+    @ads_order_string = ads.map { |ad| ad[:id] }.join(',')
+    
+    @items = []
+    ad_index = 0
+    @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
+
+    oeuvres.each do |oeuvre|
+      @items << oeuvre
+      @items_until_next_ad -= 1
+      if @items_until_next_ad == 0 && ads.present?
+        @items << ads[ad_index % ads.length]
+        ad_index += 1
+        @items_until_next_ad = rand(AD_FREQUENCY_RANGE)
+      end
     end
   end
 
-  def load_more
+def load_more
     offset = params[:offset].to_i
     limit = 2
     loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
@@ -23,23 +41,39 @@ class OeuvresController < ApplicationController
     @oeuvres = Oeuvre.where(validation: true)
                      .where.not(id: loaded_ids)
                      .order("RANDOM()")
-                     .offset(offset)
                      .limit(limit)
 
-    items_per_ad = 5
-    html_output = "" 
+    items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
+    ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
 
-    @oeuvres.each_with_index do |oeuvre, i|
-      global_index = offset + i
+    # --- LOGIQUE DE PUB MISE À JOUR (NE PLUS MÉLANGER) ---
+    if params[:ads_order].present?
+      ordered_ad_ids = params[:ads_order].split(',')
+      # On récupère les pubs de la DB et on les trie selon l'ordre reçu
+      ads_hashes = ads_data 
+      ads = ads_hashes.sort_by { |ad| ordered_ad_ids.index(ad[:id].to_s) }
+    else
+      ads = [] # Sécurité : pas de pubs si l'ordre n'est pas passé
+    end
+
+   html_output = "" 
+    @oeuvres.each do |oeuvre|
+      html_output += render_to_string(partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' }, formats: [:html])
       
-      if global_index > 0 && global_index % items_per_ad == 0
-        html_output += render_to_string(partial: 'oeuvres/ad_card', locals: {})
+      items_until_next_ad -= 1
+      if items_until_next_ad == 0 && ads.present?
+        current_ad = ads[ad_index % ads.length]
+        html_output += render_to_string(partial: 'oeuvres/ad_card', locals: { ad: current_ad }, formats: [:html])
+        ad_index += 1
+        items_until_next_ad = rand(AD_FREQUENCY_RANGE)
       end
-      
-      html_output += render_to_string(partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' })
     end
     
-    render html: html_output.html_safe
+    render json: { 
+      html: html_output.html_safe, 
+      items_until_next_ad: items_until_next_ad,
+      ad_index: ad_index
+    }
   end
 
   # GET /oeuvres/1 or /oeuvres/1.json

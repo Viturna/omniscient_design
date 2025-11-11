@@ -92,22 +92,21 @@
       <button class="refonte-alert-close" id="closeRefonteAlert" title="Fermer">×</button>
     </div> %>
     <div class="box-card" id="boxCard">
-      <% @oeuvres.each do |o| %>
-        <% Rails.logger.debug "Type chargé : #{o.class.name}" %>
-      <% end %>
-      <% items_per_ad = 5 %>
-      <% ads = ads_data.shuffle %>
-      <% ad_index = 0 %>
-      <% @oeuvres.each_with_index do |oeuvre, index| %>
-        <% if index > 0 && index % items_per_ad == 0 %>
-          <% current_ad = ads[ad_index % ads.length] %>
-          <% ad_index += 1 %>
-          <%= render partial: 'oeuvres/ad_card', locals: { ad: current_ad } %>
+      <% @items.each do |item| %>
+        <% if item.is_a?(Oeuvre) %>
+          <%= render partial: 'oeuvres/card', locals: { card: item, class_name: 'card' } %>
+        <% elsif item.is_a?(Hash) %>
+          <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
         <% end %>
-        <%= render partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' } %>
       <% end %>
     </div>
-    <div id="oeuvres-load-more" data-offset="2" data-loaded-ids="<%= @oeuvres.pluck(:id).join(',') %>"></div>
+    <div id="oeuvres-load-more" 
+         data-offset="<%= @items.count { |i| i.is_a?(Oeuvre) } %>"
+         data-loaded-ids="<%= @items.select { |i| i.is_a?(Oeuvre) }.map(&:id).join(',') %>"
+         data-ad-index="0" 
+         data-items-until-next-ad="<%= @items_until_next_ad %>"
+         data-ads-order="<%= @ads_order_string %>"> <%# <-- AJOUT DE L'ORDRE %>
+    </div>
   </div>
   <div class="button-nav">
     <button class="arrow-button up">
@@ -131,7 +130,7 @@
     const upButton = document.querySelector(".arrow-button.up");
     const downButton = document.querySelector(".arrow-button.down");
 
-    if (!container) return;
+    if (!container || !loadMoreTrigger) return;
 
     // Reset du scroll au chargement
     container.scrollTop = 0;
@@ -141,28 +140,50 @@
     let isLoading = false;
     let isVerticalScrolling = false;
 
-    // --- SCROLL INFINI ---
+    // --- SCROLL INFINI (MIS À JOUR POUR JSON + PUBS) ---
     function loadMoreCards() {
-      if (isLoading || !loadMoreTrigger) return;
+      if (isLoading) return;
       isLoading = true;
-      const offset = loadMoreTrigger.dataset.offset;
-      const loadedIds = loadMoreTrigger.dataset.loadedIds.split(',');
 
-      fetch(`/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds.join(',')}`)
-        .then(response => response.text())
-        .then(html => {
-          if (html.trim() === "") {
-            loadMoreTrigger.style.display = "none";
-          } else {
-            container.insertAdjacentHTML("beforeend", html);
-            loadMoreTrigger.dataset.offset = parseInt(offset) + 2;
-            const newLoadedIds = Array.from(container.querySelectorAll('.card')).map(c => c.dataset.id);
-            loadMoreTrigger.dataset.loadedIds = [...new Set([...loadedIds, ...newLoadedIds])].join(',');
-            validateCardAlignment();
-          }
-        })
-        .catch(err => console.error("Erreur loadMore:", err))
-        .finally(() => isLoading = false);
+      // Récupère les données actuelles depuis les attributs data-*
+      let offset = parseInt(loadMoreTrigger.dataset.offset) || 0;
+      let loadedIds = loadMoreTrigger.dataset.loadedIds || '';
+      let itemsUntilNextAd = loadMoreTrigger.dataset.itemsUntilNextAd;
+      let adIndex = loadMoreTrigger.dataset.adIndex;
+      let adsOrder = loadMoreTrigger.dataset.adsOrder; // Récupère l'ordre
+
+      // Construit l'URL avec tous les paramètres
+      const url = `/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds}&items_until_next_ad=${itemsUntilNextAd}&ad_index=${adIndex}&ads_order=${adsOrder}`;
+
+      fetch(url, {
+        headers: {
+          'Accept': 'application/json' // Important : on attend du JSON
+        }
+      })
+      .then(response => response.json()) // On parse la réponse JSON
+      .then(data => {
+        if (data.html.trim() === "") {
+          loadMoreTrigger.style.display = "none"; // Plus rien à charger
+        } else {
+          // Insère le nouveau HTML (qui contient oeuvres ET pubs)
+          container.querySelector('#boxCard').insertAdjacentHTML("beforeend", data.html);
+
+          // Met à jour les compteurs sur le trigger pour le prochain appel
+          loadMoreTrigger.dataset.itemsUntilNextAd = data.items_until_next_ad;
+          loadMoreTrigger.dataset.adIndex = data.ad_index;
+
+          // Met à jour l'offset et les IDs chargés
+          const currentCards = Array.from(container.querySelectorAll('.card:not(.ad-card)'));
+          const allLoadedIds = currentCards.map(c => c.dataset.id).filter(id => id);
+
+          loadMoreTrigger.dataset.offset = allLoadedIds.length; // Le nouvel offset est le nombre total d'oeuvres
+          loadMoreTrigger.dataset.loadedIds = allLoadedIds.join(',');
+
+          validateCardAlignment();
+        }
+      })
+      .catch(err => console.error("Erreur loadMore:", err))
+      .finally(() => isLoading = false);
     }
 
     function validateCardAlignment() {
@@ -172,11 +193,14 @@
     container.addEventListener("scroll", () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
       isVerticalScrolling = true;
-      if (scrollTop + clientHeight >= scrollHeight) loadMoreCards();
+      // Déclenche le chargement 300px avant la fin
+      if (!isLoading && scrollTop + clientHeight >= scrollHeight - 300) {
+        loadMoreCards();
+      }
       setTimeout(() => isVerticalScrolling = false, 100);
     }, { passive: true });
 
-    // --- NAVIGATION VERTICALE (Boutons & Clavier & Swipe Vertical) ---
+    // --- NAVIGATION VERTICALE (Boutons & Clavier) ---
     function scrollToCard(direction) {
       const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
       const scrollTop = container.scrollTop;
@@ -226,11 +250,12 @@
       }
       // Sinon si mouvement vertical dominant -> Navigation entre cartes
       else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50 && !isVerticalScrolling) {
-         if (deltaY < 0) scrollToCard("down");
-         else scrollToCard("up");
+         if (deltaY < 0) scrollToCard("down"); // Swipe vers le haut
+         else scrollToCard("up"); // Swipe vers le bas
       }
     }, { passive: true });
 
+    // Initialise l'alignement au chargement
     validateCardAlignment();
   });
 </script>

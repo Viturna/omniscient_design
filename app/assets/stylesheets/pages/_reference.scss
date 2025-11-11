@@ -275,6 +275,7 @@
     cursor: pointer;
     background-color: $secondary-color;
     color: $primary-color;
+    opacity: 0.9;
     & svg path {
       fill: $primary-color;
     }

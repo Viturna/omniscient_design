@@ -27,6 +27,7 @@ class Oeuvre < ApplicationRecord
   attr_accessor :rejection_reason
 
   attribute :source, :json, default: []
+
   
   def validated?
     validation == true

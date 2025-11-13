@@ -6,11 +6,6 @@ class OeuvreImage < ApplicationRecord
       resize_to_fill: [400, 400],
       format: :webp
   end
-
-    has_one_attached :file do |attachable|
-    attachable.variant :slider, resize_to_limit: [1920, 1080], quality: 80, format: :webp
-    attachable.variant :thumb, resize_to_fill: [400, 400], quality: 75, format: :webp
-  end
   
   validates :file,
             attached: true,

@@ -30,11 +30,14 @@
     <input id="workSearch" name="query" autocomplete="off" class="search-top-bar" type="search" placeholder="<%= t('search.placeholder') %>">
   <% end %>
   <div class="top-bar-flex">
-    <div class="circle circle-notif" id="openPopup">
+    <div class="circle circle-notif openPopup" id="openPopup">
       <svg width="4" height="22" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
         <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
       </svg>
+      <div class="notification-counter">
+        <div class="notification-badge">!</div>
+      </div>
     </div>
     <%= link_to notifications_path do %>
       <div class="circle circle-notif">
@@ -293,6 +296,31 @@
       <div class="popup-inner">
         <p class="title-popup"><%= t('mainpopup.title') %></p>
         <div class="popup-decoration">
+          <%= image_tag("merci-100.png", :alt => "100 utilisateurs") %>
+        </div>
+        <p class="subtitle-popup">Un grand merci</p>
+        <p>
+          La communauté Omniscient Design s'agrandit ! Nous sommes incroyablement fiers et reconnaissants de compter aujourd'hui <strong>plus de 100 utilisateurs inscrits</strong>. Merci à chacun de vous !
+          <br>
+          <br>
+          Nous souhaitons adresser un immense merci tout particulier à <strong>Lou, notre toute première donatrice</strong> ! 💖
+          <br>
+          <br>
+          Un geste formidable qui nous aide concrètement à maintenir la plateforme active et à financer son développement futur. 
+          <br>
+          <br>
+          Mais sa contribution ne s'arrête pas là : Lou a aussi enrichi la base de données en ajoutant la fiche du designer 
+          <%= link_to "Jean Widmer", "https://omniscientdesign.fr/fr/designers/jean-widmer", style: "text-decoration: underline; font-weight: 500; color: #202020;" %>.
+          <br>
+          <br>
+          C'est exactement l'esprit que nous souhaitons pour Omniscient Design : une plateforme collaborative qui vit et s'enrichit grâce à sa communauté.
+          <br>
+          <br>
+          Si vous aussi, vous appréciez le projet, vous pouvez faire comme Lou !
+        </p>
+        <%= link_to "Faire un don", "https://fr.tipeee.com/le-site-omniscient-design", class: "button dark"%>
+        <%= link_to "Ajouter une référence", add_elements_path, class: "button dark" %>
+        <div class="popup-decoration">
           <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
         </div>
         <p class="subtitle-popup"><%= t('mainpopup.subtitle_project') %></p>
@@ -342,6 +370,33 @@
 
       closeButton.addEventListener("click", function() {
         alertElement.style.display = "none";
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener("turbo:load", function() {
+      // Sélectionner TOUS les éléments avec la classe .openPopup
+      const openPopupBtns = document.querySelectorAll(".openPopup");
+      const closePopupButton = document.getElementById("closePopup");
+      const popup = document.getElementById("popup");
+
+      if (!closePopupButton || !popup) return;
+
+      // Boucle sur tous les boutons d'ouverture pour leur ajouter l'écouteur d'événement
+      openPopupBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+          popup.style.display = "flex";
+        });
+      });
+
+      closePopupButton.addEventListener("click", function() {
+        popup.style.display = "none";
+      });
+
+      window.addEventListener("click", function(event) {
+        if (event.target === popup) {
+          popup.style.display = "none";
+        }
       });
     });
   </script>

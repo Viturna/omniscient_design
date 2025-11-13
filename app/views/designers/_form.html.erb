@@ -166,18 +166,22 @@
     <h3><%= t('add_designer.steps.4.title', default: "Images") %></h3>
     <div class="flex-form">
       <div>
-        <%= form.label :images, "#{t('add_designer.steps.4.image', default: 'Ajouter des images')} (3 max)" %>
-        <div id="image-fields-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
-          <!-- CORRECTION : Remplacer :oeuvre_images par :designer_images -->
-          <%= form.fields_for :designer_images do |image_form| %>
+        <%= form.label :images, "#{t('add_designer.steps.4.image', default: 'Ajouter des images')} (3 max - Glissez pour réorganiser)" %>
+        <div id="image-fields-container" 
+           class="image-grid-container"
+           data-controller="sortable">
+          <%= form.fields_for :designer_images, @designer.designer_images.sort_by { |img| img.position || 0 } do |image_form| %>
             <% next if image_form.index >= 3 %>
-            <div class="image-upload-field" 
+            <div class="image-upload-card" 
                data-controller="image-preview" 
-               style="display: flex; gap: 10px; flex-direction: column;">
+               data-sortable-target="item">
+              <%= image_form.hidden_field :position, data: { 'sortable-target': 'positionInput' } %>
+              <div class="image-drag-handle">
+                ⬍ Glisser (Position <%= image_form.object.position || 'N/A' %>)
+              </div>
               <% if image_form.object.persisted? && image_form.object.file.attached? %>
-                <!-- Image existante (pour le formulaire 'edit') -->
-                <div class="existing-image-preview" style="position: relative; width: 100%; height: 400px;">
-                  <%= image_tag image_form.object.file.variant(:thumb), style: "width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" %>
+                <div class="image-preview-existing">
+                  <%= image_tag image_form.object.file.variant(:thumb), class: "image-preview-img" %>
                   <div class="image-delete-overlay">
                     <%= image_form.check_box :_destroy %>
                     <%= image_form.label :_destroy, "×", class: "delete-image-btn", title: "Supprimer" %>
@@ -186,26 +190,24 @@
                 <div>
                   <div data-image-preview-target="container"></div>
                   <%= image_form.file_field :file, 
-                    accept: "image/png,image/jpeg,image/jpg,image/webp",
-                    data: { 
-                      action: "change->image-preview#preview",
-                      image_preview_target: "input" 
-                    } %>
-                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field", style: "margin-top: 5px;" %>
+                  accept: "image/png,image/jpeg,image/jpg,image/webp",
+                  data: { 
+                    action: "change->image-preview#preview",
+                    image_preview_target: "input" 
+                  } %>
+                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
                 </div>
               <% else %>
-                <!-- Champ vide pour une nouvelle image -->
-                <div data-image-preview-target="container">
-                  <!-- L'image de prévisualisation ira ici -->
+                <div class="image-preview-new" data-image-preview-target="container">
                 </div>
                 <div style="flex-grow: 1;">
                   <%= image_form.file_field :file, 
-                    accept: "image/png,image/jpeg,image/jpg,image/webp",
-                    data: { 
-                      action: "change->image-preview#preview",
-                      image_preview_target: "input" 
-                    } %>
-                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field", style: "margin-top: 5px;" %>
+                  accept: "image/png,image/jpeg,image/jpg,image/webp",
+                  data: { 
+                    action: "change->image-preview#preview",
+                    image_preview_target: "input" 
+                  } %>
+                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
                 </div>
               <% end %>
             </div>

@@ -22,12 +22,12 @@ class Designer < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true
 
-  has_many :designer_studios
+  has_many :designer_studios, dependent: :destroy
   has_many :studios, through: :designer_studios
 
   attribute :source, :json, default: []
 
-  has_many :designer_images, dependent: :destroy
+  has_many :designer_images, -> { order(position: :asc) }, dependent: :destroy
   accepts_nested_attributes_for :designer_images, allow_destroy: true, 
                                 reject_if: :all_blank, 
                                 limit: 3

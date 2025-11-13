@@ -16,3 +16,4 @@ pin "gsap/ScrollTrigger", to: "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTr
 
 # ActionCable
 pin "@rails/actioncable/src", to: "@rails--actioncable--src.js" # @8.0.201
+pin "sortablejs", to: "https://ga.jspm.io/npm:sortablejs@1.15.2/modular/sortable.esm.js"

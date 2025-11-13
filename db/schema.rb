@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_11_163243) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_13_212046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -92,6 +92,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_163243) do
     t.datetime "created_at", null: false
     t.string "credit"
     t.bigint "designer_id", null: false
+    t.integer "position"
     t.datetime "updated_at", null: false
     t.index ["designer_id"], name: "index_designer_images_on_designer_id"
   end
@@ -317,6 +318,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_163243) do
     t.datetime "created_at", null: false
     t.string "credit"
     t.bigint "oeuvre_id", null: false
+    t.integer "position"
     t.datetime "updated_at", null: false
     t.index ["oeuvre_id"], name: "index_oeuvre_images_on_oeuvre_id"
   end
@@ -393,6 +395,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_11_163243) do
   create_table "studio_images", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "credit"
+    t.integer "position"
     t.bigint "studio_id", null: false
     t.datetime "updated_at", null: false
     t.index ["studio_id"], name: "index_studio_images_on_studio_id"

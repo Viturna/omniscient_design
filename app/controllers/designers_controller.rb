@@ -106,14 +106,18 @@ def load_more
   def new
     @designer = Designer.new
     @current_page = 'add_elements'
-    # AJOUT : Construit 3 champs d'images vides pour le formulaire
-    3.times { @designer.designer_images.build }
+    3.times do |i|
+      @designer.designer_images.build(position: i + 1)
+    end
   end
 
   def edit
     @current_page = 'add_elements'
     # AJOUT : Construit des champs d'images supplémentaires jusqu'à 3
-    (3 - @designer.designer_images.count).times { @designer.designer_images.build }
+    (3 - @designer.designer_images.count).times do |i|
+      max_pos = @designer.designer_images.map(&:position).compact.max || 0
+      @designer.designer_images.build(position: max_pos + i + 1)
+    end
   end
 
   def create
@@ -130,7 +134,9 @@ def load_more
       @countries = Country.order(:country)
       flash.now[:alert] = I18n.t('designer.create.failure')
       # Assure que les champs d'image sont reconstruits en cas d'erreur
-      (3 - @designer.designer_images.count).times { @designer.designer_images.build }
+      3.times do |i|
+        @designer.designer_images.build(position: i + 1)
+      end
       render :new, status: :unprocessable_entity
     end
   end
@@ -148,9 +154,10 @@ def load_more
     end
   end
 
-  # ... (actions destroy, reject, cancel, validate, check_existence inchangées) ...
   def destroy
     @designer = Designer.find_by(slug: params[:slug])
+      create_rejection_notification(@designer)
+      update_suivi_references_refusees(@designer.user)
     if @designer
       handle_destroy(@designer, I18n.t('designer.destroy.success', name: @designer.nom_designer))
     else
@@ -176,14 +183,10 @@ def load_more
       @designer.designers_domaines.delete_all if @designer.respond_to?(:designers_domaines)
       @designer.designer_countries.delete_all if @designer.respond_to?(:designer_countries)
       @designer.designers_oeuvres.delete_all if @designer.respond_to?(:designers_oeuvres)
+
       @designer.update!(rejection_reason: rejection_reason, validation: false)
 
-      if @designer.user.present?
-        handle_destroy(@designer, I18n.t('designer.reject.success'))
-      else
-        Rails.logger.warn("Le designer #{@designer.id} n'a pas d'utilisateur associé pour la notification de rejet.")
-        redirect_to validation_path, notice: I18n.t('designer.reject.success') and return
-      end
+      handle_destroy(@designer, I18n.t('designer.reject.success'))
     rescue => e
       Rails.logger.error("Erreur rejet designer : #{e.message}")
       redirect_to validation_path, alert: I18n.t('designer.reject.failure')
@@ -314,7 +317,7 @@ def load_more
       country_ids: [],
       source: [],
       # AJOUT : Permet les attributs pour les images uploadées
-      designer_images_attributes: [:id, :file, :credit, :_destroy]
+      designer_images_attributes: [:id, :file, :credit, :_destroy, :position]
     )
   end
 end

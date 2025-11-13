@@ -1,3 +1,35 @@
+<style>
+  /* Styles pour les champs imbriqués (designers) */
+  .nested-fields-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
+  gap: 24px;
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  }
+  .nested-field-group {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fdfdfd;
+  }
+  .date-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+  }
+  .remove-field { /* Pour le formulaire 'edit' */
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #E61818;
+  }
+  .remove-field label {
+  color: #E61818 !important;
+  }
+</style>
 <%= form_with(model: @studio, local: true, data: { controller: "recaptcha" }) do |form| %>
   <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
   <div class="error-message" style="color: red; display: none;"></div>
@@ -61,7 +93,7 @@
     <div class="flex-form">
       <div style="width: 100%;">
         <%= form.label :nom, t('add_studio.steps.1.nom', default: "Nom du studio") %>
-        <%= form.text_field :nom, placeholder: t('add_studio.steps.1.nom_placeholder', default: "Ex: Studio Ghibli, Pixar...") %>
+        <%= form.text_field :nom, placeholder: t('add_studio.steps.1.nom_placeholder', default: "Ex: Maison Bonnet, ..") %>
       </div>
     </div>
     <div class="flex-btn-add" style="justify-content: flex-end;">
@@ -69,6 +101,39 @@
     </div>
   </div>
   <div class="form-step" data-step="3" style="display:none;">
+    <h3>Designers du studio (10 max)</h3>
+    <div class="nested-fields-container">
+      <%= form.fields_for :designer_studios do |ds_form| %>
+        <div class="nested-field-group">
+          <div class="field">
+            <%= ds_form.label :designer_id, "Designer" %>
+            <%= ds_form.collection_select :designer_id,
+                  Designer.where(validation: true).order(:prenom, :nom),
+                  :id,
+                  :nom_designer, # J'utilise :nom_designer comme dans ton code
+                  { prompt: "Sélectionner un designer..." },
+                  { class: "form-control designer-select-nested select2" } %>
+          </div>
+          <div class="date-fields-grid">
+            <div class="field">
+              <%= ds_form.label :date_entree, "Année d'entrée" %>
+              <%= ds_form.number_field :date_entree, placeholder: "Ex: 1990", class: "form-control year-input" %>
+            </div>
+            <div class="field">
+              <%= ds_form.label :date_sortie, "Année de sortie" %>
+              <%= ds_form.number_field :date_sortie, placeholder: "Ex: 2005 (ou vide)", class: "form-control year-input" %>
+            </div>
+          </div>
+          <%# Case pour supprimer un designer existant (utile dans 'edit') %>
+          <% if ds_form.object.persisted? %>
+            <div class="field-checkbox remove-field">
+              <%= ds_form.check_box :_destroy %>
+              <%= ds_form.label :_destroy, "Supprimer ce designer" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
     <h3>Dates et Domaines</h3>
     <div class="flex-form">
       <div>
@@ -149,11 +214,56 @@
     </div>
   </div>
   <div class="form-step" data-step="5" style="display:none;">
-    <h3>Image</h3>
+    <h3><%= t('add_studio.steps.4.title', default: "Images") %></h3>
     <div class="flex-form">
       <div>
-        <%= form.label :image, t('add_studio.steps.4.image', default: "URL de l'image") %>
-        <%= form.text_field :image, placeholder: "https://..." %>
+        <%= form.label :images, "#{t('add_studio.steps.4.image', default: 'Ajouter des images')} (3 max - Glissez pour réorganiser)" %>
+        <div id="image-fields-container" 
+             class="image-grid-container"
+             data-controller="sortable">
+          <%= form.fields_for :studio_images, @studio.studio_images.sort_by { |img| img.position || 0 } do |image_form| %>
+            <% next if image_form.index >= 3 %>
+            <div class="image-upload-card" 
+                 data-controller="image-preview" 
+                 data-sortable-target="item">
+              <%= image_form.hidden_field :position, data: { 'sortable-target': 'positionInput' } %>
+              <div class="image-drag-handle">
+                ⬍ Glisser (Position <%= image_form.object.position || 'N/A' %>)
+              </div>
+              <% if image_form.object.persisted? && image_form.object.file.attached? %>
+                <div class="image-preview-existing">
+                  <%= image_tag image_form.object.file, class: "image-preview-img" %>
+                  <div class="image-delete-overlay">
+                    <%= image_form.check_box :_destroy %>
+                    <%= image_form.label :_destroy, "×", class: "delete-image-btn", title: "Supprimer" %>
+                  </div>
+                </div>
+                <div>
+                  <div data-image-preview-target="container"></div>
+                  <%= image_form.file_field :file, 
+                    accept: "image/png,image/jpeg,image/jpg,image/webp",
+                    data: { 
+                      action: "change->image-preview#preview",
+                      image_preview_target: "input" 
+                    } %>
+                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
+                </div>
+              <% else %>
+                <div class="image-preview-new" data-image-preview-target="container">
+                </div>
+                <div style="flex-grow: 1;">
+                  <%= image_form.file_field :file, 
+                    accept: "image/png,image/jpeg,image/jpg,image/webp",
+                    data: { 
+                      action: "change->image-preview#preview",
+                      image_preview_target: "input" 
+                    } %>
+                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
     <div class="flex-btn-add">
@@ -254,6 +364,7 @@
 
     // Init Select2 (si applicable pour Studio)
     if (typeof $ !== 'undefined' && $.fn.select2) {
+        $('.designer-select-nested').select2({ placeholder: 'Sélectionner un designer...', allowClear: true, width: '100%'});
         $('.country-select').select2({ placeholder: 'Rechercher un pays...', allowClear: true, width: '100%' });
         $('.domaine-select').select2({ placeholder: 'Sélectionnez un domaine...', allowClear: true, width: '100%' });
     }

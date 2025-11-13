@@ -856,11 +856,11 @@ fr:
     none: "Aucune notification."
     new_oeuvre: "Une nouvelle œuvre est à valider : %{name}"
     oeuvre_validated: "La référence %{name} a été validée. Encore un grand merci pour ta contribution."
-    oeuvre_rejected: "Votre référence %{name} a été rejetée."
+    oeuvre_rejected: "Votre référence %{name} a été rejetée. (Vous pouvez consulter la raison sur votre profil)"
     no_user_for_rejection: "La référence %{oeuvre_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_designer: "Un nouveau designer est à valider : %{name}"
     designer_validated: "Le/La designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
-    designer_rejected: "Votre designer %{name} a été rejeté(e)."
+    designer_rejected: "Votre designer %{name} a été rejeté(e). (Vous pouvez consulter la raison sur votre profil)"
     no_user_for_rejection_designer: "Le/La designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_user_registered: "Nouvel utilisateur inscrit : %{name}"
   email_confirmation:

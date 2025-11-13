@@ -131,7 +131,7 @@ class User < ApplicationRecord
   # Validation des noms et pseudo contre les mots interdits
   def no_ban_words_in_names
     ban_words = %w[
-      anal anus arse ass ballsack balls bastard bitch biatch blowjob blow job
+      anal anus arse ass ballsack balls bastard bitch biatch blowjob blow job hiltler
       bollock bollok boner boob bugger bum butt buttplug clitoris cock crap cunt
       damn dick dildo dyke fag feck fellate fellatio felching fuck f u c k fudgepacker
       fudge packer flange hell homo jerk jizz knobend knob end labia lmao lmfao muff

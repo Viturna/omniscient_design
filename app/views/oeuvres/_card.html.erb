@@ -19,7 +19,8 @@
                   <%= image_tag image, 
                   alt: card.nom_oeuvre, 
                   class: "card-slide-image #{'active' if index == 0}", 
-                  data: { slider_target: "slide" } %>
+                  data: { slider_target: "slide",
+                  loading: (index == 0 ? "eager" : "lazy") } %>
                 <% end %>
               <% else %>
                 <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>

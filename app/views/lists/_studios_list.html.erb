@@ -4,14 +4,10 @@
       (defined?(@selected_studio_ids) && @selected_studio_ids.include?(studio.id)),
       class: 'hidden-check', id: "studio_#{studio.id}", disabled: true %>
   <label for="studio_#{studio.id}">
-    <%
-       thumb_path = "studios/thumbs/#{remove_accents_and_special_chars(studio.nom)}.webp"
-    %>
-    <% if asset_exists?(thumb_path) %>
-      <div class="card-list-add" style="background-image: url('<%= asset_path(thumb_path) %>'); background-size: cover; background-position: center;">
+    <% if studio.studio_images.first&.file&.attached? %>
+      <div class="card-list-add" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>');  background-size: cover; background-position: center;">
       <% else %>
-        <% Rails.logger.debug("Studio image not found : #{thumb_path}") %>
-        <div class="card-list-add" style="background: url('<%= asset_path(studio.image) %>'); background-size: cover; background-position: center;">
+        <div class="card-list-add" style="background: #F3F3F3;">
         <% end %>
         <div class="default-overlay"></div>
         <p class="card-title-add"><%= truncate(studio.nom, length: 25, omission: '...') %></p>

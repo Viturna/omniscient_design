@@ -4,8 +4,9 @@
   .add-flex {
     margin-top: 100px;
     display: flex;
-    gap: 5vw;
+    gap: 2vw;
     min-height: 300px;
+    flex-wrap: wrap;
   }
   @media screen and (min-width:1025px) and (max-width:1280px){
     .add-flex {
@@ -43,14 +44,19 @@
                       class: "semi-bold underline")) %>
   </p>
   <div class="add-flex">
+    <%= link_to new_oeuvre_path do %>
+      <div class="button-add">
+        <%= t('add_references.buttons.references') %>
+      </div>
+    <%end%>
     <%= link_to new_designer_path do %>
       <div class="button-add">
         <%= t('add_references.buttons.designers') %>
       </div>
     <%end%>
-    <%= link_to new_oeuvre_path do %>
+    <%# <%= link_to new_studio_path do 
       <div class="button-add">
-        <%= t('add_references.buttons.references') %>
+        Studios
       </div>
     <%end%>
   </div>

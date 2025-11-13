@@ -3,29 +3,8 @@ class StudiosController < ApplicationController
 
   before_action :set_studio, only: %i[show edit update destroy cancel validate reject]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
-  # Adaptez check_certified si besoin (ex: check_admin_or_certified comme vu avant)
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
-  def index
-    @studios = Studio.where(validation: true).order("RANDOM()").limit(2)
-    # Adaptez @current_page si besoin
-    @current_page = 'accueil'
-  end
-
-  def load_more
-    offset = params[:offset].to_i
-    limit = 2
-    loaded_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
-
-    @studios = Studio.where(validation: true)
-                     .where.not(id: loaded_ids)
-                     .order("RANDOM()")
-                     .offset(offset)
-                     .limit(limit)
-
-    # Assurez-vous d'avoir le partial _studio_card.html.erb (ou adaptez le nom)
-    render partial: 'studios/studio_card', collection: @studios, as: :studio
-  end
 
   def show
     @domaines = @studio.domaines
@@ -44,16 +23,24 @@ class StudiosController < ApplicationController
 
   def new
     @studio = Studio.new
+    10.times { @studio.designer_studios.build }
+     3.times do |i|
+      @studio.studio_images.build(position: i + 1)
+    end
     @current_page = 'add_elements'
   end
 
   def edit
     @current_page = 'add_elements'
-    # Si les studios ont des pays, décommentez :
-    # @country_1, @country_2, @country_3 = @studio.country_ids[0..2]
+    (3 - @studio.studio_images.count).times do |i|
+      max_pos = @studio.studio_images.map(&:position).compact.max || 0
+      @studio.studio_images.build(position: max_pos + i + 1)
+    end
+    (10 - @studio.designer_studios.count).times { @studio.designer_studios.build }
+    @country_1, @country_2, @country_3 = @studio.country_ids[0..2]
   end
 
-  def create
+def create
     @studio = Studio.new(studio_params)
     @studio.user = current_user
     token = params[:recaptcha_token]
@@ -64,12 +51,13 @@ class StudiosController < ApplicationController
       flash[:success] = I18n.t('studio.create.success', default: "Studio créé avec succès")
       redirect_to @studio
     else
-      # @countries = Country.order(:country) # Si utilisé dans le formulaire
+      3.times do |i|
+        @studio.studio_images.build(position: i + 1)
+      end
       flash.now[:alert] = I18n.t('studio.create.failure', default: "Erreur lors de la création")
       render :new, status: :unprocessable_entity
     end
   end
-
   def update
     # Utilisation de friendly.find si vous utilisez friendly_id pour les studios aussi
     # Sinon Studio.find(params[:id])
@@ -203,7 +191,7 @@ class StudiosController < ApplicationController
     redirect_to studios_path, alert: "Studio introuvable."
   end
 
-  def studio_params
+ def studio_params
     params.require(:studio).permit(
       :nom,
       :date_creation,
@@ -214,10 +202,22 @@ class StudiosController < ApplicationController
       :creations_majeures,
       :heritage_et_impact,
       :image,
-      # :recaptcha_token, # Pas besoin de le permuter s'il n'est pas en BDD
       domaine_ids: [],
       country_ids: [],
-      source: []
+      source: [],
+      studio_images_attributes: [
+        :id, 
+        :file, 
+        :credit, 
+        :_destroy
+      ],
+      designer_studios_attributes: [
+        :id, 
+        :designer_id, 
+        :date_entree, 
+        :date_sortie, 
+        :_destroy
+      ]
     )
   end
 end

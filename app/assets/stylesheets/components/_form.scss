@@ -50,6 +50,161 @@ input[type="search"]::-webkit-search-cancel-button {
   appearance: none;
 }
 
+// Image preview
+
+.image-grid-container {
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 2vw !important;
+  margin-top: 1rem;
+}
+
+/* --- La carte d'upload --- */
+.image-upload-card {
+  width: 22vw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 2px dashed #ddd; /* Plus visible pour l'upload */
+  border-radius: 8px;
+  padding: 1rem;
+  position: relative;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+}
+.image-upload-card:hover {
+  border-color: #999; /* Feedback au survol */
+  background-color: #fff;
+}
+/* Style quand on est en train de glisser */
+.image-upload-card.sortable-chosen {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+/* --- La "poignée" pour glisser --- */
+.image-drag-handle {
+  cursor: move; /* Indique qu'on peut glisser */
+  text-align: center;
+  color: #777;
+  background: #f4f4f4;
+  border-radius: 4px;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+  border: 1px solid #eee;
+  user-select: none; /* Empêche de sélectionner le texte */
+}
+
+/* --- Prévisualisation d'image existante --- */
+.image-preview-existing {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Force un ratio 1:1 (carré) */
+  overflow: hidden;
+  border-radius: 8px;
+}
+.image-preview-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* S'assure que l'image remplit le cadre */
+}
+
+/* --- Bouton 'X' pour supprimer --- */
+.image-delete-overlay {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #eee;
+  border-radius: 1rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.image-delete-overlay .delete-image-btn {
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #e61818;
+  cursor: pointer;
+  line-height: 1;
+}
+.image-delete-overlay input[type="checkbox"] {
+  display: none; /* On cache la vraie checkbox */
+}
+
+/* --- Champ de crédit --- */
+.image-credit-field {
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+/* Style que votre JS "image-preview" peut ajouter */
+.image-preview-new img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  max-height: 200px;
+}
+
+.image-credit-field input {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  font-size: 12px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 8px 8px;
+  z-index: 11;
+}
+
+#oeuvre-images-input {
+  display: none;
+}
+.image-add-new-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #aaa;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+.image-add-new-label:hover {
+  border-color: #e61818;
+  color: #e61818;
+}
+.image-add-new-label svg {
+  width: 40px;
+  height: 40px;
+  stroke: currentColor;
+  margin-bottom: 8px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 1260px) {
+  .image-grid-container {
+    flex-direction: column !important;
+  }
+  .image-upload-card {
+    width: 100%;
+  }
+}
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   input.search-top-bar {
     font-size: 16px;
@@ -319,6 +474,23 @@ textarea {
 .rules-add-hr {
   margin: 24px 0;
 }
+.form-step {
+  display: none; /* Caché par défaut */
+  animation: fadeIn 0.5s ease-in-out;
+}
+.form-step.active {
+  display: block; /* La step active est visible */
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .form-step p {
   color: $secondary-color;
 }
@@ -373,113 +545,4 @@ body.dark-mode {
   right: 0 !important;
   left: auto !important;
   border: none !important;
-}
-
-// Image preview
-
-#image-preview-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.existing-image-preview,
-.new-image-preview,
-.new-image-upload-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.existing-image-preview .image-preview,
-.new-image-preview .image-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-delete-overlay {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 10;
-}
-.delete-image-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  font-size: 20px;
-  font-weight: bold;
-  line-height: 1;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: all 0.2s;
-}
-.delete-image-btn:hover {
-  background: #e61818;
-  opacity: 0.7;
-}
-.image-delete-overlay input[type="checkbox"] {
-  display: none;
-}
-.existing-image-preview input[type="checkbox"]:checked + .delete-image-btn {
-  background: #e61818;
-  transform: scale(1.1);
-}
-.existing-image-preview input[type="checkbox"]:checked ~ .image-preview {
-  opacity: 0.3;
-  filter: grayscale(1);
-}
-
-.image-credit-field input {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 6px 8px;
-  background: rgba(0, 0, 0, 0.7);
-  border: none;
-  color: white;
-  font-size: 12px;
-  box-sizing: border-box;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0 0 8px 8px;
-  z-index: 11;
-}
-
-#oeuvre-images-input {
-  display: none;
-}
-.image-add-new-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  border: 2px dashed #aaa;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #aaa;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
-}
-.image-add-new-label:hover {
-  border-color: #e61818;
-  color: #e61818;
-}
-.image-add-new-label svg {
-  width: 40px;
-  height: 40px;
-  stroke: currentColor;
-  margin-bottom: 8px;
 }

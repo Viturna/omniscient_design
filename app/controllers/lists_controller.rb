@@ -234,6 +234,55 @@ before_action :set_list, only: [
       end
     end
   end
+  def filtered_scopes
+    oeuvres   = Oeuvre.where(validation: true)
+    designers = Designer.where(validation: true)
+    studios   = Studio.where(validation: true)
+    # ----- années -----
+    if params[:start_year].present? && params[:end_year].present?
+      sy, ey = params[:start_year].to_i, params[:end_year].to_i
+      if sy > 0 && ey > 0 && sy <= ey
+        designers = designers.where(date_naissance: sy..ey)
+        studios   = studios.where(date_creation: sy..ey)
+        oeuvres   = oeuvres.where(date_oeuvre: sy..ey)
+      end
+    end
+
+    # ----- domaines -----
+    domaines_params = params.dig(:list, :domaine)
+      if domaines_params.present?
+        domaine_ids = Array(domaines_params).reject(&:blank?)
+        if domaine_ids.any?
+          designers = designers.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+          studios   = studios.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+          oeuvres   = oeuvres.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+        end
+      end
+
+
+    # ----- notions -----
+    notions_params = params[:notions] || params.dig(:list, :notions)
+    if notions_params.present?
+      notion_ids = Array(notions_params).reject(&:blank?)
+      designers  = designers.joins(:notions).where(notions: { id: notion_ids }).distinct
+      oeuvres    = oeuvres.joins(:notions).where(notions: { id: notion_ids }).distinct
+    end
+
+    # ----- pays -----
+    countries_params = params[:country] || params.dig(:list, :country)
+      if countries_params.present?
+        country_ids = Array(countries_params).reject(&:blank?)
+        if country_ids.any?
+          designers = designers.joins(:designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+          # Si StudioCountry existe :
+          studios   = studios.joins(:studio_countries).where(studio_countries: { country_id: country_ids }).distinct
+          oeuvres   = oeuvres.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+        end
+      end
+
+
+    [oeuvres, designers, studios]
+  end
   def toggle_privacy
     if params[:privacy] == 'public'
       @list.update(share_token: @list.previous_share_token || SecureRandom.hex(10))
@@ -309,14 +358,26 @@ before_action :set_list, only: [
     redirect_to @list, notice: notice
   end
 
- def load_more_oeuvres
+  # app/controllers/lists_controller.rb
+
+def load_more_oeuvres
   offset = params[:offset].to_i
   if params[:slug].present?
     @list = List.friendly.find_by(slug: params[:slug])
-    @oeuvres = @list.oeuvres.offset(offset).limit(10)
+    selected_oeuvre_ids = @list.oeuvre_ids
+    @oeuvres = Oeuvre.where(validation: true)
+                     .where.not(id: selected_oeuvre_ids)
+                     .order(:nom_oeuvre)
+                     .offset(offset)
+                     .limit(10)
   else
-    oeuvres_scope, = filtered_scopes
-    @oeuvres = oeuvres_scope.order(:nom_oeuvre).offset(offset).limit(10)
+    # --- CORRECTION ---
+    # On charge les oeuvres non filtrées, car le JS n'envoie pas les filtres
+    @oeuvres = Oeuvre.where(validation: true)
+                     .order(:nom_oeuvre)
+                     .offset(offset)
+                     .limit(10)
+    # --- FIN CORRECTION ---
   end
   render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
 end
@@ -325,106 +386,45 @@ def load_more_designers
   offset = params[:offset].to_i
   if params[:slug].present?
     @list = List.friendly.find_by(slug: params[:slug])
-    @designers = @list.designers.offset(offset).limit(10)
+    selected_designer_ids = @list.designer_ids
+    @designers = Designer.where(validation: true)
+                         .where.not(id: selected_designer_ids)
+                         .order(:nom)
+                         .offset(offset)
+                         .limit(10)
   else
-    _, designers_scope = filtered_scopes
-    @designers = designers_scope.order(:nom).offset(offset).limit(10)
+    # --- CORRECTION ---
+    # On charge les designers non filtrés
+    @designers = Designer.where(validation: true)
+                         .order(:nom)
+                         .offset(offset)
+                         .limit(10)
+    # --- FIN CORRECTION ---
   end
   render partial: 'designers_list', collection: @designers, as: :designer
 end
+
 def load_more_studios
-    offset = params[:offset].to_i
-    if params[:slug].present?
-      @list = List.friendly.find_by(slug: params[:slug])
-      @studios = @list.studios.offset(offset).limit(10)
-    else
-      _, _, studios_scope = filtered_scopes
-      @studios = studios_scope.order(:nom).offset(offset).limit(10)
-    end
-    # Assurez-vous d'avoir le partial _studios_list.html.erb
-    render partial: 'studios_list', collection: @studios, as: :studio
+  offset = params[:offset].to_i
+  if params[:slug].present?
+    @list = List.friendly.find_by(slug: params[:slug])
+    selected_studio_ids = @list.studio_ids
+    @studios = Studio.where(validation: true)
+                     .where.not(id: selected_studio_ids)
+                     .order(:nom)
+                     .offset(offset)
+                     .limit(10)
+  else
+    # --- CORRECTION ---
+    # On charge les studios non filtrés
+    @studios = Studio.where(validation: true)
+                     .order(:nom)
+                     .offset(offset)
+                     .limit(10)
+    # --- FIN CORRECTION ---
   end
-  def search_items
-    query = params[:q].to_s.strip
-    type  = params[:type]
-
-    case type
-    when 'designers'
-      @designers = Designer.where(validation: true)
-                          .where("nom ILIKE :q OR prenom ILIKE :q", q: "%#{query}%")
-                          .limit(10)
-      render partial: 'designers_list', collection: @designers, as: :designer
-    when 'studios'
-      @studios = Studio.where(validation: true)
-                       .where("nom ILIKE ?", "%#{query}%")
-                       .limit(10)
-      render partial: 'studios_list', collection: @studios, as: :studio
-    when 'oeuvres'
-      @oeuvres = Oeuvre.where(validation: true)
-                      .where("nom_oeuvre ILIKE ?", "%#{query}%")
-                      .limit(10)
-      render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
-
-    else
-      render plain: ""
-    end
-  end
-
-
-
-  private
-
- def filtered_scopes
-  oeuvres   = Oeuvre.where(validation: true)
-  designers = Designer.where(validation: true)
-  studios   = Studio.where(validation: true)
-  # ----- années -----
-  if params[:start_year].present? && params[:end_year].present?
-    sy, ey = params[:start_year].to_i, params[:end_year].to_i
-    if sy > 0 && ey > 0 && sy <= ey
-      designers = designers.where(date_naissance: sy..ey)
-      studios   = studios.where(date_creation: sy..ey)
-      oeuvres   = oeuvres.where(date_oeuvre: sy..ey)
-    end
-  end
-
-  # ----- domaines -----
-  domaines_params = params.dig(:list, :domaine)
-    if domaines_params.present?
-      domaine_ids = Array(domaines_params).reject(&:blank?)
-      if domaine_ids.any?
-        designers = designers.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-        studios   = studios.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-        oeuvres   = oeuvres.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-      end
-    end
-
-
-  # ----- notions -----
-  notions_params = params[:notions] || params.dig(:list, :notions)
-  if notions_params.present?
-    notion_ids = Array(notions_params).reject(&:blank?)
-    designers  = designers.joins(:notions).where(notions: { id: notion_ids }).distinct
-    oeuvres    = oeuvres.joins(:notions).where(notions: { id: notion_ids }).distinct
-  end
-
-  # ----- pays -----
-  countries_params = params[:country] || params.dig(:list, :country)
-    if countries_params.present?
-      country_ids = Array(countries_params).reject(&:blank?)
-      if country_ids.any?
-        designers = designers.joins(:designer_countries).where(designer_countries: { country_id: country_ids }).distinct
-        # Si StudioCountry existe :
-        studios   = studios.joins(:studio_countries).where(studio_countries: { country_id: country_ids }).distinct
-        oeuvres   = oeuvres.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
-      end
-    end
-
-
-  [oeuvres, designers, studios]
+  render partial: 'studios_list', collection: @studios, as: :studio
 end
-
-
   def set_list
     @list = List.friendly.find_by(slug: params[:slug])
     redirect_to lists_path, alert: I18n.t('lists.not_found') unless @list

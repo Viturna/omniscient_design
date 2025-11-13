@@ -10,7 +10,7 @@ class OeuvresController < ApplicationController
   AD_FREQUENCY_RANGE = 4..7
   AD_FIRST_POSITION_RANGE = 3..5
   # GET /oeuvres or /oeuvres.json
-def index
+  def index
     oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
     @current_page = 'accueil'
     @lists = user_signed_in? ? current_user.lists : []
@@ -97,7 +97,9 @@ def load_more
   # GET /oeuvres/new
   def new
     @oeuvre = Oeuvre.new
-    (3 - @oeuvre.oeuvre_images.count).times { @oeuvre.oeuvre_images.build }
+    3.times do |i|
+      @oeuvre.oeuvre_images.build(position: i + 1)
+    end
 
     @current_page = 'add_elements'
     @selected_designers = [] 
@@ -105,7 +107,10 @@ def load_more
 
   # GET /oeuvres/1/edit
   def edit
-    (3 - @oeuvre.oeuvre_images.count).times { @oeuvre.oeuvre_images.build }
+    (3 - @oeuvre.oeuvre_images.count).times do |i|
+      max_pos = @oeuvre.oeuvre_images.map(&:position).compact.max || 0
+      @oeuvre.oeuvre_images.build(position: max_pos + i + 1)
+    end
 
     @current_page = 'add_elements'
     @selected_designers = @oeuvre.designers.pluck(:id)
@@ -122,7 +127,9 @@ def load_more
       flash[:success] = t('oeuvres.create.success')
       redirect_to @oeuvre
     else
-      (3 - @oeuvre.oeuvre_images.count).times { @oeuvre.oeuvre_images.build }
+      3.times do |i|
+        @oeuvre.oeuvre_images.build(position: i + 1)
+      end
       render :new, status: :unprocessable_entity
     end
   end
@@ -348,7 +355,8 @@ end
         :id,    
         :file, 
         :credit,
-        :_destroy
+        :_destroy,
+        :position
       ]
   )
 

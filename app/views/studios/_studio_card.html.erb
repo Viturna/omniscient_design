@@ -1,10 +1,8 @@
 <%= link_to studio do %>
-  <% image_path = "studios/desktop/#{remove_accents_and_special_chars(studio.nom)}.webp" %>
-  <% if image_path.present? && asset_exists?(image_path) %>
-    <div class="card-designer" style="background: url('<%= asset_path(image_path) %>'); background-size: cover; background-position:center center;">
+  <% if studio.studio_images.first&.file&.attached? %>
+    <div class="card-designer" style="background: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>'); background-size: cover; background-position: center center;">
     <% else %>
-      <%# Fallback sur l'image externe si l'image locale n'existe pas %>
-      <div class="card-designer" style="background: url('<%= asset_path(studio.image) %>'); background-size: cover; background-position:center;">
+      <div class="card-designer" style="background: #F3F3F3;">
       <% end %>
       <div class="inner-card-designer">
         <% if studio.respond_to?(:countries) %>

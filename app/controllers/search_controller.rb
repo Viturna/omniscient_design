@@ -90,16 +90,19 @@ class SearchController < ApplicationController
         end
       },
       studios: {
-        title: t('search.studios', default: "Studios"), # Assurez-vous d'avoir la trad
+        title: t('search.studios', default: "Studios"),
         class: "section-title",
         results: studios.map do |s|
-          # Gestion de l'image studio (similaire à designer)
-          thumb_path = Rails.root.join("app/assets/images/studios/thumbs/#{remove_accents_and_special_chars(s.nom)}.webp")
-          img_url = if File.exist?(thumb_path)
-                      "/assets/studios/thumbs/#{remove_accents_and_special_chars(s.nom)}.webp"
-                    else
-                      s.image # ou une image par défaut
-                    end
+           first_image = o.studio_images.first
+            thumb_url = nil
+
+            if first_image&.file&.attached?
+              begin
+                thumb_url = url_for(first_image.file.variant(:thumb))
+              rescue ActiveStorage::FileNotFoundError => e
+                Rails.logger.error "[Autocomplete] Fichier manquant pour Studio ID #{o.id}: #{e.message}"
+              end
+            end
           {
             name: s.nom,
             url: studio_path(s),
@@ -166,7 +169,7 @@ class SearchController < ApplicationController
                         .order(:date_naissance)
                       
     @studios = Studio.where(validation: true)
-                        .select(:id, :nom, :date_creation,:image, :slug)
+                        .select(:id, :nom, :date_creation, :slug)
                         .includes(:domaines, :countries)
                         .order(:date_creation)
   else
@@ -185,7 +188,7 @@ class SearchController < ApplicationController
                      .per(per_page)
 
     @studios = Studio.where(validation: true)
-                        .select(:id, :nom, :date_creation, :image, :slug)
+                        .select(:id, :nom, :date_creation, :slug)
                         .includes(:domaines, :countries)
                         .order(:nom)
                         .page(params[:page])

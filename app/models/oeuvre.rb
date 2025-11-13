@@ -1,7 +1,7 @@
 class Oeuvre < ApplicationRecord
   extend FriendlyId
 
-  has_many :oeuvre_images, dependent: :destroy
+  has_many :oeuvre_images, -> { order(position: :asc) }, dependent: :destroy
   accepts_nested_attributes_for :oeuvre_images, allow_destroy: true, 
                                 reject_if: :all_blank, 
                                 limit: 3
@@ -27,7 +27,6 @@ class Oeuvre < ApplicationRecord
   attr_accessor :rejection_reason
 
   attribute :source, :json, default: []
-
   
   def validated?
     validation == true

@@ -39,7 +39,7 @@
         <div class="notification-badge">!</div>
       </div>
     </div>
-    <%= link_to notifications_path do %>
+    <%= link_to notifications_path, title: "Voir mes notiifications" do %>
       <div class="circle circle-notif">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20.1825 5.26C19.3238 4.76133 18.7932 3.83333 18.7945 2.83333V2.82933C18.7958 1.26667 17.5438 0 15.9998 0C14.4558 0 13.2038 1.26667 13.2038 2.82933V2.83333C13.2052 3.83467 12.6758 4.76133 11.8158 5.26C5.59317 8.876 9.16917 20.88 2.6665 23.0013V25.3333H29.3332V23.0013C22.8305 20.88 26.4065 8.876 20.1825 5.26ZM15.9998 1.33333C16.7358 1.33333 17.3332 1.932 17.3332 2.66667C17.3332 3.40267 16.7358 4 15.9998 4C15.2638 4 14.6665 3.40267 14.6665 2.66667C14.6665 1.932 15.2638 1.33333 15.9998 1.33333ZM19.9998 28C19.9998 30.1307 18.1438 32 16.0385 32C13.9332 32 11.9998 30.1307 11.9998 28H19.9998Z" fill="white"/>
@@ -121,13 +121,13 @@
          data-ads-order="<%= @ads_order_string %>">
     </div>
     <div class="button-nav">
-      <button class="arrow-button up">
+      <button class="arrow-button up" aria-label="Card précédente">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 38L18 40L22 40L22 38L18 38ZM22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6L22 6ZM22 38L22 6L18 6L18 38L22 38Z" fill="white"/>
           <path d="M5 15.8408L20.0002 2.54515L35.0005 15.8408" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
         </svg>
       </button>
-      <button class="arrow-button down">
+      <button class="arrow-button down" aria-label="Card suivante">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 2L18 1.86484e-08L22 -1.86484e-08L22 2L18 2ZM22 34C22 35.1046 21.1046 36 20 36C18.8954 36 18 35.1046 18 34L22 34ZM22 2L22 34L18 34L18 2L22 2Z" fill="white"/>
           <path d="M5 24.1592L20.0002 37.4549L35.0005 24.1592" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>

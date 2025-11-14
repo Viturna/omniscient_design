@@ -54,12 +54,12 @@
               <% end %>
             </div>
             <% if images.count > 1 %>
-              <button class="card-slider-nav prev" data-action="click->slider#prev" title="Précédent">
+              <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Image précédente">
                 <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
                   <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
                 </svg>
               </button>
-              <button class="card-slider-nav next" data-action="click->slider#next" title="Suivant">
+              <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Image suivante">
                 <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
                   <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
                 </svg>
@@ -69,7 +69,8 @@
                   <button class="card-slider-dot <%= 'active' if index == 0 %>" 
                     data-action="click->slider#switchSlide" 
                     data-slider-index-value="<%= index %>" 
-                    data-slider-target="dot"></button>
+                    data-slider-target="dot"
+                    aria-label="Aller à l'image <%= index + 1 %>"></button>
                 <% end %>
               </div>
             <% end %>

@@ -1,6 +1,6 @@
 # Application
 pin "application", preload: true
-pin "controllers", to: "controllers/index.js"
+pin_all_from "app/javascript/controllers", under: "controllers"
 # Hotwire
 pin "@hotwired/turbo", to: "@hotwired--turbo.js"
 pin "@hotwired/turbo-rails", to: "@hotwired--turbo-rails.js"

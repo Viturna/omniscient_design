@@ -132,13 +132,6 @@ export default class extends Controller {
         label.textContent = item.name
         suggestion.appendChild(label)
 
-        if (item.designer) {
-          const designer = document.createElement("small")
-          designer.classList.add("suggestion-designer")
-          designer.textContent = `Designé par : ${item.designer}`
-          suggestion.appendChild(designer)
-        }
-
         suggestion.addEventListener("click", () => window.location.href = item.url)
 
         this.suggestions.push(item)
@@ -149,6 +142,7 @@ export default class extends Controller {
     createSection(data.domaines)
     createSection(data.designers)
     createSection(data.oeuvres)
+    createSection(data.studios)
 
     if (!this.suggestions.length) {
       this.resultsTarget.innerHTML = "<div class='no-suggestion'>Aucune suggestion</div>"

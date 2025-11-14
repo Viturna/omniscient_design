@@ -1,120 +1,113 @@
 class SearchController < ApplicationController
   include ApplicationHelper
-  # 1. AJOUT : Nécessaire pour utiliser url_for
   include Rails.application.routes.url_helpers
 
-  def autocomplete
-    query = params[:query].to_s.strip
+ def autocomplete
+  query = params[:query].to_s.strip
 
-    if query.length < 2
-      return render json: { error: "Query too short" }, status: :bad_request
-    end
-
-    domaines = Domaine.where("domaine ILIKE ?", "%#{query}%").limit(5)
-    
-    designers = Designer.where(validation: true).where(
-      "prenom ILIKE :q OR nom ILIKE :q OR (prenom || ' ' || nom) ILIKE :q OR (nom || ' ' || prenom) ILIKE :q",
-      q: "%#{query}%"
-    ).limit(5)
-
-    # 2. MODIFIÉ : On pré-charge les associations pour la performance
-    oeuvres = Oeuvre.where(validation: true)
-                    .where("nom_oeuvre ILIKE ?", "%#{query}%")
-                    .includes(oeuvre_images: { file_attachment: :blob }, designers: [])
-                    .limit(5)
-              
-    studios = Studio.where(validation: true)
-                    .where("nom ILIKE ?", "%#{query}%")
-                    .limit(5)
-
-    render json: {
-      domaines: {
-        title: t('search.domains'),
-        class: "section-title",
-        results: domaines.map do |d|
-          {
-            name: d.domaine,
-            url: search_path(tab: 'frise', domaine: [d.id]),
-            svg: "/assets/domaines/#{d.svg}"
-          }
-        end
-      },
-      designers: {
-        title: t('search.designers'),
-        class: "section-title",
-        results: designers.map do |d|
-         first_image = o.designer_images.first
-          thumb_url = nil
-
-          if first_image&.file&.attached?
-            begin
-              thumb_url = url_for(first_image.file.variant(:thumb))
-            rescue ActiveStorage::FileNotFoundError => e
-              # Si le fichier est cassé (comme dans vos logs), on ne plante pas
-              Rails.logger.error "[Autocomplete] Fichier manquant pour Designer ID #{o.id}: #{e.message}"
-            end
-          end
-          {
-            name: d.nom_designer,
-            url: designer_path(d),
-            img: img_url
-          }
-        end
-      },
-
-      # 3. MODIFIÉ : Remplacement de l'ancienne logique par Active Storage
-      oeuvres: {
-        title: t('search.references'),
-        class: "section-title",
-        results: oeuvres.map do |o|
-          
-          first_image = o.oeuvre_images.first
-          thumb_url = nil
-
-          if first_image&.file&.attached?
-            begin
-              # On génère l'URL pour le variant :thumb
-              thumb_url = url_for(first_image.file.variant(:thumb))
-            rescue ActiveStorage::FileNotFoundError => e
-              # Si le fichier est cassé (comme dans vos logs), on ne plante pas
-              Rails.logger.error "[Autocomplete] Fichier manquant pour Oeuvre ID #{o.id}: #{e.message}"
-            end
-          end
-
-          {
-            name: o.nom_oeuvre,
-            url: oeuvre_path(o),
-            thumb: thumb_url, # <- C'est la clé que votre JS attend
-            designer: o.designers.map(&:nom_designer).join(', ') # <- Votre JS gère ça
-          }
-        end
-      },
-      studios: {
-        title: t('search.studios', default: "Studios"),
-        class: "section-title",
-        results: studios.map do |s|
-           first_image = o.studio_images.first
-            thumb_url = nil
-
-            if first_image&.file&.attached?
-              begin
-                thumb_url = url_for(first_image.file.variant(:thumb))
-              rescue ActiveStorage::FileNotFoundError => e
-                Rails.logger.error "[Autocomplete] Fichier manquant pour Studio ID #{o.id}: #{e.message}"
-              end
-            end
-          {
-            name: s.nom,
-            url: studio_path(s),
-            img: img_url
-          }
-        end
-      }
-    }
-  rescue => e
-    Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
-    render json: { error: t('search.server_error') }, status: 500
+  if query.length < 2
+    return render json: { error: "Query too short" }, status: :bad_request
   end
+
+  domaines = Domaine.where("domaine ILIKE ?", "%#{query}%").limit(5)
+  
+  designers = Designer.where(validation: true).where(
+    "prenom ILIKE :q OR nom ILIKE :q OR (prenom || ' ' || nom) ILIKE :q OR (nom || ' ' || prenom) ILIKE :q",
+    q: "%#{query}%"
+  ).includes(designer_images: { file_attachment: :blob }).limit(5)
+
+  oeuvres = Oeuvre.where(validation: true)
+                  .where("nom_oeuvre ILIKE ?", "%#{query}%")
+                  .includes(oeuvre_images: { file_attachment: :blob }, designers: [])
+                  .limit(5)
+            
+  studios = Studio.where(validation: true)
+                  .where("nom ILIKE ?", "%#{query}%")
+                  .includes(studio_images: { file_attachment: :blob })
+                  .limit(5)
+
+  render json: {
+    domaines: {
+      title: t('search.domains'),
+      class: "section-title",
+      results: domaines.map do |d|
+        {
+          name: d.domaine,
+          url: search_path(tab: 'frise', domaine: [d.id]),
+          svg: "/assets/domaines/#{d.svg}"
+        }
+      end
+    },
+    designers: {
+      title: t('search.designers'),
+      class: "section-title",
+      results: designers.map do |d|
+        first_image = d.designer_images.first
+        thumb_url = nil
+
+        if first_image&.file&.attached?
+          begin
+            thumb_url = url_for(first_image.file.variant(:thumb))
+          rescue ActiveStorage::FileNotFoundError => e
+            Rails.logger.error "[Autocomplete] Fichier manquant pour Designer ID #{d.id}: #{e.message}"
+          end
+        end
+        {
+          name: d.nom_designer,
+          url: designer_path(d),
+          img: thumb_url
+        }
+      end
+    },
+
+    oeuvres: {
+      title: t('search.references'),
+      class: "section-title",
+      results: oeuvres.map do |o|
+        first_image = o.oeuvre_images.first
+        thumb_url = nil
+
+        if first_image&.file&.attached?
+          begin
+            thumb_url = url_for(first_image.file.variant(:thumb))
+          rescue ActiveStorage::FileNotFoundError => e
+            Rails.logger.error "[Autocomplete] Fichier manquant pour Oeuvre ID #{o.id}: #{e.message}"
+          end
+        end
+
+        {
+          name: o.nom_oeuvre,
+          url: oeuvre_path(o),
+          img: thumb_url,
+        }
+      end
+    },
+    studios: {
+      title: t('search.studios', default: "Studios"),
+      class: "section-title",
+      results: studios.map do |s|
+         first_image = s.studio_images.first
+          thumb_url = nil
+
+          if first_image&.file&.attached?
+            begin
+              thumb_url = url_for(first_image.file.variant(:thumb))
+            rescue ActiveStorage::FileNotFoundError => e
+              Rails.logger.error "[Autocomplete] Fichier manquant pour Studio ID #{s.id}: #{e.message}"
+            end
+          end
+        {
+          name: s.nom,
+          url: studio_path(s),
+          img: thumb_url 
+        }
+      end
+    }
+  }
+rescue => e
+  Rails.logger.error "[Autocomplete] Erreur: #{e.message}"
+  render json: { error: t('search.server_error') }, status: 500
+end
 
   def search
     @current_page = 'recherche'
@@ -127,7 +120,6 @@ class SearchController < ApplicationController
     query = params[:query].to_s.strip
   
    if query.present?
-    # Recherche sur designers et oeuvres, avec limite 1 chacun, ordre par similarité (simple LIKE ici)
     designer = Designer.where(validation: true)
       .where("prenom ILIKE :q OR nom ILIKE :q OR (prenom || ' ' || nom) ILIKE :q OR (nom || ' ' || prenom) ILIKE :q", q: "%#{query}%")
       .order(
@@ -147,12 +139,10 @@ class SearchController < ApplicationController
     if studio
       redirect_to studio_path(studio) and return
     end
-    # Si on a un designer dont le nom/prénom correspond quasi-exactement, on redirige vers lui
     if designer && (oeuvre.nil? || query.length <= designer.nom.length)
       redirect_to designer_path(designer) and return
     end
 
-    # Sinon si on a une oeuvre, on redirige vers elle
     if oeuvre
       redirect_to oeuvre_path(oeuvre) and return
     end

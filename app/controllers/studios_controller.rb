@@ -32,7 +32,9 @@ class StudiosController < ApplicationController
 
   def edit
     @current_page = 'add_elements'
-    (3 - @studio.studio_images.count).times do |i|
+    existing_images = @studio.studio_images.count
+  
+    (3 - existing_images).times do |i|
       max_pos = @studio.studio_images.map(&:position).compact.max || 0
       @studio.studio_images.build(position: max_pos + i + 1)
     end

@@ -107,13 +107,15 @@ def load_more
 
   # GET /oeuvres/1/edit
   def edit
-    (3 - @oeuvre.oeuvre_images.count).times do |i|
+    @current_page = 'add_elements'
+    @selected_designers = @oeuvre.designers.pluck(:id)
+
+    existing_images = @oeuvre.oeuvre_images.count
+  
+    (3 - existing_images).times do |i|
       max_pos = @oeuvre.oeuvre_images.map(&:position).compact.max || 0
       @oeuvre.oeuvre_images.build(position: max_pos + i + 1)
     end
-
-    @current_page = 'add_elements'
-    @selected_designers = @oeuvre.designers.pluck(:id)
   end
 
   # POST /oeuvres or /oeuvres.json

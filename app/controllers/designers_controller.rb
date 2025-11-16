@@ -113,8 +113,9 @@ def load_more
 
   def edit
     @current_page = 'add_elements'
-    # AJOUT : Construit des champs d'images supplémentaires jusqu'à 3
-    (3 - @designer.designer_images.count).times do |i|
+   existing_images = @designer.designer_images.count
+  
+    (3 - existing_images).times do |i|
       max_pos = @designer.designer_images.map(&:position).compact.max || 0
       @designer.designer_images.build(position: max_pos + i + 1)
     end

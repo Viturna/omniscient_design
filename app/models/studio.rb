@@ -26,14 +26,11 @@ class Studio < ApplicationRecord
   has_many :designer_studios, dependent: :destroy
   has_many :designers, through: :designer_studios
 
-  # Accepte les champs imbriqués pour la table de liaison
   accepts_nested_attributes_for :designer_studios, 
                                 allow_destroy: true, 
-                                # Ignore les champs si aucun designer n'est sélectionné
                                 reject_if: proc { |attributes| attributes['designer_id'].blank? },
-                                limit: 10 # Limite serveur
+                                limit: 10
 
-  # Validation pour afficher un message d'erreur clair si la limite est dépassée
   validates :designers, length: { 
     maximum: 10, 
     message: "ne peut pas dépasser 10 designers." 

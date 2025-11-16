@@ -181,7 +181,7 @@
   <!-- Étape 5 -->
   <div class="form-step" data-step="5" style="display: none;">
     <h3><%= t('add_oeuvre.steps.4.title') %></h3>
-    <div class="flex-form"> 
+    <div class="flex-form">
       <div>
         <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
         <%= form.text_field :date_oeuvre, placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), id: "date-oeuvre-input" %>
@@ -192,7 +192,7 @@
         <div id="image-fields-container" 
              class="image-grid-container"
              data-controller="sortable">
-          <%= form.fields_for :oeuvre_images, @oeuvre.oeuvre_images.sort_by(&:position) do |image_form| %>
+          <%= form.fields_for :oeuvre_images, @oeuvre.oeuvre_images.sort_by { |img| img.position || 0 } do |image_form| %>
             <div class="image-upload-card" 
                  data-controller="image-preview" 
                  data-sortable-target="item">

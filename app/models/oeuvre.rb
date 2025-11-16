@@ -3,7 +3,7 @@ class Oeuvre < ApplicationRecord
 
   has_many :oeuvre_images, -> { order(position: :asc) }, dependent: :destroy
   accepts_nested_attributes_for :oeuvre_images, allow_destroy: true, 
-                                reject_if: :all_blank, 
+                                reject_if: proc { |attributes| attributes['file'].blank? }, 
                                 limit: 3
   friendly_id :nom_oeuvre, use: :slugged
 

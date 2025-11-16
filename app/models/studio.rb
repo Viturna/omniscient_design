@@ -5,8 +5,8 @@ class Studio < ApplicationRecord
   validates :nom, presence: true
 
   has_many :studio_images, -> { order(position: :asc) }, dependent: :destroy
-  accepts_nested_attributes_for  :studio_images, allow_destroy: true, 
-                                reject_if: :all_blank, 
+  accepts_nested_attributes_for :studio_images, allow_destroy: true, 
+                                reject_if: proc { |attributes| attributes['file'].blank? }, 
                                 limit: 3
 
   has_many :studios_domaines, dependent: :destroy

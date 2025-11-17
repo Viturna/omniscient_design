@@ -12,6 +12,7 @@ class BugReportsController < ApplicationController
   def create
     @bug_report = BugReport.new(bug_report_params)
     @bug_report.user = current_user
+    notify_admins_of_new_bug(@bug_report)
     if @bug_report.save
       redirect_to profil_path, notice: I18n.t('bug_report.create.success')
     else
@@ -41,6 +42,7 @@ class BugReportsController < ApplicationController
 def update_status
   if @bug_report.update(status: params[:status])
     redirect_to bug_reports_path, notice: I18n.t('bug_report.update_status.success')
+    notify_user_of_status_update(@bug_report)
   else
     redirect_to bug_reports_path, alert: I18n.t('bug_report.update_status.error')
   end
@@ -60,4 +62,46 @@ end
   def authenticate_admin!
     redirect_to root_path, alert: I18n.t('bug_report.access.denied') unless current_user.admin?
   end
+
+  def notify_admins_of_new_bug(bug_report)
+    message = I18n.t('notifications.new_bug_report', 
+                     user_name: bug_report.user.pseudo, 
+                     default: "Nouveau bug signalé par #{bug_report.user.pseudo}")
+    
+    admins = User.where(role: 'admin')
+    
+    admins.each do |admin|
+      next if admin == bug_report.user 
+      
+      Notification.create(
+        user: admin, 
+        notifiable: bug_report, 
+        message: message
+      )
+    end
+  rescue => e
+    Rails.logger.error "ERREUR notify_admins_of_new_bug: #{e.message}"
+  end
+
+  def notify_user_of_status_update(bug_report)
+    return unless bug_report.user.present?
+    
+    return if bug_report.user == current_user 
+
+    status_text = I18n.t("bug_report.statuses.#{bug_report.status}", default: bug_report.status.humanize)
+    
+    message = I18n.t('notifications.bug_report_updated', 
+                     status: status_text, 
+                     default: "Votre rapport de bug est passé au statut : #{status_text}")
+                     
+    Notification.create(
+      user: bug_report.user,
+      notifiable: bug_report,
+      message: message
+    )
+  rescue => e
+    Rails.logger.error "ERREUR notify_user_of_status_update: #{e.message}"
+  end
+  
+
 end

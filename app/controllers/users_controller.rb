@@ -24,13 +24,17 @@ class UsersController < ApplicationController
                                .where(sql_query, query: "%#{params[:query]}%")
     end
 
-    # 3. Calcul des stats (sur le scope filtré ou total, selon votre besoin. 
-    # Ici je les laisse sur le TOTAL pour que les stats globales ne changent pas avec la recherche, 
-    # mais vous pouvez utiliser 'users_scope' si vous voulez que les stats reflètent la recherche).
-    # Pour des stats globales, on garde une variable séparée :
     all_users_scope = User.includes(:etablissement) 
 
-    @stats_etablissements = all_users_scope.joins(:etablissement).group('etablissements.name').count.sort_by { |_, c| -c }
+    all_etablissements_stats = all_users_scope.joins(:etablissement)
+                                            .group('etablissements.name')
+                                            .count
+                                            .sort_by { |_, c| -c } 
+  @total_etablissements_count = all_etablissements_stats.length
+  @stats_etablissements = Kaminari.paginate_array(all_etablissements_stats)
+                                  .page(params[:etablissements_page])
+                                  .per(10)
+
     @stats_source = all_users_scope.where.not(how_did_you_hear: [nil, '']).group(:how_did_you_hear).count.sort_by { |_, c| -c }
     @stats_status = all_users_scope.where.not(statut: [nil, '']).group(:statut).count.sort_by { |_, c| -c }
     @stats_certified_count = all_users_scope.where(certified: true).count

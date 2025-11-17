@@ -264,7 +264,7 @@
               <div class="circle">
                 <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.0037 41.2739C33.5799 41.2739 42.1665 32.6873 42.1665 22.1111C42.1665 11.5349 33.5799 2.9502 23.0037 2.9502C12.4294 2.9502 3.84277 11.5349 3.84277 22.1111C3.84277 32.6873 12.4294 41.2739 23.0037 41.2739ZM23.0037 25.9406C22.2102 25.9406 21.5662 25.2966 21.5662 24.5031V13.9614C21.5662 13.1679 22.2102 12.5239 23.0037 12.5239C23.7972 12.5239 24.4412 13.1679 24.4412 13.9614V24.5031C24.4412 25.2966 23.7972 25.9406 23.0037 25.9406ZM22.9999 31.6906C21.9419 31.6906 21.0832 30.8319 21.0832 29.7739C21.0832 28.7159 21.9419 27.8573 22.9999 27.8573C24.0579 27.8573 24.9165 28.7159 24.9165 29.7739C24.9165 30.8319 24.0579 31.6906 22.9999 31.6906Z" fill="white"/></svg>
               </div>
-              <p>Signaler une erreur</p>
+              <p>Suggérer une modification</p>
             <% end %>
           <% end %>
         </div>
@@ -308,7 +308,7 @@
                         <div class="oeuvre-card-image" style="background-color: #EEE;">
                         <% end %>
                         <div class="oeuvre-card-content">
-                          <p class="oeuvre-designer"><%= oeuvre.designers.map(&:nom_designer).join(', ') %></p>
+                          <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %></p>
                           <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                         </div>
                       </div>

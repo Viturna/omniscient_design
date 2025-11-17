@@ -1,0 +1,167 @@
+<%#
+# Page d'administration pour lister tous les établissements
+# Chemin: app/views/admin/etablissements/index.html.erb
+%>
+
+<style>
+  /* Styles minimaux pour la lisibilité du tableau admin */
+  .table-admin-wrapper {
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  .table-admin {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap; 
+  }
+  .table-admin th, .table-admin td {
+    border-bottom: 1px solid #eee;
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .table-admin thead th {
+    background-color: #f9f9f9;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #555;
+    position: sticky; 
+    top: 0;
+  }
+  .table-admin tbody tr:hover {
+    background-color: #f7f7f7;
+  }
+  .table-admin td {
+    font-size: 14px;
+    color: #333;
+  }
+  .table-admin .col-bool {
+    font-family: monospace;
+  }
+  .table-admin .col-links {
+    white-space: normal; 
+    min-width: 250px;
+    max-width: 350px;
+  }
+  .table-admin .col-links a {
+    color: #007bff;
+    word-break: break-all; 
+  }
+  .table-admin .col-actions {
+    white-space: nowrap;
+  }
+  
+  /* Style pour les booléens (de votre autre fichier) */
+  .bool-true { color: #28a745; font-weight: 500; }
+  .bool-false { color: #999; }
+</style>
+
+<section class="top-default-page">
+  <%= link_to users_path do %>
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_3256_104)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_3256_104">
+          <rect width="36" height="36" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  <% end %>
+  <h1>Gestion des Établissements</h1>
+</section>
+<section class="grid-1">
+  <%= paginate @etablissements %>
+
+  <div class="table-wrapper">
+    <table> 
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Nb. Utilisateurs</th> <%# NOUVELLE COLONNE %>
+          <th>UAI</th>
+          <th>Statut</th>
+          <th>Type</th>
+          <th>Académie / Région</th>
+          <th>Localisation</th>
+          <th>Contact</th>
+          <th>Voies</th>
+          <th>Sections</th>
+          <th>Coordonnées</th>
+          <th>Actions</th> <%# NOUVELLE COLONNE %>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <% @etablissements.each do |etab| %>
+          <tr>
+            <td>
+              <strong><%= etab.name %></strong>
+            </td>
+            <td>
+              <%# etab.users_count vient du contrôleur %>
+              <strong><%= etab.users_count %></strong> 
+            </td>
+            <td><code><%= etab.uai %></code></td>
+            <td><%= etab.statut_public_prive %></td>
+            <td><%= etab.type_etablissement %></td>
+            <td>
+              <%= etab.academy %><br>
+              <small><%= etab.region %></small>
+            </td>
+            <td>
+              <%= etab.city %><br>
+              <small><%= etab.address %></small>
+            </td>
+            <td class="col-links">
+              <% if etab.phone.present? %>
+                <%= etab.phone %><br>
+              <% end %>
+              <% if etab.messagerie.present? %>
+                <%= mail_to etab.messagerie %><br>
+              <% end %>
+              <% if etab.website.present? %>
+                <%= link_to "Site web", etab.website, target: "_blank", rel: "noopener" %>
+              <% end %>
+            </td>
+            <td class="col-bool">
+              Générale: <span class="bool-<%= etab.voie_generale %>"><%= oui_non(etab.voie_generale) %></span><br>
+              Techno: <span class="bool-<%= etab.voie_technologique %>"><%= oui_non(etab.voie_technologique) %></span><br>
+              Pro: <span class="bool-<%= etab.voie_professionnelle %>"><%= oui_non(etab.voie_professionnelle) %></span><br>
+              Post-Bac: <span class="bool-<%= etab.post_bac %>"><%= oui_non(etab.post_bac) %></span>
+            </td>
+            <td class="col-bool">
+              Arts: <span class="bool-<%= etab.section_arts %>"><%= oui_non(etab.section_arts) %></span><br>
+              Cinéma: <span class="bool-<%= etab.section_cinema %>"><%= oui_non(etab.section_cinema) %></span><br>
+              Théâtre: <span class="bool-<%= etab.section_theatre %>"><%= oui_non(etab.section_theatre) %></span>
+            </td>
+            <td>
+              <% if etab.latitude.present? && etab.longitude.present? %>
+                Lat: <%= etab.latitude %><br>
+                Lon: <%= etab.longitude %>
+              <% end %>
+            </td>
+            <td class="col-actions">
+              <%= link_to "Modifier", edit_admin_etablissement_path(etab), class: "btn btn-sm btn-primary" %>
+               <% if etab.users_count == 0 %>
+                <%= link_to "Supprimer", admin_etablissement_path(etab), 
+                      class: "btn btn-sm btn-danger",
+                      data: { 
+                        turbo_method: :delete, 
+                        turbo_confirm: "Êtes-vous sûr de vouloir supprimer '#{etab.name}' ? Cette action est irréversible." 
+                      } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top: 20px;">
+      <%= paginate @etablissements %>
+  </div>
+</section>

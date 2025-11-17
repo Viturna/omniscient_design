@@ -3,6 +3,10 @@ class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
 
+  def should_generate_new_friendly_id?
+    nom_changed? || prenom_changed?
+  end
+
   validates :nom, presence: true
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year

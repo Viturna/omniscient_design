@@ -1,0 +1,133 @@
+<style>
+    label{
+        color: #202020 !important;
+    }
+</style>
+<section class="top-default-page">
+  <%= link_to admin_etablissements_path do %>
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_3256_104)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
+      </g>
+    </svg>
+  <% end %>
+  <h1>Modifier : <%= @etablissement.name %></h1>
+</section>
+
+<section class="grid-1">
+  
+  <%# 
+    On utilise le style 'form-step' et 'flex-form' 
+    que vous avez dans vos autres formulaires.
+  %>
+  <div class="form-step" style="display: block;">
+    <%= form_with(model: [:admin, @etablissement], local: true) do |form| %>
+
+      <% if @etablissement.errors.any? %>
+        <div style="color: red; margin-bottom: 20px;">
+          <h2>Erreurs :</h2>
+          <ul>
+            <% @etablissement.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    
+      <div class="flex-form">
+        
+        <div>
+          <%= form.label :name, "Nom de l'établissement" %>
+          <%= form.text_field :name %>
+        </div>
+
+        <div>
+          <%= form.label :uai, "Code UAI (non modifiable)" %>
+          <%= form.text_field :uai, readonly: true, disabled: true, style: "background-color: #eee;" %>
+        </div>
+
+        <div style="flex-direction: row; gap: 20px;">
+          <div style="width: 50%;">
+            <%= form.label :statut_public_prive, "Statut (Public/Privé)" %>
+            <%= form.text_field :statut_public_prive %>
+          </div>
+          <div style="width: 50%;">
+            <%= form.label :type_etablissement, "Type d'établissement" %>
+            <%= form.text_field :type_etablissement %>
+          </div>
+        </div>
+        
+        <div style="flex-direction: row; gap: 20px;">
+          <div style="width: 50%;">
+            <%= form.label :academy, "Académie" %>
+            <%= form.text_field :academy %>
+          </div>
+          <div style="width: 50%;">
+            <%= form.label :region, "Région" %>
+            <%= form.text_field :region %>
+          </div>
+        </div>
+
+        <div style="flex-direction: row; gap: 20px;">
+          <div style="width: 50%;">
+            <%= form.label :address, "Adresse" %>
+            <%= form.text_field :address %>
+          </div>
+          <div style="width: 50%;">
+            <%= form.label :city, "Ville" %>
+            <%= form.text_field :city %>
+          </div>
+        </div>
+
+        <div style="flex-direction: row; gap: 20px;">
+          <div style="width: 50%;">
+            <%= form.label :latitude, "Latitude" %>
+            <%= form.text_field :latitude %>
+          </div>
+          <div style="width: 50%;">
+            <%= form.label :longitude, "Longitude" %>
+            <%= form.text_field :longitude %>
+          </div>
+        </div>
+        
+        <div>
+          <%= form.label :phone, "Téléphone" %>
+          <%= form.text_field :phone %>
+        </div>
+        
+        <div>
+          <%= form.label :messagerie, "Email (Messagerie)" %>
+          <%= form.text_field :messagerie %>
+        </div>
+        
+        <div>
+          <%= form.label :website, "Site Web (URL)" %>
+          <%= form.text_field :website %>
+        </div>
+        
+        <hr>
+        <h3>Voies</h3>
+        <div style="flex-direction: row; gap: 30px;">
+          <div><%= form.check_box :voie_generale %> <%= form.label :voie_generale %></div>
+          <div><%= form.check_box :voie_technologique %> <%= form.label :voie_technologique %></div>
+          <div><%= form.check_box :voie_professionnelle %> <%= form.label :voie_professionnelle %></div>
+          <div><%= form.check_box :post_bac %> <%= form.label :post_bac, "Post-Bac" %></div>
+        </div>
+        
+        <hr>
+        <h3>Sections Spécifiques</h3>
+        <div style="flex-direction: row; gap: 30px;">
+          <div><%= form.check_box :section_arts %> <%= form.label :section_arts, "Arts" %></div>
+          <div><%= form.check_box :section_cinema %> <%= form.label :section_cinema, "Cinéma" %></div>
+          <div><%= form.check_box :section_theatre %> <%= form.label :section_theatre, "Théâtre" %></div>
+        </div>
+        
+        <div class="flex-btn-add" style="margin-top: 30px;">
+          <%= link_to "Annuler", admin_etablissements_path, class: "button large" %>
+          <%= form.submit "Mettre à jour", class: "button large dark" %>
+        </div>
+        
+      </div>
+    <% end %>
+  </div>
+</section>

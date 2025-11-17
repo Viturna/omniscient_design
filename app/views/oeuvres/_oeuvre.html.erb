@@ -180,9 +180,7 @@
       <div class="header-top">
         <div>
           <p class="subtitle-card">
-            <% oeuvre.designers.each do |designer| %>
-              <%= link_to designer.nom_designer, designer_path(designer) %><%= ', ' unless designer == oeuvre.designers.last %>
-            <% end %>
+            <%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %>
           </p>
           <p class="title-card"><%= oeuvre.nom_oeuvre %></p>
         </div>
@@ -212,9 +210,7 @@
       <div class="text-show">
         <div class="title-box-oeuvre">
           <p class="subtitle-card">
-            <% oeuvre.designers.each do |designer| %>
-              <%= link_to designer.nom_designer, designer_path(designer) %><%= ',' unless designer == oeuvre.designers.last %>
-            <% end %>
+            <%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %>
           </p>
           <h1 class="title-card"><%= oeuvre.nom_oeuvre %></h1>
         </div>
@@ -351,7 +347,7 @@
                       <div class="oeuvre-card-image" style="background-color: #EEE;">
                       <% end %>
                       <div class="oeuvre-card-content">
-                        <span class="oeuvre-designer"><%= oeuvre.designers.map(&:nom_designer).join(', ') %></span>
+                        <span class="oeuvre-designer"><%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %></span>
                         <p class="oeuvre-title"><%= oeuvre.nom_oeuvre %></p>
                       </div>
                     </div>

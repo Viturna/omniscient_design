@@ -1,241 +1,134 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
 require 'csv'
+require 'uri'
 
-# Import des domaines
-csv_text_domaines = File.read(Rails.root.join('lib', 'seeds', 'domaine.csv'), encoding: 'utf-8')
-csv_domaines = CSV.parse(csv_text_domaines, headers: true)
-
-domaines_counter = 0
-
-csv_domaines.each do |row|
-  domaine = Domaine.find_or_create_by(
-    domaine: row['domaine'],
-    couleur: row['couleur'],
-    svg: row['svg']
-  )
-  if domaine.save
-    puts "Domaine importé : #{domaine.domaine}"
-  else
-    puts "Erreur lors de l'importation du domaine : #{domaine.errors.full_messages}"
+# --- Import des domaines ---
+puts "--- Import des Domaines ---"
+begin
+  csv_text_domaines = File.read(Rails.root.join('lib', 'seeds', 'domaine.csv'), encoding: 'utf-8')
+  csv_domaines = CSV.parse(csv_text_domaines, headers: true)
+  domaines_counter = 0
+  csv_domaines.each do |row|
+    domaine = Domaine.find_or_create_by(
+      domaine: row['domaine'],
+      couleur: row['couleur'],
+      svg: row['svg']
+    )
+    domaines_counter += 1 if domaine.persisted?
   end
-
-  domaines_counter += 1
+  puts "Nombre total de domaines importés/vérifiés : #{domaines_counter}"
+rescue Errno::ENOENT
+  puts "AVERTISSEMENT : Fichier 'domaine.csv' non trouvé. Importation annulée."
 end
 
-puts "Nombre total de domaines importés : #{domaines_counter}"
-
-# Import des notions
-csv_text_notions = File.read(Rails.root.join('lib', 'seeds', 'notions.csv'), encoding: 'utf-8')
-csv_notions = CSV.parse(csv_text_notions, headers: true)
-
-notions_counter = 0
-
-csv_notions.each do |row|
-  notion = Notion.find_or_create_by(
-    name: row['name']
-  )
-  if notion.save
-    puts "notions importé : #{notion.name}"
-  else
-    puts "Erreur lors de l'importation du notion : #{notion.errors.full_messages}"
+# --- Import des notions ---
+puts "\n--- Import des Notions ---"
+begin
+  csv_text_notions = File.read(Rails.root.join('lib', 'seeds', 'notions.csv'), encoding: 'utf-8')
+  csv_notions = CSV.parse(csv_text_notions, headers: true)
+  notions_counter = 0
+  csv_notions.each do |row|
+    notion = Notion.find_or_create_by(name: row['name'])
+    notions_counter += 1 if notion.persisted?
   end
-
-  notions_counter += 1
+  puts "Nombre total de notions importées/vérifiés : #{notions_counter}"
+rescue Errno::ENOENT
+  puts "AVERTISSEMENT : Fichier 'notions.csv' non trouvé. Importation annulée."
 end
 
-puts "Nombre total de notions importés : #{notions_counter}"
+# ==============================================================================
+# --- IMPORT DES ÉTABLISSEMENTS (etablissements2.csv UNIQUEMENT) ---
+# ==============================================================================
+puts "\n--- Import des Établissements ---"
 
-# Import des établissements
-csv_text_etablissements = File.read(Rails.root.join('lib', 'seeds', 'etablissements.csv'), encoding: 'utf-8')
-csv_etablissements = CSV.parse(csv_text_etablissements, headers: true)
-
-etablissements_counter = 0
-
-csv_etablissements.each do |row|
-  etablissement = Etablissement.find_or_create_by(
-    name: row['name'],
-    region: row['region'],
-    academy: row['academy'],
-    city: row['city'],
-    messagerie: row['messagerie'],
-    address: row['address'],
-    phone: row['phone'],
-    website: row['website'],
-    longitude: row['longitude'],
-    latitude: row['latitude']
-  )
-  if etablissement.save
-    puts "Établissement importé : #{etablissement.name}"
-  else
-    puts "Erreur lors de l'importation de l'établissement : #{etablissement.errors.full_messages.join(", ")}"
-  end
-
-  etablissements_counter += 1
+# Helper pour extraire l'UAI de '0070004S@ac-grenoble.fr' ou 'ce.0350787R@ac-rennes.fr'
+def extract_uai_from_email(email_string)
+  return nil if email_string.blank?
+  match = email_string.strip.match(/^(?:ce\.)?([0-9]{7}[a-zA-Z])@/i)
+  match ? match[1].upcase : nil
 end
 
-puts "Nombre total d'établissements importés : #{etablissements_counter}"
+new_etablissements_counter = 0
+updated_etablissements_counter = 0
 
-# Import des pays
-csv_text_countries = File.read(Rails.root.join('lib', 'seeds', 'pays.csv'), encoding: 'utf-8')
-csv_countries = CSV.parse(csv_text_countries, headers: true)
+puts "Traitement du fichier : etablissements2.csv..."
+new_file_path = Rails.root.join('lib', 'seeds', 'etablissements2.csv')
+if File.exist?(new_file_path)
+  begin
+    csv_text_new = File.read(new_file_path, encoding: 'utf-8')
+    # Utilisation du délimiteur point-virgule ';'
+    csv_new = CSV.parse(csv_text_new, headers: true, col_sep: ';')
 
-countries_counter = 0
+    csv_new.each do |row|
+      uai = extract_uai_from_email(row['Mail'])
+      
+      if uai.nil?
+        puts "SKIPPING: UAI non trouvé dans Mail '#{row['Mail']}' pour '#{row['Nom_etablissement']}'"
+        next
+      end
 
-csv_countries.each do |row|
-  country = Country.find_or_create_by(
-    country: row['country'],
-    country_numeric: row['country_numeric']
-  )
+      etablissement = Etablissement.find_or_initialize_by(uai: uai)
+      is_new = etablissement.new_record?
 
-  if country.save
-    puts "Pays importé : #{country.country}"
-  else
-    puts "Erreur lors de l'importation du pays : #{country.errors.full_messages.join(", ")}"
-  end
+      etablissement.assign_attributes(
+        name: row['Nom_etablissement'],
+        address: [row['Adresse_1'], row['Adresse_3']].reject(&:blank?).join(', '),
+        city: row['Nom_commune'],
+        region: row['Libelle_region'],
+        academy: row['Libelle_academie'],
+        phone: row['Telephone'],
+        website: row['Web'],
+        messagerie: row['Mail'],
+        latitude: row['latitude'].present? ? row['latitude'].to_f : nil,
+        longitude: row['longitude'].present? ? row['longitude'].to_f : nil,
+        type_etablissement: row['Type_etablissement'],
+        statut_public_prive: row['Statut_public_prive'],
+        voie_generale: (row['Voie_generale'] == 't'),
+        voie_technologique: (row['Voie_technologique'] == 't'),
+        voie_professionnelle: (row['Voie_professionnelle'] == 't'),
+        post_bac: (row['Post_BAC'] == 't'),
+        section_arts: (row['Section_arts'] == 't'),
+        section_cinema: (row['Section_cinema'] == 't'),
+        section_theatre: (row['Section_theatre'] == 't')
+      )
 
-  countries_counter += 1
-end
-
-puts "Nombre total de pays importés : #{countries_counter}"
-
-# Import des designers
-csv_text_designers = File.read(Rails.root.join('lib', 'seeds', 'designers.csv'), encoding: 'utf-8')
-csv_designers = CSV.parse(csv_text_designers, headers: true)
-
-designers_counter = 0
-
-csv_designers.each do |row|
-  designer = Designer.find_or_create_by(
-    nom: row['nom'],
-    prenom: row['prenom'],
-    date_naissance: row['date_naissance'],
-    image: row['image'],
-    presentation_generale: row['presentation_generale'],
-    formation_et_influences: row['formation_et_influences'],
-    style_ou_philosophie: row['style_ou_philosophie'],
-    creations_majeures: row['creations_majeures'],
-    heritage_et_impact: row['heritage_et_impact']
-  )
-
-  # Créez un tableau vide pour les pays
-  countries = []
-
-  # Vérifiez si les pays dans les colonnes 'country_1', 'country_2', etc., existent et ajoutez-les
-  (1..2).each do |i| # Si vous avez deux colonnes de pays
-    country_column = row["country_#{i}"]
-    if country_column.present?
-      country = Country.find_by(country: country_column) # On cherche seulement
-      countries << country if country # Ajout uniquement si le pays existe
+      if etablissement.save
+        if is_new
+          new_etablissements_counter += 1
+        else
+          updated_etablissements_counter += 1
+        end
+      else
+        puts "ERREUR: #{etablissement.errors.full_messages.join(", ")} pour UAI #{uai}"
+      end
     end
+  rescue CSV::MalformedCSVError => e
+    puts "ERREUR CSV : Le fichier 'etablissements2.csv' est malformé. Vérifiez le délimiteur (doit être ';'). Erreur: #{e.message}"
   end
-
-  # Associer les pays au designer via la table de jointure
-  designer.countries = countries.compact 
-
-  # Créez un tableau vide pour les domaines
-  domaines = []
-
-  # Vérifiez si les domaines dans les colonnes 'domaine_1', 'domaine_2', etc., existent et ajoutez-les
-  (1..2).each do |i| # Si vous avez deux colonnes de domaines
-    domaine_column = row["domaine_#{i}"]
-    if domaine_column.present?
-      domaine = Domaine.find_or_create_by(domaine: domaine_column)
-      domaines << domaine
-    end
-  end
-
-  # Associer les domaines au designer via la table de jointure
-  designer.domaines = domaines
-
-  # Sauvegarde du designer
-  designer.save!
-
-  if designer.save
-    puts "Designer importée : #{designer.nom_designer}"
-    designers_counter += 1
-  else
-    puts "Erreur lors de l'importation du designer : #{designer.errors.full_messages.join(', ')}"
-  end
-  puts
+else
+  puts "AVERTISSEMENT : Fichier 'etablissements2.csv' non trouvé. Importation annulée."
 end
 
-puts "#{designers_counter} designers importés avec succès."
-# Import des oeuvres
+puts "\nNombre total de nouveaux établissements créés : #{new_etablissements_counter}"
+puts "Nombre d'établissements mis à jour : #{updated_etablissements_counter}"
 
-csv_text_oeuvres = File.read(Rails.root.join('lib', 'seeds', 'oeuvres.csv'), encoding: 'utf-8')
-csv_oeuvres = CSV.parse(csv_text_oeuvres, headers: true)
-
-oeuvres_counter = 0
-
-csv_oeuvres.each do |row|
-  # Création ou association d'une œuvre
-  oeuvre = Oeuvre.new(
-    nom_oeuvre: row['nom_oeuvre'],
-    date_oeuvre: row['date_oeuvre'],
-    presentation_generale: row['presentation_generale'],
-    contexte_historique: row['contexte_historique'],
-    materiaux_et_innovations_techniques: row['materiaux_et_innovations_techniques'],
-    concept_et_inspiration: row['concept_et_inspiration'],
-    dimension_esthetique: row['dimension_esthetique'],
-    impact_et_message: row['impact_et_message'],
-    image: row['image']
-  )
-
-  # # Association du domaine
-  # domaine = Domaine.find_or_create_by(domaine: row['domaine'])
-  # if domaine.nil?
-  #   puts "Erreur : Le domaine '#{row['domaine']}' n'existe pas."
-  #   next
-  # end
-  # oeuvre.domaine = domaine
-  # Initialisation des designers supplémentaires
-  designers = []
-  
-  (1..2).each do |i|
-    designer_name = row["nom_designer_#{i}"]
-    next unless designer_name.present? 
-    designer = Designer.find_by(nom: designer_name)
-  
-    if designer.nil?
-      puts "⚠️ Designer non trouvé : #{designer_name}"
-    else
-      designers << designer
-    end
+# ==============================================================================
+# --- Import des pays ---
+# ==============================================================================
+puts "\n--- Import des Pays ---"
+begin
+  csv_text_countries = File.read(Rails.root.join('lib', 'seeds', 'pays.csv'), encoding: 'utf-8')
+  csv_countries = CSV.parse(csv_text_countries, headers: true)
+  countries_counter = 0
+  csv_countries.each do |row|
+    country = Country.find_or_create_by(
+      country: row['country'],
+      country_numeric: row['country_numeric']
+    )
+    countries_counter += 1 if country.persisted?
   end
-
-  # Ajouter le designer principal uniquement s'il n'y a pas d'autres designers
-  if designers.empty?
-    designers << main_designer unless main_designer.nil?
-  end
-
-  # Associer tous les designers à l'œuvre
-  oeuvre.designers = designers.compact
-
-
-  # Sauvegarde de l'œuvre
-  if oeuvre.save
-    puts "Oeuvre importée : #{oeuvre.nom_oeuvre}"
-    oeuvres_counter += 1
-  else
-    puts "Erreur lors de l'importation de l'œuvre : #{oeuvre.errors.full_messages.join(', ')}"
-  end
+  puts "Nombre total de pays importés/vérifiés : #{countries_counter}"
+rescue Errno::ENOENT
+  puts "AVERTISSEMENT : Fichier 'pays.csv' non trouvé. Importation annulée."
 end
 
-puts "Nombre total d'œuvres importées : #{oeuvres_counter}"
+puts "\n--- Seed terminé ! ---"

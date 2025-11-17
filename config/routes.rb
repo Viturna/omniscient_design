@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     get "suivi_references", to: "dashboard#suivi_references"
     get "suivi_lists", to: "dashboard#suivi_lists"
     get "feedbacks", to: "dashboard#feedbacks"
+    resources :etablissements, only: [:index, :edit, :update, :destroy]
   end
 
   get 'frise/oeuvres', to: 'search#frise_oeuvres'

@@ -126,7 +126,9 @@ end
 
     text.html_safe
   end
-
+  def oui_non(value)
+    value ? "Oui" : "Non"
+  end
   def current_theme
     cookies&.[](:theme).presence || 'system'
   end

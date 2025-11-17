@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_13_212046) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_17_001333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -179,9 +179,20 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_13_212046) do
     t.string "messagerie"
     t.string "name"
     t.string "phone"
+    t.boolean "post_bac"
     t.string "region"
+    t.boolean "section_arts"
+    t.boolean "section_cinema"
+    t.boolean "section_theatre"
+    t.string "statut_public_prive"
+    t.string "type_etablissement"
+    t.string "uai"
     t.datetime "updated_at", null: false
+    t.boolean "voie_generale"
+    t.boolean "voie_professionnelle"
+    t.boolean "voie_technologique"
     t.string "website"
+    t.index ["uai"], name: "index_etablissements_on_uai", unique: true
   end
 
   create_table "feedbacks", force: :cascade do |t|

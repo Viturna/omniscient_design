@@ -581,6 +581,10 @@ fr:
     placeholder_description: "Description du problème"
     placeholder_url: "URL où se situe le bug (ou lien vers une image)"
     submit_button: "Envoyer"
+    statuses:
+      a_faire: "À faire"
+      en_cours: "En cours"
+      corrige: "Corrigé"
     errors_title:
       one: "%{count} erreur empêche l’envoi du rapport :"
       other: "%{count} erreurs empêchent l’envoi du rapport :"
@@ -863,6 +867,9 @@ fr:
     designer_rejected: "Votre designer %{name} a été rejeté(e). (Vous pouvez consulter la raison sur votre profil)"
     no_user_for_rejection_designer: "Le/La designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_user_registered: "Nouvel utilisateur inscrit : %{name}"
+    new_bug_report: "Nouveau bug signalé par %{user_name}"
+    bug_report_updated: "Votre rapport de bug est passé au statut : %{status}"
+    new_feedback: "Nouveau feedback reçu de %{user_name}"
   email_confirmation:
     heading: "Confirmez votre email"
     message_html: "Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour activer votre compte.<br>Si vous ne recevez pas l'email, vérifiez votre dossier spam ou %{resend_link}."
@@ -902,7 +909,7 @@ fr:
     source_italic: "Les éléments dont l’information est incertaine sont affichés en italique pour en signaler la prudence."
     actions: "Actions"
     partager: "Partager"
-    signaler_erreur: "Signaler une erreur"
+    signaler_erreur: "Suggérer une modification"
     contribution: "Contribution"
     enrichissement: "A enrichi votre apprentissage en ajoutant cette référence le"
     validation: "a validé la référence"

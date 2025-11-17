@@ -24,10 +24,16 @@
     margin-top: 20px;
     width: 97%;
   }
-  .stat-box h3 {
-    margin-top: 0;
+  .etablissements-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
+    margin-bottom: 15px;
+  }
+  .stat-box h3 {
+    margin: 0;
   }
   .stat-box ul {
     list-style: none;
@@ -243,8 +249,11 @@
       </ul>
     </div>
   </div>
-  <div class="stat-box etablissements">
-    <h3>Top Établissements     <span>(<%= @stats_etablissements.count %>)</span></h3>
+ <div class="stat-box etablissements">  
+    <div class="etablissements-header">
+      <h3>Top Établissements <span>(<%= @total_etablissements_count %>)</span></h3>
+      <%= link_to "Voir la liste des établissements", admin_etablissements_path, class: "btn btn-sm btn-primary" %>
+    </div>
     <ul>
       <% @stats_etablissements.each do |name, count| %>
         <li>
@@ -253,6 +262,7 @@
         </li>
       <% end %>
     </ul>
+    <%= paginate @stats_etablissements, param_name: :etablissements_page, remote: true %>
   </div>
 </section>
 <script>

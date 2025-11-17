@@ -23,6 +23,7 @@ class FeedbacksController < ApplicationController
     @feedback = current_user.feedbacks.build(feedback_params)
 
     if @feedback.save
+      notify_admins_of_new_feedback(@feedback)
       redirect_to root_path, notice: I18n.t('feedback.create.success')
     else
       flash.now[:alert] = I18n.t('feedback.create.failure')
@@ -53,5 +54,27 @@ class FeedbacksController < ApplicationController
 
   def set_feedback
     @feedback = Feedback.find(params[:id])
+  end
+
+  def notify_admins_of_new_feedback(feedback)
+    submitter_name = feedback.user.pseudo || feedback.user.full_name
+    
+    message = I18n.t('notifications.new_feedback', 
+                     user_name: submitter_name, 
+                     default: "Nouveau feedback reçu de #{submitter_name}")
+    
+    admins = User.where(role: 'admin')
+    
+    admins.each do |admin|
+      next if admin == feedback.user 
+      
+      Notification.create(
+        user: admin, 
+        notifiable: feedback, 
+        message: message
+      )
+    end
+  rescue => e
+    Rails.logger.error "ERREUR notify_admins_of_new_feedback: #{e.message}"
   end
 end

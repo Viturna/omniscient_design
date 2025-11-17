@@ -7,6 +7,10 @@ class Oeuvre < ApplicationRecord
                                 limit: 3
   friendly_id :nom_oeuvre, use: :slugged
 
+  def should_generate_new_friendly_id?
+    nom_oeuvre_changed?
+  end
+
   validates :nom_oeuvre, uniqueness: true, presence: true
     
   has_many :oeuvres_domaines, dependent: :destroy

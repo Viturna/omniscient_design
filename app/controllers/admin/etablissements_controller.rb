@@ -17,8 +17,13 @@ class Admin::EtablissementsController < ApplicationController
       
       # Recherche sur plusieurs colonnes
       @etablissements_scope = @etablissements_scope.where(
-        "etablissements.name ILIKE ? OR etablissements.uai ILIKE ? OR etablissements.city ILIKE ? OR etablissements.academy ILIKE ?",
-        query, query, query, query
+        "etablissements.name ILIKE ? OR 
+         etablissements.uai ILIKE ? OR 
+         etablissements.city ILIKE ? OR 
+         etablissements.academy ILIKE ? OR
+         CAST(etablissements.latitude AS TEXT) ILIKE ? OR
+         CAST(etablissements.longitude AS TEXT) ILIKE ?",
+        query, query, query, query, query, query # Ajout de 'query' 2x
       )
     end
 

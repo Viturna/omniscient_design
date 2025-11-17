@@ -11,7 +11,17 @@ class Admin::EtablissementsController < ApplicationController
                               .select('etablissements.*, COUNT(users.id) AS users_count')
                               .order(:name)
     
-    # Kaminari s'applique à la fin
+    if params[:query].present?
+      # Crée un terme de recherche sécurisé
+      query = "%#{params[:query]}%"
+      
+      # Recherche sur plusieurs colonnes
+      @etablissements_scope = @etablissements_scope.where(
+        "etablissements.name ILIKE ? OR etablissements.uai ILIKE ? OR etablissements.city ILIKE ? OR etablissements.academy ILIKE ?",
+        query, query, query, query
+      )
+    end
+    
     @etablissements = @etablissements_scope.page(params[:page])
   end
 

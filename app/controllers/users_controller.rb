@@ -33,7 +33,7 @@ class UsersController < ApplicationController
   @total_etablissements_count = all_etablissements_stats.length
   @stats_etablissements = Kaminari.paginate_array(all_etablissements_stats)
                                   .page(params[:etablissements_page])
-                                  .per(10)
+                                  .per(30)
 
     @stats_source = all_users_scope.where.not(how_did_you_hear: [nil, '']).group(:how_did_you_hear).count.sort_by { |_, c| -c }
     @stats_status = all_users_scope.where.not(statut: [nil, '']).group(:statut).count.sort_by { |_, c| -c }

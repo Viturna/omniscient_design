@@ -1,45 +1,7 @@
-<%#
-# Page d'administration pour lister tous les établissements
-# Chemin: app/views/admin/etablissements/index.html.erb
-%>
+
 
 <style>
-  /* Styles minimaux pour la lisibilité du tableau admin */
-  .table-admin-wrapper {
-    overflow-x: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-  }
-  .table-admin {
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap; 
-  }
-  .table-admin th, .table-admin td {
-    border-bottom: 1px solid #eee;
-    padding: 12px 15px;
-    text-align: left;
-    vertical-align: top;
-  }
-  .table-admin thead th {
-    background-color: #f9f9f9;
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #555;
-    position: sticky; 
-    top: 0;
-  }
-  .table-admin tbody tr:hover {
-    background-color: #f7f7f7;
-  }
-  .table-admin td {
-    font-size: 14px;
-    color: #333;
-  }
-  .table-admin .col-bool {
-    font-family: monospace;
-  }
+
   .table-admin .col-links {
     white-space: normal; 
     min-width: 250px;
@@ -74,6 +36,18 @@
   <h1>Gestion des Établissements</h1>
 </section>
 <section class="grid-1">
+    <div class="search-bar-container" style="margin: 20px 0;">
+    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px;" do |f| %>
+      <%= f.text_field :query, 
+            value: params[:query], 
+            placeholder: "Rechercher par nom, UAI, ville, académie...", 
+            class: "form-control" %>
+      <%= f.submit "Rechercher", class: "btn btn-primary" %>
+      <% if params[:query].present? %>
+        <%= link_to "Effacer", admin_etablissements_path, class: "btn btn-secondary" %>
+      <% end %>
+    <% end %>
+  </div>
   <%= paginate @etablissements %>
 
   <div class="table-wrapper">

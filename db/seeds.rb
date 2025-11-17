@@ -55,7 +55,6 @@ new_file_path = Rails.root.join('lib', 'seeds', 'etablissements2.csv')
 if File.exist?(new_file_path)
   begin
     csv_text_new = File.read(new_file_path, encoding: 'utf-8')
-    # Utilisation du délimiteur point-virgule ';'
     csv_new = CSV.parse(csv_text_new, headers: true, col_sep: ';')
 
     csv_new.each do |row|

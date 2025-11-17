@@ -21,7 +21,7 @@ class Admin::EtablissementsController < ApplicationController
         query, query, query, query
       )
     end
-    
+
     @etablissements = @etablissements_scope.page(params[:page])
   end
 
@@ -53,15 +53,16 @@ class Admin::EtablissementsController < ApplicationController
   end
 
   # Ajoutez les `permit` pour tous les champs que vous voulez pouvoir modifier
-  def etablissement_params
-    params.require(:etablissement).permit(
-      :name, :address, :city, :region, :academy, :phone, 
-      :website, :messagerie, :statut_public_prive, :type_etablissement
-      # Ajoutez les booléens si vous les rendez éditables
-      # :voie_generale, :voie_technologique, :voie_professionnelle, 
-      # :post_bac, :section_arts, :section_cinema, :section_theatre
-    )
-  end
+def etablissement_params
+  params.require(:etablissement).permit(
+    :name, :address, :city, :region, :academy, :phone, 
+    :website, :messagerie, :statut_public_prive, :type_etablissement,
+    :latitude, :longitude,
+    :voie_generale, :voie_technologique, :voie_professionnelle, 
+    :post_bac, :section_arts, :section_cinema, :section_theatre,
+    :uai  
+  )
+end
 
   def authenticate_admin!
     redirect_to root_path, alert: "Accès refusé." unless current_user&.admin?

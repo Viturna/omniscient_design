@@ -1,0 +1,117 @@
+<section class="top-default-page">
+  <%= link_to root_path do %>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+    </svg>
+  <%end%>
+  <h1>Envoyer une Notification</h1>
+</section>
+
+<section class="grid-1">
+  <div class="container">
+    <%# Utilisation de notifications_path car c'est une action d'admin %>
+    <%= form_with url: notifications_path, local: true do |form| %>
+      
+      <div class="form-group">
+        <%= form.label :user_id, "Destinataire(s)" %>
+        
+        <%# Checkbox pour "Tous les utilisateurs" %>
+        <div class="form-check" style="margin-bottom: 10px;">
+          <input type="checkbox" id="select-all-users" name="select_all" value="all" class="form-check-input">
+          <label class="form-check-label" for="select-all-users">
+            Sélectionner Tous les Utilisateurs
+          </label>
+        </div>
+
+    
+        <%= select_tag 'user_ids[]', 
+            options_from_collection_for_select(@users, :id, ->(u) { "#{u.email} (ID: #{u.id})" }), 
+            { 
+              class: "form-control user-multiselect", 
+              multiple: true, # Permet la sélection multiple
+              id: "user-select-field",
+              data: { 
+                placeholder: "Rechercher et sélectionner un ou plusieurs utilisateurs...",
+                # Assurez-vous d'avoir Select2 initialisé pour la classe 'user-multiselect'
+              } 
+            } %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :message, "Message de la notification" %>
+        <%= form.text_area :message, rows: 5, class: "form-control", required: true %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit "Envoyer la notification", class: "button dark", data: { confirm: "Êtes-vous sûr de vouloir envoyer cette notification ?" } %>
+      </div>
+
+    <% end %>
+  </div>
+</section>
+
+<%# ---------------------------------------------------------------------- %>
+<%# Intégration et Logique JavaScript (Select2 et Logique 'Tout le Monde') %>
+<%# ---------------------------------------------------------------------- %>
+<script>
+  document.addEventListener("turbo:load", () => {
+    const selectField = $('#user-select-field');
+    const selectAllCheckbox = $('#select-all-users');
+
+    // 1. Initialisation de Select2
+    function initSelect2() {
+      if (selectField.hasClass("select2-hidden-accessible")) {
+        selectField.select2('destroy');
+      }
+      selectField.select2({
+        placeholder: "Rechercher et sélectionner un ou plusieurs utilisateurs...",
+        allowClear: true,
+        width: '100%',
+        language: {
+          searching: function() { return "Recherche en cours..."; },
+          noResults: function() { return "Aucun résultat trouvé"; }
+        }
+      });
+    }
+
+    // 2. Logique "Sélectionner Tous"
+    function toggleUserSelection(disable) {
+        if (disable) {
+            selectField.val(null).trigger('change'); // Désélectionne tout
+            selectField.prop('disabled', true);
+            selectField.next('.select2-container').addClass('select2-disabled');
+        } else {
+            selectField.prop('disabled', false);
+            selectField.next('.select2-container').removeClass('select2-disabled');
+        }
+    }
+
+    // Gestion de l'événement sur la checkbox
+    selectAllCheckbox.on('change', function() {
+      toggleUserSelection(this.checked);
+    });
+
+    // Initialisation au chargement de la page
+    initSelect2();
+    toggleUserSelection(selectAllCheckbox.is(':checked'));
+    
+    // 3. Préparation des données du formulaire avant soumission
+    // Pour que le contrôleur sache si l'admin veut envoyer à "all" ou aux ID sélectionnés
+    $('form').on('submit', function(e) {
+      if (selectAllCheckbox.is(':checked')) {
+        // Crée un champ caché temporaire pour indiquer 'all'
+        // et retire les éventuels user_ids[] de la sélection
+        $(this).append('<input type="hidden" name="user_id" value="all">');
+        selectField.prop('disabled', true); // Désactive le multiselect pour ne pas envoyer d'IDs inutiles
+      } else {
+        // S'assurer qu'au moins un utilisateur est sélectionné si "all" n'est pas coché
+        if (selectField.val() === null || selectField.val().length === 0) {
+            alert("Veuillez sélectionner au moins un utilisateur ou cocher 'Tous les Utilisateurs'.");
+            e.preventDefault();
+        }
+      }
+    });
+  });
+</script>
+
+

@@ -340,34 +340,36 @@ end
   end
 
  def oeuvre_params
-  permitted = params.require(:oeuvre).permit(
-    :nom_oeuvre,
-    :presentation_generale,
-    :contexte_historique,
-    :materiaux_et_innovations_techniques,
-    :concept_et_inspiration,
-    :dimension_esthetique,
-    :impact_et_message,
-    :date_oeuvre,
-    designer_ids: [],
-    notion_ids: [],
-    domaine_ids: [],
-    source: [],
-    oeuvre_images_attributes: [
-        :id,    
-        :file, 
-        :credit,
-        :_destroy,
-        :position
-      ]
-  )
+    permitted = params.require(:oeuvre).permit(
+      :nom_oeuvre,
+      :presentation_generale,
+      :contexte_historique,
+      :materiaux_et_innovations_techniques,
+      :concept_et_inspiration,
+      :dimension_esthetique,
+      :impact_et_message,
+      :date_oeuvre,
+      designer_ids: [],
+      notion_ids: [],
+      domaine_ids: [],
+      studio_ids: [],
+      source: [],
+      oeuvre_images_attributes: [
+          :id,    
+          :file, 
+          :credit,
+          :_destroy,
+          :position
+        ]
+    )
 
-  [:designer_ids, :notion_ids, :domaine_ids, :source].each do |key|
-    permitted[key] = permitted[key].reject(&:blank?) if permitted[key]
+    [:designer_ids, :notion_ids, :domaine_ids, :studio_ids, :source].each do |key|
+      if permitted[key].is_a?(Array)
+        permitted[key] = permitted[key].reject(&:blank?) 
+      end
+    end
+
+    permitted
   end
-
-  permitted
-end
-
 
 end

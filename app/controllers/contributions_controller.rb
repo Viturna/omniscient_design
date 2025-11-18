@@ -21,5 +21,17 @@ class ContributionsController < ApplicationController
         rejection_reason: rejected_designer.reason
       )
     end
+    @studios = current_user.studios + current_user.rejected_studios.map do |rejected_studio|
+      Studio.new(
+        nom: rejected_studio.nom,
+        created_at: rejected_studio.created_at,
+        validation: false,
+        user: rejected_studio.user,
+        rejection_reason: rejected_studio.reason
+      )
+    end
+    @oeuvres = @oeuvres.sort_by(&:created_at).reverse
+    @designers = @designers.sort_by(&:created_at).reverse
+    @studios = @studios.sort_by(&:created_at).reverse
   end
 end

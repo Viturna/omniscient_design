@@ -308,7 +308,7 @@
                         <div class="oeuvre-card-image" style="background-color: #EEE;">
                         <% end %>
                         <div class="oeuvre-card-content">
-                          <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %></p>
+                          <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map(&:nom_designer), ", ") %></p>
                           <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                         </div>
                       </div>

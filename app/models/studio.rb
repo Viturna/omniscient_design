@@ -30,6 +30,9 @@ class Studio < ApplicationRecord
   has_many :designer_studios, dependent: :destroy
   has_many :designers, through: :designer_studios
 
+  has_many :oeuvre_studios, dependent: :destroy
+  has_many :oeuvres, through: :oeuvre_studios
+
   accepts_nested_attributes_for :designer_studios, 
                                 allow_destroy: true, 
                                 reject_if: proc { |attributes| attributes['designer_id'].blank? },

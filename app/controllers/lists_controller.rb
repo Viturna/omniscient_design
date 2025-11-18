@@ -1,12 +1,12 @@
 class ListsController < ApplicationController
   before_action :authenticate_user!
-before_action :set_list, only: [
-    :show, :edit, :update, :destroy, :invite_editors,
-    :change_role, :remove_user, :toggle_privacy,
-    :remove_designer, :remove_oeuvre, :remove_studio,
-    :add_oeuvre, :add_designer, :add_studio 
-  ]
-  
+  before_action :set_list, only: [
+      :show, :edit, :update, :destroy, :invite_editors,
+      :change_role, :remove_user, :toggle_privacy,
+      :remove_designer, :remove_oeuvre, :remove_studio,
+      :add_oeuvre, :add_designer, :add_studio 
+    ]
+    
   def index
     @lists = current_user.lists
     @editor_lists = current_user.editable_lists
@@ -393,38 +393,34 @@ def load_more_designers
                          .offset(offset)
                          .limit(10)
   else
-    # --- CORRECTION ---
-    # On charge les designers non filtrés
     @designers = Designer.where(validation: true)
                          .order(:nom)
                          .offset(offset)
                          .limit(10)
-    # --- FIN CORRECTION ---
   end
   render partial: 'designers_list', collection: @designers, as: :designer
 end
 
-def load_more_studios
-  offset = params[:offset].to_i
-  if params[:slug].present?
-    @list = List.friendly.find_by(slug: params[:slug])
-    selected_studio_ids = @list.studio_ids
-    @studios = Studio.where(validation: true)
-                     .where.not(id: selected_studio_ids)
-                     .order(:nom)
-                     .offset(offset)
-                     .limit(10)
-  else
-    # --- CORRECTION ---
-    # On charge les studios non filtrés
-    @studios = Studio.where(validation: true)
-                     .order(:nom)
-                     .offset(offset)
-                     .limit(10)
-    # --- FIN CORRECTION ---
+  def load_more_studios
+    offset = params[:offset].to_i
+    if params[:slug].present?
+      @list = List.friendly.find_by(slug: params[:slug])
+      selected_studio_ids = @list.studio_ids
+      @studios = Studio.where(validation: true)
+                          .where.not(id: selected_studio_ids)
+                          .order(:nom)
+                          .offset(offset)
+                          .limit(10)
+    else
+      @studios = Studio.where(validation: true)
+                          .order(:nom)
+                          .offset(offset)
+                          .limit(10)
+    end
+    render partial: 'studios_list', collection: @studios, as: :studio
   end
-  render partial: 'studios_list', collection: @studios, as: :studio
-end
+
+
   def set_list
     @list = List.friendly.find_by(slug: params[:slug])
     redirect_to lists_path, alert: I18n.t('lists.not_found') unless @list

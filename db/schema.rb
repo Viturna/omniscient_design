@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_17_001333) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_18_230225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -299,13 +299,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_001333) do
   end
 
   create_table "notifications", force: :cascade do |t|
+    t.bigint "admin_id"
     t.datetime "created_at", null: false
     t.string "message"
-    t.bigint "notifiable_id", null: false
-    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id"
+    t.string "notifiable_type"
     t.integer "status", default: 0
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["admin_id"], name: "index_notifications_on_admin_id"
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -332,6 +334,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_001333) do
     t.integer "position"
     t.datetime "updated_at", null: false
     t.index ["oeuvre_id"], name: "index_oeuvre_images_on_oeuvre_id"
+  end
+
+  create_table "oeuvre_studios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "oeuvre_id", null: false
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oeuvre_id", "studio_id"], name: "index_oeuvre_studios_on_oeuvre_id_and_studio_id", unique: true
+    t.index ["oeuvre_id"], name: "index_oeuvre_studios_on_oeuvre_id"
+    t.index ["studio_id"], name: "index_oeuvre_studios_on_studio_id"
   end
 
   create_table "oeuvres", force: :cascade do |t|
@@ -391,6 +403,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_001333) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_rejected_oeuvres_on_user_id"
+  end
+
+  create_table "rejected_studios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "nom"
+    t.text "reason"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_rejected_studios_on_user_id"
   end
 
   create_table "studio_countries", force: :cascade do |t|
@@ -511,14 +532,18 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_001333) do
   add_foreign_key "list_visitors", "users"
   add_foreign_key "lists", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "admin_id"
   add_foreign_key "notions_oeuvres", "notions"
   add_foreign_key "notions_oeuvres", "oeuvres"
   add_foreign_key "oeuvre_images", "oeuvres"
+  add_foreign_key "oeuvre_studios", "oeuvres"
+  add_foreign_key "oeuvre_studios", "studios"
   add_foreign_key "oeuvres", "users"
   add_foreign_key "oeuvres_domaines", "domaines"
   add_foreign_key "oeuvres_domaines", "oeuvres"
   add_foreign_key "rejected_designers", "users"
   add_foreign_key "rejected_oeuvres", "users"
+  add_foreign_key "rejected_studios", "users"
   add_foreign_key "studio_countries", "countries"
   add_foreign_key "studio_countries", "studios"
   add_foreign_key "studio_images", "studios"

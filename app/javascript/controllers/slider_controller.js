@@ -9,11 +9,16 @@ export default class extends Controller {
         updateBackground: { type: Boolean, default: false }
     }
 
+    // 🌟 Ajout de la méthode de recalcul pour les éléments cachés
+    recalculate() {
+        this.showCurrentSlide();
+    }
+
     connect() {
         this.showCurrentSlide()
     }
 
-    // --- Fonctions next, prev, switchSlide (INCHANGÉES) ---
+    // Gère l'événement "click->slider#next"
     next(event) {
         if (event) {
             event.preventDefault()
@@ -26,6 +31,7 @@ export default class extends Controller {
         }
     }
 
+    // Gère l'événement "click->slider#prev"
     prev(event) {
         if (event) {
             event.preventDefault()
@@ -38,6 +44,7 @@ export default class extends Controller {
         }
     }
 
+    // Gère l'événement "click->slider#switchSlide"
     switchSlide(event) {
         if (event) {
             event.preventDefault()
@@ -45,14 +52,18 @@ export default class extends Controller {
         }
         this.indexValue = parseInt(event.currentTarget.dataset.sliderIndexValue)
     }
-    // --- Fin des fonctions inchangées ---
 
 
     indexValueChanged() {
         this.showCurrentSlide()
+
+        // Déclenche l'événement custom pour la modale afin de mettre à jour les crédits
+        this.element.dispatchEvent(new CustomEvent('slide:changed', {
+            bubbles: true,
+            detail: { index: this.indexValue }
+        }))
     }
 
-    // La fonction principale qui met à jour l'affichage
     showCurrentSlide() {
         // 1. Met à jour les slides
         if (this.hasSlideTarget) {
@@ -68,7 +79,7 @@ export default class extends Controller {
             })
         }
 
-        // 3. Logique conditionnelle pour le fond (MODIFIÉE)
+        // 3. Logique conditionnelle pour le fond
         if (this.updateBackgroundValue) {
             if (this.slideTargets.length === 0) return;
 
@@ -77,14 +88,7 @@ export default class extends Controller {
             if (currentSlide && currentSlide.tagName === "IMG") {
                 const newImageUrl = currentSlide.src
                 if (newImageUrl) {
-
-                    // *** LA MODIFICATION CLÉ ***
-                    // On cherche l'élément cible :
-                    // 1. 'this.backgroundTarget' s'il existe (pour la carte)
-                    // 2. 'this.element' sinon (pour la page oeuvre)
                     const targetElement = this.hasBackgroundTarget ? this.backgroundTarget : this.element;
-
-                    // On applique le style à la bonne cible
                     targetElement.style.backgroundImage = `url('${newImageUrl}')`;
                 }
             }

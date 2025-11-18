@@ -25,6 +25,9 @@ class Oeuvre < ApplicationRecord
   has_many :designers_oeuvres, dependent: :destroy
   has_many :designers, through: :designers_oeuvres
 
+  has_many :oeuvre_studios, dependent: :destroy
+  has_many :studios, through: :oeuvre_studios
+
   has_many :notions_oeuvres, class_name: 'NotionsOeuvre', dependent: :destroy
   has_many :notions, through: :notions_oeuvres
 

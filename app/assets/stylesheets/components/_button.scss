@@ -30,7 +30,8 @@
   font-weight: 500;
   font-size: 22px;
   border-radius: 10px;
-  padding: 90px 125px;
+  width: 22vw;
+  aspect-ratio: 1/0.5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,7 +152,6 @@
   //ADD
   .button-add {
     font-size: 20px;
-    padding: 100px 0;
     width: 40vw;
   }
 
@@ -215,8 +215,7 @@
   //ADD
   .button-add {
     font-size: 20px;
-    padding: 100px 0;
-    width: auto;
+    width: 60vw;
   }
 }
 
@@ -265,8 +264,7 @@
   //ADD
   .button-add {
     font-size: 18px;
-    padding: 90px 0;
-    width: auto;
+    width: 60vw;
   }
 }
 
@@ -316,8 +314,7 @@
   //ADD
   .button-add {
     font-size: 18px;
-    padding: 70px 0;
-    width: auto;
+    width: 90vw;
   }
 }
 
@@ -371,8 +368,7 @@
   //ADD
   .button-add {
     font-size: 16px;
-    padding: 70px 0;
-    width: auto;
+    width: 90vw;
   }
 }
 

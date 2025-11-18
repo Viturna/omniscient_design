@@ -6,32 +6,74 @@
   flex-direction: column;
 }
 
+/* ---------------------------------------------------- */
+/* --- SLIDER PRINCIPAL (HEADER-SHOW) --- */
+/* ---------------------------------------------------- */
 .slider-slides {
   position: absolute;
   z-index: 2;
-  inset: 0; /* Raccourci pour top/left/right/bottom: 0 */
+  inset: 0;
 }
 
-/* 2. Style des slides (basé sur ton .top-img-header) */
 .slider-slides .top-img-header {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  /* On garde ton object-fit: contain */
   object-fit: contain;
-
-  /* Logique du fondu */
+  cursor: pointer;
   opacity: 0;
   transition: opacity 0.6s ease-in-out;
 }
 
-/* 3. La slide active est visible */
 .slider-slides .top-img-header.active {
   opacity: 1;
 }
 
-/* 4. Flèches de navigation */
+/* ---------------------------------------------------- */
+/* --- SLIDER DANS LA MODALE (IMAGE-SLIDER-CONTAINER) --- */
+/* ---------------------------------------------------- */
+.image-slider-container {
+  position: relative; /* Base pour les éléments absolus */
+  height: 100%; /* S'assure qu'il prend la hauteur du modal-body */
+  width: 100%;
+}
+
+.image-slider-container .slider-slides {
+  position: relative;
+  inset: unset;
+  height: 100%;
+  width: 100%;
+}
+
+/* Conteneur de chaque slide dans la modale */
+.image-slider-container .slider-slide-wrapper {
+  /* Position absolue pour que les slides se chevauchent */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Utilise flex pour le centrage de l'image */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 🔑 CORRECTION CLÉ : Contrôle la visibilité des slides */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* 🔑 CORRECTION CLÉ : Afficher UNIQUEMENT la slide active */
+.image-slider-container .slider-slide-wrapper.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- Navigation et Dots (Styles partagés/génériques) --- */
+
 .slider-nav {
   position: absolute;
   top: 50%;
@@ -66,13 +108,13 @@
   display: none;
 }
 
-/* 5. Points de pagination */
+/* Points de pagination */
 .slider-dots {
   position: absolute;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100; /* Respecte ton z-index */
+  z-index: 100;
   display: flex;
   gap: 10px;
 }
@@ -89,6 +131,7 @@
 .slider-dot.active {
   background: white;
 }
+// ----------
 
 .header-show {
   transition: height 0.6s ease, background-color 0.3s ease;

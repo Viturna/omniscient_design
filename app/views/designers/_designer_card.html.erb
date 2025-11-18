@@ -13,6 +13,11 @@
         <% end %>
         <p class="title-card-designer"><%= designer.nom %> <br>
           <%= designer.prenom %> </p>
+        <% if local_assigns[:liaison] %>
+          <p class="country-card-designer">
+            <%= liaison.date_entree %> - <%= liaison.date_sortie.presence || "Présent" %>
+          </p>
+        <% end %>
       </div>
     </div>
   <% end %>

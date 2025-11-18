@@ -52,7 +52,9 @@ Rails.application.routes.draw do
         post :admin_resend_confirmation
       end
     end
-    resources :notifications, only: [:index, :show, :destroy]
+    
+    get 'notifications/news', to: 'notifications#news', as: :notifications_news
+    resources :notifications, only: [:index, :show, :destroy, :new, :create]
 
     resources :lists, param: :slug do
       member do
@@ -72,7 +74,7 @@ Rails.application.routes.draw do
       end
       get :load_more_oeuvres, on: :collection
       get :load_more_designers, on: :collection
-      get :load_more_studios
+      get :load_more_studios, on: :collection
       collection do
         get :search_items
       end

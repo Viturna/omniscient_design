@@ -1,4 +1,3 @@
-<!-- filepath: app/views/contributions/index.html.erb -->
 <% content_for :title, "Mes Contributions - Omniscient Design" %>
 <% content_for :description, "Suivez vos contributions et voyez les références que vous avez ajoutées, ainsi que leur statut de validation." %>
 <style>
@@ -133,3 +132,45 @@
   <% end %>
 </section>
 
+<%# 🌟 NOUVEAU : Section Studios %>
+<section class="grid-1">
+  <h2><%= "Studios Ajoutés" %></h2>
+  <% if @studios.any? %>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="medium">Nom du Studio</th>
+            <th class="medium"><%= t('contributions.date_added') %></th>
+            <th class="medium"><%= t('contributions.status') %></th>
+            <th class="medium"><%= t('contributions.comment') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @studios.each do |studio| %>
+            <tr>
+              <td><%= studio.nom %></td>
+              <td><%= studio.created_at.present? ? studio.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+              <td>
+                <% if studio.validation %>
+                  <span class="status validated"><%= t('contributions.validated') %></span>
+                <% elsif studio.rejection_reason.present? %>
+                  <span class="status rejected"><%= t('contributions.rejected') %></span>
+                <% else %>
+                  <span class="status pending"><%= t('contributions.pending') %></span>
+                <% end %>
+              </td>
+              <td>
+                <% if studio.rejection_reason.present? %>
+                  <%= studio.rejection_reason %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p>Aucun studio ajouté pour le moment.</p>
+  <% end %>
+</section>

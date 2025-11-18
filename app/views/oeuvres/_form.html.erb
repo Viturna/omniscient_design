@@ -102,6 +102,20 @@
               } %>
           </div>
         <% end %>
+        <div>
+          <%= form.label :studio_ids, 'Studio(s) associé(s)' %>
+          <%= form.collection_select :studio_ids, 
+              Studio.order(:nom), 
+              :id, 
+              :nom, 
+              { include_blank: true, selected: @oeuvre.studio_ids }, 
+              { 
+                class: "form-control studio-select", 
+                multiple: true, 
+                name: "oeuvre[studio_ids][]",
+                data: { placeholder: "Sélectionnez un ou plusieurs studios..." }
+              } %>
+        </div>
       </div>
       <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
       <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
@@ -303,7 +317,7 @@
 
   // Initialisation designers
   initSelect2('.designer-select', 'Rechercher un/une designer...');
-
+  initSelect2('.studio-select', 'Sélectionnez un ou plusieurs studios...');
   // Initialisation notions
   initSelect2('.notions-select', 'Rechercher des notions...');
   initSelect2('.domaine-select', 'Sélectionnez un domaine...');

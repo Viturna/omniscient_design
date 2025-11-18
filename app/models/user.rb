@@ -75,6 +75,7 @@ class User < ApplicationRecord
   has_many :lists, dependent: :destroy
   has_many :oeuvres, dependent: :nullify
   has_many :designers, dependent: :nullify
+  has_many :studios, dependent: :nullify
   has_many :notifications, dependent: :destroy
 
   has_many :feedbacks, dependent: :nullify
@@ -88,6 +89,7 @@ class User < ApplicationRecord
 
   has_many :rejected_oeuvres, dependent: :destroy
   has_many :rejected_designers, dependent: :destroy
+  has_many :rejected_studios, dependent: :destroy
 
   # --- Méthodes ---
 

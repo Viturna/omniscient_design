@@ -286,33 +286,14 @@
       <% designers_associes = @studio.designer_studios.includes(designer: { designer_images: { file_attachment: :blob } }) %>
       <% if designers_associes.any? %>
         <h2 class="title-description-reference">Designers associés</h2>
-        <%# On réutilise le style de grille/wrapper que tu as déjà pour les "Oeuvres" %>
-        <div class="horizontal-scroll-section">
-          <div class="horizontal-wrapper" style="flex-wrap: wrap; justify-content: flex-start;">
-            <% designers_associes.each do |liaison| %>
-              <% designer = liaison.designer %>
-              <%# S'assure que le designer existe (au cas où) %>
-              <% next unless designer.present? %>
-              <%= link_to designer_path(designer), class: "designer-card-mini" do %>
-                <div class="designer-card-image">
-                  <% if designer.designer_images.first&.file&.attached? %>
-                    <%# Affiche la miniature de l'image du designer %>
-                    <%= image_tag designer.designer_images.first.file.variant(:thumb), alt: "#{designer.prenom} #{designer.nom}" %>
-                  <% else %>
-                    <%# Placeholder avec les initiales si pas d'image %>
-                    <div class="designer-card-placeholder">
-                      <span><%= designer.prenom.first %><%= designer.nom.first %></span>
-                    </div>
-                  <% end %>
-                </div>
-                <div class="designer-card-info">
-                  <span class="name"><%= designer.prenom %> <%= designer.nom %></span>
-                  <span class="tenure"><%= liaison.date_entree %> - <%= liaison.date_sortie || "Présent" %></span>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
+        <div style="display:flex; flex-wrap: wrap; gap:1rem; justify-content: flex-start;">
+          <% designers_associes.each do |liaison| %>
+            <% designer = liaison.designer %>
+            <% next unless designer.present? %>
+            
+            <%= render 'designers/designer_card', designer: designer, liaison: liaison %>
+          <% end %>
+      </div>
       <% end %>
       <h2 class="title-description-reference">Présentation générale</h2>
       <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.presentation_generale) %></p>
@@ -405,7 +386,7 @@
                       <div class="oeuvre-card-image" style="background-color: #EEE;">
                       <% end %>
                       <div class="oeuvre-card-content">
-                        <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %></p>
+                        <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map(&:nom_designer), ", ") %></p>
                         <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                       </div>
                     </div>

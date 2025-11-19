@@ -104,7 +104,9 @@
     <div class="box-card" id="boxCard">
       <% @items.each do |item| %>
         <% if item.is_a?(Designer) %>
-          <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
+            <% cache item do %>
+              <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
+          <% end %>
         <% elsif item.is_a?(Hash) %>
           <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
         <% end %>

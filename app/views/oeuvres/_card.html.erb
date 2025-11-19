@@ -1,42 +1,54 @@
 <% images = card.oeuvre_images.select { |img| img.file.attached? }.map(&:file) %>
 <%= link_to oeuvre_path(card.slug) do %>
   <div class="card" data-id="<%= card.id %>" data-controller="slider" data-slider-update-background-value="true">
+    <%# ... Gestion des couleurs de fond (inchangé) ... %>
     <% if card.domaines.any? %>
       <% if card.domaines.size == 1 %>
         <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>;">
+      <% else %>
+        <% colors = card.domaines.map(&:couleur).join(', ') %>
+        <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
+      <% end %>
+    <% else %>
+      <div class="bg-card" style="background-color: #ccc;">
+    <% end %>
+
+      <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
+        <%# --- DÉBUT DE LA CORRECTION LCP --- %>
+        <% if images.any? %>
+          <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
+          
+          <%# On utilise image_tag au lieu de la DIV background %>
+          <%= image_tag bg_variant,
+              class: "card-slider-blurred-bg",
+              alt: "",
+              data: { slider_target: "background" },
+              fetchpriority: "high",  # <--- LA CORRECTION EST ICI
+              style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" 
+          %>
         <% else %>
-          <% colors = card.domaines.map(&:couleur).join(', ') %>
-          <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
-          <% end %>
-        <% else %>
-          <div class="bg-card" style="background-color: #ccc;">
-          <% end %>
-          <div class="bg-img-card card-slider-wrapper">
-            <% if images.any? %>
-              <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
-              <div class="card-slider-blurred-bg" 
-                  data-slider-target="background"
-                  style="background-image: url('<%= url_for(bg_variant) %>');">
-              </div>
-            <% else %>
-              <div class="card-slider-blurred-bg" 
-                  data-slider-target="background"
-                  style="background-color: #e0e0e0;">
-              </div>
-            <% end %>
-            <div class="card-slider-slides">
-              <% if images.any? %>
-                <% images.each_with_index do |image, index| %>
-                 <%= image_tag image.variant(resize_to_limit: [800, 800], format: :webp),
+          <div class="card-slider-blurred-bg" 
+               data-slider-target="background"
+               style="background-color: #e0e0e0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
+          </div>
+        <% end %>
+        <%# --- FIN DE LA CORRECTION LCP --- %>
+
+        <div class="card-slider-slides" style="position: relative; z-index: 1;">
+          <% if images.any? %>
+            <% images.each_with_index do |image, index| %>
+              <%= image_tag image.variant(resize_to_limit: [800, 800], format: :webp),
                   alt: card.nom_oeuvre, 
                   class: "card-slide-image #{'active' if index == 0}", 
                   data: { slider_target: "slide",
-                  loading: (index == 0 ? "eager" : "lazy") } %>
-                <% end %>
-              <% else %>
-                <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
-              <% end %>
-            </div>
+                  loading: (index == 0 ? "eager" : "lazy") },
+                  # On ajoute aussi fetchpriority sur l'image principale si c'est la première
+                  fetchpriority: (index == 0 ? "high" : "auto") %> 
+            <% end %>
+          <% else %>
+            <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
+          <% end %>
+        </div>
             <div class="flex-info-card">
               <div class="info-card-dark">
                 <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">

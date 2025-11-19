@@ -5,24 +5,42 @@ export default class extends Controller {
   static targets = ["loading", "content", "footer"]
 
   connect() {
-    this.init()
-    document.addEventListener("turbo:load", () => this.init())
-    document.addEventListener("turbo:before-render", () => this.showLoading())
+    if (sessionStorage.getItem("loaderSeen") === "true") {
+      this.hideImmediately();
+    } else {
+      this.playAnimation();
+    }
   }
 
-  init() {
-    requestAnimationFrame(() => this.showContent())
+  playAnimation() {
+    document.body.classList.add('overflow-hidden');
+
+    this.loadingTarget.style.display = "flex";
+
+    setTimeout(() => {
+      this.finish();
+    }, 3500);
   }
 
-  showLoading() {
-    if (this.hasLoadingTarget) this.loadingTarget.style.display = "flex"
-    if (this.hasContentTarget) this.contentTarget.style.display = "none"
-    if (this.hasFooterTarget) this.footerTarget.style.display = "none"
+  finish() {
+    sessionStorage.setItem("loaderSeen", "true");
+
+    this.loadingTarget.style.opacity = "0";
+
+    setTimeout(() => {
+      this.hideImmediately();
+    }, 500);
   }
 
-  showContent() {
-    if (this.hasLoadingTarget) this.loadingTarget.style.display = "none"
-    if (this.hasContentTarget) this.contentTarget.style.display = "block"
-    if (this.hasFooterTarget) this.footerTarget.style.display = "block"
+  hideImmediately() {
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.style.display = "none";
+      this.loadingTarget.style.opacity = "0"; // Pour être sûr
+    }
+
+    if (this.hasContentTarget) this.contentTarget.style.display = "block";
+    if (this.hasFooterTarget) this.footerTarget.style.display = "block";
+
+    document.body.classList.remove('overflow-hidden');
   }
 }

@@ -9,6 +9,11 @@
   height: 100dvh;
   width: calc(100vw - 350px);
   user-select: none;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  background-color: #fff;
+}
+body.overflow-hidden {
+  overflow: hidden;
 }
 .main-show #loading {
   width: 100vw;
@@ -37,5 +42,4 @@
   #loading img {
     width: 124px;
   }
-  
 }

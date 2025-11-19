@@ -87,11 +87,11 @@
         <div class="loader-bg">
           <video autoplay loop muted playsinline webkit-playsinline preload="auto">
             <source src="<%= asset_path('loader.webm') %>" type="video/webm">
-            <%= t('loader.unsupported_browser') %>
+            <source src="<%= asset_path('loader.mp4') %>" type="video/mp4">
           </video>
         </div>
       </div>
-      <div id="content" data-loading-target="content" style="display: none;">
+      <div id="content" data-loading-target="content">
         <%= yield %>
       </div>
     </main>

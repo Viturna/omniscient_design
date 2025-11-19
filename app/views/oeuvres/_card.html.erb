@@ -12,11 +12,22 @@
           <div class="bg-card" style="background-color: #ccc;">
           <% end %>
           <div class="bg-img-card card-slider-wrapper">
-            <div class="card-slider-blurred-bg" data-slider-target="background"></div>
+            <% if images.any? %>
+              <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
+              <div class="card-slider-blurred-bg" 
+                  data-slider-target="background"
+                  style="background-image: url('<%= url_for(bg_variant) %>');">
+              </div>
+            <% else %>
+              <div class="card-slider-blurred-bg" 
+                  data-slider-target="background"
+                  style="background-color: #e0e0e0;">
+              </div>
+            <% end %>
             <div class="card-slider-slides">
               <% if images.any? %>
                 <% images.each_with_index do |image, index| %>
-                  <%= image_tag image, 
+                 <%= image_tag image.variant(resize_to_limit: [800, 800], format: :webp),
                   alt: card.nom_oeuvre, 
                   class: "card-slide-image #{'active' if index == 0}", 
                   data: { slider_target: "slide",

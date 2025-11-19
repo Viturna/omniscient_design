@@ -167,7 +167,7 @@ def create
 
   # Notifications (adaptez les clés de traduction)
   def create_notification(studio)
-    message = I18n.t('notifications.new_studio', name: studio.nom, default: "Nouveau studio : #{studio.nom}")
+    message = I18n.t('notifications.new_studio', name: studio.nom, default: "Nouveau studio à valider : #{studio.nom}")
     User.where("role = ? OR certified = ?", 'admin', true).each do |user|
       Notification.create(user_id: user.id, notifiable: studio, message: message)
     end

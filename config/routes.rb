@@ -53,7 +53,7 @@ Rails.application.routes.draw do
       end
     end
     
-    get 'notifications/news', to: 'notifications#news', as: :notifications_news
+    get 'notifications/new', to: 'notifications#new', as: :notifications_new
     resources :notifications, only: [:index, :show, :destroy, :new, :create]
 
     resources :lists, param: :slug do

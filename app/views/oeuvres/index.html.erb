@@ -35,6 +35,11 @@
   /* Assurez-vous qu'elle a la même classe/taille que vos vraies cartes */
   scroll-snap-align: start;
   }
+
+  .card, .ad-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 100% 500px;
+  }
 </style>
 <section class="home-page top-bar-search">
   <%= link_to search_path, class: "search-link" do %>
@@ -46,9 +51,6 @@
         <path d="M2 8L2 20" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
         <path d="M2 2V2.0001" stroke="white" stroke-width="2.82843" stroke-linecap="round"/>
       </svg>
-      <div class="notification-counter">
-        <div class="notification-badge">!</div>
-      </div>
     </div>
     <%= link_to notifications_path, title: "Voir mes notiifications" do %>
       <div class="circle circle-notif">
@@ -97,7 +99,9 @@
     <div class="box-card" id="boxCard">
       <% @items.each do |item| %>
         <% if item.is_a?(Oeuvre) %>
-          <%= render partial: 'oeuvres/card', locals: { card: item, class_name: 'card' } %>
+          <% cache item do %>
+            <%= render partial: 'oeuvres/card', locals: { card: item, class_name: 'card' } %>
+          <% end %>
         <% elsif item.is_a?(Hash) %>
           <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
         <% end %>

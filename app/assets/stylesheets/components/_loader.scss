@@ -10,7 +10,7 @@
   width: calc(100vw - 350px);
   user-select: none;
   transition: opacity 0.5s ease, visibility 0.5s ease;
-  background-color: #fff;
+  background-color: $background-color;
 }
 body.overflow-hidden {
   overflow: hidden;

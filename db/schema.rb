@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_18_230225) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_19_223438) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -44,9 +44,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_18_230225) do
 
   create_table "ads", force: :cascade do |t|
     t.boolean "active", default: true
+    t.integer "clicks_count", default: 0
     t.datetime "created_at", null: false
     t.text "description"
     t.date "end_date"
+    t.integer "impressions_count", default: 0
     t.string "link"
     t.date "start_date"
     t.string "title"

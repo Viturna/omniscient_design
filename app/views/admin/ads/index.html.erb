@@ -35,6 +35,9 @@
           <th>Image</th>
           <th>Titre</th>
           <th>Statut</th>
+          <th>Vues (Impressions)</th>
+           <th>Clics</th>              
+           <th>CTR (%)</th>            
           <th>Période d'affichage</th>
           <th>Lien</th>
           <th>Actions</th>
@@ -56,6 +59,20 @@
                 <span class="status-active">Actif</span>
               <% else %>
                 <span class="status-inactive">Inactif</span>
+              <% end %>
+            </td>
+            <td style="text-align: center;">
+              <%= ad.impressions_count %>
+            </td>
+            <td style="text-align: center;">
+              <strong><%= ad.clicks_count %></strong>
+            </td>
+            <td>
+              <%# Calcul du taux de clic (CTR) pour éviter la division par zéro %>
+              <% if ad.impressions_count > 0 %>
+                <%= ((ad.clicks_count.to_f / ad.impressions_count) * 100).round(2) %>%
+              <% else %>
+                0%
               <% end %>
             </td>
             <td>

@@ -146,6 +146,13 @@ Rails.application.routes.draw do
     get 'contributions', to: 'contributions#index', as: 'user_contributions'
     get 'confirmation_pending', to: 'pages#confirmation_pending', as: 'confirmation_pending'
 
+    #ADS
+    resources :ads, only: [] do
+      member do
+        get :click      # Pour tracker le clic
+        get :impression # Pour tracker l'affichage
+      end
+    end 
 
     # ---- ERREURS ----
     match "/404", to: "errors#not_found", via: :all

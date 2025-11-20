@@ -127,6 +127,7 @@ def load_more
     token = params[:recaptcha_token]
 
     if verify_recaptcha(token) && @designer.save
+      Rails.cache.delete("linkify_keywords_list")
       update_suivi_references_emises(current_user)
       create_notification(@designer)
       flash[:success] = I18n.t('designer.create.success')

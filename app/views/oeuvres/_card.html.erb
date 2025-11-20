@@ -37,13 +37,21 @@
         <div class="card-slider-slides" style="position: relative; z-index: 1;">
           <% if images.any? %>
             <% images.each_with_index do |image, index| %>
-              <%= image_tag image.variant(resize_to_limit: [800, 800], format: :webp),
-                  alt: card.nom_oeuvre, 
-                  class: "card-slide-image #{'active' if index == 0}", 
-                  data: { slider_target: "slide",
-                  loading: (index == 0 ? "eager" : "lazy") },
-                  # On ajoute aussi fetchpriority sur l'image principale si c'est la première
-                  fetchpriority: (index == 0 ? "high" : "auto") %> 
+             <%= image_tag image.variant(resize_to_limit: [400, 400], format: :webp), # Source par défaut (fallback)
+                srcset: [
+                  [image.variant(resize_to_limit: [400, 400], format: :webp), "400w"],
+                  [image.variant(resize_to_limit: [800, 800], format: :webp), "800w"],
+                  [image.variant(resize_to_limit: [1200, 1200], format: :webp), "1200w"]
+                ],
+                sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
+                alt: card.nom_oeuvre, 
+                class: "card-slide-image #{'active' if index == 0}", 
+                data: { 
+                  slider_target: "slide",
+                  loading: (index == 0 ? "eager" : "lazy") 
+                },
+                fetchpriority: (index == 0 ? "high" : "auto") 
+            %>
             <% end %>
           <% else %>
             <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>

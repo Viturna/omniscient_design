@@ -69,6 +69,7 @@ end
     end
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
+
   def remove_accents_and_special_chars(str)
     return '' if str.nil?
   
@@ -99,28 +100,50 @@ end
   end
   
   def linkify_designer_names_and_oeuvres(text)
-      return "" if text.blank? 
-    designers = Designer.where(validation: true)
-    oeuvres = Oeuvre.where(validation: true)
+    return "" if text.blank?
 
-    designers.each do |designer|
-      nom_complet = "#{designer.prenom} #{designer.nom}"
-      next if nom_complet.blank?
-
-      regex = Regexp.new("\\b#{Regexp.escape(nom_complet)}\\b")
-
+    lists = Rails.cache.fetch("linkify_keywords_list", expires_in: 12.hours) do
+      {
+        designers: Designer.where(validation: true)
+                           .select(:id, :prenom, :nom, :slug)
+                           .map { |d| { name: "#{d.prenom} #{d.nom}".strip, slug: d.slug } },
+                           
+        studios: Studio.where(validation: true)
+                       .select(:id, :nom, :slug)
+                       .map { |s| { name: s.nom, slug: s.slug } },
+                       
+        oeuvres: Oeuvre.where(validation: true)
+                       .select(:id, :nom_oeuvre, :slug)
+                       .map { |o| { name: o.nom_oeuvre, slug: o.slug } }
+      }
+    end
+    lists[:designers].each do |item|
+      next if item[:name].blank?
+      
+      regex = Regexp.new("\\b#{Regexp.escape(item[:name])}\\b")
+      
       text = text.gsub(regex) do |match|
-        "<a class=\"black underline\" href='/designers/#{designer.slug}'>#{match}</a>"
+        "<a class=\"black underline\" href='/designers/#{item[:slug]}'>#{match}</a>"
       end
     end
 
-    oeuvres.each do |oeuvre|
-      next if oeuvre.nom_oeuvre.blank?
+    lists[:studios].each do |item|
+      next if item[:name].blank?
 
-      regex = Regexp.new("\\b#{Regexp.escape(oeuvre.nom_oeuvre)}\\b")
-
+      regex = Regexp.new("\\b#{Regexp.escape(item[:name])}\\b")
+      
       text = text.gsub(regex) do |match|
-        "<a class=\"black underline\" href='/oeuvres/#{oeuvre.slug}'>#{match}</a>"
+        "<a class=\"black underline\" href='/studios/#{item[:slug]}'>#{match}</a>"
+      end
+    end
+
+    lists[:oeuvres].each do |item|
+      next if item[:name].blank?
+
+      regex = Regexp.new("\\b#{Regexp.escape(item[:name])}\\b")
+      
+      text = text.gsub(regex) do |match|
+        "<a class=\"black underline\" href='/oeuvres/#{item[:slug]}'>#{match}</a>"
       end
     end
 

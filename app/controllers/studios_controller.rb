@@ -48,6 +48,7 @@ def create
     token = params[:recaptcha_token]
 
     if verify_recaptcha(token) && @studio.save
+      Rails.cache.delete("linkify_keywords_list")
       update_suivi_references_emises(current_user)
       create_notification(@studio)
       flash[:success] = I18n.t('studio.create.success', default: "Studio créé avec succès")

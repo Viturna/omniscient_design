@@ -372,7 +372,8 @@
   </div>
   <% if studio.validation %>
     <div class="next-card">
-      <% studio_oeuvres = @studio.oeuvres.where(validation: true) %>
+      <% studio_oeuvres = studio.oeuvres.where(validation: true) %>
+      
       <% if studio_oeuvres.any? %>
         <h2 class="title-description-reference">Références du studio</h2>
         <div class="horizontal-scroll-section">
@@ -380,22 +381,27 @@
             <% studio_oeuvres.each do |oeuvre| %>
               <%= link_to oeuvre do %>
                 <div class="oeuvre-card">
+                  <%# --- CORRECTION ICI : Ajout du IF manquant --- %>
                   <% if oeuvre.oeuvre_images.first&.file&.attached? %>
-                    <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb)) %>');">
-                    <% else %>
-                      <div class="oeuvre-card-image" style="background-color: #EEE;">
-                      <% end %>
+                    <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(resize_to_limit: [400, 400])) %>');">
+                  <% else %>
+                    <div class="oeuvre-card-image" style="background-color: #EEE;">
+                  <% end %>
+                  <%# --------------------------------------------- %>
+
                       <div class="oeuvre-card-content">
-                        <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map(&:nom_designer), ", ") %></p>
+                        <p class="oeuvre-designer">
+                          <%= oeuvre.designers.any? ? oeuvre.designers.map(&:nom_designer).join(", ") : "Designer inconnu" %>
+                        </p>
                         <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                       </div>
-                    </div>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
+                    </div> </div> <% end %>
+            <% end %>
           </div>
-        <% end %>
+        </div>
+
+    </div>
+  <% end %>
         <h2 class="title-description-reference">Découvrir d'autres studios</h2>
         <div class="horizontal-scroll-section">
           <div class="horizontal-wrapper">

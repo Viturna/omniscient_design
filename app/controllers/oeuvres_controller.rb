@@ -124,6 +124,7 @@ def load_more
     @oeuvre.user = current_user
 
     if @oeuvre.save
+      Rails.cache.delete("linkify_keywords_list")
       update_suivi_references_emises(current_user)
       create_notification(@oeuvre)
       flash[:success] = t('oeuvres.create.success')

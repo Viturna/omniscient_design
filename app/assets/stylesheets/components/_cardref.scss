@@ -255,10 +255,11 @@ body.dark-mode {
   // Ceci force un fond transparent au cas où l'image aurait
   // des parties transparentes (ex: PNG), pour voir le flou derrière
   background-color: transparent;
+}
 
-  &.active {
-    display: block;
-  }
+.card-slider-slides .card-slide-image.active {
+  display: block !important;
+  opacity: 1 !important;
 }
 
 // Les infos doivent être par-dessus tout

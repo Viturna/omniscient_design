@@ -5,7 +5,7 @@ export default class extends Controller {
   static targets = ["loading", "content", "footer"]
 
   connect() {
-    // Vérification immédiate
+    // Si déjà vu, on cache tout de suite
     if (sessionStorage.getItem("loaderSeen") === "true") {
       this.hideImmediately();
     } else {
@@ -14,41 +14,64 @@ export default class extends Controller {
   }
 
   playAnimation() {
-    // On fige le scroll
     document.body.classList.add('overflow-hidden');
-    
-    // Le loader est visible par défaut via CSS, on attend juste la fin
-    // Sécurité de 3.5s pour laisser la vidéo jouer
-    setTimeout(() => {
+    this.loadingTarget.style.display = "flex";
+
+    // --- CHANGEMENT ICI ---
+    // On vérifie l'état du chargement réel de la page
+
+    if (document.readyState === "complete") {
+      // Cas 1 : Le site est déjà chargé quand le contrôleur se connecte (connexion très rapide)
       this.finish();
-    }, 3500);
+    } else {
+      // Cas 2 : Le site charge encore, on attend l'événement de fin de chargement
+      window.addEventListener("load", () => {
+        this.finish();
+      }, { once: true }); // { once: true } nettoie l'écouteur automatiquement après usage
+    }
+
+    // Sécurité : Si jamais le "load" ne se déclenche pas (ex: un script tiers plante), 
+    // on force l'ouverture après 5 secondes max pour ne pas bloquer l'utilisateur.
+    setTimeout(() => {
+      if (document.body.classList.contains('overflow-hidden')) {
+        this.finish();
+      }
+    }, 5000);
   }
 
   finish() {
-    // On mémorise que l'utilisateur a vu l'intro
     sessionStorage.setItem("loaderSeen", "true");
-    this.hideWithTransition();
+
+    // Petit délai de confort (500ms) pour voir au moins un tout petit peu le logo/vidéo
+    // Si vous voulez de l'instantané pur, mettez 0 ou enlevez le setTimeout
+    setTimeout(() => {
+      this.loadingTarget.style.opacity = "0";
+      this.hideWithTransition();
+    }, 500);
   }
 
   hideWithTransition() {
-    // On ajoute la classe CSS qui gère l'opacité
     if (this.hasLoadingTarget) {
       this.loadingTarget.classList.add("is-hidden");
-      
-      // Une fois la transition CSS finie (500ms), on nettoie
+
+      // On attend la fin de la transition CSS (0.5s) pour retirer du DOM
       setTimeout(() => {
-        this.loadingTarget.style.display = "none"; // Retrait du flux
+        this.loadingTarget.style.display = "none";
         document.body.classList.remove('overflow-hidden');
       }, 500);
     }
   }
 
   hideImmediately() {
-    // Cas où on revient sur le site : suppression instantanée
     if (this.hasLoadingTarget) {
       this.loadingTarget.style.display = "none";
       this.loadingTarget.classList.add("is-hidden");
     }
+
+    // On s'assure que le contenu est affiché
+    if (this.hasContentTarget) this.contentTarget.style.display = "block";
+    if (this.hasFooterTarget) this.footerTarget.style.display = "block";
+
     document.body.classList.remove('overflow-hidden');
   }
 }

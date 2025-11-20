@@ -80,6 +80,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super
   end
   
+ def unlink_provider
+    current_user.update(provider: nil, uid: nil)
+    
+    redirect_to edit_user_registration_path, notice: "Votre compte a été délié avec succès. Pensez à définir un mot de passe si ce n'est pas déjà fait."
+  end
 
   protected
 

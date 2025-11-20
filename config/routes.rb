@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       get 'users/sign_out', to: 'users/sessions#destroy'
       get 'users/oauth_reauthentication', to: 'users/registrations#oauth_reauthentication', as: :oauth_reauthentication
       get 'users/:id/visits', to: 'users#visits', as: :user_visits
+      delete 'users/unlink_provider', to: 'users/registrations#unlink_provider', as: :unlink_provider
     end
     # Tes routes publiques
     resources :feedbacks, only: [:new, :create, :index, :destroy]

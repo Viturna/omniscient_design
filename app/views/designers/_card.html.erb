@@ -4,33 +4,63 @@
     <%# --------- Couleur de fond --------- %>
     <% if card.domaines.any? %>
       <% if card.domaines.size == 1 %>
-        <!-- Un seul domaine → couleur unie -->
         <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>;">
+      <% else %>
+        <% colors = card.domaines.map(&:couleur).join(', ') %>
+        <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
+      <% end %>
+    <% else %>
+      <div class="bg-card" style="background-color: #ccc;">
+    <% end %>
+
+      <%# --------- Image de fond --------- %>
+      <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
+        
+        <%# --- Background Blurred Image (Pas de priorité haute) --- %>
+        <% if images.any? %>
+          <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
+          <%= image_tag bg_variant,
+              class: "card-slider-blurred-bg",
+              alt: "",
+              data: { slider_target: "background" },
+              style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" 
+          %>
         <% else %>
-          <!-- Plusieurs domaines → dégradé -->
-          <% colors = card.domaines.map(&:couleur).join(', ') %>
-          <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
-          <% end %>
-        <% else %>
-          <!-- Aucun domaine → couleur par défaut -->
-          <div class="bg-card" style="background-color: #ccc;">
-          <% end %>
-          <%# --------- Image de fond --------- %>
-          <div class="bg-img-card card-slider-wrapper">
-            <div class="card-slider-blurred-bg" data-slider-target="background"></div>
-            <div class="card-slider-slides">
-              <% if images.any? %>
-                <% images.each_with_index do |image, index| %>
-                  <%= image_tag image, 
+           <div class="card-slider-blurred-bg" style="background-color: #e0e0e0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
+        <% end %>
+
+        <%# --- Slider Images (Optimisées) --- %>
+        <div class="card-slider-slides">
+          <% if images.any? %>
+            <% images.each_with_index do |image, index| %>
+              <%# Création des variantes explicites %>
+              <% v400 = image.variant(resize_to_limit: [400, 400], format: :webp) %>
+              <% v800 = image.variant(resize_to_limit: [800, 800], format: :webp) %>
+              <% v1200 = image.variant(resize_to_limit: [1200, 1200], format: :webp) %>
+
+              <%= image_tag v400, 
+                  srcset: [
+                    [url_for(v400), "400w"],
+                    [url_for(v800), "800w"],
+                    [url_for(v1200), "1200w"]
+                  ],
+                  sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
                   alt: card.nom_designer, 
                   class: "card-slide-image #{'active' if index == 0}", 
-                  data: { slider_target: "slide",
-                  loading: (index == 0 ? "eager" : "lazy") } %>
-                <% end %>
-              <% else %>
-                <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
-              <% end %>
-            </div>
+                  
+                  # Chargement natif
+                  loading: (index == 0 ? "eager" : "lazy"),
+                  
+                  # Priorité haute uniquement sur la première image
+                  fetchpriority: (index == 0 ? "high" : "auto"),
+
+                  data: { slider_target: "slide" } 
+              %>
+            <% end %>
+          <% else %>
+            <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
+          <% end %>
+        </div>
             <div class="flex-info-card">
               <div>
                 <div class="info-card-dark">

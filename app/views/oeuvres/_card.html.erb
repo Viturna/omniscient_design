@@ -32,20 +32,18 @@
           </div>
         <% end %>
 
-      <div class="card-slider-slides" style="position: relative; z-index: 1;">
+      <div class="card-slider-slides">
           <% if images.any? %>
             <% images.each_with_index do |image, index| %>
-             <%# 1. On prépare les variantes %>
              <% v400 = image.variant(resize_to_limit: [400, 400], format: :webp) %>
              <% v800 = image.variant(resize_to_limit: [800, 800], format: :webp) %>
              <% v1200 = image.variant(resize_to_limit: [1200, 1200], format: :webp) %>
              
-             <%# 2. On génère les URLs explicitement pour éviter l'erreur AssetNotFound %>
-             <%= image_tag v400, # Le src principal peut rester un objet variante
+             <%= image_tag v400,
                 srcset: [
-                  [url_for(v400), "400w"],   # ICI : On utilise url_for()
-                  [url_for(v800), "800w"],   # ICI : On utilise url_for()
-                  [url_for(v1200), "1200w"]  # ICI : On utilise url_for()
+                  [url_for(v400), "400w"],
+                  [url_for(v800), "800w"],
+                  [url_for(v1200), "1200w"]
                 ],
                 sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
                 alt: card.nom_oeuvre, 

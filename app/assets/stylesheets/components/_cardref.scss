@@ -241,19 +241,15 @@ body.dark-mode {
 }
 
 .card-slide-image {
-  display: none;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 
-  object-fit: contain; // <-- LA MODIFICATION CLÉ
+  object-fit: contain;
 
   object-position: center;
-
-  // Ceci force un fond transparent au cas où l'image aurait
-  // des parties transparentes (ex: PNG), pour voir le flou derrière
   background-color: transparent;
 }
 
@@ -261,7 +257,9 @@ body.dark-mode {
   display: block !important;
   opacity: 1 !important;
 }
-
+.card-slider-slides .card-slide-image:not(.active) {
+  display: none;
+}
 // Les infos doivent être par-dessus tout
 .flex-info-card {
   position: relative;

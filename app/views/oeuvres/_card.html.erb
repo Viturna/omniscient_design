@@ -23,7 +23,6 @@
               class: "card-slider-blurred-bg",
               alt: "",
               data: { slider_target: "background" },
-              fetchpriority: "high",
               style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" 
           %>
         <% else %>
@@ -50,10 +49,10 @@
                 ],
                 sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
                 alt: card.nom_oeuvre, 
-                class: "card-slide-image #{'active' if index == 0}", 
+                class: "card-slide-image #{'active' if index == 0}",
+                loading: (index == 0 ? "eager" : "lazy"), 
                 data: { 
                   slider_target: "slide",
-                  loading: (index == 0 ? "eager" : "lazy") 
                 },
                 fetchpriority: (index == 0 ? "high" : "auto") 
             %>

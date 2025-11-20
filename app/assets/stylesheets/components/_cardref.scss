@@ -255,6 +255,7 @@ body.dark-mode {
 .card-slider-slides .card-slide-image.active {
   display: block !important;
   opacity: 1 !important;
+  visibility: visible !important;
 }
 .card-slider-slides .card-slide-image:not(.active) {
   display: none;

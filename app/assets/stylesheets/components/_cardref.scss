@@ -248,7 +248,6 @@ body.dark-mode {
   height: 100%;
 
   object-fit: contain;
-
   object-position: center;
   background-color: transparent;
 }
@@ -259,11 +258,6 @@ body.dark-mode {
 }
 .card-slider-slides .card-slide-image:not(.active) {
   display: none;
-}
-// Les infos doivent être par-dessus tout
-.flex-info-card {
-  position: relative;
-  z-index: 10; // Devant le z-index: 3 des slides
 }
 
 // La nav doit être par-dessus tout

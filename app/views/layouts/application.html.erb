@@ -30,6 +30,12 @@
     <meta name="recaptcha-site-key" content="<%= ENV['RECAPTCHA_SITE_KEY'] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
     <%= render 'application/favicon' %>
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+    <noscript>
+      <style>
+        #loading { display: none !important; visibility: hidden !important; }
+        body { overflow: auto !important; }
+      </style>
+    </noscript>
       <!-- Google Tag Manager -->
     <script async>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

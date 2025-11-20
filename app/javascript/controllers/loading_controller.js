@@ -5,6 +5,7 @@ export default class extends Controller {
   static targets = ["loading", "content", "footer"]
 
   connect() {
+    // Vérification immédiate
     if (sessionStorage.getItem("loaderSeen") === "true") {
       this.hideImmediately();
     } else {
@@ -13,34 +14,41 @@ export default class extends Controller {
   }
 
   playAnimation() {
+    // On fige le scroll
     document.body.classList.add('overflow-hidden');
-
-    this.loadingTarget.style.display = "flex";
-
+    
+    // Le loader est visible par défaut via CSS, on attend juste la fin
+    // Sécurité de 3.5s pour laisser la vidéo jouer
     setTimeout(() => {
       this.finish();
     }, 3500);
   }
 
   finish() {
+    // On mémorise que l'utilisateur a vu l'intro
     sessionStorage.setItem("loaderSeen", "true");
+    this.hideWithTransition();
+  }
 
-    this.loadingTarget.style.opacity = "0";
-
-    setTimeout(() => {
-      this.hideImmediately();
-    }, 500);
+  hideWithTransition() {
+    // On ajoute la classe CSS qui gère l'opacité
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.classList.add("is-hidden");
+      
+      // Une fois la transition CSS finie (500ms), on nettoie
+      setTimeout(() => {
+        this.loadingTarget.style.display = "none"; // Retrait du flux
+        document.body.classList.remove('overflow-hidden');
+      }, 500);
+    }
   }
 
   hideImmediately() {
+    // Cas où on revient sur le site : suppression instantanée
     if (this.hasLoadingTarget) {
       this.loadingTarget.style.display = "none";
-      this.loadingTarget.style.opacity = "0"; // Pour être sûr
+      this.loadingTarget.classList.add("is-hidden");
     }
-
-    if (this.hasContentTarget) this.contentTarget.style.display = "block";
-    if (this.hasFooterTarget) this.footerTarget.style.display = "block";
-
     document.body.classList.remove('overflow-hidden');
   }
 }

@@ -298,8 +298,8 @@ fr:
   devise:
     login:
       title: "Connexion"
-      email: "Email"
-      password: "Mot de passe"
+      email: "Entrez votre adresse e-mail"
+      password: "Entrez votre mot de passe"
       forgot_password: "Mot de passe oublié ?"
       remember_me: "Se souvenir de moi"
       submit: "Se connecter"
@@ -692,7 +692,7 @@ fr:
     save_list: "Enregistrer la liste"
   add_references:
     subtitle_top: "Votre contribution"
-    main_title: "Ajouter des designers ou des références"
+    main_title: "Contribuer à la base de références"
     subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
     contributions_html: "Vous pouvez consulter vos contributions %{link}."
     contributions_link_text: "en cliquant ici"
@@ -828,11 +828,10 @@ fr:
         source_placeholder: "Ex : https://example.com"
         add_source_button: "Ajouter un lien"
       4:
-        title: "Étape 4 : Date et image"
+        title: "Étape 4 : Images"
         date_oeuvre: "Date de la référence"
         date_oeuvre_placeholder: "Ex : 2002"
         image: "Image(s)"
-        image_placeholder: "https://url-de-l-image.fr"
     buttons:
       next: "Suivant"
       prev: "Précédent"

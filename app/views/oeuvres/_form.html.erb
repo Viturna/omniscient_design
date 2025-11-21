@@ -1,390 +1,333 @@
-<%= form_with(model: @oeuvre, local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
-  <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
-  <div class="error-message" style="color: red; display: none;"></div>
-  <% if @oeuvre.errors.any? %>
-    <div style="color: red">
+<div data-controller="multi-step-form" 
+     data-multi-step-form-edit-mode-value="<%= @oeuvre.persisted? %>">
+
+  <%= form_with(model: @oeuvre, id: "oeuvre-form", local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
+    
+    <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
+    
+   <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>
+    
+    <% if @oeuvre.errors.any? %>
+      <div style="color: red; margin-bottom: 20px;">
+        <ul>
+          <% @oeuvre.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-step" data-multi-step-form-target="step" style="<%= @oeuvre.persisted? ? 'display: none;' : 'display: block;' %>">
+      <h3>Critères d’acceptation des références et designers</h3>
+      <p>
+        Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants.
+        <br><br>
+        <span style="font-weight:500;">⚠️ Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée.</span>
+      </p>
+      <hr class="rules-add-hr">
+      
+      <h4>1. Originalité et Authenticité</h4>
       <ul>
-        <% @oeuvre.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
+        <li>Chaque référence doit être <strong>originale</strong>, conçue par son auteur.</li>
+        <li>Chaque référence doit être clairement sourcée.</li>
       </ul>
-    </div>
-  <% end %>
-  <!-- Étape 1 : Règlement -->
-  <div class="form-step" data-step="1">
-    <h3>Critères d’acceptation des références et designers</h3>
-    <p>
-      Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants.
-      <br>
-      <br>
-      <span style="font-weight:500;">⚠️ Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée.</span>
-    </p>
-    <hr class="rules-add-hr">
-    <h4>1. Originalité et Authenticité</h4>
-    <ul>
-      <li>Chaque référence doit être <strong>originale</strong>, conçue par son auteur.</li>
-      <li>Chaque référence doit être clairement sourcée.</li>
-    </ul>
-    <h4>2. Qualité visuelle</h4>
-    <ul>
-      <li>Images <strong>nettes</strong>et en <strong>haute résolution</strong>.</li>
-      <li>Formats acceptés : PNG, JPG, WEBP.</li>
-      <li>Aucune image <strong>floue</strong> ou <strong>pixelisée</strong> ne sera acceptée.</li>
-    </ul>
-    <h4>3. Respect des droits d’auteur</h4>
-    <ul>
-      <li>Vous devez avoir les <strong>droits d’utilisation complets</strong> sur tous les éléments partagés.</li>
-      <li>Pas d’infraction aux droits d’auteur.</li>
-    </ul>
-    <h4>4. Description détaillée</h4>
-    <ul>
-      <li>Fournir des descriptions complètes (artiste, technique, contexte...).</li>
-      <li>Le texte doit être rédigé correctement, <strong>sans fautes d’orthographe</strong> majeures ni langage familier.</li>
-      <li>Les descriptions doivent être <strong>factuelles</strong> et <strong>neutres</strong>, sans jugement ni prise de parti.</li>
-    </ul>
-    <h4>5. Pertinence et cohérence</h4>
-    <ul>
-      <li>Doit être pertinente pour la communauté et ne pas dupliquer du contenu existant.</li>
-    </ul>
-    <h4>6. Contenu responsable</h4>
-    <ul>
-      <li>Pas de contenu discriminatoire, violent, politique, religieux ou trollesque.</li>
-    </ul>
-    <p>Soumettre une référence sur omniscientdesign.fr signifie que vous acceptez pleinement ces conditions et vous engagez à les respecter.</p>
-    <div style="margin-top:48px;">
-      <label style="font-weight: 500;">
-        <input type="checkbox" id="accept-rules-checkbox">
-        J’ai lu et j’accepte le règlement ci-dessus
-      </label>
-    </div>
-    <div class="flex-btn-add" style="justify-content:flex-end; margin-top:1rem;">
-      <button type="button" class="next-step button large" id="btn-next-rules" disabled>
-        <%= t('add_oeuvre.buttons.next') %>
-      </button>
-    </div>
-  </div>
-  <!-- Étape 2 -->
-  <div class="form-step" data-step="2" style="display:none;">
-    <h3><%= t('add_oeuvre.steps.1.title') %></h3>
-    <div class="flex-form">
-      <div>
-        <%= form.label :nom_oeuvre, t('add_oeuvre.steps.1.nom_oeuvre') %>
-        <%= form.text_field :nom_oeuvre, placeholder: t('add_oeuvre.steps.1.nom_oeuvre_placeholder') %>
+      <h4>2. Qualité visuelle</h4>
+      <ul>
+        <li>Images <strong>nettes</strong> et en <strong>haute résolution</strong>.</li>
+        <li>Formats acceptés : PNG, JPG, WEBP.</li>
+        <li>Aucune image <strong>floue</strong> ou <strong>pixelisée</strong> ne sera acceptée.</li>
+      </ul>
+      <h4>3. Respect des droits d’auteur</h4>
+      <ul>
+        <li>Vous devez avoir les <strong>droits d’utilisation complets</strong> sur tous les éléments partagés.</li>
+        <li>Pas d’infraction aux droits d’auteur.</li>
+      </ul>
+      <h4>4. Description détaillée</h4>
+      <ul>
+        <li>Fournir des descriptions complètes (artiste, technique, contexte...).</li>
+        <li>Le texte doit être rédigé correctement, <strong>sans fautes d’orthographe</strong> majeures ni langage familier.</li>
+        <li>Les descriptions doivent être <strong>factuelles</strong> et <strong>neutres</strong>, sans jugement ni prise de parti.</li>
+      </ul>
+      <h4>5. Pertinence et cohérence</h4>
+      <ul>
+        <li>Doit être pertinente pour la communauté et ne pas dupliquer du contenu existant.</li>
+      </ul>
+      <h4>6. Contenu responsable</h4>
+      <ul>
+        <li>Pas de contenu discriminatoire, violent, politique, religieux ou trollesque.</li>
+      </ul>
+      
+      <p>Soumettre une référence sur omniscientdesign.fr signifie que vous acceptez pleinement ces conditions et vous engagez à les respecter.</p>
+      
+      <div style="margin-top:48px;">
+        <label style="font-weight: 500; cursor: pointer;">
+          <input type="checkbox" 
+                 id="accept-rules-checkbox" 
+                 data-multi-step-form-target="rulesCheckbox"
+                 data-action="change->multi-step-form#toggleRules">
+          J’ai lu et j’accepte le règlement ci-dessus
+        </label>
+      </div>
+
+      <div class="flex-btn-add" style="justify-content:flex-end; margin-top:1rem;">
+        <button type="button" 
+                class="button large" 
+                disabled 
+                data-multi-step-form-target="rulesNextBtn"
+                data-action="click->multi-step-form#next">
+          <%= t('add_oeuvre.buttons.next') %>
+        </button>
       </div>
     </div>
-    <div class="flex-btn-add" style="justify-content: flex-end;">
-      <button type="button" class="next-step button large"><%= t('add_oeuvre.buttons.next') %></button>
-    </div>
-  </div>
-  <!-- Étape 3 -->
-  <div class="form-step" data-step="3" style="display: none;">
-    <h3><%= t('add_oeuvre.steps.2.title') %></h3>
-    <div class="flex-form">
-      <div data-controller="multi-select" data-multi-select-prefix-value="designer">
-        <%= form.label :designer_ids, t('add_oeuvre.steps.2.designer_ids') %>
-        <% max_designers = 3 %>
-        <% selected_designers = @oeuvre.designer_ids %>
-        <% (0...max_designers).each do |index| %>
-          <div>
-            <%= form.collection_select :designer_ids,
-              Designer.order(:nom),
-              :id,
-              :nom_designer,
-              { 
-                include_blank: t('add_oeuvre.steps.2.designer_blank'),
-                prompt: t('add_oeuvre.steps.2.designer_prompt'),
-                selected: selected_designers[index]
-              },
-              { 
-                class: "form-control designer-select",
-                id: "designer_#{index + 1}",
-                name: "oeuvre[designer_ids][]"
-              } %>
-          </div>
-        <% end %>
+
+    <div class="form-step" data-multi-step-form-target="step" style="<%= @oeuvre.persisted? ? 'display: block;' : 'display: none;' %>">
+      <h3><%= t('add_oeuvre.steps.1.title') %></h3>
+      <div class="flex-form">
         <div>
-          <%= form.label :studio_ids, 'Studio(s) associé(s)' %>
-          <%= form.collection_select :studio_ids, 
-              Studio.order(:nom), 
+          <%= form.label :nom_oeuvre, t('add_oeuvre.steps.1.nom_oeuvre') %>
+          <%= form.text_field :nom_oeuvre, 
+              required: true, 
+              placeholder: t('add_oeuvre.steps.1.nom_oeuvre_placeholder'),
+              data: { multi_step_form_target: "nameInput" } 
+          %>
+        </div>
+      </div>
+      <div class="flex-btn-add" style="justify-content: flex-end;">
+        <button type="button" class="prev-step button large" style="margin-right: 10px;" data-action="click->multi-step-form#prev" data-multi-step-form-target="prevButton">
+          <%= t('add_oeuvre.buttons.prev') %>
+        </button>
+        <button type="button" class="button large" data-action="click->multi-step-form#next">
+          <%= t('add_oeuvre.buttons.next') %>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-step" data-multi-step-form-target="step" style="display: none;">
+      <h3><%= t('add_oeuvre.steps.2.title') %></h3>
+      <div class="flex-form">
+        <div data-controller="multi-select" data-multi-select-prefix-value="designer">
+          <%= form.label :designer_ids, t('add_oeuvre.steps.2.designer_ids') %>
+          <% max_designers = 3 %>
+          <% selected_designers = @oeuvre.designer_ids %>
+          <% (0...max_designers).each do |index| %>
+            <div>
+              <%= form.collection_select :designer_ids,
+                Designer.order(:nom),
+                :id,
+                :nom_designer,
+                { 
+                  include_blank: t('add_oeuvre.steps.2.designer_blank'),
+                  prompt: t('add_oeuvre.steps.2.designer_prompt'),
+                  selected: selected_designers[index]
+                },
+                { 
+                  class: "form-control designer-select",
+                  id: "designer_#{index + 1}",
+                  name: "oeuvre[designer_ids][]"
+                } %>
+            </div>
+          <% end %>
+          <div>
+            <%= form.label :studio_ids, 'Studio(s) associé(s)' %>
+            <%= form.collection_select :studio_ids, 
+                Studio.order(:nom), 
+                :id, 
+                :nom, 
+                { include_blank: true, selected: @oeuvre.studio_ids }, 
+                { 
+                  class: "form-control studio-select", 
+                  multiple: true, 
+                  name: "oeuvre[studio_ids][]",
+                  data: { placeholder: "Sélectionnez un ou plusieurs studios..." }
+                } %>
+          </div>
+        </div>
+        
+        <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
+        <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
+        
+        <div>
+          <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
+          <%= form.collection_select :domaine_ids, 
+              Domaine.order(:domaine), 
               :id, 
-              :nom, 
-              { include_blank: true, selected: @oeuvre.studio_ids }, 
-              { 
-                class: "form-control studio-select", 
-                multiple: true, 
-                name: "oeuvre[studio_ids][]",
-                data: { placeholder: "Sélectionnez un ou plusieurs studios..." }
-              } %>
+              :domaine, 
+              { include_blank: false, selected: @oeuvre.domaine_ids }, 
+              { class: "form-control domaine-select", multiple: true, name: "oeuvre[domaine_ids][]" } %>
         </div>
-      </div>
-      <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
-      <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
-      <div>
-        <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
-        <%= form.collection_select :domaine_ids, 
-            Domaine.order(:domaine), 
-            :id, 
-            :domaine, 
-            { include_blank: false, selected: @oeuvre.domaine_ids }, 
-            { class: "form-control domaine-select", multiple: true, name: "oeuvre[domaine_ids][]" } %>
-      </div>
-    </div>
-    <div class="flex-btn-add">
-      <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
-      <button type="button" class="next-step button large"><%= t('add_oeuvre.buttons.next') %></button>
-    </div>
-  </div>
-  <!-- Étape 4 -->
-  <div class="form-step" data-step="4" style="display: none;">
-    <h3><%= t('add_oeuvre.steps.3.title') %></h3>
-    <div class="flex-form">
-      <div>
-        <%= form.label :presentation_generale, t('add_oeuvre.steps.3.presentation_generale') %>
-        <%= form.text_area :presentation_generale, placeholder: t('add_oeuvre.steps.3.presentation_generale_placeholder') %>
-      </div>
-      <div>
-        <%= form.label :contexte_historique, t('add_oeuvre.steps.3.contexte_historique') %>
-        <%= form.text_area :contexte_historique, placeholder: t('add_oeuvre.steps.3.contexte_historique_placeholder') %>
-      </div>
-      <div>
-        <%= form.label :materiaux_et_innovations_techniques, t('add_oeuvre.steps.3.materiaux_et_innovations_techniques') %>
-        <%= form.text_area :materiaux_et_innovations_techniques, placeholder: t('add_oeuvre.steps.3.materiaux_et_innovations_techniques_placeholder') %>
-      </div>
-      <div>
-        <%= form.label :concept_et_inspiration, t('add_oeuvre.steps.3.concept_et_inspiration') %>
-        <%= form.text_area :concept_et_inspiration, placeholder: t('add_oeuvre.steps.3.concept_et_inspiration_placeholder') %>
-      </div>
-      <div>
-        <%= form.label :dimension_esthetique, t('add_oeuvre.steps.3.dimension_esthetique') %>
-        <%= form.text_area :dimension_esthetique, placeholder: t('add_oeuvre.steps.3.dimension_esthetique_placeholder') %>
-      </div>
-      <div>
-        <%= form.label :impact_et_message, t('add_oeuvre.steps.3.impact_et_message') %>
-        <%= form.text_area :impact_et_message, placeholder: t('add_oeuvre.steps.3.impact_et_message_placeholder') %>
-      </div>
-      <div data-controller="sources" data-sources-prefix-value="oeuvre">
-        <%= form.label :source, t('add_oeuvre.steps.3.source') %>
-        <div id="sources-container" data-sources-target="container">
-          <% (@oeuvre.source || []).each do |src| %>
-            <div class="source-input">
-              <%= text_field_tag "oeuvre[source][]", src, placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
-              <button type="button" class="remove-source button small">
-                <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
-                </svg>
-              </button>
-            </div>
-          <% end %>
-          <% if (@oeuvre.source || []).empty? %>
-            <div class="source-input">
-              <%= text_field_tag "oeuvre[source][]", "", placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
-              <button type="button" class="remove-source button small"><svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.9236 8.57306L17.5371 20.2734C17.5042 21.2755 17.082 22.2253 16.3603 22.9212C15.6386 23.6171 14.674 24.0044 13.6714 24.0009H6.32669C5.32474 24.0045 4.36077 23.6177 3.63914 22.9226C2.91751 22.2275 2.49495 21.2787 2.46104 20.2773L2.07447 8.57306C2.06601 8.31675 2.15972 8.06758 2.33498 7.88036C2.51024 7.69314 2.75269 7.58321 3.00899 7.57475C3.2653 7.5663 3.51447 7.66 3.70169 7.83526C3.88891 8.01052 3.99884 8.25297 4.0073 8.50928L4.39386 20.2125C4.41311 20.7121 4.62522 21.1849 4.98563 21.5314C5.34604 21.8779 5.82671 22.0713 6.32669 22.071H13.6714C14.1721 22.0713 14.6533 21.8774 15.0138 21.53C15.3743 21.1826 15.586 20.709 15.6043 20.2087L15.9908 8.50928C15.9993 8.25297 16.1092 8.01052 16.2964 7.83526C16.4836 7.66 16.7328 7.5663 16.9891 7.57475C17.2454 7.58321 17.4879 7.69314 17.6631 7.88036C17.8384 8.06758 17.9321 8.31675 17.9236 8.57306ZM19.2022 4.67938C19.2022 4.93569 19.1004 5.1815 18.9192 5.36274C18.7379 5.54398 18.4921 5.64579 18.2358 5.64579H1.76329C1.50698 5.64579 1.26117 5.54398 1.07993 5.36274C0.898693 5.1815 0.796875 4.93569 0.796875 4.67938C0.796875 4.42307 0.898693 4.17726 1.07993 3.99602C1.26117 3.81479 1.50698 3.71297 1.76329 3.71297H4.75917C5.06537 3.71379 5.36093 3.60066 5.58833 3.39559C5.81573 3.19053 5.9587 2.90819 5.98941 2.60353C6.06073 1.88885 6.39556 1.22632 6.92866 0.745025C7.46177 0.263728 8.15497 -0.00185871 8.87319 9.79255e-06H11.1249C11.8432 -0.00185871 12.5363 0.263728 13.0695 0.745025C13.6026 1.22632 13.9374 1.88885 14.0087 2.60353C14.0394 2.90819 14.1824 3.19053 14.4098 3.39559C14.6372 3.60066 14.9327 3.71379 15.239 3.71297H18.2348C18.4911 3.71297 18.7369 3.81479 18.9182 3.99602C19.0994 4.17726 19.2012 4.42307 19.2012 4.67938H19.2022ZM7.6671 3.71297H12.3329C12.206 3.4228 12.1229 3.11532 12.0865 2.80067C12.0626 2.56246 11.9511 2.34162 11.7736 2.18092C11.5961 2.02023 11.3653 1.93114 11.1259 1.9309H8.87416C8.63474 1.93114 8.40394 2.02023 8.22647 2.18092C8.04899 2.34162 7.93748 2.56246 7.91354 2.80067C7.87685 3.11537 7.79443 3.42285 7.6671 3.71297ZM8.64028 18.3551V10.1261C8.64028 9.86978 8.53846 9.62397 8.35723 9.44273C8.17599 9.26149 7.93018 9.15967 7.67387 9.15967C7.41756 9.15967 7.17175 9.26149 6.99051 9.44273C6.80928 9.62397 6.70746 9.86978 6.70746 10.1261V18.359C6.70746 18.6153 6.80928 18.8611 6.99051 19.0423C7.17175 19.2236 7.41756 19.3254 7.67387 19.3254C7.93018 19.3254 8.17599 19.2236 8.35723 19.0423C8.53846 18.8611 8.64028 18.6153 8.64028 18.359V18.3551ZM13.2926 18.3551V10.1261C13.2926 9.86978 13.1908 9.62397 13.0095 9.44273C12.8283 9.26149 12.5825 9.15967 12.3262 9.15967C12.0699 9.15967 11.8241 9.26149 11.6428 9.44273C11.4616 9.62397 11.3598 9.86978 11.3598 10.1261V18.359C11.3598 18.6153 11.4616 18.8611 11.6428 19.0423C11.8241 19.2236 12.0699 19.3254 12.3262 19.3254C12.5825 19.3254 12.8283 19.2236 13.0095 19.0423C13.1908 18.8611 13.2926 18.6153 13.2926 18.359V18.3551Z" fill="#E61818"/>
-                </svg></button>
-            </div>
-          <% end %>
+         <div>
+          <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
+          <%= form.text_field :date_oeuvre, required: true, placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), id: "date-oeuvre-input" %>
+          <div id="date-oeuvre-error" style="color: red; font-size: 0.9em;"></div>
         </div>
-        <button type="button" id="add-source" data-sources-target="addButton" class="button small"><%= t('add_oeuvre.steps.3.add_source_button') %></button>
+        
+      </div>
+      <div class="flex-btn-add">
+        <button type="button" class="button large" data-action="click->multi-step-form#prev"><%= t('add_oeuvre.buttons.prev') %></button>
+        <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_oeuvre.buttons.next') %></button>
       </div>
     </div>
-    <div class="flex-btn-add">
-      <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
-      <button type="button" class="next-step button large"><%= t('add_oeuvre.buttons.next') %></button>
-    </div>
-  </div>
-  <!-- Étape 5 -->
-  <div class="form-step" data-step="5" style="display: none;">
-    <h3><%= t('add_oeuvre.steps.4.title') %></h3>
-    <div class="flex-form">
-      <div>
-        <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
-        <%= form.text_field :date_oeuvre, placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), id: "date-oeuvre-input" %>
-        <div id="date-oeuvre-error"></div>
-      </div>
-      <div>
-        <%= form.label :images, "#{t('add_oeuvre.steps.4.image')} (3 max - Glissez pour réorganiser)" %>
-        <div id="image-fields-container" 
-             class="image-grid-container"
-             data-controller="sortable">
-          <%= form.fields_for :oeuvre_images, @oeuvre.oeuvre_images.sort_by { |img| img.position || 0 } do |image_form| %>
-            <div class="image-upload-card" 
-                 data-controller="image-preview" 
-                 data-sortable-target="item">
-              <%= image_form.hidden_field :position, data: { 'sortable-target': 'positionInput' } %>
-              <div class="image-drag-handle">
-                ⬍ Glisser (Position <%= image_form.object.position || 'N/A' %>)
+
+    <div class="form-step" data-multi-step-form-target="step" style="display: none;">
+      <h3><%= t('add_oeuvre.steps.3.title') %></h3>
+      <div class="flex-form">
+        <div>
+          <%= form.label :presentation_generale, t('add_oeuvre.steps.3.presentation_generale') %>
+          <%= form.text_area :presentation_generale, placeholder: t('add_oeuvre.steps.3.presentation_generale_placeholder') %>
+        </div>
+        <div>
+          <%= form.label :contexte_historique, t('add_oeuvre.steps.3.contexte_historique') %>
+          <%= form.text_area :contexte_historique, placeholder: t('add_oeuvre.steps.3.contexte_historique_placeholder') %>
+        </div>
+        <div>
+          <%= form.label :materiaux_et_innovations_techniques, t('add_oeuvre.steps.3.materiaux_et_innovations_techniques') %>
+          <%= form.text_area :materiaux_et_innovations_techniques, placeholder: t('add_oeuvre.steps.3.materiaux_et_innovations_techniques_placeholder') %>
+        </div>
+        <div>
+          <%= form.label :concept_et_inspiration, t('add_oeuvre.steps.3.concept_et_inspiration') %>
+          <%= form.text_area :concept_et_inspiration, placeholder: t('add_oeuvre.steps.3.concept_et_inspiration_placeholder') %>
+        </div>
+        <div>
+          <%= form.label :dimension_esthetique, t('add_oeuvre.steps.3.dimension_esthetique') %>
+          <%= form.text_area :dimension_esthetique, placeholder: t('add_oeuvre.steps.3.dimension_esthetique_placeholder') %>
+        </div>
+        <div>
+          <%= form.label :impact_et_message, t('add_oeuvre.steps.3.impact_et_message') %>
+          <%= form.text_area :impact_et_message, placeholder: t('add_oeuvre.steps.3.impact_et_message_placeholder') %>
+        </div>
+      
+        <div data-controller="sources" data-sources-prefix-value="oeuvre">
+          <%= form.label :source, t('add_oeuvre.steps.3.source') %>
+          <div id="sources-container" data-sources-target="container">
+            <% (@oeuvre.source || []).each do |src| %>
+              <div class="source-input">
+                <%= text_field_tag "oeuvre[source][]", src, placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
+                <button type="button" class="remove-source button small">×</button>
               </div>
-              <% if image_form.object.persisted? && image_form.object.file.attached? %>
-                <div class="image-preview-existing">
-                  <%= image_tag image_form.object.file, class: "image-preview-img" %>
-                  <div class="image-delete-overlay">
-                    <%= image_form.label :_destroy, "×", class: "delete-image-btn", title: "Supprimer" %>
-                    <%= image_form.check_box :_destroy %>
-                  </div>
-                </div>
-                <div>
-                  <div data-image-preview-target="container"></div>
-                  <%= image_form.file_field :file, 
-                    accept: "image/png,image/jpeg,image/jpg,image/webp",
-                    data: { 
-                      action: "change->image-preview#preview",
-                      image_preview_target: "input" 
-                    } %>
-                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
-                </div>
-              <% else %>
-                <div class="image-preview-new" data-image-preview-target="container">
-                </div>
-                <div style="flex-grow: 1;">
-                  <%= image_form.file_field :file, 
-                    accept: "image/png,image/jpeg,image/jpg,image/webp",
-                    data: { 
-                      action: "change->image-preview#preview",
-                      image_preview_target: "input" 
-                    } %>
-                  <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
+            <% end %>
+            <% if (@oeuvre.source || []).empty? %>
+               <div class="source-input">
+                <%= text_field_tag "oeuvre[source][]", "", placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
+                <button type="button" class="remove-source button small">×</button>
+              </div>
+            <% end %>
+          </div>
+          <button type="button" id="add-source" data-sources-target="addButton" class="button small"><%= t('add_oeuvre.steps.3.add_source_button') %></button>
         </div>
       </div>
+      
+      <div class="flex-btn-add">
+        <button type="button" class="button large" data-action="click->multi-step-form#prev"><%= t('add_oeuvre.buttons.prev') %></button>
+        <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_oeuvre.buttons.next') %></button>
+      </div>
     </div>
-    <div class="flex-btn-add">
-      <button type="button" class="prev-step button large"><%= t('add_oeuvre.buttons.prev') %></button>
-      <%= form.submit t('add_oeuvre.buttons.submit'), class: "button large" %>
+
+    <div class="form-step" data-multi-step-form-target="step" style="display: none;">
+      <h3><%= t('add_oeuvre.steps.4.title') %></h3>
+      <div class="flex-form">
+        <div>
+          <%= form.label :images, "#{t('add_oeuvre.steps.4.image')} (3 max - Glissez pour réorganiser)" %>
+          <div id="image-fields-container" 
+               class="image-grid-container"
+               data-controller="sortable">
+            <%= form.fields_for :oeuvre_images, @oeuvre.oeuvre_images.sort_by { |img| img.position || 0 } do |image_form| %>
+              <div class="image-upload-card" 
+                   data-controller="image-preview" 
+                   data-sortable-target="item">
+                <%= image_form.hidden_field :position, data: { 'sortable-target': 'positionInput' } %>
+                <div class="image-drag-handle">
+                  ⬍ Glisser (Position <%= image_form.object.position || 'N/A' %>)
+                </div>
+                <% if image_form.object.persisted? && image_form.object.file.attached? %>
+                  <div class="image-preview-existing">
+                    <%= image_tag image_form.object.file, class: "image-preview-img" %>
+                    <div class="image-delete-overlay">
+                      <%= image_form.label :_destroy, "×", class: "delete-image-btn", title: "Supprimer" %>
+                      <%= image_form.check_box :_destroy %>
+                    </div>
+                  </div>
+                  <div>
+                    <div data-image-preview-target="container"></div>
+                    <%= image_form.file_field :file, 
+                      accept: "image/png,image/jpeg,image/jpg,image/webp",
+                      data: { 
+                        action: "change->image-preview#preview",
+                        image_preview_target: "input" 
+                      } %>
+                    <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
+                  </div>
+                <% else %>
+                  <div class="image-preview-new" data-image-preview-target="container"></div>
+                  <div style="flex-grow: 1;">
+                    <%= image_form.file_field :file, 
+                      accept: "image/png,image/jpeg,image/jpg,image/webp",
+                      data: { 
+                        action: "change->image-preview#preview",
+                        image_preview_target: "input" 
+                      } %>
+                    <%= image_form.text_field :credit, placeholder: "Crédit photo", class: "image-credit-field" %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="flex-btn-add">
+        <button type="button" class="button large" data-action="click->multi-step-form#prev"><%= t('add_oeuvre.buttons.prev') %></button>
+        <%= form.submit t('add_oeuvre.buttons.submit'), class: "button large" %>
+      </div>
     </div>
-  </div>
-<% end %>
+
+  <% end %>
+</div>
+
 <script>
   document.addEventListener("turbo:load", () => {
      var oeuvreYearInput = document.getElementById("date-oeuvre-input");
      var oeuvreYearError = document.getElementById("date-oeuvre-error");
-   if (!oeuvreYearInput || !oeuvreYearError || !form) return;
-     var currentYear = new Date().getFullYear();
+     
+     if (oeuvreYearInput && oeuvreYearError) {
+        var currentYear = new Date().getFullYear();
 
-     function validateYear(year, minYear, maxYear) {
-       return !isNaN(year) && year >= minYear && year <= maxYear;
+        function validateYear(year) {
+          return !isNaN(year) && year >= 0 && year <= currentYear;
+        }
+
+        oeuvreYearInput.addEventListener("input", function() {
+          if (!validateYear(this.value)) {
+            oeuvreYearError.textContent = "Année invalide (entre 0 et " + currentYear + ")";
+          } else {
+            oeuvreYearError.textContent = "";
+          }
+        });
      }
 
-     oeuvreYearInput.addEventListener("input", function() {
-       var oeuvreYear = oeuvreYearInput.value;
-
-       if (!validateYear(oeuvreYear, 0, currentYear)) {
-         oeuvreYearError.textContent = "Veuillez entrer une année de naissance valide entre 0 et " + currentYear;
-       } else {
-         oeuvreYearError.textContent = "";
-       }
-     });
-
-     var form = document.querySelector("form");
-     form.addEventListener("submit", function(event) {
-       var oeuvreYear = oeuvreYearInput.value;
-       var errors = [];
-
-       if (!validateYear(oeuvreYear, 0, currentYear)) {
-         oeuvreYearError.textContent = "Veuillez entrer une année de naissance valide entre 0 et " + currentYear;
-         errors.push("oeuvreYearError");
-       }
-
-       if (errors.length > 0) {
-         event.preventDefault();
-       }
-     });
+     if (typeof $ !== 'undefined' && $.fn.select2) {
+        function initSelect2(selector, placeholder) {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            if ($(el).hasClass("select2-hidden-accessible")) {
+              $(el).select2('destroy'); 
+            }
+            $(el).select2({
+              placeholder: placeholder,
+              allowClear: true,
+              width: '100%',
+              language: {
+                noResults: function() { return "Aucun résultat trouvé"; }
+              }
+            });
+          });
+        }
+        initSelect2('.designer-select', 'Sélectionnez un ou une designer...');
+        initSelect2('.studio-select', 'Sélectionnez un ou plusieurs studios...');
+        initSelect2('.notions-select', 'Sélectionnez une ou plusieurs notions...');
+        initSelect2('.domaine-select', 'Sélectionnez un ou plusieurs domaines...');
+     }
    });
 </script>
-<script>
-  document.addEventListener("turbo:load", () => {
 
-  function initSelect2(selector, placeholder) {
-    const elements = document.querySelectorAll(selector);
-    elements.forEach(el => {
-      if ($(el).hasClass("select2-hidden-accessible")) {
-        $(el).select2('destroy'); // supprime l'ancienne instance
-      }
-      $(el).select2({
-        placeholder: placeholder,
-        allowClear: true,
-        width: '100%',
-        language: {
-          inputTooShort: function() { return "Veuillez entrer plus de caractères..."; },
-          searching: function() { return "Recherche en cours..."; },
-          noResults: function() { return "Aucun résultat trouvé"; }
-        }
-      });
-    });
-  }
-
-  // Initialisation designers
-  initSelect2('.designer-select', 'Rechercher un/une designer...');
-  initSelect2('.studio-select', 'Sélectionnez un ou plusieurs studios...');
-  // Initialisation notions
-  initSelect2('.notions-select', 'Rechercher des notions...');
-  initSelect2('.domaine-select', 'Sélectionnez un domaine...');
-  });
-</script>
-<script>
-  document.addEventListener("turbo:load", () => {
-    const checkbox = document.getElementById("accept-rules-checkbox");
-    const nextBtn  = document.getElementById("btn-next-rules");
-    const steps = document.querySelectorAll(".form-step");
-
-    // 🔹 Si déjà accepté dans la session → on saute l'étape 1 directement
-    if (sessionStorage.getItem("rulesAccepted") === "true") {
-      const step1 = document.querySelector('.form-step[data-step="1"]');
-      const step2 = document.querySelector('.form-step[data-step="2"]');
-      if (step1 && step2) {
-        step1.style.display = "none";
-        step2.style.display = "block";
-      }
-    }
-
-    // 🔹 Gestion du bouton "Accepter" pour activer le bouton suivant
-    if (checkbox && nextBtn) {
-      checkbox.addEventListener("change", () => {
-        nextBtn.disabled = !checkbox.checked;
-      });
-
-      nextBtn.addEventListener("click", () => {
-        if (checkbox.checked) {
-          // On enregistre l'acceptation dans la session
-          sessionStorage.setItem("rulesAccepted", "true");
-
-          // On passe à l'étape suivante
-          const step1 = document.querySelector('.form-step[data-step="1"]');
-          const step2 = document.querySelector('.form-step[data-step="2"]');
-          if (step1 && step2) {
-            step1.style.display = "none";
-            step2.style.display = "block";
-          }
-        }
-      });
-    }
-
-    // 🔹 Navigation entre étapes
-    document.querySelectorAll(".next-step").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const current = btn.closest(".form-step");
-        const next = current.nextElementSibling;
-        if (next) {
-          current.style.display = "none";
-          next.style.display = "block";
-        }
-      });
-    });
-
-    document.querySelectorAll(".prev-step").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const current = btn.closest(".form-step");
-        const prev = current.previousElementSibling;
-        if (prev) {
-          current.style.display = "none";
-          prev.style.display = "block";
-        }
-      });
-    });
-  });
-</script>
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

@@ -11,10 +11,8 @@
     <p class="subtitle"><%= t('add_oeuvre.subtitle') %></p>
 
     <div class="progress-container-form">
-      <div class="progress-bar-form" data-progress-form-target="progressBar"></div>
-      <span class="progress-percent-form" data-progress-form-target="progressPercent">
-        <%= t('add_oeuvre.progress.percent', percent: 0) %>
-      </span>
+      <div class="progress-bar-form"></div>
+      <span class="progress-percent-form">0%</span>
     </div>
   </section>
 
@@ -22,85 +20,3 @@
     <%= render "form", oeuvre: @oeuvre %>
   </section>
 </div>
-<script>
- document.addEventListener("turbo:load", () => {
-  let currentStep = 1;
-  const steps = document.querySelectorAll(".form-step");
-  if (steps.length === 0) return;
-
-  const errorMessageElement = document.querySelector(".error-message");
-
-  function showStep(step) {
-    steps.forEach(el => (el.style.display = "none"));
-    document.querySelector(`[data-step="${step}"]`).style.display = "block";
-  }
-
-  function showError(message) {
-    if (!errorMessageElement) return;
-    errorMessageElement.textContent = message;
-    errorMessageElement.style.display = "block";
-  }
-
-  function hideError() {
-    if (!errorMessageElement) return;
-    errorMessageElement.textContent = "";
-    errorMessageElement.style.display = "none";
-  }
-
-  document.querySelectorAll(".next-step").forEach(button => {
-    button.addEventListener("click", async () => {
-      // Étape 1 : vérifier le nom
-      if (currentStep === 2) {
-        const nomOeuvre = document.querySelector("input[name='oeuvre[nom_oeuvre]']").value.trim();
-
-        if (nomOeuvre === "") {
-          showError("Veuillez entrer un nom de référence.");
-          return; // bloque la navigation
-        }
-
-        hideError();
-
-        try {
-          const response = await fetch(`/oeuvres/check_existence?nom_oeuvre=${encodeURIComponent(nomOeuvre)}`);
-          const data = await response.json();
-
-          if (data.exists) {
-            if (data.edit_path) {
-              window.location.href = data.edit_path;
-            } else {
-              showError("Cette référence existe déjà et est validée.");
-            }
-            return; // bloque la navigation
-          }
-
-          // Si tout est ok, passer à l'étape suivante
-          currentStep++;
-          showStep(currentStep);
-
-        } catch (err) {
-          console.error("Erreur réseau:", err);
-          // Optionnel : on peut bloquer ou laisser passer
-          showError("Impossible de vérifier la référence pour le moment.");
-        }
-
-      } else {
-        // Pour les autres étapes sans validation
-        currentStep++;
-        if (currentStep > steps.length) currentStep = steps.length;
-        showStep(currentStep);
-      }
-    });
-  });
-
-  document.querySelectorAll(".prev-step").forEach(button => {
-    button.addEventListener("click", () => {
-      currentStep--;
-      if (currentStep < 1) currentStep = 1;
-      showStep(currentStep);
-    });
-  });
-
-  showStep(currentStep);
-});
-
-</script>

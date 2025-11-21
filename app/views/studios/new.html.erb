@@ -9,103 +9,11 @@
     <h1><%= t('add_studio.main_title', default: "Ajouter un studio") %></h1>
     <p class="subtitle"><%= t('add_studio.subtitle', default: "Partagez un studio de design marquant.") %></p>
     <div class="progress-container-form">
-      <div class="progress-bar-form" data-progress-form-target="progressBar"></div>
-      <span class="progress-percent-form" data-progress-form-target="progressPercent">0%</span>
-    </div>
+    <div class="progress-bar-form"></div>
+    <span class="progress-percent-form">0%</span>
+  </div>
   </section>
   <section class="grid-1" style="background-color:#202020; color:#FFF; min-height: 100vh;">
     <%= render "form", studio: @studio %>
   </section>
 </div>
-<script>
-  document.addEventListener("turbo:load", () => {
-    let currentStep = 1;
-    const steps = document.querySelectorAll(".form-step");
-    if (steps.length === 0) return;
-
-    function showStep(step) {
-      steps.forEach((el) => (el.style.display = "none"));
-      const stepElement = document.querySelector(`[data-step="${step}"]`);
-      if (stepElement) stepElement.style.display = "block";
-    }
-
-    function showError(message) {
-      const errorMessageElement = document.querySelector(".error-message");
-      if (!errorMessageElement) return;
-      errorMessageElement.textContent = message;
-      errorMessageElement.style.display = "block";
-    }
-
-    function hideError() {
-      const errorMessageElement = document.querySelector(".error-message");
-      if (errorMessageElement) errorMessageElement.style.display = "none";
-    }
-
-    // Navigation SUIVANT
-    document.querySelectorAll(".next-step").forEach((button) => {
-      button.addEventListener("click", function () {
-        // Étape 2 : Vérification du nom du studio
-        if (currentStep === 2) {
-          const nomInput = document.querySelector("input[name='studio[nom]']");
-          if (!nomInput) { // Sécurité si l'input n'existe pas sur la page
-             currentStep++;
-             showStep(currentStep);
-             return;
-          }
-          const nom = nomInput.value.trim();
-
-          if (nom === "") {
-            showError("Veuillez entrer le nom du studio.");
-            return;
-          }
-
-          hideError();
-
-          // AJAX : Vérifier si le studio existe déjà
-          fetch(`/studios/check_existence?nom=${encodeURIComponent(nom)}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.exists) {
-                if (data.edit_path) {
-                  // Si existe mais non validé -> on propose de l'éditer
-                  window.location.href = data.edit_path;
-                } else {
-                  // Si existe et validé -> erreur bloquante
-                  showError("Ce studio existe déjà et est validé.");
-                }
-              } else {
-                // N'existe pas -> on continue
-                currentStep++;
-                if (currentStep > steps.length) currentStep = steps.length;
-                showStep(currentStep);
-              }
-            })
-            .catch(error => {
-               console.error("Erreur lors de la vérification d'existence:", error);
-               // En cas d'erreur technique, on laisse passer (ou on affiche un message générique)
-               currentStep++;
-               showStep(currentStep);
-            });
-
-        } else {
-          // Autres étapes -> passage simple
-          currentStep++;
-          if (currentStep > steps.length) currentStep = steps.length;
-          showStep(currentStep);
-        }
-      });
-    });
-
-    // Navigation PRÉCÉDENT
-    document.querySelectorAll(".prev-step").forEach((button) => {
-      button.addEventListener("click", function () {
-        currentStep--;
-        if (currentStep < 1) currentStep = 1;
-        showStep(currentStep);
-      });
-    });
-
-    // Initialisation
-    showStep(currentStep);
-  });
-</script>

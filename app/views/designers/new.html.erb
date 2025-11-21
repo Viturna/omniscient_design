@@ -9,93 +9,12 @@
     <h1><%= t('add_designer.main_title') %></h1>
     <p class="subtitle"><%= t('add_designer.subtitle') %></p>
     <div class="progress-container-form">
-      <div class="progress-bar-form" data-progress-form-target="progressBar"></div>
-      <span class="progress-percent-form" data-progress-form-target="progressPercent">0%</span>
+      <div class="progress-bar-form"></div>
+      <span class="progress-percent-form">0%</span>
     </div>
   </section>
   <section class="grid-1" style="background-color:#202020; color:#FFF; min-height: 100vh;">
     <%= render "form", designer: @designer %>
   </section>
 </div>
-<script>
-  document.addEventListener("turbo:load", () => {
-    let currentStep = 1;
-    const steps = document.querySelectorAll(".form-step");
-    if (steps.length === 0) return;   
-    // Fonction pour afficher l'étape
-    function showStep(step) {
-      steps.forEach((el) => (el.style.display = "none"));
-      document.querySelector(`[data-step="${step}"]`).style.display = "block";
-    }
 
-    // Fonction pour afficher les messages d'erreur
-    function showError(message) {
-      const errorMessageElement = document.querySelector(".error-message");
-      if (!errorMessageElement) return; 
-      errorMessageElement.textContent = message;
-      errorMessageElement.style.display = "block";  // Afficher le message d'erreur
-    }
-
-    // Fonction pour cacher les messages d'erreur
-    function hideError() {
-      const errorMessageElement = document.querySelector(".error-message");
-      errorMessageElement.style.display = "none";  // Cacher le message d'erreur
-    }
-
-    // Gérer l'événement de changement d'étape
-    document.querySelectorAll(".next-step").forEach((button) => {
-      button.addEventListener("click", function () {
-        if (currentStep === 2) {
-          const nom = document.querySelector("input[name='designer[nom]']").value.trim();
-          const prenom = document.querySelector("input[name='designer[prenom]']").value.trim();
-
-          // Vérifier si les champs sont vides
-          if (nom === "") {
-            showError("Veuillez entrer le nom du designer.");
-            return;
-          }
-
-          // Masquer les messages d'erreur si les champs sont valides
-          hideError();
-
-          // Vérification d'existence du designer
-          fetch(`/designers/check_existence?nom=${encodeURIComponent(nom)}&prenom=${encodeURIComponent(prenom)}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.exists) {
-                if (data.edit_path) {
-                  window.location.href = data.edit_path; // Redirige vers l'édition si pas validé
-                } else {
-                  showError("Ce designer existe déjà et est validé.");
-                }
-              } else {
-                currentStep++;
-                if (currentStep > steps.length) {
-                  currentStep = steps.length;
-                }
-                showStep(currentStep);
-              }
-            });
-        } else {
-          currentStep++;
-          if (currentStep > steps.length) {
-            currentStep = steps.length;
-          }
-          showStep(currentStep);
-        }
-      });
-    });
-
-    document.querySelectorAll(".prev-step").forEach((button) => {
-      button.addEventListener("click", function () {
-        currentStep--;
-        if (currentStep < 1) {
-          currentStep = 1;
-        }
-        showStep(currentStep);
-      });
-    });
-
-    showStep(currentStep);
-  });
-</script>

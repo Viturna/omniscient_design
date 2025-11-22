@@ -19,6 +19,19 @@ Rails.application.configure do
   config.server_timing = true
 
   # Enable/disable caching. By default caching is disabled.
+  if Rails.root.join("tmp/caching-dev.txt").exist?
+    config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
+
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      "Cache-Control" => "public, max-age=#{2.days.to_i}"
+    }
+  else
+    config.action_controller.perform_caching = false
+
+    config.cache_store = :null_store
+  end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :minio_images
@@ -53,10 +66,11 @@ Rails.application.configure do
   config.assets.check_precompiled_asset = false
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
+  
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { host: "localhost:3000", protocol: "http" }
 
-  # SMTP settings for Gmail
+  # SMTP settings for Gmail/Mailjet
   config.action_mailer.smtp_settings = {
     address: "in-v3.mailjet.com",
     port: 587,
@@ -64,9 +78,9 @@ Rails.application.configure do
     password: ENV["MAILJET_SECRET_KEY"],
     authentication: :plain,
     enable_starttls_auto: true,
-    openssl_verify_mode:  "none" 
+    # CORRECTION ICI : Utiliser 0 (entier) au lieu de "none" (string)
+    openssl_verify_mode: 0 
   }
-
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
@@ -77,10 +91,17 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
+  # -------------------------------------------------------
+  # CONFIGURATION NGROK & HOSTS (Le fix pour l'app mobile)
+  # -------------------------------------------------------
+  # On vide la liste pour être sûr qu'il n'y a pas de restrictions par défaut
   config.hosts.clear
+  
+  # On autorise explicitement Ngrok (regex), localhost et l'IP locale
   config.hosts << /[a-z0-9\-]+\.ngrok\-free\.app/
   config.hosts << "localhost"
   config.hosts << "127.0.0.1"
+  # -------------------------------------------------------
 
   config.log_level = :debug
 end

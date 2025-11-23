@@ -37,29 +37,33 @@
       </style>
     </noscript>
     <!-- Google Tag Manager -->
-    <script async>
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-KS23M7LQ');
-    </script>
+    <% unless native_app? %>
+      <script async>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-KS23M7LQ');
+      </script>
+    <% end %>
     <!-- End Google Tag Manager -->
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
   <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
+    <% unless native_app? %>
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner" style="display:none;">
-      <div>
-        <p><%= t('cookies.banner_text') %></p>
-        <button data-action="click->cookie-consent#accept"><%= t('cookies.accept') %></button>
-        <button data-action="click->cookie-consent#decline"><%= t('cookies.decline') %></button>
+      <!-- End Google Tag Manager (noscript) -->
+      <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner" style="display:none;">
+        <div>
+          <p><%= t('cookies.banner_text') %></p>
+          <button data-action="click->cookie-consent#accept"><%= t('cookies.accept') %></button>
+          <button data-action="click->cookie-consent#decline"><%= t('cookies.decline') %></button>
+        </div>
       </div>
-    </div>
+    <% end %>
     <% if notice.present? %>
       <div class="alert" data-controller="alert">
         <p><%= notice %></p>

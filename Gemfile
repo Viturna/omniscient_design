@@ -90,3 +90,6 @@ gem 'omniauth-rails_csrf_protection'
 
 # Apple AUTH
 gem 'omniauth-apple'
+
+gem 'fcm'
+gem 'googleauth'

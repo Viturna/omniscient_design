@@ -91,6 +91,9 @@ class User < ApplicationRecord
   has_many :rejected_designers, dependent: :destroy
   has_many :rejected_studios, dependent: :destroy
 
+  has_many :user_devices, dependent: :destroy
+  has_many :notifications, dependent: :destroy
+
   # --- Méthodes ---
 
   # Méthode standard Devise pour retrouver un utilisateur via OmniAuth

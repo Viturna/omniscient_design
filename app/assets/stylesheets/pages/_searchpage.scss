@@ -606,6 +606,10 @@
     height: 240px;
     padding: 15px;
   }
+
+  .top-bar-search {
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
 @media screen and (min-width: 426px) and (max-width: 600px) {

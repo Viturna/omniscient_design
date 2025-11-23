@@ -228,7 +228,9 @@
     top: 0;
     z-index: 9999;
     height: 70px;
+    padding-top: env(safe-area-inset-top);
   }
+
   .nav-home-mobile svg {
     scale: 1.4;
   }
@@ -249,6 +251,9 @@
     }
   }
 
+  .box-card {
+    padding-top: env(safe-area-inset-top);
+  }
   .switch-home-mobile a {
     font-size: 16px;
     padding: 8px 20px;
@@ -278,6 +283,7 @@
   .home-page.top-bar-search {
     display: none;
   }
+  
 
   .button-nav {
     display: none;

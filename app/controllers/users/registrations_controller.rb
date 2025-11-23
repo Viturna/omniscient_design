@@ -19,37 +19,48 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def create
-    super do |user|
+ def create
+    build_resource(sign_up_params)
+
+    if session['devise.omniauth_data'].present?
+      resource.skip_confirmation!
+    end
+
+    resource.save
+
+    yield resource if block_given?
+
+    if resource.persisted?
+      
       if params[:user][:referral_code].present?
         referrer = User.find_by(referral_code: params[:user][:referral_code])
         if referrer
-          Referral.create(referrer: referrer, referee: user, reward_claimed: false)
+          Referral.create(referrer: referrer, referee: resource, reward_claimed: false)
         end
       end
 
-      if resource.persisted?
-        # Nettoyage de la session après succès
-        session.delete('devise.omniauth_data')
+      session.delete('devise.omniauth_data') # Nettoyage session
+      create_admin_notification_for_signup(resource) # Notif Admin
 
-        create_admin_notification_for_signup(resource)
-        # Si l'utilisateur est actif directement (pas de confirmation email requise pour OAuth parfois)
-        if resource.active_for_authentication?
-          set_flash_message! :notice, :signed_up
-          sign_up(resource_name, resource)
-          return respond_with resource, location: after_sign_up_path_for(resource)
-        else
-          set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
-          expire_data_after_sign_in!
-          return respond_with resource, location: after_inactive_sign_up_path_for(resource)
-        end
+      if resource.active_for_authentication?
+        set_flash_message! :notice, :signed_up
+        sign_up(resource_name, resource)
+        respond_with resource, location: after_sign_up_path_for(resource)
       else
-        # En cas d'erreur (ex: validation manquante), on recharge les établissements pour réafficher le formulaire
-        @etablissements = Etablissement.all
+        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
+        expire_data_after_sign_in!
+        respond_with resource, location: after_inactive_sign_up_path_for(resource)
       end
+
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      
+      @etablissements = Etablissement.order(:city) 
+      
+      respond_with resource
     end
   end
-
   def edit
     @current_page = 'profil'
     super

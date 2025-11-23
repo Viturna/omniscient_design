@@ -71,14 +71,14 @@ class User < ApplicationRecord
   has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id', dependent: :destroy
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
 
-  has_many :bug_reports, dependent: :nullify
+  has_many :bug_reports, dependent: :destroy
   has_many :lists, dependent: :destroy
   has_many :oeuvres, dependent: :nullify
   has_many :designers, dependent: :nullify
   has_many :studios, dependent: :nullify
   has_many :notifications, dependent: :destroy
 
-  has_many :feedbacks, dependent: :nullify
+  has_many :feedbacks, dependent: :destroy
   has_many :suivis, dependent: :destroy
 
   has_many :list_editors, dependent: :destroy

@@ -1,12 +1,8 @@
 <%# On définit le mode édition %>
 <% is_edit_mode = @studio.persisted? %>
-
-<%# Wrapper principal qui connecte le contrôleur Stimulus %>
-<%# check-url-value est optionnel. Si vous n'avez pas de vérification d'existence pour les studios, laissez-le vide ou retirez l'attribut %>
 <div data-controller="multi-step-form" 
      data-multi-step-form-edit-mode-value="<%= is_edit_mode %>"
      data-multi-step-form-check-url-value="/studios/check_existence">
-
   <style>
     /* Styles pour les champs imbriqués (designers) */
     .nested-fields-container {
@@ -39,14 +35,9 @@
       color: #E61818 !important;
     }
   </style>
-
   <%= form_with(model: @studio, local: true, id: "studio-form", data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
-    
     <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
-    
-    <%# Cible pour les erreurs JS du contrôleur %>
     <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>
-
     <% if @studio.errors.any? %>
       <div style="color: red">
         <h2><%= t('add_studio.errors.count', count: @studio.errors.count, default: "Erreurs : #{@studio.errors.count}") %></h2>
@@ -57,16 +48,15 @@
         </ul>
       </div>
     <% end %>
-
     <div class="form-step" data-multi-step-form-target="step" style="<%= is_edit_mode ? 'display: none;' : 'display: block;' %>">
       <h3>Critères d’acceptation des studios</h3>
       <p>
         Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants.
-        <br><br>
+        <br>
+        <br>
         <span style="font-weight:500;">⚠️ Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée.</span>
       </p>
       <hr class="rules-add-hr">
-      
       <h4>1. Originalité et Authenticité</h4>
       <ul>
         <li>Chaque référence doit être <strong>originale</strong>.</li>
@@ -91,7 +81,6 @@
       <ul>
         <li>Doit être pertinent pour la communauté.</li>
       </ul>
-      
       <div style="margin-top:48px;">
         <label style="font-weight: 500; cursor: pointer;">
           <input type="checkbox" 
@@ -101,7 +90,6 @@
           J’ai lu et j’accepte le règlement ci-dessus
         </label>
       </div>
-      
       <div class="flex-btn-add" style="justify-content:flex-end; margin-top:1rem;">
         <button type="button" 
                 class="button large" 
@@ -112,13 +100,11 @@
         </button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="<%= is_edit_mode ? 'display: block;' : 'display: none;' %>">
       <h3>Informations générales</h3>
       <div class="flex-form">
         <div style="width: 100%;">
           <%= form.label :nom, t('add_studio.steps.1.nom', default: "Nom du studio") %>
-          <%# Target nameInput pour la vérification d'existence %>
           <%= form.text_field :nom, required: true, placeholder: t('add_studio.steps.1.nom_placeholder', default: "Ex: Maison Bonnet, .."), data: { multi_step_form_target: "nameInput" } %>
         </div>
       </div>
@@ -129,7 +115,6 @@
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next', default: "Suivant") %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display:none;">
       <h3>Designers du studio (10 max)</h3>
       <div class="nested-fields-container">
@@ -142,7 +127,13 @@
                     :id,
                     :nom_designer, 
                     { prompt: "Sélectionner un designer..." },
-                    { class: "form-control designer-select-nested select2" } %>
+                    { 
+                      class: "form-control",
+                      data: {
+                        controller: "select2",
+                        select2_placeholder_value: "Sélectionner un designer..."
+                      }
+                    } %>
             </div>
             <div class="date-fields-grid">
               <div class="field">
@@ -163,18 +154,32 @@
           </div>
         <% end %>
       </div>
-
       <h3>Dates et Domaines</h3>
-      <div class="flex-form">
+      <div class="flex-form" data-controller="year-validator">
         <div>
           <%= form.label :date_creation, t('add_studio.steps.2.date_creation', default: "Année de création") %>
-          <%= form.text_field :date_creation, required: true, placeholder: "Ex: 1986", class: "year-input", id: "creation-year-input" %>
-          <div class="error-message" id="creation-year-error"></div>
+          <%= form.text_field :date_creation, 
+              required: true, 
+              placeholder: "Ex: 1986", 
+              class: "year-input", 
+              id: "creation-year-input",
+              data: {
+                action: "input->year-validator#validate",
+                year_validator_target: "input"
+              } %>
+          <div class="error-message" id="creation-year-error" data-year-validator-target="error" data-for="creation-year-input"></div>
         </div>
         <div>
           <%= form.label :date_fin, t('add_studio.steps.2.date_fin', default: "Année de fermeture (optionnel)") %>
-          <%= form.text_field :date_fin, placeholder: "Ex: 2023", class: "year-input", id: "end-year-input" %>
-          <div class="error-message" id="end-year-error"></div>
+          <%= form.text_field :date_fin, 
+              placeholder: "Ex: 2023", 
+              class: "year-input", 
+              id: "end-year-input",
+              data: {
+                action: "input->year-validator#validate",
+                year_validator_target: "input"
+              } %>
+          <div class="error-message" id="end-year-error" data-year-validator-target="error" data-for="end-year-input"></div>
         </div>
         <div>
           <%= form.label :country_ids, t('add_designer.steps.2.country', default: "Pays") %>
@@ -184,9 +189,12 @@
               :country,
               { prompt: "Sélectionner un ou plusieurs pays", selected: @studio.country_ids },
               { 
-                class: "form-control country-select select2", 
+                class: "form-control", 
                 multiple: true, 
-                data: { placeholder: "Rechercher un pays..." }
+                data: { 
+                  controller: "select2",
+                  select2_placeholder_value: "Rechercher un pays..." 
+                }
               } %>
         </div>
         <div>
@@ -196,7 +204,15 @@
               :id, 
               :domaine, 
               { include_blank: false, selected: @studio.domaine_ids }, 
-              { class: "form-control domaine-select", multiple: true, name: "studio[domaine_ids][]" } %>
+              { 
+                class: "form-control", 
+                multiple: true, 
+                name: "studio[domaine_ids][]",
+                data: {
+                  controller: "select2",
+                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
+                }
+              } %>
         </div>
       </div>
       <div class="flex-btn-add">
@@ -204,18 +220,15 @@
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next', default: "Suivant") %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display:none;">
       <h3>Détails et Sources</h3>
       <div class="flex-form">
         <% [:presentation_generale, :formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
           <div>
             <%= form.label field, t("add_studio.steps.3.#{field}", default: field.to_s.humanize) %>
-            <%# Seule la présentation générale est souvent obligatoire, adaptez required si besoin %>
             <%= form.text_area field, required: (field == :presentation_generale), placeholder: t("add_studio.steps.3.#{field}_placeholder", default: "Renseignez ce champ...") %>
           </div>
         <% end %>
-        
         <div data-controller="sources" data-sources-prefix-value="studio">
           <%= form.label :source, t('add_oeuvre.steps.3.source', default: "Sources") %>
           <div data-sources-target="container">
@@ -226,7 +239,7 @@
               </div>
             <% end %>
             <% if (@studio.source || []).empty? %>
-               <div class="source-input">
+              <div class="source-input">
                 <%= text_field_tag "studio[source][]", "", placeholder: "https://..." %>
                 <button type="button" class="remove-source button small">×</button>
               </div>
@@ -242,7 +255,6 @@
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next', default: "Suivant") %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display:none;">
       <h3><%= t('add_studio.steps.4.title', default: "Images") %></h3>
       <div class="flex-form">
@@ -300,50 +312,8 @@
         <%= form.submit t('add_designer.buttons.submit', default: "Soumettre"), class: "button large" %>
       </div>
     </div>
-
   <% end %>
 </div>
-
-<script>
-  document.addEventListener("turbo:load", () => {
-    // Validation Dates Création/Fermeture
-    var creationYearInput = document.getElementById("creation-year-input");
-    var endYearInput = document.getElementById("end-year-input");
-    var creationYearError = document.getElementById("creation-year-error");
-    var endYearError = document.getElementById("end-year-error");
-    var currentYear = new Date().getFullYear();
-
-    if (creationYearInput) {
-      function validateYear(year) { return !isNaN(year) && year >= 1000 && year <= currentYear; }
-
-      creationYearInput.addEventListener("input", function() {
-        if (!validateYear(this.value)) {
-          creationYearError.textContent = "Année invalide.";
-        } else {
-          creationYearError.textContent = "";
-        }
-      });
-
-      if(endYearInput) {
-        endYearInput.addEventListener("input", function() {
-          if (this.value && !validateYear(this.value)) {
-            endYearError.textContent = "Année invalide.";
-          } else {
-            if(endYearError) endYearError.textContent = "";
-          }
-        });
-      }
-    }
-
-    // Init Select2
-    if (typeof $ !== 'undefined' && $.fn.select2) {
-        $('.designer-select-nested').select2({ placeholder: 'Sélectionner un designer...', allowClear: true, width: '100%'});
-        $('.country-select').select2({ placeholder: 'Rechercher un pays...', allowClear: true, width: '100%' });
-        $('.domaine-select').select2({ placeholder: 'Sélectionnez un domaine...', allowClear: true, width: '100%' });
-    }
-  });
-</script>
-
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

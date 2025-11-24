@@ -1,12 +1,8 @@
 <div data-controller="multi-step-form" 
      data-multi-step-form-edit-mode-value="<%= @oeuvre.persisted? %>">
-
   <%= form_with(model: @oeuvre, id: "oeuvre-form", local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
-    
     <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
-    
-   <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>
-    
+    <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>
     <% if @oeuvre.errors.any? %>
       <div style="color: red; margin-bottom: 20px;">
         <ul>
@@ -16,16 +12,15 @@
         </ul>
       </div>
     <% end %>
-
     <div class="form-step" data-multi-step-form-target="step" style="<%= @oeuvre.persisted? ? 'display: none;' : 'display: block;' %>">
       <h3>Critères d’acceptation des références et designers</h3>
       <p>
         Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants.
-        <br><br>
+        <br>
+        <br>
         <span style="font-weight:500;">⚠️ Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée.</span>
       </p>
       <hr class="rules-add-hr">
-      
       <h4>1. Originalité et Authenticité</h4>
       <ul>
         <li>Chaque référence doit être <strong>originale</strong>, conçue par son auteur.</li>
@@ -56,9 +51,7 @@
       <ul>
         <li>Pas de contenu discriminatoire, violent, politique, religieux ou trollesque.</li>
       </ul>
-      
       <p>Soumettre une référence sur omniscientdesign.fr signifie que vous acceptez pleinement ces conditions et vous engagez à les respecter.</p>
-      
       <div style="margin-top:48px;">
         <label style="font-weight: 500; cursor: pointer;">
           <input type="checkbox" 
@@ -68,7 +61,6 @@
           J’ai lu et j’accepte le règlement ci-dessus
         </label>
       </div>
-
       <div class="flex-btn-add" style="justify-content:flex-end; margin-top:1rem;">
         <button type="button" 
                 class="button large" 
@@ -79,7 +71,6 @@
         </button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="<%= @oeuvre.persisted? ? 'display: block;' : 'display: none;' %>">
       <h3><%= t('add_oeuvre.steps.1.title') %></h3>
       <div class="flex-form">
@@ -101,7 +92,6 @@
         </button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display: none;">
       <h3><%= t('add_oeuvre.steps.2.title') %></h3>
       <div class="flex-form">
@@ -121,9 +111,13 @@
                   selected: selected_designers[index]
                 },
                 { 
-                  class: "form-control designer-select",
+                  class: "form-control",
                   id: "designer_#{index + 1}",
-                  name: "oeuvre[designer_ids][]"
+                  name: "oeuvre[designer_ids][]",
+                  data: { 
+                    controller: "select2",
+                    select2_placeholder_value: t('add_oeuvre.steps.2.designer_prompt')
+                  }
                 } %>
             </div>
           <% end %>
@@ -135,17 +129,33 @@
                 :nom, 
                 { include_blank: true, selected: @oeuvre.studio_ids }, 
                 { 
-                  class: "form-control studio-select", 
+                  class: "form-control", 
                   multiple: true, 
                   name: "oeuvre[studio_ids][]",
-                  data: { placeholder: "Sélectionnez un ou plusieurs studios..." }
+                  data: { 
+                    controller: "select2",
+                    select2_placeholder_value: "Sélectionnez un ou plusieurs studios..." 
+                  }
                 } %>
           </div>
         </div>
-        
-        <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
-        <%= form.collection_select :notion_ids, Notion.order(:name), :id, :name, { include_blank: false }, { class: "form-control notions-select", multiple: true, name: "oeuvre[notion_ids][]" } %>
-        
+        <div>
+          <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
+          <%= form.collection_select :notion_ids, 
+              Notion.order(:name), 
+              :id, 
+              :name, 
+              { include_blank: false }, 
+              { 
+                class: "form-control", 
+                multiple: true, 
+                name: "oeuvre[notion_ids][]",
+                data: {
+                  controller: "select2",
+                  select2_placeholder_value: "Sélectionnez une ou plusieurs notions..."
+                }
+              } %>
+        </div>
         <div>
           <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
           <%= form.collection_select :domaine_ids, 
@@ -153,21 +163,34 @@
               :id, 
               :domaine, 
               { include_blank: false, selected: @oeuvre.domaine_ids }, 
-              { class: "form-control domaine-select", multiple: true, name: "oeuvre[domaine_ids][]" } %>
+              { 
+                class: "form-control", 
+                multiple: true, 
+                name: "oeuvre[domaine_ids][]",
+                data: {
+                  controller: "select2",
+                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
+                }
+              } %>
         </div>
-         <div>
+        <div data-controller="year-validator">
           <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
-          <%= form.text_field :date_oeuvre, required: true, placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), id: "date-oeuvre-input" %>
-          <div id="date-oeuvre-error" style="color: red; font-size: 0.9em;"></div>
+          <%= form.text_field :date_oeuvre, 
+              required: true, 
+              placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), 
+              id: "date-oeuvre-input",
+              data: {
+                action: "input->year-validator#validate",
+                year_validator_target: "input"
+              } %>
+          <div id="date-oeuvre-error" style="color: red; font-size: 0.9em;" data-year-validator-target="error" data-for="date-oeuvre-input"></div>
         </div>
-        
       </div>
       <div class="flex-btn-add">
         <button type="button" class="button large" data-action="click->multi-step-form#prev"><%= t('add_oeuvre.buttons.prev') %></button>
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_oeuvre.buttons.next') %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display: none;">
       <h3><%= t('add_oeuvre.steps.3.title') %></h3>
       <div class="flex-form">
@@ -195,7 +218,6 @@
           <%= form.label :impact_et_message, t('add_oeuvre.steps.3.impact_et_message') %>
           <%= form.text_area :impact_et_message, placeholder: t('add_oeuvre.steps.3.impact_et_message_placeholder') %>
         </div>
-      
         <div data-controller="sources" data-sources-prefix-value="oeuvre">
           <%= form.label :source, t('add_oeuvre.steps.3.source') %>
           <div id="sources-container" data-sources-target="container">
@@ -206,7 +228,7 @@
               </div>
             <% end %>
             <% if (@oeuvre.source || []).empty? %>
-               <div class="source-input">
+              <div class="source-input">
                 <%= text_field_tag "oeuvre[source][]", "", placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
                 <button type="button" class="remove-source button small">×</button>
               </div>
@@ -215,13 +237,11 @@
           <button type="button" id="add-source" data-sources-target="addButton" class="button small"><%= t('add_oeuvre.steps.3.add_source_button') %></button>
         </div>
       </div>
-      
       <div class="flex-btn-add">
         <button type="button" class="button large" data-action="click->multi-step-form#prev"><%= t('add_oeuvre.buttons.prev') %></button>
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_oeuvre.buttons.next') %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display: none;">
       <h3><%= t('add_oeuvre.steps.4.title') %></h3>
       <div class="flex-form">
@@ -278,56 +298,8 @@
         <%= form.submit t('add_oeuvre.buttons.submit'), class: "button large" %>
       </div>
     </div>
-
   <% end %>
 </div>
-
-<script>
-  document.addEventListener("turbo:load", () => {
-     var oeuvreYearInput = document.getElementById("date-oeuvre-input");
-     var oeuvreYearError = document.getElementById("date-oeuvre-error");
-     
-     if (oeuvreYearInput && oeuvreYearError) {
-        var currentYear = new Date().getFullYear();
-
-        function validateYear(year) {
-          return !isNaN(year) && year >= 0 && year <= currentYear;
-        }
-
-        oeuvreYearInput.addEventListener("input", function() {
-          if (!validateYear(this.value)) {
-            oeuvreYearError.textContent = "Année invalide (entre 0 et " + currentYear + ")";
-          } else {
-            oeuvreYearError.textContent = "";
-          }
-        });
-     }
-
-     if (typeof $ !== 'undefined' && $.fn.select2) {
-        function initSelect2(selector, placeholder) {
-          const elements = document.querySelectorAll(selector);
-          elements.forEach(el => {
-            if ($(el).hasClass("select2-hidden-accessible")) {
-              $(el).select2('destroy'); 
-            }
-            $(el).select2({
-              placeholder: placeholder,
-              allowClear: true,
-              width: '100%',
-              language: {
-                noResults: function() { return "Aucun résultat trouvé"; }
-              }
-            });
-          });
-        }
-        initSelect2('.designer-select', 'Sélectionnez un ou une designer...');
-        initSelect2('.studio-select', 'Sélectionnez un ou plusieurs studios...');
-        initSelect2('.notions-select', 'Sélectionnez une ou plusieurs notions...');
-        initSelect2('.domaine-select', 'Sélectionnez un ou plusieurs domaines...');
-     }
-   });
-</script>
-
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

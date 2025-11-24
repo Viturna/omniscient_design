@@ -1,16 +1,10 @@
-<%# On définit le mode édition %>
 <% is_edit_mode = @designer.persisted? %>
-
 <div data-controller="multi-step-form" 
      data-multi-step-form-edit-mode-value="<%= is_edit_mode %>"
      data-multi-step-form-check-url-value="/designers/check_existence">
-
   <%= form_with(model: @designer, local: true, id: "designer-form", data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
-    
     <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
-    
     <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>
-
     <% if @designer.errors.any? %>
       <div style="color: red; margin-bottom: 20px;">
         <h2><%= t('add_designer.errors.count', count: @designer.errors.count) %></h2>
@@ -21,36 +15,40 @@
         </ul>
       </div>
     <% end %>
-
     <div class="form-step" data-multi-step-form-target="step" style="<%= is_edit_mode ? 'display: none;' : 'display: block;' %>">
       <h3>Critères d’acceptation des références et designers</h3>
       <p>
         Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants.
-        <br><br>
+        <br>
+        <br>
         <span style="font-weight:500;">⚠️ Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte.</span>
       </p>
       <hr class="rules-add-hr">
-      
       <h4>1. Originalité et Authenticité</h4>
-      <ul><li>Chaque référence doit être <strong>originale</strong>.</li></ul>
-      
+      <ul>
+        <li>Chaque référence doit être <strong>originale</strong>.</li>
+      </ul>
       <h4>2. Qualité visuelle</h4>
-      <ul><li>Images <strong>nettes</strong> et en haute résolution.</li></ul>
-      
+      <ul>
+        <li>Images <strong>nettes</strong> et en haute résolution.</li>
+      </ul>
       <h4>3. Respect des droits d’auteur</h4>
-      <ul><li>Vous devez avoir les droits d’utilisation complets.</li></ul>
-      
+      <ul>
+        <li>Vous devez avoir les droits d’utilisation complets.</li>
+      </ul>
       <h4>4. Description détaillée</h4>
-      <ul><li>Textes sans fautes et factuels.</li></ul>
-      
+      <ul>
+        <li>Textes sans fautes et factuels.</li>
+      </ul>
       <h4>5. Pertinence</h4>
-      <ul><li>Contenu pertinent pour la communauté.</li></ul>
-      
+      <ul>
+        <li>Contenu pertinent pour la communauté.</li>
+      </ul>
       <h4>6. Contenu responsable</h4>
-      <ul><li>Pas de contenu discriminatoire ou politique.</li></ul>
-
+      <ul>
+        <li>Pas de contenu discriminatoire ou politique.</li>
+      </ul>
       <p>Soumettre une référence signifie que vous acceptez pleinement ces conditions.</p>
-      
       <div style="margin-top:48px;">
         <label style="font-weight: 500; cursor: pointer;">
           <input type="checkbox" 
@@ -60,25 +58,21 @@
           J’ai lu et j’accepte le règlement ci-dessus
         </label>
       </div>
-
       <div class="flex-btn-add" style="justify-content:flex-end; margin-top:1rem;">
         <button type="button" class="next-step button large" id="btn-next-rules" disabled data-multi-step-form-target="rulesNextBtn" data-action="click->multi-step-form#next">
           <%= t('add_oeuvre.buttons.next') %>
         </button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="<%= is_edit_mode ? 'display: block;' : 'display: none;' %>">
       <h3><%= t('add_designer.steps.1.title') %></h3>
       <div class="flex-form">
         <div>
           <%= form.label :prenom, t('add_designer.steps.1.prenom') %>
-          <%# TARGET: surnameInput %>
           <%= form.text_field :prenom, placeholder: t('add_designer.steps.1.prenom_placeholder'), data: { multi_step_form_target: "surnameInput" } %>
         </div>
         <div>
           <%= form.label :nom, t('add_designer.steps.1.nom') %>
-          <%# TARGET: nameInput %>
           <%= form.text_field :nom, required: true, placeholder: t('add_designer.steps.1.nom_placeholder'), data: { multi_step_form_target: "nameInput" } %>
         </div>
       </div>
@@ -89,19 +83,33 @@
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next') %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display:none;">
       <h3><%= t('add_designer.steps.2.title') %></h3>
-      <div class="flex-form">
+      <div class="flex-form" data-controller="year-validator">
         <div>
           <%= form.label :date_naissance, t('add_designer.steps.2.date_naissance') %>
-          <%= form.text_field :date_naissance, required: true, placeholder: t('add_designer.steps.2.date_naissance_placeholder'), class: "year-input", id: "birth-year-input" %>
-          <div class="error-message" id="birth-year-error"></div>
+          <%= form.text_field :date_naissance, 
+              required: true, 
+              placeholder: t('add_designer.steps.2.date_naissance_placeholder'), 
+              class: "year-input", 
+              id: "birth-year-input",
+              data: { 
+                action: "input->year-validator#validate",
+                year_validator_target: "input"
+              } %>
+          <div class="error-message" data-year-validator-target="error" data-for="birth-year-input"></div>
         </div>
         <div>
           <%= form.label :date_deces, t('add_designer.steps.2.date_deces') %>
-          <%= form.text_field :date_deces, placeholder: t('add_designer.steps.2.date_deces_placeholder'), class: "year-input", id: "death-year-input" %>
-          <div class="error-message" id="death-year-error"></div>
+          <%= form.text_field :date_deces, 
+              placeholder: t('add_designer.steps.2.date_deces_placeholder'), 
+              class: "year-input", 
+              id: "death-year-input",
+              data: { 
+                action: "input->year-validator#validate",
+                year_validator_target: "input"
+              } %>
+          <div class="error-message" data-year-validator-target="error" data-for="death-year-input"></div>
         </div>
         <div>
           <%= form.label :countries, t('add_designer.steps.2.country') %>
@@ -111,9 +119,12 @@
               :country,
               { prompt: t('add_designer.steps.2.country_placeholder'), selected: @designer.country_ids },
               { 
-                class: "form-control country-select select2", 
+                class: "form-control select2", 
                 multiple: true, 
-                data: { placeholder: t('add_designer.select2.placeholder') }
+                data: { 
+                  controller: "select2",
+                  select2_placeholder_value: t('add_designer.steps.2.country_placeholder') 
+                }
               } %>
         </div>
         <div>
@@ -123,7 +134,15 @@
               :id, 
               :domaine, 
               { include_blank: false, selected: @designer.domaine_ids }, 
-              { class: "form-control domaine-select", multiple: true, name: "designer[domaine_ids][]" } %>
+              { 
+                class: "form-control", 
+                multiple: true, 
+                name: "designer[domaine_ids][]",
+                data: {
+                  controller: "select2",
+                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
+                }
+              } %>
         </div>
       </div>
       <div class="flex-btn-add">
@@ -131,23 +150,19 @@
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next') %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display:none;">
       <h3><%= t('add_designer.steps.3.title') %></h3>
       <div class="flex-form">
-        <%# PRESENTATION GENERALE AVEC REQUIRED %>
         <div>
           <%= form.label :presentation_generale, t("add_designer.steps.3.presentation_generale") %>
           <%= form.text_area :presentation_generale, placeholder: t("add_designer.steps.3.presentation_generale_placeholder") %>
         </div>
-
         <% [:formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
           <div>
             <%= form.label field, t("add_designer.steps.3.#{field}") %>
             <%= form.text_area field, placeholder: t("add_designer.steps.3.#{field}_placeholder") %>
           </div>
         <% end %>
-        
         <div data-controller="sources" data-sources-prefix-value="designer">
           <%= form.label :source, t('add_oeuvre.steps.3.source') %>
           <div data-sources-target="container">
@@ -157,12 +172,12 @@
                 <button type="button" class="remove-source button small">×</button>
               </div>
             <% end %>
-             <% if (@designer.source.blank? || @designer.source.empty?) %>
-                <div class="source-input">
-                  <%= text_field_tag "designer[source][]", "", placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
-                  <button type="button" class="remove-source button small">×</button>
-                </div>
-             <% end %>
+            <% if (@designer.source.blank? || @designer.source.empty?) %>
+              <div class="source-input">
+                <%= text_field_tag "designer[source][]", "", placeholder: t('add_oeuvre.steps.3.source_placeholder') %>
+                <button type="button" class="remove-source button small">×</button>
+              </div>
+            <% end %>
           </div>
           <button type="button" data-sources-target="addButton" class="button small">
             <%= t('add_oeuvre.steps.3.add_source_button') %>
@@ -174,7 +189,6 @@
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next') %></button>
       </div>
     </div>
-
     <div class="form-step" data-multi-step-form-target="step" style="display: none;">
       <h3><%= t('add_designer.steps.4.title', default: "Images") %></h3>
       <div class="flex-form">
@@ -232,69 +246,8 @@
         <%= form.submit t('add_designer.buttons.submit'), class: "button large" %>
       </div>
     </div>
-
   <% end %>
 </div>
-
-<script>
-  document.addEventListener("turbo:load", () => {
-    // Validation années (gardée ici car très spécifique)
-    var birthYearInput = document.getElementById("birth-year-input");
-    var deathYearInput = document.getElementById("death-year-input");
-    var birthYearError = document.getElementById("birth-year-error");
-    var deathYearError = document.getElementById("death-year-error");
-
-    var currentYear = new Date().getFullYear();
-
-    if (birthYearInput) {
-      function validateYear(year) {
-        return !isNaN(year) && year >= 0 && year <= currentYear;
-      }
-
-      birthYearInput.addEventListener("input", function() {
-        if (!validateYear(this.value)) {
-          birthYearError.textContent = "Année invalide (entre 0 et " + currentYear + ")";
-        } else {
-          birthYearError.textContent = "";
-        }
-      });
-
-      if(deathYearInput) {
-        deathYearInput.addEventListener("input", function() {
-          if (this.value && !validateYear(this.value)) {
-            deathYearError.textContent = "Année invalide (entre 0 et " + currentYear + ")";
-          } else {
-            deathYearError.textContent = "";
-          }
-        });
-      }
-    }
-  });
-
-  document.addEventListener("turbo:load", () => {
-    if (typeof $ !== 'undefined' && $.fn.select2) {
-        function initSelect2(selector, placeholder) {
-          const elements = document.querySelectorAll(selector);
-          elements.forEach(el => {
-            if ($(el).hasClass("select2-hidden-accessible")) {
-              $(el).select2('destroy');
-            }
-            $(el).select2({
-              placeholder: placeholder,
-              allowClear: true,
-              width: '100%',
-              language: {
-                noResults: function() { return "Aucun résultat trouvé"; }
-              }
-            });
-          });
-        }
-        initSelect2('.country-select', 'Sélectionnez un ou plusieurs pays...');
-        initSelect2('.domaine-select', 'Sélectionnez un ou plusieurs domaine...');
-    }
-  });
-</script>
-
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

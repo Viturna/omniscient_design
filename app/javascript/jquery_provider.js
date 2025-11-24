@@ -1,5 +1,7 @@
-import * as jquery from "jquery"
+import jquery from "jquery"
 
-// jQuery s'attache souvent à window automatiquement, mais on force le lien
-window.jQuery = jquery.default || jquery
-window.$ = window.jQuery
+// On attache jQuery globalement pour que les plugins comme Select2 le trouvent
+window.jQuery = jquery
+window.$ = jquery
+
+export default jquery

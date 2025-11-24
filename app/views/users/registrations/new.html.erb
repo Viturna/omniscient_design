@@ -136,13 +136,18 @@
         </div>
         <div class="field input-flex" data-registration-target="establishmentField"
               style="<%= resource.statut == 'etudiant' || resource.statut == 'enseignant' ? '' : 'display: none;' %>">
-          <%= f.label :etablissement_id, t('edit_profile.institution') %>
           <%= f.collection_select :etablissement_id,
-        Etablissement.order(:city),
-        :id,
-        :all_info,
-        { prompt: t('edit_profile.choose_institution') },
-        { class: 'form-control etablissement-select' } %>
+              Etablissement.order(:city),
+              :id,
+              :all_info,
+              { prompt: t('edit_profile.choose_institution') },
+              { 
+                class: 'form-control',
+                data: { 
+                  controller: "select2",
+                  select2_placeholder_value: "Rechercher un établissement..."
+                } 
+              } %>
         </div>
         <div class="field input-flex" data-registration-target="studentField"
               style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
@@ -150,22 +155,34 @@
           <%= f.select :study_level,
             User::STUDY_LEVELS,
             { include_blank: "Sélectionnez votre niveau scolaire" },
-            { class: "form-control level-select" } %>
+            { 
+              class: "form-control", # J'ai retiré 'level-select' qui ne sert plus
+              data: { 
+                controller: "select2",
+                select2_placeholder_value: "Sélectionnez votre niveau scolaire"
+              }
+            } %>
         </div>
         <div class="field input-flex">
           <%= f.label :how_did_you_hear, t('devise.registration.label_how_did_you_hear') %>
           <%= f.select :how_did_you_hear,
-                       options_for_select([
-                         "Instagram",
-                         "TikTok",
-                         "LinkedIn",
-                         "Pinterest",
-                         t('devise.registration.how_did_you_hear.word_of_mouth', default: "Bouche à oreilles"),
-                         t('devise.registration.how_did_you_hear.search', default: "Recherche internet"),
-                         t('devise.registration.how_did_you_hear.other', default: "Autre")
-                       ], selected: resource.how_did_you_hear),
-                       { required: true },
-                       { class: "form-control hear-select" } %>
+          options_for_select([
+            "Instagram",
+            "TikTok",
+            "LinkedIn",
+            "Pinterest",
+            t('devise.registration.how_did_you_hear.word_of_mouth', default: "Bouche à oreilles"),
+            t('devise.registration.how_did_you_hear.search', default: "Recherche internet"),
+            t('devise.registration.how_did_you_hear.other', default: "Autre")
+          ], selected: resource.how_did_you_hear),
+          { required: true },
+          { 
+            class: "form-control", 
+            data: { 
+              controller: "select2",
+              select2_placeholder_value: "Comment avez-vous connu le site ?"
+            } 
+          } %>
         </div>
         <%# <div class="field">
           <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
@@ -187,33 +204,6 @@
     </div>
   </section>
 </div>
-<script>
-  document.addEventListener("turbo:load", () => {
-  function initSelect2(selector, placeholder) {
-    const elements = document.querySelectorAll(selector);
-    elements.forEach(el => {
-      if ($(el).hasClass("select2-hidden-accessible")) {
-        $(el).select2('destroy'); // supprime l'ancienne instance
-      }
-      $(el).select2({
-        placeholder: placeholder,
-        allowClear: true,
-        width: '100%',
-        language: {
-          inputTooShort: function() { return "Veuillez entrer plus de caractères..."; },
-          searching: function() { return "Recherche en cours..."; },
-          noResults: function() { return "Aucun résultat trouvé"; }
-        }
-      });
-    });
-  }
-
-  initSelect2('.etablissement-select', 'Rechercher un établissement...');
-  initSelect2('.hear-select', 'Comment avez-vous connu le site ?');
-  initSelect2('.level-select', 'Sélectionnez votre niveau scolaire');
-
-  });
-</script>
 <% content_for :recaptcha_script do %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= ENV["RECAPTCHA_SITE_KEY"] %>"></script>
 <% end %>

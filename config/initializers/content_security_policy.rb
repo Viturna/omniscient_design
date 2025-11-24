@@ -1,19 +1,22 @@
 Rails.application.configure do
   config.content_security_policy do |policy|
-    policy.default_src :self, :https
+    # On autorise HTTP et HTTPS
+    policy.default_src :self, :https, :http, :unsafe_inline
     policy.font_src    :self, :https, :data
-    policy.img_src     :self, :https, :data, :blob # Ajout de :blob pour les prévisualisations d'images
+    
+    # IMAGES : On autorise explicitement localhost:9000 et le schéma http:
+    policy.img_src     :self, :https, :http, :data, :blob, "http://localhost:9000"
+    
     policy.object_src  :none
-
-    # SCRIPTS : On garde les nonces pour la sécurité
-    policy.script_src  :self, :https, "https://cdn.jsdelivr.net", "https://ga.jspm.io", :unsafe_inline
-
-    # STYLES : On ajoute :unsafe_inline pour autoriser les attributs style="..."
-    # C'est nécessaire car beaucoup de JS (GSAP, jQuery, etc.) modifient le style directement.
-    policy.style_src   :self, :https, :unsafe_inline
+    
+    # SCRIPTS : On autorise tout le monde pour débloquer la situation
+    policy.script_src  :self, :https, :http, :unsafe_inline, :unsafe_eval, "https://cdn.jsdelivr.net", "https://ga.jspm.io"
+    
+    # STYLES : On autorise le style inline
+    policy.style_src   :self, :https, :http, :unsafe_inline
   end
 
-  # On garde le générateur de nonce pour les balises <script> et <style>
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-  config.content_security_policy_nonce_directives = %w(script-src) # J'ai retiré style-src ici
+  # --- LA SOLUTION EST ICI ---
+  # Ne commente pas cette ligne. Mets-la à NIL pour forcer la désactivation.
+  config.content_security_policy_nonce_generator = nil
 end

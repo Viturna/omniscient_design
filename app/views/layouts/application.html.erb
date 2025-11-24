@@ -90,16 +90,16 @@
     <% end %>
     <% main_show = (controller_name == 'oeuvres' || controller_name == 'designers' || controller_name == 'studios') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
     <main class="<%= 'main-show' if main_show %>">
-      <% unless native_app? %>
+      <%# <% unless native_app? 
         <div id="loading" data-loading-target="loading">
           <div class="loader-bg">
             <video autoplay loop muted playsinline webkit-playsinline preload="auto">
-              <source src="<%= asset_path('loader.webm') %>" type="video/webm">
-              <source src="<%= asset_path('loader.mp4') %>" type="video/mp4">
+              <source src="<%= asset_path('loader.webm') " type="video/webm">
+              <source src="<%= asset_path('loader.mp4')>" type="video/mp4">
             </video>
           </div>
         </div>
-      <%end%>
+      <%end %>
       <div id="content" data-loading-target="content">
         <%= yield %>
       </div>

@@ -1,7 +1,5 @@
 <% content_for :title, "Découvrez des designers inspirants - Omniscient Design" %>
 <% content_for :description, "Plongez dans notre sélection de designers : biographies, projets, styles et parcours réunis dans un carnet numérique unique." %>
-
-
 <style>
   @media screen and (max-width: 320px) {
     .top-bar-search {
@@ -106,8 +104,8 @@
     <div class="box-card" id="boxCard">
       <% @items.each do |item| %>
         <% if item.is_a?(Designer) %>
-            <% cache item do %>
-              <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
+          <% cache item do %>
+            <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
           <% end %>
         <% elsif item.is_a?(Hash) %>
           <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
@@ -295,32 +293,6 @@
         </svg>
       </div>
       <div class="popup-inner">
-        <p class="title-popup"><%= t('mainpopup.title') %></p>
-        <div class="popup-decoration">
-          <%= image_tag("merci-100.png", :alt => "100 utilisateurs") %>
-        </div>
-        <p class="subtitle-popup">Un grand merci</p>
-        <p>
-          La communauté Omniscient Design s'agrandit ! Nous sommes incroyablement fiers et reconnaissants de compter aujourd'hui <strong>plus de 100 utilisateurs inscrits</strong>. Merci à chacun de vous !
-          <br>
-          <br>
-          Nous souhaitons adresser un immense merci tout particulier à <strong>Lou, notre toute première donatrice</strong> ! 💖
-          <br>
-          <br>
-          Un geste formidable qui nous aide concrètement à maintenir la plateforme active et à financer son développement futur. 
-          <br>
-          <br>
-          Mais sa contribution ne s'arrête pas là : Lou a aussi enrichi la base de données en ajoutant la fiche du designer 
-          <%= link_to "Jean Widmer", "https://omniscientdesign.fr/fr/designers/jean-widmer", style: "text-decoration: underline; font-weight: 500; color: #202020;" %>.
-          <br>
-          <br>
-          C'est exactement l'esprit que nous souhaitons pour Omniscient Design : une plateforme collaborative qui vit et s'enrichit grâce à sa communauté.
-          <br>
-          <br>
-          Si vous aussi, vous appréciez le projet, vous pouvez faire comme Lou !
-        </p>
-        <%= link_to "Faire un don", "https://fr.tipeee.com/le-site-omniscient-design", class: "button dark"%>
-        <%= link_to "Ajouter une référence", add_elements_path, class: "button dark" %>
         <div class="popup-decoration">
           <%= image_tag("logo-white.svg", :alt => "logo omniscient design") %>
         </div>

@@ -4,20 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
 
-    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
-
     <%= javascript_importmap_tags %>
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+    
     <%= turbo_include_tags %>
 
-    <meta name="robots" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <meta name="googlebot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <meta name="bingbot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <%= tag :link, rel: 'canonical', href: request.original_url.split('?').first %>
     <title><%= content_for?(:title) ? yield(:title) : t('meta.default_title') %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
     <meta name="theme-color" content="#ffffff">
@@ -30,7 +25,6 @@
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:type" content="website">
     <meta property="og:image" content="<%= asset_url('logo-od-rs.jpg') %>">
-
     <meta name="twitter:site" content="@OmniscientDesign">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : t('meta.default_title') %>">

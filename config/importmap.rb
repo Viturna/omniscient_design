@@ -2,8 +2,6 @@ pin "application"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
 
-pin "es-module-shims", to: "https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"
-
 pin "@hotwired/turbo", to: "@hotwired--turbo.js"
 pin "@hotwired/turbo-rails", to: "@hotwired--turbo-rails.js"
 pin "@hotwired/stimulus", to: "@hotwired--stimulus.js"

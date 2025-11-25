@@ -1,6 +1,6 @@
 import jquery from "jquery"
 
-// On attache jQuery globalement pour que les plugins comme Select2 le trouvent
+// On attache jQuery globalement
 window.jQuery = jquery
 window.$ = jquery
 

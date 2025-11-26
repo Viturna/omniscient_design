@@ -3,6 +3,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'openssl'
+require 'stringio' # <--- NÉCESSAIRE pour lire la variable d'env comme un fichier
 
 # Désactive la vérification SSL en dev (Fix Mac)
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
@@ -14,14 +15,19 @@ class PushNotificationService
   def initialize(notification)
     @notification = notification
     @user = notification.user
-    @creds_path = Rails.root.join('config', 'firebase-credentials.json')
   end
 
   def send
+    # On récupère les tokens
     tokens = @user.user_devices.pluck(:token)
-    return if tokens.empty? || !File.exist?(@creds_path)
+    return if tokens.empty?
 
+    # 1. RÉCUPÉRATION SÉCURISÉE DU TOKEN D'ACCÈS
     access_token = get_access_token
+    
+    # Si on n'a pas réussi à s'identifier (pas de fichier ni de variable ENV), on arrête
+    return unless access_token
+
     uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
 
     tokens.each do |device_token|
@@ -29,33 +35,33 @@ class PushNotificationService
         message: {
           token: device_token,
           
-          # 1. INFO GÉNÉRALE (Titre/Corps)
+          # INFO GÉNÉRALE
           notification: {
             title: "Omniscient Design",
             body: @notification.message
           },
           
-          # 2. DATA (Pour le clic)
+          # DATA
           data: {
             notifiable_id: @notification.notifiable_id.to_s,
             notifiable_type: @notification.notifiable_type
           },
 
-          # 3. CONFIGURATION IOS (Badge + Son)
+          # CONFIGURATION IOS
           apns: { 
             payload: { 
               aps: { sound: "default", badge: 1 } 
             } 
           },
 
-          # 4. CONFIGURATION ANDROID (C'est ce qu'il manquait !) 🤖
+          # CONFIGURATION ANDROID
           android: {
             priority: "HIGH",
             notification: {
-              channel_id: "default_channel", # Le même ID que dans votre MainActivity.kt
+              channel_id: "default_channel",
               sound: "default",
-              icon: "ic_notification", # Le nom du fichier sans l'extension
-              color: "#FFFFFF",
+              icon: "ic_notification",
+              color: "#FFFFFF", # Votre couleur personnalisée
               default_sound: true,
               default_vibrate_timings: true
             }
@@ -65,7 +71,6 @@ class PushNotificationService
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      # Désactive SSL strict pour éviter l'erreur Mac en local
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE 
       
       request = Net::HTTP::Post.new(uri)
@@ -75,10 +80,11 @@ class PushNotificationService
 
       response = http.request(request)
       
+      # GESTION DES RÉPONSES
       if response.code == '200'
-        Rails.logger.info "✅ Notification envoyée avec succès à #{device_token.first(15)}..."
+        Rails.logger.info "✅ Push envoyé à #{device_token.first(15)}..."
       elsif response.code == '404' || response.code == '410'
-        Rails.logger.warn "🗑️ Token invalide (404). Suppression du device..."
+        Rails.logger.warn "🗑️ Token invalide. Suppression..."
         UserDevice.find_by(token: device_token)&.destroy
       else
         Rails.logger.error "❌ Erreur FCM (#{response.code}): #{response.body}"
@@ -88,12 +94,33 @@ class PushNotificationService
 
   private
 
+  # C'EST ICI QUE LA MAGIE OPÈRE (ENV vs FICHIER)
   def get_access_token
-    authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
-      json_key_io: File.open(@creds_path),
-      scope: SCOPES
-    )
+    authorizer = nil
+
+    if ENV["FIREBASE_CREDENTIALS_JSON"].present?
+      # CAS 1 : PRODUCTION (Variable d'environnement)
+      # On lit la string comme si c'était un fichier
+      authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
+        json_key_io: StringIO.new(ENV["FIREBASE_CREDENTIALS_JSON"]),
+        scope: SCOPES
+      )
+    elsif File.exist?(Rails.root.join('config', 'firebase-credentials.json'))
+      # CAS 2 : DÉVELOPPEMENT (Fichier physique)
+      authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
+        json_key_io: File.open(Rails.root.join('config', 'firebase-credentials.json')),
+        scope: SCOPES
+      )
+    else
+      # CAS 3 : ERREUR DE CONFIG
+      Rails.logger.error "🔴 CRITIQUE : Aucun fichier 'firebase-credentials.json' trouvé et variable 'FIREBASE_CREDENTIALS_JSON' vide."
+      return nil
+    end
+
     token_data = authorizer.fetch_access_token!
     token_data['access_token']
+  rescue => e
+    Rails.logger.error "🔴 Erreur Auth Google : #{e.message}"
+    nil
   end
 end

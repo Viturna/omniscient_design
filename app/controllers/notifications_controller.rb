@@ -25,7 +25,8 @@ class NotificationsController < ApplicationController
         user: user,
         admin: current_user,
         message: message,
-        status: :unread
+        status: :unread,
+        notifiable: user
       )
     end
     flash[:notice] = "Notification envoyée à tous les utilisateurs."
@@ -38,7 +39,8 @@ class NotificationsController < ApplicationController
         user: target_user,
         admin: current_user,
         message: message,
-        status: :unread
+        status: :unread,
+        notifiable: user
       )
     end
     flash[:notice] = "Notification envoyée à #{target_user_ids.count} utilisateur(s) sélectionné(s)."

@@ -3,9 +3,9 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'openssl'
-require 'stringio' # <--- NÉCESSAIRE pour lire la variable d'env comme un fichier
+require 'stringio'
 
-# Désactive la vérification SSL en dev (Fix Mac)
+# Désactive la vérification SSL en dev
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
 class PushNotificationService
@@ -18,50 +18,53 @@ class PushNotificationService
   end
 
   def send
-    # On récupère les tokens
-    tokens = @user.user_devices.pluck(:token)
-    return if tokens.empty?
+    # --- MOUCHARD 1 : DÉMARRAGE ---
+    Rails.logger.info "🚀 [PushService] Démarrage pour User ID: #{@user.id} (#{@user.email})"
 
-    # 1. RÉCUPÉRATION SÉCURISÉE DU TOKEN D'ACCÈS
+    tokens = @user.user_devices.pluck(:token)
+    
+    # --- MOUCHARD 2 : LES TOKENS ---
+    Rails.logger.info "🔍 [PushService] Tokens trouvés en BDD : #{tokens.count}"
+    if tokens.empty?
+      Rails.logger.warn "⚠️ [PushService] ARRÊT : Aucun token trouvé pour cet utilisateur."
+      return
+    end
+
+    # --- MOUCHARD 3 : L'AUTH GOOGLE ---
+    Rails.logger.info "🔑 [PushService] Tentative d'authentification Google..."
     access_token = get_access_token
     
-    # Si on n'a pas réussi à s'identifier (pas de fichier ni de variable ENV), on arrête
-    return unless access_token
+    unless access_token
+      Rails.logger.error "🛑 [PushService] ARRÊT : Échec récupération Access Token."
+      return
+    end
+    Rails.logger.info "✅ [PushService] Authentification réussie !"
 
     uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
 
     tokens.each do |device_token|
+      # --- MOUCHARD 4 : ENVOI ---
+      Rails.logger.info "📨 [PushService] Envoi vers token : #{device_token.first(10)}..."
+      
       body = {
         message: {
           token: device_token,
-          
-          # INFO GÉNÉRALE
           notification: {
             title: "Omniscient Design",
             body: @notification.message
           },
-          
-          # DATA
           data: {
             notifiable_id: @notification.notifiable_id.to_s,
             notifiable_type: @notification.notifiable_type
           },
-
-          # CONFIGURATION IOS
-          apns: { 
-            payload: { 
-              aps: { sound: "default", badge: 1 } 
-            } 
-          },
-
-          # CONFIGURATION ANDROID
+          apns: { payload: { aps: { sound: "default", badge: 1 } } },
           android: {
             priority: "HIGH",
             notification: {
               channel_id: "default_channel",
               sound: "default",
               icon: "ic_notification",
-              color: "#FFFFFF", # Votre couleur personnalisée
+              color: "#FFFFFF",
               default_sound: true,
               default_vibrate_timings: true
             }
@@ -80,47 +83,44 @@ class PushNotificationService
 
       response = http.request(request)
       
-      # GESTION DES RÉPONSES
+      # --- MOUCHARD 5 : RÉSULTAT ---
+      Rails.logger.info "📬 [PushService] Réponse Google : #{response.code} - #{response.body}"
+
       if response.code == '200'
-        Rails.logger.info "✅ Push envoyé à #{device_token.first(15)}..."
+        Rails.logger.info "✅ [PushService] SUCCÈS TOTAL"
       elsif response.code == '404' || response.code == '410'
-        Rails.logger.warn "🗑️ Token invalide. Suppression..."
+        Rails.logger.warn "🗑️ [PushService] Token invalide. Suppression..."
         UserDevice.find_by(token: device_token)&.destroy
-      else
-        Rails.logger.error "❌ Erreur FCM (#{response.code}): #{response.body}"
       end
     end
   end
 
   private
 
-  # C'EST ICI QUE LA MAGIE OPÈRE (ENV vs FICHIER)
   def get_access_token
     authorizer = nil
 
     if ENV["FIREBASE_CREDENTIALS_JSON"].present?
-      # CAS 1 : PRODUCTION (Variable d'environnement)
-      # On lit la string comme si c'était un fichier
+      Rails.logger.info "📂 [PushService] Utilisation de la variable d'environnement JSON"
       authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
         json_key_io: StringIO.new(ENV["FIREBASE_CREDENTIALS_JSON"]),
         scope: SCOPES
       )
     elsif File.exist?(Rails.root.join('config', 'firebase-credentials.json'))
-      # CAS 2 : DÉVELOPPEMENT (Fichier physique)
+      Rails.logger.info "📂 [PushService] Utilisation du fichier physique JSON"
       authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
         json_key_io: File.open(Rails.root.join('config', 'firebase-credentials.json')),
         scope: SCOPES
       )
     else
-      # CAS 3 : ERREUR DE CONFIG
-      Rails.logger.error "🔴 CRITIQUE : Aucun fichier 'firebase-credentials.json' trouvé et variable 'FIREBASE_CREDENTIALS_JSON' vide."
+      Rails.logger.error "🔴 [PushService] CRITIQUE : Aucun fichier ni variable ENV trouvés !"
       return nil
     end
 
     token_data = authorizer.fetch_access_token!
     token_data['access_token']
   rescue => e
-    Rails.logger.error "🔴 Erreur Auth Google : #{e.message}"
+    Rails.logger.error "🔴 [PushService] Exception Auth : #{e.message}"
     nil
   end
 end

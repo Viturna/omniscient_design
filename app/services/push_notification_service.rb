@@ -2,15 +2,18 @@ require 'googleauth'
 require 'net/http'
 require 'uri'
 require 'json'
+require 'openssl'
+
+# Désactive la vérification SSL en dev (Fix Mac)
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
 class PushNotificationService
-  PROJECT_ID = "omniscientdesign-a2e94" # Votre ID projet
+  PROJECT_ID = "omniscientdesign-a2e94"
   SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
 
   def initialize(notification)
     @notification = notification
     @user = notification.user
-    # Chemin vers votre fichier JSON
     @creds_path = Rails.root.join('config', 'firebase-credentials.json')
   end
 
@@ -18,42 +21,50 @@ class PushNotificationService
     tokens = @user.user_devices.pluck(:token)
     return if tokens.empty? || !File.exist?(@creds_path)
 
-    # 1. Obtenir un Token d'accès Google sécurisé (OAuth2)
     access_token = get_access_token
-    
-    # 2. Préparer l'URL d'envoi V1
     uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
 
     tokens.each do |device_token|
-      # 3. Construire le message
       body = {
         message: {
           token: device_token,
+          
+          # 1. INFO GÉNÉRALE (Titre/Corps)
           notification: {
             title: "Omniscient Design",
             body: @notification.message
           },
+          
+          # 2. DATA (Pour le clic)
           data: {
             notifiable_id: @notification.notifiable_id.to_s,
             notifiable_type: @notification.notifiable_type
           },
-          # Configuration spécifique iOS
-          apns: {
-            payload: {
-              aps: {
-                sound: "default",
-                badge: 1
-              }
+
+          # 3. CONFIGURATION IOS (Badge + Son)
+          apns: { 
+            payload: { 
+              aps: { sound: "default", badge: 1 } 
+            } 
+          },
+
+          # 4. CONFIGURATION ANDROID (C'est ce qu'il manquait !) 🤖
+          android: {
+            priority: "HIGH",
+            notification: {
+              channel_id: "default_channel", # Le même ID que dans votre MainActivity.kt
+              sound: "default",
+              default_sound: true,
+              default_vibrate_timings: true
             }
           }
         }
       }
 
-      # 4. Envoyer la requête HTTP manuellement (C'est plus sûr)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # Désactive SSL strict pour éviter l'erreur Mac en local
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE 
       
       request = Net::HTTP::Post.new(uri)
       request['Authorization'] = "Bearer #{access_token}"
@@ -62,9 +73,11 @@ class PushNotificationService
 
       response = http.request(request)
       
-      # Logs pour débugger
       if response.code == '200'
-        Rails.logger.info "✅ Notification envoyée avec succès à #{device_token}"
+        Rails.logger.info "✅ Notification envoyée avec succès à #{device_token.first(15)}..."
+      elsif response.code == '404' || response.code == '410'
+        Rails.logger.warn "🗑️ Token invalide (404). Suppression du device..."
+        UserDevice.find_by(token: device_token)&.destroy
       else
         Rails.logger.error "❌ Erreur FCM (#{response.code}): #{response.body}"
       end

@@ -59,6 +59,10 @@
   }
 }
 
+.nav-home-mobile {
+  display: none;
+}
+
 .button-nav {
   position: fixed;
   display: flex;
@@ -185,7 +189,7 @@
 
   .switch-home-mobile a {
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 10px 16px;
     color: $primary-color;
 
     &:hover {
@@ -228,7 +232,8 @@
     top: 0;
     z-index: 9999;
     height: 70px;
-    padding-top: env(safe-area-inset-top);
+    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
+    gap: 12px;
   }
 
   .nav-home-mobile svg {
@@ -251,12 +256,9 @@
     }
   }
 
-  .box-card {
-    padding-top: env(safe-area-inset-top);
-  }
   .switch-home-mobile a {
     font-size: 16px;
-    padding: 8px 20px;
+    padding: 10px 14px;
     color: $primary-color;
 
     &:hover {
@@ -283,7 +285,6 @@
   .home-page.top-bar-search {
     display: none;
   }
-  
 
   .button-nav {
     display: none;

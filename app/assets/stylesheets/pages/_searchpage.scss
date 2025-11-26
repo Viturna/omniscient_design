@@ -608,7 +608,7 @@
   }
 
   .top-bar-search {
-    padding-top: env(safe-area-inset-top);
+    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
   }
 }
 

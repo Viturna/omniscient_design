@@ -229,18 +229,24 @@
 
 @media screen and (min-width: 0px) and (max-width: 600px) {
   .log {
-    padding-bottom: 96px;
+    padding: 0px;
   }
 
   .box-log {
-    padding: 0px 4vw;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100dvh;
   }
 
   .form {
-    width: 82vw;
-    padding: 24px 4vw;
+    margin: 0;
+    width: auto;
+    height: auto;
+    padding: 56px 5vw;
+    border-radius: 0;
+    padding-bottom: 96px;
   }
-
   .actions {
     margin: 0;
   }
@@ -267,16 +273,5 @@
   }
   .flex-login-oauth {
     flex-direction: column;
-  }
-}
-
-@media screen and (min-width: 0px) and (max-width: 425px) {
-  .logo-log {
-    width: 40vw;
-    min-width: 130px;
-  }
-
-  .box-log h1 {
-    margin-top: 145px;
   }
 }

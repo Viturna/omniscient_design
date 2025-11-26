@@ -250,6 +250,10 @@
     width: 90vw;
   }
 
+  .card .subtitle-card {
+    margin-top: 16px;
+  }
+
   .bg-card {
     width: 90vw;
     height: calc(100dvh - 280px);
@@ -307,9 +311,13 @@
   }
 
   .card {
-    padding-top: 0px;
+    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
     height: 100dvh;
     width: 90vw;
+  }
+
+  .card .subtitle-card {
+    margin-top: 16px;
   }
 
   .bg-card {

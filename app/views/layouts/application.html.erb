@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <!-- ✅ POLYFILL OBLIGATOIRE POUR FIREFOX & SAFARI -->
     <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
-    <!-- ✅ IMPORTMAP DOIT ÊTRE AVANT TOUT MODULE -->
     <script type="importmap">
       <%= Rails.application.importmap.to_json(resolver: self).html_safe %>
     </script>
-    <!-- ✅ POINT D'ENTRÉE JS PRINCIPAL -->
     <script type="module">
       import "application"
     </script>
@@ -63,10 +60,8 @@
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
   <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading">
     <% unless native_app? %>
-      <!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-      <!-- End Google Tag Manager (noscript) -->
       <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner" style="display:none;">
         <div>
           <p><%= t('cookies.banner_text') %></p>

@@ -54,6 +54,8 @@ class PushNotificationService
             notification: {
               channel_id: "default_channel", # Le même ID que dans votre MainActivity.kt
               sound: "default",
+              icon: "ic_notification", # Le nom du fichier sans l'extension
+              color: "#FFFFFF",
               default_sound: true,
               default_vibrate_timings: true
             }

@@ -1,6 +1,4 @@
+# config/initializers/session_store.rb
 Rails.application.config.session_store :cookie_store, 
-  expire_after: 1.year,
-  key: '_omniscient_design_session', 
-  secure: Rails.env.production?,
-  same_site: (Rails.env.production? ? :none : :lax)
-  
+  key: '_omniscient_design_session',
+  expire_after: 1.year

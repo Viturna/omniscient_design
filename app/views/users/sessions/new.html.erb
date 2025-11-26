@@ -118,10 +118,14 @@
         </div>
         <%= link_to t('devise.login.forgot_password'), new_user_password_path, class: "forgot-password" %>
         <% if devise_mapping.rememberable? %>
-          <div class="field remember-me">
-            <%= f.check_box :remember_me %>
-            <%= f.label :remember_me, t('devise.login.remember_me') %>
-          </div>
+          <% if native_app? %>
+            <%= f.hidden_field :remember_me, value: true %>
+          <% else %>
+            <div class="field remember-me">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me, t('devise.login.remember_me') %>
+            </div>
+          <% end %>
         <% end %>
         <div class="actions">
           <%= f.submit t('devise.login.submit'), class:"button dark btn-login" %>

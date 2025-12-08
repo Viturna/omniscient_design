@@ -1,3 +1,24 @@
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -68,6 +89,11 @@ main {
   gap: 16px;
 }
 
+.flex-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
 @media screen and (max-width: 1280px) {
   main {
     margin-left: 30vw;

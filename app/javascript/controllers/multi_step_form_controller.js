@@ -5,7 +5,8 @@ export default class extends Controller {
 
     static values = {
         editMode: Boolean,
-        checkUrl: String
+        checkUrl: String,
+        formType: String
     }
 
     connect() {
@@ -26,6 +27,8 @@ export default class extends Controller {
             if (index === this.currentStepIndex) {
                 el.style.display = "block";
                 el.style.visibility = "visible";
+
+                this.trackStepView(index + 1);
             } else {
                 el.style.display = "none";
             }
@@ -67,7 +70,6 @@ export default class extends Controller {
         event.preventDefault();
         if (!this.validateCurrentStep()) return;
 
-        // LOGIQUE DE VÉRIFICATION (Uniquement à l'étape 2, si pas en mode édition)
         if (this.currentStepIndex === 1 && !this.editModeValue) {
             const canProceed = await this.checkExistence();
             if (!canProceed) return;
@@ -114,15 +116,15 @@ export default class extends Controller {
             if (!input.checkValidity()) {
                 isValid = false;
                 input.reportValidity();
+
+                this.trackValidationError(this.currentStepIndex + 1, input.name);
                 break;
             }
         }
         return isValid;
     }
 
-    // --- VÉRIFICATION AJAX ---
     async checkExistence() {
-        // Si pas d'URL configurée, on passe sans vérifier
         if (!this.hasCheckUrlValue) return true;
 
         let params = "";
@@ -137,7 +139,6 @@ export default class extends Controller {
         else if (this.hasNameInputTarget) {
             const nom = this.nameInputTarget.value.trim();
 
-            // 👇 MODIFICATION ICI : On regarde l'URL pour savoir si c'est un Studio ou une Oeuvre
             if (this.checkUrlValue.includes("studios")) {
                 params = `nom=${encodeURIComponent(nom)}`; // Pour les Studios
             } else {
@@ -182,5 +183,34 @@ export default class extends Controller {
             this.errorMessageTarget.style.display = "none";
             this.errorMessageTarget.textContent = "";
         }
+    }
+
+    // MÉTHODES DE TRACKING GOOGLE ANALYTICS
+
+    trackStepView(stepNumber) {
+        if (typeof gtag !== 'function') return;
+
+        const formType = this.hasFormTypeValue ? this.formTypeValue : "unknown";
+
+        gtag('event', 'form_step_view', {
+            'event_category': 'Contribution',
+            'event_label': formType,
+            'step_number': stepNumber,
+            'form_name': `add_${formType}`
+        });
+
+    }
+
+    trackValidationError(stepNumber, fieldName) {
+        if (typeof gtag !== 'function') return;
+
+        const formType = this.hasFormTypeValue ? this.formTypeValue : "unknown";
+
+        gtag('event', 'form_validation_error', {
+            'event_category': 'Contribution',
+            'event_label': formType,
+            'step_number': stepNumber,
+            'error_field': fieldName
+        });
     }
 }

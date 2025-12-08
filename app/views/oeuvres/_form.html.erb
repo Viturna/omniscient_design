@@ -1,5 +1,6 @@
 <div data-controller="multi-step-form" 
-     data-multi-step-form-edit-mode-value="<%= @oeuvre.persisted? %>">
+     data-multi-step-form-edit-mode-value="<%= @oeuvre.persisted? %>"
+     data-multi-step-form-form-type-value="oeuvre">
   <%= form_with(model: @oeuvre, id: "oeuvre-form", local: true, data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
     <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
     <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>
@@ -176,7 +177,6 @@
         <div data-controller="year-validator">
           <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
           <%= form.text_field :date_oeuvre, 
-              required: true, 
               placeholder: t('add_oeuvre.steps.4.date_oeuvre_placeholder'), 
               id: "date-oeuvre-input",
               data: {
@@ -198,27 +198,31 @@
           <%= form.label :presentation_generale, t('add_oeuvre.steps.3.presentation_generale') %>
           <%= form.text_area :presentation_generale, placeholder: t('add_oeuvre.steps.3.presentation_generale_placeholder') %>
         </div>
-        <div>
-          <%= form.label :contexte_historique, t('add_oeuvre.steps.3.contexte_historique') %>
-          <%= form.text_area :contexte_historique, placeholder: t('add_oeuvre.steps.3.contexte_historique_placeholder') %>
+        <div class="flex-button">
+          <% [
+          :contexte_historique, 
+          :materiaux_et_innovations_techniques, 
+          :concept_et_inspiration, 
+          :dimension_esthetique, 
+          :impact_et_message
+        ].each do |field| %>
+            <div data-controller="toggle-single-field flex-form">
+              <button type="button" 
+                    class="button small secondary dashed" 
+                    data-toggle-single-field-target="button"
+                    data-action="click->toggle-single-field#reveal">
+                + <%= t("add_oeuvre.steps.3.#{field}") %>
+              </button>
+              <div data-toggle-single-field-target="container" style="display: none;">
+                <%= form.label field, t("add_oeuvre.steps.3.#{field}") %>
+                <%= form.text_area field, 
+                  placeholder: t("add_oeuvre.steps.3.#{field}_placeholder"),
+                  data: { toggle_single_field_target: "input" } %>
+              </div>
+            </div>
+          <% end %>
         </div>
-        <div>
-          <%= form.label :materiaux_et_innovations_techniques, t('add_oeuvre.steps.3.materiaux_et_innovations_techniques') %>
-          <%= form.text_area :materiaux_et_innovations_techniques, placeholder: t('add_oeuvre.steps.3.materiaux_et_innovations_techniques_placeholder') %>
-        </div>
-        <div>
-          <%= form.label :concept_et_inspiration, t('add_oeuvre.steps.3.concept_et_inspiration') %>
-          <%= form.text_area :concept_et_inspiration, placeholder: t('add_oeuvre.steps.3.concept_et_inspiration_placeholder') %>
-        </div>
-        <div>
-          <%= form.label :dimension_esthetique, t('add_oeuvre.steps.3.dimension_esthetique') %>
-          <%= form.text_area :dimension_esthetique, placeholder: t('add_oeuvre.steps.3.dimension_esthetique_placeholder') %>
-        </div>
-        <div>
-          <%= form.label :impact_et_message, t('add_oeuvre.steps.3.impact_et_message') %>
-          <%= form.text_area :impact_et_message, placeholder: t('add_oeuvre.steps.3.impact_et_message_placeholder') %>
-        </div>
-        <div data-controller="sources" data-sources-prefix-value="oeuvre">
+        <div data-controller="sources" data-sources-prefix-value="oeuvre" style="margin-top: 20px;">
           <%= form.label :source, t('add_oeuvre.steps.3.source') %>
           <div id="sources-container" data-sources-target="container">
             <% (@oeuvre.source || []).each do |src| %>

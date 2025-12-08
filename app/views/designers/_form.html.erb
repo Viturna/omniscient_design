@@ -1,7 +1,8 @@
 <% is_edit_mode = @designer.persisted? %>
 <div data-controller="multi-step-form" 
      data-multi-step-form-edit-mode-value="<%= is_edit_mode %>"
-     data-multi-step-form-check-url-value="/designers/check_existence">
+     data-multi-step-form-check-url-value="/designers/check_existence"
+     data-multi-step-form-form-type-value="designer">
   <%= form_with(model: @designer, local: true, id: "designer-form", data: { controller: "recaptcha", recaptcha_target: "form" }) do |form| %>
     <%= hidden_field_tag :recaptcha_token, nil, id: "recaptcha_token", data: { recaptcha_target: "token" } %>
     <div class="error-message" style="color: red; display: none;" data-multi-step-form-target="errorMessage"></div>

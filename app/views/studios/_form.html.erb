@@ -2,7 +2,8 @@
 <% is_edit_mode = @studio.persisted? %>
 <div data-controller="multi-step-form" 
      data-multi-step-form-edit-mode-value="<%= is_edit_mode %>"
-     data-multi-step-form-check-url-value="/studios/check_existence">
+     data-multi-step-form-check-url-value="/studios/check_existence"
+     data-multi-step-form-form-type-value="studio">
   <style>
     /* Styles pour les champs imbriqués (designers) */
     .nested-fields-container {

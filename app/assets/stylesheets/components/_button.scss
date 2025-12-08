@@ -25,6 +25,16 @@
   padding: 25px 125px;
 }
 
+.button.dashed {
+  background: transparent;
+  border: 1px dashed #ccc;
+  color: #fff;
+}
+.button.dashed:hover {
+  background-color: $secondary-color;
+  color: $primary-color;
+}
+
 // Add Element
 .button-add {
   font-weight: 500;

@@ -12,5 +12,7 @@ pin "jquery_provider", to: "jquery_provider.js"
 pin "select2", to: "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"
 
 pin "gsap", to: "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js"
+pin "lenis", to: "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm"
+
 pin "@rails/actioncable/src", to: "@rails--actioncable--src.js"
 pin "sortablejs", to: "https://ga.jspm.io/npm:sortablejs@1.15.2/modular/sortable.esm.js"

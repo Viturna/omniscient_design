@@ -235,12 +235,28 @@
     <div class="form-step" data-multi-step-form-target="step" style="display:none;">
       <h2 data-multi-step-form-target="stepTitle">Détails et Sources</h2>
       <div class="flex-form">
-        <% [:presentation_generale, :formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
-          <div>
-            <%= form.label field, t("add_studio.steps.3.#{field}", default: field.to_s.humanize) %>
-            <%= form.text_area field, required: (field == :presentation_generale), placeholder: t("add_studio.steps.3.#{field}_placeholder", default: "Renseignez ce champ...") %>
-          </div>
-        <% end %>
+        <div>
+          <%= form.label :presentation_generale, t("add_studio.steps.3.presentation_generale", default: "Présentation générale") %>
+          <%= form.text_area :presentation_generale, required: true, placeholder: t("add_studio.steps.3.presentation_generale_placeholder", default: "Renseignez ce champ...") %>
+        </div>
+        <div class="flex-button">
+          <% [:formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
+            <div data-controller="toggle-single-field flex-form">
+              <button type="button" 
+                    class="button small secondary dashed" 
+                    data-toggle-single-field-target="button"
+                    data-action="click->toggle-single-field#reveal">
+                + <%= t("add_studio.steps.3.#{field}", default: field.to_s.humanize) %>
+              </button>
+              <div data-toggle-single-field-target="container" style="display: none;">
+                <%= form.label field, t("add_studio.steps.3.#{field}", default: field.to_s.humanize) %>
+                <%= form.text_area field, 
+                  placeholder: t("add_studio.steps.3.#{field}_placeholder", default: "Renseignez ce champ..."),
+                  data: { toggle_single_field_target: "input" } %>
+              </div>
+            </div>
+          <% end %>
+        </div>
         <div data-controller="sources" data-sources-prefix-value="studio">
           <%= form.label :source, t('add_oeuvre.steps.3.source', default: "Sources") %>
           <div data-sources-target="container">
@@ -265,8 +281,8 @@
               </div>
             <% end %>
           </div>
-          <button type="button" data-sources-target="addButton" class="button small">
-            <%= t('add_oeuvre.steps.3.add_source_button', default: "Ajouter une autre source") %>
+          <button type="button" data-sources-target="addButton" class="button small secondary dashed">
+            <%= t('add_oeuvre.steps.3.add_source_button', default: "+ Ajouter une autre source") %>
           </button>
         </div>
       </div>

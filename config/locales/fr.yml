@@ -826,7 +826,7 @@ fr:
         impact_et_message_placeholder: "Ex : La petite fille au ballon est devenue un symbole de l’espoir…"
         source: "Source(s)"
         source_placeholder: "Ex : https://example.com"
-        add_source_button: "Ajouter un lien"
+        add_source_button: "+ Ajouter un lien"
       4:
         title: "Étape 4 : Images & Illustrations"
         date_oeuvre: "Date de la référence"

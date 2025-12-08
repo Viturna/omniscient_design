@@ -290,10 +290,9 @@
           <% designers_associes.each do |liaison| %>
             <% designer = liaison.designer %>
             <% next unless designer.present? %>
-            
             <%= render 'designers/designer_card', designer: designer, liaison: liaison %>
           <% end %>
-      </div>
+        </div>
       <% end %>
       <h2 class="title-description-reference">Présentation générale</h2>
       <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.presentation_generale) %></p>
@@ -373,7 +372,6 @@
   <% if studio.validation %>
     <div class="next-card">
       <% studio_oeuvres = studio.oeuvres.where(validation: true) %>
-      
       <% if studio_oeuvres.any? %>
         <h2 class="title-description-reference">Références du studio</h2>
         <div class="horizontal-scroll-section">
@@ -384,289 +382,270 @@
                   <%# --- CORRECTION ICI : Ajout du IF manquant --- %>
                   <% if oeuvre.oeuvre_images.first&.file&.attached? %>
                     <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(resize_to_limit: [400, 400])) %>');">
-                  <% else %>
-                    <div class="oeuvre-card-image" style="background-color: #EEE;">
-                  <% end %>
-                  <%# --------------------------------------------- %>
-
+                    <% else %>
+                      <div class="oeuvre-card-image" style="background-color: #EEE;">
+                      <% end %>
+                      <%# --------------------------------------------- %>
                       <div class="oeuvre-card-content">
                         <p class="oeuvre-designer">
                           <%= oeuvre.designers.any? ? oeuvre.designers.map(&:nom_designer).join(", ") : "Designer inconnu" %>
                         </p>
                         <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
                       </div>
-                    </div> </div> <% end %>
-            <% end %>
-          </div>
-        </div>
-
-    </div>
-  <% end %>
-        <h2 class="title-description-reference">Découvrir d'autres studios</h2>
-        <div class="horizontal-scroll-section">
-          <div class="horizontal-wrapper">
-            <% studios = Studio.where(validation: true).where.not(id: @studio.id).order("RANDOM()").limit(5) %>
-            <% studios.each do |studio| %>
-              <%= link_to studio do %>
-                <div class="oeuvre-card">
-                  <% if studio.studio_images.first&.file&.attached? %>
-                    <div class="oeuvre-card-image" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>');">
-                    <% else %>
-                      <div class="oeuvre-card-image" style="background-color: #EEE;">
-                      <% end %>
-                      <div class="oeuvre-card-content">
-                        <p class="oeuvre-designer">
-                          <%= studio.countries.map(&:country).join(", ") %>
-                        </p>
-                        <h2 class="oeuvre-title"><%= studio.nom %></h2>
-                      </div>
                     </div>
-                  </div>
-                <% end %>
+ </div>
+ <% end %>
               <% end %>
             </div>
           </div>
         </div>
       <% end %>
-      <div data-controller="validation-overlay">
-        <% if !studio.validation %>
-          <% if current_user&.certified? || current_user&.admin? %>
-            <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
-              <div class="naviguation">
-                <p class="naviguation-title">Panneau d'administration</p>
-                <div class="naviguation-buttons">
-                  <% if user_signed_in? && (current_user.id == studio.user_id || current_user.admin? || current_user.certified?) %>
-                    <%= link_to 'Valider le studio', validate_studio_path(studio), class: 'button' %>
-                    <%= link_to 'Modifier le studio', edit_studio_path(studio), class: 'button' %>
-                    <a href="#" class="button" data-toggle="modal" data-target="#globalRejectModal" data-url="<%= reject_studio_path(studio) %>" data-title="<%= studio.nom %>">Supprimer le studio</a>
-                  <% end %>
-                </div>
-                <div class="naviguation-buttons">
-                  <%= link_to "Ajouter un autre studio", add_elements_path, class: "button" %>
-                  <%= link_to "Retour", add_elements_path, class: "button" %>
-                </div>
-              </div>
-            </div>
-          <% else %>
-            <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
-              <div class="naviguation">
-                <p class="naviguation-title">Que souhaitez-vous faire ?</p>
-                <div class="naviguation-buttons">
-                  <%= link_to "Ajouter un autre studio", add_elements_path, class: "button" %>
-                  <% if user_signed_in? && (current_user.id == studio.user_id) %>
-                    <%= link_to 'Annuler la soumission', cancel_studio_path(studio), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission ?' } %>
-                  <% end %>
-                  <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
-                </div>
-              </div>
-            </div>
-          <% end %>
-          <div class="validation" id="validation" data-validation-overlay-target="validation">
-            <%= image_tag "logo-white.svg", alt: "", class:"logo-overlay" %>
-            <svg width="76" height="73" viewBox="0 0 76 73" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M69 33.4961V36.5186C68.996 43.527 66.7266 50.3463 62.5303 55.9595C58.334 61.5727 52.4357 65.6791 45.7149 67.6663C38.9941 69.6534 31.8111 69.4148 25.237 66.986C18.663 64.5572 13.0501 60.0684 9.23562 54.1891C5.42112 48.3097 3.60932 41.3548 4.07045 34.3616C4.53158 27.3684 7.24092 20.7117 11.7944 15.3841C16.3479 10.0565 22.5015 6.34359 29.3376 4.79908C36.1737 3.25456 43.3259 3.9612 49.7275 6.8136" stroke="white" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M72.25 7.26895L36.5 43.0189L26.75 33.2689" stroke="#06D7A0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <p class="validation-title">Merci pour votre contribution !</p>
-            <p class="validation-text">Votre fiche est actuellement en cours de traitement. Veuillez noter que ce processus peut prendre quelques jours. Vous serez informé(e) via votre compte dès que celle-ci sera traitée.</p>
-            <svg width="30" height="45" viewBox="0 0 30 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M27.8206 3L15.4103 14L3.00009 3" stroke="white" stroke-opacity="0.1" stroke-width="3.0207" stroke-linecap="square"/>
-              <path d="M27.8206 17L15.4103 28L3.00009 17" stroke="white" stroke-opacity="0.5" stroke-width="3.0207" stroke-linecap="square"/>
-              <path d="M27.8206 31L15.4103 42L3.00009 31" stroke="white" stroke-width="3.0207" stroke-linecap="square"/>
-            </svg>
-          </div>
-          <div class="overlay" id="overlay" data-validation-overlay-target="overlay"></div>
-        <% end %>
-      </div>
-      <div id="shareModal" class="popup" data-share-target="modal" data-action="click->share#backdropClose">
-        <div class="popup-content">
-          <div class="top-popup">
-            <svg class="close-popup" id="closePopup" data-action="click->share#close" data-share-target="close" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-            </svg>
-          </div>
-          <div class="flex-title-popup">
-            <p class="title-popup">Partager cette page</p>
-            <button id="copyLink" class="popup-link-add" data-action="click->share#copyLink" data-share-target="copy">Copier le lien</button>
-          </div>
-          <div class="share-options">
-            <button id="shareX" class="share-button" title="Partager sur X" data-action="click->share#shareX" data-share-target="x">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.751 3H20.818L14.118 10.625L22 21H15.828L10.995 14.707L5.464 21H2.394L9.561 12.845L2 3H8.328L12.698 8.752L17.751 3ZM16.675 19.172H18.375L7.404 4.732H5.58L16.675 19.172Z" fill="white"/></svg>
-            </button>
-            <button id="shareMessages" class="share-button" data-action="click->share#shareMessages" data-share-target="messages" title="Partager par Message">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM17 14H7C6.45 14 6 13.55 6 13C6 12.45 6.45 12 7 12H17C17.55 12 18 12.45 18 13C18 13.55 17.55 14 17 14ZM17 11H7C6.45 11 6 10.55 6 10C6 9.45 6.45 9 7 9H17C17.55 9 18 9.45 18 10C18 10.55 17.55 11 17 11ZM17 8H7C6.45 8 6 7.55 6 7C6 6.45 6.45 6 7 6H17C17.55 6 18 6.45 18 7C18 7.55 17.55 8 17 8Z" fill="white"/></svg>
-            </button>
-            <button id="shareEmail" data-action="click->share#shareEmail" data-share-target="email" class="share-button" title="Partager par Email">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/></svg>
-            </button>
-            <button id="shareWhatsApp" data-action="click->share#shareWhatsApp" data-share-target="whatsapp" class="share-button" title="Partager sur WhatsApp">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.05 4.91006C18.1332 3.98399 17.0412 3.24973 15.8377 2.75011C14.6341 2.25049 13.3432 1.99552 12.04 2.00006C6.58005 2.00006 2.13005 6.45006 2.13005 11.9101C2.13005 13.6601 2.59005 15.3601 3.45005 16.8601L2.05005 22.0001L7.30005 20.6201C8.75005 21.4101 10.38 21.8301 12.04 21.8301C17.5 21.8301 21.9501 17.3801 21.9501 11.9201C21.9501 9.27006 20.92 6.78006 19.05 4.91006ZM12.04 20.1501C10.56 20.1501 9.11005 19.7501 7.84005 19.0001L7.54005 18.8201L4.42005 19.6401L5.25005 16.6001L5.05005 16.2901C4.2278 14.977 3.79119 13.4593 3.79005 11.9101C3.79005 7.37006 7.49005 3.67006 12.03 3.67006C14.23 3.67006 16.3 4.53006 17.85 6.09006C18.6175 6.85402 19.2257 7.76272 19.6394 8.76348C20.0531 9.76425 20.2641 10.8372 20.26 11.9201C20.28 16.4601 16.58 20.1501 12.04 20.1501ZM16.56 13.9901C16.31 13.8701 15.09 13.2701 14.87 13.1801C14.64 13.1001 14.48 13.0601 14.31 13.3001C14.14 13.5501 13.67 14.1101 13.53 14.2701C13.39 14.4401 13.24 14.4601 12.99 14.3301C12.74 14.2101 11.94 13.9401 11 13.1001C10.26 12.4401 9.77005 11.6301 9.62005 11.3801C9.48005 11.1301 9.60005 11.0001 9.73005 10.8701C9.84005 10.7601 9.98005 10.5801 10.1 10.4401C10.22 10.3001 10.27 10.1901 10.35 10.0301C10.43 9.86006 10.39 9.72006 10.33 9.60006C10.27 9.48006 9.77005 8.26006 9.57005 7.76006C9.37005 7.28006 9.16005 7.34006 9.01005 7.33006H8.53005C8.36005 7.33006 8.10005 7.39006 7.87005 7.64006C7.65005 7.89006 7.01005 8.49006 7.01005 9.71006C7.01005 10.9301 7.90005 12.1101 8.02005 12.2701C8.14005 12.4401 9.77005 14.9401 12.25 16.0101C12.84 16.2701 13.3 16.4201 13.66 16.5301C14.25 16.7201 14.79 16.6901 15.22 16.6301C15.7 16.5601 16.69 16.0301 16.89 15.4501C17.1 14.8701 17.1 14.3801 17.03 14.2701C16.96 14.1601 16.81 14.1101 16.56 13.9901Z" fill="white"/></svg>
-            </button>
-          </div>
-          <input type="text" id="shareLink" data-share-target="link" value="" hidden readonly>
-        </div>
-      </div>
-      <div id="popup" class="popup">
-        <div class="popup-content">
-          <div class="top-popup">
-            <svg class="close-popup" id="closePopupSave" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-            </svg>
-          </div>
-          <div class="flex-title-popup">
-            <p class="title-popup">Ajouter dans une liste</p>
-            <%= link_to 'Créer une liste', new_list_path(designer_id: @studio.id), class: "popup-link-add" %>
-          </div>
-          <% @lists.each do |list| %>
-            <div class="field">
-              <div class="box-list">
-                <%= link_to list, class: "box-list-left" do %>
-                  <div class="box-text-list">
-                    <p class="title-list"><%= list.name %></p>
-                    <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
+      <h2 class="title-description-reference">Découvrir d'autres studios</h2>
+      <div class="horizontal-scroll-section">
+        <div class="horizontal-wrapper">
+          <% studios = Studio.where(validation: true).where.not(id: @studio.id).order("RANDOM()").limit(5) %>
+          <% studios.each do |studio| %>
+            <%= link_to studio do %>
+              <div class="oeuvre-card">
+                <% if studio.studio_images.first&.file&.attached? %>
+                  <div class="oeuvre-card-image" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>');">
+                  <% else %>
+                    <div class="oeuvre-card-image" style="background-color: #EEE;">
+                    <% end %>
+                    <div class="oeuvre-card-content">
+                      <p class="oeuvre-designer">
+                        <%= studio.countries.map(&:country).join(", ") %>
+                      </p>
+                      <h2 class="oeuvre-title"><%= studio.nom %></h2>
+                    </div>
                   </div>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
-      <div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog" aria-labelledby="globalRejectModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="globalRejectModalLabel">Refuser l'entrée</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+    <% end %>
+    <div data-controller="validation-overlay">
+      <% if !studio.validation %>
+        <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
+          <div class="naviguation">
+            <p class="naviguation-title">Que souhaitez-vous faire ?</p>
+            <div class="naviguation-buttons">
+              <%= link_to "Ajouter un autre studio", add_elements_path, class: "button" %>
+              <% if user_signed_in? && (current_user.id == studio.user_id) %>
+                <%= link_to 'Annuler la soumission', cancel_studio_path(studio), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission ?' } %>
+              <% end %>
+              <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
             </div>
-            <div class="modal-body">
-              <%= form_with url: "", method: :patch, id: "rejectForm" do |form| %>
-                <div class="form-group">
-                  <%= form.label :rejection_reason, "Raison du refus" %>
-                  <%= form.text_area :rejection_reason, class: "form-control", id: "rejectionReasonField" %>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                  <%= form.submit "Refuser", class: "btn btn-danger" %>
+          </div>
+        </div>
+        <div class="validation" id="validation" data-validation-overlay-target="validation">
+          <%= image_tag "logo-white.svg", alt: "", class:"logo-overlay" %>
+          <svg width="76" height="73" viewBox="0 0 76 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M69 33.4961V36.5186C68.996 43.527 66.7266 50.3463 62.5303 55.9595C58.334 61.5727 52.4357 65.6791 45.7149 67.6663C38.9941 69.6534 31.8111 69.4148 25.237 66.986C18.663 64.5572 13.0501 60.0684 9.23562 54.1891C5.42112 48.3097 3.60932 41.3548 4.07045 34.3616C4.53158 27.3684 7.24092 20.7117 11.7944 15.3841C16.3479 10.0565 22.5015 6.34359 29.3376 4.79908C36.1737 3.25456 43.3259 3.9612 49.7275 6.8136" stroke="white" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M72.25 7.26895L36.5 43.0189L26.75 33.2689" stroke="#06D7A0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="validation-title">Merci pour votre contribution !</p>
+          <p class="validation-text">Votre fiche est actuellement en cours de traitement. Veuillez noter que ce processus peut prendre quelques jours. Vous serez informé(e) via votre compte dès que celle-ci sera traitée.</p>
+          <svg width="30" height="45" viewBox="0 0 30 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M27.8206 3L15.4103 14L3.00009 3" stroke="white" stroke-opacity="0.1" stroke-width="3.0207" stroke-linecap="square"/>
+            <path d="M27.8206 17L15.4103 28L3.00009 17" stroke="white" stroke-opacity="0.5" stroke-width="3.0207" stroke-linecap="square"/>
+            <path d="M27.8206 31L15.4103 42L3.00009 31" stroke="white" stroke-width="3.0207" stroke-linecap="square"/>
+          </svg>
+        </div>
+        <div class="overlay" id="overlay" data-validation-overlay-target="overlay"></div>
+      <% end %>
+    </div>
+    <div id="shareModal" class="popup" data-share-target="modal" data-action="click->share#backdropClose">
+      <div class="popup-content">
+        <div class="top-popup">
+          <svg class="close-popup" id="closePopup" data-action="click->share#close" data-share-target="close" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+          </svg>
+        </div>
+        <div class="flex-title-popup">
+          <p class="title-popup">Partager cette page</p>
+          <button id="copyLink" class="popup-link-add" data-action="click->share#copyLink" data-share-target="copy">Copier le lien</button>
+        </div>
+        <div class="share-options">
+          <button id="shareX" class="share-button" title="Partager sur X" data-action="click->share#shareX" data-share-target="x">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.751 3H20.818L14.118 10.625L22 21H15.828L10.995 14.707L5.464 21H2.394L9.561 12.845L2 3H8.328L12.698 8.752L17.751 3ZM16.675 19.172H18.375L7.404 4.732H5.58L16.675 19.172Z" fill="white"/></svg>
+          </button>
+          <button id="shareMessages" class="share-button" data-action="click->share#shareMessages" data-share-target="messages" title="Partager par Message">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM17 14H7C6.45 14 6 13.55 6 13C6 12.45 6.45 12 7 12H17C17.55 12 18 12.45 18 13C18 13.55 17.55 14 17 14ZM17 11H7C6.45 11 6 10.55 6 10C6 9.45 6.45 9 7 9H17C17.55 9 18 9.45 18 10C18 10.55 17.55 11 17 11ZM17 8H7C6.45 8 6 7.55 6 7C6 6.45 6.45 6 7 6H17C17.55 6 18 6.45 18 7C18 7.55 17.55 8 17 8Z" fill="white"/></svg>
+          </button>
+          <button id="shareEmail" data-action="click->share#shareEmail" data-share-target="email" class="share-button" title="Partager par Email">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/></svg>
+          </button>
+          <button id="shareWhatsApp" data-action="click->share#shareWhatsApp" data-share-target="whatsapp" class="share-button" title="Partager sur WhatsApp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.05 4.91006C18.1332 3.98399 17.0412 3.24973 15.8377 2.75011C14.6341 2.25049 13.3432 1.99552 12.04 2.00006C6.58005 2.00006 2.13005 6.45006 2.13005 11.9101C2.13005 13.6601 2.59005 15.3601 3.45005 16.8601L2.05005 22.0001L7.30005 20.6201C8.75005 21.4101 10.38 21.8301 12.04 21.8301C17.5 21.8301 21.9501 17.3801 21.9501 11.9201C21.9501 9.27006 20.92 6.78006 19.05 4.91006ZM12.04 20.1501C10.56 20.1501 9.11005 19.7501 7.84005 19.0001L7.54005 18.8201L4.42005 19.6401L5.25005 16.6001L5.05005 16.2901C4.2278 14.977 3.79119 13.4593 3.79005 11.9101C3.79005 7.37006 7.49005 3.67006 12.03 3.67006C14.23 3.67006 16.3 4.53006 17.85 6.09006C18.6175 6.85402 19.2257 7.76272 19.6394 8.76348C20.0531 9.76425 20.2641 10.8372 20.26 11.9201C20.28 16.4601 16.58 20.1501 12.04 20.1501ZM16.56 13.9901C16.31 13.8701 15.09 13.2701 14.87 13.1801C14.64 13.1001 14.48 13.0601 14.31 13.3001C14.14 13.5501 13.67 14.1101 13.53 14.2701C13.39 14.4401 13.24 14.4601 12.99 14.3301C12.74 14.2101 11.94 13.9401 11 13.1001C10.26 12.4401 9.77005 11.6301 9.62005 11.3801C9.48005 11.1301 9.60005 11.0001 9.73005 10.8701C9.84005 10.7601 9.98005 10.5801 10.1 10.4401C10.22 10.3001 10.27 10.1901 10.35 10.0301C10.43 9.86006 10.39 9.72006 10.33 9.60006C10.27 9.48006 9.77005 8.26006 9.57005 7.76006C9.37005 7.28006 9.16005 7.34006 9.01005 7.33006H8.53005C8.36005 7.33006 8.10005 7.39006 7.87005 7.64006C7.65005 7.89006 7.01005 8.49006 7.01005 9.71006C7.01005 10.9301 7.90005 12.1101 8.02005 12.2701C8.14005 12.4401 9.77005 14.9401 12.25 16.0101C12.84 16.2701 13.3 16.4201 13.66 16.5301C14.25 16.7201 14.79 16.6901 15.22 16.6301C15.7 16.5601 16.69 16.0301 16.89 15.4501C17.1 14.8701 17.1 14.3801 17.03 14.2701C16.96 14.1601 16.81 14.1101 16.56 13.9901Z" fill="white"/></svg>
+          </button>
+        </div>
+        <input type="text" id="shareLink" data-share-target="link" value="" hidden readonly>
+      </div>
+    </div>
+    <div id="popup" class="popup">
+      <div class="popup-content">
+        <div class="top-popup">
+          <svg class="close-popup" id="closePopupSave" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
+          </svg>
+        </div>
+        <div class="flex-title-popup">
+          <p class="title-popup">Ajouter dans une liste</p>
+          <%= link_to 'Créer une liste', new_list_path(designer_id: @studio.id), class: "popup-link-add" %>
+        </div>
+        <% @lists.each do |list| %>
+          <div class="field">
+            <div class="box-list">
+              <%= link_to list, class: "box-list-left" do %>
+                <div class="box-text-list">
+                  <p class="title-list"><%= list.name %></p>
+                  <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
                 </div>
               <% end %>
             </div>
           </div>
-        </div>
+        <% end %>
       </div>
-      <div id="imageModal" class="modal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <span id="closeImageModal" style="cursor:pointer;font-size:1.5rem;">&times;</span>
-            </div>
-            <div class="modal-body" style="text-align:center;">
-            </div>
+    </div>
+    <div class="modal fade" id="globalRejectModal" tabindex="-1" role="dialog" aria-labelledby="globalRejectModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="globalRejectModalLabel">Refuser l'entrée</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <%= form_with url: "", method: :patch, id: "rejectForm" do |form| %>
+              <div class="form-group">
+                <%= form.label :rejection_reason, "Raison du refus" %>
+                <%= form.text_area :rejection_reason, class: "form-control", id: "rejectionReasonField" %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <%= form.submit "Refuser", class: "btn btn-danger" %>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
-      <script>
-        document.addEventListener("turbo:load", () => {
-          // --- 1. MODALS GÉNÉRIQUES (pour Reject) ---
-          const modalTriggers = document.querySelectorAll('[data-toggle="modal"]');
-          const closeButtons = document.querySelectorAll('.modal .close, .modal .btn-secondary');
-          const modals = document.querySelectorAll('.modal');
+    </div>
+    <div id="imageModal" class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span id="closeImageModal" style="cursor:pointer;font-size:1.5rem;">&times;</span>
+          </div>
+          <div class="modal-body" style="text-align:center;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("turbo:load", () => {
+        // --- 1. MODALS GÉNÉRIQUES (pour Reject) ---
+        const modalTriggers = document.querySelectorAll('[data-toggle="modal"]');
+        const closeButtons = document.querySelectorAll('.modal .close, .modal .btn-secondary');
+        const modals = document.querySelectorAll('.modal');
 
-          modalTriggers.forEach(button => {
-            // Nettoyage des anciens listeners pour éviter les multiples déclenchements
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
+        modalTriggers.forEach(button => {
+          // Nettoyage des anciens listeners pour éviter les multiples déclenchements
+          const newButton = button.cloneNode(true);
+          button.parentNode.replaceChild(newButton, button);
 
-            newButton.addEventListener('click', function(event) {
-              event.preventDefault();
-              const targetModal = document.querySelector(newButton.getAttribute('data-target'));
-              if (targetModal) {
-                targetModal.classList.add('show');
-                targetModal.style.display = 'block';
-                document.body.classList.add('modal-open');
-              }
+          newButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            const targetModal = document.querySelector(newButton.getAttribute('data-target'));
+            if (targetModal) {
+              targetModal.classList.add('show');
+              targetModal.style.display = 'block';
+              document.body.classList.add('modal-open');
+            }
+          });
+        });
+
+        closeButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) {
+              modal.classList.remove('show');
+              modal.style.display = 'none';
+              document.body.classList.remove('modal-open');
+            }
+          });
+        });
+
+        modals.forEach(modal => {
+          modal.addEventListener('click', function(event) {
+            if (event.target === this) {
+              this.classList.remove('show');
+              this.style.display = 'none';
+              document.body.classList.remove('modal-open');
+            }
+          });
+        });
+
+        // --- 2. LOGIQUE MODAL REJECT SPÉCIFIQUE ---
+        const modalReject = document.querySelector('#globalRejectModal');
+        const formReject = document.querySelector('#rejectForm');
+        const rejectionField = document.querySelector('#rejectionReasonField');
+
+        if (modalReject && formReject) {
+          document.querySelectorAll('[data-toggle="modal"][data-target="#globalRejectModal"]').forEach(button => {
+            button.addEventListener('click', function () {
+              const url = this.getAttribute('data-url');
+              const title = this.getAttribute('data-title');
+              formReject.setAttribute('action', url);
+              modalReject.querySelector('.modal-title').textContent = `Refuser l'entrée : ${title}`;
+              if (rejectionField) rejectionField.value = '';
             });
           });
+        }
 
-          closeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-              const modal = this.closest('.modal');
-              if (modal) {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
-                document.body.classList.remove('modal-open');
-              }
-            });
+        // --- 3. LOGIQUE IMAGE POPUP ---
+        const openBtn = document.getElementById("openImagePopup");
+        const imageModal = document.getElementById("imageModal");
+        const closeBtn = document.getElementById("closeImageModal");
+
+        if (openBtn && imageModal && closeBtn) {
+          openBtn.addEventListener("click", () => {
+            imageModal.style.display = "flex";
+            imageModal.classList.add("show");
           });
-
-          modals.forEach(modal => {
-            modal.addEventListener('click', function(event) {
-              if (event.target === this) {
-                this.classList.remove('show');
-                this.style.display = 'none';
-                document.body.classList.remove('modal-open');
-              }
-            });
+          closeBtn.addEventListener("click", () => {
+            imageModal.style.display = "none";
+            imageModal.classList.remove("show");
           });
-
-          // --- 2. LOGIQUE MODAL REJECT SPÉCIFIQUE ---
-          const modalReject = document.querySelector('#globalRejectModal');
-          const formReject = document.querySelector('#rejectForm');
-          const rejectionField = document.querySelector('#rejectionReasonField');
-
-          if (modalReject && formReject) {
-            document.querySelectorAll('[data-toggle="modal"][data-target="#globalRejectModal"]').forEach(button => {
-              button.addEventListener('click', function () {
-                const url = this.getAttribute('data-url');
-                const title = this.getAttribute('data-title');
-                formReject.setAttribute('action', url);
-                modalReject.querySelector('.modal-title').textContent = `Refuser l'entrée : ${title}`;
-                if (rejectionField) rejectionField.value = '';
-              });
-            });
-          }
-
-          // --- 3. LOGIQUE IMAGE POPUP ---
-          const openBtn = document.getElementById("openImagePopup");
-          const imageModal = document.getElementById("imageModal");
-          const closeBtn = document.getElementById("closeImageModal");
-
-          if (openBtn && imageModal && closeBtn) {
-            openBtn.addEventListener("click", () => {
-              imageModal.style.display = "flex";
-              imageModal.classList.add("show");
-            });
-            closeBtn.addEventListener("click", () => {
+          imageModal.addEventListener("click", (e) => {
+            if (e.target === imageModal) {
               imageModal.style.display = "none";
               imageModal.classList.remove("show");
-            });
-            imageModal.addEventListener("click", (e) => {
-              if (e.target === imageModal) {
-                imageModal.style.display = "none";
-                imageModal.classList.remove("show");
-              }
-            });
-          }
+            }
+          });
+        }
 
-          // --- 4. LOGIQUE SAVE POPUP (LISTES) ---
-          const openPopupSave = document.getElementById("openPopupSave");
-          const closePopupSave = document.getElementById("closePopupSave");
-          const popupSave = document.getElementById("popup");
+        // --- 4. LOGIQUE SAVE POPUP (LISTES) ---
+        const openPopupSave = document.getElementById("openPopupSave");
+        const closePopupSave = document.getElementById("closePopupSave");
+        const popupSave = document.getElementById("popup");
 
-          if (openPopupSave && closePopupSave && popupSave) {
-            openPopupSave.addEventListener("click", () => {
-              popupSave.style.display = "flex";
-            });
-            closePopupSave.addEventListener("click", () => {
+        if (openPopupSave && closePopupSave && popupSave) {
+          openPopupSave.addEventListener("click", () => {
+            popupSave.style.display = "flex";
+          });
+          closePopupSave.addEventListener("click", () => {
+            popupSave.style.display = "none";
+          });
+          window.addEventListener("click", (event) => {
+            if (event.target === popupSave) {
               popupSave.style.display = "none";
-            });
-            window.addEventListener("click", (event) => {
-              if (event.target === popupSave) {
-                popupSave.style.display = "none";
-              }
-            });
-          }
-        });
-      </script>
-    </div>
+            }
+          });
+        }
+      });
+    </script>
+  </div>

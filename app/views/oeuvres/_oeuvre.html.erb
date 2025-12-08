@@ -216,7 +216,7 @@
         </div>
       </div>
     </div>
- <%# Fin de div.header-show %>
+    <%# Fin de div.header-show %>
     <div class="content-show">
       <div class="text-show">
         <div class="title-box-oeuvre">
@@ -381,41 +381,18 @@
     <% end %>
     <div data-controller="validation-overlay">
       <% if !oeuvre.validation %>
-        <% if current_user.certified? || current_user.admin? %>
-          <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
-            <div class="naviguation">
-              <p class="naviguation-title"><%= t('oeuvres.panneau_admin') %></p>
-              <div class="naviguation-buttons">
-                <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? || current_user.certified?%>
-                  <%= link_to t('oeuvres.valider_oeuvre'), validate_oeuvre_path(oeuvre), class: 'button'%>
-                  <%= link_to t('oeuvres.modifier_oeuvre'), edit_oeuvre_path(oeuvre), class: 'button'%>
-                  <a href="#" class="button" data-toggle="modal" data-target="#globalRejectModal"
-                   data-url="<%= reject_oeuvre_path(oeuvre) %>"
-                   data-title="<%= oeuvre.nom_oeuvre %>">
-                    <%= t('oeuvres.supprimer_reference') %>
-                  </a>
-                <% end %>
-              </div>
-              <div class="naviguation-buttons">
-                <%= link_to t('oeuvres.ajouter_autre'), add_elements_path, class: "button" %>
-                <%= link_to t('oeuvres.retour'), add_elements_path, class: "button" %>
-              </div>
+        <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
+          <div class="naviguation">
+            <p class="naviguation-title">Que souhaitez-vous faire ?</p>
+            <div class="naviguation-buttons">
+              <%= link_to "Ajouter une autre référence", add_elements_path, class: "button" %>
+              <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? %>
+                <%= link_to 'Annuler la soumission', cancel_oeuvre_path(oeuvre), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de cette référence ?' } %>
+              <% end %>
+              <%= link_to "Retour à l'accueil", oeuvres_path, class: "button" %>
             </div>
           </div>
-        <%else%>
-          <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
-            <div class="naviguation">
-              <p class="naviguation-title"><%= t('oeuvres.supprimer_reference') %></p>
-              <div class="naviguation-buttons">
-                <%= link_to "Ajouter une autre référence", add_elements_path, class: "button" %>
-                <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? %>
-                  <%= link_to 'Annuler la soumission', cancel_oeuvre_path(oeuvre), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de cette référence ?' } %>
-                <% end %>
-                <%= link_to "Retour à l'accueil", oeuvres_path, class: "button" %>
-              </div>
-            </div>
-          </div>
-        <%end%>
+        </div>
         <div class="validation" id="validation" data-validation-overlay-target="validation">
           <%= image_tag "logo-white.svg", alt: "", class:"logo-overlay" %>
           <svg width="76" height="73" viewBox="0 0 76 73" fill="none" xmlns="http://www.w3.org/2000/svg">

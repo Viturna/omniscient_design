@@ -101,31 +101,26 @@
       <h2 data-multi-step-form-target="stepTitle"><%= t('add_oeuvre.steps.2.title') %></h2>
       <div class="flex-form">
         <div data-controller="multi-select" data-multi-select-prefix-value="designer">
-          <%= form.label :designer_ids, t('add_oeuvre.steps.2.designer_ids') %>
-          <% max_designers = 3 %>
-          <% selected_designers = @oeuvre.designer_ids %>
-          <% (0...max_designers).each do |index| %>
-            <div>
-              <%= form.collection_select :designer_ids,
-                Designer.order(:nom),
-                :id,
-                :nom_designer,
-                { 
-                  include_blank: t('add_oeuvre.steps.2.designer_blank'),
-                  prompt: t('add_oeuvre.steps.2.designer_prompt'),
-                  selected: selected_designers[index]
-                },
-                { 
-                  class: "form-control",
-                  id: "designer_#{index + 1}",
-                  name: "oeuvre[designer_ids][]",
-                  data: { 
-                    controller: "select2",
-                    select2_placeholder_value: t('add_oeuvre.steps.2.designer_prompt')
-                  }
-                } %>
-            </div>
-          <% end %>
+          <div>
+            <%= form.label :designer_ids, t('add_oeuvre.steps.2.designer_ids') %>
+            <%= form.collection_select :designer_ids,
+              Designer.order(:nom),
+              :id,
+              :nom_designer,
+              { 
+                include_blank: false, 
+                selected: @oeuvre.designer_ids 
+              },
+              { 
+                class: "form-control",
+                multiple: true, 
+                name: "oeuvre[designer_ids][]",
+                data: { 
+                  controller: "select2",
+                  select2_placeholder_value: t('add_oeuvre.steps.2.designer_prompt')
+                }
+              } %>
+          </div>
           <div>
             <%= form.label :studio_ids, 'Studio(s) associé(s)' %>
             <%= form.collection_select :studio_ids, 

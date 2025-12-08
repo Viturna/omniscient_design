@@ -168,12 +168,24 @@
           <%= form.label :presentation_generale, t("add_designer.steps.3.presentation_generale") %>
           <%= form.text_area :presentation_generale, placeholder: t("add_designer.steps.3.presentation_generale_placeholder") %>
         </div>
-        <% [:formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
-          <div>
-            <%= form.label field, t("add_designer.steps.3.#{field}") %>
-            <%= form.text_area field, placeholder: t("add_designer.steps.3.#{field}_placeholder") %>
-          </div>
-        <% end %>
+        <div class="flex-button">
+          <% [:formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
+            <div data-controller="toggle-single-field flex-form">
+              <button type="button" 
+                    class="button small secondary dashed" 
+                    data-toggle-single-field-target="button"
+                    data-action="click->toggle-single-field#reveal">
+                + <%= t("add_designer.steps.3.#{field}") %>
+              </button>
+              <div data-toggle-single-field-target="container" style="display: none;">
+                <%= form.label field, t("add_designer.steps.3.#{field}") %>
+                <%= form.text_area field, 
+                  placeholder: t("add_designer.steps.3.#{field}_placeholder"),
+                  data: { toggle_single_field_target: "input" } %>
+              </div>
+            </div>
+          <% end %>
+        </div>
         <div data-controller="sources" data-sources-prefix-value="designer">
           <%= form.label :source, t('add_oeuvre.steps.3.source') %>
           <div data-sources-target="container">
@@ -198,7 +210,7 @@
               </div>
             <% end %>
           </div>
-          <button type="button" data-sources-target="addButton" class="button small">
+          <button type="button" data-sources-target="addButton" class="button small secondary dashed">
             <%= t('add_oeuvre.steps.3.add_source_button') %>
           </button>
         </div>

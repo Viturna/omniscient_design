@@ -347,41 +347,18 @@
         <% end %>
         <div data-controller="validation-overlay">
           <% if !designer.validation %>
-            <% if current_user&.certified? || current_user&.admin? %>
-              <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
-                <div class="naviguation">
-                  <p class="naviguation-title">Panneau d'administration</p>
-                  <div class="naviguation-buttons">
-                    <% if user_signed_in? && (current_user.id == designer.user_id || current_user.admin? || current_user.certified?) %>
-                      <%= link_to 'Valider le designer', validate_designer_path(designer), class: 'button'%>
-                      <%= link_to 'Modifier le designer', edit_designer_path(designer), class: 'button'%>
-                      <a href="#" class="button" data-toggle="modal" data-target="#globalRejectModal"
-                         data-url="<%= reject_designer_path(designer) %>"
-                         data-title="<%= designer.nom_designer %>">
-                        Supprimer le designer
-                      </a>
-                    <% end %>
-                  </div>
-                  <div class="naviguation-buttons">
-                    <%= link_to "Ajouter un autre designer", add_elements_path, class: "button" %>
-                    <%= link_to "Retour", add_elements_path, class: "button" %>
-                  </div>
+            <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
+              <div class="naviguation">
+                <p class="naviguation-title">Que souhaitez-vous faire ?</p>
+                <div class="naviguation-buttons">
+                  <%= link_to "Ajouter un autre designer", add_elements_path, class: "button" %>
+                  <% if user_signed_in? && (current_user.id == designer.user_id || current_user.admin?) %>
+                    <%= link_to 'Annuler la soumission', cancel_designer_path(designer), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de ce designer ?' } %>
+                  <% end %>
+                  <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
                 </div>
               </div>
-            <% else %>
-              <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
-                <div class="naviguation">
-                  <p class="naviguation-title">Que souhaitez-vous faire ?</p>
-                  <div class="naviguation-buttons">
-                    <%= link_to "Ajouter un autre designer", add_elements_path, class: "button" %>
-                    <% if user_signed_in? && (current_user.id == designer.user_id || current_user.admin?) %>
-                      <%= link_to 'Annuler la soumission', cancel_designer_path(designer), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de ce designer ?' } %>
-                    <% end %>
-                    <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+            </div>
             <div class="validation" id="validation" data-validation-overlay-target="validation">
               <%= image_tag "logo-white.svg", alt: "", class:"logo-overlay" %>
               <svg width="76" height="73" viewBox="0 0 76 73" fill="none" xmlns="http://www.w3.org/2000/svg">

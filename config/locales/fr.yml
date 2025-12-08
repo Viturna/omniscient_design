@@ -767,7 +767,7 @@ fr:
         heritage_et_impact: "Héritage et impact (Min. 200 caractères)"
         heritage_et_impact_placeholder: "Ex : Gustave Eiffel a redéfini les standards..."
       4:
-        title: "Étape 4 : Image"
+        title: "Étape 4 : Images & Illustrations"
         image: "Url de l'image"
         image_placeholder: "https://url-de-l-image.fr"
     buttons:
@@ -828,10 +828,10 @@ fr:
         source_placeholder: "Ex : https://example.com"
         add_source_button: "Ajouter un lien"
       4:
-        title: "Étape 4 : Images"
+        title: "Étape 4 : Images & Illustrations"
         date_oeuvre: "Date de la référence"
         date_oeuvre_placeholder: "Ex : 2002"
-        image: "Image(s)"
+        image: "Image(s) & Illustration(s)"
     buttons:
       next: "Suivant"
       prev: "Précédent"

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["step", "prevButton", "rulesCheckbox", "rulesNextBtn", "nameInput", "surnameInput", "errorMessage", "progressBar", "progressText"]
+    static targets = ["step", "prevButton", "rulesCheckbox", "rulesNextBtn", "nameInput", "surnameInput", "errorMessage", "progressBar", "progressText", "stepTitle"]
 
     static values = {
         editMode: Boolean,
@@ -18,7 +18,45 @@ export default class extends Controller {
 
         this.showCurrentStep();
         this.checkRulesCheckbox();
+        this.bindHeaderBack();
     }
+
+    disconnect() {
+        if (this.boundHeaderBackHandler) {
+            const backLink = document.getElementById("header-back-btn");
+            if (backLink) {
+                backLink.removeEventListener('click', this.boundHeaderBackHandler);
+            }
+        }
+    }
+
+    // --- GESTION DU HEADER (C'est cette partie qui manquait) ---
+
+    bindHeaderBack() {
+        const backLink = document.getElementById("header-back-btn");
+
+        if (backLink) {
+            this.boundHeaderBackHandler = this.handleHeaderBack.bind(this);
+            backLink.addEventListener('click', this.boundHeaderBackHandler);
+        }
+    }
+
+    handleHeaderBack(event) {
+        // Définir le point de départ selon le mode (0 pour création, 1 pour édition)
+        const startStepIndex = this.editModeValue ? 1 : 0;
+
+        // Si on est plus loin que le début du formulaire...
+        if (this.currentStepIndex > startStepIndex) {
+            // ... on empêche le lien de changer de page
+            event.preventDefault();
+            // ... et on recule d'une étape
+            this.currentStepIndex--;
+            this.showCurrentStep();
+        }
+        // Sinon, on laisse le lien fonctionner normalement (retour à la page précédente)
+    }
+
+    // --- FIN GESTION HEADER ---
 
     showCurrentStep() {
         if (!this.hasStepTarget) return;
@@ -29,6 +67,7 @@ export default class extends Controller {
                 el.style.visibility = "visible";
 
                 this.trackStepView(index + 1);
+                this.updateHeaderTitle(el);
             } else {
                 el.style.display = "none";
             }
@@ -40,6 +79,19 @@ export default class extends Controller {
         window.scrollTo(0, 0);
     }
 
+    updateHeaderTitle(currentStepEl) {
+        const headerTitle = document.querySelector(".top-header h1");
+
+        const stepTitle = this.hasStepTitleTarget ?
+            currentStepEl.querySelector('[data-multi-step-form-target="stepTitle"]') :
+            currentStepEl.querySelector("h3");
+
+        if (headerTitle && stepTitle) {
+            headerTitle.textContent = stepTitle.textContent;
+            stepTitle.style.display = "none";
+        }
+    }
+
     updateProgress() {
         const progressBar = document.querySelector(".progress-bar-form");
         const progressText = document.querySelector(".progress-percent-form");
@@ -47,8 +99,7 @@ export default class extends Controller {
         if (!progressBar) return;
 
         const totalSteps = this.stepTargets.length;
-        const current = this.currentStepIndex + 1;
-        const percent = Math.round((current / totalSteps) * 100);
+        const percent = Math.round((this.currentStepIndex / totalSteps) * 100);
 
         progressBar.style.width = `${percent}%`;
         if (progressText) {
@@ -68,6 +119,7 @@ export default class extends Controller {
 
     async next(event) {
         event.preventDefault();
+
         if (!this.validateCurrentStep()) return;
 
         if (this.currentStepIndex === 1 && !this.editModeValue) {
@@ -129,20 +181,18 @@ export default class extends Controller {
 
         let params = "";
 
-        // Cas 1 : Designer (Nom + Prénom)
         if (this.hasSurnameInputTarget && this.hasNameInputTarget) {
             const nom = this.nameInputTarget.value.trim();
             const prenom = this.surnameInputTarget.value.trim();
             params = `nom=${encodeURIComponent(nom)}&prenom=${encodeURIComponent(prenom)}`;
         }
-        // Cas 2 : Nom seul (Oeuvre ou Studio)
         else if (this.hasNameInputTarget) {
             const nom = this.nameInputTarget.value.trim();
 
             if (this.checkUrlValue.includes("studios")) {
-                params = `nom=${encodeURIComponent(nom)}`; // Pour les Studios
+                params = `nom=${encodeURIComponent(nom)}`;
             } else {
-                params = `nom_oeuvre=${encodeURIComponent(nom)}`; // Par défaut (Oeuvres)
+                params = `nom_oeuvre=${encodeURIComponent(nom)}`;
             }
         } else {
             return true;
@@ -185,8 +235,6 @@ export default class extends Controller {
         }
     }
 
-    // MÉTHODES DE TRACKING GOOGLE ANALYTICS
-
     trackStepView(stepNumber) {
         if (typeof gtag !== 'function') return;
 
@@ -198,7 +246,6 @@ export default class extends Controller {
             'step_number': stepNumber,
             'form_name': `add_${formType}`
         });
-
     }
 
     trackValidationError(stepNumber, fieldName) {

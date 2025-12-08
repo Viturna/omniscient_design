@@ -86,13 +86,12 @@ main {
 .flex-form div {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .flex-button {
   display: flex;
   justify-content: center;
-  margin-top: 32px;
 }
 @media screen and (max-width: 1280px) {
   main {

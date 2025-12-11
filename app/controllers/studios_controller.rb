@@ -5,7 +5,6 @@ class StudiosController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
-
   def show
     @domaines = @studio.domaines
     if user_signed_in?
@@ -24,7 +23,7 @@ class StudiosController < ApplicationController
   def new
     @studio = Studio.new
     10.times { @studio.designer_studios.build }
-     3.times do |i|
+    3.times do |i|
       @studio.studio_images.build(position: i + 1)
     end
     @current_page = 'add_elements'
@@ -42,7 +41,7 @@ class StudiosController < ApplicationController
     @country_1, @country_2, @country_3 = @studio.country_ids[0..2]
   end
 
-def create
+  def create
     @studio = Studio.new(studio_params)
     @studio.user = current_user
     token = params[:recaptcha_token]
@@ -61,16 +60,12 @@ def create
       render :new, status: :unprocessable_entity
     end
   end
-  def update
-    # Utilisation de friendly.find si vous utilisez friendly_id pour les studios aussi
-    # Sinon Studio.find(params[:id])
-    @studio = Studio.friendly.find(params[:slug])
 
+  def update
     if @studio.update(studio_params)
       flash[:success] = I18n.t('studio.update.success', default: "Studio mis à jour")
       redirect_to @studio
     else
-      # @countries = Country.order(:country)
       flash.now[:alert] = I18n.t('studio.update.failure', default: "Erreur lors de la mise à jour")
       render :edit, status: :unprocessable_entity
     end
@@ -80,7 +75,7 @@ def create
     if @studio.destroy
       handle_destroy_success(@studio)
     else
-       redirect_to validation_path, alert: I18n.t('studio.destroy.error', default: "Erreur lors de la suppression")
+      redirect_to validation_path, alert: I18n.t('studio.destroy.error', default: "Erreur lors de la suppression")
     end
   end
 
@@ -90,23 +85,23 @@ def create
     @studio.studios_domaines.delete_all if @studio.respond_to?(:studios_domaines)
 
     if @studio.destroy
-        create_rejection_notification(@studio)
-        update_suivi_references_refusees(@studio.user)
-        redirect_to validation_path, notice: I18n.t('studio.reject.success', default: "Studio rejeté")
+      create_rejection_notification(@studio)
+      update_suivi_references_refusees(@studio.user)
+      redirect_to validation_path, notice: I18n.t('studio.reject.success', default: "Studio rejeté")
     else
-        redirect_to validation_path, alert: I18n.t('studio.reject.failure', default: "Erreur lors du rejet")
+      redirect_to validation_path, alert: I18n.t('studio.reject.failure', default: "Erreur lors du rejet")
     end
   end
 
   def cancel
     if user_signed_in? && (current_user.admin? || @studio.user_id == current_user.id)
-        @studio.destroy
-        update_suivi_references_refusees(@studio.user)
-        flash[:notice] = I18n.t('studio.cancel.success', default: "Soumission annulée")
-        redirect_to add_elements_path 
+      @studio.destroy
+      update_suivi_references_refusees(@studio.user)
+      flash[:notice] = I18n.t('studio.cancel.success', default: "Soumission annulée")
+      redirect_to add_elements_path 
     else
-        flash[:alert] = I18n.t('studio.cancel.denied', default: "Action non autorisée")
-        redirect_to @studio
+      flash[:alert] = I18n.t('studio.cancel.denied', default: "Action non autorisée")
+      redirect_to @studio
     end
   end
 
@@ -137,7 +132,7 @@ def create
   private
 
   def handle_destroy_success(studio)
-      redirect_to validation_path, notice: I18n.t('studio.destroy.success', name: studio.nom, default: "Studio supprimé")
+    redirect_to validation_path, notice: I18n.t('studio.destroy.success', name: studio.nom, default: "Studio supprimé")
   end
 
   def update_suivi_references_emises(user)
@@ -159,8 +154,7 @@ def create
   end
 
   def create_notification(studio)
-  def create_notification(studio)
-    title = "Nouveau studio à valider"
+    title = "Nouvelle proposition"
     message = I18n.t('notifications.new_studio', name: studio.nom, default: "Nouveau studio à valider : #{studio.nom}")
     
     User.where("role = ? OR certified = ?", 'admin', true).each do |user|
@@ -176,7 +170,7 @@ def create
   def create_validation_notification(studio)
     return unless studio.user_id
     
-    title = "Studio validé"
+    title = "Fiche validée"
     message = I18n.t('notifications.studio_validated', name: studio.nom, default: "Votre studio #{studio.nom} a été validé.")
     
     Notification.create(
@@ -190,7 +184,7 @@ def create
   def create_rejection_notification(studio)
      return unless studio.user_id
      
-     title = "Studio refusé"
+     title = "Fiche refusée"
      message = I18n.t('notifications.studio_rejected', name: studio.nom, default: "Votre studio #{studio.nom} a été refusé.")
      
      Notification.create(
@@ -200,13 +194,14 @@ def create
        message: message
      ) 
   end
+
   def set_studio
     @studio = Studio.friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound
     redirect_to studios_path, alert: "Studio introuvable."
   end
 
- def studio_params
+  def studio_params
     params.require(:studio).permit(
       :nom,
       :date_creation,
@@ -217,6 +212,7 @@ def create
       :creations_majeures,
       :heritage_et_impact,
       :image,
+      :recaptcha_token,
       domaine_ids: [],
       country_ids: [],
       source: [],
@@ -224,7 +220,8 @@ def create
         :id, 
         :file, 
         :credit, 
-        :_destroy
+        :_destroy,
+        :position
       ],
       designer_studios_attributes: [
         :id, 

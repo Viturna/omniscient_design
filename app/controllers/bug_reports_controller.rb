@@ -63,7 +63,8 @@ end
     redirect_to root_path, alert: I18n.t('bug_report.access.denied') unless current_user.admin?
   end
 
-  def notify_admins_of_new_bug(bug_report)
+ def notify_admins_of_new_bug(bug_report)
+    title = "Nouveau bug signalé"
     message = I18n.t('notifications.new_bug_report', 
                      user_name: bug_report.user.pseudo, 
                      default: "Nouveau bug signalé par #{bug_report.user.pseudo}")
@@ -76,7 +77,9 @@ end
       Notification.create(
         user: admin, 
         notifiable: bug_report, 
-        message: message
+        title: title,
+        message: message,
+        status: :unread
       )
     end
   rescue => e
@@ -85,9 +88,9 @@ end
 
   def notify_user_of_status_update(bug_report)
     return unless bug_report.user.present?
-    
-    return if bug_report.user == current_user 
+    return if bug_report.user == current_user && current_user.admin?
 
+    title = "Suivi de votre signalement"
     status_text = I18n.t("bug_report.statuses.#{bug_report.status}", default: bug_report.status.humanize)
     
     message = I18n.t('notifications.bug_report_updated', 
@@ -97,11 +100,11 @@ end
     Notification.create(
       user: bug_report.user,
       notifiable: bug_report,
-      message: message
+      title: title,  
+      message: message,
+      status: :unread
     )
   rescue => e
     Rails.logger.error "ERREUR notify_user_of_status_update: #{e.message}"
   end
-  
-
 end

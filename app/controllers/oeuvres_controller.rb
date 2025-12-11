@@ -232,26 +232,20 @@ end
   
   private
   def update_image_credits(oeuvre, params)
-    # 1. Mettre à jour les crédits des images EXISTANTES
     if params[:oeuvre][:existing_image_credits]
       params[:oeuvre][:existing_image_credits].each do |blob_id, credit_text|
-        # On trouve le blob (le fichier) et on met à jour ses metadata
         blob = ActiveStorage::Blob.find_by(id: blob_id)
         blob&.update(metadata: { credit: credit_text.presence })
       end
     end
 
-    # 2. Mettre à jour les crédits des NOUVELLES images
     if params[:oeuvre][:new_image_credits]
-      # On récupère les NOUVEAUX attachements (créés lors du @oeuvre.save)
-      # On les trie par ID pour espérer matcher l'ordre du formulaire
       new_attachments = oeuvre.images_attachments
                               .where.not(id: oeuvre.images.map(&:id)) # Exclut les anciens
                               .order(:id) # On suppose que l'ordre de création = ordre du form
                               
       new_credits = params[:oeuvre][:new_image_credits]
 
-      # On associe chaque crédit à chaque nouvel attachement
       new_attachments.each_with_index do |attachment, index|
         credit_text = new_credits[index]
         if credit_text.present?
@@ -280,21 +274,38 @@ end
     end
   end
   def create_notification(oeuvre)
+    title = "Nouvelle référence à valider"
     message = t('notifications.new_oeuvre', name: oeuvre.nom_oeuvre)
     
     recipients = User.where("role = ? OR certified = ?", 'admin', true)
 
     recipients.each do |user|
-      Notification.create(user_id: user.id, notifiable: oeuvre, message: message)
+      Notification.create(
+        user_id: user.id, 
+        notifiable: oeuvre, 
+        title: title,
+        message: message
+      )
     end
   end
+
   def create_validation_notification(oeuvre)
+    title = "Référence validée"
     message = t('notifications.oeuvre_validated', name: oeuvre.nom_oeuvre)
 
     if oeuvre.user_id.present?
-      Notification.create(user_id: oeuvre.user_id, notifiable: oeuvre, message: message)
+      Notification.create(
+        user_id: oeuvre.user_id, 
+        notifiable: oeuvre, 
+        title: title,
+        message: message
+      )
     else
-      Notification.create(notifiable: oeuvre, message: message)
+      Notification.create(
+        notifiable: oeuvre, 
+        title: title,
+        message: message
+      )
     end
   rescue ActiveRecord::NotNullViolation => e
     Rails.logger.error(t('notifications.error_creation', error: e.message))
@@ -302,8 +313,15 @@ end
 
   def create_rejection_notification(oeuvre)
     if oeuvre.user_id.present?
+      title = "Référence refusée"
       message = t('notifications.oeuvre_rejected', name: oeuvre.nom_oeuvre)
-      Notification.create(user_id: oeuvre.user_id, notifiable: oeuvre, message: message)
+      
+      Notification.create(
+        user_id: oeuvre.user_id, 
+        notifiable: oeuvre, 
+        title: title,
+        message: message
+      )
     else
       Rails.logger.error(t('notifications.no_user_for_rejection', oeuvre_id: oeuvre.id))
     end

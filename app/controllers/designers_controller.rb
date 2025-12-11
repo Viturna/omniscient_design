@@ -13,7 +13,6 @@ class DesignersController < ApplicationController
     designers = Designer.where(validation: true).order("RANDOM()").limit(10)
     @current_page = 'accueil'
 
-    # --- NOUVELLE LOGIQUE D'INSERTION DE PUBS ---
     ads = ads_data.shuffle
     @ads_order_string = ads.map { |ad| ad[:id] }.join(',') # Sauvegarde l'ordre
     
@@ -40,10 +39,8 @@ def load_more
     @designers = Designer.where(validation: true)
                          .where.not(id: loaded_ids)
                          .order("RANDOM()")
-                         # .offset(offset) # On n'utilise plus l'offset
                          .limit(limit)
 
-    # --- LOGIQUE DE PUB POUR LOAD_MORE ---
     items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
     ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
     ads = ads_data.shuffle
@@ -58,7 +55,6 @@ def load_more
     items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
     ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
 
-    # --- LOGIQUE DE PUB MISE À JOUR (NE PLUS MÉLANGER) ---
     if params[:ads_order].present?
       ordered_ad_ids = params[:ads_order].split(',')
       ads_hashes = ads_data
@@ -66,7 +62,6 @@ def load_more
     else
       ads = []
     end
-    # --- FIN LOGIQUE ---
 
     html_output = "" 
     @designers.each do |designer|
@@ -135,7 +130,6 @@ def load_more
     else
       @countries = Country.order(:country)
       flash.now[:alert] = I18n.t('designer.create.failure')
-      # Assure que les champs d'image sont reconstruits en cas d'erreur
       3.times do |i|
         @designer.designer_images.build(position: i + 1)
       end
@@ -150,7 +144,6 @@ def load_more
     else
       @countries = Country.order(:country)
       flash.now[:alert] = I18n.t('designer.update.failure')
-      # Assure que les champs d'image sont reconstruits en cas d'erreur
       (3 - @designer.designer_images.count).times { @designer.designer_images.build }
       render :edit, status: :unprocessable_entity
     end
@@ -268,20 +261,22 @@ def load_more
     suivi.save
   end
   
-  def create_notification(designer)
+def create_notification(designer)
+    title = "Nouveau designer à valider"
     message = t('notifications.new_designer', name: designer.nom_designer)
     recipients = User.where("role = ? OR certified = ?", 'admin', true)
     recipients.each do |user|
-      Notification.create(user_id: user.id, notifiable: designer, message: message)
+      Notification.create(user_id: user.id, notifiable: designer, title: title, message: message)
     end
   end
 
   def create_validation_notification(designer)
+    title = "Designer validé"
     message = t('notifications.designer_validated', name: designer.nom_designer)
     if designer.user_id.present?
-      Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
+      Notification.create(user_id: designer.user_id, notifiable: designer, title: title, message: message)
     else
-      Notification.create(notifiable: designer, message: message)
+      Notification.create(notifiable: designer, title: title, message: message)
     end
   rescue ActiveRecord::NotNullViolation => e
     Rails.logger.error(t('notifications.error_creation', error: e.message))
@@ -289,8 +284,9 @@ def load_more
 
   def create_rejection_notification(designer)
     if designer.user_id.present?
+      title = "Designer refusé"
       message = t('notifications.designer_rejected', name: designer.nom_designer)
-      Notification.create(user_id: designer.user_id, notifiable: designer, message: message)
+      Notification.create(user_id: designer.user_id, notifiable: designer, title: title, message: message)
     else
       Rails.logger.error(t('notifications.no_user_for_rejection_designer', designer_id: designer.id))
     end
@@ -313,12 +309,11 @@ def load_more
       :style_ou_philosophie,
       :creations_majeures,
       :heritage_et_impact,
-      :image, # C'est l'ancien champ image URL, on le garde
+      :image,
       :recaptcha_token,
       domaine_ids: [],
       country_ids: [],
       source: [],
-      # AJOUT : Permet les attributs pour les images uploadées
       designer_images_attributes: [:id, :file, :credit, :_destroy, :position]
     )
   end

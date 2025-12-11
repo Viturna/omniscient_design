@@ -58,7 +58,7 @@ class FeedbacksController < ApplicationController
 
   def notify_admins_of_new_feedback(feedback)
     submitter_name = feedback.user.pseudo || feedback.user.full_name
-    
+    title = "Nouveau Feedback"
     message = I18n.t('notifications.new_feedback', 
                      user_name: submitter_name, 
                      default: "Nouveau feedback reçu de #{submitter_name}")
@@ -71,7 +71,9 @@ class FeedbacksController < ApplicationController
       Notification.create(
         user: admin, 
         notifiable: feedback, 
-        message: message
+        title: title,
+        message: message,
+        status: :unread
       )
     end
   rescue => e

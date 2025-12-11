@@ -358,7 +358,7 @@ class ListsController < ApplicationController
     redirect_to @list, notice: notice
   end
 
-  # app/controllers/lists_controller.rb
+
 
 def load_more_oeuvres
   offset = params[:offset].to_i
@@ -371,13 +371,10 @@ def load_more_oeuvres
                      .offset(offset)
                      .limit(10)
   else
-    # --- CORRECTION ---
-    # On charge les oeuvres non filtrées, car le JS n'envoie pas les filtres
     @oeuvres = Oeuvre.where(validation: true)
                      .order(:nom_oeuvre)
                      .offset(offset)
                      .limit(10)
-    # --- FIN CORRECTION ---
   end
   render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
 end
@@ -431,9 +428,17 @@ end
   end
 
   def create_share_notification(list)
+    title = "Liste partagée"
     message = I18n.t('lists.shared_message', name: list.name)
+    
     list.editors.each do |editor|
-      Notification.create(user_id: editor.id, notifiable: list, message: message)
+      Notification.create(
+        user_id: editor.id, 
+        notifiable: list, 
+        title: title,
+        message: message,
+        status: :unread
+      )
     end
   end
 end

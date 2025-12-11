@@ -1,46 +1,101 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
+
 .notifications {
   margin: 32px 0;
-}
-
-.notifications li {
-  width: calc(100% - 25px);
-  height: 70px;
-  background-color: #FFF;
-  border-radius: 5px;
   display: flex;
-  align-items: center;
-  padding-left: 25px;
-  color: $primary-color;
-  margin-top: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.notifications li:hover {
-  background-color: #EDEDED;
+.notification-item {
+  width: 100%;
+  min-height: 80px;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  color: $primary-color;
+  transition: background-color 0.2s ease;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+
+  &:hover {
+    background-color: #ededed;
+  }
+
+  &.unread {
+    background-color: #f9f9ff;
+    border-left: 4px solid $primary-color;
+  }
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 85%;
+
+  .notification-title {
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0;
+    color: $primary-color;
+  }
+
+  .notification-message {
+    font-size: 15px;
+    color: $text-color;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.notification-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 100px;
 }
 
 .time {
-  font-size: 14px;
-  margin-left: 8px;
-  color: $text-color;
+  font-size: 13px;
+  color: #8d9299;
+  margin: 0;
+  white-space: nowrap; 
 }
 
-@media screen and (min-width: 0px) and (max-width: 1024px) {
-  .time {
-    margin: 0;
-  }
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #e61818;
+  border-radius: 50%;
+  margin-top: 8px;
+}
 
+@media screen and (max-width: 1024px) {
   .notifications {
-    margin: 32px 0;
+    margin: 24px 0;
   }
 
-  .notifications li {
-    width: calc(100% - 40px);
-    gap: 16px;
-    height: auto;
-    align-items: start;
-    padding: 20px;
+  .notification-item {
     flex-direction: column;
-    margin-top: 16px;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 12px;
+    height: auto;
+  }
+
+  .notification-content {
+    max-width: 100%;
+  }
+
+  .notification-meta {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
   }
 }

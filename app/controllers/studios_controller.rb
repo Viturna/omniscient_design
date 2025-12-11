@@ -87,12 +87,7 @@ def create
   def reject
     rejection_reason = params[:rejection_reason].presence || I18n.t('studio.reject.no_comment', default: "Aucun commentaire")
     
-    # Si vous avez une table RejectedStudio, décommentez et adaptez :
-    # RejectedStudio.create!(nom: @studio.nom, user: @studio.user, reason: rejection_reason)
-
-    # Suppression des associations si nécessaire (adaptez les noms)
     @studio.studios_domaines.delete_all if @studio.respond_to?(:studios_domaines)
-    # @studio.studio_countries.delete_all if @studio.respond_to?(:studio_countries)
 
     if @studio.destroy
         create_rejection_notification(@studio)
@@ -106,9 +101,9 @@ def create
   def cancel
     if user_signed_in? && (current_user.admin? || @studio.user_id == current_user.id)
         @studio.destroy
-        update_suivi_references_refusees(@studio.user) # Ou une autre métrique pour "annulé"
+        update_suivi_references_refusees(@studio.user)
         flash[:notice] = I18n.t('studio.cancel.success', default: "Soumission annulée")
-        redirect_to add_elements_path # Ou studios_path
+        redirect_to add_elements_path 
     else
         flash[:alert] = I18n.t('studio.cancel.denied', default: "Action non autorisée")
         redirect_to @studio
@@ -126,7 +121,6 @@ def create
   end
 
   def check_existence
-    # Recherche insensible à la casse sur le NOM uniquement pour les studios
     studio = Studio.where("LOWER(nom) = ?", params[:nom].to_s.downcase.strip).first
 
     if studio
@@ -143,11 +137,9 @@ def create
   private
 
   def handle_destroy_success(studio)
-      # Logique après suppression réussie (notifs, redirection...)
       redirect_to validation_path, notice: I18n.t('studio.destroy.success', name: studio.nom, default: "Studio supprimé")
   end
 
-  # Méthodes de suivi (identiques à DesignersController)
   def update_suivi_references_emises(user)
     return unless user
     suivi = user.suivis.first_or_create
@@ -166,29 +158,49 @@ def create
     suivi.increment!(:nb_references_refusees)
   end
 
-  # Notifications (adaptez les clés de traduction)
   def create_notification(studio)
+  def create_notification(studio)
+    title = "Nouveau studio à valider"
     message = I18n.t('notifications.new_studio', name: studio.nom, default: "Nouveau studio à valider : #{studio.nom}")
+    
     User.where("role = ? OR certified = ?", 'admin', true).each do |user|
-      Notification.create(user_id: user.id, notifiable: studio, message: message)
+      Notification.create(
+        user_id: user.id, 
+        notifiable: studio, 
+        title: title,
+        message: message
+      )
     end
   end
 
   def create_validation_notification(studio)
     return unless studio.user_id
+    
+    title = "Studio validé"
     message = I18n.t('notifications.studio_validated', name: studio.nom, default: "Votre studio #{studio.nom} a été validé.")
-    Notification.create(user_id: studio.user_id, notifiable: studio, message: message)
+    
+    Notification.create(
+      user_id: studio.user_id, 
+      notifiable: studio, 
+      title: title,
+      message: message
+    )
   end
 
   def create_rejection_notification(studio)
      return unless studio.user_id
+     
+     title = "Studio refusé"
      message = I18n.t('notifications.studio_rejected', name: studio.nom, default: "Votre studio #{studio.nom} a été refusé.")
-     # Note : notifiable sera nil si le studio est détruit, vous voudrez peut-être adapter cela
-     Notification.create(user_id: studio.user_id, message: message) 
+     
+     Notification.create(
+       user_id: studio.user_id, 
+       notifiable: studio,
+       title: title,
+       message: message
+     ) 
   end
-
   def set_studio
-    # Adaptez selon si vous utilisez friendly_id ou non
     @studio = Studio.friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound
     redirect_to studios_path, alert: "Studio introuvable."

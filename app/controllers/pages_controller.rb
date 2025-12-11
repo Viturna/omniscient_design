@@ -57,7 +57,6 @@ class PagesController < ApplicationController
         redirect_to parrainage_filleul_path and return
       end
   
-      # Trouver le parrain correspondant au code
       referrer = User.find_by(referral_code: referral_code)
   
       if referrer

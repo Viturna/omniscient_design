@@ -5,9 +5,6 @@ require 'json'
 require 'openssl'
 require 'stringio'
 
-# Désactive la vérification SSL en dev
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
-
 class PushNotificationService
   PROJECT_ID = "omniscientdesign-a2e94"
   SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
@@ -46,16 +43,20 @@ class PushNotificationService
       # --- MOUCHARD 4 : ENVOI ---
       Rails.logger.info "📨 [PushService] Envoi vers token : #{device_token.first(10)}..."
       
+      # [CORRECTION] Utilisation du titre de la notification ou un défaut
+      title_content = @notification.title.presence || "Omniscient Design"
+      
       body = {
         message: {
           token: device_token,
           notification: {
-            title: "Omniscient Design",
+            title: title_content, 
             body: @notification.message
           },
           data: {
             notifiable_id: @notification.notifiable_id.to_s,
-            notifiable_type: @notification.notifiable_type
+            notifiable_type: @notification.notifiable_type.to_s, # .to_s pour sécurité
+            notification_id: @notification.id.to_s # Utile pour marquer comme lu au clic
           },
           apns: { payload: { aps: { sound: "default", badge: 1 } } },
           android: {
@@ -74,7 +75,11 @@ class PushNotificationService
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE 
+      
+      # Configuration SSL locale uniquement pour le développement si nécessaire
+      if Rails.env.development?
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE 
+      end
       
       request = Net::HTTP::Post.new(uri)
       request['Authorization'] = "Bearer #{access_token}"

@@ -43,19 +43,13 @@ class ApplicationController < ActionController::Base
   end
 
   def track_visit
-    # 1. On définit la durée d'inactivité qui déclenche une nouvelle visite (ex: 30 min)
     timeout = 30.minutes
-
-    # 2. On récupère l'heure de sa dernière action (stockée dans son cookie de session)
     last_activity = session[:last_activity_at]
 
-    # 3. Si c'est sa première action OU s'il était inactif depuis plus de 30 min
     if last_activity.nil? || last_activity.to_time < timeout.ago
-      # => C'est une nouvelle visite, on l'enregistre dans la DB
       DailyVisit.create(user: current_user, visited_on: Date.current)
     end
 
-    # 4. On met à jour l'heure de dernière activité pour la prochaine requête
     session[:last_activity_at] = Time.current
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_22_212753) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_08_220427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -307,6 +307,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_22_212753) do
     t.bigint "notifiable_id"
     t.string "notifiable_type"
     t.integer "status", default: 0
+    t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["admin_id"], name: "index_notifications_on_admin_id"

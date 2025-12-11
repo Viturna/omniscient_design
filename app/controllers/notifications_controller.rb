@@ -5,7 +5,7 @@ class NotificationsController < ApplicationController
 
   def index
     @current_page = 'profil'
-    current_user.notifications.update(status: :read)
+    current_user.notifications.unread.update_all(status: :read) # Optimisation de l'update
     @notifications = current_user.notifications.order(created_at: :desc)
   end
 
@@ -16,40 +16,39 @@ class NotificationsController < ApplicationController
   end
 
   def create
+    title = params[:title] 
     message = params[:message]
     
-    # On utilise une transaction pour s'assurer que tout est propre
     ActiveRecord::Base.transaction do
       if params[:select_all] == "all" || params[:user_id] == "all"
-        # Cas 1 : Envoi à tous
         User.find_each do |user|
-          Notification.create!( # create! pour lever une erreur si validation échoue
+          Notification.create!(
             user: user,
             admin: current_user,
+            title: title,
             message: message,
             status: :unread,
-            notifiable: user
+            notifiable: user 
           )
         end
         flash[:notice] = "Notification envoyée à tous les utilisateurs."
       
       elsif params[:user_ids].present?
-        # Cas 2 : Envoi à un ou plusieurs utilisateurs sélectionnés
         target_user_ids = params[:user_ids].reject(&:blank?)
         
         User.where(id: target_user_ids).find_each do |target_user|
           Notification.create!(
             user: target_user,
             admin: current_user,
+            title: title,
             message: message,
             status: :unread,
-            notifiable: target_user # <--- C'ÉTAIT L'ERREUR ICI
+            notifiable: target_user
           )
         end
         flash[:notice] = "Notification envoyée à #{target_user_ids.count} utilisateur(s) sélectionné(s)."
       
       else
-        # Cas 3 : Rien n'est sélectionné
         flash[:alert] = "Veuillez sélectionner au moins un destinataire."
         redirect_to new_notification_path and return
       end

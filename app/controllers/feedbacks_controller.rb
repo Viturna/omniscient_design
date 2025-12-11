@@ -57,22 +57,19 @@ class FeedbacksController < ApplicationController
   end
 
   def notify_admins_of_new_feedback(feedback)
-    submitter_name = feedback.user.pseudo || feedback.user.full_name
+    submitter_name = feedback.user.pseudo || feedback.user.firstname
     title = "Nouveau Feedback"
     message = I18n.t('notifications.new_feedback', 
                      user_name: submitter_name, 
                      default: "Nouveau feedback reçu de #{submitter_name}")
     
-    admins = User.where(role: 'admin')
-    
-    admins.each do |admin|
-      next if admin == feedback.user 
-      
+    User.where(role: 'admin').each do |user| 
       Notification.create(
-        user: admin, 
+        user_id: user.id, 
         notifiable: feedback, 
         title: title,
         message: message,
+        link: feedbacks_path,
         status: :unread
       )
     end

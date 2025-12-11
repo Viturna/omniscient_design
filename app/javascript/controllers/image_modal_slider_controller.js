@@ -8,7 +8,6 @@ export default class extends Controller {
     connect() {
         this.modal = this.element;
 
-        // S'assure que aria-hidden est correctement géré au chargement si le HTML l'a oublié
         this.modal.setAttribute('aria-hidden', 'true');
 
         this.modal.addEventListener('slide:changed', this.updateCredits.bind(this));
@@ -31,8 +30,6 @@ export default class extends Controller {
         if (event) {
             event.preventDefault();
         }
-
-        // Trouver l'index de l'image cliquée (l'image 'active' dans le header)
         const activeSlideHeader = document.querySelector('.header-show .slider-slides .top-img-header.active');
         let initialIndex = 0;
         if (activeSlideHeader) {

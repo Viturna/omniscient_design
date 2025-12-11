@@ -685,7 +685,7 @@ fr:
     no_designers: "Aucun designer disponible."
     no_references: "Aucune référence disponible."
     confirm_delete: "Êtes-vous sûr de vouloir supprimer cette liste ?"
-    edit_list: "Modifier ma liste"
+    edit_list: "Ajouter à ma liste"
     load_more_designers: "Charger plus de designers"
     load_more_references: "Charger plus de références"
     no_references_found: "Aucune référence trouvée dans cette liste."

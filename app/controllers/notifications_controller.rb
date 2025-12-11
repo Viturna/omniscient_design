@@ -18,6 +18,7 @@ class NotificationsController < ApplicationController
   def create
     title = params[:title] 
     message = params[:message]
+    link = params[:link]
     
     ActiveRecord::Base.transaction do
       if params[:select_all] == "all" || params[:user_id] == "all"
@@ -27,6 +28,7 @@ class NotificationsController < ApplicationController
             admin: current_user,
             title: title,
             message: message,
+            link: link,
             status: :unread,
             notifiable: user 
           )
@@ -42,6 +44,7 @@ class NotificationsController < ApplicationController
             admin: current_user,
             title: title,
             message: message,
+            link: link,
             status: :unread,
             notifiable: target_user
           )

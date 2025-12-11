@@ -1,4 +1,13 @@
-<div id="<%= dom_id notification %>" class="notification-item <%= notification.status %>">
+<% 
+  target_path = "#"
+  
+  if notification.link.present?
+    target_path = notification.link
+  elsif notification.notifiable.present?
+    target_path = polymorphic_path(notification.notifiable) rescue "#"
+  end
+%>
+<%= link_to target_path, id: dom_id(notification), class: "notification-item #{notification.status}" do %>
   <div class="notification-content">
     <h4 class="notification-title"><%= notification.title %></h4>
     <p class="notification-message"><%= notification.message %></p>
@@ -9,4 +18,4 @@
       <div class="notification-dot"></div>
     <% end %>
   </div>
-</div>
+<% end %>

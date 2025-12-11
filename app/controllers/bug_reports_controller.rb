@@ -63,22 +63,19 @@ end
     redirect_to root_path, alert: I18n.t('bug_report.access.denied') unless current_user.admin?
   end
 
- def notify_admins_of_new_bug(bug_report)
+def notify_admins_of_new_bug(bug_report)
     title = "Nouveau bug signalé"
     message = I18n.t('notifications.new_bug_report', 
                      user_name: bug_report.user.pseudo, 
-                     default: "Nouveau bug signalé par #{bug_report.user.pseudo}")
-    
-    admins = User.where(role: 'admin')
-    
-    admins.each do |admin|
-      next if admin == bug_report.user 
-      
+                     default: "Nouveau bug signalé par #{bug_report.user.pseudo} - Cliquer pour voir le rapport.")
+
+    User.where(role: 'admin').each do |user| 
       Notification.create(
-        user: admin, 
+        user_id: user.id, 
         notifiable: bug_report, 
         title: title,
         message: message,
+
         status: :unread
       )
     end

@@ -109,23 +109,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
   private
 
-  def create_admin_notification_for_signup(user)
-    message = I18n.t('notifications.new_user_registered', name: user.full_name, default: "Nouvel utilisateur inscrit : #{user.full_name}")
-    recipients = User.where(role: 'admin')
-    recipients.each do |recipient|
-      Notification.create!(user: recipient, notifiable: user, message: message)
+def create_admin_notification_for_signup(user)
+    title = "Nouvelle inscription"
+    message = I18n.t('notifications.new_user_registered', name: user.full_name, default: "Nouvel utilisateur inscrit : #{user.full_name} - Cliquer pour voir les utilisateurs.")
+    
+    User.where(role: 'admin').each do |recipient|
+      Notification.create!(
+        user: recipient, 
+        notifiable: user, 
+        title: title, 
+        message: message,
+        link: users_path,
+        status: :unread
+      )
     end
   end
 
   def notify_admins_of_deletion(user, reason)
+    title = "Compte supprimé"
     reason_text = reason.present? ? reason : "Aucune raison spécifiée."
     
     message = "Compte supprimé : #{user.full_name} (ID: #{user.id}). Raison du départ : #{reason_text}"
 
-    recipients = User.where(role: 'admin')
-    
-    recipients.each do |recipient|
-      Notification.create(user: recipient, notifiable: recipient, message: message)
+    User.where(role: 'admin').each do |recipient|
+      Notification.create(
+        user: recipient, 
+        notifiable: recipient,
+        title: title,
+        message: message,
+        status: :unread
+      )
     end
   rescue => e
     Rails.logger.error "Erreur lors de la notification de suppression de compte : #{e.message}"

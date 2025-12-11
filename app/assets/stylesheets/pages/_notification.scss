@@ -7,7 +7,10 @@
   gap: 12px;
 }
 
-.notification-item {
+a.notification-item {
+  text-decoration: none;
+  cursor: pointer;
+
   width: 100%;
   min-height: 80px;
   background-color: #fff;
@@ -17,12 +20,16 @@
   align-items: center;
   padding: 20px 25px;
   color: $primary-color;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   box-sizing: border-box;
   border: 1px solid transparent;
 
   &:hover {
     background-color: #ededed;
+  }
+
+  &:active {
+    transform: scale(0.99);
   }
 
   &.unread {
@@ -39,13 +46,13 @@
 
   .notification-title {
     font-weight: 600;
-    font-size: 17px;
+    font-size: 16px;
     margin: 0;
     color: $primary-color;
   }
 
   .notification-message {
-    font-size: 15px;
+    font-size: 14px;
     color: $text-color;
     margin: 0;
     line-height: 1.4;
@@ -63,7 +70,7 @@
   font-size: 13px;
   color: #8d9299;
   margin: 0;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 .notification-dot {

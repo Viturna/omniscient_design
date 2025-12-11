@@ -89,65 +89,19 @@ class ListsController < ApplicationController
   def new
     @current_page = 'listes'
     @list = current_user.lists.build
-
-    @domaines  = Domaine.all
-    @countries = Country.where(id: DesignerCountry.select(:country_id)).order(:country)
-
-    oeuvres_scope, designers_scope, studios_scope = filtered_scopes
-
-    @selected_oeuvre_ids  = [params[:oeuvre_id]].compact
-    @selected_designer_ids = [params[:designer_id]].compact
-    @selected_studio_ids   = [params[:studio_id]].compact
-
-    @oeuvres   = oeuvres_scope.order(:nom_oeuvre).limit(10).to_a
-    @designers = designers_scope.order(:nom).limit(10).to_a
-    @studios   = studios_scope.order(:nom).limit(10).to_a
-
-    # injecte les pré-sélectionnés en tête
-    Oeuvre.where(id: @selected_oeuvre_ids).each do |o|
-      @oeuvres.unshift(o) unless @oeuvres.map(&:id).include?(o.id)
-    end
-    Designer.where(id: @selected_designer_ids).each do |d|
-      @designers.unshift(d) unless @designers.map(&:id).include?(d.id)
-    end
-    Studio.where(id: @selected_studio_ids).each do |s|
-      @studios.unshift(s) unless @studios.map(&:id).include?(s.id)
-    end
-
   end
 
 
-  def create
-    @list = current_user.lists.build(list_params)
+ def create
+    @list = List.new(list_params)
+    @list.user = current_user
 
     if @list.save
-      if params[:designer_ids].present?
-        designer_ids = params[:designer_ids].split(',').map(&:to_i)
-        @list.designers = Designer.where(id: designer_ids)
-      end
-
-      if params[:studio_ids].present?
-        studio_ids = params[:studio_ids].split(',').map(&:to_i)
-        @list.studios = Studio.where(id: studio_ids)
-      end
-
-      if params[:oeuvre_ids].present?
-        oeuvre_ids = params[:oeuvre_ids].split(',').map(&:to_i)
-        @list.oeuvres = Oeuvre.where(id: oeuvre_ids)
-      end
-
-      redirect_to @list, notice: I18n.t('lists.create.success')
+      # REDIRECTION ETAPE 2 : On va sur la liste avec le paramètre newly_created
+      redirect_to list_path(@list, newly_created: true), notice: I18n.t('list.create.success', default: "Liste créée ! Ajoutez maintenant vos éléments.")
     else
-      @oeuvres = Oeuvre.where(validation: true).order(:nom_oeuvre).limit(10)
-      @designers = Designer.where(validation: true).order(:nom).limit(10)
-      @studios = Studio.where(validation: true).order(:nom).limit(10)
-      @domaines = Domaine.all
-
-      @selected_designer_ids = params[:designer_ids].to_s.split(',').map(&:to_i)
-      @selected_studio_ids   = params[:studio_ids].to_s.split(',').map(&:to_i)
-      @selected_oeuvre_ids = params[:oeuvre_ids].to_s.split(',').map(&:to_i)
-
-      render :new
+      flash.now[:alert] = I18n.t('list.create.failure', default: "Erreur lors de la création.")
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -358,6 +312,35 @@ class ListsController < ApplicationController
     redirect_to @list, notice: notice
   end
 
+  def search_items
+    query = params[:q].to_s.downcase.strip
+    type = params[:type]
+    limit = 10 # Limite pour ne pas surcharger la vue
+
+    case type
+    when 'studios'
+      @studios = Studio.where(validation: true)
+                       .where("LOWER(nom) LIKE ?", "%#{query}%")
+                       .limit(limit)
+      render partial: 'studios_list', collection: @studios, as: :studio
+
+    when 'designers'
+      @designers = Designer.where(validation: true)
+                           .where("LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?", "%#{query}%", "%#{query}%")
+                           .limit(limit)
+      render partial: 'designers_list', collection: @designers, as: :designer
+
+    when 'oeuvres'
+      @oeuvres = Oeuvre.where(validation: true)
+                       .where("LOWER(nom_oeuvre) LIKE ?", "%#{query}%")
+                       .limit(limit)
+      render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+
+    else
+      head :bad_request # Renvoie une erreur 400 si le type est inconnu
+    end
+  end
+
 
 
 def load_more_oeuvres
@@ -424,7 +407,7 @@ end
   end
 
   def list_params
-    params.require(:list).permit(:name, designer_ids: [], studio_ids: [], oeuvre_ids: [])
+    params.require(:list).permit(:name, :public, designer_ids: [], studio_ids: [], oeuvre_ids: [])
   end
 
   def create_share_notification(list)

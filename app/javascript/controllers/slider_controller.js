@@ -9,7 +9,6 @@ export default class extends Controller {
         updateBackground: { type: Boolean, default: false }
     }
 
-    // 🌟 Ajout de la méthode de recalcul pour les éléments cachés
     recalculate() {
         this.showCurrentSlide();
     }
@@ -18,7 +17,6 @@ export default class extends Controller {
         this.showCurrentSlide()
     }
 
-    // Gère l'événement "click->slider#next"
     next(event) {
         if (event) {
             event.preventDefault()
@@ -31,7 +29,6 @@ export default class extends Controller {
         }
     }
 
-    // Gère l'événement "click->slider#prev"
     prev(event) {
         if (event) {
             event.preventDefault()
@@ -44,7 +41,6 @@ export default class extends Controller {
         }
     }
 
-    // Gère l'événement "click->slider#switchSlide"
     switchSlide(event) {
         if (event) {
             event.preventDefault()
@@ -57,7 +53,6 @@ export default class extends Controller {
     indexValueChanged() {
         this.showCurrentSlide()
 
-        // Déclenche l'événement custom pour la modale afin de mettre à jour les crédits
         this.element.dispatchEvent(new CustomEvent('slide:changed', {
             bubbles: true,
             detail: { index: this.indexValue }
@@ -65,21 +60,18 @@ export default class extends Controller {
     }
 
     showCurrentSlide() {
-        // 1. Met à jour les slides
         if (this.hasSlideTarget) {
             this.slideTargets.forEach((slide, i) => {
                 slide.classList.toggle("active", i === this.indexValue)
             })
         }
 
-        // 2. Met à jour les dots
         if (this.hasDotTarget) {
             this.dotTargets.forEach((dot, i) => {
                 dot.classList.toggle("active", i === this.indexValue)
             })
         }
 
-        // 3. Logique conditionnelle pour le fond
         if (this.updateBackgroundValue) {
             if (this.slideTargets.length === 0) return;
 

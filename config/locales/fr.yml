@@ -49,6 +49,19 @@ fr:
     cookie: "Cookies"
     donation: "Soutenir le projet"
     copyright: "©2025 Omniscient Design - Tous droits réservés"
+  badges:
+    categories:
+      special: "Trophées Uniques"
+      donor: "Mécénat"
+      contributor: "Contributions"
+      ambassador: "Ambassadeur"
+      investigator: "Enquêtes & Améliorations"
+    levels:
+      standard: "Standard"
+      bronze: "Bronze"
+      silver: "Argent"
+      gold: "Or"
+      platinum: "Platine"
   search:
     placeholder: "Rechercher une référence ou un designer"
     title: "Rechercher"
@@ -743,15 +756,15 @@ fr:
         title: "Étape 2 : Identité du designer"
         prenom: "Prénom"
         prenom_placeholder: "Ex : Gustave"
-        nom: "Nom"
+        nom: "Nom*"
         nom_placeholder: "Ex : Eiffel"
       2:
         title: "Étape 3 : Informations clés"
-        date_naissance: "Année de naissance"
+        date_naissance: "Année de naissance*"
         date_naissance_placeholder: "Ex : 1832"
         date_deces: "Année de décès (optionnel)"
         date_deces_placeholder: "Ex : 1923"
-        country: "Pays"
+        country: "Pays*"
         country_placeholder: "Sélectionner un pays"
         country_blank: "Aucun pays"
       3:
@@ -799,7 +812,7 @@ fr:
         authenticity_text: "- Chaque référence doit être originale, conçue par son auteur. \n - Chaque référence doit être clairement sourcés."
       1:
         title: "Étape 2 : La référence"
-        nom_oeuvre: "Nom de la référence"
+        nom_oeuvre: "Nom de la référence*"
         nom_oeuvre_placeholder: "Ex : La petite fille au ballon"
       2:
         title: "Étape 2 : Informations clés"

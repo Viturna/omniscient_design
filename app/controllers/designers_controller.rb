@@ -205,6 +205,7 @@ def load_more
     if @designer.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@designer)
       update_suivi_references_validees(@designer.user)
+      GamificationService.new(@oeuvre.user).check_contributor
       redirect_to validation_path, notice: I18n.t('designer.validate.success', name: @designer.nom_designer)
     else
       redirect_to validation_path, alert: I18n.t('designer.validate.failure')

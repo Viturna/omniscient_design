@@ -76,7 +76,9 @@
   </div>
 </section>
 <div id="designers">
-  <div class="home-flex" id="cardContainer">
+    <div class="home-flex" id="cardContainer"
+       data-controller="scroll-vertical"
+       data-scroll-vertical-cooldown-value="500">
     <div class="nav-home-mobile">
       <%= image_tag("logo.svg", alt: "Logo", class: "logo-img") %>
       <div class="switch-home-mobile">

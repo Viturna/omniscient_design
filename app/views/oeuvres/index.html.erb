@@ -6,7 +6,7 @@
       display: none;
     }
     #cardContainer {
-      height: calc(100vh - 50px); /* Ajuster la hauteur pour les petits écrans */
+      height: calc(100vh - 50px);
     }
   }
   #cardContainer {
@@ -32,7 +32,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Assurez-vous qu'elle a la même classe/taille que vos vraies cartes */
   scroll-snap-align: start;
   }
 
@@ -69,7 +68,9 @@
   </div>
 </section>
 <div id="oeuvres">
-  <div class="home-flex" id="cardContainer">
+  <div class="home-flex" id="cardContainer"
+       data-controller="scroll-vertical"
+       data-scroll-vertical-cooldown-value="500">
     <div class="nav-home-mobile">
       <%= link_to(notifications_path) do %>
         <div class="circle circle-notif">

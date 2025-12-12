@@ -13,6 +13,7 @@ class BugReportsController < ApplicationController
     @bug_report = BugReport.new(bug_report_params)
     @bug_report.user = current_user
     notify_admins_of_new_bug(@bug_report)
+    GamificationService.new(current_user).check_investigator
     if @bug_report.save
       redirect_to profil_path, notice: I18n.t('bug_report.create.success')
     else

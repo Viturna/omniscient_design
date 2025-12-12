@@ -121,6 +121,23 @@
                 }
               } %>
           </div>
+            <div>
+          <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
+          <%= form.collection_select :domaine_ids, 
+              Domaine.order(:domaine), 
+              :id, 
+              :domaine, 
+              { include_blank: false, selected: @oeuvre.domaine_ids }, 
+              { 
+                class: "form-control", 
+                multiple: true, 
+                name: "oeuvre[domaine_ids][]",
+                data: {
+                  controller: "select2",
+                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
+                }
+              } %>
+        </div>
           <div>
             <%= form.label :studio_ids, 'Studio(s) associé(s)' %>
             <%= form.collection_select :studio_ids, 
@@ -156,23 +173,7 @@
                 }
               } %>
         </div>
-        <div>
-          <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
-          <%= form.collection_select :domaine_ids, 
-              Domaine.order(:domaine), 
-              :id, 
-              :domaine, 
-              { include_blank: false, selected: @oeuvre.domaine_ids }, 
-              { 
-                class: "form-control", 
-                multiple: true, 
-                name: "oeuvre[domaine_ids][]",
-                data: {
-                  controller: "select2",
-                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
-                }
-              } %>
-        </div>
+      
         <div data-controller="year-validator">
           <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
           <%= form.text_field :date_oeuvre, 

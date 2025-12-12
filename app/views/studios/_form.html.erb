@@ -116,7 +116,7 @@
       <h2 data-multi-step-form-target="stepTitle">Informations générales</h2>
       <div class="flex-form">
         <div style="width: 100%;">
-          <%= form.label :nom, t('add_studio.steps.1.nom', default: "Nom du studio") %>
+          <%= form.label :nom, t('add_studio.steps.1.nom', default: "Nom du studio*") %>
           <%= form.text_field :nom, required: true, placeholder: t('add_studio.steps.1.nom_placeholder', default: "Ex: Maison Bonnet, .."), data: { multi_step_form_target: "nameInput" } %>
         </div>
       </div>
@@ -169,7 +169,7 @@
       <h3>Dates et Domaines</h3>
       <div class="flex-form" data-controller="year-validator">
         <div>
-          <%= form.label :date_creation, t('add_studio.steps.2.date_creation', default: "Année de création") %>
+          <%= form.label :date_creation, t('add_studio.steps.2.date_creation', default: "Année de création*") %>
           <%= form.text_field :date_creation, 
               required: true, 
               placeholder: "Ex: 1986", 
@@ -237,7 +237,7 @@
       <div class="flex-form">
         <div>
           <%= form.label :presentation_generale, t("add_studio.steps.3.presentation_generale", default: "Présentation générale") %>
-          <%= form.text_area :presentation_generale, required: true, placeholder: t("add_studio.steps.3.presentation_generale_placeholder", default: "Renseignez ce champ...") %>
+          <%= form.text_area :presentation_generale, placeholder: t("add_studio.steps.3.presentation_generale_placeholder", default: "Renseignez ce champ...") %>
         </div>
         <div class="flex-button">
           <% [:formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>

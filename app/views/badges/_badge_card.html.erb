@@ -1,0 +1,19 @@
+<div class="badge-card <%= unlocked ? 'unlocked' : 'locked' %> level-<%= badge.level %>">
+  <div class="badge-visual">
+    <% if !unlocked %>
+      <%= image_tag "badges/default.png", class: "badge-img", alt: "Badge verrouillé" %>
+    
+    <% elsif badge.image_name.present? %>
+      <%= image_tag "badges/#{badge.image_name}", class: "badge-img", alt: badge.name %>
+    
+    <% else %>
+      <div class="badge-placeholder"><%= badge.name[0] %></div>
+    <% end %>
+    
+  </div>
+
+  <div class="badge-details">
+    <h3 class="badge-title"><%= badge.name %></h3>
+    <p class="badge-desc"><%= badge.description %></p>
+  </div>
+</div>

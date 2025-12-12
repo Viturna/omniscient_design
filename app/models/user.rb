@@ -94,6 +94,9 @@ class User < ApplicationRecord
   has_many :user_devices, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
+  has_many :user_badges, dependent: :destroy
+  has_many :badges, through: :user_badges
+
   # --- Méthodes ---
 
   # Méthode standard Devise pour retrouver un utilisateur via OmniAuth

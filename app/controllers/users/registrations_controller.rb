@@ -41,7 +41,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
       session.delete('devise.omniauth_data') # Nettoyage session
       create_admin_notification_for_signup(resource) # Notif Admin
-
+      service = GamificationService.new(resource)
+      service.check_omniscient_user
+      service.check_early_adopter
+      
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
         sign_up(resource_name, resource)

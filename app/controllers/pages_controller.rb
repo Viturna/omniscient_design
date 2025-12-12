@@ -90,4 +90,13 @@ class PagesController < ApplicationController
     @current_page = 'profil'
   end
 
+  def secret_badge
+  if user_signed_in?
+    GamificationService.new(current_user).check_detail_finder
+    redirect_to profil_path, notice: "Bravo ! Vous avez l'œil ! Badge débloqué."
+  else
+    redirect_to new_user_session_path, alert: "Connectez-vous pour débloquer ce secret."
+  end
+end
+
 end

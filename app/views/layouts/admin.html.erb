@@ -58,6 +58,11 @@
               <li><%= link_to "Rapports de bug", bug_reports_path, class: ("active" if @current_page == "bug_reports") %></li>
               <li><%= link_to "Ads", admin_ads_path, class: ("active" if @current_page == "ads") %></li>
               <li>
+              <%= link_to new_admin_user_badge_path, class: "sidebar-link" do %>
+                Attribuer Badges
+              <% end %>
+              </li>
+              <li>
                 <%= link_to feedbacks_path, class: ("active" if @current_page == "feedbacks") do %>
                   Feedbacks
                 <% end %>
@@ -156,6 +161,11 @@
                   </defs>
                 </svg>
                 Feedbacks
+              <% end %>
+            </li>
+            <li>
+              <%= link_to new_admin_user_badge_path, class: "sidebar-link" do %>
+                Attribuer Badges
               <% end %>
             </li>
           </ul>

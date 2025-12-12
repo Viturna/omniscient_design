@@ -110,6 +110,7 @@ class StudiosController < ApplicationController
     if @studio.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@studio)
       update_suivi_references_validees(@studio.user)
+      GamificationService.new(@studio.user).check_contributor
       redirect_to validation_path, notice: I18n.t('studio.validate.success', name: @studio.nom, default: "Studio validé")
     else
       redirect_to validation_path, alert: I18n.t('studio.validate.failure', default: "Erreur de validation")

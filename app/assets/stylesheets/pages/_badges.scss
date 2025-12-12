@@ -1,0 +1,132 @@
+.badges-stats-container {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 48px;
+  margin-top: 24px;
+  border: 1px solid #eee;
+
+  .stats-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: #202020;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #202020, #404040);
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+  }
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+/* CARTE BADGE */
+.badge-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  /* État Débloqué */
+  &.unlocked {
+    border-color: #202020;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  &.locked {
+    opacity: 0.8;
+    background: #fafafa;
+
+    .badge-visual {
+      filter: grayscale(100%) contrast(0.8);
+      opacity: 0.5;
+    }
+
+    .badge-title,
+    .badge-desc {
+      color: #999;
+    }
+  }
+
+  /* VISUEL */
+  .badge-visual {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 16px;
+
+    .badge-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .badge-placeholder {
+      width: 100%;
+      height: 100%;
+      background: #eee;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #bbb;
+    }
+
+    .lock-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(32, 32, 32, 0.8);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  /* DETAILS */
+  .badge-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .badge-desc {
+    font-size: 16px;
+    color: #52525d;
+    line-height: 1.5;
+  }
+}

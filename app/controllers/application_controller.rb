@@ -63,6 +63,17 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def after_sign_in_path_for(resource)
+    if resource.is_a?(User)
+      service = GamificationService.new(resource)
+      
+      service.check_noctambule
+      service.check_multi_support 
+    end
+
+    stored_location_for(resource) || super
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:referral_code])
   end

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get "suivi_lists", to: "dashboard#suivi_lists"
     get "feedbacks", to: "dashboard#feedbacks"
     resources :etablissements, only: [:index, :edit, :update, :destroy]
+    resources :user_badges, only: [:new, :create]
   end
 
   get 'frise/oeuvres', to: 'search#frise_oeuvres'
@@ -126,6 +127,8 @@ Rails.application.routes.draw do
       patch :update_status, on: :member
     end
 
+    get 'mes-badges', to: 'badges#index', as: :badges
+
     # Pages statiques
     get '/search_autocomplete', to: 'search#autocomplete'
     get 'search', to: 'search#search', as: 'search'
@@ -147,6 +150,7 @@ Rails.application.routes.draw do
     get 'set_theme', to: 'application#set_theme'
     get 'contributions', to: 'contributions#index', as: 'user_contributions'
     get 'confirmation_pending', to: 'pages#confirmation_pending', as: 'confirmation_pending'
+    get 'secret/legal_found', to: 'pages#secret_badge', as: :secret_badge
 
     #ADS
     resources :ads, only: [] do

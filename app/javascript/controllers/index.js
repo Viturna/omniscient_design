@@ -64,6 +64,9 @@ application.register("registration", RegistrationController)
 import ScrollHorizontalController from "./scroll_horizontal_controller"
 application.register("scroll-horizontal", ScrollHorizontalController)
 
+import ScrollVerticalController from "./scroll_vertical_controller"
+application.register("scroll-vertical", ScrollVerticalController)
+
 import Select2Controller from "./select2_controller"
 application.register("select2", Select2Controller)
 

@@ -210,6 +210,7 @@ end
     if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@oeuvre)
       update_suivi_references_validees(@oeuvre.user)
+      GamificationService.new(@oeuvre.user).check_contributor
       redirect_to validation_path, notice: t('oeuvres.validate.success', name: @oeuvre.nom_oeuvre)
     else
       redirect_to validation_path, alert: t('oeuvres.validate.failure', errors: @oeuvre.errors.full_messages.join(', '))

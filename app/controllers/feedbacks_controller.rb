@@ -23,6 +23,7 @@ class FeedbacksController < ApplicationController
     @feedback = current_user.feedbacks.build(feedback_params)
 
     if @feedback.save
+      GamificationService.new(current_user).check_investigator
       notify_admins_of_new_feedback(@feedback)
       redirect_to root_path, notice: I18n.t('feedback.create.success')
     else

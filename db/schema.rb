@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_11_152418) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_12_205656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_152418) do
     t.string "link"
     t.date "start_date"
     t.string "title"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "badges", force: :cascade do |t|
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "image_name"
+    t.string "level"
+    t.string "name"
+    t.integer "threshold"
     t.datetime "updated_at", null: false
   end
 
@@ -479,6 +490,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_152418) do
     t.index ["user_id"], name: "index_suivis_on_user_id"
   end
 
+  create_table "user_badges", force: :cascade do |t|
+    t.bigint "badge_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["badge_id"], name: "index_user_badges_on_badge_id"
+    t.index ["user_id"], name: "index_user_badges_on_user_id"
+  end
+
   create_table "user_devices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "platform"
@@ -565,5 +585,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_152418) do
   add_foreign_key "studios_domaines", "domaines"
   add_foreign_key "studios_domaines", "studios"
   add_foreign_key "suivis", "users"
+  add_foreign_key "user_badges", "badges"
+  add_foreign_key "user_badges", "users"
   add_foreign_key "user_devices", "users"
 end

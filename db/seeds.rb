@@ -1,74 +1,67 @@
 require 'csv'
 require 'uri'
 
-# --- Import des domaines ---
+# ==============================================================================
+# --- 1. IMPORT DES DONNÉES CSV (Domaines, Notions, Établissements, Pays) ---
+# ==============================================================================
+
+# --- Domaines ---
 puts "--- Import des Domaines ---"
 begin
-  csv_text_domaines = File.read(Rails.root.join('lib', 'seeds', 'domaine.csv'), encoding: 'utf-8')
-  csv_domaines = CSV.parse(csv_text_domaines, headers: true)
-  domaines_counter = 0
-  csv_domaines.each do |row|
-    domaine = Domaine.find_or_create_by(
-      domaine: row['domaine'],
-      couleur: row['couleur'],
-      svg: row['svg']
-    )
-    domaines_counter += 1 if domaine.persisted?
+  csv_text = File.read(Rails.root.join('lib', 'seeds', 'domaine.csv'), encoding: 'utf-8')
+  csv = CSV.parse(csv_text, headers: true)
+  count = 0
+  csv.each do |row|
+    domaine = Domaine.find_or_create_by(domaine: row['domaine']) do |d|
+      d.couleur = row['couleur']
+      d.svg = row['svg']
+    end
+    count += 1 if domaine.persisted?
   end
-  puts "Nombre total de domaines importés/vérifiés : #{domaines_counter}"
+  puts "✅ Domaines : #{count}"
 rescue Errno::ENOENT
-  puts "AVERTISSEMENT : Fichier 'domaine.csv' non trouvé. Importation annulée."
+  puts "⚠️ Fichier 'domaine.csv' non trouvé."
 end
 
-# --- Import des notions ---
+# --- Notions ---
 puts "\n--- Import des Notions ---"
 begin
-  csv_text_notions = File.read(Rails.root.join('lib', 'seeds', 'notions.csv'), encoding: 'utf-8')
-  csv_notions = CSV.parse(csv_text_notions, headers: true)
-  notions_counter = 0
-  csv_notions.each do |row|
+  csv_text = File.read(Rails.root.join('lib', 'seeds', 'notions.csv'), encoding: 'utf-8')
+  csv = CSV.parse(csv_text, headers: true)
+  count = 0
+  csv.each do |row|
     notion = Notion.find_or_create_by(name: row['name'])
-    notions_counter += 1 if notion.persisted?
+    count += 1 if notion.persisted?
   end
-  puts "Nombre total de notions importées/vérifiés : #{notions_counter}"
+  puts "✅ Notions : #{count}"
 rescue Errno::ENOENT
-  puts "AVERTISSEMENT : Fichier 'notions.csv' non trouvé. Importation annulée."
+  puts "⚠️ Fichier 'notions.csv' non trouvé."
 end
 
-# ==============================================================================
-# --- IMPORT DES ÉTABLISSEMENTS (etablissements2.csv UNIQUEMENT) ---
-# ==============================================================================
+# --- Établissements ---
 puts "\n--- Import des Établissements ---"
-
-# Helper pour extraire l'UAI de '0070004S@ac-grenoble.fr' ou 'ce.0350787R@ac-rennes.fr'
 def extract_uai_from_email(email_string)
   return nil if email_string.blank?
   match = email_string.strip.match(/^(?:ce\.)?([0-9]{7}[a-zA-Z])@/i)
   match ? match[1].upcase : nil
 end
 
-new_etablissements_counter = 0
-updated_etablissements_counter = 0
-
-puts "Traitement du fichier : etablissements2.csv..."
-new_file_path = Rails.root.join('lib', 'seeds', 'etablissements2.csv')
-if File.exist?(new_file_path)
+file_path = Rails.root.join('lib', 'seeds', 'etablissements2.csv')
+if File.exist?(file_path)
   begin
-    csv_text_new = File.read(new_file_path, encoding: 'utf-8')
-    csv_new = CSV.parse(csv_text_new, headers: true, col_sep: ';')
+    csv_text = File.read(file_path, encoding: 'utf-8')
+    csv = CSV.parse(csv_text, headers: true, col_sep: ';')
+    new_count = 0
+    updated_count = 0
 
-    csv_new.each do |row|
+    csv.each do |row|
       uai = extract_uai_from_email(row['Mail'])
-      
-      if uai.nil?
-        puts "SKIPPING: UAI non trouvé dans Mail '#{row['Mail']}' pour '#{row['Nom_etablissement']}'"
-        next
-      end
+      next unless uai
 
-      etablissement = Etablissement.find_or_initialize_by(uai: uai)
-      is_new = etablissement.new_record?
+      etab = Etablissement.find_or_initialize_by(uai: uai)
+      is_new = etab.new_record?
 
-      etablissement.assign_attributes(
+      etab.assign_attributes(
         name: row['Nom_etablissement'],
         address: [row['Adresse_1'], row['Adresse_3']].reject(&:blank?).join(', '),
         city: row['Nom_commune'],
@@ -77,8 +70,8 @@ if File.exist?(new_file_path)
         phone: row['Telephone'],
         website: row['Web'],
         messagerie: row['Mail'],
-        latitude: row['latitude'].present? ? row['latitude'].to_f : nil,
-        longitude: row['longitude'].present? ? row['longitude'].to_f : nil,
+        latitude: row['latitude'].presence&.to_f,
+        longitude: row['longitude'].presence&.to_f,
         type_etablissement: row['Type_etablissement'],
         statut_public_prive: row['Statut_public_prive'],
         voie_generale: (row['Voie_generale'] == 't'),
@@ -90,44 +83,87 @@ if File.exist?(new_file_path)
         section_theatre: (row['Section_theatre'] == 't')
       )
 
-      if etablissement.save
-        if is_new
-          new_etablissements_counter += 1
-        else
-          updated_etablissements_counter += 1
-        end
-      else
-        puts "ERREUR: #{etablissement.errors.full_messages.join(", ")} pour UAI #{uai}"
+      if etab.save
+        is_new ? new_count += 1 : updated_count += 1
       end
     end
+    puts "✅ Établissements : #{new_count} créés, #{updated_count} mis à jour."
   rescue CSV::MalformedCSVError => e
-    puts "ERREUR CSV : Le fichier 'etablissements2.csv' est malformé. Vérifiez le délimiteur (doit être ';'). Erreur: #{e.message}"
+    puts "❌ Erreur CSV Établissements : #{e.message}"
   end
 else
-  puts "AVERTISSEMENT : Fichier 'etablissements2.csv' non trouvé. Importation annulée."
+  puts "⚠️ Fichier 'etablissements2.csv' non trouvé."
 end
 
-puts "\nNombre total de nouveaux établissements créés : #{new_etablissements_counter}"
-puts "Nombre d'établissements mis à jour : #{updated_etablissements_counter}"
-
-# ==============================================================================
-# --- Import des pays ---
-# ==============================================================================
+# --- Pays ---
 puts "\n--- Import des Pays ---"
 begin
-  csv_text_countries = File.read(Rails.root.join('lib', 'seeds', 'pays.csv'), encoding: 'utf-8')
-  csv_countries = CSV.parse(csv_text_countries, headers: true)
-  countries_counter = 0
-  csv_countries.each do |row|
-    country = Country.find_or_create_by(
-      country: row['country'],
-      country_numeric: row['country_numeric']
-    )
-    countries_counter += 1 if country.persisted?
+  csv_text = File.read(Rails.root.join('lib', 'seeds', 'pays.csv'), encoding: 'utf-8')
+  csv = CSV.parse(csv_text, headers: true)
+  count = 0
+  csv.each do |row|
+    country = Country.find_or_create_by(country: row['country']) do |c|
+      c.country_numeric = row['country_numeric']
+    end
+    count += 1 if country.persisted?
   end
-  puts "Nombre total de pays importés/vérifiés : #{countries_counter}"
+  puts "✅ Pays : #{count}"
 rescue Errno::ENOENT
-  puts "AVERTISSEMENT : Fichier 'pays.csv' non trouvé. Importation annulée."
+  puts "⚠️ Fichier 'pays.csv' non trouvé."
+end
+
+
+# ==============================================================================
+# --- 2. GESTION DES BADGES (Simple String) ---
+# ==============================================================================
+puts "\n--- Gestion des Badges ---"
+
+badges_data = [
+  # --- SPÉCIAUX ---
+  { name: "Omniscient User", category: "special", level: "standard", description: "Bienvenue dans l'aventure ! Tu as créé ton compte.", filename: "omniscient_user.png" },
+  { name: "Early Adopter", category: "special", description: "Tu fais partie des 100 premiers membres historiques.", filename: "early_adopter.png" },
+  { name: "Donateur", category: "special", level: "standard", description: "Merci pour ton soutien financier au projet.", filename: "donateur.png" },
+  { name: "Community Member", category: "special", level: "standard", description: "Tu suis l'actualité du design sur tous nos réseaux.", filename: "community.png" },
+  { name: "Dans les moindres détails", category: "special", description: "Tu as trouvé le secret caché !", filename: "details.png" },
+  { name: "Noctambule", category: "special", level: "standard", description: "Connecté entre minuit et 5h du matin. Le design ne dort jamais.", filename: "noctambule.png" },
+  { name: "Multi support", category: "special", level: "standard", description: "Tu utilises l'application Omniscient Design.", filename: "multi_support.png" },
+
+  # --- CONTRIBUTEURS (Refs) ---
+  { name: "Contributeur Bronze", category: "contributor", level: "bronze", threshold: 1, description: "1ère contribution validée.", filename: "contributeur_bronze.png" },
+  { name: "Contributeur Argent", category: "contributor", level: "silver", threshold: 10, description: "10 contributions validées.", filename: "contributeur_argent.png" },
+  { name: "Contributeur Or", category: "contributor", level: "gold", threshold: 20, description: "20 contributions validées. Un pilier du site !", filename: "contributeur_or.png" },
+
+  # --- AMBASSADEURS (Parrainage) ---
+  { name: "Ambassadeur Bronze", category: "ambassador", level: "bronze", threshold: 3, description: "3 filleuls parrainés.", filename: "ambassadeur_bronze.png" },
+  { name: "Ambassadeur Argent", category: "ambassador", level: "silver", threshold: 10, description: "10 filleuls parrainés.", filename: "ambassadeur_argent.png" },
+  { name: "Ambassadeur Or", category: "ambassador", level: "gold", threshold: 20, description: "20 filleuls parrainés.", filename: "ambassadeur_or.png" },
+
+  # --- INVESTIGATEURS (Feedbacks/Bugs) ---
+  { name: "Investigateur Bronze", category: "investigator", level: "bronze", threshold: 1, description: "1er retour envoyé.", filename: "investigateur_bronze.png" },
+  { name: "Investigateur Argent", category: "investigator", level: "silver", threshold: 5, description: "5 retours envoyés.", filename: "investigateur_argent.png" },
+  { name: "Investigateur Or", category: "investigator", level: "gold", threshold: 10, description: "10 retours envoyés.", filename: "investigateur_or.png" },
+
+  # --- DONATEURS (Niveaux) ---
+  { name: "Donateur Bronze", category: "donor", level: "bronze", threshold: 5, description: "Don cumulé de 5€.", filename: "donateur_bronze.png" },
+  { name: "Donateur Argent", category: "donor", level: "silver", threshold: 20, description: "Don cumulé de 20€.", filename: "donateur_argent.png" },
+  { name: "Donateur Or", category: "donor", level: "gold", threshold: 50, description: "Don cumulé de 50€.", filename: "donateur_or.png" }
+]
+
+badges_data.each do |data|
+  badge = Badge.find_or_initialize_by(name: data[:name])
+  badge.assign_attributes(
+    category: data[:category],
+    level: data[:level],
+    threshold: data[:threshold] || 0,
+    description: data[:description],
+    image_name: data[:filename]
+  )
+  
+  if badge.save
+    puts "✅ Badge '#{badge.name}' : OK (Image liée : #{badge.image_name})"
+  else
+    puts "❌ Erreur Badge '#{data[:name]}' : #{badge.errors.full_messages.join(', ')}"
+  end
 end
 
 puts "\n--- Seed terminé ! ---"

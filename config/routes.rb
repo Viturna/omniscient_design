@@ -91,7 +91,7 @@ Rails.application.routes.draw do
       member do
         delete :destroy
         get :validate
-        delete 'cancel'
+        delete :cancel
         patch :reject
       end
     end
@@ -103,7 +103,7 @@ Rails.application.routes.draw do
       end
       member do
         get :validate
-        delete 'cancel'
+        delete :cancel
         delete :destroy
         patch :reject
       end
@@ -116,7 +116,7 @@ Rails.application.routes.draw do
       end
       member do
         get :validate
-        delete 'cancel'
+        delete :cancel
         delete :destroy
         patch :reject
       end

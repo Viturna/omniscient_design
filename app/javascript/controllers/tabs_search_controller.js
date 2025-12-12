@@ -1,4 +1,3 @@
-// app/javascript/controllers/tabs_search_controller.js
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -9,15 +8,24 @@ export default class extends Controller {
     ]
 
     connect() {
-        // applique les filtres au chargement initial
         this.applyFiltersDisplay()
     }
 
-    /**
-     * Géré au clic sur un onglet.
-     * Si on reste sur le même onglet => switch local.
-     * Sinon => affiche un loader puis Turbo.visit(url).
-     */
+    update(event) {
+        if (event && event.type === 'submit') event.preventDefault();
+
+        this.showLoadingOverlay();
+        const form = document.getElementById("filterForm");
+
+        const url = new URL(form.action);
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData);
+
+        params.set("page", "1");
+        url.search = params.toString();
+        Turbo.visit(url.toString());
+    }
+
     switch(event) {
         event.preventDefault()
         const tabName = event.currentTarget.dataset.tab
@@ -26,33 +34,25 @@ export default class extends Controller {
             this.tabInputTarget.value = tabName
         }
 
-        const currentTab = new URL(window.location).searchParams.get("tab") || "designers"
+        const currentTab = new URL(window.location).searchParams.get("tab") || "references"
 
         if (tabName === currentTab) {
             this.showTabLocally(tabName)
             return
         }
 
-        // feedback immédiat sur le bouton
         this.tabTargets.forEach(tab => tab.classList.remove("active"))
         event.currentTarget.classList.add("active")
 
-        // affiche le loader
         this.showLoadingOverlay()
 
-        // construit l’URL et déclenche le rechargement côté serveur
         const url = new URL(window.location)
         url.searchParams.set("tab", tabName)
         url.searchParams.set("page", "1")
 
         Turbo.visit(url.toString())
-
-
     }
 
-    /**
-     * Affichage local si on reste sur le même onglet
-     */
     showTabLocally(tabName) {
         this.tabContentTargets.forEach(tab => {
             tab.style.display = (tab.id === tabName) ? "block" : "none"
@@ -65,7 +65,7 @@ export default class extends Controller {
         this.applyFiltersDisplay(tabName)
     }
 
-    applyFiltersDisplay(tabName = new URLSearchParams(window.location.search).get("tab") || "designers") {
+    applyFiltersDisplay(tabName = new URLSearchParams(window.location.search).get("tab") || "references") {
         if (this.hasDomainFilterTarget) this.domainFilterTarget.style.display = "flex"
         if (this.hasCountryFilterTarget) {
             this.countryFilterTarget.style.display = ["designers", "frise", "studios"].includes(tabName) ? "flex" : "none"

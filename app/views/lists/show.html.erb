@@ -650,9 +650,7 @@
           const query = this.value.trim();
 
           if (query.length < 2) {
-            // Si champ vide ou trop court, recharge les premiers éléments
             loadInitial(type, listContainer);
-            // NOUVEAU : S'assurer que le bouton existe avant de le manipuler
             if (loadMoreButton) loadMoreButton.style.display = 'inline-block';
             return;
           }
@@ -663,14 +661,12 @@
           .then(response => response.text())
           .then(html => {
             listContainer.innerHTML = html;
-            // NOUVEAU : S'assurer que le bouton existe avant de le manipuler
-            if (loadMoreButton) loadMoreButton.style.display = 'none'; // Cache le bouton
+            if (loadMoreButton) loadMoreButton.style.display = 'none';
           })
           .catch(err => console.error(`Erreur recherche ${type}:`, err));
         });
       }
 
-      // Recharge les 10 premiers en cas d'effacement
       function loadInitial(type, container) {
         fetch(`/lists/load_more_${type}?offset=0`, {
           headers: { 'Accept': 'text/html' }
@@ -682,7 +678,6 @@
       document.addEventListener("turbo:load", () => {
         setupLiveSearch('designer-search', 'designers-load-more', 'designers');
         setupLiveSearch('oeuvre-search', 'oeuvres-load-more', 'oeuvres');
-        // NOUVEAU : Initialisation de la recherche pour les studios
         setupLiveSearch('studio-search', 'studios-load-more', 'studios');
       });
     </script>

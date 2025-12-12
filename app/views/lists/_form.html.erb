@@ -63,6 +63,15 @@
     transition: all 0.2s ease;
     background: #fff;
   }
+  @media screen and (max-width:768px){
+    .radio-card {
+      width: calc(100% - 32px);
+      padding: 24px 16px;
+    }
+    .visibility-toggle-container {
+      flex-direction: column !important;
+    }
+  }
   .radio-card:hover {
     border-color: #202020;
   }

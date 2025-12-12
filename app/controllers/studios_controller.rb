@@ -96,13 +96,14 @@ class StudiosController < ApplicationController
   def cancel
     if user_signed_in? && (current_user.admin? || @studio.user_id == current_user.id)
       @studio.destroy
-      update_suivi_references_refusees(@studio.user)
-      flash[:notice] = I18n.t('studio.cancel.success', default: "Soumission annulée")
-      redirect_to add_elements_path 
+    
+      update_suivi_references_refusees(@studio.user) if @studio.user
+      
+      flash[:notice] = "La contribution a été annulée avec succès."
     else
-      flash[:alert] = I18n.t('studio.cancel.denied', default: "Action non autorisée")
-      redirect_to @studio
+      flash[:alert] = "Vous n'avez pas l'autorisation d'annuler cette contribution."
     end
+    redirect_to add_elements_path
   end
 
   def validate

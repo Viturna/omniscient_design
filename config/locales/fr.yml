@@ -740,13 +740,13 @@ fr:
       percent: "%{percent}%"
     steps:
       1:
-        title: "Étape 1 : Identité"
+        title: "Étape 2 : Identité du designer"
         prenom: "Prénom"
         prenom_placeholder: "Ex : Gustave"
         nom: "Nom"
         nom_placeholder: "Ex : Eiffel"
       2:
-        title: "Étape 2 : Informations clés"
+        title: "Étape 3 : Informations clés"
         date_naissance: "Année de naissance"
         date_naissance_placeholder: "Ex : 1832"
         date_deces: "Année de décès (optionnel)"
@@ -755,7 +755,7 @@ fr:
         country_placeholder: "Sélectionner un pays"
         country_blank: "Aucun pays"
       3:
-        title: "Étape 3 : Contexte et Description"
+        title: "Étape 4 : Contexte et Description"
         presentation_generale: "Présentation générale (Min. 200 caractères)"
         presentation_generale_placeholder: "Ex : Gustave Eiffel, ingénieur et entrepreneur français..."
         formation_et_influences: "Formation et influences (Min. 200 caractères)"
@@ -767,7 +767,7 @@ fr:
         heritage_et_impact: "Héritage et impact (Min. 200 caractères)"
         heritage_et_impact_placeholder: "Ex : Gustave Eiffel a redéfini les standards..."
       4:
-        title: "Étape 4 : Images & Illustrations"
+        title: "Étape 5 : Images & Illustrations"
         image: "Url de l'image"
         image_placeholder: "https://url-de-l-image.fr"
     buttons:
@@ -792,17 +792,17 @@ fr:
       percent: "%{percent}%"
     steps:
       0: 
-        title: "Critères d’acceptation des œuvres et designers"
+        title: "Étape 1 : Critères d’acceptation des œuvres et designers"
         subtitle: "Afin de garantir la qualité, la cohérence et le respect du travail de chacun, toute soumission sur omniscientdesign.fr doit respecter les critères suivants."
         warning: "Le non-respect de ces règles entraînera la suppression immédiate du contenu et le bannissement définitif du compte. Aucune seconde chance ne sera accordée."
         authenticity_title: "1. Originalité et Authenticité"
         authenticity_text: "- Chaque référence doit être originale, conçue par son auteur. \n - Chaque référence doit être clairement sourcés."
       1:
-        title: "Étape 1 : La référence"
+        title: "Étape 2 : La référence"
         nom_oeuvre: "Nom de la référence"
         nom_oeuvre_placeholder: "Ex : La petite fille au ballon"
       2:
-        title: "Étape 2 : Contexte et description"
+        title: "Étape 2 : Informations clés"
         designer_ids: "Nom du/des designer(s)"
         designer_placeholder: "Rechercher un/une designer…"
         designer_blank: "Aucun designer"
@@ -811,7 +811,7 @@ fr:
         notion_placeholder: "Rechercher des notions…"
         domaine_id: "Domaine(s)"
       3:
-        title: "Étape 3 : Contexte et description"
+        title: "Étape 4 : Contexte et description"
         presentation_generale: "Présentation générale (Min. 200 caractères)"
         presentation_generale_placeholder: "Ex : La petite fille au ballon est l’une des œuvres les plus emblématiques de Banksy…"
         contexte_historique: "Contexte historique (Min. 200 caractères)"
@@ -828,7 +828,7 @@ fr:
         source_placeholder: "Ex : https://example.com"
         add_source_button: "+ Ajouter un lien"
       4:
-        title: "Étape 4 : Images & Illustrations"
+        title: "Étape 5 : Images & Illustrations"
         date_oeuvre: "Date de la référence"
         date_oeuvre_placeholder: "Ex : 2002"
         image: "Image(s) & Illustration(s)"

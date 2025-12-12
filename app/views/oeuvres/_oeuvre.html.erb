@@ -387,7 +387,9 @@
             <div class="naviguation-buttons">
               <%= link_to "Ajouter une autre référence", add_elements_path, class: "button" %>
               <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? %>
-                <%= link_to 'Annuler la soumission', cancel_oeuvre_path(oeuvre), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de cette référence ?' } %>
+                <%= link_to 'Annuler la soumission', cancel_oeuvre_path(oeuvre), 
+                data: { turbo_method: :delete, confirm: "Êtes-vous sûr ?" }, 
+                class: "button secondary" %>
               <% end %>
               <%= link_to "Retour à l'accueil", oeuvres_path, class: "button" %>
             </div>

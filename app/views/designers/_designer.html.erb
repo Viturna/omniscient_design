@@ -262,7 +262,7 @@
             </a>
             <%= link_to new_bug_report_path(url: request.original_url), class: "button-circle" do %>
               <div class="circle">
-                 <svg width="35" height="35" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="35" height="35" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23.75 25.3125C23.75 24.81 23.305 24.375 22.8125 24.375C19.6112 24.375 7.88875 24.375 4.6875 24.375C4.195 24.375 3.75 24.81 3.75 25.3125C3.75 25.815 4.195 26.25 4.6875 26.25H22.8125C23.305 26.25 23.75 25.815 23.75 25.3125ZM8.72125 16.4587C7.05375 21.3537 6.87125 21.7487 6.87125 22.1925C6.87125 22.8512 7.44625 23.1288 7.8075 23.1288C8.2475 23.1288 8.6425 22.9575 13.525 21.2625L8.72125 16.4587ZM10.0462 15.1325L14.8538 19.94L25.8838 8.9225C26.1275 8.67875 26.25 8.35875 26.25 8.03875C26.25 7.72 26.1275 7.4 25.8838 7.15625C25.0188 6.2925 23.7062 4.98 22.84 4.11625C22.5962 3.8725 22.2763 3.75 21.9563 3.75C21.6388 3.75 21.3187 3.8725 21.0737 4.11625L10.0462 15.1325Z" fill="white"/>
                 </svg>
               </div>
@@ -355,7 +355,9 @@
                 <div class="naviguation-buttons">
                   <%= link_to "Ajouter un autre designer", add_elements_path, class: "button" %>
                   <% if user_signed_in? && (current_user.id == designer.user_id || current_user.admin?) %>
-                    <%= link_to 'Annuler la soumission', cancel_designer_path(designer), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission de ce designer ?' } %>
+                    <%= link_to 'Annuler la soumission', cancel_designer_path(designer), 
+                      data: { turbo_method: :delete, confirm: "Êtes-vous sûr ?" }, 
+                      class: "button secondary" %>
                   <% end %>
                   <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
                 </div>

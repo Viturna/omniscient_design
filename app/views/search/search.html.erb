@@ -130,7 +130,7 @@
                 data: {
                   controller: "select2",
                   select2_placeholder_value: t('search.domain'),
-                  select2_submit_on_change_value: "true"
+                  action: "change->tabs-search#update"
                 }
               } %>
       </div>
@@ -146,7 +146,7 @@
                 data: {
                   controller: "select2",
                   select2_placeholder_value: t('search.choose_notions'),
-                  select2_submit_on_change_value: "true"
+                  action: "change->tabs-search#update"
                 }
               } %>
       </div>
@@ -161,7 +161,7 @@
                 data: {
                   controller: "select2",
                   select2_placeholder_value: t('search.choose_country'),
-                  select2_submit_on_change_value: "true"
+                  action: "change->tabs-search#update"
                 }
               } %>
       </div>
@@ -188,7 +188,10 @@
                 id: "endDate",
                 placeholder: t('search.end_year') %>
             </div>
-            <button type="button" id="applyDateFilter" class="button dark">
+            <button type="button" 
+              id="applyDateFilter" 
+              class="button dark"
+              data-action="click->tabs-search#update">
               <%= t('search.apply') %>
             </button>
           </div>
@@ -201,8 +204,8 @@
                 class="form-control" 
                 data-tabs-search-target="sortSelect"
                 data-controller="select2"
-                data-select2-submit-on-change-value="true"
-                data-select2-minimum-results-for-search-value="Infinity"> <% if params[:tab] == 'references' %>
+                data-action="change->tabs-search#update"
+          data-select2-minimum-results-for-search-value="Infinity"> <% if params[:tab] == 'references' %>
             <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
               <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
                 <option value="oeuvre_asc" <%= 'selected' if params[:sort] == 'oeuvre_asc' %>><%= t('search.oeuvre_old_new') %></option>

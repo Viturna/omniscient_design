@@ -3,32 +3,41 @@ import $ from "jquery"
 import "select2"
 
 export default class extends Controller {
-    static values = { placeholder: String }
+  static values = { 
+    placeholder: String,
+    submitOnChange: Boolean
+  }
 
-    connect() {
-        this.initSelect2()
+  connect() {
+    this.initSelect2()
+  }
+
+  disconnect() {
+    if ($(this.element).data('select2')) {
+      $(this.element).select2('destroy')
+    }
+  }
+
+  initSelect2() {
+    const options = {
+      width: '100%',
+      placeholder: this.placeholderValue || "Sélectionner...",
+      allowClear: true,
+      language: "fr",
+      minimumResultsForSearch: this.element.dataset.select2MinimumResultsForSearchValue === "Infinity" ? Infinity : 0
     }
 
-    disconnect() {
-        $(this.element).select2('destroy')
-    }
+    $(this.element).select2(options)
 
-    initSelect2() {
-        const options = {
-            width: '100%',
-            placeholder: this.placeholderValue || "Sélectionner...",
-            allowClear: true,
-            language: "fr"
-        }
+    $(this.element).on('select2:select select2:unselect', (e) => {
+      this.element.dispatchEvent(new Event('change', { bubbles: true }))
+    })
 
-        $(this.element).select2(options)
-
-        $(this.element).on('select2:open', function (e) {
-            const evt = document.querySelector('.select2-results__options');
-
-            if (evt) {
-                evt.setAttribute('data-lenis-prevent', 'true');
-            }
-        });
-    }
+    $(this.element).on('select2:open', function (e) {
+      const evt = document.querySelector('.select2-results__options');
+      if (evt) {
+        evt.setAttribute('data-lenis-prevent', 'true');
+      }
+    });
+  }
 }

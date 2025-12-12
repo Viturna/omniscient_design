@@ -195,14 +195,15 @@ end
   
   def cancel
     if user_signed_in? && (current_user.admin? || @oeuvre.user_id == current_user.id)
-      update_suivi_references_refusees(@oeuvre.user)
-      @oeuvre.destroy!
-      flash[:notice] = t('oeuvres.cancel.success')
-      redirect_to oeuvres_path
+      @oeuvre.destroy
+    
+      update_suivi_references_refusees(@oeuvre.user) if @oeuvre.user
+      
+      flash[:notice] = "La contribution a été annulée avec succès."
     else
-      flash[:alert] = t('oeuvres.cancel.failure')
-      redirect_to oeuvres_path
+      flash[:alert] = "Vous n'avez pas l'autorisation d'annuler cette contribution."
     end
+    redirect_to add_elements_path
   end
 
  def validate

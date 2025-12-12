@@ -440,7 +440,9 @@
             <div class="naviguation-buttons">
               <%= link_to "Ajouter un autre studio", add_elements_path, class: "button" %>
               <% if user_signed_in? && (current_user.id == studio.user_id) %>
-                <%= link_to 'Annuler la soumission', cancel_studio_path(studio), method: :delete, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la soumission ?' } %>
+                <%= link_to 'Annuler la soumission', cancel_studio_path(studio), 
+                  data: { turbo_method: :delete, confirm: "Êtes-vous sûr ?" }, 
+                  class: "button secondary" %>
               <% end %>
               <%= link_to "Retour à l'accueil", designers_path, class: "button" %>
             </div>

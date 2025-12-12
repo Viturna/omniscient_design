@@ -189,17 +189,16 @@ def load_more
   end
 
   def cancel
-    if user_signed_in?
-      if current_user.admin? || @designer.user_id == current_user.id
-        update_suivi_references_refusees(@designer.user)
-        @designer.destroy!
-        flash[:notice] = I18n.t('designer.cancel.success')
-        redirect_to designers_path
-      else
-        flash[:alert] = I18n.t('designer.cancel.denied')
-        redirect_to designers_path
-      end
+    if user_signed_in? && (current_user.admin? || @designer.user_id == current_user.id)
+      @designer.destroy
+    
+      update_suivi_references_refusees(@designer.user) if @designer.user
+      
+      flash[:notice] = "La contribution a été annulée avec succès."
+    else
+      flash[:alert] = "Vous n'avez pas l'autorisation d'annuler cette contribution."
     end
+    redirect_to add_elements_path
   end
 
   def validate

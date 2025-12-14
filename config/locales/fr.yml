@@ -588,7 +588,7 @@ fr:
       dossier: "18,8 Mo"
   bug_report:
     subtitle_top: "Votre contribution"
-    title: "Signaler un problème"
+    title: "Signaler un problème/Suggérer une modification"
     description: "Si vous rencontrez un problème avec notre site, une fonctionnalité ou un service, nous vous invitons à nous en informer afin que nous puissions résoudre rapidement la situation."
     help_title: "Votre aide nous est précieuse"
     placeholder_description: "Description du problème"

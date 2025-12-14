@@ -649,6 +649,7 @@
 }
 
 .logo-overlay {
+  width: 12vw;
   position: absolute;
   left: 35px;
   top: 35px;
@@ -919,6 +920,12 @@
 
   .title-description-reference {
     font-size: 20px;
+  }
+
+  // validation
+
+  .svg-overlay-validation {
+    scale: 0.5;
   }
 }
 

@@ -18,3 +18,11 @@
     text-decoration: underline;
     text-decoration-thickness: 2px;
 }
+
+.pagination .prev {
+    display: none !important;
+}
+
+.pagination .next {
+    display: none !important;
+}

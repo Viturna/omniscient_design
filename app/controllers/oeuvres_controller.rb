@@ -9,7 +9,7 @@ class OeuvresController < ApplicationController
 
   AD_FREQUENCY_RANGE = 4..7
   AD_FIRST_POSITION_RANGE = 3..5
-  # GET /oeuvres or /oeuvres.json
+
   def index
     oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
     @current_page = 'accueil'
@@ -30,6 +30,12 @@ class OeuvresController < ApplicationController
         ad_index += 1
         @items_until_next_ad = rand(AD_FREQUENCY_RANGE)
       end
+    end
+
+    if user_signed_in?
+      @saved_oeuvre_ids = current_user.saved_oeuvres.pluck(:id)
+    else
+      @saved_oeuvre_ids = []
     end
   end
 
@@ -84,8 +90,13 @@ def load_more
       return
     end
     @lists = user_signed_in? ? current_user.lists : []
+    if user_signed_in?
+      @saved_oeuvre_ids = current_user.saved_oeuvres.pluck(:id)
+    else
+      @saved_oeuvre_ids = []
+    end
 
-     @domaine_oeuvres = Oeuvre
+    @domaine_oeuvres = Oeuvre
                        .joins(:domaines)
                        .where(domaines: { id: @domaines.ids })
                        .where(validation: true)
@@ -231,6 +242,11 @@ end
     end
   end
   
+def save_modal
+    @oeuvre = Oeuvre.friendly.find(params[:slug])
+    @lists = current_user.lists
+    render layout: false
+  end
   
   private
   def update_image_credits(oeuvre, params)

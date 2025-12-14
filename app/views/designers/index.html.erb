@@ -76,7 +76,7 @@
   </div>
 </section>
 <div id="designers">
-    <div class="home-flex" id="cardContainer"
+  <div class="home-flex" id="cardContainer"
        data-controller="scroll-vertical"
        data-scroll-vertical-cooldown-value="500">
     <div class="nav-home-mobile">
@@ -105,18 +105,30 @@
     </div> %>
     <div class="box-card" id="boxCard">
       <% @items.each do |item| %>
+        
         <% if item.is_a?(Designer) %>
-          <% cache item do %>
-            <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
-          <% end %>
+          <div data-entity-type="designer" data-id="<%= item.id %>" class="entity-wrapper">
+             <% cache item do %>
+              <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
+            <% end %>
+          </div>
+
+        <% elsif item.is_a?(Studio) %>
+           <div data-entity-type="studio" data-id="<%= item.id %>" class="entity-wrapper">
+             <% cache item do %>
+              <%= render partial: 'studios/card', locals: { card: item, class_name: 'card' } %>
+             <% end %>
+           </div>
+
         <% elsif item.is_a?(Hash) %>
           <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
         <% end %>
       <% end %>
     </div>
     <div id="designers-load-more" 
-         data-offset="<%= @items.count { |i| i.is_a?(Designer) } %>"
-         data-loaded-ids="<%= @items.select { |i| i.is_a?(Designer) }.map(&:id).join(',') %>"
+         data-offset="<%= @items.count { |i| i.is_a?(Designer) || i.is_a?(Studio) } %>"
+         data-loaded-designer-ids="<%= @items.select { |i| i.is_a?(Designer) }.map(&:id).join(',') %>"
+         data-loaded-studio-ids="<%= @items.select { |i| i.is_a?(Studio) }.map(&:id).join(',') %>"
          data-ad-index="0"
          data-items-until-next-ad="<%= @items_until_next_ad %>"
          data-ads-order="<%= @ads_order_string %>">
@@ -136,7 +148,14 @@
       </button>
     </div>
   </div>
-  <script>
+  <div id="saveModalOverlay" class="popup" style="display: none; z-index: 9999;">
+    <div class="popup-content">
+      <%= turbo_frame_tag "save_modal_content" do %>
+        <p style="text-align: center; padding: 20px;">Chargement...</p>
+      <% end %>
+    </div>
+  </div>
+ <script>
     document.addEventListener("turbo:load", () => {
       const container = document.getElementById("cardContainer");
       if (container) {
@@ -151,44 +170,53 @@
       let isLoading = false;
       let isScrolling = false;
 
-      // --- SCROLL INFINI (MIS À JOUR POUR JSON + PUBS) ---
+      // --- SCROLL INFINI (MIS À JOUR POUR JSON + PUBS + STUDIOS) ---
       function loadMoreCards() {
         if (isLoading) return;
         isLoading = true;
 
         // Récupère les données actuelles depuis les attributs data-*
         let offset = parseInt(loadMoreTrigger.dataset.offset) || 0;
-        let loadedIds = loadMoreTrigger.dataset.loadedIds || '';
+        
+        // IMPORTANT : On récupère les IDs séparément
+        let loadedDesignerIds = loadMoreTrigger.dataset.loadedDesignerIds || '';
+        let loadedStudioIds = loadMoreTrigger.dataset.loadedStudioIds || '';
+        
         let itemsUntilNextAd = loadMoreTrigger.dataset.itemsUntilNextAd;
         let adIndex = loadMoreTrigger.dataset.adIndex;
-        let adsOrder = loadMoreTrigger.dataset.adsOrder; // Récupère l'ordre
+        let adsOrder = loadMoreTrigger.dataset.adsOrder;
 
-        // Construit l'URL avec tous les paramètres
-        const url = `/designers/load_more?offset=${offset}&loaded_ids=${loadedIds}&items_until_next_ad=${itemsUntilNextAd}&ad_index=${adIndex}&ads_order=${adsOrder}`;
+        // Construit l'URL avec tous les paramètres (ajout de loaded_studio_ids)
+        const url = `/designers/load_more?offset=${offset}&loaded_designer_ids=${loadedDesignerIds}&loaded_studio_ids=${loadedStudioIds}&items_until_next_ad=${itemsUntilNextAd}&ad_index=${adIndex}&ads_order=${adsOrder}`;
 
         fetch(url, {
           headers: {
-            'Accept': 'application/json' // Important : on attend du JSON
+            'Accept': 'application/json'
           }
         })
-        .then(response => response.json()) // On parse la réponse JSON
+        .then(response => response.json())
         .then(data => {
           if (data.html.trim() === "") {
-            loadMoreTrigger.style.display = "none"; // Plus rien à charger
+            loadMoreTrigger.style.display = "none";
           } else {
-            // Insère le nouveau HTML (qui contient designers ET pubs)
+            // Insère le nouveau HTML
             container.querySelector('#boxCard').insertAdjacentHTML("beforeend", data.html);
 
-            // Met à jour les compteurs sur le trigger pour le prochain appel
+            // Met à jour les compteurs pubs
             loadMoreTrigger.dataset.itemsUntilNextAd = data.items_until_next_ad;
             loadMoreTrigger.dataset.adIndex = data.ad_index;
 
-            // Met à jour l'offset et les IDs chargés
-            const currentCards = Array.from(container.querySelectorAll('.card:not(.ad-card)'));
-            const allLoadedIds = currentCards.map(c => c.dataset.id).filter(id => id);
+            // --- MISE A JOUR DES IDs CHARGÉS ---
+            // On scanne les wrappers que j'ai ajoutés dans la boucle Ruby
+            const designerWrappers = Array.from(container.querySelectorAll('.entity-wrapper[data-entity-type="designer"]'));
+            const studioWrappers = Array.from(container.querySelectorAll('.entity-wrapper[data-entity-type="studio"]'));
 
-            loadMoreTrigger.dataset.offset = allLoadedIds.length;
-            loadMoreTrigger.dataset.loadedIds = allLoadedIds.join(',');
+            const allLoadedDesignerIds = designerWrappers.map(el => el.dataset.id).filter(id => id);
+            const allLoadedStudioIds = studioWrappers.map(el => el.dataset.id).filter(id => id);
+
+            loadMoreTrigger.dataset.offset = allLoadedDesignerIds.length + allLoadedStudioIds.length;
+            loadMoreTrigger.dataset.loadedDesignerIds = allLoadedDesignerIds.join(',');
+            loadMoreTrigger.dataset.loadedStudioIds = allLoadedStudioIds.join(',');
 
             validateCardAlignment();
           }
@@ -207,9 +235,9 @@
         });
       }
 
-      // --- NAVIGATION VERTICALE (Boutons, Clavier) ---
+      // --- NAVIGATION VERTICALE ---
       function scrollToCard(direction) {
-        const cards = Array.from(container.querySelectorAll(".card, .ad-card")); // Inclut les pubs
+        const cards = Array.from(container.querySelectorAll(".card, .ad-card")); 
         const scrollTop = container.scrollTop;
         const containerHeight = container.clientHeight;
 
@@ -240,13 +268,13 @@
         if (e.key === "ArrowDown") scrollToCard("down");
       });
 
-      // --- GESTION UNIFIÉE DES TOUCHES (Vertical + Horizontal) ---
+      // --- TOUCH / SWIPE ---
       let touchStartX = 0;
       let touchStartY = 0;
 
       container.addEventListener("touchstart", (e) => {
         touchStartY = e.touches[0].clientY;
-        touchStartX = e.touches[0].screenX; // Ajout pour swipe horizontal
+        touchStartX = e.touches[0].screenX;
       }, { passive: true });
 
       container.addEventListener("touchend", (e) => {
@@ -257,24 +285,20 @@
         const deltaX = touchEndX - touchStartX;
         const deltaY = touchEndY - touchStartY;
 
-        // Si mouvement horizontal dominant -> Navigation entre pages
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-           // Swipe GAUCHE -> aller vers Oeuvres
            if (deltaX < 0) {
                window.location.href = '<%= oeuvres_path %>';
            }
         }
-        // Sinon si mouvement vertical dominant -> Navigation entre cartes
         else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
-           if (deltaY > 0) scrollToCard("up"); // Swipe vers le bas
-           else scrollToCard("down"); // Swipe vers le haut
+           if (deltaY > 0) scrollToCard("up");
+           else scrollToCard("down");
         }
       }, { passive: true });
 
 
       validateCardAlignment();
 
-      // Écouteur de défilement pour le chargement infini
       container.addEventListener("scroll", () => {
         const { scrollTop, scrollHeight, clientHeight } = container;
         isScrolling = true;

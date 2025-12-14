@@ -122,72 +122,68 @@ class ListsController < ApplicationController
     redirect_to lists_url, notice: I18n.t('lists.destroy.success')
   end
 
-  def remove_designer
-    designer = Designer.find(params[:designer_id])
-    notice = if @list.designers.delete(designer)
-               I18n.t('lists.remove.designer.success')
-             else
-               I18n.t('lists.remove.designer.failure')
-             end
-    redirect_to request.referer, notice: notice
+  def add_oeuvre
+    @list = List.friendly.find(params[:slug]) 
+    
+    @oeuvre = Oeuvre.find(params[:oeuvre_id])
+
+    unless @list.oeuvres.include?(@oeuvre)
+      @list.oeuvres << @oeuvre
+    end
+
+    redirect_to save_modal_oeuvre_path(@oeuvre)
   end
 
   def remove_oeuvre
-    oeuvre = Oeuvre.find(params[:oeuvre_id])
-    notice = if @list.oeuvres.delete(oeuvre)
-               I18n.t('lists.remove.oeuvre.success')
-             else
-               I18n.t('lists.remove.oeuvre.failure')
-             end
-    redirect_to request.referer, notice: notice
-  end
-  def remove_studio
-    studio = Studio.find(params[:studio_id])
-    notice = if @list.studios.delete(studio)
-               I18n.t('lists.remove.studio.success', default: "Studio retiré de la liste")
-             else
-               I18n.t('lists.remove.studio.failure', default: "Erreur lors du retrait du studio")
-             end
-    redirect_to request.referer, notice: notice
-  end
+    @list = List.friendly.find(params[:slug]) 
+    
+    @oeuvre = Oeuvre.find(params[:oeuvre_id])
 
-  def add_oeuvre
-    oeuvre = Oeuvre.find(params[:oeuvre_id])
-    if @list.oeuvres.include?(oeuvre)
-      redirect_to request.referer, alert: I18n.t('lists.add.oeuvre.exists')
-    else
-      if @list.oeuvres << oeuvre
-        redirect_to request.referer, notice: I18n.t('lists.add.oeuvre.success')
-      else
-        redirect_to request.referer, alert: I18n.t('lists.add.oeuvre.failure')
-      end
-    end
+    @list.oeuvres.delete(@oeuvre)
+
+    redirect_to save_modal_oeuvre_path(@oeuvre)
   end
 
   def add_designer
-    designer = Designer.find(params[:designer_id])
-    if @list.designers.include?(designer)
-      redirect_to request.referer, alert: I18n.t('lists.add.designer.exists')
-    else
-      if @list.designers << designer
-        redirect_to request.referer, notice: I18n.t('lists.add.designer.success')
-      else
-        redirect_to request.referer, alert: I18n.t('lists.add.designer.failure')
-      end
+    @list = List.friendly.find(params[:slug])
+    @designer = Designer.find(params[:designer_id])
+
+    unless @list.designers.include?(@designer)
+      @list.designers << @designer
     end
+
+    redirect_to save_modal_designer_path(@designer)
   end
+
+  def remove_designer
+    @list = List.friendly.find(params[:slug])
+    @designer = Designer.find(params[:designer_id])
+
+    @list.designers.delete(@designer)
+
+    redirect_to save_modal_designer_path(@designer)
+  end
+
   def add_studio
-    studio = Studio.find(params[:studio_id])
-    if @list.studios.include?(studio)
-      redirect_to request.referer, alert: I18n.t('lists.add.studio.exists', default: "Ce studio est déjà dans la liste")
-    else
-      if @list.studios << studio
-        redirect_to request.referer, notice: I18n.t('lists.add.studio.success', default: "Studio ajouté à la liste")
-      else
-        redirect_to request.referer, alert: I18n.t('lists.add.studio.failure', default: "Erreur lors de l'ajout du studio")
-      end
+    @list = List.friendly.find(params[:slug])
+    @studio = Studio.find(params[:studio_id])
+
+    unless @list.studios.include?(@studio)
+      @list.studios << @studio
     end
+
+    redirect_to save_modal_studio_path(@studio)
   end
+
+  def remove_studio
+    @list = List.friendly.find(params[:slug])
+    @studio = Studio.find(params[:studio_id])
+
+    @list.studios.delete(@studio)
+
+    redirect_to save_modal_studio_path(@studio)
+  end
+  
   def filtered_scopes
     oeuvres   = Oeuvre.where(validation: true)
     designers = Designer.where(validation: true)

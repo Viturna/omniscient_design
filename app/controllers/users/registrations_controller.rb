@@ -103,8 +103,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :how_did_you_hear, :study_level, :provider, :uid])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :statut, :etablissement_id, :how_did_you_hear, :study_level])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :pseudo, :rgpd_consent, :statut, :etablissement_id, :how_did_you_hear, :study_level, :newsletter, :provider, :uid])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :pseudo, :statut, :etablissement_id, :how_did_you_hear, :study_level, :newsletter])
   end
 
   def after_inactive_sign_up_path_for(resource)

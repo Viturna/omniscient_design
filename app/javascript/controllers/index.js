@@ -61,6 +61,9 @@ application.register("reference-scroll", ReferenceScrollController)
 import RegistrationController from "./registration_controller"
 application.register("registration", RegistrationController)
 
+import SaveModalController from "./save_modal_controller"
+application.register("save-modal", SaveModalController)
+
 import ScrollHorizontalController from "./scroll_horizontal_controller"
 application.register("scroll-horizontal", ScrollHorizontalController)
 

@@ -61,17 +61,17 @@ Rails.application.routes.draw do
     resources :lists, param: :slug do
       member do
         post 'add_oeuvre'
-        post 'add_designer'
-        post 'remove_designer'
-        post 'remove_oeuvre', to: 'lists#remove_oeuvre'
+        post :add_designer
+        delete :remove_designer
+        delete 'remove_oeuvre', to: 'lists#remove_oeuvre'
         post 'toggle_share'
         post 'invite_editors'
         post 'change_role'
         delete 'remove_user'
         post 'toggle_privacy'
         get :load_more_oeuvres
-        post 'add_studio'
-        post 'remove_studio'
+        post :add_studio
+        delete :remove_studio
         get :load_more_studios
       end
       get :load_more_oeuvres, on: :collection
@@ -94,6 +94,7 @@ Rails.application.routes.draw do
         get :validate
         delete :cancel
         patch :reject
+        get :save_modal
       end
     end
 
@@ -107,6 +108,7 @@ Rails.application.routes.draw do
         delete :cancel
         delete :destroy
         patch :reject
+        get :save_modal
       end
     end
 
@@ -120,6 +122,7 @@ Rails.application.routes.draw do
         delete :cancel
         delete :destroy
         patch :reject
+        get :save_modal
       end
     end
 

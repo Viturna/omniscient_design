@@ -97,14 +97,15 @@ class User < ApplicationRecord
   has_many :user_badges, dependent: :destroy
   has_many :badges, through: :user_badges
 
+  has_many :saved_oeuvres, through: :lists, source: :oeuvres
+  has_many :saved_designers, through: :lists, source: :designers
+  has_many :saved_studios, through: :lists, source: :studios
   # --- Méthodes ---
 
-  # Méthode standard Devise pour retrouver un utilisateur via OmniAuth
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first
   end
 
-  # Surcharge Devise : le mot de passe n'est pas requis si l'utilisateur vient d'un provider (Google)
   def password_required?
     return false if provider.present?
     super
@@ -128,7 +129,6 @@ class User < ApplicationRecord
 
   private
 
-  # Génération d’un code de parrainage unique
   def generate_referral_code
     self.referral_code = loop do
       code = SecureRandom.alphanumeric(8)
@@ -136,7 +136,6 @@ class User < ApplicationRecord
     end
   end
 
-  # Validation des noms et pseudo contre les mots interdits
   def no_ban_words_in_names
     ban_words = %w[
       anal anus arse ass ballsack balls bastard bitch biatch blowjob blow job hiltler

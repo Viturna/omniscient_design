@@ -140,6 +140,13 @@
     </button>
   </div>
 </div>
+<div id="saveModalOverlay" class="popup" style="display: none; z-index: 9999;">
+  <div class="popup-content">
+    <%= turbo_frame_tag "save_modal_content" do %>
+      <p style="text-align: center; padding: 20px;">Chargement...</p>
+    <% end %>
+  </div>
+</div>
 <script>
   document.addEventListener("turbo:load", () => {
     const container = document.getElementById("cardContainer");

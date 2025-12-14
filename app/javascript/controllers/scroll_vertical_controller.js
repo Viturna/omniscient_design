@@ -33,7 +33,7 @@ export default class extends Controller {
         if (this.isScrolling) return
 
         const deltaY = event.deltaY
-        if (Math.abs(deltaY) < 30) return
+        if (Math.abs(deltaY) < 20) return
 
         this.triggerScroll(deltaY > 0 ? 1 : -1)
     }

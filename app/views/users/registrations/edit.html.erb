@@ -230,6 +230,10 @@
           </div>
         </div>
       <%end%>
+     <div class="field rgpd" style="flex-direction: row; gap: 10px;">
+          <%= f.check_box :newsletter, class: "checkbox-input", id: "user_newsletter" %>
+          <%= f.label :newsletter, "Je souhaite recevoir les actualités et nouveautés d'Omniscient Design", style: "margin: 0; cursor: pointer;", for: "user_newsletter" %>
+        </div>
       <div class="actions">
         <%= f.submit  t('edit_profile.update_button'), class: "button large maj dark" %>
       </div>

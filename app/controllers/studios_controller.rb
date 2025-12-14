@@ -18,6 +18,12 @@ class StudiosController < ApplicationController
       end
       @lists = []
     end
+
+    if user_signed_in?
+      @saved_studio_ids = current_user.saved_studios.pluck(:id)
+    else
+      @saved_studio_ids = []
+    end
   end
 
   def new
@@ -129,6 +135,12 @@ class StudiosController < ApplicationController
     else
       render json: { exists: false }
     end
+  end
+
+  def save_modal
+    @studio = Studio.friendly.find(params[:slug])
+    @lists = current_user.lists
+    render layout: false
   end
 
   private

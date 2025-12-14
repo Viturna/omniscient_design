@@ -129,7 +129,6 @@
             { class: "role-select form-control",
               required: true,
               data: {
-                # CORRECTION ICI : Une seule action vers la nouvelle méthode unifiée
                 action: "change->registration#toggleFields",
                 registration_target: "statutSelect"
               } } %>
@@ -156,7 +155,7 @@
             User::STUDY_LEVELS,
             { include_blank: "Sélectionnez votre niveau scolaire" },
             { 
-              class: "form-control", # J'ai retiré 'level-select' qui ne sert plus
+              class: "form-control",
               data: { 
                 controller: "select2",
                 select2_placeholder_value: "Sélectionnez votre niveau scolaire"
@@ -187,6 +186,10 @@
         <%# <div class="field">
           <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
         <%# </div> %>
+        <div class="field rgpd">
+          <%= f.check_box :newsletter, class: "checkbox-input", id: "user_newsletter" %>
+          <%= f.label :newsletter, "Je souhaite recevoir les actualités et nouveautés d'Omniscient Design", style: "margin: 0; cursor: pointer;", for: "user_newsletter" %>
+        </div>
         <div class="field rgpd">
           <%= f.check_box :rgpd_consent, required: true %>
           <%= f.label :rgpd_consent,

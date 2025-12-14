@@ -10,18 +10,42 @@ class DesignersController < ApplicationController
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index
-    designers = Designer.where(validation: true).order("RANDOM()").limit(10)
+    # --- OPTIMISATION ---
+    # 1. On utilise .includes pour éviter le problème N+1 (chargement des images et domaines en une fois)
+    # 2. On change les LIMIT pour qu'il y ait beaucoup moins de studios (Ratio 9 Designers / 1 Studio)
+    
+    designers = Designer.where(validation: true)
+                        .includes(:domaines, designer_images: { file_attachment: :blob })
+                        .order("RANDOM()")
+                        .limit(9) # On prend 9 designers
+
+    studios = Studio.where(validation: true)
+                    .includes(:domaines, studio_images: { file_attachment: :blob })
+                    .order("RANDOM()")
+                    .limit(1) # Et seulement 1 studio
+
+    raw_items = (designers + studios).shuffle
+
     @current_page = 'accueil'
 
     ads = ads_data.shuffle
-    @ads_order_string = ads.map { |ad| ad[:id] }.join(',') # Sauvegarde l'ordre
+    @ads_order_string = ads.map { |ad| ad[:id] }.join(',') 
     
     @items = []
     ad_index = 0
     @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
 
-    designers.each do |designer|
-      @items << designer
+    if user_signed_in?
+      # .pluck est déjà très rapide, c'est bien
+      @saved_designer_ids = current_user.saved_designers.pluck(:id)
+      @saved_studio_ids = current_user.saved_studios.pluck(:id)
+    else
+      @saved_designer_ids = []
+      @saved_studio_ids = []
+    end
+
+    raw_items.each do |item|
+      @items << item
       @items_until_next_ad -= 1
       if @items_until_next_ad == 0 && ads.present?
         @items << ads[ad_index % ads.length]
@@ -31,27 +55,34 @@ class DesignersController < ApplicationController
     end
   end
 
-def load_more
-    offset = params[:offset].to_i
-    limit = 2
-    loaded_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
+  def load_more
+    # Récupération des IDs déjà chargés
+    loaded_designer_ids = params[:loaded_designer_ids]&.split(',')&.map(&:to_i) || []
+    loaded_studio_ids = params[:loaded_studio_ids]&.split(',')&.map(&:to_i) || []
+    
+    # Fallback pour compatibilité
+    if loaded_designer_ids.empty? && params[:loaded_ids].present?
+       loaded_designer_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
+    end
 
-    @designers = Designer.where(validation: true)
-                         .where.not(id: loaded_ids)
+    # --- OPTIMISATION & RATIO ---
+    # On charge 3 designers pour 1 studio (pour garder les studios rares mais présents)
+    
+    new_designers = Designer.where(validation: true)
+                         .where.not(id: loaded_designer_ids)
+                         .includes(:domaines, designer_images: { file_attachment: :blob }) # Optimisation SQL
                          .order("RANDOM()")
-                         .limit(limit)
-
-    items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
-    ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
-    ads = ads_data.shuffle
-
-    html_output = "" 
-
-    @designers = Designer.where(validation: true)
-                         .where.not(id: loaded_ids)
+                         .limit(3)
+    
+    new_studios = Studio.where(validation: true)
+                         .where.not(id: loaded_studio_ids)
+                         .includes(:domaines, studio_images: { file_attachment: :blob }) # Optimisation SQL
                          .order("RANDOM()")
-                         .limit(limit)
+                         .limit(1)
 
+    mixed_items = (new_designers + new_studios).shuffle
+
+    # Gestion Pubs
     items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
     ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
 
@@ -60,12 +91,19 @@ def load_more
       ads_hashes = ads_data
       ads = ads_hashes.sort_by { |ad| ordered_ad_ids.index(ad[:id].to_s) }
     else
-      ads = []
+      ads = ads_data.shuffle
     end
 
     html_output = "" 
-    @designers.each do |designer|
-      html_output += render_to_string(partial: 'designers/card', locals: { card: designer, class_name: 'card' }, formats: [:html])
+
+    mixed_items.each do |item|
+      if item.is_a?(Designer)
+        card_html = render_to_string(partial: 'designers/card', locals: { card: item, class_name: 'card' }, formats: [:html])
+        html_output += "<div data-entity-type='designer' data-id='#{item.id}' class='entity-wrapper'>#{card_html}</div>"
+      elsif item.is_a?(Studio)
+        card_html = render_to_string(partial: 'studios/card', locals: { card: item, class_name: 'card' }, formats: [:html])
+        html_output += "<div data-entity-type='studio' data-id='#{item.id}' class='entity-wrapper'>#{card_html}</div>"
+      end
       
       items_until_next_ad -= 1
       if items_until_next_ad == 0 && ads.present?
@@ -95,6 +133,11 @@ def load_more
         redirect_to root_path, alert: I18n.t('designer.access.denied')
       end
       @lists = []
+    end
+    if user_signed_in?
+      @saved_designer_ids = current_user.saved_designers.pluck(:id)
+    else
+      @saved_designer_ids = []
     end
   end
 
@@ -222,6 +265,11 @@ def load_more
     end
   end
 
+  def save_modal
+    @designer = Designer.friendly.find(params[:slug])
+    @lists = current_user.lists
+    render layout: false
+  end
 
   private
 

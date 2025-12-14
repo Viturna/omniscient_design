@@ -115,6 +115,7 @@
             <th class="sortable">Établissement</th>
             <th class="sortable">Niveau d'études</th>
             <th class="sortable">Via</th>
+            <th class="sortable">Newsletter</th>
             <th class="sortable">Confirmé</th>
             <th class="sortable">Certifié</th>
             <th class="sortable">BAN</th>
@@ -134,6 +135,7 @@
               <td><%= user.etablissement&.name %></td>
               <td><%= user.study_level %></td>
               <td><%= user.how_did_you_hear %></td>
+              <td><%= user.newsletter? ? 'Oui' : 'Non' %></td>
               <td>
                 <% if user.confirmed? %>
                   <span style="color: green; font-weight: bold;">Oui</span>
@@ -249,7 +251,7 @@
       </ul>
     </div>
   </div>
- <div class="stat-box etablissements">  
+  <div class="stat-box etablissements">
     <div class="etablissements-header">
       <h3>Top Établissements <span>(<%= @total_etablissements_count %>)</span></h3>
       <%= link_to "Voir la liste des établissements", admin_etablissements_path, class: "btn btn-sm btn-primary" %>

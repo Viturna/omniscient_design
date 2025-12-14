@@ -119,7 +119,7 @@
   }
 </style>
 <div class="body-show" id="<%= dom_id studio %>" data-controller="reference-scroll share">
-  <<% if studio.studio_images.any? %>
+  <% if studio.studio_images.any? %>
     <div class="header-show" style="background-image: url('<%= url_for(studio.studio_images.first.file) %>');" data-controller="slider" data-slider-update-background-value="true">
   <% else %>
     <div class="header-show" style="background-color:#FFF; ">
@@ -183,10 +183,17 @@
               </div>
             <% end %>
           <% end %>
-          <button id="openPopupSave" style="border:none; background:none;" data-no-popup>
-            <div class="circle">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" fill="white"/>
+           <button class="save-btn" 
+                  data-controller="save-modal" 
+                  data-action="click->save-modal#open"
+              data-save-modal-studio-id-value="<%= studio.id %>" 
+              title="Enregistrer dans une liste"
+              style="position: relative; z-index: 50; background: none; border: none; cursor: pointer; pointer-events: auto;">
+              <div class="circle">
+                <svg style="pointer-events: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" 
+                      fill="<%= @saved_studio_ids&.include?(studio.id) ? 'white' : 'none' %>" 
+                      stroke="white" stroke-width="2"/>
               </svg>
             </div>
           </button>
@@ -385,13 +392,11 @@
             <% studio_oeuvres.each do |oeuvre| %>
               <%= link_to oeuvre do %>
                 <div class="oeuvre-card">
-                  <%# --- CORRECTION ICI : Ajout du IF manquant --- %>
                   <% if oeuvre.oeuvre_images.first&.file&.attached? %>
                     <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(resize_to_limit: [400, 400])) %>');">
                     <% else %>
                       <div class="oeuvre-card-image" style="background-color: #EEE;">
                       <% end %>
-                      <%# --------------------------------------------- %>
                       <div class="oeuvre-card-content">
                         <p class="oeuvre-designer">
                           <%= oeuvre.designers.any? ? oeuvre.designers.map(&:nom_designer).join(", ") : "Designer inconnu" %>
@@ -493,28 +498,10 @@
         <input type="text" id="shareLink" data-share-target="link" value="" hidden readonly>
       </div>
     </div>
-    <div id="popup" class="popup">
+    <div id="saveModalOverlay" class="popup" style="display: none; z-index: 9999;">
       <div class="popup-content">
-        <div class="top-popup">
-          <svg class="close-popup" id="closePopupSave" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-          </svg>
-        </div>
-        <div class="flex-title-popup">
-          <p class="title-popup">Ajouter dans une liste</p>
-          <%= link_to 'Créer une liste', new_list_path(designer_id: @studio.id), class: "popup-link-add" %>
-        </div>
-        <% @lists.each do |list| %>
-          <div class="field">
-            <div class="box-list">
-              <%= link_to list, class: "box-list-left" do %>
-                <div class="box-text-list">
-                  <p class="title-list"><%= list.name %></p>
-                  <p class="nb-list"><%= list.designers.count + list.oeuvres.count %> Références</p>
-                </div>
-              <% end %>
-            </div>
-          </div>
+        <%= turbo_frame_tag "save_modal_content" do %>
+          <p style="text-align: center; padding: 20px;">Chargement...</p>
         <% end %>
       </div>
     </div>

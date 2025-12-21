@@ -785,6 +785,16 @@
   .title-description-reference {
     font-size: 22px;
   }
+
+  // validation
+
+  .validation {
+    gap: 24px;
+  }
+
+  .validation-text {
+    width: 50vw;
+  }
 }
 
 @media screen and (min-width: 426px) and (max-width: 600px) {
@@ -924,8 +934,12 @@
 
   // validation
 
-  .svg-overlay-validation {
-    scale: 0.5;
+  .validation {
+    gap: 24px;
+  }
+
+  .validation-text {
+    width: 50vw;
   }
 }
 

@@ -19,6 +19,9 @@ application.register("back", BackController)
 import CookieConsentController from "./cookie_consent_controller"
 application.register("cookie-consent", CookieConsentController)
 
+import DeviceSyncController from "./device_sync_controller"
+application.register("device-sync", DeviceSyncController)
+
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
 

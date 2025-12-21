@@ -122,7 +122,7 @@
       </div>
       <div class="flex-btn-add" style="justify-content: flex-end;">
         <% unless is_edit_mode %>
-          <button type="button" class="prev-step button large" style="margin-right: 10px;" data-action="click->multi-step-form#prev" data-multi-step-form-target="prevButton"><%= t('add_designer.buttons.prev', default: "Précédent") %></button>
+          <button type="button" class="prev-step button large" data-action="click->multi-step-form#prev" data-multi-step-form-target="prevButton"><%= t('add_designer.buttons.prev', default: "Précédent") %></button>
         <% end %>
         <button type="button" class="button large" data-action="click->multi-step-form#next"><%= t('add_designer.buttons.next', default: "Suivant") %></button>
       </div>

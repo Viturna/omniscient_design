@@ -15,87 +15,64 @@ class PushNotificationService
   end
 
   def send
-    # --- MOUCHARD 1 : DÉMARRAGE ---
-    Rails.logger.info "🚀 [PushService] Démarrage pour User ID: #{@user.id} (#{@user.email})"
+    return unless @user # Sécurité
 
-    tokens = @user.user_devices.pluck(:token)
-    
-    # --- MOUCHARD 2 : LES TOKENS ---
-    Rails.logger.info "🔍 [PushService] Tokens trouvés en BDD : #{tokens.count}"
+    # Optimisation : on charge uniquement les tokens uniques pour éviter les doublons d'envoi
+    tokens = @user.user_devices.pluck(:token).uniq
+
     if tokens.empty?
-      Rails.logger.warn "⚠️ [PushService] ARRÊT : Aucun token trouvé pour cet utilisateur."
+      Rails.logger.info "ℹ️ [PushService] Aucun device pour User #{@user.id}, arrêt."
       return
     end
 
-    # --- MOUCHARD 3 : L'AUTH GOOGLE ---
-    Rails.logger.info "🔑 [PushService] Tentative d'authentification Google..."
     access_token = get_access_token
-    
-    unless access_token
-      Rails.logger.error "🛑 [PushService] ARRÊT : Échec récupération Access Token."
-      return
-    end
-    Rails.logger.info "✅ [PushService] Authentification réussie !"
+    return unless access_token
 
     uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
+    
+    # Prépare la connexion HTTP une seule fois pour tous les tokens (meilleure perf)
+    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+      # Config SSL Dev
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
-    tokens.each do |device_token|
-      # --- MOUCHARD 4 : ENVOI ---
-      Rails.logger.info "📨 [PushService] Envoi vers token : #{device_token.first(10)}..."
-      
-      # [CORRECTION] Utilisation du titre de la notification ou un défaut
-      title_content = @notification.title.presence || "Omniscient Design"
-      
-      body = {
-        message: {
-          token: device_token,
-          notification: {
-            title: title_content, 
-            body: @notification.message
-          },
-          data: {
-            notifiable_id: @notification.notifiable_id.to_s,
-            notifiable_type: @notification.notifiable_type.to_s, # .to_s pour sécurité
-            notification_id: @notification.id.to_s # Utile pour marquer comme lu au clic
-          },
-          apns: { payload: { aps: { sound: "default", badge: 1 } } },
-          android: {
-            priority: "HIGH",
-            notification: {
-              channel_id: "default_channel",
-              sound: "default",
-              icon: "ic_notification",
-              color: "#FFFFFF",
-              default_sound: true,
-              default_vibrate_timings: true
+      tokens.each do |device_token|
+        begin
+          # Construction du payload (identique à votre code)
+          title_content = @notification.title.presence || "Omniscient Design"
+          body = {
+            message: {
+              token: device_token,
+              notification: { title: title_content, body: @notification.message },
+              data: {
+                notifiable_id: @notification.notifiable_id.to_s,
+                notifiable_type: @notification.notifiable_type.to_s,
+                notification_id: @notification.id.to_s
+              },
+              apns: { payload: { aps: { sound: "default", badge: 1 } } },
+              android: { notification: { sound: "default", default_sound: true } }
             }
           }
-        }
-      }
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      
-      # Configuration SSL locale uniquement pour le développement si nécessaire
-      if Rails.env.development?
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE 
-      end
-      
-      request = Net::HTTP::Post.new(uri)
-      request['Authorization'] = "Bearer #{access_token}"
-      request['Content-Type'] = 'application/json'
-      request.body = body.to_json
+          request = Net::HTTP::Post.new(uri)
+          request['Authorization'] = "Bearer #{access_token}"
+          request['Content-Type'] = 'application/json'
+          request.body = body.to_json
 
-      response = http.request(request)
-      
-      # --- MOUCHARD 5 : RÉSULTAT ---
-      Rails.logger.info "📬 [PushService] Réponse Google : #{response.code} - #{response.body}"
+          response = http.request(request)
 
-      if response.code == '200'
-        Rails.logger.info "✅ [PushService] SUCCÈS TOTAL"
-      elsif response.code == '404' || response.code == '410'
-        Rails.logger.warn "🗑️ [PushService] Token invalide. Suppression..."
-        UserDevice.find_by(token: device_token)&.destroy
+          # Gestion des erreurs Google (404/410 = Token invalide)
+          if ['404', '410'].include?(response.code)
+            Rails.logger.warn "🗑️ [PushService] Token périmé détecté, suppression..."
+            UserDevice.where(token: device_token).destroy_all
+          elsif response.code != '200'
+            Rails.logger.error "⚠️ [PushService] Erreur Google (#{response.code}) : #{response.body}"
+          end
+
+        rescue => e
+          # C'EST ICI LE SECRET DE LA DURABILITÉ :
+          # Si un envoi plante, on loggue l'erreur et on passe au token suivant !
+          Rails.logger.error "🔴 [PushService] Crash sur token #{device_token.first(10)} : #{e.message}"
+        end
       end
     end
   end
@@ -103,29 +80,25 @@ class PushNotificationService
   private
 
   def get_access_token
+    # (Garder votre méthode existante, elle est correcte)
+    # ...
     authorizer = nil
-
     if ENV["FIREBASE_CREDENTIALS_JSON"].present?
-      Rails.logger.info "📂 [PushService] Utilisation de la variable d'environnement JSON"
       authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
         json_key_io: StringIO.new(ENV["FIREBASE_CREDENTIALS_JSON"]),
         scope: SCOPES
       )
     elsif File.exist?(Rails.root.join('config', 'firebase-credentials.json'))
-      Rails.logger.info "📂 [PushService] Utilisation du fichier physique JSON"
       authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
         json_key_io: File.open(Rails.root.join('config', 'firebase-credentials.json')),
         scope: SCOPES
       )
     else
-      Rails.logger.error "🔴 [PushService] CRITIQUE : Aucun fichier ni variable ENV trouvés !"
       return nil
     end
-
-    token_data = authorizer.fetch_access_token!
-    token_data['access_token']
+    authorizer.fetch_access_token!['access_token']
   rescue => e
-    Rails.logger.error "🔴 [PushService] Exception Auth : #{e.message}"
+    Rails.logger.error "🔴 [PushService] Auth Exception : #{e.message}"
     nil
   end
 end

@@ -58,7 +58,8 @@
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
-  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading">
+  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading" data-controller="device-sync" 
+      data-device-sync-user-id-value="<%= current_user&.id %>">
     <% unless native_app? %>
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -186,15 +187,15 @@
           <div class="footer-bottom">
             <p><%=t('footer.copyright')%></p>
             <ul class="legal">
-              <li><a href="#"><%=t('footer.legal')%></a></li>
-              <li><a href="#"><%=t('footer.politique')%></a></li>
-              <li><a href="#"><%=t('footer.cgu')%></a></li>
-              <li><a href="#"><%=t('footer.cookie')%></a></li>
-            </ul>
-          </div>
-        </footer>
-      <%end%>
+              <li><%= link_to mentionslegales_path do %><%=t('footer.legal')%><%end%></a></li>
+            <li><%= link_to politiquedeconfidentialite_path do %><%=t('footer.politique')%><%end%></li>
+            <li><%= link_to cgu_path do %><%=t('footer.cgu')%><%end%></li>
+            <li><%= link_to cookies_path do %><%=t('footer.cookie')%><%end%></li>
+          </ul>
+        </div>
+      </footer>
     <%end%>
-    <%= yield :recaptcha_script %>
-  </body>
+  <%end%>
+  <%= yield :recaptcha_script %>
+</body>
 </html>

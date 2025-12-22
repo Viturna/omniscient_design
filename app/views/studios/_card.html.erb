@@ -1,93 +1,97 @@
 <% images = card.studio_images.select { |img| img.file.attached? }.map(&:file) %>
-
 <div class="card" 
      data-id="<%= card.id %>" 
      data-controller="slider" 
      data-slider-update-background-value="true"
      style="position: relative;">
-
-
   <%= link_to studio_path(card.slug), class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
     <span style="display:none;">Voir le studio</span>
   <% end %>
-
-
   <% style_bg = "position: relative; z-index: 2; pointer-events: none;" %>
-  
   <% if card.domaines.any? %>
     <% if card.domaines.size == 1 %>
       <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>; <%= style_bg %>">
-    <% else %>
-      <% colors = card.domaines.map(&:couleur).join(', ') %>
-      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); <%= style_bg %>">
-    <% end %>
-  <% else %>
-    <div class="bg-card" style="background-color: #ccc; <%= style_bg %>">
-  <% end %>
-
-    <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
-      
-      <% if images.any? %>
-        <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
-        <%= image_tag bg_variant,
+      <% else %>
+        <% colors = card.domaines.map(&:couleur).join(', ') %>
+        <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); <%= style_bg %>">
+        <% end %>
+      <% else %>
+        <div class="bg-card" style="background-color: #ccc; <%= style_bg %>">
+        <% end %>
+        <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
+          <% if images.any? %>
+            <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
+            <%= image_tag bg_variant,
             class: "card-slider-blurred-bg",
             alt: "",
             data: { slider_target: "background" },
             style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" 
         %>
-      <% else %>
-        <div class="card-slider-blurred-bg" data-slider-target="background" style="background-color: #e0e0e0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
-      <% end %>
-
-      <div class="card-slider-slides">
-        <% if images.any? %>
-          <% images.each_with_index do |image, index| %>
-            <% v400 = image.variant(resize_to_limit: [400, 400], format: :webp) %>
-            <%= image_tag v400,
-                alt: card.nom, 
-                class: "card-slide-image #{'active' if index == 0}",
-                data: { slider_target: "slide" }
-            %>
+          <% else %>
+            <div class="card-slider-blurred-bg" data-slider-target="background" style="background-color: #e0e0e0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
           <% end %>
-        <% else %>
-          <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
-        <% end %>
-      </div>
+          <div class="card-slider-slides">
+            <% if images.any? %>
+              <% images.each_with_index do |image, index| %>
+                <%# Création des variantes explicites %>
+                <% v400 = image.variant(resize_to_limit: [400, 400], format: :webp) %>
+                <% v800 = image.variant(resize_to_limit: [800, 800], format: :webp) %>
+                <% v1200 = image.variant(resize_to_limit: [1200, 1200], format: :webp) %>
+                <%= image_tag v400, 
+                  srcset: [
+                    [url_for(v400), "400w"],
+                    [url_for(v800), "800w"],
+                    [url_for(v1200), "1200w"]
+                  ],
+                  sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
+                  alt: card.nom_designer, 
+                  class: "card-slide-image #{'active' if index == 0}", 
+                  
+                  # Chargement natif
+                  loading: (index == 0 ? "eager" : "lazy"),
+                  
+                  # Priorité haute uniquement sur la première image
+                  fetchpriority: (index == 0 ? "high" : "auto"),
 
-      <div class="flex-info-card" style="position: relative; z-index: 5;">
-        
-        <div class="flex-info-card-left" style="pointer-events: auto;">
-          <div class="info-card-dark">
-             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_3261_191)">
-                  <path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/>
-                </g>
-              </svg>
-             <%= card.respond_to?(:date_creation) ? card.date_creation : "" %>
+                  data: { slider_target: "slide" } 
+              %>
+              <% end %>
+            <% else %>
+              <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
+            <% end %>
           </div>
-          <% if card.domaines.present? %>
-            <div class="domaine-flex-card">
-              <% card.domaines.each do |domaine| %>
-                <div class="info-card-dark">
-                  <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
-                  <%= domaine.domaine %>
+          <div class="flex-info-card" style="position: relative; z-index: 5;">
+            <div class="flex-info-card-left" style="pointer-events: auto;">
+              <div class="info-card-dark">
+                <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_3261_191)">
+                    <path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/>
+                  </g>
+                </svg>
+                <%= card.respond_to?(:date_creation) ? card.date_creation : "" %>
+              </div>
+              <% if card.domaines.present? %>
+                <div class="domaine-flex-card">
+                  <% card.domaines.each do |domaine| %>
+                    <div class="info-card-dark">
+                      <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
+                      <%= domaine.domaine %>
+                    </div>
+                  <% end %>
                 </div>
               <% end %>
             </div>
-          <% end %>
-        </div>
-
-        <%# DROITE : Bouton Save Studio %>
-        <% if user_signed_in? %>
-          <button class="save-btn" 
+            <%# DROITE : Bouton Save Studio %>
+            <% if user_signed_in? %>
+              <button class="save-btn" 
                   data-controller="save-modal" 
                   data-action="click->save-modal#open"
-                  data-save-modal-studio-id-value="<%= card.id %>" 
-                  title="Enregistrer ce studio"
-                  style="position: relative; z-index: 50; background: none; border: none; cursor: pointer; pointer-events: auto;">
-            <div class="circle">
-              <svg style="pointer-events: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" 
+                data-save-modal-studio-id-value="<%= card.id %>" 
+                title="Enregistrer ce studio"
+                style="position: relative; z-index: 50; background: none; border: none; cursor: pointer; pointer-events: auto;">
+                <div class="circle">
+                  <svg style="pointer-events: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" 
                       fill="<%= @saved_studio_ids&.include?(card.id) ? 'white' : 'none' %>" 
                       stroke="white" stroke-width="2"/>
               </svg>
@@ -96,37 +100,34 @@
         <% end %>
 
       </div>
-
-      <%# Navigation Slider %>
-      <% if images.count > 1 %>
-        <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Précédent" style="z-index: 20; pointer-events: auto;">
-          <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
-          </svg>
-        </button>
-        <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Suivant" style="z-index: 20; pointer-events: auto;">
-          <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
-          </svg>
-        </button>
-        <div class="card-slider-dots" style="z-index: 20; pointer-events: auto;">
-          <% images.each_with_index do |image, index| %>
-            <button class="card-slider-dot <%= 'active' if index == 0 %>" 
+                      <%# Navigation Slider %>
+                      <% if images.count > 1 %>
+                        <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Précédent" style="z-index: 20; pointer-events: auto;">
+                          <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
+                          </svg>
+                        </button>
+                        <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Suivant" style="z-index: 20; pointer-events: auto;">
+                          <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
+                          </svg>
+                        </button>
+                        <div class="card-slider-dots" style="z-index: 20; pointer-events: auto;">
+                          <% images.each_with_index do |image, index| %>
+                            <button class="card-slider-dot <%= 'active' if index == 0 %>" 
                     data-action="click->slider#switchSlide" 
-                    data-slider-index-value="<%= index %>" 
-                    data-slider-target="dot"></button>
-          <% end %>
-        </div>
-      <% end %>
-
-    </div> 
-  </div>
-
-  <%# Infos Texte (Bas) %>
-  <div class="container-text-card">
-    <p class="subtitle-card">Studio</p>
-    <h2 class="title-card"><%= card.nom %></h2> <%# Attention: souvent 'nom' pour studio, pas 'nom_oeuvre' %>
-    <p class="description-card description-card-home"><%= card.presentation_generale %></p>
-  </div>
-
-</div>
+                              data-slider-index-value="<%= index %>" 
+                              data-slider-target="dot"></button>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <%# Infos Texte (Bas) %>
+                  <div class="container-text-card">
+                    <p class="subtitle-card">Studio</p>
+                    <h2 class="title-card"><%= card.nom %></h2>
+                    <%# Attention: souvent 'nom' pour studio, pas 'nom_oeuvre' %>
+                    <p class="description-card description-card-home"><%= card.presentation_generale %></p>
+                  </div>
+                </div>

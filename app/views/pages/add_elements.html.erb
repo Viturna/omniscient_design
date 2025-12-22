@@ -27,9 +27,15 @@
     flex-direction: column;
     justify-content: center;
     min-height: 100dvh;
+    height: 100%;
     background-color: #202020;
     h1{
       color: #FFF;
+    }
+  }
+  @media screen and (max-width:450px){
+    .add-elements {
+      padding-top: calc(var(--safe-area-top-android, env(safe-area-inset-top, 0px)) + 32px);
     }
   }
 </style>

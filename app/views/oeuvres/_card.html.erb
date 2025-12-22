@@ -36,12 +36,28 @@
           <div class="card-slider-slides">
             <% if images.any? %>
               <% images.each_with_index do |image, index| %>
+                <%# Création des variantes explicites %>
                 <% v400 = image.variant(resize_to_limit: [400, 400], format: :webp) %>
-                <%= image_tag v400,
-                alt: card.nom_oeuvre, 
-                class: "card-slide-image #{'active' if index == 0}",
-                data: { slider_target: "slide" }
-            %>
+                <% v800 = image.variant(resize_to_limit: [800, 800], format: :webp) %>
+                <% v1200 = image.variant(resize_to_limit: [1200, 1200], format: :webp) %>
+                <%= image_tag v400, 
+                  srcset: [
+                    [url_for(v400), "400w"],
+                    [url_for(v800), "800w"],
+                    [url_for(v1200), "1200w"]
+                  ],
+                  sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
+                  alt: card.nom_designer, 
+                  class: "card-slide-image #{'active' if index == 0}", 
+                  
+                  # Chargement natif
+                  loading: (index == 0 ? "eager" : "lazy"),
+                  
+                  # Priorité haute uniquement sur la première image
+                  fetchpriority: (index == 0 ? "high" : "auto"),
+
+                  data: { slider_target: "slide" } 
+              %>
               <% end %>
             <% else %>
               <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>

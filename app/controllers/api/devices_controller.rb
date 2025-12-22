@@ -13,20 +13,23 @@ class Api::DevicesController < ApplicationController
       return head :bad_request 
     end
 
-    # 1. NETTOYAGE : Si ce token appartenait à quelqu'un d'autre avant (ex: changement de compte), on le libère.
+    # 1. NETTOYAGE : Si ce token appartenait à quelqu'un d'autre avant
     UserDevice.where(token: token).where.not(user_id: current_user.id).destroy_all
 
     # 2. MISE À JOUR : On cherche le device, ou on le crée s'il n'existe pas
     device = current_user.user_devices.find_or_initialize_by(token: token)
     
-    # 3. ACTIF : On met à jour la date (updated_at) pour savoir qu'il est actif
+    # 3. ACTIF : On met à jour la plateforme
     device.platform = platform
-    device.touch 
+    
+    # [CORRECTION] On retire device.touch ici car cela fait planter la création d'un nouveau device.
+    # .save s'occupera de mettre à jour les dates (created_at / updated_at).
 
     if device.save
       Rails.logger.info "✅ [Device Sync] Token synchronisé pour #{current_user.email}"
       head :ok
     else
+      Rails.logger.error "❌ [API Device] Erreur : #{device.errors.full_messages}"
       head :unprocessable_entity
     end
   end

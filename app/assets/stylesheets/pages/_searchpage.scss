@@ -581,6 +581,7 @@
 
   .searchpage {
     margin-top: 124px;
+    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
   }
 
   .flex-category,

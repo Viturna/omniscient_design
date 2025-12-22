@@ -5,7 +5,7 @@ class NotificationsController < ApplicationController
 
   def index
     @current_page = 'profil'
-    current_user.notifications.unread.update_all(status: :read) # Optimisation de l'update
+    current_user.notifications.unread.update_all(status: :read)
     @notifications = current_user.notifications.order(created_at: :desc)
   end
 
@@ -16,55 +16,59 @@ class NotificationsController < ApplicationController
   end
 
   def create
-    title = params[:title] 
-    message = params[:message]
-    link = params[:link]
+    # 1. On récupère les données proprement via strong params
+    # Cela gère le cas où le formulaire envoie "notification[title]" ou juste "title"
+    vals = params[:notification] || params 
     
-    ActiveRecord::Base.transaction do
-      if params[:select_all] == "all" || params[:user_id] == "all"
-        User.find_each do |user|
-          Notification.create!(
-            user: user,
-            admin: current_user,
-            title: title,
-            message: message,
-            link: link,
-            status: :unread,
-            notifiable: user 
-          )
-        end
-        flash[:notice] = "Notification envoyée à tous les utilisateurs."
-      
-      elsif params[:user_ids].present?
-        target_user_ids = params[:user_ids].reject(&:blank?)
-        
-        User.where(id: target_user_ids).find_each do |target_user|
-          Notification.create!(
-            user: target_user,
-            admin: current_user,
-            title: title,
-            message: message,
-            link: link,
-            status: :unread,
-            notifiable: target_user
-          )
-        end
-        flash[:notice] = "Notification envoyée à #{target_user_ids.count} utilisateur(s) sélectionné(s)."
-      
-      else
-        flash[:alert] = "Veuillez sélectionner au moins un destinataire."
-        redirect_to new_notification_path and return
+    title = vals[:title]
+    message = vals[:message]
+    link = vals[:link]
+
+    # Debug: Affiche ça dans votre terminal serveur pour vérifier
+    Rails.logger.info "📢 Tentative envoi Notif - Titre: #{title} | Message: #{message}"
+
+    if title.blank? || message.blank?
+      flash[:alert] = "Le titre et le message sont obligatoires."
+      redirect_to new_notification_path and return
+    end
+    
+    # Compteur pour le feedback
+    count = 0
+
+    # 2. Définition des cibles
+    targets = if params[:select_all] == "all" || params[:user_id] == "all"
+                User.all
+              elsif params[:user_ids].present?
+                User.where(id: params[:user_ids].reject(&:blank?))
+              else
+                []
+              end
+
+    if targets.empty?
+      flash[:alert] = "Veuillez sélectionner au moins un destinataire."
+      redirect_to new_notification_path and return
+    end
+
+    # 3. Création boucle (Sans transaction globale pour éviter les timeouts sur le push synchrone)
+    targets.find_each do |target_user|
+      begin
+        Notification.create!(
+          user: target_user,
+          admin: current_user,
+          title: title,
+          message: message,
+          link: link,
+          status: :unread,
+          notifiable: nil # On garde nil comme dans votre test console qui marchait
+        )
+        count += 1
+      rescue => e
+        Rails.logger.error "❌ Erreur envoi notif user #{target_user.id}: #{e.message}"
       end
     end
     
+    flash[:notice] = "Notification envoyée avec succès à #{count} utilisateur(s)."
     redirect_to notifications_path
-
-  rescue ActiveRecord::RecordInvalid => e
-    flash[:alert] = "Erreur de validation : #{e.message}"
-    redirect_to new_notification_path
-  rescue => e
-    flash[:alert] = "Erreur lors de l'envoi : #{e.message}"
-    redirect_to new_notification_path
   end
 
   def show

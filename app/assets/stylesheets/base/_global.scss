@@ -190,7 +190,6 @@ body.dark-mode {
 @media screen and (max-width: 425px) {
   .grid-1 {
     padding: 0 5vw 32px 5vw;
-    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
   }
 }
 

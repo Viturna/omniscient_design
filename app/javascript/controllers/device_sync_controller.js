@@ -4,26 +4,29 @@ export default class extends Controller {
     static values = { userId: Number }
 
     connect() {
-        // Dès que la page s'affiche, on tente de synchroniser
-        if (this.hasUserIdValue) {
-            this.syncToken();
-        }
-    }
-
-    syncToken() {
-        // 1. Récupération du token envoyé par l'App Native
-        // L'app iOS doit injecter le token dans window.FCMToken
-        // Si vous utilisez une PWA pure, il faudra utiliser le SDK Firebase JS ici.
-        const token = window.FCMToken;
-
-        if (!token) {
-            console.log("ℹ️ [Device Sync] Pas de token détecté (Navigateur classique ou Token non prêt)");
+        // 🛑 STOP : Si pas d'ID utilisateur (pas connecté), on ne fait rien !
+        if (!this.hasUserIdValue || this.userIdValue === 0) {
+            console.log("⏸️ [Device Sync] Utilisateur non connecté, attente du login...");
             return;
         }
 
-        // 2. Envoi au serveur Rails
+        // Sinon, on lance la synchro
+        this.syncToken();
+    }
+
+    syncToken() {
+        const token = window.FCMToken;
+
+        if (!token) {
+            console.log("ℹ️ [Device Sync] Pas de token détecté");
+            return;
+        }
+
+        console.log("🚀 [Device Sync] Envoi du token pour User ID:", this.userIdValue);
+
         fetch('/api/devices', {
             method: 'POST',
+            credentials: 'include', // Important pour envoyer le cookie de session
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content
@@ -31,7 +34,11 @@ export default class extends Controller {
             body: JSON.stringify({ token: token, platform: 'ios' })
         })
             .then(response => {
-                if (response.ok) console.log("✅ [Device Sync] Token envoyé au serveur avec succès !");
+                if (response.ok) {
+                    console.log("✅ [Device Sync] Token synchronisé !");
+                } else {
+                    console.error("❌ [Device Sync] Erreur serveur :", response.status);
+                }
             });
     }
 }

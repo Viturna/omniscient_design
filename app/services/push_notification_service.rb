@@ -39,6 +39,7 @@ class PushNotificationService
         begin
           # Construction du payload (identique à votre code)
           title_content = @notification.title.presence || "Omniscient Design"
+                        unread_count = @user.notifications.unread.count
           body = {
             message: {
               token: device_token,
@@ -48,7 +49,7 @@ class PushNotificationService
                 notifiable_type: @notification.notifiable_type.to_s,
                 notification_id: @notification.id.to_s
               },
-              apns: { payload: { aps: { sound: "default", badge: 1 } } },
+              apns: { payload: { aps: { sound: "default", badge: unread_count } } },
               android: { notification: { sound: "default", default_sound: true } }
             }
           }

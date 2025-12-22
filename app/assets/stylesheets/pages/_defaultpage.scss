@@ -14,6 +14,7 @@
     color: $secondary-color;
   }
 }
+
 .table-wrapper {
   width: 100%;
   overflow-x: scroll;
@@ -155,4 +156,11 @@ th.sortable.desc::after {
   margin-bottom: 1rem;
   color: #374151;
   text-align: center;
+}
+
+@media screen and (max-width: 450px) {
+  .top-default-page {
+    height: 10vh;
+    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
+  }
 }

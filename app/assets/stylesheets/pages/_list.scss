@@ -1,5 +1,4 @@
-@import 'abstracts/variables';
-
+@import "abstracts/variables";
 
 .flex-title-list {
   display: flex;
@@ -33,7 +32,7 @@
   font-size: 18px;
   aspect-ratio: 1/1;
 
-  fill: #E61818;
+  fill: #e61818;
   border: none;
   background-color: rgba(230, 24, 24, 0.1);
 
@@ -73,7 +72,7 @@
   position: fixed;
   bottom: 0;
   right: 0;
- width: calc(100vw - 350px - 128px);
+  width: calc(100vw - 350px - 128px);
   padding-right: 128px;
   gap: 24px;
   background-color: $secondary-color;
@@ -114,9 +113,7 @@
   }
 }
 
-@media screen and (min-width:0px) and (max-width:600px) {
-
-
+@media screen and (min-width: 0px) and (max-width: 600px) {
   .flex-title-list {
     gap: 16px;
     flex-direction: column;
@@ -144,67 +141,49 @@
   }
 
   .form-footer {
-    .button{
+    .button {
       width: fit-content;
       height: 65px;
     }
   }
-
 }
 
-@media screen and (min-width:501px) and (max-width:800px) {
-
+@media screen and (min-width: 501px) and (max-width: 800px) {
   .no-list p {
     width: 65%;
   }
 }
 
-
-body.dark-mode {
-  .bottom-list {
-    background-color: $secondary-color-dark;
-  }
-
+@media screen and (max-width: 768px) {
   .form-footer {
-    background-color: $background-color-dark;
+    width: 100vw;
+    padding: 16px 50px;
+    bottom: 72px;
+    right: 0;
   }
 }
-
-@media screen and (max-width:768px) {
-.form-footer {
-  width: 100vw;
-  padding: 16px 50px;
-  bottom: 72px;
-  right: 0;
-}
-}
-@media screen and (max-width:400px) {
+@media screen and (max-width: 400px) {
   .form-footer {
     padding: 16px 20px;
   }
 }
 
-
-
 @media screen and (max-width: 1280px) {
   .bottom-list {
-width: calc(100vw - 30vw - 8vw);
-  padding-right: 8vw;
-}
-  
+    width: calc(100vw - 30vw - 8vw);
+    padding-right: 8vw;
+  }
 }
 @media screen and (max-width: 768px) {
   .bottom-list {
-  width: 100vw;
-  padding-right: 8vw;
-    bottom: 70px;
-    .delete{
+    width: 100vw;
+    padding-right: 8vw;
+    bottom: var(--safe-area-top-android, env(safe-area-inset-top, 70px));
+    .delete {
       margin-top: 0;
     }
-    #openPopupAdd{
-      width: 40vw
+    #openPopupAdd {
+      width: 40vw;
     }
-}
-
-  
+  }
 }

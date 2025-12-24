@@ -197,11 +197,13 @@
       </div>
     <% else %>
       <div class="flex-card-list">
-        <% (@list.designers + @list.oeuvres).sort_by { |item| item.is_a?(Oeuvre) ? item.nom_oeuvre.downcase : item.nom.downcase }.each do |item| %>
+        <% (@list.designers + @list.oeuvres + @list.studios).sort_by { |item| item.is_a?(Oeuvre) ? item.nom_oeuvre.downcase : item.nom.downcase }.each do |item| %>
           <% if item.is_a?(Designer) %>
             <%= render 'designers/designer_card', designer: item %>
           <% elsif item.is_a?(Oeuvre) %>
             <%= render 'oeuvres/oeuvre_card', oeuvre: item %>
+          <% elsif item.is_a?(Studio) %>
+            <%= render 'studios/studio_card', studio: item %>
           <% end %>
         <% end %>
       </div>
@@ -290,394 +292,396 @@
         </svg>
       </div>
       <div class="popup-inner">
-        <%# Studios %>
-        <div class="search-container">
+        <%# Références %>
+        <div class="search-container" style="margin-top: 64px;">
           <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.38281 0.530273C6.58078 0.291983 7.82269 0.414466 8.95117 0.881836C10.0797 1.34928 11.045 2.14062 11.7236 3.15625C12.4023 4.17191 12.7637 5.36637 12.7637 6.58789V6.58887C12.7653 7.95942 12.3062 9.29104 11.46 10.3691L11.2344 10.6562L11.4932 10.915L14.293 13.7061L14.2939 13.707C14.3325 13.7452 14.3629 13.7908 14.3838 13.8408C14.4046 13.8909 14.416 13.9448 14.416 13.999C14.416 14.0534 14.4047 14.108 14.3838 14.1582C14.3733 14.1832 14.3608 14.2071 14.3457 14.2295L14.2939 14.292L14.292 14.2939C14.2539 14.3324 14.2082 14.3629 14.1582 14.3838C14.108 14.4047 14.0534 14.416 13.999 14.416C13.9448 14.416 13.8909 14.4046 13.8408 14.3838C13.8158 14.3734 13.7919 14.3608 13.7695 14.3457L13.707 14.2939L13.7061 14.293L10.915 11.4932L10.6562 11.2344L10.3691 11.46C9.35826 12.2534 8.12445 12.7067 6.84473 12.7588L6.58887 12.7637H6.58789C5.36637 12.7637 4.17191 12.4023 3.15625 11.7236C2.14062 11.045 1.34928 10.0797 0.881836 8.95117C0.414466 7.82269 0.291983 6.58078 0.530273 5.38281C0.768606 4.18482 1.35699 3.08442 2.2207 2.2207C3.08442 1.35699 4.18482 0.768606 5.38281 0.530273ZM7.63184 1.33789C6.5938 1.13149 5.51787 1.23765 4.54004 1.64258C3.56199 2.0477 2.72585 2.73405 2.1377 3.61426C1.54954 4.49449 1.23536 5.52924 1.23535 6.58789L1.24219 6.85352C1.30786 8.17642 1.86172 9.43201 2.80273 10.373C3.74376 11.3141 4.99938 11.8679 6.32227 11.9336L6.58789 11.9404C7.64655 11.9404 8.68128 11.6262 9.56152 11.0381C10.4416 10.45 11.1281 9.61463 11.5332 8.63672C11.9383 7.65873 12.0444 6.58218 11.8379 5.54395C11.6314 4.50562 11.1216 3.55132 10.373 2.80273C9.62447 2.05417 8.67014 1.54442 7.63184 1.33789Z" fill="#202020" stroke="#202020" stroke-width="0.823492"/>
           </svg>
-          <input type="search" id="studio-search" placeholder="Rechercher des studios" />
+          <input type="search" id="oeuvre-search" placeholder="<%= t('lists.create.reference_search_placeholder') %>" />
         </div>
-        <div id="studios-list">
-          <% if @selected_studios.present? %>
-            <h3>Studios sélectionnés</h3>
+        <div id="oeuvres-list">
+          <% if @selected_oeuvres.present? %>
+            <h3><%= t('list.selected_references') %></h3>
             <div class="flex-card" style="margin-top:32px">
-              <%= render partial: 'studios_list', collection: @selected_studios, as: :studio %>
+              <%= render partial: 'oeuvres_list', collection: @selected_oeuvres, as: :oeuvre %>
             </div>
           <% end %>
-          <% if @other_studios.present? %>
-            <h3>Studios</h3>
-            <div class="flex-card" id="studios-load-more" style="margin-top:32px">
-              <%= render partial: 'studios_list', collection: @other_studios, as: :studio %>
+          <% if @other_oeuvres.present? %>
+            <h3><%= t('list.references') %></h3>
+            <div class="flex-card" id="oeuvres-load-more" style="margin-top:32px">
+              <%= render partial: 'oeuvres_list', collection: @other_oeuvres, as: :oeuvre %>
             </div>
           <% else %>
-            <p>
-              <h3>Aucun studio</h3>
-            </p>
+            <p><%= t('list.no_references') %></p>
           <% end %>
         </div>
-        <button type="button" id="load-more-studios" class="button dark" data-type="studios" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>
-          Charger plus de studios </button>
+        <div style="text-align:center; margin-top:20px;">
+          <button type="button" id="load-more-oeuvres" data-type="oeuvres" class="button dark" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>><%= t('list.load_more_references') %></button>
+          </div>
           <%# Designers %>
           <div class="search-container">
-          <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5.38281 0.530273C6.58078 0.291983 7.82269 0.414466 8.95117 0.881836C10.0797 1.34928 11.045 2.14062 11.7236 3.15625C12.4023 4.17191 12.7637 5.36637 12.7637 6.58789V6.58887C12.7653 7.95942 12.3062 9.29104 11.46 10.3691L11.2344 10.6562L11.4932 10.915L14.293 13.7061L14.2939 13.707C14.3325 13.7452 14.3629 13.7908 14.3838 13.8408C14.4046 13.8909 14.416 13.9448 14.416 13.999C14.416 14.0534 14.4047 14.108 14.3838 14.1582C14.3733 14.1832 14.3608 14.2071 14.3457 14.2295L14.2939 14.292L14.292 14.2939C14.2539 14.3324 14.2082 14.3629 14.1582 14.3838C14.108 14.4047 14.0534 14.416 13.999 14.416C13.9448 14.416 13.8909 14.4046 13.8408 14.3838C13.8158 14.3734 13.7919 14.3608 13.7695 14.3457L13.707 14.2939L13.7061 14.293L10.915 11.4932L10.6562 11.2344L10.3691 11.46C9.35826 12.2534 8.12445 12.7067 6.84473 12.7588L6.58887 12.7637H6.58789C5.36637 12.7637 4.17191 12.4023 3.15625 11.7236C2.14062 11.045 1.34928 10.0797 0.881836 8.95117C0.414466 7.82269 0.291983 6.58078 0.530273 5.38281C0.768606 4.18482 1.35699 3.08442 2.2207 2.2207C3.08442 1.35699 4.18482 0.768606 5.38281 0.530273ZM7.63184 1.33789C6.5938 1.13149 5.51787 1.23765 4.54004 1.64258C3.56199 2.0477 2.72585 2.73405 2.1377 3.61426C1.54954 4.49449 1.23536 5.52924 1.23535 6.58789L1.24219 6.85352C1.30786 8.17642 1.86172 9.43201 2.80273 10.373C3.74376 11.3141 4.99938 11.8679 6.32227 11.9336L6.58789 11.9404C7.64655 11.9404 8.68128 11.6262 9.56152 11.0381C10.4416 10.45 11.1281 9.61463 11.5332 8.63672C11.9383 7.65873 12.0444 6.58218 11.8379 5.54395C11.6314 4.50562 11.1216 3.55132 10.373 2.80273C9.62447 2.05417 8.67014 1.54442 7.63184 1.33789Z" fill="#202020" stroke="#202020" stroke-width="0.823492"/>
-          </svg>
-          <input type="search" id="designer-search" placeholder="<%= t('lists.create.designer_search_placeholder') %>" />
-        </div>
-        <div id="designers-list">
-          <% if @selected_designers.present? %>
-            <h3><%= t('list.selected_designers') %></h3>
-            <div class="flex-card" style="margin-top:32px">
-              <%= render partial: 'designers_list', collection: @selected_designers, as: :designer %>
-            </div>
-          <% end %>
-          <% if @other_designers.present? %>
-            <h3><%= t('list.designers') %></h3>
-            <div class="flex-card" id="designers-load-more" style="margin-top:32px">
-              <%= render partial: 'designers_list', collection: @other_designers, as: :designer %>
-            </div>
-          <% else %>
-            <p>
-              <h3><%= t('list.no_designers') %></h3>
-            </p>
-          <% end %>
-        </div>
-        <button type="button" id="load-more-designers" class="button dark" data-type="designers" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>><%= t('list.load_more_designers') %></button>
-          <%# Références %>
-          <div class="search-container" style="margin-top: 64px;">
             <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M5.38281 0.530273C6.58078 0.291983 7.82269 0.414466 8.95117 0.881836C10.0797 1.34928 11.045 2.14062 11.7236 3.15625C12.4023 4.17191 12.7637 5.36637 12.7637 6.58789V6.58887C12.7653 7.95942 12.3062 9.29104 11.46 10.3691L11.2344 10.6562L11.4932 10.915L14.293 13.7061L14.2939 13.707C14.3325 13.7452 14.3629 13.7908 14.3838 13.8408C14.4046 13.8909 14.416 13.9448 14.416 13.999C14.416 14.0534 14.4047 14.108 14.3838 14.1582C14.3733 14.1832 14.3608 14.2071 14.3457 14.2295L14.2939 14.292L14.292 14.2939C14.2539 14.3324 14.2082 14.3629 14.1582 14.3838C14.108 14.4047 14.0534 14.416 13.999 14.416C13.9448 14.416 13.8909 14.4046 13.8408 14.3838C13.8158 14.3734 13.7919 14.3608 13.7695 14.3457L13.707 14.2939L13.7061 14.293L10.915 11.4932L10.6562 11.2344L10.3691 11.46C9.35826 12.2534 8.12445 12.7067 6.84473 12.7588L6.58887 12.7637H6.58789C5.36637 12.7637 4.17191 12.4023 3.15625 11.7236C2.14062 11.045 1.34928 10.0797 0.881836 8.95117C0.414466 7.82269 0.291983 6.58078 0.530273 5.38281C0.768606 4.18482 1.35699 3.08442 2.2207 2.2207C3.08442 1.35699 4.18482 0.768606 5.38281 0.530273ZM7.63184 1.33789C6.5938 1.13149 5.51787 1.23765 4.54004 1.64258C3.56199 2.0477 2.72585 2.73405 2.1377 3.61426C1.54954 4.49449 1.23536 5.52924 1.23535 6.58789L1.24219 6.85352C1.30786 8.17642 1.86172 9.43201 2.80273 10.373C3.74376 11.3141 4.99938 11.8679 6.32227 11.9336L6.58789 11.9404C7.64655 11.9404 8.68128 11.6262 9.56152 11.0381C10.4416 10.45 11.1281 9.61463 11.5332 8.63672C11.9383 7.65873 12.0444 6.58218 11.8379 5.54395C11.6314 4.50562 11.1216 3.55132 10.373 2.80273C9.62447 2.05417 8.67014 1.54442 7.63184 1.33789Z" fill="#202020" stroke="#202020" stroke-width="0.823492"/>
             </svg>
-            <input type="search" id="oeuvre-search" placeholder="<%= t('lists.create.reference_search_placeholder') %>" />
+            <input type="search" id="designer-search" placeholder="<%= t('lists.create.designer_search_placeholder') %>" />
           </div>
-          <div id="oeuvres-list">
-            <% if @selected_oeuvres.present? %>
-              <h3><%= t('list.selected_references') %></h3>
+          <div id="designers-list">
+            <% if @selected_designers.present? %>
+              <h3><%= t('list.selected_designers') %></h3>
               <div class="flex-card" style="margin-top:32px">
-                <%= render partial: 'oeuvres_list', collection: @selected_oeuvres, as: :oeuvre %>
+                <%= render partial: 'designers_list', collection: @selected_designers, as: :designer %>
               </div>
             <% end %>
-            <% if @other_oeuvres.present? %>
-              <h3><%= t('list.references') %></h3>
-              <div class="flex-card" id="oeuvres-load-more" style="margin-top:32px">
-                <%= render partial: 'oeuvres_list', collection: @other_oeuvres, as: :oeuvre %>
+            <% if @other_designers.present? %>
+              <h3><%= t('list.designers') %></h3>
+              <div class="flex-card" id="designers-load-more" style="margin-top:32px">
+                <%= render partial: 'designers_list', collection: @other_designers, as: :designer %>
               </div>
             <% else %>
-              <p><%= t('list.no_references') %></p>
+              <p>
+                <h3><%= t('list.no_designers') %></h3>
+              </p>
             <% end %>
           </div>
-          <div style="text-align:center; margin-top:20px;">
-            <button type="button" id="load-more-oeuvres" data-type="oeuvres" class="button dark" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>><%= t('list.load_more_references') %></button>
+          <button type="button" id="load-more-designers" class="button dark" data-type="designers" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>><%= t('list.load_more_designers') %></button>
+            <%# Studios %>
+            <div class="search-container">
+              <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.38281 0.530273C6.58078 0.291983 7.82269 0.414466 8.95117 0.881836C10.0797 1.34928 11.045 2.14062 11.7236 3.15625C12.4023 4.17191 12.7637 5.36637 12.7637 6.58789V6.58887C12.7653 7.95942 12.3062 9.29104 11.46 10.3691L11.2344 10.6562L11.4932 10.915L14.293 13.7061L14.2939 13.707C14.3325 13.7452 14.3629 13.7908 14.3838 13.8408C14.4046 13.8909 14.416 13.9448 14.416 13.999C14.416 14.0534 14.4047 14.108 14.3838 14.1582C14.3733 14.1832 14.3608 14.2071 14.3457 14.2295L14.2939 14.292L14.292 14.2939C14.2539 14.3324 14.2082 14.3629 14.1582 14.3838C14.108 14.4047 14.0534 14.416 13.999 14.416C13.9448 14.416 13.8909 14.4046 13.8408 14.3838C13.8158 14.3734 13.7919 14.3608 13.7695 14.3457L13.707 14.2939L13.7061 14.293L10.915 11.4932L10.6562 11.2344L10.3691 11.46C9.35826 12.2534 8.12445 12.7067 6.84473 12.7588L6.58887 12.7637H6.58789C5.36637 12.7637 4.17191 12.4023 3.15625 11.7236C2.14062 11.045 1.34928 10.0797 0.881836 8.95117C0.414466 7.82269 0.291983 6.58078 0.530273 5.38281C0.768606 4.18482 1.35699 3.08442 2.2207 2.2207C3.08442 1.35699 4.18482 0.768606 5.38281 0.530273ZM7.63184 1.33789C6.5938 1.13149 5.51787 1.23765 4.54004 1.64258C3.56199 2.0477 2.72585 2.73405 2.1377 3.61426C1.54954 4.49449 1.23536 5.52924 1.23535 6.58789L1.24219 6.85352C1.30786 8.17642 1.86172 9.43201 2.80273 10.373C3.74376 11.3141 4.99938 11.8679 6.32227 11.9336L6.58789 11.9404C7.64655 11.9404 8.68128 11.6262 9.56152 11.0381C10.4416 10.45 11.1281 9.61463 11.5332 8.63672C11.9383 7.65873 12.0444 6.58218 11.8379 5.54395C11.6314 4.50562 11.1216 3.55132 10.373 2.80273C9.62447 2.05417 8.67014 1.54442 7.63184 1.33789Z" fill="#202020" stroke="#202020" stroke-width="0.823492"/>
+              </svg>
+              <input type="search" id="studio-search" placeholder="Rechercher des studios" />
             </div>
-            <div id="designer_ids_field_container"></div>
-            <div id="studio_ids_field_container"></div>
-            <div id="oeuvre_ids_field_container"></div>
-            <div class="form-group" style="margin-top: 32px; display: flex; justify-content: end;">
-              <%= form.submit t('list.save_list'), class: "button large dark" %>
+            <div id="studios-list">
+              <% if @selected_studios.present? %>
+                <h3>Studios sélectionnés</h3>
+                <div class="flex-card" style="margin-top:32px">
+                  <%= render partial: 'studios_list', collection: @selected_studios, as: :studio %>
+                </div>
+              <% end %>
+              <% if @other_studios.present? %>
+                <h3>Studios</h3>
+                <div class="flex-card" id="studios-load-more" style="margin-top:32px">
+                  <%= render partial: 'studios_list', collection: @other_studios, as: :studio %>
+                </div>
+              <% else %>
+                <p>
+                  <h3>Aucun studio</h3>
+                </p>
+              <% end %>
+            </div>
+            <button type="button" id="load-more-studios" class="button dark" data-type="studios" <%= "data-slug='#{@list.slug}'" if @list&.persisted? %>>
+          Charger plus de studios </button>
+          
+         
+          <div id="designer_ids_field_container"></div>
+          <div id="studio_ids_field_container"></div>
+          <div id="oeuvre_ids_field_container"></div>
+          <div class="form-group" style="margin-top: 32px; display: flex; justify-content: end;">
+            <%= form.submit t('list.save_list'), class: "button large dark" %>
+          </div>
             </div>
           </div>
         </div>
-      </div>
-    <% end %>
-    <script>
-      document.addEventListener("turbo:load", function() {
-        var popupAdd = document.getElementById('popup-add');
-        var btnOpenAdd = document.getElementById('openPopupAdd');
-        var btnCloseAdd = document.getElementById('closePopupAdd');
+      <% end %>
+      <script>
+        document.addEventListener("turbo:load", function() {
+          var popupAdd = document.getElementById('popup-add');
+          var btnOpenAdd = document.getElementById('openPopupAdd');
+          var btnCloseAdd = document.getElementById('closePopupAdd');
 
-        if (popupAdd) {
-          popupAdd.setAttribute("data-lenis-prevent", "true");
+          if (popupAdd) {
+            popupAdd.setAttribute("data-lenis-prevent", "true");
 
-          if (btnOpenAdd) {
-            btnOpenAdd.addEventListener('click', function(event) {
-              event.preventDefault();
-              popupAdd.style.display = "flex";
-              localStorage.setItem('popupOpen', 'true');
-            });
-          }
-
-          if (btnCloseAdd) {
-            btnCloseAdd.addEventListener('click', function(event) {
-              event.preventDefault();
-              popupAdd.style.display = "none";
-              localStorage.setItem('popupOpen', 'false');
-            });
-          }
-
-          popupAdd.addEventListener('click', function(event) {
-            if (event.target === popupAdd) {
-              popupAdd.style.display = "none";
-              localStorage.setItem('popupOpen', 'false');
+            if (btnOpenAdd) {
+              btnOpenAdd.addEventListener('click', function(event) {
+                event.preventDefault();
+                popupAdd.style.display = "flex";
+                localStorage.setItem('popupOpen', 'true');
+              });
             }
-          });
-        }
-      });
-    </script>
-    <script>
-      document.addEventListener("turbo:load", () => {
-        var modal = document.getElementById("manageUsersPopup");
-        var btn = document.getElementById("manageUsersBtn");
-        var span = document.getElementById("closePopupShare");
 
-        btn.onclick = function() {
-          modal.style.display = "flex";
-        }
+            if (btnCloseAdd) {
+              btnCloseAdd.addEventListener('click', function(event) {
+                event.preventDefault();
+                popupAdd.style.display = "none";
+                localStorage.setItem('popupOpen', 'false');
+              });
+            }
 
-        span.onclick = function() {
-          modal.style.display = "none";
-        }
+            popupAdd.addEventListener('click', function(event) {
+              if (event.target === popupAdd) {
+                popupAdd.style.display = "none";
+                localStorage.setItem('popupOpen', 'false');
+              }
+            });
+          }
+        });
+      </script>
+      <script>
+        document.addEventListener("turbo:load", () => {
+          var modal = document.getElementById("manageUsersPopup");
+          var btn = document.getElementById("manageUsersBtn");
+          var span = document.getElementById("closePopupShare");
 
-        window.onclick = function(event) {
-          if (event.target == modal) {
+          btn.onclick = function() {
+            modal.style.display = "flex";
+          }
+
+          span.onclick = function() {
             modal.style.display = "none";
           }
-        }
 
-        document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          modal.style.display = "none";
-        }
-      });
-      });
-    </script>
-    <script>
-      // 1. Créez un objet global pour stocker nos fonctions et notre état (offsets)
-      //    Cela nous permet de les supprimer et de les recréer proprement.
-      window.myListApp = window.myListApp || {};
-
-      // 2. Définissez la FONCTION qui gère le clic (le "handler")
-      //    En la nommant, on peut la supprimer plus tard.
-      window.myListApp.loadMoreHandler = function(e) {
-        e.preventDefault();
-        const type = this.dataset.type;
-        const slug = this.dataset.slug;
-
-        // 3. Utilisez les offsets stockés sur l'objet global
-        const offset = window.myListApp.offsets[type];
-        let url = `/lists/load_more_${type}?offset=${offset}`;
-
-        // Votre code fetch (qui est parfait)
-        fetch(url, {
-          headers: {
-            'Accept': 'text/html'
-          }
-        })
-        .then(response => response.text())
-        .then(html => {
-          if (html.trim() !== "") {
-            document.getElementById(`${type}-load-more`).insertAdjacentHTML("beforeend", html);
-            // 4. Incrémentez l'offset global
-            window.myListApp.offsets[type] += 10;
-          } else {
-            this.disabled = true;
-            this.innerText = "Plus de résultats";
-          }
-        })
-        .catch(error => console.error(`Erreur lors du chargement des ${type}:`, error));
-      };
-
-      // 5. Créez une fonction d'installation qui nettoie d'abord
-      function setupLoadMore(buttonId) {
-        const button = document.getElementById(buttonId);
-        if (button) {
-          // ÉTAPE CLÉ : Supprimez l'ancien listener pour éviter les doublons
-          button.removeEventListener("click", window.myListApp.loadMoreHandler);
-
-          // Ajoutez le nouveau listener
-          button.addEventListener("click", window.myListApp.loadMoreHandler);
-        }
-      }
-
-      // 6. Votre listener turbo:load est maintenant propre
-      document.addEventListener("turbo:load", () => {
-        // (Re)initialisez les offsets à chaque chargement de page,
-        // car le DOM (votre liste) est aussi réinitialisé.
-        window.myListApp.offsets = { oeuvres: 10, designers: 10, studios: 10 };
-
-        // (Re)attachez les listeners en toute sécurité
-        setupLoadMore("load-more-oeuvres");
-        setupLoadMore("load-more-designers");
-        setupLoadMore("load-more-studios");
-      });
-    </script>
-    <script>
-      document.addEventListener("turbo:load", () => {
-       const selectedDesigners = new Set();
-       const selectedOeuvres = new Set();
-       // NOUVEAU : Ajout du Set pour les studios
-       const selectedStudios = new Set();
-
-       function updateHiddenFields() {
-         const designerContainer = document.getElementById('designer_ids_field_container');
-         const oeuvreContainer = document.getElementById('oeuvre_ids_field_container');
-         // NOUVEAU : Récupération du conteneur studio
-         const studioContainer = document.getElementById('studio_ids_field_container');
-
-         // Vider les anciens champs
-         designerContainer.innerHTML = '';
-         oeuvreContainer.innerHTML = '';
-         // NOUVEAU : Vider le conteneur studio
-         studioContainer.innerHTML = '';
-
-         selectedDesigners.forEach(id => {
-           const input = document.createElement('input');
-           input.type = 'hidden';
-           input.name = 'list[designer_ids][]';
-           input.value = id;
-           designerContainer.appendChild(input);
-         });
-
-         selectedOeuvres.forEach(id => {
-           const input = document.createElement('input');
-           input.type = 'hidden';
-           input.name = 'list[oeuvre_ids][]';
-           input.value = id;
-           oeuvreContainer.appendChild(input);
-         });
-
-         // NOUVEAU : Création des champs cachés pour les studios
-         selectedStudios.forEach(id => {
-           const input = document.createElement('input');
-           input.type = 'hidden';
-           input.name = 'list[studio_ids][]';
-           input.value = id;
-           studioContainer.appendChild(input);
-         });
-       }
-
-
-       function handleCardClick(event, type) {
-         const card = event.target.closest('.check-box-wrapper');
-         if (!card || !card.dataset.id || event.target.tagName.toLowerCase() === 'a') return;
-
-         const checkbox = card.querySelector("input[type='checkbox']");
-         if (checkbox) checkbox.checked = !checkbox.checked;
-
-         const itemId = card.dataset.id;
-
-         if (type === 'designer') {
-           if (selectedDesigners.has(itemId)) {
-             selectedDesigners.delete(itemId);
-             card.classList.remove('selected');
-           } else {
-             selectedDesigners.add(itemId);
-             card.classList.add('selected');
-           }
-         } else if (type === 'oeuvre') {
-           if (selectedOeuvres.has(itemId)) {
-             selectedOeuvres.delete(itemId);
-             card.classList.remove('selected');
-           } else {
-             selectedOeuvres.add(itemId);
-             card.classList.add('selected');
-           }
-         }
-         // NOUVEAU : Logique de clic pour les studios
-         else if (type === 'studio') {
-           if (selectedStudios.has(itemId)) {
-             selectedStudios.delete(itemId);
-             card.classList.remove('selected');
-           } else {
-             selectedStudios.add(itemId);
-             card.classList.add('selected');
-           }
-         }
-
-         updateHiddenFields();
-       }
-
-       function setupSelectableCards(containerId, type) {
-         const container = document.getElementById(containerId);
-         if (container) {
-           container.addEventListener('click', event => handleCardClick(event, type));
-         }
-       }
-
-       function initializeSelections() {
-         const initialDesignerIds = <%= raw(@list.designer_ids.to_json) %>;
-         const initialOeuvreIds = <%= raw(@list.oeuvre_ids.to_json) %>;
-         // NOUVEAU : Récupération des IDs studio initiaux
-         const initialStudioIds = <%= raw(@list.studio_ids.to_json) %>;
-
-         initialDesignerIds.forEach(id => selectedDesigners.add(id.toString()));
-         initialOeuvreIds.forEach(id => selectedOeuvres.add(id.toString()));
-         // NOUVEAU : Ajout des IDs studio initiaux au Set
-         initialStudioIds.forEach(id => selectedStudios.add(id.toString()));
-
-         // Marquer les éléments visuellement sélectionnés s'ils sont affichés
-         document.querySelectorAll('#designers-list .check-box-wrapper').forEach(card => {
-           if (selectedDesigners.has(card.dataset.id)) {
-             card.classList.add('selected');
-             card.querySelector("input[type='checkbox']").checked = true;
-           }
-         });
-
-         document.querySelectorAll('#oeuvres-list .check-box-wrapper').forEach(card => {
-           if (selectedOeuvres.has(card.dataset.id)) {
-             card.classList.add('selected');
-             card.querySelector("input[type='checkbox']").checked = true;
-           }
-         });
-
-         // NOUVEAU : Marquage visuel des studios initiaux
-         document.querySelectorAll('#studios-list .check-box-wrapper').forEach(card => {
-           if (selectedStudios.has(card.dataset.id)) {
-             card.classList.add('selected');
-             card.querySelector("input[type='checkbox']").checked = true;
-           }
-         });
-
-         updateHiddenFields();
-       }
-
-
-       // Initialisation
-       setupSelectableCards('designers-list', 'designer');
-       setupSelectableCards('oeuvres-list', 'oeuvre');
-       // NOUVEAU : Initialisation des clics pour les studios
-       setupSelectableCards('studios-list', 'studio');
-
-       initializeSelections();
-      });
-    </script>
-    <script>
-      function setupLiveSearch(inputId, listContainerId, type) {
-        const input = document.getElementById(inputId);
-        const listContainer = document.getElementById(listContainerId);
-        const loadMoreButton = document.getElementById(`load-more-${type}`);
-
-        input.addEventListener('input', function () {
-          const query = this.value.trim();
-
-          if (query.length < 2) {
-            loadInitial(type, listContainer);
-            if (loadMoreButton) loadMoreButton.style.display = 'inline-block';
-            return;
+          window.onclick = function(event) {
+            if (event.target == modal) {
+              modal.style.display = "none";
+            }
           }
 
-          fetch(`/lists/search_items?q=${encodeURIComponent(query)}&type=${type}`, {
-            headers: { 'Accept': 'text/html' }
+          document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            modal.style.display = "none";
+          }
+        });
+        });
+      </script>
+      <script>
+        // 1. Créez un objet global pour stocker nos fonctions et notre état (offsets)
+        //    Cela nous permet de les supprimer et de les recréer proprement.
+        window.myListApp = window.myListApp || {};
+
+        // 2. Définissez la FONCTION qui gère le clic (le "handler")
+        //    En la nommant, on peut la supprimer plus tard.
+        window.myListApp.loadMoreHandler = function(e) {
+          e.preventDefault();
+          const type = this.dataset.type;
+          const slug = this.dataset.slug;
+
+          // 3. Utilisez les offsets stockés sur l'objet global
+          const offset = window.myListApp.offsets[type];
+          let url = `/lists/load_more_${type}?offset=${offset}`;
+
+          // Votre code fetch (qui est parfait)
+          fetch(url, {
+            headers: {
+              'Accept': 'text/html'
+            }
           })
           .then(response => response.text())
           .then(html => {
-            listContainer.innerHTML = html;
-            if (loadMoreButton) loadMoreButton.style.display = 'none';
+            if (html.trim() !== "") {
+              document.getElementById(`${type}-load-more`).insertAdjacentHTML("beforeend", html);
+              // 4. Incrémentez l'offset global
+              window.myListApp.offsets[type] += 10;
+            } else {
+              this.disabled = true;
+              this.innerText = "Plus de résultats";
+            }
           })
-          .catch(err => console.error(`Erreur recherche ${type}:`, err));
+          .catch(error => console.error(`Erreur lors du chargement des ${type}:`, error));
+        };
+
+        // 5. Créez une fonction d'installation qui nettoie d'abord
+        function setupLoadMore(buttonId) {
+          const button = document.getElementById(buttonId);
+          if (button) {
+            // ÉTAPE CLÉ : Supprimez l'ancien listener pour éviter les doublons
+            button.removeEventListener("click", window.myListApp.loadMoreHandler);
+
+            // Ajoutez le nouveau listener
+            button.addEventListener("click", window.myListApp.loadMoreHandler);
+          }
+        }
+
+        // 6. Votre listener turbo:load est maintenant propre
+        document.addEventListener("turbo:load", () => {
+          // (Re)initialisez les offsets à chaque chargement de page,
+          // car le DOM (votre liste) est aussi réinitialisé.
+          window.myListApp.offsets = { oeuvres: 10, designers: 10, studios: 10 };
+
+          // (Re)attachez les listeners en toute sécurité
+          setupLoadMore("load-more-oeuvres");
+          setupLoadMore("load-more-designers");
+          setupLoadMore("load-more-studios");
         });
-      }
+      </script>
+      <script>
+        document.addEventListener("turbo:load", () => {
+         const selectedDesigners = new Set();
+         const selectedOeuvres = new Set();
+         // NOUVEAU : Ajout du Set pour les studios
+         const selectedStudios = new Set();
 
-      function loadInitial(type, container) {
-        fetch(`/lists/load_more_${type}?offset=0`, {
-          headers: { 'Accept': 'text/html' }
-        })
-        .then(response => response.text())
-        .then(html => container.innerHTML = html);
-      }
+         function updateHiddenFields() {
+           const designerContainer = document.getElementById('designer_ids_field_container');
+           const oeuvreContainer = document.getElementById('oeuvre_ids_field_container');
+           // NOUVEAU : Récupération du conteneur studio
+           const studioContainer = document.getElementById('studio_ids_field_container');
 
-      document.addEventListener("turbo:load", () => {
-        setupLiveSearch('designer-search', 'designers-load-more', 'designers');
-        setupLiveSearch('oeuvre-search', 'oeuvres-load-more', 'oeuvres');
-        setupLiveSearch('studio-search', 'studios-load-more', 'studios');
-      });
-    </script>
+           // Vider les anciens champs
+           designerContainer.innerHTML = '';
+           oeuvreContainer.innerHTML = '';
+           // NOUVEAU : Vider le conteneur studio
+           studioContainer.innerHTML = '';
+
+           selectedDesigners.forEach(id => {
+             const input = document.createElement('input');
+             input.type = 'hidden';
+             input.name = 'list[designer_ids][]';
+             input.value = id;
+             designerContainer.appendChild(input);
+           });
+
+           selectedOeuvres.forEach(id => {
+             const input = document.createElement('input');
+             input.type = 'hidden';
+             input.name = 'list[oeuvre_ids][]';
+             input.value = id;
+             oeuvreContainer.appendChild(input);
+           });
+
+           // NOUVEAU : Création des champs cachés pour les studios
+           selectedStudios.forEach(id => {
+             const input = document.createElement('input');
+             input.type = 'hidden';
+             input.name = 'list[studio_ids][]';
+             input.value = id;
+             studioContainer.appendChild(input);
+           });
+         }
+
+
+         function handleCardClick(event, type) {
+           const card = event.target.closest('.check-box-wrapper');
+           if (!card || !card.dataset.id || event.target.tagName.toLowerCase() === 'a') return;
+
+           const checkbox = card.querySelector("input[type='checkbox']");
+           if (checkbox) checkbox.checked = !checkbox.checked;
+
+           const itemId = card.dataset.id;
+
+           if (type === 'designer') {
+             if (selectedDesigners.has(itemId)) {
+               selectedDesigners.delete(itemId);
+               card.classList.remove('selected');
+             } else {
+               selectedDesigners.add(itemId);
+               card.classList.add('selected');
+             }
+           } else if (type === 'oeuvre') {
+             if (selectedOeuvres.has(itemId)) {
+               selectedOeuvres.delete(itemId);
+               card.classList.remove('selected');
+             } else {
+               selectedOeuvres.add(itemId);
+               card.classList.add('selected');
+             }
+           }
+           // NOUVEAU : Logique de clic pour les studios
+           else if (type === 'studio') {
+             if (selectedStudios.has(itemId)) {
+               selectedStudios.delete(itemId);
+               card.classList.remove('selected');
+             } else {
+               selectedStudios.add(itemId);
+               card.classList.add('selected');
+             }
+           }
+
+           updateHiddenFields();
+         }
+
+         function setupSelectableCards(containerId, type) {
+           const container = document.getElementById(containerId);
+           if (container) {
+             container.addEventListener('click', event => handleCardClick(event, type));
+           }
+         }
+
+         function initializeSelections() {
+           const initialDesignerIds = <%= raw(@list.designer_ids.to_json) %>;
+           const initialOeuvreIds = <%= raw(@list.oeuvre_ids.to_json) %>;
+           // NOUVEAU : Récupération des IDs studio initiaux
+           const initialStudioIds = <%= raw(@list.studio_ids.to_json) %>;
+
+           initialDesignerIds.forEach(id => selectedDesigners.add(id.toString()));
+           initialOeuvreIds.forEach(id => selectedOeuvres.add(id.toString()));
+           // NOUVEAU : Ajout des IDs studio initiaux au Set
+           initialStudioIds.forEach(id => selectedStudios.add(id.toString()));
+
+           // Marquer les éléments visuellement sélectionnés s'ils sont affichés
+           document.querySelectorAll('#designers-list .check-box-wrapper').forEach(card => {
+             if (selectedDesigners.has(card.dataset.id)) {
+               card.classList.add('selected');
+               card.querySelector("input[type='checkbox']").checked = true;
+             }
+           });
+
+           document.querySelectorAll('#oeuvres-list .check-box-wrapper').forEach(card => {
+             if (selectedOeuvres.has(card.dataset.id)) {
+               card.classList.add('selected');
+               card.querySelector("input[type='checkbox']").checked = true;
+             }
+           });
+
+           // NOUVEAU : Marquage visuel des studios initiaux
+           document.querySelectorAll('#studios-list .check-box-wrapper').forEach(card => {
+             if (selectedStudios.has(card.dataset.id)) {
+               card.classList.add('selected');
+               card.querySelector("input[type='checkbox']").checked = true;
+             }
+           });
+
+           updateHiddenFields();
+         }
+
+
+         // Initialisation
+         setupSelectableCards('designers-list', 'designer');
+         setupSelectableCards('oeuvres-list', 'oeuvre');
+         // NOUVEAU : Initialisation des clics pour les studios
+         setupSelectableCards('studios-list', 'studio');
+
+         initializeSelections();
+        });
+      </script>
+      <script>
+        function setupLiveSearch(inputId, listContainerId, type) {
+          const input = document.getElementById(inputId);
+          const listContainer = document.getElementById(listContainerId);
+          const loadMoreButton = document.getElementById(`load-more-${type}`);
+
+          input.addEventListener('input', function () {
+            const query = this.value.trim();
+
+            if (query.length < 2) {
+              loadInitial(type, listContainer);
+              if (loadMoreButton) loadMoreButton.style.display = 'inline-block';
+              return;
+            }
+
+            fetch(`/lists/search_items?q=${encodeURIComponent(query)}&type=${type}`, {
+              headers: { 'Accept': 'text/html' }
+            })
+            .then(response => response.text())
+            .then(html => {
+              listContainer.innerHTML = html;
+              if (loadMoreButton) loadMoreButton.style.display = 'none';
+            })
+            .catch(err => console.error(`Erreur recherche ${type}:`, err));
+          });
+        }
+
+        function loadInitial(type, container) {
+          fetch(`/lists/load_more_${type}?offset=0`, {
+            headers: { 'Accept': 'text/html' }
+          })
+          .then(response => response.text())
+          .then(html => container.innerHTML = html);
+        }
+
+        document.addEventListener("turbo:load", () => {
+          setupLiveSearch('designer-search', 'designers-load-more', 'designers');
+          setupLiveSearch('oeuvre-search', 'oeuvres-load-more', 'oeuvres');
+          setupLiveSearch('studio-search', 'studios-load-more', 'studios');
+        });
+      </script>

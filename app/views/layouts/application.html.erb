@@ -61,6 +61,10 @@
         document.documentElement.style.setProperty('--native-bottom', '0px');
       }
     </script>
+    <script>
+      window.loaderWebmPath = "<%= asset_path('loader.webm') %>";
+      window.loaderMp4Path = "<%= asset_path('loader.mp4') %>";
+    </script>
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>

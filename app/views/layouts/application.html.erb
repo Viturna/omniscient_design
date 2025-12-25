@@ -55,6 +55,12 @@
         })(window,document,'script','dataLayer','GTM-KS23M7LQ');
       </script>
     <% end %>
+    <script>
+      // Si le navigateur dit qu'il est "Turbo Native" (vos apps iOS/Android)
+      if (navigator.userAgent.indexOf('Turbo Native') !== -1) {
+        document.documentElement.style.setProperty('--native-bottom', '0px');
+      }
+    </script>
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>

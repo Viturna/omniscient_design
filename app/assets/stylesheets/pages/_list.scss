@@ -178,7 +178,7 @@
   .bottom-list {
     width: 100vw;
     padding-right: 8vw;
-    bottom: var(--safe-area-top-android, env(safe-area-inset-top, 70px));
+    bottom: var(--native-bottom, 70px);
     .delete {
       margin-top: 0;
     }

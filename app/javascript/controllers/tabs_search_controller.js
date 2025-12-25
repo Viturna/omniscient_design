@@ -121,30 +121,41 @@ export default class extends Controller {
      */
     showLoadingOverlay() {
         // retire tout overlay existant
-        const old = document.getElementById("search-loading-overlay")
+        const old = document.getElementById("loading")
         if (old) old.remove()
 
         const overlay = document.createElement("div")
-        overlay.id = "search-loading-overlay"
+        // On utilise l'ID 'loading' comme demandé dans votre HTML
+        overlay.id = "loading"
         overlay.setAttribute("aria-hidden", "true")
+
+        // Styles CSS intégrés pour garantir l'affichage par dessus tout (overlay)
+        // Vous pouvez retirer ceci si vous gérez le style de #loading entièrement dans votre CSS
         overlay.style.cssText = `
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(255,255,255,0.9);
-      z-index:9999;
-      pointer-events:auto;
-      cursor:wait;
-    `
+          position: fixed;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255, 255, 255, 0.9);
+          z-index: 9999;
+          pointer-events: auto;
+          cursor: wait;
+        `
+
+        // On utilise les variables window définies à l'étape 1
+        // Si elles ne sont pas définies, on met des chemins par défaut (ou vide)
+        const webmSrc = window.loaderWebmPath || ""
+        const mp4Src = window.loaderMp4Path || ""
+
         overlay.innerHTML = `
-      <video autoplay loop muted playsinline webkit-playsinline preload="auto"
-             style="max-width:200px;max-height:200px;pointer-events:none;">
-        <source src="${window.loaderVideoPath}" type="video/webm">
-        ${window.loaderUnsupportedText || "Votre navigateur ne supporte pas la vidéo."}
-      </video>
-    `
+          <div class="loader-bg">
+            <video autoplay loop muted playsinline webkit-playsinline preload="auto" style="max-width: 100%; height: auto;">
+              <source src="${webmSrc}" type="video/webm">
+              <source src="${mp4Src}" type="video/mp4">
+            </video>
+          </div>
+        `
 
         document.body.appendChild(overlay)
 

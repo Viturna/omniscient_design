@@ -80,7 +80,7 @@
        data-controller="scroll-vertical"
        data-scroll-vertical-cooldown-value="500">
     <div class="nav-home-mobile">
-       <%= link_to(notifications_path) do %>
+      <%= link_to(notifications_path) do %>
         <div class="circle circle-notif">
           <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20.1825 5.26C19.3238 4.76133 18.7932 3.83333 18.7945 2.83333V2.82933C18.7958 1.26667 17.5438 0 15.9998 0C14.4558 0 13.2038 1.26667 13.2038 2.82933V2.83333C13.2052 3.83467 12.6758 4.76133 11.8158 5.26C5.59317 8.876 9.16917 20.88 2.6665 23.0013V25.3333H29.3332V23.0013C22.8305 20.88 26.4065 8.876 20.1825 5.26ZM15.9998 1.33333C16.7358 1.33333 17.3332 1.932 17.3332 2.66667C17.3332 3.40267 16.7358 4 15.9998 4C15.2638 4 14.6665 3.40267 14.6665 2.66667C14.6665 1.932 15.2638 1.33333 15.9998 1.33333ZM19.9998 28C19.9998 30.1307 18.1438 32 16.0385 32C13.9332 32 11.9998 30.1307 11.9998 28H19.9998Z" fill="white"/>
@@ -93,8 +93,8 @@
         </div>
       <% end %>
       <div class="switch-home-mobile">
-        <%= link_to t('global.designers'), designers_path, class: "active"  %>
         <%= link_to t('global.references'), oeuvres_path%>
+        <%= link_to t('global.designers'), designers_path, class: "active"  %>
       </div>
       <div class="circle circle-notif openPopup" id="openPopup">
         <svg width="2" height="11" viewBox="0 0 4 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,8 +104,8 @@
       </div>
     </div>
     <div class="switch-home">
-      <%= link_to t('global.designers'), designers_path, class: "active" %>
       <%= link_to t('global.references'), oeuvres_path %>
+      <%= link_to t('global.designers'), designers_path, class: "active" %>
     </div>
     <%# <div class="refonte-alert" id="refonteAlert">
       <div class="refonte-alert-content">
@@ -116,21 +116,14 @@
     </div> %>
     <div class="box-card" id="boxCard">
       <% @items.each do |item| %>
-        
         <% if item.is_a?(Designer) %>
           <div data-entity-type="designer" data-id="<%= item.id %>" class="entity-wrapper">
-             <% cache item do %>
-              <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
-            <% end %>
+            <%= render partial: 'designers/card', locals: { card: item, class_name: 'card' } %>
           </div>
-
         <% elsif item.is_a?(Studio) %>
-           <div data-entity-type="studio" data-id="<%= item.id %>" class="entity-wrapper">
-             <% cache item do %>
-              <%= render partial: 'studios/card', locals: { card: item, class_name: 'card' } %>
-             <% end %>
-           </div>
-
+          <div data-entity-type="studio" data-id="<%= item.id %>" class="entity-wrapper">
+            <%= render partial: 'studios/card', locals: { card: item, class_name: 'card' } %>
+          </div>
         <% elsif item.is_a?(Hash) %>
           <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
         <% end %>
@@ -166,7 +159,7 @@
       <% end %>
     </div>
   </div>
- <script>
+  <script>
     document.addEventListener("turbo:load", () => {
       const container = document.getElementById("cardContainer");
       if (container) {
@@ -188,11 +181,11 @@
 
         // Récupère les données actuelles depuis les attributs data-*
         let offset = parseInt(loadMoreTrigger.dataset.offset) || 0;
-        
+
         // IMPORTANT : On récupère les IDs séparément
         let loadedDesignerIds = loadMoreTrigger.dataset.loadedDesignerIds || '';
         let loadedStudioIds = loadMoreTrigger.dataset.loadedStudioIds || '';
-        
+
         let itemsUntilNextAd = loadMoreTrigger.dataset.itemsUntilNextAd;
         let adIndex = loadMoreTrigger.dataset.adIndex;
         let adsOrder = loadMoreTrigger.dataset.adsOrder;
@@ -248,7 +241,7 @@
 
       // --- NAVIGATION VERTICALE ---
       function scrollToCard(direction) {
-        const cards = Array.from(container.querySelectorAll(".card, .ad-card")); 
+        const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
         const scrollTop = container.scrollTop;
         const containerHeight = container.clientHeight;
 

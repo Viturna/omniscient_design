@@ -100,46 +100,48 @@
                   title="Enregistrer ce designer"
                   style="position: relative; z-index: 50; background: none; border: none; cursor: pointer; pointer-events: auto;">
                   <div class="circle">
-                    <svg style="pointer-events: none;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M25.3334 32L16.0001 24L6.66675 32V0H25.3334V32Z" 
-                          fill="<%= @saved_designer_ids&.include?(card.id) ? 'white' : 'none' %>" 
-                          stroke="white" stroke-width="2"/>
-                      </svg>
-                    </div>
-                  </button>
-            <% end %>
-            </div>
-                        <% if images.count > 1 %>
-                          <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Image précédente">
-                            <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
-                              <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
-                            </svg>
-                          </button>
-                          <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Image suivante">
-                            <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
-                              <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
-                            </svg>
-                          </button>
-                          <div class="card-slider-dots">
-                            <% images.each_with_index do |image, index| %>
-                              <button class="card-slider-dot <%= 'active' if index == 0 %>" 
-                                data-action="click->slider#switchSlide" 
-                                data-slider-index-value="<%= index %>" 
-                                data-slider-target="dot"
-                                aria-label="Aller à l'image <%= index + 1 %>"></button>
-                            <% end %>
-                          </div>
-                        <% end %>
-                      </div>
-                    </div>
-                    <div class="container-text-card">
-                      <% if card.countries.present? %>
-                        <p class="subtitle-card">
-                          <%= card.countries.map(&:name).join(' & ') %>
-                        </p>
+                    <svg style="pointer-events: none;" width="40" height="40" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <% if @saved_designer_ids&.include?(card.id) %>
+                        <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Z" fill="white"/>
+                      <% else %>
+                        <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z" fill="white"/>
                       <% end %>
-                      <h2 class="title-card"><%= card.nom_designer %></h2>
-                      <p class="description-card description-card-home"><%= card.presentation_generale %></p>
-                    </div>
+                    </svg>
                   </div>
+                </button>
+              <% end %>
+            </div>
+            <% if images.count > 1 %>
+              <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Image précédente">
+                <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
+                  <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
+                </svg>
+              </button>
+              <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Image suivante">
+                <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
+                  <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
+                </svg>
+              </button>
+              <div class="card-slider-dots">
+                <% images.each_with_index do |image, index| %>
+                  <button class="card-slider-dot <%= 'active' if index == 0 %>" 
+                                data-action="click->slider#switchSlide" 
+                    data-slider-index-value="<%= index %>" 
+                    data-slider-target="dot"
+                    aria-label="Aller à l'image <%= index + 1 %>"></button>
                 <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="container-text-card">
+          <% if card.countries.present? %>
+            <p class="subtitle-card">
+              <%= card.countries.map(&:name).join(' & ') %>
+            </p>
+          <% end %>
+          <h2 class="title-card"><%= card.nom_designer %></h2>
+          <p class="description-card description-card-home"><%= card.presentation_generale %></p>
+        </div>
+      </div>
+    <% end %>

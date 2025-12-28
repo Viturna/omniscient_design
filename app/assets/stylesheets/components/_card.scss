@@ -145,41 +145,7 @@
   margin-bottom: 3dvh;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .card {
-    width: 60vw;
-    padding-top: 180px;
-    height: calc(100dvh - 180px);
-  }
-
-  .bg-card {
-    width: 60vw;
-    height: 55vh;
-  }
-
-  .title-card {
-    font-size: 30px;
-  }
-
-  .subtitle-card {
-    font-size: 18px;
-    margin-top: 16px;
-  }
-
-  .container-text-card {
-    padding: 0px;
-  }
-
-  .title-description-card {
-    display: none;
-  }
-
-  .description-card {
-    display: none;
-  }
-}
-
-@media screen and (min-width: 601px) and (max-width: 768px) {
+@media screen and (min-width: 601px) and (max-width: 1024px) {
   .bg-img-card {
     transform: rotate(-4deg);
   }

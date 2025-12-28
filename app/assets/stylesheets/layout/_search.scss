@@ -87,14 +87,7 @@
   background: #555;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .top-bar-search {
-    width: 54vw;
-    padding: 0 8vw;
-  }
-}
-
-@media screen and (min-width: 426px) and (max-width: 768px) {
+@media screen and (min-width: 426px) and (max-width: 1024px) {
   .top-bar-search {
     width: 84vw;
     padding: 0 8vw;

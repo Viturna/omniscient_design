@@ -165,40 +165,6 @@
   }
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .header-desktop {
-    width: 30vw;
-    height: 100vh;
-    padding: 0 2vw;
-  }
-
-  .name-header {
-    font-size: 1.25rem;
-    margin-left: 1rem;
-  }
-
-  header li a {
-    font-size: 1.125rem;
-  }
-
-  header li a svg {
-    scale: 0.8;
-  }
-
-  header li .active p {
-    font-size: 1.125rem;
-  }
-
-  .button-login {
-    width: 14vw;
-    font-size: 0.875rem;
-  }
-
-  .link-header a {
-    font-size: 1rem;
-  }
-}
-
 /* Base : cache mobile par défaut */
 .header-mobile {
   display: none;
@@ -216,7 +182,7 @@
 }
 
 /* Mobile visible uniquement en dessous de 768px */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .header-desktop {
     display: none;
   }

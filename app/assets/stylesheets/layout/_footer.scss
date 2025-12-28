@@ -214,18 +214,9 @@
   }
 }
 
-// Mobiles (max 768px)
-@media (max-width: 950px) {
+@media (max-width: 1024px) {
   .footer-top {
-    width: calc(100% - 10vw - 30vw);
-    margin-left: 30vw;
-    padding: 40px 5vw;
-    flex-direction: column;
-  }
-}
-@media (max-width: 769px) {
-  .footer-top {
-    width: calc(100% - 10vw);
+    width: calc(100% - 8vw);
     margin-left: 0;
   }
   .footer-bottom {

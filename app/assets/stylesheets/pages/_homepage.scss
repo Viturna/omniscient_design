@@ -79,17 +79,7 @@
   cursor: pointer;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .nav-home a {
-    font-size: 18px;
-  }
-
-  .button-nav {
-    gap: 16px;
-  }
-}
-
-@media screen and (min-width: 601px) and (max-width: 768px) {
+@media screen and (min-width: 601px) and (max-width: 1024px) {
   .nav-home-mobile {
     background-color: #f7f7f7;
     display: flex;

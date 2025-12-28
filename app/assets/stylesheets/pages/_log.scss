@@ -147,34 +147,7 @@
   gap: 10px;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .log {
-    padding-bottom: 96px;
-  }
-
-  .box-log {
-    padding: 0px 4vw;
-  }
-
-  .form {
-    width: 53vw;
-    padding: 32px;
-  }
-
-  .btn-login {
-    width: 100%;
-    height: 65px;
-  }
-
-  .title-boxlog {
-    font-size: 18px;
-  }
-  .flex-login-oauth {
-    flex-direction: column;
-  }
-}
-
-@media screen and (min-width: 601px) and (max-width: 768px) {
+@media screen and (min-width: 601px) and (max-width: 950px) {
   .log {
     padding-bottom: 96px;
   }

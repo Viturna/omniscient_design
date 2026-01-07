@@ -30,11 +30,14 @@ class GamificationService
 
   # "Noctambule" : Connecté entre 00h et 5h
   def check_noctambule
-    current_hour = Time.now.hour
-    if current_hour >= 0 && current_hour < 5
-      assign_badge(name: "Noctambule", category: "special")
-    end
+  return if @user.badges.exists?(name: "Noctambule")
+  
+  heure_actuelle = Time.current.in_time_zone("Europe/Paris").hour
+
+  if heure_actuelle >= 0 && heure_actuelle < 5
+    assign_badge(name: "Noctambule", category: "special")
   end
+end
 
   # "Multi support" : Avoir l'app (Utilisation de UserDevice)
   def check_multi_support

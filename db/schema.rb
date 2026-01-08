@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_140044) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_08_165345) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -566,8 +566,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_140044) do
   add_foreign_key "list_visitors", "lists"
   add_foreign_key "list_visitors", "users"
   add_foreign_key "lists", "users"
-  add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "admin_id"
+  add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "notions_oeuvres", "notions"
   add_foreign_key "notions_oeuvres", "oeuvres"
   add_foreign_key "oeuvre_images", "oeuvres"

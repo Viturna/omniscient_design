@@ -101,8 +101,9 @@ class User < ApplicationRecord
 
   # Système
   has_many :user_devices, dependent: :destroy
-  # C'est ici que ça bloquait (Notifications) :
+  
   has_many :notifications, dependent: :destroy 
+  has_many :sent_notifications, class_name: 'Notification', foreign_key: 'admin_id', dependent: :nullify
 
   # Gamification
   has_many :user_badges, dependent: :destroy

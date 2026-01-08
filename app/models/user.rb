@@ -9,11 +9,13 @@ class User < ApplicationRecord
   # Attributs
   attribute :banned, :boolean, default: false
 
+  # Validations Mot de passe
   validates :password, format: {
     with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}\z/,
     message: "doit contenir au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial"
   }, if: :password_required?
-  # Statuts valides
+
+  # Constantes
   STATUTS = %w[etudiant enseignant entreprise artiste autre]
 
   STUDY_LEVELS = [
@@ -52,54 +54,65 @@ class User < ApplicationRecord
     'Doctorat',
     'Autre'
   ]
+
+  # Validations Champs
   validates :study_level, inclusion: { in: STUDY_LEVELS, message: "n'est pas valide" }, if: -> { statut == 'etudiant' && study_level.present? }
-  # Validations
   validates :rgpd_consent, acceptance: true
   validates :pseudo, presence: true, uniqueness: { message: I18n.t('user.pseudo_taken') }
   validates :firstname, presence: true
   validates :statut, inclusion: { in: STATUTS, message: I18n.t('user.invalid_statut', value: "%{value}") }
   validates :email, uniqueness: { case_sensitive: false }
-
   validate :no_ban_words_in_names
 
-  has_many :daily_visits, dependent: :destroy
-  # Associations
+  # --- ASSOCIATIONS (Toutes nettoyées avec dependent: :destroy) ---
+  
   belongs_to :etablissement, optional: true
 
+  # Visites
+  has_many :daily_visits, dependent: :destroy
+
+  # Parrainage
   has_one :referral, foreign_key: 'referee_id', dependent: :destroy
   has_many :referrals_as_referrer, class_name: 'Referral', foreign_key: 'referrer_id', dependent: :destroy
   has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id', dependent: :destroy
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
 
+  # Contributions & Feedback
   has_many :bug_reports, dependent: :destroy
-  has_many :lists, dependent: :destroy
-  has_many :oeuvres, dependent: :nullify
-  has_many :designers, dependent: :nullify
-  has_many :studios, dependent: :nullify
-  has_many :notifications, dependent: :destroy
-
   has_many :feedbacks, dependent: :destroy
   has_many :suivis, dependent: :destroy
-
+  
+  # Listes
+  has_many :lists, dependent: :destroy
   has_many :list_editors, dependent: :destroy
   has_many :editable_lists, through: :list_editors, source: :list
-
   has_many :list_visitors, dependent: :destroy
   has_many :visitor_lists, through: :list_visitors, source: :list
 
+  # Créations (On ne supprime pas les œuvres si le créateur part, on met à null)
+  has_many :oeuvres, dependent: :nullify
+  has_many :designers, dependent: :nullify
+  has_many :studios, dependent: :nullify
+
+  # Rejets (Admin)
   has_many :rejected_oeuvres, dependent: :destroy
   has_many :rejected_designers, dependent: :destroy
   has_many :rejected_studios, dependent: :destroy
 
+  # Système
   has_many :user_devices, dependent: :destroy
-  has_many :notifications, dependent: :destroy
+  # C'est ici que ça bloquait (Notifications) :
+  has_many :notifications, dependent: :destroy 
 
+  # Gamification
   has_many :user_badges, dependent: :destroy
   has_many :badges, through: :user_badges
 
+  # Favoris (Lecture seule via listes)
   has_many :saved_oeuvres, through: :lists, source: :oeuvres
   has_many :saved_designers, through: :lists, source: :designers
   has_many :saved_studios, through: :lists, source: :studios
+
   # --- Méthodes ---
 
   def self.from_omniauth(auth)

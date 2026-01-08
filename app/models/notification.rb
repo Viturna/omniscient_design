@@ -10,10 +10,6 @@ class Notification < ApplicationRecord
   private
 
   def send_push_later
-    # Idéalement, utilisez ActiveJob pour ne pas ralentir le serveur
-    # PushNotificationJob.perform_later(self)
-    
-    # Version simple pour tester :
     PushNotificationService.new(self).send
   end
 end

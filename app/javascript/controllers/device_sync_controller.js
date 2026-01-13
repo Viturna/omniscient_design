@@ -3,22 +3,50 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="device-sync"
 export default class extends Controller {
     connect() {
-        // On tente la synchro dès que le contrôleur se connecte
+        // 1. Essai immédiat
         this.sync()
+
+        // 2. On lance une surveillance (polling) au cas où le token arrive après le chargement
+        this.startPolling()
+    }
+
+    disconnect() {
+        this.stopPolling()
+    }
+
+    startPolling() {
+        // Vérifie toutes les 500ms
+        this.interval = setInterval(() => {
+            if (window.FCMToken) {
+                // Dès qu'on le trouve, on envoie et on arrête de chercher
+                this.sync()
+                this.stopPolling()
+            }
+        }, 500)
+
+        // Sécurité : on arrête de chercher après 10 secondes pour ne pas tourner dans le vide
+        setTimeout(() => {
+            this.stopPolling()
+        }, 10000)
+    }
+
+    stopPolling() {
+        if (this.interval) clearInterval(this.interval)
     }
 
     sync() {
-        // 1. On vérifie si iOS a injecté le token
-        if (window.FCMToken) {
-            console.log("📱 Token iOS détecté, envoi au serveur...", window.FCMToken)
-            this.sendToken(window.FCMToken)
-        } else {
-            console.log("⏳ Pas de token iOS détecté pour le moment.")
-        }
-    }
+        // S'il n'y a pas de token, on ne fait rien
+        if (!window.FCMToken) return
 
-    sendToken(token) {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        // Évite d'envoyer le même token plusieurs fois d'affilée
+        if (this.lastSentToken === window.FCMToken) return
+
+        console.log("📱 Token iOS détecté, envoi au serveur...")
+        this.lastSentToken = window.FCMToken
+
+        // Récupération sécurisée du CSRF Token
+        const csrfElement = document.querySelector('meta[name="csrf-token"]')
+        const csrfToken = csrfElement ? csrfElement.getAttribute('content') : ''
 
         fetch('/api/devices', {
             method: 'POST',
@@ -27,15 +55,15 @@ export default class extends Controller {
                 'X-CSRF-Token': csrfToken
             },
             body: JSON.stringify({
-                token: token,
-                platform: 'ios' // ou détecter via userAgent
+                token: window.FCMToken,
+                platform: 'ios'
             })
         })
             .then(response => {
                 if (response.ok) {
                     console.log("✅ Device enregistré avec succès !")
                 } else {
-                    console.error("❌ Erreur lors de l'enregistrement du device")
+                    console.error("❌ Erreur serveur lors de l'enregistrement")
                 }
             })
             .catch(error => console.error("❌ Erreur réseau :", error))

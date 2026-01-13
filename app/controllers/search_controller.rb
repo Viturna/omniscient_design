@@ -124,7 +124,6 @@ class SearchController < ApplicationController
     query = params[:query].to_s.strip
   
     if query.present?
-      # MODIFICATION ICI : Recherche insensible aux accents pour la redirection directe
       designer = Designer.where(validation: true)
         .where("unaccent(prenom) ILIKE unaccent(:q) OR unaccent(nom) ILIKE unaccent(:q) OR unaccent(prenom || ' ' || nom) ILIKE unaccent(:q) OR unaccent(nom || ' ' || prenom) ILIKE unaccent(:q)", q: "%#{query}%")
         .order(
@@ -144,7 +143,6 @@ class SearchController < ApplicationController
       if studio
         redirect_to studio_path(studio) and return
       end
-      # On vérifie si un designer correspond MIEUX que l'oeuvre (ex: éviter de rediriger vers une oeuvre qui contient juste le nom)
       if designer && (oeuvre.nil? || query.length <= designer.nom.length)
         redirect_to designer_path(designer) and return
       end
@@ -154,8 +152,6 @@ class SearchController < ApplicationController
       end
     end
 
-    # --- La suite reste identique (filtres, tabs, etc.) ---
-    
     if params[:tab] == "frise"
       @oeuvres = Oeuvre.where(validation: true)
                       .select(:id, :nom_oeuvre, :date_oeuvre, :slug)
@@ -227,27 +223,53 @@ class SearchController < ApplicationController
       end
     end
 
+    # --- MODIFICATION START : GESTION DES DATES INDÉPENDANTES ---
+    current_year = Time.now.year
+
     if params[:start_year].present? && params[:end_year].present?
+      # CAS 1 : L'utilisateur a filtré par dates. Tout le monde s'aligne.
       start_year = params[:start_year].to_i
       end_year = params[:end_year].to_i
     
       if start_year > 0 && end_year > 0 && start_year <= end_year
         @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
         @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
-        @timeline_years = (start_year..end_year).to_a
+        @studios = @studios.where("date_creation >= ? AND (date_fin IS NULL OR date_fin <= ?)", start_year, end_year)
+        
+        # On définit 3 variables, mais elles ont la même plage car l'utilisateur a filtré
+        timeline_range = (start_year..end_year).to_a
+        @designers_timeline_years = timeline_range
+        @oeuvres_timeline_years = timeline_range
+        @studios_timeline_years = timeline_range
+        @timeline_years = timeline_range # Backup pour compatibilité
       else
-        start_year =  1880
-        end_year = Time.now.year
-        @timeline_years = (start_year..end_year).to_a
+        # Fallback si dates invalides
+        fallback_range = (1880..current_year).to_a
+        @designers_timeline_years = fallback_range
+        @oeuvres_timeline_years = fallback_range
+        @studios_timeline_years = fallback_range
+        @timeline_years = fallback_range
       end
     else
-        start_year =  1880
-        end_year = Time.now.year
-        @timeline_years = (start_year..end_year).to_a
-        if start_year > 0 && end_year > 0 && start_year <= end_year
-           @studios = @studios.where("date_creation >= ? AND (date_fin IS NULL OR date_fin <= ?)", start_year, end_year)
-        end
+      # CAS 2 : Pas de filtre date. On calcule dynamiquement le début pour CHAQUE catégorie.
+      
+      # Pour les designers
+      min_designer = @designers.minimum(:date_naissance) || 1880
+      @designers_timeline_years = (min_designer..current_year).to_a
+
+      # Pour les oeuvres
+      min_oeuvre = @oeuvres.minimum(:date_oeuvre) || 1880
+      @oeuvres_timeline_years = (min_oeuvre..current_year).to_a
+
+      # Pour les studios
+      min_studio = @studios.minimum(:date_creation) || 1880
+      @studios_timeline_years = (min_studio..current_year).to_a
+      
+      # Variable globale pour éviter les erreurs de vue (prend le min global par défaut)
+      global_min = [min_designer, min_oeuvre, min_studio].min
+      @timeline_years = (global_min..current_year).to_a
     end
+    # --- MODIFICATION END ---
   
     case params[:sort]
       when 'nom_asc'

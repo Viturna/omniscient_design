@@ -68,8 +68,12 @@
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
-  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading" data-controller="device-sync" 
-      data-device-sync-user-id-value="<%= current_user ? current_user.id : 0 %>">
+  <body class="<%= body_class %> <%= 'no-scroll' if (controller_name == 'oeuvres' || controller_name == 'designers') && action_name == 'index' %>" 
+        data-controller-name="<%= controller_name %>" 
+        data-action-name="<%= action_name %>" 
+        data-controller="loading device-sync" 
+        data-action="turbo:load@window->device-sync#sync"
+    data-device-sync-user-id-value="<%= current_user ? current_user.id : 0 %>">
     <% unless native_app? %>
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS23M7LQ"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

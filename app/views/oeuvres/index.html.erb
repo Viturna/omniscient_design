@@ -94,13 +94,6 @@
       <%= link_to t('global.references'), oeuvres_path, class: "active" %>
       <%= link_to t('global.designers'), designers_path %>
     </div>
-    <%# <div class="refonte-alert" id="refonteAlert">
-      <div class="refonte-alert-content">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
-        <span><strong>Maintenance :</strong> Une opération de refonte des images est en cours sur les références. Elles reviennent bientôt !</span>
-      </div>
-      <button class="refonte-alert-close" id="closeRefonteAlert" title="Fermer">×</button>
-    </div> %>
     <div class="box-card" id="boxCard" data-scroll-vertical-target="container">
       <% @items.each do |item| %>
         <% if item.is_a?(Oeuvre) %>
@@ -120,15 +113,13 @@
     </div>
   </div>
   <div class="button-nav">
-    <button class="arrow-button up" aria-label="Card précédente" 
-            data-action="click->scroll-vertical#scrollToPrev">
+    <button class="arrow-button up" aria-label="Card précédente" data-action="click->scroll-vertical#scrollToPrev">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M18 38L18 40L22 40L22 38L18 38ZM22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6L22 6ZM22 38L22 6L18 6L18 38L22 38Z" fill="white"/>
         <path d="M5 15.8408L20.0002 2.54515L35.0005 15.8408" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
       </svg>
     </button>
-    <button class="arrow-button down" aria-label="Card suivante"
-            data-action="click->scroll-vertical#scrollToNext">
+    <button class="arrow-button down" aria-label="Card suivante" data-action="click->scroll-vertical#scrollToNext">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M18 2L18 1.86484e-08L22 -1.86484e-08L22 2L18 2ZM22 34C22 35.1046 21.1046 36 20 36C18.8954 36 18 35.1046 18 34L22 34ZM22 2L22 34L18 34L18 2L22 2Z" fill="white"/>
         <path d="M5 24.1592L20.0002 37.4549L35.0005 24.1592" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
@@ -143,161 +134,6 @@
     <% end %>
   </div>
 </div>
-<script>
-  document.addEventListener("turbo:load", () => {
-    const container = document.getElementById("cardContainer");
-    const loadMoreTrigger = document.getElementById("oeuvres-load-more");
-    const upButton = document.querySelector(".arrow-button.up");
-    const downButton = document.querySelector(".arrow-button.down");
-
-    if (!container || !loadMoreTrigger) return;
-
-    // Reset du scroll au chargement
-    container.scrollTop = 0;
-    window.scrollTo(0, 0);
-    requestAnimationFrame(() => container.scrollTop = 0);
-
-    let isLoading = false;
-    let isVerticalScrolling = false;
-
-    // --- CORRECTION DU CHARGEMENT AUTOMATIQUE ---
-    function checkAndFillScreen() {
-      if (isLoading) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const threshold = 300; // Marge de déclenchement (en px)
-
-      // Cas 1 : Le contenu est plus petit que l'écran (Pas de scrollbar)
-      const isScreenEmpty = scrollHeight <= clientHeight;
-
-      // Cas 2 : Le contenu dépasse, MAIS on est déjà dans la zone de déclenchement
-      // (Ex: sur grand écran, le bas de la page est déjà visible ou tout proche)
-      const isInLoadZone = (scrollTop + clientHeight) >= (scrollHeight - threshold);
-
-      if (isScreenEmpty || isInLoadZone) {
-        console.log("🚀 Chargement auto (Ecran vide ou zone atteinte)");
-        loadMoreCards();
-      }
-    }
-
-    // --- SCROLL INFINI ---
-    function loadMoreCards() {
-      if (isLoading) return;
-      isLoading = true;
-
-      let offset = parseInt(loadMoreTrigger.dataset.offset) || 0;
-      let loadedIds = loadMoreTrigger.dataset.loadedIds || '';
-      let itemsUntilNextAd = loadMoreTrigger.dataset.itemsUntilNextAd;
-      let adIndex = loadMoreTrigger.dataset.adIndex;
-      let adsOrder = loadMoreTrigger.dataset.adsOrder;
-
-      const url = `/oeuvres/load_more?offset=${offset}&loaded_ids=${loadedIds}&items_until_next_ad=${itemsUntilNextAd}&ad_index=${adIndex}&ads_order=${adsOrder}`;
-
-      fetch(url, {
-        headers: { 'Accept': 'application/json' }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.html.trim() === "") {
-          loadMoreTrigger.style.display = "none";
-        } else {
-          container.querySelector('#boxCard').insertAdjacentHTML("beforeend", data.html);
-
-          loadMoreTrigger.dataset.itemsUntilNextAd = data.items_until_next_ad;
-          loadMoreTrigger.dataset.adIndex = data.ad_index;
-
-          const currentCards = Array.from(container.querySelectorAll('.card:not(.ad-card)'));
-          const allLoadedIds = currentCards.map(c => c.dataset.id).filter(id => id);
-
-          loadMoreTrigger.dataset.offset = allLoadedIds.length;
-          loadMoreTrigger.dataset.loadedIds = allLoadedIds.join(',');
-
-          validateCardAlignment();
-
-          // IMPORTANT : On relance la vérification une fois le contenu ajouté
-          // Si l'écran est géant, il faudra peut-être charger 2 ou 3 fois d'affilée
-          setTimeout(checkAndFillScreen, 100);
-        }
-      })
-      .catch(err => console.error("Erreur loadMore:", err))
-      .finally(() => isLoading = false);
-    }
-
-    function validateCardAlignment() {
-      container.querySelectorAll(".card, .ad-card").forEach(c => c.style.marginBottom = "10px");
-    }
-
-    container.addEventListener("scroll", () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      isVerticalScrolling = true;
-      // On utilise la même logique que checkAndFillScreen
-      if (!isLoading && scrollTop + clientHeight >= scrollHeight - 300) {
-        loadMoreCards();
-      }
-      setTimeout(() => isVerticalScrolling = false, 100);
-    }, { passive: true });
-
-    // --- NAVIGATION VERTICALE (Boutons & Clavier) ---
-    function scrollToCard(direction) {
-      const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
-      const scrollTop = container.scrollTop;
-      const containerHeight = container.clientHeight;
-      const currentIndex = cards.findIndex(c => {
-        const top = c.offsetTop;
-        return top <= scrollTop + containerHeight / 2 && (top + c.offsetHeight) >= scrollTop + containerHeight / 2;
-      });
-
-      let target = currentIndex;
-      if (direction === "down" && currentIndex < cards.length - 1) target++;
-      else if (direction === "up" && currentIndex > 0) target--;
-
-      if (target !== currentIndex && cards[target]) {
-        cards[target].scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-
-    if (upButton && downButton) {
-        upButton.addEventListener("click", () => scrollToCard("up"));
-        downButton.addEventListener("click", () => scrollToCard("down"));
-    }
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowUp") scrollToCard("up");
-      if (e.key === "ArrowDown") scrollToCard("down");
-    });
-
-    // --- TOUCH GESTURES ---
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    container.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-
-    container.addEventListener("touchend", (e) => {
-      const touchEndX = e.changedTouches[0].screenX;
-      const touchEndY = e.changedTouches[0].screenY;
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
-
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-         if (deltaX > 0) {
-             window.location.href = '<%= designers_path %>';
-         }
-      }
-      else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50 && !isVerticalScrolling) {
-         if (deltaY < 0) scrollToCard("down");
-         else scrollToCard("up");
-      }
-    }, { passive: true });
-
-    // Initialisation
-    validateCardAlignment();
-
-    // Lancement initial (Délai pour laisser le temps au rendu CSS)
-    setTimeout(checkAndFillScreen, 200);
-  });
-</script>
 <div id="popup" class="popup">
   <div class="popup-content">
     <div class="top-popup">
@@ -348,14 +184,12 @@
 </div>
 <script>
   document.addEventListener("turbo:load", function() {
-    // Sélectionner TOUS les éléments avec la classe .openPopup
     const openPopupBtns = document.querySelectorAll(".openPopup");
     const closePopupButton = document.getElementById("closePopup");
     const popup = document.getElementById("popup");
 
     if (!closePopupButton || !popup) return;
 
-    // Boucle sur tous les boutons d'ouverture pour leur ajouter l'écouteur d'événement
     openPopupBtns.forEach(btn => {
       btn.addEventListener("click", function() {
         popup.style.display = "flex";
@@ -373,16 +207,3 @@
     });
   });
 </script>
-<%# <script>
-  document.addEventListener("turbo:load", function() {
-    const alertElement = document.getElementById("refonteAlert");
-    const closeButton = document.getElementById("closeRefonteAlert");
-
-    // S'ils n'existent pas sur la page, on ne fait rien
-    if (!alertElement || !closeButton) return;
-
-    closeButton.addEventListener("click", function() {
-      alertElement.style.display = "none";
-    });
-  });
-</script> %>

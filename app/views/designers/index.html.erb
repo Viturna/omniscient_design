@@ -6,7 +6,7 @@
       display: none;
     }
     #cardContainer {
-      height: calc(100dvh - 50px); /* Ajuster la hauteur pour les petits écrans */
+      height: calc(100dvh - 50px);
     }
   }
    #cardContainer {
@@ -22,7 +22,16 @@
 
   body {
     margin: 0;
-    overflow: hidden; /* Désactive le scroll global */
+  }
+  .ad-container {
+  width: 100%;
+  text-align: center;
+  }
+  .ad-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
   }
 </style>
 <section class="home-page top-bar-search">
@@ -50,29 +59,6 @@
         <% end %>
       </div>
     <% end %>
-    <%# <button data-controller="lang-switcher" class="lang-switcher" data-action="click->lang-switcher#toggle">
-    <span class="lang-icon">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.82263 6.50977C8.82263 10.8194 6.63857 12.9761 3.94531 12.9761M3.94531 6.50977H10.7736" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M4.9209 9.07349C4.9209 11.1649 7.11764 12.8856 10.7737 12.9753M11.7491 19.8036L15.651 11.0244L19.5529 19.8036M18.6749 17.8527H12.6271M6.57333 3.2207L7.34688 3.78842" stroke="white" stroke-width="1.95093" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-      </span>
-      <span class="lang-label" data-lang-switcher-target="current"><%= I18n.locale.to_s.upcase </span>
-      <span class="lang-arrow">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.83984 6.80664L9.22632 11.1931L13.6128 6.80664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-      </span>
-      <div class="lang-dropdown" data-lang-switcher-target="dropdown">
-          <%= link_to url_for(locale: :fr), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "FR" } do 
-            <span class="flag">🇫🇷</span> FR
-          <% end 
-          <%= link_to url_for(locale: :en), class: "lang-option", data: { action: "click->lang-switcher#select", lang_switcher_target: "option", lang: "EN" } do 
-            <span class="flag">🇬🇧</span> EN
-          <% end 
-      </div>
-  </button> %>
   </div>
 </section>
 <div id="designers">
@@ -107,14 +93,7 @@
       <%= link_to t('global.references'), oeuvres_path %>
       <%= link_to t('global.designers'), designers_path, class: "active" %>
     </div>
-    <%# <div class="refonte-alert" id="refonteAlert">
-      <div class="refonte-alert-content">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
-        <span><strong>Maintenance :</strong> Une opération de refonte des images est en cours sur les designers. Elles reviennent bientôt !</span>
-      </div>
-      <button class="refonte-alert-close" id="closeRefonteAlert" title="Fermer">×</button>
-    </div> %>
-    <div class="box-card" id="boxCard">
+    <div class="box-card" id="boxCard" data-scroll-vertical-target="container">
       <% @items.each do |item| %>
         <% if item.is_a?(Designer) %>
           <div data-entity-type="designer" data-id="<%= item.id %>" class="entity-wrapper">
@@ -130,6 +109,7 @@
       <% end %>
     </div>
     <div id="designers-load-more" 
+         data-scroll-vertical-target="trigger"
          data-offset="<%= @items.count { |i| i.is_a?(Designer) || i.is_a?(Studio) } %>"
          data-loaded-designer-ids="<%= @items.select { |i| i.is_a?(Designer) }.map(&:id).join(',') %>"
          data-loaded-studio-ids="<%= @items.select { |i| i.is_a?(Studio) }.map(&:id).join(',') %>"
@@ -138,13 +118,13 @@
          data-ads-order="<%= @ads_order_string %>">
     </div>
     <div class="button-nav">
-      <button class="arrow-button up" aria-label="Card précédente">
+      <button class="arrow-button up" aria-label="Card précédente" data-action="click->scroll-vertical#scrollUp">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 38L18 40L22 40L22 38L18 38ZM22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6L22 6ZM22 38L22 6L18 6L18 38L22 38Z" fill="white"/>
           <path d="M5 15.8408L20.0002 2.54515L35.0005 15.8408" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
         </svg>
       </button>
-      <button class="arrow-button down" aria-label="Card suivante">
+      <button class="arrow-button down" aria-label="Card suivante" data-action="click->scroll-vertical#scrollDown">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 2L18 1.86484e-08L22 -1.86484e-08L22 2L18 2ZM22 34C22 35.1046 21.1046 36 20 36C18.8954 36 18 35.1046 18 34L22 34ZM22 2L22 34L18 34L18 2L22 2Z" fill="white"/>
           <path d="M5 24.1592L20.0002 37.4549L35.0005 24.1592" stroke="white" stroke-width="3.65112" stroke-linecap="square"/>
@@ -159,162 +139,6 @@
       <% end %>
     </div>
   </div>
-  <script>
-    document.addEventListener("turbo:load", () => {
-      const container = document.getElementById("cardContainer");
-      if (container) {
-        container.scrollTop = 0;
-      }
-      const loadMoreTrigger = document.getElementById("designers-load-more");
-      const upButton = document.querySelector(".arrow-button.up");
-      const downButton = document.querySelector(".arrow-button.down");
-
-      if (!container || !loadMoreTrigger) return;
-
-      let isLoading = false;
-      let isScrolling = false;
-
-      // --- SCROLL INFINI (MIS À JOUR POUR JSON + PUBS + STUDIOS) ---
-      function loadMoreCards() {
-        if (isLoading) return;
-        isLoading = true;
-
-        // Récupère les données actuelles depuis les attributs data-*
-        let offset = parseInt(loadMoreTrigger.dataset.offset) || 0;
-
-        // IMPORTANT : On récupère les IDs séparément
-        let loadedDesignerIds = loadMoreTrigger.dataset.loadedDesignerIds || '';
-        let loadedStudioIds = loadMoreTrigger.dataset.loadedStudioIds || '';
-
-        let itemsUntilNextAd = loadMoreTrigger.dataset.itemsUntilNextAd;
-        let adIndex = loadMoreTrigger.dataset.adIndex;
-        let adsOrder = loadMoreTrigger.dataset.adsOrder;
-
-        // Construit l'URL avec tous les paramètres (ajout de loaded_studio_ids)
-        const url = `/designers/load_more?offset=${offset}&loaded_designer_ids=${loadedDesignerIds}&loaded_studio_ids=${loadedStudioIds}&items_until_next_ad=${itemsUntilNextAd}&ad_index=${adIndex}&ads_order=${adsOrder}`;
-
-        fetch(url, {
-          headers: {
-            'Accept': 'application/json'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.html.trim() === "") {
-            loadMoreTrigger.style.display = "none";
-          } else {
-            // Insère le nouveau HTML
-            container.querySelector('#boxCard').insertAdjacentHTML("beforeend", data.html);
-
-            // Met à jour les compteurs pubs
-            loadMoreTrigger.dataset.itemsUntilNextAd = data.items_until_next_ad;
-            loadMoreTrigger.dataset.adIndex = data.ad_index;
-
-            // --- MISE A JOUR DES IDs CHARGÉS ---
-            // On scanne les wrappers que j'ai ajoutés dans la boucle Ruby
-            const designerWrappers = Array.from(container.querySelectorAll('.entity-wrapper[data-entity-type="designer"]'));
-            const studioWrappers = Array.from(container.querySelectorAll('.entity-wrapper[data-entity-type="studio"]'));
-
-            const allLoadedDesignerIds = designerWrappers.map(el => el.dataset.id).filter(id => id);
-            const allLoadedStudioIds = studioWrappers.map(el => el.dataset.id).filter(id => id);
-
-            loadMoreTrigger.dataset.offset = allLoadedDesignerIds.length + allLoadedStudioIds.length;
-            loadMoreTrigger.dataset.loadedDesignerIds = allLoadedDesignerIds.join(',');
-            loadMoreTrigger.dataset.loadedStudioIds = allLoadedStudioIds.join(',');
-
-            validateCardAlignment();
-          }
-        })
-        .catch((err) => {
-          console.error("Erreur lors du chargement des cartes :", err);
-        })
-        .finally(() => {
-          isLoading = false;
-        });
-      }
-
-      function validateCardAlignment() {
-        container.querySelectorAll(".card, .ad-card").forEach((card) => {
-          card.style.marginBottom = "10px";
-        });
-      }
-
-      // --- NAVIGATION VERTICALE ---
-      function scrollToCard(direction) {
-        const cards = Array.from(container.querySelectorAll(".card, .ad-card"));
-        const scrollTop = container.scrollTop;
-        const containerHeight = container.clientHeight;
-
-        const currentIndex = cards.findIndex(card => {
-          const cardTop = card.offsetTop;
-          const cardBottom = cardTop + card.offsetHeight;
-          return cardTop <= scrollTop + containerHeight / 2 && cardBottom >= scrollTop + containerHeight / 2;
-        });
-
-        let targetIndex = currentIndex;
-        if (direction === "down" && currentIndex < cards.length - 1) {
-          targetIndex++;
-        } else if (direction === "up" && currentIndex > 0) {
-          targetIndex--;
-        }
-
-        if (targetIndex !== currentIndex) {
-          cards[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }
-
-      if (upButton && downButton) {
-        upButton.addEventListener("click", () => scrollToCard("up"));
-        downButton.addEventListener("click", () => scrollToCard("down"));
-      }
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowUp") scrollToCard("up");
-        if (e.key === "ArrowDown") scrollToCard("down");
-      });
-
-      // --- TOUCH / SWIPE ---
-      let touchStartX = 0;
-      let touchStartY = 0;
-
-      container.addEventListener("touchstart", (e) => {
-        touchStartY = e.touches[0].clientY;
-        touchStartX = e.touches[0].screenX;
-      }, { passive: true });
-
-      container.addEventListener("touchend", (e) => {
-        if (isScrolling) return;
-
-        touchEndY = e.changedTouches[0].clientY;
-        const touchEndX = e.changedTouches[0].screenX;
-        const deltaX = touchEndX - touchStartX;
-        const deltaY = touchEndY - touchStartY;
-
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-           if (deltaX < 0) {
-               window.location.href = '<%= oeuvres_path %>';
-           }
-        }
-        else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
-           if (deltaY > 0) scrollToCard("up");
-           else scrollToCard("down");
-        }
-      }, { passive: true });
-
-
-      validateCardAlignment();
-
-      container.addEventListener("scroll", () => {
-        const { scrollTop, scrollHeight, clientHeight } = container;
-        isScrolling = true;
-
-        if (!isLoading && scrollTop + clientHeight >= scrollHeight - 300) {
-          loadMoreCards();
-        }
-
-        setTimeout(() => (isScrolling = false), 100);
-      }, { passive: true });
-    });
-  </script>
   <div id="popup" class="popup">
     <div class="popup-content">
       <div class="top-popup">
@@ -365,27 +189,12 @@
   </div>
   <script>
     document.addEventListener("turbo:load", function() {
-      const alertElement = document.getElementById("refonteAlert");
-      const closeButton = document.getElementById("closeRefonteAlert");
-
-      // S'ils n'existent pas sur la page, on ne fait rien
-      if (!alertElement || !closeButton) return;
-
-      closeButton.addEventListener("click", function() {
-        alertElement.style.display = "none";
-      });
-    });
-  </script>
-  <script>
-    document.addEventListener("turbo:load", function() {
-      // Sélectionner TOUS les éléments avec la classe .openPopup
       const openPopupBtns = document.querySelectorAll(".openPopup");
       const closePopupButton = document.getElementById("closePopup");
       const popup = document.getElementById("popup");
 
       if (!closePopupButton || !popup) return;
 
-      // Boucle sur tous les boutons d'ouverture pour leur ajouter l'écouteur d'événement
       openPopupBtns.forEach(btn => {
         btn.addEventListener("click", function() {
           popup.style.display = "flex";

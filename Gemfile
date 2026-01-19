@@ -93,3 +93,5 @@ gem 'omniauth-apple'
 
 gem 'fcm'
 gem 'googleauth'
+
+gem 'mailjet'

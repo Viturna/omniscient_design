@@ -1,3 +1,4 @@
+require 'mailjet'
 class User < ApplicationRecord
   before_create :generate_referral_code
 
@@ -143,13 +144,15 @@ class User < ApplicationRecord
     "#{firstname} #{lastname}".strip
   end
 
-  def subscribe_to_newsletter
+ def subscribe_to_newsletter
     ::Mailjet::Contactslist_managecontact.create(
-      id: 10603571,
-      properties: { "prenom" => self.prenom, "nom" => self.nom },
+      id: ENV['MAILJET_LIST_ID'],
+      properties: { "prenom" => self.firstname, "nom" => self.lastname }, # CORRECTION: firstname/lastname au lieu de prenom/nom si ce sont vos champs
       action: "addforce",
       email: self.email
     )
+  rescue => e
+    Rails.logger.error "Erreur Mailjet pour #{self.email}: #{e.message}"
   end
   private
 

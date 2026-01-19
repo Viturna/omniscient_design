@@ -144,7 +144,7 @@ class User < ApplicationRecord
   end
 
   def subscribe_to_newsletter
-    Mailjet::Contactslist_managecontact.create(
+    ::Mailjet::Contactslist_managecontact.create(
       id: 10603571,
       properties: { "prenom" => self.prenom, "nom" => self.nom },
       action: "addforce",

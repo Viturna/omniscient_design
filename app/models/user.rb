@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   before_create :generate_referral_code
 
+
   # Devise
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable,
@@ -114,6 +115,7 @@ class User < ApplicationRecord
   has_many :saved_designers, through: :lists, source: :designers
   has_many :saved_studios, through: :lists, source: :studios
 
+    after_create :subscribe_to_newsletter, if: :newsletter?
   # --- Méthodes ---
 
   def self.from_omniauth(auth)
@@ -141,6 +143,14 @@ class User < ApplicationRecord
     "#{firstname} #{lastname}".strip
   end
 
+  def subscribe_to_newsletter
+    Mailjet::Contactslist_managecontact.create(
+      id: 10603571,
+      properties: { "prenom" => self.prenom, "nom" => self.nom },
+      action: "addforce",
+      email: self.email
+    )
+  end
   private
 
   def generate_referral_code

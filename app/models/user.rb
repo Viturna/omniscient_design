@@ -145,9 +145,15 @@ class User < ApplicationRecord
   end
 
  def subscribe_to_newsletter
+    first_name_to_send = self.firstname.presence || self.pseudo
+    last_name_to_send = self.lastname.presence || "" 
+
     ::Mailjet::Contactslist_managecontact.create(
       id: ENV['MAILJET_LIST_ID'],
-      properties: { "prenom" => self.firstname, "nom" => self.lastname }, # CORRECTION: firstname/lastname au lieu de prenom/nom si ce sont vos champs
+      properties: { 
+        "prenom" => first_name_to_send, 
+        "nom" => last_name_to_send 
+      },
       action: "addforce",
       email: self.email
     )

@@ -219,6 +219,11 @@
   <h2>Statistiques des membres</h2>
   <div class="stats-grid">
     <div class="stat-box simple-stat">
+      <h3>Newsletter</h3>
+      <div class="stat-number"><%= @stats_newsletter_count || User.where(newsletter: true).count %></div>
+      <div class="stat-total">sur <%= @users.total_count %> membres</div>
+    </div>
+    <div class="stat-box simple-stat">
       <h3>Membres Certifiés</h3>
       <div class="stat-number"><%= @stats_certified_count %></div>
       <div class="stat-total">sur <%= @users.total_count %> membres</div>

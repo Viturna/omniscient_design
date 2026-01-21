@@ -116,7 +116,8 @@ class User < ApplicationRecord
   has_many :saved_designers, through: :lists, source: :designers
   has_many :saved_studios, through: :lists, source: :studios
 
-    after_create :subscribe_to_newsletter, if: :newsletter?
+  after_create :subscribe_to_newsletter, if: :newsletter?
+  after_update :sync_newsletter_status, if: :saved_change_to_newsletter?
   # --- Méthodes ---
 
   def self.from_omniauth(auth)
@@ -145,20 +146,10 @@ class User < ApplicationRecord
   end
 
  def subscribe_to_newsletter
-    first_name_to_send = self.firstname.presence || self.pseudo
-    last_name_to_send = self.lastname.presence || "" 
-
-    ::Mailjet::Contactslist_managecontact.create(
-      id: ENV['MAILJET_LIST_ID'],
-      properties: { 
-        "prenom" => first_name_to_send, 
-        "nom" => last_name_to_send 
-      },
-      action: "addforce",
-      email: self.email
-    )
-  rescue => e
-    Rails.logger.error "Erreur Mailjet pour #{self.email}: #{e.message}"
+    NewsletterJob.perform_later(self.id)
+  end
+  def sync_newsletter_status
+    NewsletterJob.perform_later(self.id)
   end
   private
 

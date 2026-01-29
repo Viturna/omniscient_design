@@ -223,53 +223,65 @@ class SearchController < ApplicationController
       end
     end
 
-    # --- MODIFICATION START : GESTION DES DATES INDÉPENDANTES ---
+    # --- CORRECTION START ---
+    start_year = params[:start_year].presence&.to_i
+    end_year   = params[:end_year].presence&.to_i
     current_year = Time.now.year
 
-    if params[:start_year].present? && params[:end_year].present?
-      # CAS 1 : L'utilisateur a filtré par dates. Tout le monde s'aligne.
-      start_year = params[:start_year].to_i
-      end_year = params[:end_year].to_i
-    
-      if start_year > 0 && end_year > 0 && start_year <= end_year
-        @designers = @designers.where("date_naissance BETWEEN ? AND ?", start_year, end_year)
-        @oeuvres = @oeuvres.where("date_oeuvre BETWEEN ? AND ?", start_year, end_year)
-        @studios = @studios.where("date_creation >= ? AND (date_fin IS NULL OR date_fin <= ?)", start_year, end_year)
-        
-        # On définit 3 variables, mais elles ont la même plage car l'utilisateur a filtré
-        timeline_range = (start_year..end_year).to_a
-        @designers_timeline_years = timeline_range
-        @oeuvres_timeline_years = timeline_range
-        @studios_timeline_years = timeline_range
-        @timeline_years = timeline_range # Backup pour compatibilité
-      else
-        # Fallback si dates invalides
-        fallback_range = (1880..current_year).to_a
-        @designers_timeline_years = fallback_range
-        @oeuvres_timeline_years = fallback_range
-        @studios_timeline_years = fallback_range
-        @timeline_years = fallback_range
-      end
-    else
-      # CAS 2 : Pas de filtre date. On calcule dynamiquement le début pour CHAQUE catégorie.
+    if start_year && end_year
+      # Cas 1 : Deux dates valides -> Filtrage par plage (Range)
+      range = (start_year < end_year) ? start_year..end_year : end_year..start_year
       
-      # Pour les designers
+      @designers = @designers.where(date_naissance: range)
+      @oeuvres   = @oeuvres.where(date_oeuvre: range)
+      @studios   = @studios.where("date_creation >= ? AND (date_fin IS NULL OR date_fin <= ?)", range.begin, range.end)
+
+      timeline_range = range.to_a
+      @designers_timeline_years = timeline_range
+      @oeuvres_timeline_years   = timeline_range
+      @studios_timeline_years   = timeline_range
+      @timeline_years           = timeline_range
+
+    elsif start_year
+      # Cas 2 : Seulement date de début -> "À partir de..."
+      @designers = @designers.where("date_naissance >= ?", start_year)
+      @oeuvres   = @oeuvres.where("date_oeuvre >= ?", start_year)
+      @studios   = @studios.where("date_creation >= ?", start_year)
+
+      timeline_range = (start_year..current_year).to_a
+      @designers_timeline_years = timeline_range
+      @oeuvres_timeline_years   = timeline_range
+      @studios_timeline_years   = timeline_range
+      @timeline_years           = timeline_range
+
+    elsif end_year
+      # Cas 3 : Seulement date de fin -> "Jusqu'à..."
+      @designers = @designers.where("date_naissance <= ?", end_year)
+      @oeuvres   = @oeuvres.where("date_oeuvre <= ?", end_year)
+      @studios   = @studios.where("date_creation <= ?", end_year)
+
+      # On part de 1880 par défaut pour l'affichage timeline
+      timeline_range = (1880..end_year).to_a
+      @designers_timeline_years = timeline_range
+      @oeuvres_timeline_years   = timeline_range
+      @studios_timeline_years   = timeline_range
+      @timeline_years           = timeline_range
+
+    else
+      # Cas 4 : Pas de filtre date -> Calcul dynamique
       min_designer = @designers.minimum(:date_naissance) || 1880
       @designers_timeline_years = (min_designer..current_year).to_a
 
-      # Pour les oeuvres
       min_oeuvre = @oeuvres.minimum(:date_oeuvre) || 1880
       @oeuvres_timeline_years = (min_oeuvre..current_year).to_a
 
-      # Pour les studios
       min_studio = @studios.minimum(:date_creation) || 1880
       @studios_timeline_years = (min_studio..current_year).to_a
       
-      # Variable globale pour éviter les erreurs de vue (prend le min global par défaut)
       global_min = [min_designer, min_oeuvre, min_studio].min
       @timeline_years = (global_min..current_year).to_a
     end
-    # --- MODIFICATION END ---
+    # --- CORRECTION END ---
   
     case params[:sort]
       when 'nom_asc'
@@ -292,5 +304,5 @@ class SearchController < ApplicationController
       format.html
       format.turbo_stream
     end
-  end 
+  end
 end

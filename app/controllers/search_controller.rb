@@ -170,7 +170,7 @@ class SearchController < ApplicationController
     else
       @oeuvres = Oeuvre.where(validation: true)
                       .select(:id, :nom_oeuvre, :date_oeuvre, :slug)
-                      .includes(:notions, :domaines)
+                      .includes(:notions, :designers, :domaines)
                       .order(:nom_oeuvre)
                       .page(params[:page])
                       .per(per_page)
@@ -223,7 +223,7 @@ class SearchController < ApplicationController
       end
     end
 
-    # --- CORRECTION START ---
+    # --- CORRECTION : Utilisation de reselect(:id) pour éviter l'erreur de colonnes multiples ---
     start_year = params[:start_year].presence&.to_i
     end_year   = params[:end_year].presence&.to_i
     current_year = Time.now.year
@@ -272,7 +272,15 @@ class SearchController < ApplicationController
       min_designer = @designers.minimum(:date_naissance) || 1880
       @designers_timeline_years = (min_designer..current_year).to_a
 
-      min_oeuvre = @oeuvres.minimum(:date_oeuvre) || 1880
+      # Pour les oeuvres, correction du bug "group/having" qui retourne un Hash
+      min_oeuvre_val = if @oeuvres.group_values.present?
+                         # Si groupé (ex: notions), on utilise une sous-requête pour avoir le min global
+                         # CORRECTION ICI: reselect(:id) force une seule colonne
+                         Oeuvre.where(id: @oeuvres.reselect(:id)).minimum(:date_oeuvre)
+                       else
+                         @oeuvres.minimum(:date_oeuvre)
+                       end
+      min_oeuvre = min_oeuvre_val || 1880
       @oeuvres_timeline_years = (min_oeuvre..current_year).to_a
 
       min_studio = @studios.minimum(:date_creation) || 1880
@@ -281,7 +289,7 @@ class SearchController < ApplicationController
       global_min = [min_designer, min_oeuvre, min_studio].min
       @timeline_years = (global_min..current_year).to_a
     end
-    # --- CORRECTION END ---
+    # --- FIN CORRECTION ---
   
     case params[:sort]
       when 'nom_asc'

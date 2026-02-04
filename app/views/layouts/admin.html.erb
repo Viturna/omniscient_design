@@ -1,85 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <!-- Balises pour les navigateurs -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Sécurité et CSRF protection -->
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <!-- SEO et indexation -->
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex, nofollow">
     <meta name="bingbot" content="noindex, nofollow">
     <link rel="canonical" href="<%= request.original_url %>">
-    <!-- META -->
     <title><%= content_for?(:title) ? yield(:title) : "Omniscient Design - Dashboard" %></title>
     <meta name="theme-color" content="#ffffff">
     <meta name="copyright" content="© Omniscient Design - Tous droits réservés.">
-    <!-- Favicon et manifest -->
     <%= render 'application/favicon' %>
-    <!-- Stylesheets -->
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartkick"></script>
   </head>
   <body data-controller-name="<%= controller_name %>" data-action-name="<%= action_name %>" data-controller="loading">
-    <header>
+    <header class="admin-header-container">
       <div class="header-desktop">
         <div class="first-content-header admin-header">
-          <%= link_to(root_path, class: "logo-header") do %>
-            <%= image_tag "logo.svg", alt: "", class: "home-index logo-light" %>
-            <%= image_tag "small_logo_white.svg", alt: "", class: "home-index logo-dark" %>
-            <p class="name-header">Omniscient <br>
-              Admin</p>
-          <% end %>
+          <div class="logo-wrapper">
+            <%= link_to(root_path, class: "logo-header") do %>
+              <%= image_tag "logo.svg", alt: "", class: "home-index logo-light" %>
+              <%= image_tag "small_logo_white.svg", alt: "", class: "home-index logo-dark" %>
+              <p class="name-header">Dashboard <br>
+                Admin</p>
+            <% end %>
+          </div>
           <nav class="nav-header">
             <ul>
-              <li>
-                <%= link_to root_path do %>
-                  <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16.1934 11.2389C16.1934 11.2389 11.1922 16.2445 9.24445 18.1934C9.08111 18.3556 9 18.5689 9 18.7823C9 18.9956 9.08111 19.2089 9.24445 19.3712C11.1911 21.3201 16.1912 26.3234 16.1912 26.3234C16.3523 26.4845 16.5645 26.5645 16.7767 26.5645C16.9889 26.5634 17.2023 26.4823 17.3656 26.319C17.6912 25.9934 17.6923 25.4679 17.37 25.1445L11.8411 19.6156H28.1657C28.6257 19.6156 28.999 19.2423 28.999 18.7823C28.999 18.3223 28.6257 17.9489 28.1657 17.9489H11.8411L17.3723 12.4167C17.6934 12.0956 17.6912 11.5711 17.3656 11.2456C17.2023 11.0822 16.9889 11 16.7767 11C16.5645 10.9989 16.3545 11.0789 16.1934 11.2389Z" fill="#52525D"/>
+              <li class="nav-item-secondary">
+                <%= link_to root_path, class: "sidebar-link" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                   </svg>
-                  Retour au site
+                  <span>Retour au site</span>
                 <% end %>
               </li>
-              <li><%= link_to "Dashboard", admin_root_path, class: ("active" if @current_page == "dashboard") %></li>
+              <li class="divider"></li>
               <li>
-                <%= link_to users_path, class: ("active" if @current_page == "users") do %>
-                  Utilisateurs
-                <% end %>
-              </li>
-              <li><%= link_to "Suivi listes", admin_suivi_lists_path, class: ("active" if @current_page == "suivi_lists") %></li>
-              <li><%= link_to "Suivi références", admin_suivi_references_path, class: ("active" if @current_page == "suivi_references") %></li>
-              <li><%= link_to "Rapports de bug", bug_reports_path, class: ("active" if @current_page == "bug_reports") %></li>
-              <li><%= link_to "Ads", admin_ads_path, class: ("active" if @current_page == "ads") %></li>
-              <li>
-              <%= link_to new_admin_user_badge_path, class: "sidebar-link" do %>
-                Attribuer Badges
-              <% end %>
-              </li>
-              <li>
-                <%= link_to feedbacks_path, class: ("active" if @current_page == "feedbacks") do %>
-                  Feedbacks
+                <%= link_to admin_root_path, class: "sidebar-link #{'active' if @current_page == 'dashboard'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                  </svg>
+                  <span>Dashboard</span>
                 <% end %>
               </li>
               <li>
-                <%= link_to "Notifications", notifications_new_path, class: ("active" if @current_page == "notifications") %>
+                <%= link_to users_path, class: "sidebar-link #{'active' if @current_page == 'users'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                  <span>Utilisateurs</span>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to new_admin_user_badge_path, class: "sidebar-link" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                  </svg>
+                  <span>Attribuer Badges</span>
+                <% end %>
+              </li>
+              <li class="divider"><span class="menu-title">Gestion</span></li>
+              <li>
+                <%= link_to admin_suivi_lists_path, class: "sidebar-link #{'active' if @current_page == 'suivi_lists'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                  </svg>
+                  <span>Suivi Listes</span>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to admin_suivi_references_path, class: "sidebar-link #{'active' if @current_page == 'suivi_references'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                  </svg>
+                  <span>Suivi Réf.</span>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to admin_ads_path, class: "sidebar-link #{'active' if @current_page == 'ads'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+                  </svg>
+                  <span>Ads / Pubs</span>
+                <% end %>
+              </li>
+              <li class="divider"><span class="menu-title">Support</span></li>
+              <li>
+                <%= link_to bug_reports_path, class: "sidebar-link #{'active' if @current_page == 'bug_reports'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 12h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
+                  </svg>
+                  <span>Bugs</span>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to feedbacks_path, class: "sidebar-link #{'active' if @current_page == 'feedbacks'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/>
+                  </svg>
+                  <span>Feedbacks</span>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to notifications_new_path, class: "sidebar-link #{'active' if @current_page == 'notifications'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+                  </svg>
+                  <span>Notifs</span>
+                <% end %>
               </li>
             </ul>
           </nav>
-          <div class="flex-btn-login">
+          <div class="footer-admin-header">
             <% if user_signed_in? %>
-              <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "button button-login dark" %>
+              <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "logout-icon", title: "Se déconnecter" do %>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                </svg>
+              <% end %>
             <% end %>
+            <p class="copyright-text">©<%= Time.now.year %> OD</p>
           </div>
-        </div>
-        <div class="link-header">
-          <p>©<%= Time.now.year %> - Omniscient Design</p>
         </div>
       </div>
     </header>
@@ -89,83 +140,30 @@
           <ul>
             <li>
               <%= link_to admin_root_path, class: ("active" if @current_page == "dashboard") do %>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z" fill="#52525D"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                 </svg>
-                Dashboard
               <% end %>
             </li>
             <li>
               <%= link_to users_path, class: ("active" if @current_page == "users") do %>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3257_178)">
-                    <path d="M28.5 10.5015C28.5 16.299 23.799 21.0015 18 21.0015C12.201 21.0015 7.5 16.299 7.5 10.5015C7.5 4.701 12.201 0 18 0C23.799 0 28.5 4.701 28.5 10.5015ZM26.103 21.2715C23.844 22.977 21.042 24.0015 18 24.0015C14.955 24.0015 12.1515 22.974 9.8895 21.2685C3.7815 23.958 0 32.3325 0 36H36C36 32.3655 32.1 23.991 26.103 21.2715Z" fill="#52525D"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_3257_178">
-                      <rect width="36" height="36" fill="white"/>
-                    </clipPath>
-                  </defs>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
-                Utilisateurs
               <% end %>
             </li>
             <li>
               <%= link_to admin_suivi_lists_path, class: ("active" if @current_page == "suivi_lists") do %>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3257_181)">
-                    <path d="M17.9991 0C27.934 0 36 8.06602 36 18.0009C36 27.934 27.934 36 17.9991 36C8.06602 36 0 27.934 0 18.0009C0 8.06602 8.06602 0 17.9991 0ZM16.6542 16.6542H10.3526C9.6072 16.6542 9.00225 17.2591 9.00225 18.0045C9.00225 18.7499 9.6072 19.3549 10.3526 19.3549H16.6542V25.6602C16.6542 26.4056 17.2591 27.0106 18.0045 27.0106C18.7499 27.0106 19.3548 26.4056 19.3548 25.6602V19.3549H25.661C26.4064 19.3549 27.0114 18.7499 27.0114 18.0045C27.0114 17.2591 26.4064 16.6542 25.661 16.6542H19.3548V10.348C19.3548 9.60257 18.7499 8.99762 18.0045 8.99762C17.2591 8.99762 16.6542 9.60257 16.6542 10.348V16.6542Z" fill="#52525D"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_3257_181">
-                      <rect width="36" height="36" fill="white"/>
-                    </clipPath>
-                  </defs>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
                 </svg>
-                Suivi réfs
-              <% end %>
-            </li>
-            <li>
-              <%= link_to admin_suivi_references_path, class: ("active" if @current_page == "suivi_references") do %>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3257_181)">
-                    <path d="M17.9991 0C27.934 0 36 8.06602 36 18.0009C36 27.934 27.934 36 17.9991 36C8.06602 36 0 27.934 0 18.0009C0 8.06602 8.06602 0 17.9991 0ZM16.6542 16.6542H10.3526C9.6072 16.6542 9.00225 17.2591 9.00225 18.0045C9.00225 18.7499 9.6072 19.3549 10.3526 19.3549H16.6542V25.6602C16.6542 26.4056 17.2591 27.0106 18.0045 27.0106C18.7499 27.0106 19.3548 26.4056 19.3548 25.6602V19.3549H25.661C26.4064 19.3549 27.0114 18.7499 27.0114 18.0045C27.0114 17.2591 26.4064 16.6542 25.661 16.6542H19.3548V10.348C19.3548 9.60257 18.7499 8.99762 18.0045 8.99762C17.2591 8.99762 16.6542 9.60257 16.6542 10.348V16.6542Z" fill="#52525D"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_3257_181">
-                      <rect width="36" height="36" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-                Suivi réfs
               <% end %>
             </li>
             <li>
               <%= link_to bug_reports_path, class: ("active" if @current_page == "bug_reports") do %>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95ZM3.15 24C4.8888 24 6.3 25.4112 6.3 27.15C6.3 28.8888 4.8888 30.3 3.15 30.3C1.4112 30.3 0 28.8888 0 27.15C0 25.4112 1.4112 24 3.15 24ZM36 21.75C36 21.0048 35.3952 20.4 34.65 20.4H10.35C9.6048 20.4 9 21.0048 9 21.75C9 22.4952 9.6048 23.1 10.35 23.1H34.65C35.3952 23.1 36 22.4952 36 21.75ZM3.15 15C4.8888 15 6.3 16.4112 6.3 18.15C6.3 19.8888 4.8888 21.3 3.15 21.3C1.4112 21.3 0 19.8888 0 18.15C0 16.4112 1.4112 15 3.15 15ZM36 14.55C36 13.8048 35.3952 13.2 34.65 13.2H10.35C9.6048 13.2 9 13.8048 9 14.55C9 15.2952 9.6048 15.9 10.35 15.9H34.65C35.3952 15.9 36 15.2952 36 14.55ZM3.15 6C4.8888 6 6.3 7.4112 6.3 9.15C6.3 10.8888 4.8888 12.3 3.15 12.3C1.4112 12.3 0 10.8888 0 9.15C0 7.4112 1.4112 6 3.15 6ZM36 7.35C36 6.6048 35.3952 6 34.65 6H10.35C9.6048 6 9 6.6048 9 7.35C9 8.0952 9.6048 8.7 10.35 8.7H34.65C35.3952 8.7 36 8.0952 36 7.35Z" fill="#52525D"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 12h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
                 </svg>
-                Rapports bugs
-              <% end %>
-            </li>
-            <li>
-              <%= link_to feedbacks_path, class: ("active" if @current_page == "feedbacks") do %>
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_3257_178)">
-                    <path d="M28.5 10.5015C28.5 16.299 23.799 21.0015 18 21.0015C12.201 21.0015 7.5 16.299 7.5 10.5015C7.5 4.701 12.201 0 18 0C23.799 0 28.5 4.701 28.5 10.5015ZM26.103 21.2715C23.844 22.977 21.042 24.0015 18 24.0015C14.955 24.0015 12.1515 22.974 9.8895 21.2685C3.7815 23.958 0 32.3325 0 36H36C36 32.3655 32.1 23.991 26.103 21.2715Z" fill="#52525D"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_3257_178">
-                      <rect width="36" height="36" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-                Feedbacks
-              <% end %>
-            </li>
-            <li>
-              <%= link_to new_admin_user_badge_path, class: "sidebar-link" do %>
-                Attribuer Badges
               <% end %>
             </li>
           </ul>

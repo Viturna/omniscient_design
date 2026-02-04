@@ -1,25 +1,21 @@
-
-
 <style>
-
   .table-admin .col-links {
-    white-space: normal; 
+    white-space: normal;
     min-width: 250px;
     max-width: 350px;
   }
   .table-admin .col-links a {
     color: #007bff;
-    word-break: break-all; 
+    word-break: break-all;
   }
   .table-admin .col-actions {
     white-space: nowrap;
   }
-  
-  /* Style pour les booléens (de votre autre fichier) */
+
+  /* Style pour les booléens */
   .bool-true { color: #28a745; font-weight: 500; }
   .bool-false { color: #999; }
 </style>
-
 <section class="top-default-page">
   <%= link_to users_path do %>
     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -36,26 +32,34 @@
   <h1>Gestion des Établissements</h1>
 </section>
 <section class="grid-1">
-    <div class="search-bar-container" style="margin: 20px 0;">
-    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px;" do |f| %>
+  <div class="search-bar-container" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px; flex: 1;" do |f| %>
       <%= f.text_field :query, 
             value: params[:query], 
             placeholder: "Rechercher par nom, UAI, ville, académie...", 
-            class: "form-control" %>
+            class: "form-control",
+            style: "min-width: 300px;" %>
       <%= f.submit "Rechercher", class: "btn btn-primary" %>
       <% if params[:query].present? %>
         <%= link_to "Effacer", admin_etablissements_path, class: "btn btn-secondary" %>
       <% end %>
     <% end %>
+    <%= link_to admin_etablissements_path(format: :csv, query: params[:query]), class: "btn btn-green", style: "display: flex; align-items: center; gap: 8px;" do %>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      Exporter CSV
+    <% end %>
   </div>
   <%= paginate @etablissements %>
-
   <div class="table-wrapper">
-    <table> 
+    <table class="table-admin">
       <thead>
         <tr>
           <th>Nom</th>
-          <th>Nb. Utilisateurs</th> <%# NOUVELLE COLONNE %>
+          <th>Nb. Utilisateurs</th>
           <th>UAI</th>
           <th>Statut</th>
           <th>Type</th>
@@ -65,10 +69,9 @@
           <th>Voies</th>
           <th>Sections</th>
           <th>Coordonnées</th>
-          <th>Actions</th> <%# NOUVELLE COLONNE %>
+          <th>Actions</th>
         </tr>
       </thead>
-      
       <tbody>
         <% @etablissements.each do |etab| %>
           <tr>
@@ -76,8 +79,8 @@
               <strong><%= etab.name %></strong>
             </td>
             <td>
-              <%# etab.users_count vient du contrôleur %>
-              <strong><%= etab.users_count %></strong> 
+              <%# L'attribut users_count est calculé dans le contrôleur %>
+              <strong><%= etab.respond_to?(:users_count) ? etab.users_count : etab.users.size %></strong>
             </td>
             <td><code><%= etab.uai %></code></td>
             <td><%= etab.statut_public_prive %></td>
@@ -120,7 +123,8 @@
             </td>
             <td class="col-actions">
               <%= link_to "Modifier", edit_admin_etablissement_path(etab), class: "btn btn-sm btn-primary" %>
-               <% if etab.users_count == 0 %>
+              <%# On n'affiche le bouton supprimer que s'il n'y a pas d'utilisateurs liés %>
+              <% if (etab.respond_to?(:users_count) ? etab.users_count : etab.users.size) == 0 %>
                 <%= link_to "Supprimer", admin_etablissement_path(etab), 
                       class: "btn btn-sm btn-danger",
                       data: { 
@@ -134,8 +138,7 @@
       </tbody>
     </table>
   </div>
-
   <div style="margin-top: 20px;">
-      <%= paginate @etablissements %>
+    <%= paginate @etablissements %>
   </div>
 </section>

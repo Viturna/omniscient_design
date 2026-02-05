@@ -85,6 +85,7 @@ class UsersController < ApplicationController
   end
 
  def show
+    @current_page = "users"
     @user = User.find(params[:id])
   
     @total_visits = @user.daily_visits.count

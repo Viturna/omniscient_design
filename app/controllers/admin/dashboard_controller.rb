@@ -44,31 +44,90 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
-  def suivi_references
+ def suivi_references
     @current_page = 'suivi_references'
-    @suivis = Suivi.includes(:user).all
-  end
+    
+    # --- 1. KPIs ---
+    @count_oeuvres = Oeuvre.count
+    @count_designers = Designer.count
+    @total_refs = @count_oeuvres + @count_designers
 
+    @refs_validees = Oeuvre.where(validation: true).count + Designer.where(validation: true).count
+    @refs_en_attente = Oeuvre.where(validation: [false, nil]).count + Designer.where(validation: [false, nil]).count
+    @refs_refusees = RejectedOeuvre.count + RejectedDesigner.count
+
+    # --- 2. GRAPHIQUE AVEC FILTRE ---
+    @ref_period = params[:ref_period] || '6m'
+    end_date = Date.today
+
+    case @ref_period
+    when '7d'
+      start_date = 7.days.ago.to_date
+      group_method = :group_by_day
+    when '30d'
+      start_date = 30.days.ago.to_date
+      group_method = :group_by_day
+    when '12m'
+      start_date = 12.months.ago.to_date
+      group_method = :group_by_month
+    else # '6m' par défaut
+      start_date = 6.months.ago.to_date
+      group_method = :group_by_month
+    end
+
+    # Requêtes avec la méthode de groupement dynamique
+    oeuvres_data = Oeuvre.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+                         .send(group_method, :created_at, format: (@ref_period.include?('m') ? "%b %Y" : "%d/%m"))
+                         .count
+                             
+    designers_data = Designer.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+                             .send(group_method, :created_at, format: (@ref_period.include?('m') ? "%b %Y" : "%d/%m"))
+                             .count
+    
+    @evolution_detail = [
+      { name: "Oeuvres", data: oeuvres_data },
+      { name: "Designers", data: designers_data }
+    ]
+
+    # --- 3. REPARTITION ---
+    @repartition_status = {
+      "Validées" => @refs_validees,
+      "En attente" => @refs_en_attente,
+      "Refusées" => @refs_refusees
+    }
+
+    # --- 4. TABLEAU ---
+    @suivis = Suivi.includes(user: [:oeuvres, :designers])
+                   .order(nb_references_emises: :desc)
+                   .page(params[:page]).per(20) 
+  end
+  
   def suivi_lists
     @current_page = 'suivi_lists'
+    
+    # KPIs
     @total_lists = List.count
     @users_with_lists = User.joins(:lists).distinct.count
     @total_visitors = ListVisitor.count
     @total_editors = ListEditor.count
 
+    # Top Créateurs
+    # On précharge pas les listes ici car le group by complique l'includes, 
+    # mais on s'assure d'avoir les données nécessaires.
     @top_creators = User
-      .select("users.id, users.firstname, users.lastname, users.email, COUNT(lists.id) AS lists_count")
+      .select("users.*, COUNT(lists.id) AS lists_count")
       .joins(:lists)
-      .group("users.id, users.firstname, users.lastname, users.email")
+      .group("users.id")
       .order("lists_count DESC")
-      .page(params[:creators_page]).per(20)
+      .page(params[:creators_page]).per(15)
 
+    # Top Invités
     @top_invited = User
-      .select("users.id, users.firstname, users.lastname, users.email, COUNT(list_visitors.id) AS invites_count")
+      .select("users.*, COUNT(list_visitors.id) AS invites_count")
       .joins(:list_visitors)
-      .group("users.id, users.firstname, users.lastname, users.email")
+      .group("users.id")
       .order("invites_count DESC")
-      .page(params[:invited_page]).per(20)
+      .page(params[:invited_page]).per(15)
   end
 
   private

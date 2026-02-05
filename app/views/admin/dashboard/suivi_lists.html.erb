@@ -1,165 +1,311 @@
 <style>
-  .pagination-controls {
-    margin-top: 20px;
-    text-align: center;
+  /* --- REPRISE DU CSS GLOBAL DASHBOARD --- */
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
   }
-  .pagination-controls nav {
-    display: inline-block;
+
+  /* Header */
+  .users-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  .users-dash-title {
+    font-size: 32px; font-weight: 500; color: #202020;
+    display: flex; align-items: center; gap: 16px; margin: 0;
+  }
+  .users-dash-back-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 50%;
+    background-color: #fff; border: 1px solid #eee;
+    transition: all 0.2s ease;
+  }
+  .users-dash-back-link:hover { background-color: #f0f0f0; transform: translateX(-2px); }
+
+  /* KPIs */
+  .users-dash-kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px;
+  }
+  .users-dash-kpi-card {
+    background: #fff; padding: 24px; border-radius: 16px;
+    border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    display: flex; flex-direction: column; height: 140px;
+  }
+  .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .kpi-label { font-size: 14px; font-weight: 500; color: #888; text-transform: uppercase; }
+  .kpi-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kpi-icon svg { width: 20px; height: 20px; fill: #202020; }
+  .kpi-value { font-size: 36px; font-weight: 500; color: #202020; margin-top: auto; }
+
+  .bg-indigo-light { background-color: #E8EAF6; color: #3F51B5; }
+  .bg-teal-light { background-color: #E0F2F1; color: #009688; }
+  .bg-pink-light { background-color: #FCE4EC; color: #E91E63; }
+  .bg-amber-light { background-color: #FFF8E1; color: #FFC107; }
+
+  /* Tables */
+  .section-title { font-size: 18px; font-weight: 600; color: #202020; margin-bottom: 20px; display: block; }
+
+  .users-dash-table-container {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #f0f0f0;
+    overflow: hidden; margin-bottom: 48px;
+  }
+  .users-dash-table { width: 100%; border-collapse: collapse; }
+  .users-dash-table th {
+    background-color: #fafafa; padding: 18px 24px; text-align: left;
+    font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;
+    border-bottom: 1px solid #eee;
+  }
+  .users-dash-table td {
+    padding: 18px 24px; border-bottom: 1px solid #f5f5f5;
+    font-size: 14px; font-weight: 500; color: #202020; vertical-align: middle;
+  }
+  .users-dash-table tr:hover { background-color: #fcfcfc; }
+
+  /* Avatar */
+  .user-cell { display: flex; align-items: center; gap: 12px; }
+  .user-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: #eee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: #666; overflow: hidden;
+  }
+  .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-info { display: flex; flex-direction: column; }
+  .user-name { font-weight: 600; color: #202020; line-height: 1.2; }
+  .user-email { font-size: 12px; color: #888; }
+
+  /* --- STYLE SPÉCIFIQUE LISTES (ACCORDÉON) --- */
+  details.list-dropdown {
+    position: relative;
+    width: 100%;
+  }
+
+  details.list-dropdown summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f5f5f5;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    transition: all 0.2s;
+  }
+  details.list-dropdown summary:hover { background: #eee; color: #000; }
+  details.list-dropdown summary::-webkit-details-marker { display: none; }
+
+  /* L'icône chevron qui tourne */
+  details.list-dropdown summary::after {
+    content: url('data:image/svg+xml;utf8,<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    display: block;
+    width: 12px; height: 12px;
+    transition: transform 0.2s;
+  }
+  details.list-dropdown[open] summary::after { transform: rotate(180deg); }
+
+  /* Contenu déroulant */
+  .lists-popover {
+    margin-top: 10px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    min-width: 250px;
+    max-width: 300px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .list-item-link {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    font-size: 13px;
+    border-bottom: 1px solid #f9f9f9;
+    transition: background 0.2s;
+  }
+  .list-item-link:last-child { border-bottom: none; }
+  .list-item-link:hover { background-color: #F3F4F6; color: #202020; }
+  .list-item-link span { display: block; font-size: 11px; color: #999; margin-top: 2px; }
+
+  @media (max-width: 1024px) {
+    .users-dash-kpi-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .users-dash-kpi-grid { grid-template-columns: 1fr; }
   }
 </style>
-<section class="top-default-page">
-  <%= link_to root_path, class: ("active" if @current_page == "users") do %>
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_3256_104)">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
-      </g>
-      <defs>
-        <clipPath id="clip0_3256_104">
-          <rect width="36" height="36" fill="white"/>
-        </clipPath>
-      </defs>
-    </svg>
-  <% end %>
-  <h1>Rapport des listes</h1>
-</section>
-<section class="grid-1">
-  <h2>Statistiques globales</h2>
-  <div class="stats-grid">
-    <div class="stat-card">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
-        <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h18v-3c0-2.66-5.33-4-8-4zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45v3h5v-3c0-2.66-5.33-4-6-4z"/>
-      </svg>
-      <h2><%= @total_lists %></h2>
-      <p>Total des listes créées</p>
-    </div>
-    <div class="stat-card">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
-        <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h18v-3c0-2.66-5.33-4-8-4zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45v3h5v-3c0-2.66-5.33-4-6-4z"/>
-      </svg>
-      <h2><%= @users_with_lists %></h2>
-      <p>Utilisateurs ayant créé une liste</p>
-    </div>
-    <div class="stat-card">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
-        <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h18v-3c0-2.66-5.33-4-8-4zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45v3h5v-3c0-2.66-5.33-4-6-4z"/>
-      </svg>
-      <h2><%= @total_visitors %></h2>
-      <p>Total des visiteurs invités</p>
-    </div>
-    <div class="stat-card">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#202020" viewBox="0 0 24 24" stroke="none">
-        <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h18v-3c0-2.66-5.33-4-8-4zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45v3h5v-3c0-2.66-5.33-4-6-4z"/>
-      </svg>
-      <h2><%= @total_editors %></h2>
-      <p>Total des éditeurs invités</p>
-    </div>
-  </div>
-  <hr>
-  <h2>Classement des créateurs de listes</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Utilisateur</th>
-        <th>Email</th>
-        <th class="sortable">Nombre de listes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @top_creators.each do |user| %>
-        <tr>
-          <td><%= "#{user.firstname} #{user.lastname}" %></td>
-          <td><%= user.email %></td>
-          <td><%= user.lists_count %></td>
-        </tr>
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       <% end %>
-    </tbody>
-  </table>
-  <div class="pagination-controls">
-    <%= paginate @top_creators, param_name: :creators_page %>
+      <h1 class="users-dash-title">Rapport des Listes</h1>
+    </div>
   </div>
-  <hr>
-  <h2>Classement des utilisateurs les plus invités</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Utilisateur</th>
-        <th>Email</th>
-        <th class="sortable">Nombre d’invitations</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @top_invited.each do |user| %>
+  <div class="users-dash-kpi-grid">
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Listes Créées</span>
+        <div class="kpi-icon bg-indigo-light">
+          <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @total_lists %></span>
+    </div>
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Créateurs</span>
+        <div class="kpi-icon bg-teal-light">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @users_with_lists %></span>
+    </div>
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Visiteurs Invités</span>
+        <div class="kpi-icon bg-pink-light">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @total_visitors %></span>
+    </div>
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Éditeurs Invités</span>
+        <div class="kpi-icon bg-amber-light">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @total_editors %></span>
+    </div>
+  </div>
+  <span class="section-title">Top Créateurs de listes</span>
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
+      <thead>
         <tr>
-          <td><%= "#{user.firstname} #{user.lastname}" %></td>
-          <td><%= user.email %></td>
-          <td><%= user.invites_count %></td>
+          <th>Utilisateur</th>
+          <th>Contact</th>
+          <th style="text-align: center;">Nb. Listes</th>
+          <th>Détail & Accès</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <div class="pagination-controls">
-    <%= paginate @top_invited, param_name: :invited_page %>
+      </thead>
+      <tbody>
+        <% @top_creators.each do |user| %>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar">
+                  <%= user.firstname&.first&.upcase || "?" %>
+                </div>
+                <div class="user-info">
+                  <span class="user-name"><%= user.firstname %> <%= user.lastname %></span>
+                  <span class="user-email">ID: #<%= user.id %></span>
+                </div>
+              </div>
+            </td>
+            <td><%= mail_to user.email, user.email, style: "color:#666; text-decoration:none;" %></td>
+            <td style="text-align: center;">
+              <span class="badge badge-green" style="font-size: 14px;"><%= user.lists_count %></span>
+            </td>
+            <td>
+              <details class="list-dropdown">
+                <summary>Voir les listes</summary>
+                <div class="lists-popover">
+                  <% 
+                    # On récupère les listes de cet utilisateur (limite à 10 pour pas surcharger)
+                    user_lists = user.lists.order(updated_at: :desc).limit(10) 
+                  %>
+                  <% if user_lists.any? %>
+                    <% user_lists.each do |list| %>
+                      <%= link_to list_path(list), class: "list-item-link", target: "_blank" do %>
+                        <strong><%= list.name.presence || "Sans titre" %></strong>
+                        <span>Modifié le <%= list.updated_at.strftime("%d/%m/%Y") %></span>
+                      <% end %>
+                    <% end %>
+                    <% if user.lists_count > 10 %>
+                      <div style="padding:8px; text-align:center; font-size:11px; color:#999;">
+                        + <%= user.lists_count - 10 %> autres listes...
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <div style="padding:10px; font-size:12px; color:#999; text-align:center;">Aucune liste accessible</div>
+                  <% end %>
+                </div>
+              </details>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
+      <%= paginate @top_creators, param_name: :creators_page %>
+    </div>
   </div>
-</section>
+  <span class="section-title">Utilisateurs les plus invités</span>
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Contact</th>
+          <th style="text-align: right;">Invitations reçues</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @top_invited.each do |user| %>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar" style="background: #FFF3E0; color: #E65100;">
+                  <%= user.firstname&.first&.upcase || "?" %>
+                </div>
+                <div class="user-info">
+                  <span class="user-name"><%= user.firstname %> <%= user.lastname %></span>
+                </div>
+              </div>
+            </td>
+            <td><%= user.email %></td>
+            <td style="text-align: right;">
+              <span style="font-size: 16px; font-weight: 700; color: #202020;"><%= user.invites_count %></span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
+      <%= paginate @top_invited, param_name: :invited_page %>
+    </div>
+  </div>
+</div>
 <script>
-  document.addEventListener("turbo:load", () => {
-    document.querySelectorAll("table").forEach(table => {
-      const originalRows = Array.from(table.querySelectorAll("tbody tr")).map(tr => tr.cloneNode(true));
-
-      table.querySelectorAll("th.sortable").forEach(th => {
-        th.dataset.state = "none";
-
-        th.addEventListener("click", () => {
-          const tbody = table.querySelector("tbody");
-          const rows = Array.from(tbody.querySelectorAll("tr"));
-          const idx = th.cellIndex;
-
-          // Cycle d'état
-          let newState;
-          if (th.dataset.state === "none") newState = "asc";
-          else if (th.dataset.state === "asc") newState = "desc";
-          else newState = "none";
-
-          // Reset des autres colonnes
-          table.querySelectorAll("th.sortable").forEach(h => {
-            if (h !== th) h.dataset.state = "none";
-            h.classList.remove("asc", "desc");
-          });
-
-          // Appliquer le nouvel état visuel
-          th.dataset.state = newState;
-          if (newState === "asc") th.classList.add("asc");
-          if (newState === "desc") th.classList.add("desc");
-
-          // Appliquer le tri ou reset selon l'état
-          if (newState === "none") {
-            // 🔄 Reset à l'ordre initial
-            tbody.innerHTML = "";
-            originalRows.forEach(r => tbody.appendChild(r.cloneNode(true)));
-            return;
-          }
-
-          // 🔼🔽 Tri selon l'état
-          rows.sort((a, b) => {
-            const A = a.cells[idx].innerText.trim().toLowerCase();
-            const B = b.cells[idx].innerText.trim().toLowerCase();
-            const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
-            const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
-
-            if (valA instanceof Date && valB instanceof Date) {
-              return newState === "asc" ? valA - valB : valB - valA;
-            }
-
-            return newState === "asc"
-              ? String(valA).localeCompare(String(valB))
-              : String(valB).localeCompare(String(valA));
-          });
-
-          // Réinjection des lignes triées
-          tbody.innerHTML = "";
-          rows.forEach(r => tbody.appendChild(r));
-        });
+  // Script optionnel : Fermer automatiquement un dropdown quand on en ouvre un autre
+  document.addEventListener("click", function(e) {
+    if (e.target.tagName === "SUMMARY") {
+      document.querySelectorAll("details.list-dropdown[open]").forEach(detail => {
+        if (detail !== e.target.parentElement) {
+          detail.removeAttribute("open");
+        }
       });
-    });
+    }
   });
 </script>

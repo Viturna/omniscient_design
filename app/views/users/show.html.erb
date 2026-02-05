@@ -1,0 +1,376 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartkick"></script>
+<style>
+  /* --- STYLES GLOBAUX DASHBOARD --- */
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+  }
+
+  /* Header */
+  .user-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+
+  .profile-main-info {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .profile-avatar-large {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background-color: #eee;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 600; color: #888;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+
+  .profile-identity h1 {
+    margin: 0; font-size: 32px; font-weight: 600; color: #202020;
+    line-height: 1.2;
+  }
+  .profile-identity p {
+    margin: 4px 0 0 0; font-size: 16px; color: #666;
+  }
+
+  .profile-badges-list {
+    display: flex; gap: 8px; margin-top: 12px;
+  }
+
+  /* Actions */
+  .profile-actions { display: flex; gap: 12px; }
+
+  .btn-action {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px; font-weight: 500;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+  }
+  .btn-primary { background: #202020; color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-outline { background: #fff; border-color: #ddd; color: #333; }
+  .btn-outline:hover { background: #f5f5f5; border-color: #ccc; }
+  .btn-danger { background: #FFEBEE; color: #D32F2F; border-color: transparent; }
+  .btn-danger:hover { background: #FFCDD2; }
+
+  /* Grid Layout */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+
+  /* Cards */
+  .dash-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    margin-bottom: 24px;
+  }
+
+  .card-title {
+    font-size: 18px; font-weight: 600; color: #202020;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 1px solid #f5f5f5;
+    margin-top: 0;
+  }
+
+  /* Details Row */
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f9f9f9;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { font-size: 14px; color: #888; font-weight: 500; }
+  .detail-value { font-size: 14px; color: #202020; font-weight: 500; text-align: right; }
+
+  /* KPI Mini */
+  .profile-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .mini-kpi {
+    background: #fcfcfc;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .mini-kpi-val { display: block; font-size: 24px; font-weight: 600; color: #202020; }
+  .mini-kpi-lbl { font-size: 12px; color: #888; text-transform: uppercase; font-weight: 500; }
+
+  /* --- STYLE DES BADGES GAMIFICATION --- */
+  .gamification-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 16px;
+    justify-items: center;
+  }
+
+  .gamification-badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    transition: transform 0.2s;
+  }
+  .gamification-badge-item:hover {
+    transform: translateY(-4px);
+  }
+
+  .gamification-badge-icon {
+    width: 64px;
+    height: 64px;
+    /* Remplacement par une image ou un fond */
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .gamification-badge-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Fallback si pas d'image */
+  .gamification-badge-placeholder {
+    font-size: 24px;
+    color: #ccc;
+  }
+
+  .gamification-badge-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+    line-height: 1.3;
+  }
+
+  /* Badges colorés (Statut/Rôle) */
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-blue { background: #E3F2FD; color: #1565C0; }
+  .badge-green { background: #E8F5E9; color: #2E7D32; }
+  .badge-gray { background: #F5F5F5; color: #666; }
+  .badge-red { background: #FFEBEE; color: #C62828; }
+
+  @media (max-width: 1024px) {
+    .profile-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .user-profile-header { flex-direction: column; gap: 24px; }
+    .profile-kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+<div class="users-dash-wrapper">
+  <div style="margin-bottom: 24px;">
+    <%= link_to users_path, class: "btn-action btn-outline", style: "width: fit-content;" do %>
+      <svg style="width:16px;height:16px;fill:#666;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Retour à la liste
+    <% end %>
+  </div>
+  <div class="user-profile-header">
+    <div class="profile-main-info">
+      <div class="profile-avatar-large">
+        <% if @user.profile_image.present? %>
+          <%= image_tag @user.profile_image, alt: @user.firstname %>
+        <% else %>
+          <%= @user.firstname&.first %>
+        <% end %>
+      </div>
+      <div class="profile-identity">
+        <h1><%= @user.firstname %> <%= @user.lastname %></h1>
+        <p><%= @user.email %></p>
+        <div class="profile-badges-list">
+          <span class="badge badge-gray"><%= @user.role || 'User' %></span>
+          <span class="badge badge-<%= @user.statut == 'Etudiant' ? 'blue' : 'green' %>">
+            <%= @user.statut || "Statut inconnu" %>
+          </span>
+          <% if @user.certified? %><span class="badge badge-green">Certifié</span><% end %>
+          <% if @user.banned? %><span class="badge badge-red">Banni</span><% end %>
+        </div>
+      </div>
+    </div>
+    <% if current_user.admin? %>
+      <div class="profile-actions">
+        <% if @user.certified? %>
+          <%= button_to uncertify_user_path(@user), method: :patch, class: "btn-action btn-outline", title: "Retirer la certification" do %>
+            Décertifier
+          <% end %>
+        <% else %>
+          <%= button_to certify_user_path(@user), method: :patch, class: "btn-action btn-outline", title: "Certifier le compte" do %>
+            <svg style="width:16px;height:16px;fill:#2E7D32;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Certifier
+          <% end %>
+        <% end %>
+        <% if @user.banned? %>
+          <%= button_to unban_user_path(@user), method: :patch, class: "btn-action btn-outline", style: "color: #2E7D32; border-color: #2E7D32;" do %>
+            Débannir
+          <% end %>
+        <% else %>
+          <%= button_to ban_user_path(@user), method: :patch, data: { turbo_confirm: "Êtes-vous sûr de vouloir bannir cet utilisateur ?" }, class: "btn-action btn-danger" do %>
+            <svg style="width:16px;height:16px;fill:#D32F2F;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-1.84.62-3.54 1.66-4.93l11.27 11.27C15.54 19.38 13.84 20 12 20zm6.34-3.07L7.07 5.66C8.46 4.62 10.16 4 12 4c4.41 0 8 3.59 8 8 0 1.84-.62 3.54-1.66 4.93z"/></svg> Bannir
+          <% end %>
+        <% end %>
+        <% unless @user.confirmed? %>
+          <%= button_to admin_resend_confirmation_user_path(@user), method: :post, class: "btn-action btn-primary" do %>
+            Renvoyer confirmation
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="profile-grid">
+    <div class="profile-left-col">
+      <div class="profile-kpi-grid">
+        <div class="mini-kpi">
+          <span class="mini-kpi-val"><%= @total_visits %></span>
+          <span class="mini-kpi-lbl">Visites Totales</span>
+        </div>
+        <div class="mini-kpi">
+          <span class="mini-kpi-val"><%= @lists_count %></span>
+          <span class="mini-kpi-lbl">Listes Créées</span>
+        </div>
+        <div class="mini-kpi">
+          <span class="mini-kpi-val"><%= pluralize((Date.today - @user.created_at.to_date).to_i, 'jour') %></span>
+          <span class="mini-kpi-lbl">Ancienneté</span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <h3 class="card-title">Badges & Récompenses</h3>
+        <% if @badges.present? && @badges.any? %>
+          <div class="gamification-badges-grid">
+            <% @badges.each do |badge| %>
+              <div class="gamification-badge-item">
+                <div class="gamification-badge-icon" title="<%= badge.try(:description) %>">
+                  <% if badge.respond_to?(:image) && badge.image.attached? %>
+                    <%= image_tag badge.image %>
+                  <% elsif badge.respond_to?(:icon_url) && badge.icon_url.present? %>
+                    <%= image_tag badge.icon_url %>
+                  <% else %>
+                    <div class="gamification-badge-placeholder">🏅</div>
+                  <% end %>
+                </div>
+                <div class="gamification-badge-name"><%= badge.name %></div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p style="color: #999; font-style: italic; text-align: center;">Aucun badge débloqué pour le moment.</p>
+        <% end %>
+      </div>
+      <div class="dash-card">
+        <h3 class="card-title">Informations Personnelles</h3>
+        <div class="detail-row">
+          <span class="detail-label">Pseudo</span>
+          <span class="detail-value"><%= @user.pseudo.presence || "-" %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Prénom</span>
+          <span class="detail-value"><%= @user.firstname %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Nom</span>
+          <span class="detail-value"><%= @user.lastname %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Email</span>
+          <span class="detail-value">
+            <%= @user.email %>
+            <% if @user.confirmed? %>
+              <span style="color:#2E7D32; font-size:12px;">(Confirmé)</span>
+            <% else %>
+              <span style="color:#D32F2F; font-size:12px;">(Non confirmé)</span>
+            <% end %>
+          </span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <h3 class="card-title">Activité récente (30 jours)</h3>
+        <%= area_chart @user_activity, height: "200px", colors: ["#202020"], library: { scales: { x: { grid: { display: false } }, y: { display: false } } } %>
+      </div>
+    </div>
+    <div class="profile-right-col">
+      <div class="dash-card">
+        <h3 class="card-title">Situation</h3>
+        <div class="detail-row">
+          <span class="detail-label">Statut</span>
+          <span class="detail-value"><%= @user.statut %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Niveau d'études</span>
+          <span class="detail-value"><%= @user.study_level.presence || "-" %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Établissement</span>
+          <span class="detail-value"><%= @user.etablissement&.name || "-" %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Code Postal</span>
+          <span class="detail-value">
+            <%= @user.etablissement.respond_to?(:zip_code) ? @user.etablissement.zip_code : (@user.etablissement.respond_to?(:postal_code) ? @user.etablissement.postal_code : "-") %>
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Ville</span>
+          <span class="detail-value"><%= @user.etablissement&.city || "-" %></span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <h3 class="card-title">Marketing & Système</h3>
+        <div class="detail-row">
+          <span class="detail-label">Newsletter</span>
+          <span class="detail-value">
+            <% if @user.newsletter? %>
+              <span class="badge badge-green">Abonné</span>
+            <% else %>
+              <span class="badge badge-gray">Non abonné</span>
+            <% end %>
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Source (Via)</span>
+          <span class="detail-value"><%= @user.how_did_you_hear.presence || "-" %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Création du compte</span>
+          <span class="detail-value"><%= @user.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Dernière visite</span>
+          <span class="detail-value"><%= @last_visit ? @last_visit.strftime("%d/%m/%Y") : "Jamais" %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Relance admin</span>
+          <span class="detail-value"><%= @user.admin_relance_sent? ? "Oui" : "Non" %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

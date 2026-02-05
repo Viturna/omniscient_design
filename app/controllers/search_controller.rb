@@ -243,7 +243,6 @@ class SearchController < ApplicationController
       @timeline_years           = timeline_range
 
     elsif start_year
-      # Cas 2 : Seulement date de début -> "À partir de..."
       @designers = @designers.where("date_naissance >= ?", start_year)
       @oeuvres   = @oeuvres.where("date_oeuvre >= ?", start_year)
       @studios   = @studios.where("date_creation >= ?", start_year)
@@ -255,12 +254,10 @@ class SearchController < ApplicationController
       @timeline_years           = timeline_range
 
     elsif end_year
-      # Cas 3 : Seulement date de fin -> "Jusqu'à..."
       @designers = @designers.where("date_naissance <= ?", end_year)
       @oeuvres   = @oeuvres.where("date_oeuvre <= ?", end_year)
       @studios   = @studios.where("date_creation <= ?", end_year)
 
-      # On part de 1880 par défaut pour l'affichage timeline
       timeline_range = (1880..end_year).to_a
       @designers_timeline_years = timeline_range
       @oeuvres_timeline_years   = timeline_range
@@ -268,14 +265,10 @@ class SearchController < ApplicationController
       @timeline_years           = timeline_range
 
     else
-      # Cas 4 : Pas de filtre date -> Calcul dynamique
       min_designer = @designers.minimum(:date_naissance) || 1880
       @designers_timeline_years = (min_designer..current_year).to_a
 
-      # Pour les oeuvres, correction du bug "group/having" qui retourne un Hash
       min_oeuvre_val = if @oeuvres.group_values.present?
-                         # Si groupé (ex: notions), on utilise une sous-requête pour avoir le min global
-                         # CORRECTION ICI: reselect(:id) force une seule colonne
                          Oeuvre.where(id: @oeuvres.reselect(:id)).minimum(:date_oeuvre)
                        else
                          @oeuvres.minimum(:date_oeuvre)

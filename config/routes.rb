@@ -45,7 +45,7 @@ Rails.application.routes.draw do
     end
     # Tes routes publiques
     resources :feedbacks, only: [:new, :create, :index, :destroy]
-    resources :users, only: [:index] do
+    resources :users, only: [:index, :show] do
       member do
         patch :ban
         patch :unban

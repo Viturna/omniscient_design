@@ -1,53 +1,103 @@
 class UsersController < ApplicationController
-    layout 'admin', only: [:index]
+    layout 'admin', only: [:index, :show]
   before_action :set_user, only: [:ban, :unban]
   before_action :check_admin_role, only: [:index, :certify, :uncertify, :admin_resend_confirmation, :ban, :unban]
 
-  def index
-    @current_page = 'users'
+ def index
+    @current_page = "users"
     
-    # 1. Scope de base
-    users_scope = User.includes(:etablissement, :daily_visits)
-
-    # 2. Filtrage si recherche
-    if params[:query].present?
-      sql_query = <<~SQL
-        users.firstname ILIKE :query OR
-        users.lastname ILIKE :query OR
-        users.email ILIKE :query OR
-        users.pseudo ILIKE :query OR
-        etablissements.name ILIKE :query
-      SQL
-      
-      # On met à jour le scope avec le filtre
-      users_scope = users_scope.left_outer_joins(:etablissement)
-                               .where(sql_query, query: "%#{params[:query]}%")
+    # --- 1. Gestion de la Période (Filtre Temporel) ---
+    @period = params[:period] || '30d'
+    
+    # Configuration des plages de dates selon le bouton cliqué
+    case @period
+    when '7d'
+      range = 7.days.ago.to_date..Date.today
+      date_format = "%d/%m"
+    when '60d'
+      range = 60.days.ago.to_date..Date.today
+      date_format = "%d/%m"
+    when '90d'
+      range = 90.days.ago.to_date..Date.today
+      date_format = "%d/%m"
+    when '12m'
+      range = 12.months.ago.to_date..Date.today
+      date_format = "%b %Y"
+    else # '30d' par défaut
+      range = 30.days.ago.to_date..Date.today
+      date_format = "%d/%m"
     end
 
-    all_users_scope = User.includes(:etablissement) 
+    # --- 2. Données pour les Graphiques Principaux ---
+    
+    # Graphique 1 : Évolution des Inscriptions (User)
+    users_data = User.where(created_at: range.first.beginning_of_day..range.last.end_of_day)
+                     .pluck(:created_at)
+    
+    if @period == '12m'
+      grouped_users = users_data.group_by { |d| d.beginning_of_month.to_date }
+      timeline = range.map { |d| d.beginning_of_month }.uniq
+    else
+      grouped_users = users_data.group_by { |d| d.to_date }
+      timeline = range.to_a
+    end
+    
+    @chart_signups = timeline.map { |date| [date.strftime(date_format), grouped_users[date]&.count || 0] }
 
-    all_etablissements_stats = all_users_scope.joins(:etablissement)
-                                            .group('etablissements.name')
-                                            .count
-                                            .sort_by { |_, c| -c } 
-  @total_etablissements_count = all_etablissements_stats.length
-  @stats_etablissements = Kaminari.paginate_array(all_etablissements_stats)
-                                  .page(params[:etablissements_page])
-                                  .per(30)
+    # Graphique 2 : Évolution des Visites (DailyVisit)
+    visits_data = DailyVisit.where(visited_on: range)
+                            .group(:visited_on)
+                            .count
+    
+    @chart_visits = timeline.map do |date| 
+      val = if @period == '12m'
+              # Somme des visites du mois
+              DailyVisit.where(visited_on: date.beginning_of_month..date.end_of_month).count
+            else
+              visits_data[date] || 0
+            end
+      [date.strftime(date_format), val]
+    end
 
-    @stats_source = all_users_scope.where.not(how_did_you_hear: [nil, '']).group(:how_did_you_hear).count.sort_by { |_, c| -c }
-    @stats_status = all_users_scope.where.not(statut: [nil, '']).group(:statut).count.sort_by { |_, c| -c }
-    @stats_certified_count = all_users_scope.where(certified: true).count
-    @stats_banned_count = all_users_scope.where(banned: true).count
+    @newsletter_count = User.where(newsletter: true).count
+    # --- 3. Statistiques Globales & KPIs ---
+    @total_users = User.count # Total indépendant de la période
+    @new_users_period = User.where(created_at: range.first.beginning_of_day..range.last.end_of_day).count
+    @active_users_period = DailyVisit.where(visited_on: range).distinct.count(:user_id)
+    @certified_count = User.where(certified: true).count
 
-    # 4. Pagination et ordre final pour la table (sur le scope filtré)
-    @users = users_scope.order(created_at: :asc)
-                        .page(params[:page]).per(25)
+    # Graphiques secondaires (Données globales)
+    @distrib_statut = User.group(:statut).count
+    @distrib_acquisition = User.where.not(how_did_you_hear: [nil, ""]).group(:how_did_you_hear).count
+    @distrib_levels = User.where.not(study_level: [nil, ""]).group(:study_level).count
 
-    # 5. Données pour la carte (sur le total ou filtré, au choix. Ici filtré pour que la carte suive la recherche)
-    @users_for_map = users_scope.where.not(etablissements: { latitude: nil, longitude: nil })
+    # --- 4. Tableau & Filtres ---
+    @users = User.all
+    if params[:query].present?
+      sql = "firstname ILIKE :q OR lastname ILIKE :q OR email ILIKE :q OR pseudo ILIKE :q"
+      @users = @users.where(sql, q: "%#{params[:query]}%")
+    end
+    @users = @users.where(statut: params[:statut]) if params[:statut].present?
+    @users = @users.where(role: params[:role]) if params[:role].present?
+
+    @paginated_users = @users.order(created_at: :desc).page(params[:page]).per(20)
+    @users_for_map = @users.includes(:etablissement).where.not(etablissement_id: nil)
   end
+
+ def show
+    @user = User.find(params[:id])
   
+    @total_visits = @user.daily_visits.count
+    @last_visit = @user.daily_visits.order(visited_on: :desc).first&.visited_on
+    
+    @lists_count = @user.respond_to?(:lists) ? @user.lists.count : 0
+
+    @user_activity = DailyVisit.where(user: @user)
+                               .group_by_day(:visited_on, range: 30.days.ago..Date.today)
+                               .count
+
+    @badges = @user.badges if @user.respond_to?(:badges)
+  end
   def visits
     @user = User.find(params[:id])
     @visits = @user.daily_visits.order(created_at: :desc).page(params[:page]).per(50)
@@ -55,9 +105,9 @@ class UsersController < ApplicationController
   def ban
     if current_user.admin?
       @user.update(banned: true)
-      redirect_to users_path, notice: I18n.t('user.banned_success', default: 'Utilisateur banni avec succès.')
+      redirect_to user_path(@user), notice: I18n.t('user.banned_success', default: 'Utilisateur banni avec succès.')
     else
-      redirect_to users_path, alert: I18n.t('user.access.denied_admin', default: "Vous n'avez pas les permissions nécessaires.")
+      redirect_to user_path(@user), alert: I18n.t('user.access.denied_admin', default: "Vous n'avez pas les permissions nécessaires.")
     end
   end
   def unban
@@ -67,7 +117,7 @@ class UsersController < ApplicationController
     else
       flash[:alert] = I18n.t('user.unbanned_denied', default: "Vous ne pouvez pas débannir cet utilisateur.")
     end
-    redirect_to users_path
+    redirect_to user_path(@user)
   end
 
   def certify
@@ -77,7 +127,7 @@ class UsersController < ApplicationController
     else
       flash[:alert] = I18n.t('user.certified_failure', default: "Une erreur est survenue lors de la certification.")
     end
-    redirect_to users_path
+    redirect_to user_path(@user)
   end
 
   def uncertify
@@ -87,7 +137,7 @@ class UsersController < ApplicationController
     else
       flash[:alert] = I18n.t('user.uncertified_failure', default: "Une erreur est survenue lors du retrait de la certification.")
     end
-    redirect_to users_path
+    redirect_to user_path(@user)
   end
 
   def admin_resend_confirmation

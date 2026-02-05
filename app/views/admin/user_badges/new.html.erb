@@ -1,10 +1,8 @@
 <div class="admin-content-container">
   <h1>Attribuer un Badge</h1>
   <p>Utilisez ce formulaire pour donner un badge spécifique à un utilisateur (ex: Donateur, Vainqueur de concours...).</p>
-
   <div class="card-admin" style="max-width: 600px; margin-top: 24px; padding: 32px; background: white; border-radius: 8px;">
     <%= form_with url: admin_user_badges_path, local: true do |f| %>
-      
       <div class="form-group" style="margin-bottom: 20px;">
         <%= f.label :user_id, "Utilisateur", style: "display:block; margin-bottom: 8px; font-weight:600;" %>
         <%# Select2 pour chercher parmi tous les utilisateurs %>
@@ -12,18 +10,15 @@
             { prompt: "Rechercher un utilisateur (email)..." }, 
             { class: "form-control", data: { controller: "select2" }, style: "width: 100%;" } %>
       </div>
-
       <div class="form-group" style="margin-bottom: 24px;">
         <%= f.label :badge_id, "Badge à attribuer", style: "display:block; margin-bottom: 8px; font-weight:600;" %>
         <%= f.collection_select :badge_id, @badges, :id, :name, 
             { prompt: "Choisir un badge..." }, 
             { class: "form-control", data: { controller: "select2" }, style: "width: 100%;" } %>
       </div>
-
       <div class="form-actions">
         <%= f.submit "Attribuer le Badge", class: "button dark" %>
       </div>
-
     <% end %>
   </div>
 </div>

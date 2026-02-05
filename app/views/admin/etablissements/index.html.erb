@@ -11,10 +11,18 @@
   .table-admin .col-actions {
     white-space: nowrap;
   }
-
-  /* Style pour les booléens */
   .bool-true { color: #28a745; font-weight: 500; }
   .bool-false { color: #999; }
+
+  /* Flexbox pour aligner recherche et bouton */
+  .toolbar-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 20px 0;
+  }
 </style>
 <section class="top-default-page">
   <%= link_to users_path do %>
@@ -32,42 +40,34 @@
   <h1>Gestion des Établissements</h1>
 </section>
 <section class="grid-1">
-  <div class="search-bar-container" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px; flex: 1;" do |f| %>
+  <div class="toolbar-admin">
+    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px; flex: 1; max-width: 600px;" do |f| %>
       <%= f.text_field :query, 
             value: params[:query], 
-            placeholder: "Rechercher par nom, UAI, ville, académie...", 
-            class: "form-control",
-            style: "min-width: 300px;" %>
+            placeholder: "Rechercher par nom, UAI, ville...", 
+            class: "form-control", style: "width: 100%;" %>
       <%= f.submit "Rechercher", class: "btn btn-primary" %>
       <% if params[:query].present? %>
-        <%= link_to "Effacer", admin_etablissements_path, class: "btn btn-secondary" %>
+        <%= link_to "X", admin_etablissements_path, class: "btn btn-secondary", title: "Effacer" %>
       <% end %>
     <% end %>
     <%= link_to admin_etablissements_path(format: :csv, query: params[:query]), class: "btn btn-green", style: "display: flex; align-items: center; gap: 8px;" do %>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      Exporter CSV
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Exporter Actifs CSV
     <% end %>
   </div>
   <%= paginate @etablissements %>
   <div class="table-wrapper">
-    <table class="table-admin">
+    <table>
       <thead>
         <tr>
           <th>Nom</th>
-          <th>Nb. Utilisateurs</th>
+          <th style="min-width: 100px;">Utilisateurs</th>
+ 
           <th>UAI</th>
           <th>Statut</th>
           <th>Type</th>
-          <th>Académie / Région</th>
           <th>Localisation</th>
-          <th>Contact</th>
-          <th>Voies</th>
-          <th>Sections</th>
           <th>Coordonnées</th>
           <th>Actions</th>
         </tr>
@@ -78,59 +78,33 @@
             <td>
               <strong><%= etab.name %></strong>
             </td>
-            <td>
-              <%# L'attribut users_count est calculé dans le contrôleur %>
-              <strong><%= etab.respond_to?(:users_count) ? etab.users_count : etab.users.size %></strong>
+            <td style="text-align: center;">
+              <% count = etab.users_count %>
+              <span class="badge <%= count > 0 ? 'badge-green' : 'badge-gray' %>" 
+                    style="padding: 4px 10px; border-radius: 12px; background: <%= count > 0 ? '#d4edda' : '#eee' %>; color: <%= count > 0 ? '#155724' : '#666' %>; font-weight: 600;">
+                <%= count %>
+              </span>
             </td>
             <td><code><%= etab.uai %></code></td>
             <td><%= etab.statut_public_prive %></td>
             <td><%= etab.type_etablissement %></td>
             <td>
-              <%= etab.academy %><br>
-              <small><%= etab.region %></small>
-            </td>
-            <td>
-              <%= etab.city %><br>
-              <small><%= etab.address %></small>
+              <%= etab.city %> (<%= etab.academy %>)<br>
+              <small style="color:#666;"><%= etab.region %></small>
             </td>
             <td class="col-links">
-              <% if etab.phone.present? %>
-                <%= etab.phone %><br>
+              <% if etab.phone.present? %><%= etab.phone %><br>
               <% end %>
-              <% if etab.messagerie.present? %>
-                <%= mail_to etab.messagerie %><br>
+              <% if etab.messagerie.present? %><%= mail_to etab.messagerie %><br>
               <% end %>
-              <% if etab.website.present? %>
-                <%= link_to "Site web", etab.website, target: "_blank", rel: "noopener" %>
-              <% end %>
-            </td>
-            <td class="col-bool">
-              Générale: <span class="bool-<%= etab.voie_generale %>"><%= oui_non(etab.voie_generale) %></span><br>
-              Techno: <span class="bool-<%= etab.voie_technologique %>"><%= oui_non(etab.voie_technologique) %></span><br>
-              Pro: <span class="bool-<%= etab.voie_professionnelle %>"><%= oui_non(etab.voie_professionnelle) %></span><br>
-              Post-Bac: <span class="bool-<%= etab.post_bac %>"><%= oui_non(etab.post_bac) %></span>
-            </td>
-            <td class="col-bool">
-              Arts: <span class="bool-<%= etab.section_arts %>"><%= oui_non(etab.section_arts) %></span><br>
-              Cinéma: <span class="bool-<%= etab.section_cinema %>"><%= oui_non(etab.section_cinema) %></span><br>
-              Théâtre: <span class="bool-<%= etab.section_theatre %>"><%= oui_non(etab.section_theatre) %></span>
-            </td>
-            <td>
-              <% if etab.latitude.present? && etab.longitude.present? %>
-                Lat: <%= etab.latitude %><br>
-                Lon: <%= etab.longitude %>
-              <% end %>
+              <% if etab.website.present? %><%= link_to "Site web", etab.website, target: "_blank" %><% end %>
             </td>
             <td class="col-actions">
               <%= link_to "Modifier", edit_admin_etablissement_path(etab), class: "btn btn-sm btn-primary" %>
-              <%# On n'affiche le bouton supprimer que s'il n'y a pas d'utilisateurs liés %>
-              <% if (etab.respond_to?(:users_count) ? etab.users_count : etab.users.size) == 0 %>
+              <% if count == 0 %>
                 <%= link_to "Supprimer", admin_etablissement_path(etab), 
                       class: "btn btn-sm btn-danger",
-                      data: { 
-                        turbo_method: :delete, 
-                        turbo_confirm: "Êtes-vous sûr de vouloir supprimer '#{etab.name}' ? Cette action est irréversible." 
-                      } %>
+                      data: { turbo_method: :delete, turbo_confirm: "Supprimer cet établissement ?" } %>
               <% end %>
             </td>
           </tr>

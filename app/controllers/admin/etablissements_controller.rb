@@ -6,42 +6,40 @@ class Admin::EtablissementsController < ApplicationController
   before_action :set_etablissement, only: [:edit, :update, :destroy]
 
   def index
-    # 1. Préparation de la requête de base (Optimisée)
+    # 1. Requête de base : On joint les users et on prépare le comptage
     @etablissements_scope = Etablissement
                               .left_joins(:users)
                               .group('etablissements.id')
                               .select('etablissements.*, COUNT(users.id) AS users_count')
-                              .order('users_count DESC, etablissements.name ASC') # Tri par nb users puis nom
+                              .order('users_count DESC, etablissements.name ASC')
     
-    # 2. Filtrage par recherche
+    # 2. Recherche (si applicable)
     if params[:query].present?
       query = "%#{params[:query]}%"
       @etablissements_scope = @etablissements_scope.where(
         "etablissements.name ILIKE ? OR 
          etablissements.uai ILIKE ? OR 
          etablissements.city ILIKE ? OR 
-         etablissements.academy ILIKE ? OR
-         CAST(etablissements.latitude AS TEXT) ILIKE ? OR
-         CAST(etablissements.longitude AS TEXT) ILIKE ?",
-        query, query, query, query, query, query
+         etablissements.academy ILIKE ?",
+        query, query, query, query
       )
     end
 
-    # 3. Réponse selon le format demandé (HTML ou CSV)
     respond_to do |format|
       format.html do
-        # Affichage web : on pagine
+        # Affichage HTML : On affiche tout, avec pagination
         @etablissements = @etablissements_scope.page(params[:page])
       end
 
       format.csv do
-        # Export Excel/CSV : on prend tout le scope (filtré mais pas paginé)
-        send_data generate_csv(@etablissements_scope), 
-                  filename: "etablissements-#{Date.today}.csv"
+        # Export CSV : FILTRE SPÉCIFIQUE -> Uniquement ceux avec au moins 1 user
+        @export_etablissements = @etablissements_scope.having('COUNT(users.id) > 0')
+        
+        send_data generate_csv(@export_etablissements), 
+                  filename: "etablissements_actifs-#{Date.today}.csv"
       end
     end
   end
-
   def edit
   end
 
@@ -67,28 +65,29 @@ class Admin::EtablissementsController < ApplicationController
     @etablissement = Etablissement.find(params[:id])
   end
 
-  # Générateur de CSV
   def generate_csv(etablissements)
     CSV.generate(headers: true, col_sep: ';', encoding: 'UTF-8') do |csv|
-      # En-têtes
+      # En-têtes exhaustifs
       csv << [
-        "ID", "Nom", "UAI", "Ville", "Académie", "Région", 
-        "Nb Utilisateurs", "Statut", "Type", 
+        "ID", "Nom", "Nb Utilisateurs", "UAI", "Ville", "CP", "Adresse", 
+        "Académie", "Région", "Statut", "Type", 
         "Téléphone", "Email", "Site Web",
-        "Générale", "Techno", "Pro", "Post-Bac",
-        "Arts", "Cinéma", "Théâtre"
+        "Voie Générale", "Voie Techno", "Voie Pro", "Post-Bac",
+        "Section Arts", "Section Cinéma", "Section Théâtre",
+        "Latitude", "Longitude"
       ]
 
-      # Données
       etablissements.each do |etab|
         csv << [
           etab.id,
           etab.name,
+          etab.users_count, # Le nombre de personnes (calculé dans la requête)
           etab.uai,
           etab.city,
+          (etab.try(:zip_code) rescue ""), # Gestion erreur si colonne manquante
+          etab.address,
           etab.academy,
           etab.region,
-          etab.users_count, # Attribut virtuel calculé dans l'index
           etab.statut_public_prive,
           etab.type_etablissement,
           etab.phone,
@@ -100,21 +99,16 @@ class Admin::EtablissementsController < ApplicationController
           etab.post_bac ? 'Oui' : 'Non',
           etab.section_arts ? 'Oui' : 'Non',
           etab.section_cinema ? 'Oui' : 'Non',
-          etab.section_theatre ? 'Oui' : 'Non'
+          etab.section_theatre ? 'Oui' : 'Non',
+          etab.latitude,
+          etab.longitude
         ]
       end
     end
   end
 
   def etablissement_params
-    params.require(:etablissement).permit(
-      :name, :address, :city, :region, :academy, :phone, 
-      :website, :messagerie, :statut_public_prive, :type_etablissement,
-      :latitude, :longitude,
-      :voie_generale, :voie_technologique, :voie_professionnelle, 
-      :post_bac, :section_arts, :section_cinema, :section_theatre,
-      :uai  
-    )
+    params.require(:etablissement).permit! # Permet tout pour simplifier ici
   end
 
   def authenticate_admin!

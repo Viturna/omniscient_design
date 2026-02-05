@@ -47,7 +47,7 @@ class ListsController < ApplicationController
     # Autorisation
     if @list.share_token.present? && @list.share_token == params[:share_token]
       render :show
-    elsif @list.user == current_user || @list.editors.include?(current_user) || @list.visitors.include?(current_user)
+    elsif current_user.admin? || @list.user == current_user || @list.editors.include?(current_user) || @list.visitors.include?(current_user)
       render :show
     else
       redirect_to root_path, alert: I18n.t('lists.access_denied')

@@ -61,28 +61,26 @@
 </section>
 <script>
   function triggerRating() {
-    // 1. Détection de l'OS
+    // 1. Définir une URL par défaut (Fallback pour Desktop)
+    // IMPORTANT : Toujours mettre https:// sinon le navigateur cherche sur ton site
+    var url = "https://www.google.com/search?q=Omniscient+Design";
+
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    var url = "";
 
-    // IDs à remplacer par les tiens
-    var iosAppId = "6754964970"; // ex: 123456789
-    var androidPackage = "com.thomasriq.omniscientdesign"; // ex: com.omniscient.design
+    // IDs (Change les valeurs ici)
+    var iosAppId = "6754964970";
+    var androidPackage = "com.thomasriq.omniscientdesign";
 
+    // 2. Détection de l'OS pour écraser l'URL par défaut si besoin
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      // Lien direct vers la popup d'avis App Store
+      // iOS
       url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
-      // Lien direct vers le Play Store
+      // Android
       url = "market://details?id=" + androidPackage;
-      // Fallback web si le market scheme ne marche pas (optionnel)
-      // url = "https://play.google.com/store/apps/details?id=" + androidPackage;
-    } else {
-      // Fallback Web (Google Reviews ou autre)
-      url = "TON_LIEN_GOOGLE_MY_BUSINESS_OU_TRUSTPILOT";
     }
 
-    // 2. Appel serveur pour débloquer le badge (AJAX)
+    // 3. Appel serveur pour débloquer le badge (AJAX)
     fetch("<%= rate_app_badge_path %>", {
       method: "POST",
       headers: {
@@ -90,13 +88,20 @@
         "Content-Type": "application/json"
       }
     }).then(() => {
-      // 3. Une fois l'appel serveur parti, on ouvre le store
-      window.location.href = url;
+      // 4. Redirection vers le store ou le site web
+      // Le setTimeout permet de laisser le temps à la requête fetch de partir
+      if (url) {
+        window.location.href = url;
+      }
 
-      // Optionnel : Recharger la page après un délai pour montrer le badge débloqué au retour
+      // Recharger la page après un délai pour voir le badge
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 2000);
+    }).catch(err => {
+      console.error("Erreur serveur :", err);
+      // On redirige quand même si le serveur plante
+      if (url) window.location.href = url;
     });
   }
 </script>

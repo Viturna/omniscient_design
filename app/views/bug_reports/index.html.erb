@@ -1,196 +1,270 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.js"></script>
 <style>
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+  }
+
+  .users-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+  .users-dash-title { font-size: 32px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 16px; margin: 0; }
+  .users-dash-back-link {
+    display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%;
+    background-color: #fff; border: 1px solid #eee; transition: all 0.2s ease;
+  }
+  .users-dash-back-link:hover { background-color: #f0f0f0; transform: translateX(-2px); }
+
+  .users-dash-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+  .users-dash-kpi-card {
+    background: #fff; padding: 24px; border-radius: 16px; border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; height: 140px;
+  }
+  .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .kpi-label { font-size: 14px; font-weight: 500; color: #888; text-transform: uppercase; }
+  .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .kpi-icon svg { width: 20px; height: 20px; fill: #202020; }
+  .kpi-value { font-size: 36px; font-weight: 500; color: #202020; margin-top: auto; }
+
+  .bg-blue-light { background-color: #E3F2FD; color: #1565C0; }
+  .bg-red-light { background-color: #FFEBEE; color: #C62828; }
+  .bg-orange-light { background-color: #FFF3E0; color: #EF6C00; }
+  .bg-green-light { background-color: #E8F5E9; color: #2E7D32; }
+
+  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 40px; }
+  .chart-card { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+  .chart-title { font-size: 16px; font-weight: 600; color: #202020; margin-bottom: 20px; display: block; }
+
+  .section-title { font-size: 18px; font-weight: 600; color: #202020; margin-bottom: 20px; display: block; }
+  .users-dash-table-container {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #f0f0f0;
+    overflow: visible;
+    margin-bottom: 48px; position: relative; z-index: 1;
+  }
+  .users-dash-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .users-dash-table th {
+    background-color: #fafafa; padding: 18px 24px; text-align: left;
+    font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;
+    border-bottom: 1px solid #eee;
+  }
+  .users-dash-table td {
+    padding: 18px 24px; border-bottom: 1px solid #f5f5f5;
+    font-size: 14px; font-weight: 500; color: #202020; vertical-align: middle;
+  }
+  .users-dash-table tr:hover { background-color: #fcfcfc; }
+
+  .user-cell { display: flex; align-items: center; gap: 12px; }
+  .user-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: #eee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: #666; overflow: hidden;
+  }
+  .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-info { display: flex; flex-direction: column; }
+  .user-name { font-weight: 600; color: #202020; }
+  .user-email { font-size: 12px; color: #888; }
+
   .status-select {
-    margin: 0;
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
+    padding: 6px 10px; border-radius: 6px; border: 1px solid #e0e0e0;
+    background-color: #fff; font-size: 13px; cursor: pointer;
+    font-family: inherit; color: #333;
   }
-  form select{
-    width: fit-content;
+  .status-select:hover { border-color: #bbb; }
+
+  details.bug-dropdown { position: relative; width: 100%; }
+  details.bug-dropdown summary {
+    list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    background: #f5f5f5; padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; color: #444; transition: all 0.2s; white-space: nowrap;
   }
+  details.bug-dropdown summary:hover { background: #eee; color: #000; }
+  details.bug-dropdown summary::-webkit-details-marker { display: none; }
+  details.bug-dropdown summary::after {
+    content: url('data:image/svg+xml;utf8,<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    display: block; width: 10px; height: 10px; transition: transform 0.2s;
+  }
+  details.bug-dropdown[open] summary::after { transform: rotate(180deg); }
+
+  .bug-popover {
+    position: absolute; right: 0; top: 100%; z-index: 9999;
+    margin-top: 4px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 320px; width: 400px;
+    max-height: 300px; overflow-y: auto;
+    text-align: left;
+  }
+
+  .bug-description { font-size: 13px; color: #444; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
+  .bug-url { font-size: 12px; color: #666; background: #f9f9f9; padding: 8px; border-radius: 4px; border: 1px solid #eee; word-break: break-all; }
+  .bug-actions { margin-top: 12px; display: flex; justify-content: flex-end; }
+  .btn-delete { color: #C62828; font-size: 12px; font-weight: 600; text-decoration: none; padding: 4px 8px; }
+  .btn-delete:hover { background: #FFEBEE; border-radius: 4px; }
 </style>
-<section class="top-default-page">
-  <%= link_to root_path, class: ("active" if @current_page == "users") do %>
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_3256_104)">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
-      </g>
-      <defs>
-        <clipPath id="clip0_3256_104">
-          <rect width="36" height="36" fill="white"/>
-        </clipPath>
-      </defs>
-    </svg>
-  <% end %>
-  <h1>Signalements de bugs</h1>
-</section>
-<section class="grid-1">
-  <h2>À faire</h2>
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>URL</th>
-          <th>Signalé par</th>
-          <th>Date</th>
-          <th>Statut</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @bug_reports_todo.each do |bug_report| %>
-          <tr>
-            <td><%= bug_report.description %></td>
-            <td><%= bug_report.url %></td>
-            <td><%= bug_report.user.email %></td>
-            <td><%= l(bug_report.created_at, format: :long) %></td>
-            <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status,
-        options_for_select(BugReport.statuses.map { |k, v| [v, k] }, bug_report.status),
-        class: 'status-select',
-        onchange: 'this.form.submit()' %>
-              <% end %>
-            </td>
-            <td>
-              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
-              <%= link_to 'Supprimer', bug_report_path(bug_report), 
-                    data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' }, 
-                    class: 'btn btn-danger' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <button id="load-more-button-todo" class="btn">Voir plus</button>
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <% end %>
+      <h1 class="users-dash-title">Signalements de bugs</h1>
+    </div>
   </div>
-</section>
-<section class="grid-1">
-  <h2>En cours</h2>
-  <div class="table-wrapper">
-    <table>
+  <div class="users-dash-kpi-grid">
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Signalements</span>
+        <div class="kpi-icon bg-blue-light">
+          <svg viewBox="0 0 24 24"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 12h-4v-1h4v1zm0-2h-4v-1h4v1zm0-2h-4v-1h4v1z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @total_bugs %></span>
+    </div>
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">À Faire</span>
+        <div class="kpi-icon bg-red-light">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @bugs_todo %></span>
+    </div>
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">En Cours</span>
+        <div class="kpi-icon bg-orange-light">
+          <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @bugs_in_progress %></span>
+    </div>
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Corrigés</span>
+        <div class="kpi-icon bg-green-light">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @bugs_resolved %></span>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <span class="chart-title">Évolution des signalements (6 derniers mois)</span>
+      <%= area_chart @evolution_bugs, height: "250px", colors: ["#202020"], library: { scales: { x: { grid: { display: false } }, y: { display: true } } } %>
+    </div>
+    <div class="chart-card">
+      <span class="chart-title">Répartition par statut</span>
+      <%= pie_chart @repartition_status, donut: true, height: "250px", colors: ["#C62828", "#EF6C00", "#2E7D32"], legend: "right" %>
+    </div>
+  </div>
+  <span class="section-title">Liste des signalements</span>
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
       <thead>
         <tr>
-          <th>Description</th>
-          <th>URL</th>
-          <th>Signalé par</th>
+          <th>Utilisateur</th>
           <th>Date</th>
+          <th>Aperçu</th>
           <th>Statut</th>
-          <th>Actions</th>
+          <th style="text-align:center;">Détails</th>
         </tr>
       </thead>
       <tbody>
-        <% @bug_reports_in_progress.each do |bug_report| %>
-          <tr>
-            <td><%= bug_report.description %></td>
-            <td><%= bug_report.url %></td>
-            <td><%= bug_report.user.email %></td>
-            <td><%= l(bug_report.created_at, format: :long) %></td>
-            <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status,
-                      options_for_select(BugReport.statuses.keys.map { |k| [BugReport.statuses[k], k] }, bug_report.status),
+        <% if @bug_reports.any? %>
+          <% @bug_reports.each do |bug| %>
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">
+                    <% if bug.user.profile_image.present? %>
+                      <%= image_tag bug.user.profile_image %>
+                    <% else %>
+                      <%= bug.user.pseudo&.first&.upcase || "?" %>
+                    <% end %>
+                  </div>
+                  <div class="user-info">
+                    <span class="user-name"><%= bug.user.pseudo %></span>
+                    <span class="user-email"><%= bug.user.email %></span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <%= bug.created_at.strftime("%d/%m/%Y") %>
+                <div style="font-size: 11px; color: #999;"><%= time_ago_in_words(bug.created_at) %></div>
+              </td>
+              <td>
+                <span title="<%= bug.description %>">
+                  <%= truncate(bug.description, length: 40) %>
+                </span>
+              </td>
+              <td>
+                <%= form_with url: update_status_bug_report_path(bug), method: :patch, local: true do %>
+                  <%= select_tag :status,
+                      options_for_select(BugReport.statuses.keys.map { |k| [I18n.t("enums.bug_report.status.#{k}", default: k.humanize), k] }, bug.status),
                       class: 'status-select',
                       onchange: 'this.form.submit()' %>
-              <% end %>
-            </td>
-            <td>
-              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
-              <%= link_to 'Supprimer', bug_report_path(bug_report), 
-                    data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' }, 
-                    class: 'btn btn-danger' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <button id="load-more-button-in-progress" class="btn">Voir plus</button>
-  </div>
-</section>
-<section class="grid-1">
-  <h2>Corrigé</h2>
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>URL</th>
-          <th>Signalé par</th>
-          <th>Date</th>
-          <th>Statut</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @bug_reports_resolved.each do |bug_report| %>
+                <% end %>
+              </td>
+              <td style="text-align:center;">
+                <details class="bug-dropdown">
+                  <summary>Voir le rapport</summary>
+                  <div class="bug-popover">
+                    <div style="font-weight:600; margin-bottom:8px; font-size:13px;">Description complète :</div>
+                    <div class="bug-description">
+                      <%= bug.description %>
+                    </div>
+                    <% if bug.url.present? %>
+                      <div style="font-weight:600; margin-bottom:4px; margin-top:12px; font-size:13px;">URL concernée :</div>
+                      <div class="bug-url">
+                        <%= link_to bug.url, bug.url, target: "_blank", style: "color:#1565C0; text-decoration:none;" %>
+                      </div>
+                    <% end %>
+                    <div class="bug-actions">
+                      <%= link_to 'Supprimer ce signalement', bug_report_path(bug), 
+                          data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr de vouloir supprimer ce rapport ?' }, 
+                          class: 'btn-delete' %>
+                    </div>
+                  </div>
+                </details>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
           <tr>
-            <td><%= bug_report.description %></td>
-            <td><%= bug_report.url %></td>
-            <td><%= bug_report.user.email %></td>
-            <td><%= l(bug_report.created_at, format: :long) %></td>
-            <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status,
-                      options_for_select(BugReport.statuses.keys.map { |k| [BugReport.statuses[k], k] }, bug_report.status),
-                      class: 'status-select',
-                      onchange: 'this.form.submit()' %>
-              <% end %>
-            </td>
-            <td>
-              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
-              <%= link_to 'Supprimer', bug_report_path(bug_report), 
-                    data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' }, 
-                    class: 'btn btn-danger' %>
+            <td colspan="5" style="text-align: center; color: #999; padding: 30px;">
+              Aucun bug signalé pour le moment.
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
-    <button id="load-more-button-resolved" class="btn">Voir plus</button>
+    <% if @bug_reports.respond_to?(:total_pages) %>
+      <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
+        <%= paginate @bug_reports %>
+      </div>
+    <% end %>
   </div>
-</section>
-<section class="grid-1">
-  <h2>Tous les reports</h2>
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>URL</th>
-          <th>Signalé par</th>
-          <th>Date</th>
-          <th>Statut</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @bug_reports_all.each do |bug_report| %>
-          <tr>
-            <td><%= bug_report.description %></td>
-            <td><%= bug_report.url %></td>
-            <td><%= bug_report.user.email %></td>
-            <td><%= l(bug_report.created_at, format: :long) %></td>
-            <td>
-              <%= form_with url: update_status_bug_report_path(bug_report), method: :patch, local: true, class: "status-form" do %>
-                <%= select_tag :status,
-                      options_for_select(BugReport.statuses.keys.map { |k| [BugReport.statuses[k], k] }, bug_report.status),
-                      class: 'status-select',
-                      onchange: 'this.form.submit()' %>
-              <% end %>
-            </td>
-            <td>
-              <%= link_to 'Voir', bug_report_path(bug_report), class: 'btn' %>
-              <%= link_to 'Supprimer', bug_report_path(bug_report), 
-                    data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' }, 
-                    class: 'btn btn-danger' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <button id="load-more-button-all" class="btn">Voir plus</button>
-  </div>
-</section>
+</div>
+<script>
+  document.addEventListener("click", function(e) {
+    if (e.target.tagName === "SUMMARY") {
+      document.querySelectorAll("details.bug-dropdown[open]").forEach(detail => {
+        if (detail !== e.target.parentElement) {
+          detail.removeAttribute("open");
+        }
+      });
+    }
+  });
+
+  document.querySelectorAll('.bug-popover').forEach(popover => {
+    popover.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  });
+</script>

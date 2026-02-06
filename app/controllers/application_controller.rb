@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale
   before_action :track_visit, if: :user_signed_in?
+  before_action :check_gamification_badges, if: :user_signed_in?
 
   def set_theme
     theme = params[:theme]
@@ -63,11 +64,18 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def check_gamification_badges
+    current_hour = Time.current.in_time_zone("Europe/Paris").hour
+    
+    if current_hour >= 0 && current_hour < 5
+      GamificationService.new(current_user).check_noctambule
+    end
+  end
+
   def after_sign_in_path_for(resource)
     if resource.is_a?(User)
       service = GamificationService.new(resource)
       
-      service.check_noctambule
       service.check_multi_support 
     end
 

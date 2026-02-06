@@ -11,4 +11,9 @@ class BadgesController < ApplicationController
     @special_badges = @badges.select { |b| b.special? }
     @level_badges = @badges.reject { |b| b.special? }.group_by(&:category)
   end
+
+  def rate_app
+  GamificationService.new(current_user).check_omniscient_supporter
+  head :ok 
+end
 end

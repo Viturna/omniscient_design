@@ -46,6 +46,11 @@ end
     end
   end
 
+  # "Omniscient Supporter" : Clic sur le lien de notation
+  def check_omniscient_supporter
+    assign_badge(name: "Omniscient Supporter", category: "special")
+  end
+
   # --- 2. BADGES À NIVEAUX ---
 
   # "Donateur" : Appelé manuellement ou via webhook paiement

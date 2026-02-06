@@ -37,7 +37,13 @@
         <% @special_badges.each do |badge| %>
           <% unlocked = @my_badge_ids.include?(badge.id) %>
           <% next if badge.name == "Early Adopter" && !unlocked %>
-          <%= render partial: "badge_card", locals: { badge: badge, unlocked: unlocked } %>
+          <% if badge.name == "Omniscient Supporter" && !unlocked %>
+            <div onclick="triggerRating()" style="cursor: pointer;">
+              <%= render partial: "badge_card", locals: { badge: badge, unlocked: false } %>
+            </div>
+          <% else %>
+            <%= render partial: "badge_card", locals: { badge: badge, unlocked: unlocked } %>
+          <% end %>
         <% end %>
       </div>
     </div>
@@ -53,3 +59,44 @@
     </div>
   <% end %>
 </section>
+<script>
+  function triggerRating() {
+    // 1. Détection de l'OS
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    var url = "";
+
+    // IDs à remplacer par les tiens
+    var iosAppId = "6754964970"; // ex: 123456789
+    var androidPackage = "com.thomasriq.omniscientdesign"; // ex: com.omniscient.design
+
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      // Lien direct vers la popup d'avis App Store
+      url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+    } else if (/android/i.test(userAgent)) {
+      // Lien direct vers le Play Store
+      url = "market://details?id=" + androidPackage;
+      // Fallback web si le market scheme ne marche pas (optionnel)
+      // url = "https://play.google.com/store/apps/details?id=" + androidPackage;
+    } else {
+      // Fallback Web (Google Reviews ou autre)
+      url = "TON_LIEN_GOOGLE_MY_BUSINESS_OU_TRUSTPILOT";
+    }
+
+    // 2. Appel serveur pour débloquer le badge (AJAX)
+    fetch("<%= rate_app_badge_path %>", {
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+        "Content-Type": "application/json"
+      }
+    }).then(() => {
+      // 3. Une fois l'appel serveur parti, on ouvre le store
+      window.location.href = url;
+
+      // Optionnel : Recharger la page après un délai pour montrer le badge débloqué au retour
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    });
+  }
+</script>

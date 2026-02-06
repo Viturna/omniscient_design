@@ -131,6 +131,7 @@ Rails.application.routes.draw do
     end
 
     get 'mes-badges', to: 'badges#index', as: :badges
+    post 'badges/rate_app', to: 'badges#rate_app', as: :rate_app_badge
 
     # Pages statiques
     get '/search_autocomplete', to: 'search#autocomplete'

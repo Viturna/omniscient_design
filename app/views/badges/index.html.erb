@@ -62,21 +62,23 @@
 <script>
   function triggerRating() {
     // 1. Définir une URL par défaut (Fallback pour Desktop)
-    // IMPORTANT : Toujours mettre https:// sinon le navigateur cherche sur ton site
     var url = "https://www.google.com/search?q=Omniscient+Design";
 
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-    // IDs (Change les valeurs ici)
+    // IDs
     var iosAppId = "6754964970";
     var androidPackage = "com.thomasriq.omniscientdesign";
 
-    // 2. Détection de l'OS pour écraser l'URL par défaut si besoin
+    // 2. Détection de l'OS
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      // iOS
-      url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      // iOS : ON CHANGE ICI
+      // Utiliser 'itms-apps://' force l'ouverture de l'application App Store
+      // au lieu d'ouvrir une page web dans Chrome/Safari.
+      url = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+
     } else if (/android/i.test(userAgent)) {
-      // Android
+      // Android : market:// force l'ouverture du Play Store
       url = "market://details?id=" + androidPackage;
     }
 
@@ -88,19 +90,18 @@
         "Content-Type": "application/json"
       }
     }).then(() => {
-      // 4. Redirection vers le store ou le site web
-      // Le setTimeout permet de laisser le temps à la requête fetch de partir
+      // 4. Redirection vers le store
       if (url) {
         window.location.href = url;
       }
 
-      // Recharger la page après un délai pour voir le badge
+      // Recharger la page après un délai pour voir le badge au retour
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     }).catch(err => {
       console.error("Erreur serveur :", err);
-      // On redirige quand même si le serveur plante
+      // Redirection de secours même si erreur serveur
       if (url) window.location.href = url;
     });
   }

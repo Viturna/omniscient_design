@@ -505,12 +505,6 @@
 
 /* --- MEGA MENU & ACCORDÉON --- */
 
-/* Conteneur principal du filtre */
-.filter[data-controller="mega-menu"] {
-  position: relative;
-  width: 16vw !important; /* Force la largeur pour l'alignement */
-}
-
 /* 1. Le Bouton Principal (Remplacement Select2) */
 .mega-menu-btn {
   width: 100%;

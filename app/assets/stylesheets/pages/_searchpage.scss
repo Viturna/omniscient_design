@@ -503,6 +503,220 @@
   user-select: none;
 }
 
+/* --- MEGA MENU & ACCORDÉON --- */
+
+/* Conteneur principal du filtre */
+.filter[data-controller="mega-menu"] {
+  position: relative;
+  width: 16vw !important; /* Force la largeur pour l'alignement */
+}
+
+/* 1. Le Bouton Principal (Remplacement Select2) */
+.mega-menu-btn {
+  width: 100%;
+  height: 55px;
+  padding: 10px 15px;
+  background: #fff;
+  border: 2px solid #e9e9e9;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 16px;
+  color: #202020;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #bbb;
+  }
+
+  /* État ouvert */
+  &.active {
+    border-color: #202020;
+  }
+
+  /* État avec sélection active */
+  &.has-selection {
+    background-color: #202020;
+    color: #fff;
+    border-color: #202020;
+
+    svg path {
+      stroke: #fff;
+    }
+  }
+}
+
+/* 2. Le Contenu Déroulant (La "Carte Blanche") */
+.mega-menu-content {
+  display: none; /* Caché par défaut */
+  position: absolute;
+  top: 65px;
+  right: -25vw;
+  width: 900px; /* Largeur pour 4 colonnes */
+  max-width: 90vw;
+  background: #fff;
+  border: 1px solid #e9e9e9;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 32px;
+  z-index: 999;
+  cursor: default;
+
+  &.active {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+/* La Grille 4 Colonnes */
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.mega-menu-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espace entre les groupes */
+}
+
+/* Titre du Thème (ex: CONCEPTION) */
+.mega-menu-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #202020;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+  margin: 0 0 8px 0;
+}
+
+/* Groupe Notion (Contient Titre + Liste) */
+.mega-menu-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. Titre de la Notion (Header Accordéon) */
+.mega-menu-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid transparent; /* Pour éviter le saut au hover */
+  padding: 8px 0;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: color 0.2s;
+  border-bottom: 1px solid #f5f5f5;
+
+  &:hover {
+    color: #000;
+  }
+
+  /* Rotation de la flèche quand actif */
+  &.active {
+    font-weight: 700;
+    .chevron-icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  .chevron-icon {
+    transition: transform 0.3s ease;
+  }
+}
+
+/* 4. Liste des Verbes (Contenu Accordéon) */
+.mega-menu-items {
+  display: none; /* Caché par défaut pour éviter la liste à rallonge */
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0 12px 8px;
+  background-color: #fafafa; /* Léger fond gris pour différencier */
+  border-radius: 4px;
+  margin-top: 4px;
+
+  /* Classe ajoutée par JS pour ouvrir */
+  &.open {
+    display: flex;
+    animation: slideDown 0.2s ease-out forwards;
+  }
+}
+
+/* Un Item (Checkbox + Label) */
+.mega-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #555;
+  transition: color 0.1s;
+
+  &:hover {
+    color: #000;
+  }
+
+  input[type="checkbox"] {
+    accent-color: #202020;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Mobile */
+@media screen and (max-width: 1024px) {
+  .mega-menu-content {
+    width: 90vw;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+  }
+
+  .mega-menu-grid {
+    grid-template-columns: 1fr; /* 1 seule colonne */
+    gap: 24px;
+  }
+}
+
 // Filter frise
 .filter {
   width: 16vw;

@@ -269,6 +269,15 @@ select {
   width: 100% !important;
 }
 
+.select2-container--default .select2-results__group {
+  font-weight: 600 !important; /* Semibold */
+  color: #202020 !important; /* Couleur foncée pour le contraste */
+  font-size: 14px !important; /* Taille adaptée */
+  text-transform: uppercase; /* Optionnel : pour bien distinguer du reste */
+  padding: 14px 12px 24px 12px !important; /* Espacement */
+  background-color: #f9f9f9;
+  cursor: default;
+}
 /* Forcer la hauteur du champ */
 .select2-container .select2-selection--single {
   padding-left: 25px !important;

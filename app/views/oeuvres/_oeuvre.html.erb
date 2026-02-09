@@ -237,11 +237,18 @@
           <h1 class="title-card"><%= oeuvre.nom_oeuvre %></h1>
         </div>
         <h2 class="title-description-reference"><%= t('oeuvres.notions') %></h2>
-        <% if oeuvre.notions.any? %>
-          <div class="notions-flex">
-            <% oeuvre.notions.each do |notion| %>
-              <div class="notion-container">
-                <%= notion.name %>
+        <% if oeuvre.verbs.any? %>
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <% oeuvre.verbs.includes(:notion).group_by(&:notion).sort_by { |n, _| n.name }.each do |notion, verbs| %>
+              <div class="notions-flex">
+                <div class="notion-container" style="background-color: #202020;">
+                  <span style="color: #FFF; font-weight: 500;"> <%= notion.name %></span>
+                </div>
+                <% verbs.each do |verb| %>
+                  <div class="notion-container">
+                    <%= verb.name %>
+                  </div>
+                <% end %>
               </div>
             <% end %>
           </div>

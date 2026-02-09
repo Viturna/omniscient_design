@@ -387,7 +387,7 @@ def save_modal
       :impact_et_message,
       :date_oeuvre,
       designer_ids: [],
-      notion_ids: [],
+      verb_ids: [],
       domaine_ids: [],
       studio_ids: [],
       source: [],

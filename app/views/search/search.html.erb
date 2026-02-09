@@ -154,21 +154,46 @@
                 }
               } %>
       </div>
-      <div class="filter" data-tabs-search-target="notionsFilter">
-        <label for="notionsFilter"><%= t('search.notions') %></label>
-        <%= form.select :notions, 
-              Notion.all.map { |n| [n.name, n.id] }, 
-              { include_blank: t('search.choose_notions'), selected: params[:notions] }, 
-              { 
-                multiple: true, 
-                class: "form-control", 
-                name: "notions[]",
-                data: {
-                  controller: "select2",
-                  select2_placeholder_value: t('search.choose_notions'),
-                  action: "change->tabs-search#update"
-                }
-              } %>
+      <div class="filter" data-tabs-search-target="notionsFilter" data-controller="mega-menu">
+        <label><%= t('search.notions') %></label>
+        <button type="button" class="mega-menu-btn" data-mega-menu-target="button" data-action="click->mega-menu#toggle">
+          <span data-mega-menu-target="label"><%= t('search.choose_notions') %></span>
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="mega-menu-content" data-mega-menu-target="content">
+          <div class="mega-menu-grid">
+            <% Notion.unique_themes.each do |theme| %>
+              <div class="mega-menu-column">
+                <h4 class="mega-menu-title"><%= theme %></h4>
+                <% Notion.by_theme(theme).ordered.each do |notion| %>
+                  <div class="mega-menu-group">
+                    <div class="mega-menu-subtitle" data-action="click->mega-menu#toggleAccordion">
+                      <span><%= notion.name %></span>
+                      <svg class="chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" style="transition: transform 0.2s ease;">
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <% has_checked_item = notion.verbs.any? { |v| params[:notions]&.include?(v.id.to_s) } %>
+                    <div class="mega-menu-items <%= 'open' if has_checked_item %>">
+                      <% notion.verbs.each do |verb| %>
+                        <label class="mega-menu-item">
+                          <input type="checkbox" 
+                                 name="notions[]" 
+                                 value="<%= verb.id %>" 
+                                 <%= "checked" if params[:notions]&.include?(verb.id.to_s) %>
+                                 data-action="change->tabs-search#update change->mega-menu#updateLabel">
+                          <span><%= verb.name %></span>
+                        </label>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
       <div class="filter" data-tabs-search-target="countryFilter">
         <label for="paysFilter"><%= t('search.country') %></label>
@@ -225,7 +250,8 @@
                 data-tabs-search-target="sortSelect"
                 data-controller="select2"
                 data-action="change->tabs-search#update"
-          data-select2-minimum-results-for-search-value="Infinity"> <% if params[:tab] == 'references' %>
+          data-select2-minimum-results-for-search-value="Infinity">
+          <% if params[:tab] == 'references' %>
             <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
               <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
                 <option value="oeuvre_asc" <%= 'selected' if params[:sort] == 'oeuvre_asc' %>><%= t('search.oeuvre_old_new') %></option>
@@ -327,7 +353,6 @@
                                         <% if designer.designer_images.first&.file&.attached? %>
                                           <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
                                         <% else %>
-                                          <%# Fallback : une div vide avec une couleur ou sans image %>
                                           <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
                                         <% end %>
                                       <% end %>
@@ -340,7 +365,6 @@
                                     <% if designer.designer_images.first&.file&.attached? %>
                                       <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
                                     <% else %>
-                                      <%# Fallback : une div vide avec une couleur ou sans image %>
                                       <div class="oeuvre" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
                                     <% end %>
                                   <% end %>
@@ -369,7 +393,6 @@
                                         <% if studio.studio_images.first&.file&.attached? %>
                                           <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
                                         <% else %>
-                                          <%# Fallback : une div vide avec une couleur ou sans image %>
                                           <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
                                         <% end %>
                                       <% end %>
@@ -382,7 +405,6 @@
                                     <% if studio.studio_images.first&.file&.attached? %>
                                       <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
                                     <% else %>
-                                      <%# Fallback : une div vide avec une couleur ou sans image %>
                                       <div class="oeuvre" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
                                     <% end %>
                                   <% end %>

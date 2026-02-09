@@ -121,9 +121,9 @@
                 }
               } %>
           </div>
-            <div>
-          <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
-          <%= form.collection_select :domaine_ids, 
+          <div>
+            <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id') %>
+            <%= form.collection_select :domaine_ids, 
               Domaine.order(:domaine), 
               :id, 
               :domaine, 
@@ -137,7 +137,7 @@
                   select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
                 }
               } %>
-        </div>
+          </div>
           <div>
             <%= form.label :studio_ids, 'Studio(s) associé(s)' %>
             <%= form.collection_select :studio_ids, 
@@ -157,23 +157,24 @@
           </div>
         </div>
         <div>
-          <%= form.label :notion_ids, t('add_oeuvre.steps.2.notion_ids') %>
-          <%= form.collection_select :notion_ids, 
-              Notion.order(:name), 
-              :id, 
-              :name, 
-              { include_blank: false }, 
-              { 
-                class: "form-control", 
-                multiple: true, 
-                name: "oeuvre[notion_ids][]",
-                data: {
-                  controller: "select2",
-                  select2_placeholder_value: "Sélectionnez une ou plusieurs notions..."
-                }
-              } %>
+          <label for="oeuvre_verb_ids">Verbes associés (Classés par Notion)</label>
+          <%= form.grouped_collection_select :verb_ids, 
+                Notion.includes(:verbs).order(:name),
+                :verbs,
+                :name,
+                :id,
+                :name, 
+                { include_blank: false, selected: @oeuvre.verb_ids }, 
+                { 
+                  class: "form-control", 
+                  multiple: true, 
+                  name: "oeuvre[verb_ids][]",
+                  data: {
+                    controller: "select2",
+                    select2_placeholder_value: "Sélectionnez des verbes..."
+                  }
+                } %>
         </div>
-      
         <div data-controller="year-validator">
           <%= form.label :date_oeuvre, t('add_oeuvre.steps.4.date_oeuvre') %>
           <%= form.text_field :date_oeuvre, 

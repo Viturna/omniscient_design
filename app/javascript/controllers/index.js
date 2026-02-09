@@ -40,6 +40,9 @@ application.register("load-more-table", LoadMoreTableController)
 import LoadingController from "./loading_controller"
 application.register("loading", LoadingController)
 
+import MegaMenuController from "./mega_menu_controller"
+application.register("mega-menu", MegaMenuController)
+
 import MultiSelectController from "./multi_select_controller"
 application.register("multi-select", MultiSelectController)
 

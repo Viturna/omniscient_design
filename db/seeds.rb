@@ -26,39 +26,38 @@ require 'uri'
 # --- Notions ---
 puts "🌱 Création de l'architecture Thèmes > Notions > Verbes..."
 
-# On nettoie pour éviter les doublons lors des tests
-# Attention : cela efface les liens existants
+# On nettoie pour éviter les doublons avec les anciennes versions en majuscules
 Verb.destroy_all
 Notion.destroy_all
 
 definitions = {
-  "MATÉRIALITÉ & ENVIRONNEMENT" => {
-    "LA MATÉRIALITÉ" => ["Texturer", "Solliciter", "Rendre tangible", "Expérimenter"],
-    "L’UPCYCLING" => ["Réemployer", "Ennoblir", "Régénérer", "Réparer"],
-    "L'HYBRIDATION" => ["Croiser", "Fusionner", "Métisser", "Confronter"],
-    "LE VERNACULAIRE" => ["Transmettre", "Réinterpréter", "Ancrer", "Perpétuer"],
-    "LE BIOMIMÉTISME" => ["Imiter", "S'inspirer", "Reproduire", "Bio-sourcer"]
+  "Matérialité & Environnement" => {
+    "La matérialité" => ["Texturer", "Solliciter", "Rendre tangible", "Expérimenter"],
+    "L’upcycling" => ["Réemployer", "Ennoblir", "Régénérer", "Réparer"],
+    "L'hybridation" => ["Croiser", "Fusionner", "Métisser", "Confronter"],
+    "Le vernaculaire" => ["Transmettre", "Réinterpréter", "Ancrer", "Perpétuer"],
+    "Le biomimétisme" => ["Imiter", "S'inspirer", "Reproduire", "Bio-sourcer"]
   },
-  "CONCEPTION & STRUCTURE" => {
-    "LA TECTONIQUE" => ["Assembler", "Articuler", "Connecter", "Révéler la structure"],
-    "LA MODULARITÉ" => ["Moduler", "Combiner", "Interchanger", "Étendre"],
-    "LA SÉRIALITÉ" => ["Standardiser", "Répéter", "Dupliquer", "Industrialiser"],
-    "LE SYSTÈME" => ["Structurer", "Organiser", "Hiérarchiser", "Griller"]
+  "Conception & Structure" => {
+    "La tectonique" => ["Assembler", "Articuler", "Connecter", "Révéler la structure"],
+    "La modularité" => ["Moduler", "Combiner", "Interchanger", "Étendre"],
+    "La sérialité" => ["Standardiser", "Répéter", "Dupliquer", "Industrialiser"],
+    "Le système" => ["Structurer", "Organiser", "Hiérarchiser", "Griller"]
   },
-  "PLASTICITÉ & IMPACT VISUEL" => {
-    "L'ÉPURATION" => ["Épurer", "Soustraire", "Simplifier", "Évider"],
-    "L'ACCUMULATION" => ["Saturer", "Amasser", "Proliférer", "Multiplier"],
-    "LA STRATIFICATION" => ["Superposer", "Empiler", "Chevaucher", "Stratifier"],
-    "LA TRANSPARENCE" => ["Filtrer", "Révéler", "Voiler", "Opacifier"],
-    "LE RYTHME" => ["Cadencer", "Séquencer", "Rompre", "Désarçonner"],
-    "LE CONTRASTE" => ["Opposer", "Nuancer", "Dissoner", "Polariser"]
+  "Plasticité & Impact visuel" => {
+    "L'épuration" => ["Épurer", "Soustraire", "Simplifier", "Évider"],
+    "L'accumulation" => ["Saturer", "Amasser", "Proliférer", "Multiplier"],
+    "La stratification" => ["Superposer", "Empiler", "Chevaucher", "Stratifier"],
+    "La transparence" => ["Filtrer", "Révéler", "Voiler", "Opacifier"],
+    "Le rythme" => ["Cadencer", "Séquencer", "Rompre", "Désarçonner"],
+    "Le contraste" => ["Opposer", "Nuancer", "Dissoner", "Polariser"]
   },
-  "USAGE & EXPÉRIENCE" => {
-    "L'ERGONOMIE" => ["Adapter", "Conformer", "Sécuriser", "Optimiser"],
-    "L'AFFORDANCE" => ["Suggérer", "Guider", "Induire", "Signifier"],
-    "L'APPROPRIATION" => ["Détourner", "Hacker", "Manipuler", "Personnaliser"],
-    "LA FLEXIBILITÉ" => ["Transformer", "Partager", "Reconfigurer", "Escamoter"],
-    "LA NARRATIVITÉ" => ["Scénariser", "Évoquer", "Symboliser", "Théâtraliser"]
+  "Usage & Expérience" => {
+    "L'ergonomie" => ["Adapter", "Conformer", "Sécuriser", "Optimiser"],
+    "L'affordance" => ["Suggérer", "Guider", "Induire", "Signifier"],
+    "L'appropriation" => ["Détourner", "Hacker", "Manipuler", "Personnaliser"],
+    "La flexibilité" => ["Transformer", "Partager", "Reconfigurer", "Escamoter"],
+    "La narrativité" => ["Scénariser", "Évoquer", "Symboliser", "Théâtraliser"]
   }
 }
 
@@ -69,7 +68,7 @@ definitions.each do |theme, notions_hash|
       name: notion_name,
       theme: theme
     )
-    puts "📂 Notion créée : #{notion.name}"
+    puts "📂 Notion créée : #{notion.name} (#{theme})"
 
     # 2. Créer les Verbes liés à cette Notion
     verbs_list.each do |verb_name|
@@ -83,7 +82,6 @@ definitions.each do |theme, notions_hash|
 end
 
 puts "✨ Terminé ! #{Notion.count} Notions et #{Verb.count} Verbes créés."
-
 # --- Établissements ---
 # puts "\n--- Import des Établissements ---"
 # def extract_uai_from_email(email_string)

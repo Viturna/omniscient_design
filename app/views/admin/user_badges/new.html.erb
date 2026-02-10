@@ -1,24 +1,225 @@
-<div class="admin-content-container">
-  <h1>Attribuer un Badge</h1>
-  <p>Utilisez ce formulaire pour donner un badge spécifique à un utilisateur (ex: Donateur, Vainqueur de concours...).</p>
-  <div class="card-admin" style="max-width: 600px; margin-top: 24px; padding: 32px; background: white; border-radius: 8px;">
-    <%= form_with url: admin_user_badges_path, local: true do |f| %>
-      <div class="form-group" style="margin-bottom: 20px;">
-        <%= f.label :user_id, "Utilisateur", style: "display:block; margin-bottom: 8px; font-weight:600;" %>
-        <%# Select2 pour chercher parmi tous les utilisateurs %>
-        <%= f.collection_select :user_id, @users, :id, :email, 
-            { prompt: "Rechercher un utilisateur (email)..." }, 
-            { class: "form-control", data: { controller: "select2" }, style: "width: 100%;" } %>
+<style>
+  /* --- REPRISE DE LA DA GLOBALE --- */
+  .admin-dashboard-wrapper {
+    padding: 40px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+
+  .dashboard-title-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .dashboard-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #202020;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .dashboard-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin: 4px 0 0 0;
+    font-weight: 400;
+  }
+
+  .dashboard-back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #eee;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .dashboard-back-link:hover {
+    background-color: #f0f0f0;
+    transform: translateX(-2px);
+  }
+
+  /* Card Container Centré */
+  .form-card-container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .dash-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f0f0f0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* --- STYLE DU FORMULAIRE --- */
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #202020;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #f9f9f9;
+    color: #202020;
+    font-weight: 500;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #202020;
+    background: #fff;
+  }
+
+  /* Override Select2 pour matcher le design */
+  .select2-container--default .select2-selection--single {
+    background-color: #f9f9f9 !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #202020 !important;
+    padding-left: 16px !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 48px !important;
+    right: 10px !important;
+  }
+
+  .form-actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-submit {
+    background-color: #202020;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 30px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-submit:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-dashboard-wrapper {
+      padding: 20px 16px;
+    }
+    .dash-card {
+      padding: 24px;
+    }
+    .dashboard-title {
+      font-size: 24px;
+    }
+    .btn-submit {
+      width: 100%;
+    }
+  }
+</style>
+<div class="admin-dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="dashboard-title-group">
+      <%= link_to admin_root_path, class: "dashboard-back-link", title: "Retour" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+      <% end %>
+      <div>
+        <h1 class="dashboard-title">Attribuer un Badge</h1>
+        <p class="dashboard-subtitle">Donner un badge spécifique (Donateur, Vainqueur...) à un membre.</p>
       </div>
-      <div class="form-group" style="margin-bottom: 24px;">
-        <%= f.label :badge_id, "Badge à attribuer", style: "display:block; margin-bottom: 8px; font-weight:600;" %>
-        <%= f.collection_select :badge_id, @badges, :id, :name, 
-            { prompt: "Choisir un badge..." }, 
-            { class: "form-control", data: { controller: "select2" }, style: "width: 100%;" } %>
-      </div>
-      <div class="form-actions">
-        <%= f.submit "Attribuer le Badge", class: "button dark" %>
-      </div>
-    <% end %>
+    </div>
+  </div>
+  <div class="form-card-container">
+    <div class="dash-card">
+      <%= form_with url: admin_user_badges_path, local: true do |f| %>
+        <div class="form-group">
+          <%= f.label :user_id, "Utilisateur", class: "form-label" %>
+          <%= f.collection_select :user_id, @users, :id, :email, 
+              { prompt: "Rechercher un utilisateur par email..." }, 
+              { 
+                class: "form-control", 
+                data: { controller: "select2" }, 
+                style: "width: 100%;" 
+              } %>
+        </div>
+        <div class="form-group">
+          <%= f.label :badge_id, "Badge à attribuer", class: "form-label" %>
+          <%= f.collection_select :badge_id, @badges, :id, :name, 
+              { prompt: "Sélectionner le badge..." }, 
+              { 
+                class: "form-control", 
+                data: { controller: "select2" }, 
+                style: "width: 100%;" 
+              } %>
+        </div>
+        <div class="form-actions">
+          <%= f.button type: "submit", class: "btn-submit" do %>
+            <span>Attribuer le Badge</span>
+            <svg style="width: 20px; height: 20px; fill: #fff; margin-left: 8px;" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>

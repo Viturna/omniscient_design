@@ -1,59 +1,265 @@
-<section class="top-default-page">
-  <%= link_to root_path do %>
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
-    </svg>
-  <% end %>
-  <h1>Envoyer une Notification</h1>
-</section>
-<section class="grid-1" data-controller="admin-notification">
-  <div class="container">
-    <%# Utilisation de notifications_path car c'est une action d'admin %>
-    <%= form_with url: notifications_path, local: true, data: { action: "submit->admin-notification#submit" } do |form| %>
-      <div class="form-group">
-        <%= form.label :user_id, "Destinataire(s)" %>
-        <%# Checkbox pour "Tous les utilisateurs" %>
-        <div class="form-check" style="margin-bottom: 10px;">
-          <input type="checkbox" 
-                 id="select-all-users" 
-                 name="select_all" 
-                 value="all" 
-                 class="form-check-input"
-                 data-admin-notification-target="checkbox"
-                 data-action="change->admin-notification#toggleSelection">
-          <label class="form-check-label" for="select-all-users">
-            Sélectionner Tous les Utilisateurs
-          </label>
-        </div>
-        <%= select_tag 'user_ids[]', 
-            options_from_collection_for_select(@users, :id, ->(u) { "#{u.email} (ID: #{u.id})" }), 
-            { 
-              class: "form-control user-multiselect", 
-              multiple: true, 
-              id: "user-select-field",
-              data: { 
-                admin_notification_target: "select"
-              } 
-            } %>
-      </div>
-      <div class="form-group">
-        <%= form.label :link, "Lien de redirection (optionnel)" %>
-        <%= form.text_field :link, class: "form-control", placeholder: "Ex: https://omniscient-design.fr/oeuvres ou /profil" %>
-        <small style="color: #666;">Laissez vide pour une simple info sans clic.</small>
-      </div>
-      <div class="form-group">
-        <%= form.label :title, "Titre de la notification" %>
-        <%= form.text_field :title, class: "form-control", required: true, placeholder: "Ex: Nouveauté, Rappel..." %>
-      </div>
-      <div class="form-group">
-        <%= form.label :message, "Message de la notification" %>
-        <%= form.text_area :message, rows: 5, class: "form-control", required: true %>
-      </div>
-      <div class="actions">
-        <%= form.submit "Envoyer la notification", 
-            class: "button dark", 
-            data: { confirm: "Êtes-vous sûr de vouloir envoyer cette notification ?" } %>
-      </div>
-    <% end %>
+<style>
+  /* --- REPRISE DE LA DA GLOBALE --- */
+  .users-dash-wrapper {
+    padding: 40px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .users-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+
+  .users-dash-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #202020;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .users-dash-back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #eee;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .users-dash-back-link:hover {
+    background-color: #f0f0f0;
+    transform: translateX(-2px);
+  }
+
+  /* Card Container Centré */
+  .form-card-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .dash-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f0f0f0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* --- STYLE DU FORMULAIRE --- */
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #202020;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #f9f9f9;
+    color: #202020;
+    font-weight: 500;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #202020;
+    background: #fff;
+  }
+
+  textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .form-help-text {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  /* Style Checkbox "Sélectionner tout" */
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #E8F5E9;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #C8E6C9;
+    cursor: pointer;
+  }
+
+  .checkbox-wrapper input[type="checkbox"] {
+    accent-color: #2E7D32;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  .checkbox-label {
+    font-weight: 600;
+    color: #2E7D32;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Override Select2 pour matcher le design */
+  .select2-container--default .select2-selection--multiple {
+    background-color: #f9f9f9 !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    min-height: 50px !important;
+    padding: 4px;
+  }
+
+  .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #202020 !important;
+    background: #fff !important;
+  }
+
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #202020 !important;
+    border: 1px solid #202020 !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    margin-top: 6px !important;
+  }
+
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff !important;
+    margin-right: 8px !important;
+  }
+
+  .form-actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-submit {
+    background-color: #202020;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 30px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-submit:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .users-dash-wrapper { padding: 20px 16px; }
+    .dash-card { padding: 24px; }
+    .users-dash-title { font-size: 24px; }
+    .btn-submit { width: 100%; }
+  }
+</style>
+<div class="users-dash-wrapper" data-controller="admin-notification">
+  <div class="users-dash-header">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <% end %>
+      <h1 class="users-dash-title">Envoyer une Notification</h1>
+    </div>
   </div>
-</section>
+  <div class="form-card-container">
+    <div class="dash-card">
+      <%= form_with url: notifications_path, local: true, data: { action: "submit->admin-notification#submit" } do |form| %>
+        <div class="form-group">
+          <label class="form-label">Destinataire(s)</label>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" 
+                   id="select-all-users" 
+                   name="select_all" 
+                   value="all" 
+                   data-admin-notification-target="checkbox"
+                   data-action="change->admin-notification#toggleSelection">
+            <label class="checkbox-label" for="select-all-users">
+              Envoyer à tous les utilisateurs
+            </label>
+          </div>
+          <%= select_tag 'user_ids[]', 
+              options_from_collection_for_select(@users, :id, ->(u) { "#{u.email} (ID: #{u.id})" }), 
+              { 
+                class: "form-control user-multiselect", 
+                multiple: true, 
+                id: "user-select-field",
+                style: "width: 100%;",
+                data: { 
+                  admin_notification_target: "select",
+                  controller: "select2",
+                  placeholder: "Rechercher des utilisateurs..."
+                } 
+              } %>
+        </div>
+        <div class="form-group">
+          <%= form.label :title, "Titre de la notification", class: "form-label" %>
+          <%= form.text_field :title, class: "form-control", required: true, placeholder: "Ex: Nouvelle fonctionnalité disponible !" %>
+        </div>
+        <div class="form-group">
+          <%= form.label :link, "Lien de redirection (Optionnel)", class: "form-label" %>
+          <%= form.text_field :link, class: "form-control", placeholder: "Ex: /oeuvres/123 ou https://..." %>
+          <small class="form-help-text">Si vide, la notification sera simplement informative sans clic.</small>
+        </div>
+        <div class="form-group">
+          <%= form.label :message, "Message", class: "form-label" %>
+          <%= form.text_area :message, rows: 5, class: "form-control", required: true, placeholder: "Votre message ici..." %>
+        </div>
+        <div class="form-actions">
+          <%= form.button type: "submit", class: "btn-submit", data: { confirm: "Êtes-vous sûr de vouloir envoyer cette notification ?" } do %>
+            <span>Envoyer la notification</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -11,28 +11,50 @@
     min-height: 100vh;
     font-family: 'IBM Plex Sans', sans-serif;
     color: #202020;
+    box-sizing: border-box;
   }
 
-  .users-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-  .users-dash-title { font-size: 32px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 16px; margin: 0; }
+  .users-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap; /* Responsive */
+    gap: 16px;
+  }
+
+  .users-dash-title {
+    font-size: 32px; font-weight: 500; color: #202020;
+    display: flex; align-items: center; gap: 16px; margin: 0;
+  }
+
   .users-dash-back-link {
     display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%;
     background-color: #fff; border: 1px solid #eee; transition: all 0.2s ease;
+    flex-shrink: 0;
   }
   .users-dash-back-link:hover { background-color: #f0f0f0; transform: translateX(-2px); }
 
   /* KPIs */
-  .users-dash-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+  .users-dash-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
   .users-dash-kpi-card {
     background: #fff; padding: 24px; border-radius: 16px; border: 1px solid #f0f0f0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; height: 160px;
+    min-width: 0;
   }
+
   .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
   .kpi-label { font-size: 14px; font-weight: 500; color: #888; text-transform: uppercase; }
-  .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .kpi-icon svg { width: 20px; height: 20px; fill: #202020; }
   .kpi-value { font-size: 32px; font-weight: 600; color: #202020; margin-top: 10px; line-height: 1; }
-  .kpi-subtext { font-size: 13px; color: #666; margin-top: 8px; display: flex; gap: 10px; }
+  .kpi-subtext { font-size: 13px; color: #666; margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; }
   .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
   .dot-oeuvre { background: #333; }
   .dot-designer { background: #888; }
@@ -43,13 +65,18 @@
   .bg-red-light { background-color: #FFEBEE; color: #C62828; }
 
   /* Charts */
-  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 40px; }
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
   .chart-card { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
   /* Header du Graphique avec Filtres */
-  .chart-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .chart-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
   .chart-title { font-size: 16px; font-weight: 600; color: #202020; margin: 0; }
-  .chart-filters { display: flex; gap: 8px; }
+  .chart-filters { display: flex; gap: 8px; flex-wrap: wrap; }
   .chart-btn {
     background: none; border: 1px solid #ddd; padding: 4px 12px; border-radius: 20px;
     cursor: pointer; font-size: 12px; color: #666; font-weight: 500; transition: all 0.2s;
@@ -63,21 +90,22 @@
   .users-dash-table-container {
     background: #fff; border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #f0f0f0;
-    /* IMPORTANT POUR LE SCROLL POPUP : visible au lieu de hidden/auto */
-    overflow: visible;
+    overflow-x: auto; /* Scroll horizontal sur mobile */
     margin-bottom: 48px;
     position: relative;
     z-index: 1;
   }
-  .users-dash-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .users-dash-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 600px; /* Force scroll */ }
   .users-dash-table th {
     background-color: #fafafa; padding: 18px 24px; text-align: left;
     font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;
     border-bottom: 1px solid #eee;
+    white-space: nowrap;
   }
   .users-dash-table td {
     padding: 18px 24px; border-bottom: 1px solid #f5f5f5;
     font-size: 14px; font-weight: 500; color: #202020; vertical-align: middle;
+    white-space: nowrap;
   }
   .users-dash-table tr:hover { background-color: #fcfcfc; }
 
@@ -87,6 +115,7 @@
     width: 36px; height: 36px; border-radius: 50%; background: #eee;
     display: flex; align-items: center; justify-content: center;
     font-size: 14px; font-weight: 600; color: #666; overflow: hidden;
+    flex-shrink: 0;
   }
   .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .user-info { display: flex; flex-direction: column; }
@@ -114,14 +143,12 @@
 
   .refs-popover {
     position: absolute; right: 0; top: 100%;
-    /* Z-INDEX TRÈS ÉLEVÉ pour passer au dessus des lignes suivantes */
     z-index: 9999;
     margin-top: 4px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
     padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     min-width: 300px;
-    /* SCROLL INTERNE */
     max-height: 250px; overflow-y: auto;
-    overscroll-behavior: contain; /* Empêche de scroller la page quand on est au bout du popup */
+    overscroll-behavior: contain;
   }
 
   .ref-item {
@@ -135,7 +162,7 @@
     width: 24px; height: 24px; border-radius: 4px; background: #eee; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;
   }
-  .ref-content { flex: 1; min-width: 0; }
+  .ref-content { flex: 1; min-width: 0; text-align: left; }
   .ref-title { font-size: 13px; font-weight: 500; color: #333; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ref-meta { font-size: 11px; color: #999; display: flex; justify-content: space-between; margin-top: 2px; }
   .badge-mini { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
@@ -143,11 +170,35 @@
   .status-false { background: #FFF3E0; color: #EF6C00; }
   .status-nil { background: #FFF3E0; color: #EF6C00; }
 
-  /* Custom Scrollbar */
   .refs-popover::-webkit-scrollbar { width: 6px; }
   .refs-popover::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
   .refs-popover::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
   .refs-popover::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+  /* --- MEDIA QUERIES --- */
+
+  /* Tablette (< 1024px) */
+  @media (max-width: 1024px) {
+    .users-dash-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Mobile (< 768px) */
+  @media (max-width: 768px) {
+    .users-dash-wrapper { padding: 20px 16px 60px 16px; }
+
+    .users-dash-header { flex-direction: column; align-items: flex-start; }
+    .users-dash-title { font-size: 24px; }
+
+    .users-dash-kpi-grid { grid-template-columns: 1fr; }
+
+    /* Popover Fixe sur Mobile */
+    .refs-popover {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 85vw; max-width: 350px; right: auto; margin-top: 0;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 2px solid #eee;
+    }
+  }
 </style>
 <div class="users-dash-wrapper">
   <div class="users-dash-header">
@@ -324,7 +375,7 @@
     });
   });
 
-  // Gestion des dropdowns et du scroll
+  // Gestion des dropdowns
   document.addEventListener("click", function(e) {
     // Si on clique sur un summary, fermer les autres
     if (e.target.tagName === "SUMMARY") {
@@ -333,6 +384,14 @@
           detail.removeAttribute("open");
         }
       });
+    } else {
+      // Optionnel : fermer si on clique en dehors du dropdown
+      const isDropdown = e.target.closest("details.ref-dropdown");
+      if (!isDropdown) {
+        document.querySelectorAll("details.ref-dropdown[open]").forEach(detail => {
+          detail.removeAttribute("open");
+        });
+      }
     }
   });
 

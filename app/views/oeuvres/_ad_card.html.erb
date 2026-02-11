@@ -1,17 +1,13 @@
 <% return unless local_assigns.key?(:ad) && ad.present? %>
-
 <%# Récupération de l'ID (adapte selon si ad est un Hash ou un Objet) %>
 <% ad_id = ad.is_a?(Hash) ? ad[:id] : ad.id %>
-
 <%# 1. Lien modifié pour pointer vers notre route de tracking "click" %>
-<%= link_to click_ad_path(ad_id), target: "_blank", class: "ad-card-link" do %>
-  
+<%= link_to click_ad_path(ad_id), target: "_blank", class: "partner-card-link" do %>
   <%# 2. Script pour compter l'impression au chargement %>
   <%# Cela appelle la route 'impression' sans bloquer l'affichage %>
   <img src="<%= impression_ad_path(ad_id) %>" style="display:none;" alt="" aria-hidden="true" loading="eager">
-
-  <div class="card ad-card">
-     <div class="bg-card" style="background-color: #52525D;">
+  <div class="card partner-card">
+    <div class="bg-card" style="background-color: #52525D;">
       <div class="bg-img-card card-slider-wrapper" 
            data-controller="slider" 
            data-slider-update-background-value="true">

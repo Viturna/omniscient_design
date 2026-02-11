@@ -231,7 +231,7 @@
              data-controller="sortable">
             <%= form.fields_for :designer_images, @designer.designer_images.sort_by { |img| img.position || 0 } do |image_form| %>
               <% next if image_form.index >= 3 %>
-              <div class="image-upload-card" 
+              <div class="image-uplopartner-card" 
                  data-controller="image-preview" 
                  data-sortable-target="item">
                 <%= image_form.hidden_field :position, data: { 'sortable-target': 'positionInput' } %>

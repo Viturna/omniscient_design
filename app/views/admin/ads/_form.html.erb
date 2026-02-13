@@ -1,72 +1,41 @@
 <style>
-  .flex-form  label{
-      color: #202020;
+  .flex-form label { color: #202020; font-weight: 500; font-size: 14px; }
+  .flex-form { display: flex; flex-direction: column; gap: 20px; }
+  .flex-form h2 { margin: 0; font-size: 18px; font-weight: 600; color: #202020; border-left: 3px solid #202020; padding-left: 10px; }
+  .flex-form hr { margin: 10px 0; border: 0; border-top: 1px solid #eee; }
+
+  .flex-form .field { display: flex; flex-direction: column; gap: 8px; }
+
+  /* Checkbox styling */
+  .flex-form .field-checkbox {
+    display: flex; flex-direction: row; align-items: center; gap: 12px;
+    background: #f9f9f9; padding: 12px; border-radius: 8px; border: 1px solid #eee;
   }
-    .flex-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px; /* Espace entre les champs */
-    }
+  .flex-form .field-checkbox label { margin-bottom: 0; cursor: pointer; flex: 1; }
+  .flex-form .field-checkbox input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #202020; }
 
-    .flex-form h2 {
-  margin: 0; /* Réduit l'espace après le titre */
-    }
+  /* Inputs */
+  .flex-form input[type="text"],
+  .flex-form input[type="url"],
+  .flex-form input[type="date"],
+  .flex-form input[type="number"],
+  .flex-form input[type="file"],
+  .flex-form textarea {
+    width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit;
+  }
+  .flex-form input:focus, .flex-form textarea:focus { outline: none; border-color: #202020; background: #fff; }
 
-    .flex-form hr {
-  margin-top: 16px; /* Réduit l'espace avant la ligne */
-    }
+  .desc-profil { font-size: 13px; color: #666; margin-top: -5px; line-height: 1.4; }
+  .image-preview img { border-radius: 8px; border: 1px solid #ddd; max-width: 100%; height: auto; margin-top: 10px; }
 
-    /* Styles pour les champs de formulaire */
-    .flex-form .field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Espace entre le label et l'input */
-    }
-
-    .flex-form .field-checkbox {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-    }
-    .flex-form .field-checkbox label {
-  margin-bottom: 0;
-    }
-    .flex-form .field-checkbox input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-    }
-
-    /* Apparence des inputs */
-    .flex-form input[type="text"],
-    .flex-form input[type="url"],
-    .flex-form input[type="date"],
-    .flex-form input[type="file"],
-    .flex-form textarea {
-  width: calc(100% - 24px);
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-sizing: border-box;
-    }
-    .flex-form input[type="color"] {
-  height: 50px;
-  padding: 5px;
-    }
-    .flex-form .image-preview img {
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  max-width: 300px;
-  height: auto;
-    }
+  .actions { margin-top: 20px; text-align: right; }
 </style>
 <%= form_with(model: [:admin, ad], local: true) do |form| %>
-  <div class="flex-form" style="margin-top: 32px;">
+  <div class="flex-form" style="margin-top: 20px;">
     <% if ad.errors.any? %>
-      <div id="error_explanation" style="color: #E61818; background-color: rgba(230, 24, 24, 0.1); border: 1px solid #E61818; padding: 15px; border-radius: 8px; margin-bottom: 24px;">
-        <h2><%= pluralize(ad.errors.count, "erreur") %> empêche l'enregistrement :</h2>
-        <ul style="padding-left: 20px; margin-top: 10px;">
+      <div id="error_explanation" style="color: #C62828; background-color: #FFEBEE; border: 1px solid #FFCDD2; padding: 15px; border-radius: 8px;">
+        <h3 style="margin-top:0; font-size:16px;"><%= pluralize(ad.errors.count, "erreur") %> :</h3>
+        <ul style="padding-left: 20px; margin-bottom: 0;">
           <% ad.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
@@ -78,61 +47,78 @@
       <%= form.check_box :active %>
       <%= form.label :active, "Activer cette publicité ?" %>
     </div>
-    <p class="desc-profil" style="margin-top: -10px;">
-      Si décochée, la publicité n'apparaîtra nulle part, quelle que soit la date.
-    </p>
+    <p class="desc-profil">Si décochée, la publicité n'apparaîtra nulle part.</p>
+    <hr>
+    <h2>Paramètres de diffusion</h2>
+ 
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="field">
+        <%= form.label :weight, "Poids d'affichage (Priorité)" %>
+        <%= form.number_field :weight, min: 1, class: "form-control" %>
+        <p class="desc-profil">
+          1 = Normal. 10 = Apparaît 10x plus souvent qu'une pub à 1.
+        </p>
+      </div>
+      <div class="field">
+        <label>Ciblage</label> 
+        <div class="field-checkbox" style="margin-top: 0;">
+          <%= form.check_box :logged_out_only %>
+          <%= form.label :logged_out_only, "Afficher uniquement aux visiteurs non connectés" %>
+        </div>
+        <p class="desc-profil">Utile pour les pubs d'inscription ou d'abonnement.</p>
+      </div>
+    </div>
     <hr>
     <h2>Contenu</h2>
     <div class="field">
       <%= form.label :title, "Titre principal" %>
-      <%= form.text_field :title, class: "form-control" %>
+      <%= form.text_field :title, class: "form-control", placeholder: "Ex: -50% sur votre abonnement" %>
     </div>
     <div class="field">
       <%= form.label :description, "Sous-titre / Description" %>
-      <%= form.text_area :description, class: "form-control", rows: 4 %>
+      <%= form.text_area :description, class: "form-control", rows: 3 %>
     </div>
     <div class="field">
       <%= form.label :link, "Lien de redirection" %>
       <%= form.url_field :link, class: "form-control", placeholder: "https://www.exemple.com" %>
     </div>
     <hr>
-    <h2>Apparence</h2>
+    <h2>Visuels</h2>
     <div class="field">
       <%= form.label :image, "Image Desktop (principale)" %>
       <%= form.file_field :image, class: "form-control" %>
       <% if ad.image.attached? && ad.persisted? %>
-        <div class="image-preview" style="margin-top: 15px;">
-          <p style="margin: 0 0 5px 0;">Aperçu de l'image actuelle :</p>
+        <div class="image-preview">
+          <p style="margin: 0 0 5px 0; font-size:12px; font-weight:600;">Actuelle :</p>
           <%= image_tag ad.image.variant(resize_to_limit: [300, 300]) %>
         </div>
       <% end %>
     </div>
     <div class="field">
       <%= form.label :image_mobile, "Image Mobile (optionnelle)" %>
-      <i>Sera utilisée sur les écrans de moins de 800px.</i>
-      <%= form.file_field :image_mobile, class: "form-control" %>
-      <% if ad.image_mobile.attached? && ad.persisted? %>
-        <div class="image-preview" style="margin-top: 15px;">
-          <p style="margin: 0 0 5px 0;">Aperçu de l'image actuelle :</p>
-          <%= image_tag ad.image_mobile.variant(resize_to_limit: [300, 300]) %>
+      <i style="font-size:12px; color:#666;">Optimisé pour les écrans < 760px.</i>
+          <%= form.file_field :image_mobile, class: "form-control" %>
+          <% if ad.image_mobile.attached? && ad.persisted? %>
+            <div class="image-preview">
+              <p style="margin: 0 0 5px 0; font-size:12px; font-weight:600;">Actuelle :</p>
+              <%= image_tag ad.image_mobile.variant(resize_to_limit: [300, 300]) %>
+            </div>
+          <% end %>
         </div>
-      <% end %>
-    </div>
-    <hr>
-    <h2>Programmation (Optionnel)</h2>
-    <p class="desc-profil">Laissez les dates vides pour une diffusion permanente.</p>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-      <div class="field">
-        <%= form.label :start_date, "Date de début" %>
-        <%= form.date_field :start_date, class: "form-control" %>
+        <hr>
+        <h2>Programmation (Optionnel)</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="field">
+            <%= form.label :start_date, "Date de début" %>
+            <%= form.date_field :start_date, class: "form-control" %>
+          </div>
+          <div class="field">
+            <%= form.label :end_date, "Date de fin" %>
+            <%= form.date_field :end_date, class: "form-control" %>
+          </div>
+        </div>
+        <div class="actions">
+          <%= form.submit ad.new_record? ? "Créer la publicité" : "Mettre à jour", class: "button large maj dark" %>
+        </div>
       </div>
-      <div class="field">
-        <%= form.label :end_date, "Date de fin" %>
-        <%= form.date_field :end_date, class: "form-control" %>
-      </div>
-    </div>
-    <div class="actions">
-      <%= form.submit ad.new_record? ? "Créer la publicité" : "Mettre à jour", class: "button large maj dark" %>
-    </div>
-  </div>
-<% end %>
+    <% end %>

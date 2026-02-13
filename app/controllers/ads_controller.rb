@@ -4,7 +4,6 @@ class AdsController < ApplicationController
 
   def click
     @ad = Ad.find(params[:id])
-    
     @ad.increment!(:clicks_count)
     
     redirect_to @ad.link, allow_other_host: true
@@ -12,9 +11,8 @@ class AdsController < ApplicationController
 
   def impression
     @ad = Ad.find(params[:id])
-    
     @ad.increment!(:impressions_count)
-    
+  
     head :ok
   end
 end

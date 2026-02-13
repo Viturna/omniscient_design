@@ -1,11 +1,10 @@
 <% return unless local_assigns.key?(:ad) && ad.present? %>
 <%# Récupération de l'ID (adapte selon si ad est un Hash ou un Objet) %>
 <% ad_id = ad.is_a?(Hash) ? ad[:id] : ad.id %>
-<%# 1. Lien modifié pour pointer vers notre route de tracking "click" %>
-<%= link_to click_ad_path(ad_id), target: "_blank", class: "partner-card-link" do %>
-  <%# 2. Script pour compter l'impression au chargement %>
-  <%# Cela appelle la route 'impression' sans bloquer l'affichage %>
-  <img src="<%= impression_ad_path(ad_id) %>" style="display:none;" alt="" aria-hidden="true" loading="eager">
+<%# 1. Utilisation de la route sécurisée "partner_click" (/go/:id) %>
+<%= link_to partner_click_path(ad_id), target: "_blank", class: "partner-card-link" do %>
+  <%# 2. Pixel de tracking sur la route sécurisée "partner_impression" (/pixel/:id/view) %>
+  <img src="<%= partner_impression_path(ad_id) %>" style="display:none;" alt="" aria-hidden="true" loading="eager">
   <div class="card partner-card">
     <div class="bg-card" style="background-color: #52525D;">
       <div class="bg-img-card card-slider-wrapper" 
@@ -15,16 +14,17 @@
         <div class="card-slider-slides">
           <picture>
             <source media="(max-width: 760px)" 
-                    srcset="<%= ad[:image_mobile_url] %>">
+                    srcset="<%= ad.is_a?(Hash) ? ad[:image_mobile_url] : (ad.image_mobile.attached? ? url_for(ad.image_mobile) : url_for(ad.image)) %>">
             <source media="(min-width: 761px)" 
-                    srcset="<%= ad[:image_desktop_url] %>">
-            <img src="<%= ad[:image_desktop_url] %>" 
+                    srcset="<%= ad.is_a?(Hash) ? ad[:image_desktop_url] : url_for(ad.image) %>">
+            <img src="<%= ad.is_a?(Hash) ? ad[:image_desktop_url] : url_for(ad.image) %>" 
                  class="card-slide-image active" 
                  data-slider-target="slide"
-                 alt="<%= ad[:title] %>" />
+                 alt="<%= ad.is_a?(Hash) ? ad[:title] : ad.title %>" />
           </picture>
         </div>
-        <div class="flex-info-card ads">
+        <%# ATTENTION : J'ai remplacé la classe "ads" par "partners" ici pour éviter AdBlock %>
+        <div class="flex-info-card partners">
           <div class="info-card-dark">
             <div class="small-circle" style="background-color: #FFF;"></div>
             Sponsorisé
@@ -39,8 +39,8 @@
       <p class="subtitle-card">
         Sponsorisé
       </p>
-      <h2 class="title-card"><%= ad[:title] %></h2>
-      <p class="description-card description-card-home"><%= ad[:description] %></p>
+      <h2 class="title-card"><%= ad.is_a?(Hash) ? ad[:title] : ad.title %></h2>
+      <p class="description-card description-card-home"><%= ad.is_a?(Hash) ? ad[:description] : (ad.respond_to?(:description) ? ad.description : "") %></p>
     </div>
   </div>
 <% end %>

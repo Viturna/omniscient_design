@@ -157,12 +157,8 @@ Rails.application.routes.draw do
     get 'secret/legal_found', to: 'pages#secret_badge', as: :secret_badge
 
     #ADS
-    resources :ads, only: [] do
-      member do
-        get :click      # Pour tracker le clic
-        get :impression # Pour tracker l'affichage
-      end
-    end 
+    get '/go/:id', to: 'ads#click', as: :partner_click
+    get '/pixel/:id/view', to: 'ads#impression', as: :partner_impression
 
     post '/api/devices', to: 'api/devices#create'
 

@@ -6,7 +6,6 @@ class OeuvresController < ApplicationController
   before_action :authenticate_user!, except: [:index, :load_more, :show]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
-
   AD_FREQUENCY_RANGE = 4..7
   AD_FIRST_POSITION_RANGE = 3..5
 
@@ -15,8 +14,11 @@ class OeuvresController < ApplicationController
     @current_page = 'accueil'
     @lists = user_signed_in? ? current_user.lists : []
 
-    ads = ads_data.shuffle
-    @ads_order_string = ads.map { |ad| ad[:id] }.join(',')
+    candidate_ads = Ad.currently_active.relevant_for(current_user)
+
+    ads = candidate_ads.sort_by { |ad| -1 * (rand * ad.weight) }
+
+    @ads_order_string = ads.map(&:id).join(',')
     
     @items = []
     ad_index = 0
@@ -25,6 +27,8 @@ class OeuvresController < ApplicationController
     oeuvres.each do |oeuvre|
       @items << oeuvre
       @items_until_next_ad -= 1
+      
+      # Si c'est le moment d'afficher une pub et qu'il en reste
       if @items_until_next_ad == 0 && ads.present?
         @items << ads[ad_index % ads.length]
         ad_index += 1
@@ -39,9 +43,9 @@ class OeuvresController < ApplicationController
     end
   end
 
-def load_more
+  def load_more
     offset = params[:offset].to_i
-    limit = 2
+    limit = 2 # Tu charges peu d'oeuvres à la fois, tu pourrais augmenter à 4 ou 6
     loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
 
     @oeuvres = Oeuvre.where(validation: true)
@@ -52,24 +56,28 @@ def load_more
     items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
     ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
 
-    # --- LOGIQUE DE PUB MISE À JOUR (NE PLUS MÉLANGER) ---
     if params[:ads_order].present?
-      ordered_ad_ids = params[:ads_order].split(',')
-      # On récupère les pubs de la DB et on les trie selon l'ordre reçu
-      ads_hashes = ads_data 
-      ads = ads_hashes.sort_by { |ad| ordered_ad_ids.index(ad[:id].to_s) }
+      ordered_ad_ids = params[:ads_order].split(',').map(&:to_i)
+      
+      ads = Ad.where(id: ordered_ad_ids)
+              .index_by(&:id)
+              .values_at(*ordered_ad_ids)
+              .compact
     else
-      ads = [] # Sécurité : pas de pubs si l'ordre n'est pas passé
+      ads = [] 
     end
 
-   html_output = "" 
+    html_output = "" 
     @oeuvres.each do |oeuvre|
       html_output += render_to_string(partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' }, formats: [:html])
       
       items_until_next_ad -= 1
       if items_until_next_ad == 0 && ads.present?
         current_ad = ads[ad_index % ads.length]
+        
+        # On passe 'current_ad' (objet ActiveRecord) à la partial
         html_output += render_to_string(partial: 'oeuvres/ad_card', locals: { ad: current_ad }, formats: [:html])
+        
         ad_index += 1
         items_until_next_ad = rand(AD_FREQUENCY_RANGE)
       end
@@ -81,6 +89,9 @@ def load_more
       ad_index: ad_index
     }
   end
+
+  # ... Le reste du contrôleur (show, new, edit...) reste inchangé ...
+  # ... (Copie-colle tes méthodes show, new, create, etc. ici) ...
 
   # GET /oeuvres/1 or /oeuvres/1.json
   def show

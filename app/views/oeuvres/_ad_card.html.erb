@@ -1,9 +1,6 @@
 <% return unless local_assigns.key?(:ad) && ad.present? %>
-<%# Récupération de l'ID (adapte selon si ad est un Hash ou un Objet) %>
 <% ad_id = ad.is_a?(Hash) ? ad[:id] : ad.id %>
-<%# 1. Utilisation de la route sécurisée "partner_click" (/go/:id) %>
 <%= link_to partner_click_path(ad_id), target: "_blank", class: "partner-card-link" do %>
-  <%# 2. Pixel de tracking sur la route sécurisée "partner_impression" (/pixel/:id/view) %>
   <img src="<%= partner_impression_path(ad_id) %>" style="display:none;" alt="" aria-hidden="true" loading="eager">
   <div class="card partner-card">
     <div class="bg-card" style="background-color: #52525D;">
@@ -23,7 +20,6 @@
                  alt="<%= ad.is_a?(Hash) ? ad[:title] : ad.title %>" />
           </picture>
         </div>
-        <%# ATTENTION : J'ai remplacé la classe "ads" par "partners" ici pour éviter AdBlock %>
         <div class="flex-info-card partners">
           <div class="info-card-dark">
             <div class="small-circle" style="background-color: #FFF;"></div>

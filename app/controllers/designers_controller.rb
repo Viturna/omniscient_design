@@ -11,32 +11,35 @@ class DesignersController < ApplicationController
 
   def index
     # --- OPTIMISATION ---
-    # 1. On utilise .includes pour éviter le problème N+1 (chargement des images et domaines en une fois)
-    # 2. On change les LIMIT pour qu'il y ait beaucoup moins de studios (Ratio 9 Designers / 1 Studio)
-    
     designers = Designer.where(validation: true)
                         .includes(:domaines, designer_images: { file_attachment: :blob })
                         .order("RANDOM()")
-                        .limit(9) # On prend 9 designers
+                        .limit(9)
 
     studios = Studio.where(validation: true)
                     .includes(:domaines, studio_images: { file_attachment: :blob })
                     .order("RANDOM()")
-                    .limit(1) # Et seulement 1 studio
+                    .limit(1)
 
     raw_items = (designers + studios).shuffle
 
     @current_page = 'accueil'
 
-    ads = ads_data.shuffle
-    @ads_order_string = ads.map { |ad| ad[:id] }.join(',') 
+    # --- NOUVELLE LOGIQUE DE PUB (Poids + Ciblage) ---
+    # 1. On récupère les pubs actives et pertinentes pour l'utilisateur
+    candidate_ads = Ad.currently_active.relevant_for(current_user)
+
+    # 2. Tri pondéré (les pubs avec un gros poids sortent plus souvent au début)
+    ads = candidate_ads.sort_by { |ad| -1 * (rand * ad.weight) }
+
+    # 3. On sauvegarde l'ordre pour le "load more"
+    @ads_order_string = ads.map(&:id).join(',')
     
     @items = []
     ad_index = 0
     @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
 
     if user_signed_in?
-      # .pluck est déjà très rapide, c'est bien
       @saved_designer_ids = current_user.saved_designers.pluck(:id)
       @saved_studio_ids = current_user.saved_studios.pluck(:id)
     else
@@ -60,38 +63,39 @@ class DesignersController < ApplicationController
     loaded_designer_ids = params[:loaded_designer_ids]&.split(',')&.map(&:to_i) || []
     loaded_studio_ids = params[:loaded_studio_ids]&.split(',')&.map(&:to_i) || []
     
-    # Fallback pour compatibilité
     if loaded_designer_ids.empty? && params[:loaded_ids].present?
        loaded_designer_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
     end
 
-    # --- OPTIMISATION & RATIO ---
-    # On charge 3 designers pour 1 studio (pour garder les studios rares mais présents)
-    
+    # Chargement des items suivants
     new_designers = Designer.where(validation: true)
                          .where.not(id: loaded_designer_ids)
-                         .includes(:domaines, designer_images: { file_attachment: :blob }) # Optimisation SQL
+                         .includes(:domaines, designer_images: { file_attachment: :blob })
                          .order("RANDOM()")
                          .limit(3)
     
     new_studios = Studio.where(validation: true)
                          .where.not(id: loaded_studio_ids)
-                         .includes(:domaines, studio_images: { file_attachment: :blob }) # Optimisation SQL
+                         .includes(:domaines, studio_images: { file_attachment: :blob })
                          .order("RANDOM()")
                          .limit(1)
 
     mixed_items = (new_designers + new_studios).shuffle
 
-    # Gestion Pubs
+    # Gestion Pubs (Paramètres)
     items_until_next_ad = params[:items_until_next_ad].present? ? params[:items_until_next_ad].to_i : rand(AD_FREQUENCY_RANGE)
     ad_index = params[:ad_index].present? ? params[:ad_index].to_i : 0
 
+    # --- RECUPERATION DES PUBS EN DB (COHÉRENCE) ---
     if params[:ads_order].present?
-      ordered_ad_ids = params[:ads_order].split(',')
-      ads_hashes = ads_data
-      ads = ads_hashes.sort_by { |ad| ordered_ad_ids.index(ad[:id].to_s) }
+      ordered_ad_ids = params[:ads_order].split(',').map(&:to_i)
+      # On recharge les objets Ad depuis la BDD en respectant l'ordre exact
+      ads = Ad.where(id: ordered_ad_ids)
+              .index_by(&:id)
+              .values_at(*ordered_ad_ids)
+              .compact
     else
-      ads = ads_data.shuffle
+      ads = []
     end
 
     html_output = "" 
@@ -108,6 +112,7 @@ class DesignersController < ApplicationController
       items_until_next_ad -= 1
       if items_until_next_ad == 0 && ads.present?
         current_ad = ads[ad_index % ads.length]
+        # On utilise le partial existant (qui gère désormais les objets ActiveRecord)
         html_output += render_to_string(partial: 'oeuvres/ad_card', locals: { ad: current_ad }, formats: [:html])
         ad_index += 1
         items_until_next_ad = rand(AD_FREQUENCY_RANGE)
@@ -248,7 +253,7 @@ class DesignersController < ApplicationController
     if @designer.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@designer)
       update_suivi_references_validees(@designer.user)
-      GamificationService.new(@oeuvre.user).check_contributor
+      GamificationService.new(@designer.user).check_contributor # Correction: @designer ici, pas @oeuvre
       redirect_to validation_path, notice: I18n.t('designer.validate.success', name: @designer.nom_designer)
     else
       redirect_to validation_path, alert: I18n.t('designer.validate.failure')
@@ -309,7 +314,7 @@ class DesignersController < ApplicationController
     suivi.save
   end
   
-def create_notification(designer)
+  def create_notification(designer)
     title = "Nouveau designer à valider"
     message = t('notifications.new_designer', name: designer.nom_designer)
     recipients = User.where("role = ? OR certified = ?", 'admin', true)

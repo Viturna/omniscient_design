@@ -188,7 +188,6 @@
           <th>Utilisateur</th>
           <th>Date</th>
           <th>Catégorie</th>
- 
           <th>Aperçu</th>
           <th>Statut</th>
           <th style="text-align:center;">Détails</th>
@@ -201,15 +200,11 @@
               <td>
                 <div class="user-cell">
                   <div class="user-avatar">
-                    <% if bug.user.profile_image.present? %>
-                      <%= image_tag bug.user.profile_image %>
-                    <% else %>
-                      <%= bug.user.pseudo&.first&.upcase || "?" %>
-                    <% end %>
+                    <%= bug.user&.pseudo&.first&.upcase || "?" %>
                   </div>
                   <div class="user-info">
-                    <span class="user-name"><%= bug.user.pseudo %></span>
-                    <span class="user-email"><%= bug.user.email %></span>
+                    <span class="user-name"><%= bug.user&.pseudo || "Utilisateur inconnu" %></span>
+                    <span class="user-email"><%= bug.user&.email %></span>
                   </div>
                 </div>
               </td>

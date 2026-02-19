@@ -26,38 +26,158 @@ require 'uri'
 # --- Notions ---
 puts "🌱 Création de l'architecture Thèmes > Notions > Verbes..."
 
-# On nettoie pour éviter les doublons avec les anciennes versions en majuscules
+# On nettoie pour éviter les doublons avec les anciennes versions
 Verb.destroy_all
 Notion.destroy_all
 
 definitions = {
-  "Matérialité & Environnement" => {
-    "La matérialité" => ["Texturer", "Solliciter", "Rendre tangible", "Expérimenter"],
-    "L’upcycling" => ["Réemployer", "Ennoblir", "Régénérer", "Réparer"],
-    "L'hybridation" => ["Croiser", "Fusionner", "Métisser", "Confronter"],
-    "Le vernaculaire" => ["Transmettre", "Réinterpréter", "Ancrer", "Perpétuer"],
-    "Le biomimétisme" => ["Imiter", "S'inspirer", "Reproduire", "Bio-sourcer"]
+  "Composition & Structure" => {
+    "Accumulation" => ["Empilement", "Amas", "Collection"],
+    "Archétype" => ["Modèle standard", "Patron originel", "Matrice universelle"],
+    "Articulation" => ["Charnière", "Pivot", "Jointure"],
+    "Combinaison" => ["Mixage", "Assortiment", "Permutation"],
+    "Complémentarité" => ["Emboîtement", "Appairage", "Synergie"],
+    "Composition" => ["Agencement", "Mise en page", "Disposition"],
+    "Concentration" => ["Focalisation", "Convergence", "Densité"],
+    "Confrontation" => ["Face-à-face", "Opposition", "Choc visuel"],
+    "Connexion" => ["Câblage", "Maillage", "Réseautage"],
+    "Déconstruction" => ["Démembrement", "Dislocation", "Analyse structurelle"],
+    "Densification" => ["Compactage", "Resserrement", "Saturation spatiale"],
+    "Déséquilibre" => ["Porte-à-faux", "Basculement", "Asymétrie"],
+    "Disparition" => ["Effacement", "Gommage", "Escamotage"],
+    "Dissolution" => ["Dilution", "Fonte", "Dispersibilité"],
+    "Enfermement" => ["Cloisonnement", "Encagement", "Verrouillage"],
+    "Équilibre" => ["Contrepoids", "Équilibrage", "Stabilisation"],
+    "Hiérarchisation" => ["Classement", "Ordonnancement", "Mise en exergue"],
+    "Inclusion" => ["Encastrement", "Incrustation", "Englobement"],
+    "Insertion" => ["Introduction", "Glissement", "Intercalation"],
+    "Intégration" => ["Assimilation", "Incorporation", "Fusion contextuelle"],
+    "Liaison" => ["Nouage", "Soudure", "Connectique"],
+    "Mise en abyme" => ["Récursivité", "Auto-référence", "Répétition interne"],
+    "Ornement" => ["Décoration", "Parure", "Enjolivement"],
+    "Ornementation" => ["Cisèlerie", "Broderie", "Moulure"],
+    "Répétition" => ["Itération", "Bégaiement", "Duplication"],
+    "Stratification" => ["Feuilletez", "Superposition", "Sédimentation"],
+    "Unification" => ["Monobloc", "Lissage", "Homogénéisation"],
+    "Uniformisation" => ["Standardisation", "Nivellement", "Conformité"]
   },
-  "Conception & Structure" => {
-    "La tectonique" => ["Assembler", "Articuler", "Connecter", "Révéler la structure"],
-    "La modularité" => ["Moduler", "Combiner", "Interchanger", "Étendre"],
-    "La sérialité" => ["Standardiser", "Répéter", "Dupliquer", "Industrialiser"],
-    "Le système" => ["Structurer", "Organiser", "Hiérarchiser", "Griller"]
+  "Dynamique & Temporalité" => {
+    "Apparition" => ["Émergence", "Surgissement", "Révélation"],
+    "Ascension" => ["Élévation", "Levage", "Grimpée"],
+    "Attraction" => ["Magnétisme", "Gravitation", "Aspiration"],
+    "Bifurcation" => ["Embranchement", "Déviation", "Divergence"],
+    "Chute" => ["Descente", "Effondrement", "Gravité"],
+    "Circulation" => ["Flux", "Parcours", "Déambulation"],
+    "Déploiement" => ["Dépliage", "Étirement", "Ouverture"],
+    "Diffusion" => ["Propagation", "Éparpillement", "Rayonnement"],
+    "Durabilité" => ["Résistance", "Pérennisation", "Maintenance"],
+    "Dynamisation" => ["Activation", "Impulsion", "Mise en mouvement"],
+    "Éphémère" => ["Obsolescence programmée", "Évanescence", "Temporisation"],
+    "Évolution" => ["Darwinisme formel", "Maturation", "Progression"],
+    "Exploration" => ["Arpentage", "Sondage", "Investigation"],
+    "Extension" => ["Rallonge", "Annexion", "Prolongement"],
+    "Gradation" => ["Échelonnement", "Nuancier", "Palier"],
+    "Interaction" => ["Réactivité", "Feedback", "Dialogue interface"],
+    "Mobilité" => ["Roulement", "Glissement", "Portabilité"],
+    "Mutation" => ["Métamorphose", "Changement d'état", "Altération génétique"],
+    "Nomadisme" => ["Itinérance", "Modularité mobile", "Transportabilité"],
+    "Oscillation" => ["Balancement", "Ondulation", "Va-et-vient"],
+    "Pérennité" => ["Conservation", "Fossilisation", "Immortalisation"],
+    "Progression" => ["Avancement", "Séquençage", "Développement"],
+    "Régénération" => ["Recyclage", "Réemploi", "Renaissance"],
+    "Régression" => ["Retour en arrière", "Déclin", "Primitivisme"],
+    "Régulation" => ["Modération", "Contrôle de flux", "Temporisation"],
+    "Rotation" => ["Pivotement", "Révolution", "Tournoiement"],
+    "Suspension" => ["Accrochage", "Lévitation", "Flottement"],
+    "Temporalité" => ["Chronologie", "Rythme", "Datation"],
+    "Vibration" => ["Tremblement", "Résonance", "Pulsation"]
   },
-  "Plasticité & Impact visuel" => {
-    "L'épuration" => ["Épurer", "Soustraire", "Simplifier", "Évider"],
-    "L'accumulation" => ["Saturer", "Amasser", "Proliférer", "Multiplier"],
-    "La stratification" => ["Superposer", "Empiler", "Chevaucher", "Stratifier"],
-    "La transparence" => ["Filtrer", "Révéler", "Voiler", "Opacifier"],
-    "Le rythme" => ["Cadencer", "Séquencer", "Rompre", "Désarçonner"],
-    "Le contraste" => ["Opposer", "Nuancer", "Dissoner", "Polariser"]
+  "Forme & Matière" => {
+    "Adaptation" => ["Ajustement", "Flexibilité", "Conformation"],
+    "Amplification" => ["Grossissement", "Élargissement", "Renforcement"],
+    "Atténuation" => ["Adoucissement", "Amortissement", "Feutrage"],
+    "Coloration" => ["Teinture", "Pigmentation", "Peinture"],
+    "Compression" => ["Écrasement", "Pressage", "Emboutissage"],
+    "Courbure" => ["Cintrage", "Pliage courbe", "Arrondissement"],
+    "Déformation" => ["Torsion", "Étirement", "Malléabilité"],
+    "Dématérialisation" => ["Virtualisation", "Numérisation", "Éthérisation"],
+    "Désaturation" => ["Délavage", "Grisement", "Pâleur"],
+    "Diminution" => ["Rétrécissement", "Amoindrissement", "Atrophie"],
+    "Distorsion" => ["Anamorphose", "Glitch", "Warping"],
+    "Diversification" => ["Variété", "Hétérogénéité", "Panachage"],
+    "Dualité" => ["Contraste", "Binarité", "Dichotomie"],
+    "Évasement" => ["Élargissement conique", "Entonnoir", "Épanouissement"],
+    "Fluidité" => ["Liquéfaction", "Coulure", "Écoulement"],
+    "Fusion" => ["Alliage", "Soudure thermique", "Amalgame"],
+    "Hybridation" => ["Greffe", "Croisement", "Métissage"],
+    "Inversion" => ["Retournement", "Négatif", "Symétrie inverse"],
+    "Légèreté" => ["Ajourage", "Suspension pneumatique", "Fine structure"],
+    "Lourdeur" => ["Lestage", "Ancrage", "Massivité"],
+    "Magnification" => ["Agrandissement", "Zoom", "Macro"],
+    "Matérialisation" => ["Concrétisation", "Prototypage", "Impression 3D"],
+    "Minimalisation" => ["Épuration", "Réduction", "Synthèse"],
+    "Modulation" => ["Variation paramétrique", "Réglage", "Tessellation"],
+    "Opacité" => ["Occultation", "Masquage", "Obstruction"],
+    "Pureté" => ["Nettoyage", "Clarification", "Distillation"],
+    "Reflet" => ["Miroir", "Brillance", "Spécularité"],
+    "Réfraction" => ["Diffraction", "Prisme", "Déviation optique"],
+    "Rétention" => ["Contenant", "Réservoir", "Captation"],
+    "Rigidité" => ["Durcissement", "Armature", "Raidissement"],
+    "Rugosité" => ["Texturisation", "Grenage", "Abrasion"],
+    "Saturation" => ["Intensification", "Vivacité", "Remplissage"],
+    "Solidification" => ["Cristallisation", "Durcissement", "Gel"],
+    "Transformation" => ["Remodelage", "Conversion", "Refonte"],
+    "Translucidité" => ["Voilage", "Dépolissage", "Tamisage"],
+    "Transparence" => ["Vitrage", "Invisibilité", "Clarté"],
+    "Variation" => ["Déclinaison", "Alternative", "Modification"]
   },
-  "Usage & Expérience" => {
-    "L'ergonomie" => ["Adapter", "Conformer", "Sécuriser", "Optimiser"],
-    "L'affordance" => ["Suggérer", "Guider", "Induire", "Signifier"],
-    "L'appropriation" => ["Détourner", "Hacker", "Manipuler", "Personnaliser"],
-    "La flexibilité" => ["Transformer", "Partager", "Reconfigurer", "Escamoter"],
-    "La narrativité" => ["Scénariser", "Évoquer", "Symboliser", "Théâtraliser"]
+  "Perception & Sens" => {
+    "Appropriation" => ["Personnalisation", "Customisation", "Marquage"],
+    "Détournement" => ["Hack", "Réinterprétation", "Usage détourné"],
+    "Discrétion" => ["Camouflage", "Furtivité", "Sobriété"],
+    "Évocation" => ["Allusion", "Suggestion", "Rappel"],
+    "Exagération" => ["Caricature", "Hypertrophie", "Surenchère"],
+    "Harmonie" => ["Accord", "Euphonie", "Proportion"],
+    "Iconisation" => ["Pictogramme", "Emblème", "Signalétique"],
+    "Illusion" => ["Trompe-l'œil", "Mirage", "Faux-semblant"],
+    "Inattendu" => ["Surprise", "Rupture", "Hasard"],
+    "Interprétation" => ["Traduction", "Exégèse", "Lecture"],
+    "Irradiation" => ["Halo", "Glow", "Aura"],
+    "Manipulation" => ["Influence", "Guidage", "Affordance"],
+    "Narration" => ["Storytelling", "Scénario", "Séquence"],
+    "Perception" => ["Vision", "Ressenti", "Appréhension sensorielle"],
+    "Polarisation" => ["Orientation", "Focalisation magnétique", "Attraction/Répulsion"],
+    "Réflexion" => ["Miroitement", "Écho", "Renvoi"],
+    "Sensibilisation" => ["Éveil", "Pédagogie", "Alerte"],
+    "Simulation" => ["Maquette virtuelle", "Jumeau numérique", "Imitation"],
+    "Sublimation" => ["Idéalisation", "Transcendance", "Raffinement"],
+    "Symbolisation" => ["Métaphore", "Allégorie", "Signe"],
+    "Transposition" => ["Transfert", "Métaphore spatiale", "Décalage"]
+  },
+  "Stratégie & Procédés" => {
+    "Collaboration" => ["Co-création", "Partage", "Intelligence collective"],
+    "Conception" => ["Idéation", "Design thinking", "Esquisse"],
+    "Construction" => ["Bâtiment", "Édification", "Fabrication"],
+    "Dérivation" => ["Branchement", "Déclinaison produit", "Spin-off"],
+    "Élaboration" => ["Raffinement", "Finition", "Mise au point"],
+    "Formalisation" => ["Dessin technique", "Spécification", "Normalisation"],
+    "Imbrication" => ["Tuilage", "Chevauchement", "Interdépendance"],
+    "Inachèvement" => ["Non-finito", "Work in progress", "Ouvert"],
+    "Innovation" => ["Rupture technologique", "Brevet", "Nouveauté"],
+    "Juxtaposition" => ["Coexistence", "Côte-à-côte", "Parallélisme"],
+    "Modularité" => ["Préfabrication", "Système", "Élément standard"],
+    "Normalisation" => ["Calibrage", "Respect des normes", "Certification"],
+    "Optimisation" => ["Rendement", "Efficience", "Gain de place"],
+    "Organisation" => ["Planification", "Logistique", "Structuration"],
+    "Projection" => ["Anticipation", "Extrapolation", "Perspective"],
+    "Rationalisation" => ["Analyse", "Logique", "Simplification process"],
+    "Réappropriation" => ["Revendication", "Do It Yourself", "Hacking culturel"],
+    "Réhabilitation" => ["Rénovation", "Restauration", "Upcycling"],
+    "Regroupement" => ["Cluster", "Catégorisation", "Famille"],
+    "Séparation" => ["Division", "Tri", "Scission"],
+    "Simplification" => ["Réductionnisme", "Essentialisme", "Facilité d'usage"],
+    "Stabilisation" => ["Ancrage", "Fixation", "Pérennité technique"],
+    "Valorisation" => ["Mise en valeur", "Exposition", "Premiumisation"]
   }
 }
 
@@ -82,6 +202,7 @@ definitions.each do |theme, notions_hash|
 end
 
 puts "✨ Terminé ! #{Notion.count} Notions et #{Verb.count} Verbes créés."
+
 # --- Établissements ---
 # puts "\n--- Import des Établissements ---"
 # def extract_uai_from_email(email_string)

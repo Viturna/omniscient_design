@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_13_221514) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_221514) do
   end
 
   create_table "bug_reports", force: :cascade do |t|
+    t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "status", default: 0, null: false
@@ -526,6 +527,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_221514) do
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
+    t.bigint "country_id"
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -535,7 +537,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_221514) do
     t.string "how_did_you_hear"
     t.string "lastname"
     t.boolean "newsletter", default: false
-    t.string "profile_image"
     t.string "provider"
     t.string "pseudo"
     t.string "referral_code"
@@ -550,6 +551,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_221514) do
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -608,5 +610,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_221514) do
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "users"
   add_foreign_key "user_devices", "users"
+  add_foreign_key "users", "countries"
   add_foreign_key "verbs", "notions"
 end

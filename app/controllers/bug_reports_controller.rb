@@ -85,7 +85,7 @@ class BugReportsController < ApplicationController
   end
 
   def bug_report_params
-    params.require(:bug_report).permit(:description, :url)
+    params.require(:bug_report).permit(:description, :url, :category)
   end
 
   def authenticate_admin!

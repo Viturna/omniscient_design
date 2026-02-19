@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@import "abstracts/variables";
 
 .top-profil {
   padding: 96px 10vw;
@@ -6,7 +6,7 @@
   margin-bottom: 16px;
 
   h1 {
-    color: #FFF;
+    color: #fff;
   }
 }
 
@@ -14,7 +14,7 @@
   margin-top: 42px;
   display: flex;
   align-items: center;
-  color: #FFF;
+  color: #fff;
   gap: 32px;
 }
 
@@ -23,12 +23,14 @@
   height: 160px;
   border-radius: 200px;
   object-fit: cover;
+  border-width: 5px;
+  border-color: #fff;
 }
 
 .name {
   font-weight: 500;
   font-size: 30px;
-  color: #FFF;
+  color: #fff;
 }
 
 .flex-certified {
@@ -36,17 +38,17 @@
   flex-direction: row !important;
   align-items: center;
   margin-top: 8px;
-  gap: 8px
+  gap: 8px;
 }
 
 .pseudo {
   font-size: 24px;
-  color: #FFF;
+  color: #fff;
 }
 
 .version {
   text-align: center;
-  color: #8D9299;
+  color: #8d9299;
   font-weight: 300;
 }
 
@@ -56,9 +58,7 @@
   gap: 32px;
 }
 
-
-
-@media screen and (min-width:601px) and (max-width: 1024px) {
+@media screen and (min-width: 601px) and (max-width: 1024px) {
   .top-profil {
     padding: 96px 8vw;
   }
@@ -76,15 +76,12 @@
     font-size: 26px;
   }
 
-
   .pseudo {
     font-size: 22px;
   }
 }
 
-
-@media screen and (min-width:426px) and (max-width: 600px) {
-
+@media screen and (min-width: 426px) and (max-width: 600px) {
   .top-profil {
     padding: 64px 5vw;
     height: 350px;
@@ -131,7 +128,6 @@
 }
 
 @media screen and (max-width: 425px) {
-
   .top-profil {
     padding: 64px 5vw;
     height: 300px;

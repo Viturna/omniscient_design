@@ -4,7 +4,12 @@
   <h1><%= t('profile.your_profile') %></h1>
   <div class="flex-profil">
     <div class="profile">
-      <%= image_tag "profil.png", class: "img-profil" %>
+     <% if current_user.profile_image.attached? %>
+        <%# On utilise variant pour optimiser la taille et object-fit pour ne pas déformer %>
+        <%= image_tag current_user.profile_image.variant(resize_to_fill: [200, 200]), class: "img-profil", style: "object-fit: cover; border-radius: 50%;" %>
+      <% else %>
+        <%= image_tag "profil.png", class: "img-profil" %>
+      <% end %>
     </div>
     <div>
       <p class="name"><%= current_user.firstname %> <%= current_user.lastname %></p>

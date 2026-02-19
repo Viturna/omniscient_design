@@ -121,6 +121,27 @@
           <%= f.label :pseudo, t('devise.registration.label_pseudo') %>
           <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: t('devise.registration.pseudo_placeholder') %>
         </div>
+
+        <div class="field input-flex">
+          <%= f.label :profile_image, "Photo de profil" %>
+          <%= f.file_field :profile_image, class: "form-control", accept: "image/*" %>
+        </div>
+
+        <div class="field input-flex">
+          <%= f.label :country_id, "Pays" %>
+          <%= f.collection_select :country_id,
+              Country.order(:country),
+              :id,
+              :country,
+              { prompt: "Sélectionnez votre pays" },
+              { 
+                class: "form-control", 
+                data: { 
+                  controller: "select2",
+                  select2_placeholder_value: "Sélectionnez votre pays"
+                } 
+              } %>
+        </div>
         <div class="field input-flex">
           <%= f.label t('edit_profile.status') %>
           <%= f.select :statut,

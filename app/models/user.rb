@@ -79,6 +79,9 @@ class User < ApplicationRecord
   has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id', dependent: :destroy
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
 
+  belongs_to :country, optional: true 
+  has_one_attached :profile_image
+
   # Contributions & Feedback
   has_many :bug_reports, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
@@ -118,6 +121,10 @@ class User < ApplicationRecord
 
   after_create :subscribe_to_newsletter, if: :newsletter?
   after_update :sync_newsletter_status, if: :saved_change_to_newsletter?
+
+  # Validation optionnelle pour l'image (Format et Poids)
+  validates :profile_image, content_type: ['image/png', 'image/jpeg', 'image/webp'],
+                            size: { less_than: 5.megabytes, message: 'doit faire moins de 5 Mo' }
   # --- Méthodes ---
 
   def self.from_omniauth(auth)

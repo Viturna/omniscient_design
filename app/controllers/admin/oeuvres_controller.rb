@@ -5,7 +5,18 @@ class Admin::OeuvresController < ApplicationController
 
   def edit_verbs
     @current_page = 'oeuvres_verbs' 
+    
+    # 1. Base de la requête
     @oeuvres = Oeuvre.includes(:verbs).order(created_at: :desc)
+    
+    # 2. Si une recherche est effectuée, on filtre par nom
+    if params[:search].present?
+      # LOWER permet de rendre la recherche insensible aux majuscules/minuscules
+      @oeuvres = @oeuvres.where("LOWER(nom_oeuvre) LIKE ?", "%#{params[:search].downcase}%")
+    end
+    
+    # 3. On limite à 50 résultats maximum pour la performance
+    @oeuvres = @oeuvres.limit(50)
   
     @grouped_verbs = Verb.includes(:notion).group_by(&:notion)
   end

@@ -109,6 +109,10 @@ application.register("timeline", TimelineController)
 import ToggleSingleFieldController from "./toggle_single_field_controller"
 application.register("toggle-single-field", ToggleSingleFieldController)
 
+import VerbAssignController from "./verb_assign_controller"
+application.register("verb-assign", VerbAssignController)
+
+
 import ValidationOverlayController from "./validation_overlay_controller"
 application.register("validation-overlay", ValidationOverlayController)
 

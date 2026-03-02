@@ -19,6 +19,9 @@ Rails.application.routes.draw do
     get "feedbacks", to: "dashboard#feedbacks"
     resources :etablissements, only: [:index, :edit, :update, :destroy]
     resources :user_badges, only: [:new, :create]
+
+    get 'oeuvres/verbs', to: 'oeuvres#edit_verbs', as: :oeuvres_verbs
+    patch 'oeuvres/:id/update_verbs', to: 'oeuvres#update_verbs', as: :oeuvre_update_verbs
   end
 
   get 'frise/oeuvres', to: 'search#frise_oeuvres'

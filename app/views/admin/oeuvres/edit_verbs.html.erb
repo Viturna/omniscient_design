@@ -1,0 +1,154 @@
+<style>
+  /* Réutilisation de ton design Admin existant */
+  .users-dash-wrapper { 
+    padding: 40px 4vw 80px 4vw; 
+    max-width: 1600px; 
+    margin: 0 auto; 
+    background-color: #f8f9fa; 
+    min-height: 100vh; 
+    font-family: 'IBM Plex Sans', sans-serif; 
+    color: #202020; 
+    box-sizing: border-box; 
+  }
+  
+  .users-dash-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 40px; 
+    flex-wrap: wrap; 
+    gap: 16px; 
+  }
+  
+  .users-dash-title { 
+    font-size: 32px; 
+    font-weight: 500; 
+    color: #202020; 
+    margin: 0; 
+  }
+  
+  .users-dash-table-container { 
+    background: #fff; 
+    border-radius: 16px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02); 
+    border: 1px solid #f0f0f0; 
+    overflow: visible; /* Important pour que le dropdown Select2 ne soit pas coupé */
+    margin-bottom: 48px; 
+  }
+  
+  .users-dash-table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0; 
+    min-width: 800px; 
+  }
+  
+  .users-dash-table th { 
+    background-color: #fafafa; 
+    padding: 18px 24px; 
+    text-align: left; 
+    font-size: 12px; 
+    font-weight: 600; 
+    color: #666; 
+    text-transform: uppercase; 
+    border-bottom: 1px solid #eee; 
+  }
+  
+  .users-dash-table td { 
+    padding: 18px 24px; 
+    border-bottom: 1px solid #f5f5f5; 
+    font-size: 14px; 
+    font-weight: 500; 
+    color: #202020; 
+    vertical-align: middle; 
+  }
+  
+  /* Badges de statut de sauvegarde */
+  .badge { 
+    padding: 6px 12px; 
+    border-radius: 20px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    display: inline-block; 
+    text-align: center; 
+    min-width: 80px;
+  }
+  .badge-gray { background: #f5f5f5; color: #666; }
+  .badge-orange { background: #FFF3E0; color: #E65100; }
+  .badge-green { background: #E8F5E9; color: #2E7D32; }
+  .badge-red { background: #FFEBEE; color: #C62828; }
+
+  /* --- SURCHARGES SELECT2 --- */
+  .select2-container { 
+    width: 100% !important; 
+    min-width: 400px; 
+  }
+  
+  .select2-selection--multiple { 
+    border: 2px solid #e9e9e9 !important; 
+    border-radius: 8px !important; 
+  }
+  
+  /* CORRECTION DU SCROLL POUR LA LISTE PRINCIPALE UNIQUEMENT */
+  .select2-container .select2-results > .select2-results__options {
+    max-height: 400px !important; /* Limite la hauteur du menu principal */
+    overflow-y: auto !important;  /* Active le défilement vertical */
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch; /* Scroll fluide sur mobile */
+  }
+
+  /* On annule la limite pour les sous-listes (les optgroups) sinon ça casse le scroll */
+  .select2-results__options--nested {
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+</style>
+
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <h1 class="users-dash-title">Attribution rapide des Notions</h1>
+  </div>
+
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
+      <thead>
+        <tr>
+          <th style="width: 25%;">Références</th>
+          <th style="width: 60%;">Notions associées</th>
+          <th style="width: 15%; text-align: center;">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @oeuvres.each do |oeuvre| %>
+          <tr>
+            <td><strong><%= oeuvre.nom_oeuvre %></strong></td>
+            <td>
+              <%= form_with model: oeuvre, url: admin_oeuvre_update_verbs_path(oeuvre), method: :patch do |f| %>
+                <select name="oeuvre[verb_ids][]" 
+                        multiple="multiple" 
+                        class="form-control" 
+                        data-controller="verb-assign" 
+                        data-oeuvre-id="<%= oeuvre.id %>">
+                  
+                  <% @grouped_verbs.each do |notion, verbs| %>
+                    <optgroup label="<%= notion.name %>">
+                      <% verbs.each do |verb| %>
+                        <option value="<%= verb.id %>" <%= 'selected' if oeuvre.verb_ids.include?(verb.id) %>>
+                          <%= verb.name %>
+                        </option>
+                      <% end %>
+                    </optgroup>
+                  <% end %>
+
+                </select>
+              <% end %>
+            </td>
+            <td style="text-align: center;">
+              <span id="status-<%= oeuvre.id %>" class="badge badge-gray">-</span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

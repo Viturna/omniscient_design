@@ -11,7 +11,7 @@ class Designer < ApplicationRecord
   validate :valid_death_year, if: -> { date_deces.present? }
   validate :valid_birth_year
 
-  has_and_belongs_to_many :oeuvres, dependent: :destroy
+  has_and_belongs_to_many :references, dependent: :destroy
   has_many :designer_countries, dependent: :destroy
   has_many :countries, through: :designer_countries
   validates :countries, length: { maximum: 3,

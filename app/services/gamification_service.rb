@@ -69,12 +69,12 @@ end
 
   # "Contributeur" : Basé sur les références validées (Table Suivi)
   def check_contributor
-    # On compte les oeuvres + designers + studios validés (ou juste oeuvres selon ton choix)
+    # On compte les references + designers + studios validés (ou juste references selon ton choix)
     # Ici j'utilise le compteur global du modèle Suivi s'il existe
     count = @user.suivis.first&.nb_references_validees || 0
     
     # Si tu veux compter manuellement :
-    # count = @user.oeuvres.where(validation: true).count
+    # count = @user.references.where(validation: true).count
 
     assign_badge_by_level("contributor", count, {
       1 => "bronze",

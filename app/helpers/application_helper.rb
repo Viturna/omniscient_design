@@ -5,7 +5,7 @@ module ApplicationHelper
       { controller: 'lists', action: 'create' },
       { controller: 'lists', action: 'show' },
       { controller: 'lists', action: 'edit' },
-      { controller: 'oeuvres', action: 'edit' },
+      { controller: 'references', action: 'edit' },
       { controller: 'designers', action: 'edit' },
       { controller: 'feedbacks', action: 'new' },
       { controller: 'notifications', action: 'index' }
@@ -20,7 +20,7 @@ module ApplicationHelper
   def show_footer?
     excluded_pages = [
       {controller: 'lists',      actions: %w[show edit index new]},
-      {controller: 'oeuvres',    actions: %w[index new edit]},
+      {controller: 'references',    actions: %w[index new edit]},
       {controller: 'designers',  actions: %w[index new edit]},
       {controller: 'studios',  actions: %w[index new edit]},
       {controller: 'pages',      actions: %w[add_elements]},
@@ -99,7 +99,7 @@ end
     normalized_str
   end
   
-  def linkify_designer_names_and_oeuvres(text)
+  def linkify_designer_names_and_references(text)
     return "" if text.blank?
 
     lists = Rails.cache.fetch("linkify_keywords_list", expires_in: 12.hours) do
@@ -112,9 +112,9 @@ end
                        .select(:id, :nom, :slug)
                        .map { |s| { name: s.nom, slug: s.slug } },
                        
-        oeuvres: Oeuvre.where(validation: true)
-                       .select(:id, :nom_oeuvre, :slug)
-                       .map { |o| { name: o.nom_oeuvre, slug: o.slug } }
+        references: Reference.where(validation: true)
+                       .select(:id, :nom_reference, :slug)
+                       .map { |o| { name: o.nom_reference, slug: o.slug } }
       }
     end
     lists[:designers].each do |item|
@@ -137,13 +137,13 @@ end
       end
     end
 
-    lists[:oeuvres].each do |item|
+    lists[:references].each do |item|
       next if item[:name].blank?
 
       regex = Regexp.new("\\b#{Regexp.escape(item[:name])}\\b")
       
       text = text.gsub(regex) do |match|
-        "<a class=\"black underline\" href='/oeuvres/#{item[:slug]}'>#{match}</a>"
+        "<a class=\"black underline\" href='/references/#{item[:slug]}'>#{match}</a>"
       end
     end
 

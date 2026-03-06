@@ -48,13 +48,13 @@ class Admin::DashboardController < ApplicationController
     @current_page = 'suivi_references'
     
     # --- 1. KPIs ---
-    @count_oeuvres = Oeuvre.count
+    @count_references = Reference.count
     @count_designers = Designer.count
-    @total_refs = @count_oeuvres + @count_designers
+    @total_refs = @count_references + @count_designers
 
-    @refs_validees = Oeuvre.where(validation: true).count + Designer.where(validation: true).count
-    @refs_en_attente = Oeuvre.where(validation: [false, nil]).count + Designer.where(validation: [false, nil]).count
-    @refs_refusees = RejectedOeuvre.count + RejectedDesigner.count
+    @refs_validees = Reference.where(validation: true).count + Designer.where(validation: true).count
+    @refs_en_attente = Reference.where(validation: [false, nil]).count + Designer.where(validation: [false, nil]).count
+    @refs_refusees = RejectedReference.count + RejectedDesigner.count
 
     # --- 2. GRAPHIQUE AVEC FILTRE ---
     @ref_period = params[:ref_period] || '6m'
@@ -76,7 +76,7 @@ class Admin::DashboardController < ApplicationController
     end
 
     # Requêtes avec la méthode de groupement dynamique
-    oeuvres_data = Oeuvre.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+    references_data = Reference.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
                          .send(group_method, :created_at, format: (@ref_period.include?('m') ? "%b %Y" : "%d/%m"))
                          .count
                              
@@ -85,7 +85,7 @@ class Admin::DashboardController < ApplicationController
                              .count
     
     @evolution_detail = [
-      { name: "Oeuvres", data: oeuvres_data },
+      { name: "References", data: references_data },
       { name: "Designers", data: designers_data }
     ]
 
@@ -97,7 +97,7 @@ class Admin::DashboardController < ApplicationController
     }
 
     # --- 4. TABLEAU ---
-    @suivis = Suivi.includes(user: [:oeuvres, :designers])
+    @suivis = Suivi.includes(user: [:references, :designers])
                    .order(nb_references_emises: :desc)
                    .page(params[:page]).per(20) 
   end

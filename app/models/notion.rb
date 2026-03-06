@@ -3,8 +3,8 @@ class Notion < ApplicationRecord
   # Une notion possède plusieurs verbes (ex: "La matérialité" possède "Texturer", "Solliciter"...)
   has_many :verbs, dependent: :destroy
   
-  # On peut accéder aux oeuvres via les verbes
-  has_many :oeuvres, through: :verbs
+  # On peut accéder aux references via les verbes
+  has_many :references, through: :verbs
 
   # --- VALIDATIONS ---
   validates :name, presence: true, uniqueness: { case_sensitive: false }

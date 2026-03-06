@@ -64,25 +64,27 @@
   }
 </style>
 <%# --- DÉBUT DU CONTENEUR PRINCIPAL (Scope Stimulus) --- %>
-<div class="body-show" id="<%= dom_id oeuvre %>" data-controller="reference-scroll share">
+<div class="body-show" id="<%= dom_id reference %>" data-controller="reference-scroll share">
   <%# --- HEADER SHOW (Slider Principal) --- %>
-  <% if oeuvre.oeuvre_images.any? %>
-    <div class="header-show" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file) %>');" data-controller="slider" data-slider-update-background-value="true">
+  <% if reference.reference_images.any? && reference.reference_images.first&.file&.attached? %>
+    <div class="header-show" style="background-image: url('<%= url_for(reference.reference_images.first.file) %>');" data-controller="slider" data-slider-update-background-value="true">
     <% else %>
       <div class="header-show" style="background-color: #FFF;">
       <% end %>
       <div class="slider-slides">
-        <% if oeuvre.oeuvre_images.any? %>
-          <% oeuvre.oeuvre_images.each_with_index do |oeuvre_image, index| %>
-            <img src="<%= url_for(oeuvre_image.file) %>" 
-            alt="<%= oeuvre.nom_oeuvre %> - Image <%= index + 1 %>" 
-            class="top-img-header image-modal-trigger <%= 'active' if index == 0 %>" 
-            data-slider-target="slide"
-            data-action="click->image-modal-slider#openModal">
+        <% if reference.reference_images.any? %>
+          <% reference.reference_images.each_with_index do |reference_image, index| %>
+            <% if reference_image.file&.attached? %>
+              <img src="<%= url_for(reference_image.file) %>" 
+              alt="<%= reference.nom_reference %> - Image <%= index + 1 %>" 
+              class="top-img-header image-modal-trigger <%= 'active' if index == 0 %>" 
+              data-slider-target="slide"
+              data-action="click->image-modal-slider#openModal">
+            <% end %>
           <% end %>
         <% end %>
       </div>
-      <% if oeuvre.oeuvre_images.count > 1 %>
+      <% if reference.reference_images.count > 1 %>
         <button class="slider-nav prev" data-action="click->slider#prev" title="Précédent">
           <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
@@ -94,7 +96,7 @@
           </svg>
         </button>
         <div class="slider-dots">
-          <% oeuvre.oeuvre_images.each_with_index do |oeuvre_image, index| %>
+          <% reference.reference_images.each_with_index do |reference_image, index| %>
             <button class="slider-dot <%= 'active' if index == 0 %>" 
                   data-action="click->slider#switchSlide" 
               data-slider-index-value="<%= index %>" 
@@ -103,12 +105,12 @@
         </div>
       <% end %>
       <%# --- BOUTONS NAVIGATION (Retour, Save, Edit) --- %>
-      <% if oeuvre.validation %>
+      <% if reference.validation %>
         <div class="flex-back-btn">
           <button
             id="back-btn"
             data-controller="back" 
-            data-back-fallback-url-value="https://omniscient-design.fr/oeuvres" 
+            data-back-fallback-url-value="https://omniscient-design.fr/references" 
             data-action="click->back#handleClick">
             <div class="circle-back">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +118,7 @@
               </svg>
             </div>
           </button>
-          <%= link_to oeuvres_path do %>
+          <%= link_to references_path do %>
             <button id="home-btn" data-no-popup>
               <div class="circle-back">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +133,7 @@
         <% unless !user_signed_in? %>
           <div class="flex-right-btn">
             <% if current_user.certified? %>
-              <%= link_to edit_oeuvre_path(oeuvre) do%>
+              <%= link_to edit_reference_path(reference) do%>
                 <div class="circle" data-no-popup>
                   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M14.9998 8.00054C15.5305 8.00054 15.9998 8.46988 15.9998 9.00054C15.9998 9.55254 15.5518 10.0005 14.9998 10.0005C12.9932 10.0005 4.6665 10.0005 4.6665 10.0005V26.0005H27.3332V14.3339C27.3332 13.7819 27.7812 13.3339 28.3332 13.3339C28.8852 13.3339 29.3332 13.7819 29.3332 14.3339V26.6672C29.3332 27.4952 28.6372 28.0005 27.9998 28.0005H3.99984C3.35984 28.0005 2.6665 27.4952 2.6665 26.6672V9.33388C2.6665 8.69254 3.17317 8.00054 3.99984 8.00054H14.9998ZM12.3185 16.7019C10.9252 20.7059 10.6678 21.3019 10.6678 21.8219C10.6678 22.4099 11.1812 22.6565 11.5038 22.6565C11.8665 22.6565 12.9812 22.2552 16.6092 20.9912L12.3185 16.7019ZM13.5025 15.5165L17.7958 19.8099L29.0065 8.60988C29.2238 8.39254 29.3332 8.10721 29.3332 7.82054C29.3332 7.53654 29.2238 7.25121 29.0065 7.03254C28.2332 6.26188 27.0625 5.08988 26.2878 4.31788C26.0705 4.10054 25.7852 3.99121 25.4998 3.99121C25.2158 3.99121 24.9292 4.10054 24.7105 4.31788L13.5025 15.5165Z" fill="white"/>
@@ -142,12 +144,12 @@
             <button class="save-btn" 
                   data-controller="save-modal" 
                   data-action="click->save-modal#open"
-              data-save-modal-oeuvre-id-value="<%= oeuvre.id %>" 
+              data-save-modal-reference-id-value="<%= reference.id %>" 
               title="Enregistrer dans une liste"
               style="position: relative; z-index: 50; background: none; border: none; cursor: pointer; pointer-events: auto;">
               <div class="circle">
                 <svg style="pointer-events: none;" width="40" height="40" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <% if @saved_oeuvre_ids&.include?(oeuvre.id) %>
+                  <% if @saved_reference_ids&.include?(reference.id) %>
                     <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Z" fill="white"/>
                   <% else %>
                     <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z" fill="white"/>
@@ -173,14 +175,14 @@
       <%end%>
       <%# --- INFO HEADER (Domaines, Dates) --- %>
       <div class="info-card-first-content">
-        <%= link_to search_path(:tab => "frise", :start_year => oeuvre.date_oeuvre, :end_year => oeuvre.date_oeuvre) do %>
+        <%= link_to search_path(:tab => "frise", :start_year => reference.date_reference, :end_year => reference.date_reference) do %>
           <p class="info-card-dark info-header-show" data-no-popup>
             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_3261_191)">
                 <path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/>
               </g>
             </svg>
-            <%= oeuvre.date_oeuvre %>
+            <%= reference.date_reference %>
           </p>
         <%end%>
         <% @domaines.each do |domaine| %>
@@ -195,22 +197,22 @@
       <div class="header-top">
         <div>
           <p class="subtitle-card">
-            <%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %>
-            <% if oeuvre.studios.any? %>
-              <%= ("&nbsp;—&nbsp;" + safe_join(oeuvre.studios.map { |s| link_to s.nom, studio_path(s) }, ", ")).html_safe %>
+            <%= safe_join(reference.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %>
+            <% if reference.studios.any? %>
+              <%= ("&nbsp;—&nbsp;" + safe_join(reference.studios.map { |s| link_to s.nom, studio_path(s) }, ", ")).html_safe %>
             <% end %>
           </p>
-          <p class="title-card"><%= oeuvre.nom_oeuvre %></p>
+          <p class="title-card"><%= reference.nom_reference %></p>
         </div>
         <div class="flex-info">
-          <%= link_to search_path(:tab => "frise", :start_year => oeuvre.date_oeuvre, :end_year => oeuvre.date_oeuvre) do %>
+          <%= link_to search_path(:tab => "frise", :start_year => reference.date_reference, :end_year => reference.date_reference) do %>
             <div class="info-card" data-no-popup>
               <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_3261_191)">
                   <path d="M20.3477 20.6523H16.3477V16.6523H20.3477V20.6523ZM14.3477 10.6523H10.3477V14.6523H14.3477V10.6523ZM20.3477 10.6523H16.3477V14.6523H20.3477V10.6523ZM8.34766 16.6523H4.34766V20.6523H8.34766V16.6523ZM14.3477 16.6523H10.3477V20.6523H14.3477V16.6523ZM8.34766 10.6523H4.34766V14.6523H8.34766V10.6523ZM24.3477 2.65234V24.6523H0.347656V2.65234H3.34766V3.65234C3.34766 4.75534 4.24466 5.65234 5.34766 5.65234C6.45066 5.65234 7.34766 4.75534 7.34766 3.65234V2.65234H17.3477V3.65234C17.3477 4.75534 18.2447 5.65234 19.3477 5.65234C20.4507 5.65234 21.3477 4.75534 21.3477 3.65234V2.65234H24.3477ZM22.3477 8.65234H2.34766V22.6523H22.3477V8.65234ZM20.3477 1.65234C20.3477 1.10034 19.9007 0.652344 19.3477 0.652344C18.7947 0.652344 18.3477 1.10034 18.3477 1.65234V3.65234C18.3477 4.20434 18.7947 4.65234 19.3477 4.65234C19.9007 4.65234 20.3477 4.20434 20.3477 3.65234V1.65234ZM6.34766 3.65234C6.34766 4.20434 5.90066 4.65234 5.34766 4.65234C4.79466 4.65234 4.34766 4.20434 4.34766 3.65234V1.65234C4.34766 1.10034 4.79466 0.652344 5.34766 0.652344C5.90066 0.652344 6.34766 1.10034 6.34766 1.65234V3.65234Z" fill="white"/>
                 </g>
               </svg>
-              <%= oeuvre.date_oeuvre %>
+              <%= reference.date_reference %>
             </div>
           <%end%>
           <% @domaines.each do |domaine| %>
@@ -227,19 +229,19 @@
     <%# --- CONTENU TEXTE --- %>
     <div class="content-show">
       <div class="text-show">
-        <div class="title-box-oeuvre">
+        <div class="title-box-reference">
           <p class="subtitle-card">
-            <%= safe_join(oeuvre.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %>
-            <% if oeuvre.studios.any? %>
-              <%= ("&nbsp;—&nbsp;" + safe_join(oeuvre.studios.map { |s| link_to s.nom, studio_path(s) }, ", ")).html_safe %>
+            <%= safe_join(reference.designers.map { |d| link_to d.nom_designer, designer_path(d) }, ", ") %>
+            <% if reference.studios.any? %>
+              <%= ("&nbsp;—&nbsp;" + safe_join(reference.studios.map { |s| link_to s.nom, studio_path(s) }, ", ")).html_safe %>
             <% end %>
           </p>
-          <h1 class="title-card"><%= oeuvre.nom_oeuvre %></h1>
+          <h1 class="title-card"><%= reference.nom_reference %></h1>
         </div>
-        <h2 class="title-description-reference"><%= t('oeuvres.notions') %></h2>
-        <% if oeuvre.verbs.any? %>
+        <h2 class="title-description-reference"><%= t('references.notions') %></h2>
+        <% if reference.verbs.any? %>
           <div style="display: flex; flex-direction: column; gap: 16px">
-            <% oeuvre.verbs.includes(:notion).group_by(&:notion).sort_by { |n, _| n.name }.each do |notion, verbs| %>
+            <% reference.verbs.includes(:notion).group_by(&:notion).sort_by { |n, _| n.name }.each do |notion, verbs| %>
               <div class="notions-flex">
                 <div class="notion-container" style="background-color: #202020;">
                   <span style="color: #FFF; font-weight: 500;"> <%= notion.name %></span>
@@ -253,34 +255,34 @@
             <% end %>
           </div>
         <% else %>
-          <p><%= t('oeuvres.no_notion') %></p>
+          <p><%= t('references.no_notion') %></p>
         <% end %>
-        <h2 class="title-description-reference"><%= t('oeuvres.presentation_generale') %></h2>
-        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.presentation_generale.presence) %></p>
-        <% if oeuvre.contexte_historique.present? %>
-          <h2 class="title-description-reference"><%= t('oeuvres.contexte_historique') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.contexte_historique) %></p>
+        <h2 class="title-description-reference"><%= t('references.presentation_generale') %></h2>
+        <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.presentation_generale.presence) %></p>
+        <% if reference.contexte_historique.present? %>
+          <h2 class="title-description-reference"><%= t('references.contexte_historique') %></h2>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.contexte_historique) %></p>
         <% end %>
-        <% if oeuvre.materiaux_et_innovations_techniques.present? %>
-          <h2 class="title-description-reference"><%= t('oeuvres.materiaux_innovations') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.materiaux_et_innovations_techniques) %></p>
+        <% if reference.materiaux_et_innovations_techniques.present? %>
+          <h2 class="title-description-reference"><%= t('references.materiaux_innovations') %></h2>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.materiaux_et_innovations_techniques) %></p>
         <% end %>
-        <% if oeuvre.concept_et_inspiration.present? %>
-          <h2 class="title-description-reference"><%= t('oeuvres.concept_inspiration') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.concept_et_inspiration) %></p>
+        <% if reference.concept_et_inspiration.present? %>
+          <h2 class="title-description-reference"><%= t('references.concept_inspiration') %></h2>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.concept_et_inspiration) %></p>
         <% end %>
-        <% if oeuvre.dimension_esthetique.present? %>
-          <h2 class="title-description-reference"><%= t('oeuvres.dimension_esthetique') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.dimension_esthetique) %></p>
+        <% if reference.dimension_esthetique.present? %>
+          <h2 class="title-description-reference"><%= t('references.dimension_esthetique') %></h2>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.dimension_esthetique) %></p>
         <% end %>
-        <% if oeuvre.impact_et_message.present? %>
-          <h2 class="title-description-reference"><%= t('oeuvres.impact_message') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(oeuvre.impact_et_message) %></p>
+        <% if reference.impact_et_message.present? %>
+          <h2 class="title-description-reference"><%= t('references.impact_message') %></h2>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.impact_et_message) %></p>
         <% end %>
-        <h2 class="title-description-reference"><%= t('oeuvres.sources') %></h2>
-        <% if oeuvre.source.present? %>
+        <h2 class="title-description-reference"><%= t('references.sources') %></h2>
+        <% if reference.source.present? %>
           <div class="sources-flex" style="display: flex; flex-wrap: wrap; gap: 64px;">
-            <% JSON.parse(oeuvre.source.to_s).each do |url| %>
+            <% JSON.parse(reference.source.to_s).each do |url| %>
               <% next if url.blank? %>
               <% domain = URI.parse(url).host rescue url %>
               <% favicon_url = "https://www.google.com/s2/favicons?domain=#{domain}&sz=64" %>
@@ -293,9 +295,9 @@
             <% end %>
           </div>
         <% end %>
-        <h2 class="title-description-reference"><%= t('oeuvres.actions') %></h2>
+        <h2 class="title-description-reference"><%= t('references.actions') %></h2>
         <div class="flex-actions">
-          <% if oeuvre.validation %>
+          <% if reference.validation %>
             <%# --- MODIFICATION ICI : Bouton Partager corrigé --- %>
             <button type="button" 
                     id="shareButton" 
@@ -317,7 +319,7 @@
                   <path d="M23.75 25.3125C23.75 24.81 23.305 24.375 22.8125 24.375C19.6112 24.375 7.88875 24.375 4.6875 24.375C4.195 24.375 3.75 24.81 3.75 25.3125C3.75 25.815 4.195 26.25 4.6875 26.25H22.8125C23.305 26.25 23.75 25.815 23.75 25.3125ZM8.72125 16.4587C7.05375 21.3537 6.87125 21.7487 6.87125 22.1925C6.87125 22.8512 7.44625 23.1288 7.8075 23.1288C8.2475 23.1288 8.6425 22.9575 13.525 21.2625L8.72125 16.4587ZM10.0462 15.1325L14.8538 19.94L25.8838 8.9225C26.1275 8.67875 26.25 8.35875 26.25 8.03875C26.25 7.72 26.1275 7.4 25.8838 7.15625C25.0188 6.2925 23.7062 4.98 22.84 4.11625C22.5962 3.8725 22.2763 3.75 21.9563 3.75C21.6388 3.75 21.3187 3.8725 21.0737 4.11625L10.0462 15.1325Z" fill="white"/>
                 </svg>
               </div>
-              <p><%= t('oeuvres.signaler_erreur') %></p>
+              <p><%= t('references.signaler_erreur') %></p>
             <% end %>
           <% else %>
             <div class="button-circle">
@@ -325,63 +327,63 @@
                 <svg width="35" height="35" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 </svg>
               </div>
-              <p><%= t('oeuvres.partager') %></p>
+              <p><%= t('references.partager') %></p>
             </div>
             <div class="button-circle">
               <div class="circle">
               </div>
-              <p><%= t('oeuvres.signaler_erreur') %></p>
+              <p><%= t('references.signaler_erreur') %></p>
             </div>
           <% end %>
         </div>
         <div class="contribution">
-          <h2 class="title-description-reference"><%= t('oeuvres.contribution') %></h2>
+          <h2 class="title-description-reference"><%= t('references.contribution') %></h2>
           <div class="flex-contributor">
             <div class="box-contributor">
-              <% if oeuvre.user_id.present? %>
-                <% user = User.find_by(id: oeuvre.user_id) %>
+              <% if reference.user_id.present? %>
+                <% user = User.find_by(id: reference.user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
               <% else %>
                 <span class="contributor">Omniscient Design</span>
               <% end %>
-              <p class="text-contributor"><%= t('oeuvres.enrichissement') %> <%= I18n.l(oeuvre.created_at, format: :default) %></p>
+              <p class="text-contributor"><%= t('references.enrichissement') %> <%= I18n.l(reference.created_at, format: :default) %></p>
             </div>
             <div class="vertical-divider"></div>
             <div class="box-contributor">
-              <% if @oeuvre.validated_by_user_id.present? %>
-                <% user = User.find_by(id: @oeuvre.validated_by_user_id) %>
+              <% if @reference.validated_by_user_id.present? %>
+                <% user = User.find_by(id: @reference.validated_by_user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
               <% else %>
                 <span class="contributor">Omniscient Design</span>
               <% end %>
-              <p class="text-contributor"><%= t('oeuvres.validation') %> <%= @oeuvre.nom_oeuvre %></p>
+              <p class="text-contributor"><%= t('references.validation') %> <%= @reference.nom_reference %></p>
             </div>
           </div>
         </div>
       </div>
     </div>
     <%# --- SECTION SUIVANTE (DÉCOUVRIR AUTRES) --- %>
-    <% if @oeuvre.validation %>
+    <% if @reference.validation %>
       <div class="next-card">
-        <h2 class="title-description-reference"><%= t('oeuvres.decouvrir_autres') %></h2>
+        <h2 class="title-description-reference"><%= t('references.decouvrir_autres') %></h2>
         <div class="horizontal-scroll-section">
           <div class="horizontal-wrapper">
-            <% @domaine_oeuvres.each do |oeuvre| %>
-              <%= link_to oeuvre do %>
-                <div class="oeuvre-card">
-                  <% if oeuvre.oeuvre_images.first&.file&.attached? %>
-                    <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb)) %>');">
+            <% @domaine_references.each do |reference| %>
+              <%= link_to reference do %>
+                <div class="reference-card">
+                  <% if reference.reference_images.first&.file&.attached? %>
+                    <div class="reference-card-image" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb)) %>');">
                     <% else %>
-                      <div class="oeuvre-card-image" style="background-color: #EEE;">
+                      <div class="reference-card-image" style="background-color: #EEE;">
                       <% end %>
-                      <div class="oeuvre-card-content">
-                        <span class="oeuvre-designer">
-                          <%= safe_join(oeuvre.designers.map(&:nom_designer), ", ")%>
-                          <% if oeuvre.studios.any? %>
-                            <%= (" — " + safe_join(oeuvre.studios.map(&:nom), ", ")) %>
+                      <div class="reference-card-content">
+                        <span class="reference-designer">
+                          <%= safe_join(reference.designers.map(&:nom_designer), ", ")%>
+                          <% if reference.studios.any? %>
+                            <%= (" — " + safe_join(reference.studios.map(&:nom), ", ")) %>
                           <% end %>
                         </span>
-                        <p class="oeuvre-title"><%= oeuvre.nom_oeuvre %></p>
+                        <p class="reference-title"><%= reference.nom_reference %></p>
                       </div>
                     </div>
                   </div>
@@ -393,18 +395,18 @@
       <% end %>
       <%# --- OVERLAY VALIDATION --- %>
       <div data-controller="validation-overlay">
-        <% if !oeuvre.validation %>
+        <% if !reference.validation %>
           <div class="overlay-bottom" id="overlay-bottom" data-validation-overlay-target="overlayBottom" style="display: none;">
             <div class="naviguation">
               <p class="naviguation-title">Que souhaitez-vous faire ?</p>
               <div class="naviguation-buttons">
                 <%= link_to "Ajouter une autre référence", add_elements_path, class: "button" %>
-                <% if user_signed_in? && current_user.id == oeuvre.user_id || current_user.admin? %>
-                  <%= link_to 'Annuler la soumission', cancel_oeuvre_path(oeuvre), 
+                <% if user_signed_in? && current_user.id == reference.user_id || current_user.admin? %>
+                  <%= link_to 'Annuler la soumission', cancel_reference_path(reference), 
       data: { turbo_method: :delete, confirm: "Êtes-vous sûr ?" }, 
       class: "button secondary" %>
                 <% end %>
-                <%= link_to "Retour à l'accueil", oeuvres_path, class: "button" %>
+                <%= link_to "Retour à l'accueil", references_path, class: "button" %>
               </div>
             </div>
           </div>
@@ -484,7 +486,7 @@
       <div class="modal modal-image fade" id="imageSliderModal" tabindex="-1" role="dialog" aria-labelledby="imageSliderModalLabel" 
          aria-hidden="true" 
          data-controller="image-modal-slider" 
-         data-image-modal-slider-image-count-value="<%= @oeuvre.oeuvre_images.count %>" 
+         data-image-modal-slider-image-count-value="<%= @reference.reference_images.count %>" 
          style="display: none;">
         <div class="modal-dialog" role="document" style="max-width: 90vw;">
           <div class="modal-content">
@@ -494,15 +496,17 @@
             <div class="modal-body pt-0" style="position: relative;">
               <div class="image-slider-container" data-controller="slider" data-slider-update-background-value="false">
                 <div class="slider-slides" data-slider-target="slides">
-                  <% @oeuvre.oeuvre_images.each_with_index do |oeuvre_image, index| %>
-                    <div class="slider-slide-wrapper <%= 'active' if index == 0 %>" data-slider-target="slide">
-                      <img src="<%= url_for(oeuvre_image.file) %>" 
-                        alt="<%= @oeuvre.nom_oeuvre %> - Image <%= index + 1 %>" 
-                        style="width: 100%; height: auto; display: block; max-height: 75vh; object-fit: contain;">
-                    </div>
+                  <% @reference.reference_images.each_with_index do |reference_image, index| %>
+                    <% if reference_image.file&.attached? %>
+                      <div class="slider-slide-wrapper <%= 'active' if index == 0 %>" data-slider-target="slide">
+                        <img src="<%= url_for(reference_image.file) %>" 
+                          alt="<%= @reference.nom_reference %> - Image <%= index + 1 %>" 
+                          style="width: 100%; height: auto; display: block; max-height: 75vh; object-fit: contain;">
+                      </div>
+                    <% end %>
                   <% end %>
                 </div>
-                <% if @oeuvre.oeuvre_images.count > 1 %>
+                <% if @reference.reference_images.count > 1 %>
                   <button class="slider-nav prev" data-action="click->slider#prev" title="Précédent" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 10;">
                     <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/></svg>
                   </button>
@@ -511,7 +515,7 @@
                   </button>
                   <div class="slider-dots" 
                      style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 20;">
-                    <% @oeuvre.oeuvre_images.count.times do |index| %>
+                    <% @reference.reference_images.count.times do |index| %>
                       <button class="slider-dot <%= 'active' if index == 0 %>" 
                             data-action="click->slider#switchSlide" 
                         data-slider-index-value="<%= index %>" 
@@ -522,11 +526,11 @@
                 <% end %>
               </div>
               <div class="image-credits-container" style="text-align: center;">
-                <% @oeuvre.oeuvre_images.each_with_index do |oeuvre_image, index| %>
+                <% @reference.reference_images.each_with_index do |reference_image, index| %>
                   <p class="image-credit <%= 'active-credit' if index == 0 %>" 
                    data-credit-index="<%= index %>" 
                    style="<%= 'display: block;' if index == 0 %> color: #888; font-size: 0.9em; margin: 0;">
-                    <%= oeuvre_image.credit.present? ? "Crédit : #{oeuvre_image.credit}" : "Crédit : Non spécifié" %>
+                    <%= reference_image.credit.present? ? "Crédit : #{reference_image.credit}" : "Crédit : Non spécifié" %>
                   </p>
                 <% end %>
               </div>

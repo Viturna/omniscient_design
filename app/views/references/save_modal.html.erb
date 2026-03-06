@@ -10,7 +10,7 @@
   </div>
   <div class="flex-title-popup">
     <p class="title-popup">Ajouter dans une liste</p>
-    <%= link_to 'Créer une liste', new_list_path(oeuvre_id: @oeuvre.id), class: "popup-link-add", data: { turbo_frame: "_top" } %>
+    <%= link_to 'Créer une liste', new_list_path(reference_id: @reference.id), class: "popup-link-add", data: { turbo_frame: "_top" } %>
   </div>
   <% if @lists.empty? %>
     <p style="color: #999; margin-top: 20px;">Vous n'avez pas encore de liste.</p>
@@ -21,11 +21,11 @@
           <%= link_to list, class: "box-list-left", data: { turbo_frame: "_top" } do %>
             <div class="box-text-list">
               <p class="title-list"><%= list.name %></p>
-              <p class="nb-list"><%= (list.try(:designers)&.count || 0) + list.oeuvres.count %> Références</p>
+              <p class="nb-list"><%= (list.try(:designers)&.count || 0) + list.references.count %> Références</p>
             </div>
           <% end %>
-          <% if list.oeuvres.include?(@oeuvre) %>
-            <%= button_to remove_oeuvre_list_path(list, oeuvre_id: @oeuvre.id),
+          <% if list.references.include?(@reference) %>
+            <%= button_to remove_reference_list_path(list, reference_id: @reference.id),
                 method: :delete,
                 style: "background: none; border:none; cursor: pointer;",
                 form: { style: "margin:0;" } do %>
@@ -42,8 +42,8 @@
               </svg>
             <% end %>
           <% else %>
-            <%= form_with(url: add_oeuvre_list_path(list), method: "post", local: true, style: "margin:0;") do |form| %>
-              <%= form.hidden_field :oeuvre_id, value: @oeuvre.id %>
+            <%= form_with(url: add_reference_list_path(list), method: "post", local: true, style: "margin:0;") do |form| %>
+              <%= form.hidden_field :reference_id, value: @reference.id %>
               <button type="submit" class="add-to-list-btn" style="border:none; background:none; cursor: pointer; padding: 0;">
                 <svg class="normal-btn" width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_829_310_<%= list.id %>)">

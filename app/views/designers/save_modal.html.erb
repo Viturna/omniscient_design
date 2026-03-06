@@ -20,7 +20,7 @@
           <%= link_to list, class: "box-list-left", data: { turbo_frame: "_top" } do %>
             <div class="box-text-list">
               <p class="title-list"><%= list.name %></p>
-              <p class="nb-list"><%= (list.try(:designers)&.count || 0) + list.oeuvres.count %> Références</p>
+              <p class="nb-list"><%= (list.try(:designers)&.count || 0) + list.references.count %> Références</p>
             </div>
           <% end %>
           <% if list.designers.include?(@designer) %>

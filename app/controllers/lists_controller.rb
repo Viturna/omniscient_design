@@ -3,8 +3,8 @@ class ListsController < ApplicationController
   before_action :set_list, only: [
       :show, :edit, :update, :destroy, :invite_editors,
       :change_role, :remove_user, :toggle_privacy,
-      :remove_designer, :remove_oeuvre, :remove_studio,
-      :add_oeuvre, :add_designer, :add_studio 
+      :remove_designer, :remove_reference, :remove_studio,
+      :add_reference, :add_designer, :add_studio 
     ]
     
   def index
@@ -37,12 +37,12 @@ class ListsController < ApplicationController
                            .page(params[:studios_page]).per(10)
 
     # Œuvres
-    selected_oeuvre_ids = @list.oeuvre_ids
-    @selected_oeuvres = Oeuvre.where(id: selected_oeuvre_ids, validation: true).order(:nom_oeuvre)
-    @other_oeuvres = Oeuvre.where(validation: true)
-                           .where.not(id: selected_oeuvre_ids)
-                           .order(:nom_oeuvre)
-                           .page(params[:oeuvres_page]).per(10)
+    selected_reference_ids = @list.reference_ids
+    @selected_references = Reference.where(id: selected_reference_ids, validation: true).order(:nom_reference)
+    @other_references = Reference.where(validation: true)
+                           .where.not(id: selected_reference_ids)
+                           .order(:nom_reference)
+                           .page(params[:references_page]).per(10)
 
     # Autorisation
     if @list.share_token.present? && @list.share_token == params[:share_token]
@@ -73,12 +73,12 @@ class ListsController < ApplicationController
                              .page(params[:studios_page]).per(10)
 
       # Œuvres
-      selected_oeuvre_ids = @list.oeuvre_ids
-      @selected_oeuvres = Oeuvre.where(id: selected_oeuvre_ids, validation: true).order(:nom_oeuvre)
-      @other_oeuvres = Oeuvre.where(validation: true)
-                             .where.not(id: selected_oeuvre_ids)
-                             .order(:nom_oeuvre)
-                             .page(params[:oeuvres_page]).per(10)
+      selected_reference_ids = @list.reference_ids
+      @selected_references = Reference.where(id: selected_reference_ids, validation: true).order(:nom_reference)
+      @other_references = Reference.where(validation: true)
+                             .where.not(id: selected_reference_ids)
+                             .order(:nom_reference)
+                             .page(params[:references_page]).per(10)
 
       render :show
     else
@@ -122,26 +122,26 @@ class ListsController < ApplicationController
     redirect_to lists_url, notice: I18n.t('lists.destroy.success')
   end
 
-  def add_oeuvre
+  def add_reference
     @list = List.friendly.find(params[:slug]) 
     
-    @oeuvre = Oeuvre.find(params[:oeuvre_id])
+    @reference = Reference.find(params[:reference_id])
 
-    unless @list.oeuvres.include?(@oeuvre)
-      @list.oeuvres << @oeuvre
+    unless @list.references.include?(@reference)
+      @list.references << @reference
     end
 
-    redirect_to save_modal_oeuvre_path(@oeuvre)
+    redirect_to save_modal_reference_path(@reference)
   end
 
-  def remove_oeuvre
+  def remove_reference
     @list = List.friendly.find(params[:slug]) 
     
-    @oeuvre = Oeuvre.find(params[:oeuvre_id])
+    @reference = Reference.find(params[:reference_id])
 
-    @list.oeuvres.delete(@oeuvre)
+    @list.references.delete(@reference)
 
-    redirect_to save_modal_oeuvre_path(@oeuvre)
+    redirect_to save_modal_reference_path(@reference)
   end
 
   def add_designer
@@ -185,7 +185,7 @@ class ListsController < ApplicationController
   end
   
   def filtered_scopes
-    oeuvres   = Oeuvre.where(validation: true)
+    references   = Reference.where(validation: true)
     designers = Designer.where(validation: true)
     studios   = Studio.where(validation: true)
     # ----- années -----
@@ -194,7 +194,7 @@ class ListsController < ApplicationController
       if sy > 0 && ey > 0 && sy <= ey
         designers = designers.where(date_naissance: sy..ey)
         studios   = studios.where(date_creation: sy..ey)
-        oeuvres   = oeuvres.where(date_oeuvre: sy..ey)
+        references   = references.where(date_reference: sy..ey)
       end
     end
 
@@ -205,7 +205,7 @@ class ListsController < ApplicationController
         if domaine_ids.any?
           designers = designers.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
           studios   = studios.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-          oeuvres   = oeuvres.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+          references   = references.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
         end
       end
 
@@ -215,7 +215,7 @@ class ListsController < ApplicationController
     if notions_params.present?
       notion_ids = Array(notions_params).reject(&:blank?)
       designers  = designers.joins(:notions).where(notions: { id: notion_ids }).distinct
-      oeuvres    = oeuvres.joins(:notions).where(notions: { id: notion_ids }).distinct
+      references    = references.joins(:notions).where(notions: { id: notion_ids }).distinct
     end
 
     # ----- pays -----
@@ -226,12 +226,12 @@ class ListsController < ApplicationController
           designers = designers.joins(:designer_countries).where(designer_countries: { country_id: country_ids }).distinct
           # Si StudioCountry existe :
           studios   = studios.joins(:studio_countries).where(studio_countries: { country_id: country_ids }).distinct
-          oeuvres   = oeuvres.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+          references   = references.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
         end
       end
 
 
-    [oeuvres, designers, studios]
+    [references, designers, studios]
   end
   def toggle_privacy
     if params[:privacy] == 'public'
@@ -326,11 +326,11 @@ class ListsController < ApplicationController
                            .limit(limit)
       render partial: 'designers_list', collection: @designers, as: :designer
 
-    when 'oeuvres'
-      @oeuvres = Oeuvre.where(validation: true)
-                       .where("LOWER(nom_oeuvre) LIKE ?", "%#{query}%")
+    when 'references'
+      @references = Reference.where(validation: true)
+                       .where("LOWER(nom_reference) LIKE ?", "%#{query}%")
                        .limit(limit)
-      render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+      render partial: 'references_list', collection: @references, as: :reference
 
     else
       head :bad_request # Renvoie une erreur 400 si le type est inconnu
@@ -339,23 +339,23 @@ class ListsController < ApplicationController
 
 
 
-def load_more_oeuvres
+def load_more_references
   offset = params[:offset].to_i
   if params[:slug].present?
     @list = List.friendly.find_by(slug: params[:slug])
-    selected_oeuvre_ids = @list.oeuvre_ids
-    @oeuvres = Oeuvre.where(validation: true)
-                     .where.not(id: selected_oeuvre_ids)
-                     .order(:nom_oeuvre)
+    selected_reference_ids = @list.reference_ids
+    @references = Reference.where(validation: true)
+                     .where.not(id: selected_reference_ids)
+                     .order(:nom_reference)
                      .offset(offset)
                      .limit(10)
   else
-    @oeuvres = Oeuvre.where(validation: true)
-                     .order(:nom_oeuvre)
+    @references = Reference.where(validation: true)
+                     .order(:nom_reference)
                      .offset(offset)
                      .limit(10)
   end
-  render partial: 'oeuvres_list', collection: @oeuvres, as: :oeuvre
+  render partial: 'references_list', collection: @references, as: :reference
 end
 
 def load_more_designers
@@ -403,7 +403,7 @@ end
   end
 
   def list_params
-    params.require(:list).permit(:name, :public, designer_ids: [], studio_ids: [], oeuvre_ids: [])
+    params.require(:list).permit(:name, :public, designer_ids: [], studio_ids: [], reference_ids: [])
   end
 
   def create_share_notification(list)

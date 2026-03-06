@@ -1,5 +1,5 @@
-class RemoveDesignerIdFromOeuvres < ActiveRecord::Migration[7.1]
+class RemoveDesignerIdFromreferences < ActiveRecord::Migration[7.1]
   def change
-    remove_column :oeuvres, :designer_id, :bigint
+    remove_column :references, :designer_id, :bigint
   end
 end

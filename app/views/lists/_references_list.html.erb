@@ -1,0 +1,13 @@
+<div class="check-box-wrapper <%= 'selected' if defined?(@selected_reference_ids) && @selected_reference_ids.include?(reference.id) %>" data-id="<%= reference.id %>">
+  <%= check_box_tag "reference_ids[]", reference.id, (defined?(@selected_reference_ids) && @selected_reference_ids.include?(reference.id)), class: 'hidden-check', id: "reference_#{reference.id}", disabled: true %>
+  <label for="reference_<%= reference.id %>">
+    <% if reference.reference_images.first&.file&.attached? %>
+      <div class="card-list-add" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb)) %>');  background-size: cover; background-position: center;">
+      <% else %>
+        <div class="card-list-add" style="background: #F3F3F3;">
+        <% end %>
+        <div class="default-overlay"></div>
+        <p class="card-title-add"><%= truncate(reference.nom_reference, length: 20, omission: '...') %></p>
+      </div>
+    </label>
+  </div>

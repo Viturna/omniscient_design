@@ -1,6 +1,6 @@
-class AddSlugToOeuvres < ActiveRecord::Migration[7.1]
+class AddSlugToreferences < ActiveRecord::Migration[7.1]
   def change
-    add_column :oeuvres, :slug, :string
-    add_index :oeuvres, :slug, unique: true
+    add_column :references, :slug, :string
+    add_index :references, :slug, unique: true
   end
 end

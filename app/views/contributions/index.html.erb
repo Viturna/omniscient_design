@@ -50,7 +50,7 @@
 
 <section class="grid-1">
   <h2><%= t('contributions.added_references') %></h2>
-  <% if @oeuvres.any? %>
+  <% if @references.any? %>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -62,22 +62,22 @@
           </tr>
         </thead>
         <tbody>
-          <% @oeuvres.each do |oeuvre| %>
+          <% @references.each do |reference| %>
             <tr>
-              <td><%= oeuvre.nom_oeuvre %></td>
-              <td><%= oeuvre.created_at.present? ? oeuvre.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+              <td><%= reference.nom_reference %></td>
+              <td><%= reference.created_at.present? ? reference.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
               <td>
-                <% if oeuvre.validation %>
+                <% if reference.validation %>
                   <span class="status validated"><%= t('contributions.validated') %></span>
-                <% elsif oeuvre.rejection_reason.present? %>
+                <% elsif reference.rejection_reason.present? %>
                   <span class="status rejected"><%= t('contributions.rejected') %></span>
                 <% else %>
                   <span class="status pending"><%= t('contributions.pending') %></span>
                 <% end %>
               </td>
               <td>
-                <% if oeuvre.rejection_reason.present? %>
-                  <%= oeuvre.rejection_reason %>
+                <% if reference.rejection_reason.present? %>
+                  <%= reference.rejection_reason %>
                 <% end %>
               </td>
             </tr>

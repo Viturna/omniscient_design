@@ -20,8 +20,8 @@ export default class extends Controller {
     const form = this.element.closest('form');
     const url = form.action;
     const formData = new FormData(form);
-    const oeuvreId = this.element.dataset.oeuvreId;
-    const statusBadge = document.getElementById(`status-${oeuvreId}`);
+    const referenceId = this.element.dataset.referenceId;
+    const statusBadge = document.getElementById(`status-${referenceId}`);
 
     // UX : Changement visuel pendant la sauvegarde
     statusBadge.textContent = "Sauvegarde...";
@@ -36,25 +36,25 @@ export default class extends Controller {
         'Accept': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // UX : Confirmation de succès
-        statusBadge.textContent = "Enregistré ✓";
-        statusBadge.className = "badge badge-green";
-        
-        // Remise à zéro visuelle après 2 secondes
-        setTimeout(() => {
-          statusBadge.textContent = "-";
-          statusBadge.className = "badge badge-gray";
-        }, 2000);
-      } else {
-        throw new Error("Erreur serveur");
-      }
-    })
-    .catch(error => {
-      statusBadge.textContent = "Erreur ❌";
-      statusBadge.className = "badge badge-red";
-    });
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // UX : Confirmation de succès
+          statusBadge.textContent = "Enregistré ✓";
+          statusBadge.className = "badge badge-green";
+
+          // Remise à zéro visuelle après 2 secondes
+          setTimeout(() => {
+            statusBadge.textContent = "-";
+            statusBadge.className = "badge badge-gray";
+          }, 2000);
+        } else {
+          throw new Error("Erreur serveur");
+        }
+      })
+      .catch(error => {
+        statusBadge.textContent = "Erreur ❌";
+        statusBadge.className = "badge badge-red";
+      });
   }
 }

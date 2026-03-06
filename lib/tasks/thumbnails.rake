@@ -1,19 +1,19 @@
 require 'mini_magick'
 
 namespace :images do
-  desc "Generate thumbnails for oeuvre and designer images"
+  desc "Generate thumbnails for reference and designer images"
   task generate_thumbs: :environment do
     # === CONFIG ===
     size = 300
 
     # === ŒUVRES ===
-    oeuvre_input_dir  = Rails.root.join('app', 'assets', 'images', 'oeuvres', 'desktop')
-    oeuvre_output_dir = Rails.root.join('app', 'assets', 'images', 'oeuvres', 'thumbs')
-    FileUtils.mkdir_p(oeuvre_output_dir)
+    reference_input_dir  = Rails.root.join('app', 'assets', 'images', 'references', 'desktop')
+    reference_output_dir = Rails.root.join('app', 'assets', 'images', 'references', 'thumbs')
+    FileUtils.mkdir_p(reference_output_dir)
 
-    Dir.glob("#{oeuvre_input_dir}/*.webp").each do |image_path|
+    Dir.glob("#{reference_input_dir}/*.webp").each do |image_path|
       basename    = File.basename(image_path)
-      output_path = oeuvre_output_dir.join(basename)
+      output_path = reference_output_dir.join(basename)
 
       image = MiniMagick::Image.open(image_path)
 
@@ -28,7 +28,7 @@ namespace :images do
       end
 
       image.write(output_path)
-      puts "✅ Thumbnail generated for oeuvre: #{basename}"
+      puts "✅ Thumbnail generated for reference: #{basename}"
     end
 
     # === DESIGNERS ===

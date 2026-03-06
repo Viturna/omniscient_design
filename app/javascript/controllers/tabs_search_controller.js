@@ -91,8 +91,8 @@ export default class extends Controller {
             options = [
                 { text: window.I18nSearchSort.references.nom_asc, value: "nom_asc" },
                 { text: window.I18nSearchSort.references.nom_desc, value: "nom_desc" },
-                { text: window.I18nSearchSort.references.oeuvre_asc, value: "oeuvre_asc" },
-                { text: window.I18nSearchSort.references.oeuvre_desc, value: "oeuvre_desc" }
+                { text: window.I18nSearchSort.references.reference_asc, value: "reference_asc" },
+                { text: window.I18nSearchSort.references.reference_desc, value: "reference_desc" }
             ]
         } else if (tabName === "designers") {
             options = [

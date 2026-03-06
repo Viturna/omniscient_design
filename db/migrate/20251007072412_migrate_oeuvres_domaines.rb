@@ -1,17 +1,17 @@
-class MigrateOeuvresDomaines < ActiveRecord::Migration[7.1]
+class MigratereferencesDomaines < ActiveRecord::Migration[7.1]
   def up
-    Oeuvre.reset_column_information
-    Oeuvre.find_each do |oeuvre|
-      if oeuvre.domaine_id.present?
-        OeuvresDomaine.create!(
-          oeuvre_id: oeuvre.id,
-          domaine_id: oeuvre.domaine_id
+    Reference.reset_column_information
+    Reference.find_each do |reference|
+      if reference.domaine_id.present?
+        referencesDomaine.create!(
+          reference_id: reference.id,
+          domaine_id: reference.domaine_id
         )
       end
     end
   end
 
   def down
-    OeuvresDomaine.delete_all
+    referencesDomaine.delete_all
   end
 end

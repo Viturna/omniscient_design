@@ -69,13 +69,13 @@ en:
     name_desc: "Nom Z → A"
     birth_old_new: "Naissance ancienne → récente"
     birth_new_old: "Naissance récente → ancienne"
-    oeuvre_old_new: "Oeuvre ancienne → récente"
-    oeuvre_new_old: "Oeuvre récente → ancienne"
+    reference_old_new: "Reference ancienne → récente"
+    reference_new_old: "Reference récente → ancienne"
     sort:
       name_asc: "Name A-Z"
       name_desc: "Name Z-A"
-      oeuvre_asc: "Artwork date (old → new)"
-      oeuvre_desc: "Artwork date (new → old)"
+      reference_asc: "Artwork date (old → new)"
+      reference_desc: "Artwork date (new → old)"
       birth_asc: "Birth date (old → new)"
       birth_desc: "Birth date (new → old)"
     query_too_short: "Query too short"
@@ -301,7 +301,7 @@ en:
         success: "Designer added successfully."
         failure: "Unable to add the designer."
         exists: "This designer is already in the list."
-      oeuvre:
+      reference:
         success: "Reference added successfully."
         failure: "Unable to add the reference."
         exists: "This reference is already in the list."
@@ -309,7 +309,7 @@ en:
       designer:
         success: "Designer removed successfully."
         failure: "Error removing the designer."
-      oeuvre:
+      reference:
         success: "Reference removed successfully."
         failure: "Error removing the reference."
       user:
@@ -453,7 +453,7 @@ en:
       inputTooShort: "Please enter more characters..."
       searching: "Searching..."
       noResults: "No results found"
-  add_oeuvre:
+  add_reference:
     subtitle_top: "Your contribution"
     main_title: "Add a reference"
     subtitle: "Share your references on Omniscient Design! Submit your discoveries and our team will review them to integrate them into our database."
@@ -462,8 +462,8 @@ en:
     steps:
       1:
         title: "Step 1: The reference"
-        nom_oeuvre: "Reference name"
-        nom_oeuvre_placeholder: "E.g.: The Girl with the Balloon"
+        nom_reference: "Reference name"
+        nom_reference_placeholder: "E.g.: The Girl with the Balloon"
       2:
         title: "Step 2: Context and description"
         designer_ids: "Designer(s) name(s)"
@@ -492,8 +492,8 @@ en:
         add_source_button: "Add a link"
       4:
         title: "Step 4: Date and image"
-        date_oeuvre: "Reference date"
-        date_oeuvre_placeholder: "E.g.: 2002"
+        date_reference: "Reference date"
+        date_reference_placeholder: "E.g.: 2002"
         image: "Image(s)"
     buttons:
       next: "Next"
@@ -506,7 +506,7 @@ en:
       searching: "Searching…"
       noResults: "No results found"
     errors:
-      date_oeuvre_invalid: "Please enter a valid year between 0 and %{current_year}."
+      date_reference_invalid: "Please enter a valid year between 0 and %{current_year}."
   edit:
     subtitle_top: "Your contribution"
     edit_reference_title: "Edit a reference"
@@ -519,11 +519,11 @@ en:
     last_30_days: "Last 30 days"
     previous: "Earlier"
     none: "No notifications."
-    new_oeuvre: "A new reference is pending validation: %{name}"
-    oeuvre_validated: "The reference %{name} has been validated. Thank you for your contribution."
-    oeuvre_rejected: "Your reference %{name} has been rejected."
+    new_reference: "A new reference is pending validation: %{name}"
+    reference_validated: "The reference %{name} has been validated. Thank you for your contribution."
+    reference_rejected: "Your reference %{name} has been rejected."
     error_creation: "Error creating the notification: %{error}"
-    no_user_for_rejection: "Reference %{oeuvre_id} has no associated user for rejection notification."
+    no_user_for_rejection: "Reference %{reference_id} has no associated user for rejection notification."
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -575,7 +575,7 @@ en:
       back_home: "Back to home"
   etablissement:
     academy_prefix: "Academy of"
-  notions_oeuvre:
+  notions_reference:
     no_association: "no associated notions"
   user:
     pseudo_taken: "This username is already taken."
@@ -673,7 +673,7 @@ en:
     access:
       denied: "You are not authorized to access this reference."
     not_found: "Designer not found."
-  oeuvres:
+  references:
     notions: "Notion(s)"
     presentation_generale: "General presentation"
     contexte_historique: "Historical context"
@@ -691,8 +691,8 @@ en:
     validation: "validated the reference"
     decouvrir_autres: "Discover other references"
     panneau_admin: "Administration panel"
-    valider_oeuvre: "Validate the work"
-    modifier_oeuvre: "Edit the work"
+    valider_reference: "Validate the work"
+    modifier_reference: "Edit the work"
     supprimer_reference: "Remove the reference"
     ajouter_autre: "Add another reference"
     retour: "Back"

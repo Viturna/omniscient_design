@@ -21,15 +21,15 @@ class PagesController < ApplicationController
   end
   def validation
     @current_page = 'profil'
-    @oeuvres = Oeuvre.all.order(created_at: :desc)
+    @references = Reference.all.order(created_at: :desc)
     @designers = Designer.all.order(created_at: :desc)
     @studios = Studio.all.order(created_at: :desc)
 
-    @oeuvres_count = Oeuvre.where(validation: true).count
+    @references_count = Reference.where(validation: true).count
     @designers_count = Designer.where(validation: true).count
     @studios_count = Studio.where(validation: true).count
 
-    @oeuvres_count_val_false = Oeuvre.where(validation: false).count
+    @references_count_val_false = Reference.where(validation: false).count
     @designers_count_val_false = Designer.where(validation: false).count
     @studios_count_val_false = Studio.where(validation: false).count
   end

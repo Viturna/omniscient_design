@@ -1,8 +1,8 @@
-class CreateOeuvreStudios < ActiveRecord::Migration[8.1]
+class CreatereferenceStudios < ActiveRecord::Migration[8.1]
   def change
-    create_table :oeuvre_studios do |t|
-      # Clé étrangère vers la table 'oeuvres'
-      t.references :oeuvre, null: false, foreign_key: true
+    create_table :reference_studios do |t|
+      # Clé étrangère vers la table 'references'
+      t.references :reference, null: false, foreign_key: true
       
       # Clé étrangère vers la table 'studios'
       t.references :studio, null: false, foreign_key: true
@@ -11,6 +11,6 @@ class CreateOeuvreStudios < ActiveRecord::Migration[8.1]
     end
     
     # Ajoute un index d'unicité sur la paire pour s'assurer qu'une liaison est unique
-    add_index :oeuvre_studios, [:oeuvre_id, :studio_id], unique: true
+    add_index :reference_studios, [:reference_id, :studio_id], unique: true
   end
 end

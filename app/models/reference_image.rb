@@ -1,5 +1,5 @@
-class OeuvreImage < ApplicationRecord
-  belongs_to :oeuvre
+class ReferenceImage < ApplicationRecord
+  belongs_to :reference
 
   has_one_attached :file do |attachable|
     attachable.variant :thumb,
@@ -60,6 +60,6 @@ class OeuvreImage < ApplicationRecord
       original_blob.purge_later
     end
   rescue => e
-    Rails.logger.error("ERREUR WEBP/RESIZE pour OeuvreImage ID #{self.id}: #{e.message}")
+    Rails.logger.error("ERREUR WEBP/RESIZE pour referenceImage ID #{self.id}: #{e.message}")
   end
 end

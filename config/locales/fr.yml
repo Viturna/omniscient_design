@@ -84,13 +84,13 @@ fr:
     name_desc: "Nom Z → A"
     birth_old_new: "Naissance ancienne → récente"
     birth_new_old: "Naissance récente → ancienne"
-    oeuvre_old_new: "Oeuvre ancienne → récente"
-    oeuvre_new_old: "Oeuvre récente → ancienne"
+    reference_old_new: "Reference ancienne → récente"
+    reference_new_old: "Reference récente → ancienne"
     sort:
       name_asc: "Nom A-Z"
       name_desc: "Nom Z-A"
-      oeuvre_asc: "Date référence (ancien → récent)"
-      oeuvre_desc: "Date référence (récent → ancien)"
+      reference_asc: "Date référence (ancien → récent)"
+      reference_desc: "Date référence (récent → ancien)"
       birth_asc: "Date naissance (ancien → récent)"
       birth_desc: "Date naissance (récent → ancien)"
     query_too_short: "La requête est trop courte"
@@ -253,7 +253,7 @@ fr:
       back_home: "Retour à l'accueil"
   etablissement:
     academy_prefix: "Académie de"
-  notions_oeuvre:
+  notions_reference:
     no_association: "pas de notions associées"
   user:
     pseudo_taken: "Ce pseudo est déjà pris."
@@ -302,9 +302,9 @@ fr:
             etablissement_id:
               blank: "ne peut pas être vide"
               required: "doit être renseigné"
-        oeuvre:
+        reference:
           attributes:
-            nom_oeuvre:
+            nom_reference:
               taken: "a déjà été pris"
       messages:
         record_invalid: "La validation a échoué : %{errors}"
@@ -643,7 +643,7 @@ fr:
         success: "Designer ajouté avec succès."
         failure: "Impossible d'ajouter le/la designer."
         exists: "Ce designer est déjà dans la liste."
-      oeuvre:
+      reference:
         success: "Référence ajoutée avec succès."
         failure: "Impossible d'ajouter la référence."
         exists: "Cette référence est déjà dans la liste."
@@ -651,7 +651,7 @@ fr:
       designer:
         success: "Designer retiré avec succès."
         failure: "Erreur lors du retrait du designer."
-      oeuvre:
+      reference:
         success: "Référence retirée avec succès."
         failure: "Erreur lors du retrait de la référence."
       user:
@@ -797,7 +797,7 @@ fr:
       inputTooShort: "Veuillez entrer plus de caractères..."
       searching: "Recherche en cours..."
       noResults: "Aucun résultat trouvé"
-  add_oeuvre:
+  add_reference:
     subtitle_top: "Votre contribution"
     main_title: "Ajouter une référence"
     subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et notre équipe les validera pour les intégrer à notre base de données."
@@ -812,8 +812,8 @@ fr:
         authenticity_text: "- Chaque référence doit être originale, conçue par son auteur. \n - Chaque référence doit être clairement sourcés."
       1:
         title: "Étape 2 : La référence"
-        nom_oeuvre: "Nom de la référence*"
-        nom_oeuvre_placeholder: "Ex : La petite fille au ballon"
+        nom_reference: "Nom de la référence*"
+        nom_reference_placeholder: "Ex : La petite fille au ballon"
       2:
         title: "Étape 2 : Informations clés"
         designer_ids: "Nom du/des designer(s)"
@@ -842,8 +842,8 @@ fr:
         add_source_button: "+ Ajouter un lien"
       4:
         title: "Étape 5 : Images & Illustrations"
-        date_oeuvre: "Date de la référence"
-        date_oeuvre_placeholder: "Ex : 2002"
+        date_reference: "Date de la référence"
+        date_reference_placeholder: "Ex : 2002"
         image: "Image(s) & Illustration(s)"
     buttons:
       next: "Suivant"
@@ -857,7 +857,7 @@ fr:
       searching: "Recherche en cours…"
       noResults: "Aucun résultat trouvé"
     errors:
-      date_oeuvre_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
+      date_reference_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
   edit:
     subtitle_top: "Votre contribution"
     edit_reference_title: "Modifier une référence"
@@ -870,10 +870,10 @@ fr:
     last_30_days: "30 derniers jours"
     previous: "Auparavant"
     none: "Aucune notification."
-    new_oeuvre: "Une nouvelle œuvre est à valider : %{name}"
-    oeuvre_validated: "La référence %{name} a été validée. Encore un grand merci pour ta contribution."
-    oeuvre_rejected: "Votre référence %{name} a été rejetée. (Vous pouvez consulter la raison sur votre profil)"
-    no_user_for_rejection: "La référence %{oeuvre_id} n'a pas d'utilisateur associé pour la notification de rejet."
+    new_reference: "Une nouvelle œuvre est à valider : %{name}"
+    reference_validated: "La référence %{name} a été validée. Encore un grand merci pour ta contribution."
+    reference_rejected: "Votre référence %{name} a été rejetée. (Vous pouvez consulter la raison sur votre profil)"
+    no_user_for_rejection: "La référence %{reference_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_designer: "Un nouveau designer est à valider : %{name}"
     designer_validated: "Le/La designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
     designer_rejected: "Votre designer %{name} a été rejeté(e). (Vous pouvez consulter la raison sur votre profil)"
@@ -909,7 +909,7 @@ fr:
     access:
       denied: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
     not_found: "Designer non trouvé."
-  oeuvres:
+  references:
     notions: "Notion(s)"
     presentation_generale: "Présentation générale"
     contexte_historique: "Contexte Historique"
@@ -927,8 +927,8 @@ fr:
     validation: "a validé la référence"
     decouvrir_autres: "Découvrir d'autres références"
     panneau_admin: "Panneau d'administration"
-    valider_oeuvre: "Valider l'oeuvre"
-    modifier_oeuvre: "Modifier l'oeuvre"
+    valider_reference: "Valider l'reference"
+    modifier_reference: "Modifier l'reference"
     supprimer_reference: "Supprimer la référence"
     ajouter_autre: "Ajouter une autre référence"
     retour: "Retour"

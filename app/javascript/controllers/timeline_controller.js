@@ -10,7 +10,7 @@ export default class extends Controller {
         this.resizeObserver = new ResizeObserver(() => this.updateLine())
         this.resizeObserver.observe(this.element)
 
-        // Observer les changements de contenu (ex: oeuvres ajoutées dynamiquement)
+        // Observer les changements de contenu (ex: references ajoutées dynamiquement)
         this.mutationObserver = new MutationObserver(() => this.updateLine())
         this.mutationObserver.observe(this.element, { childList: true, subtree: true })
     }

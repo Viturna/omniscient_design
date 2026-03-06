@@ -95,12 +95,12 @@ class User < ApplicationRecord
   has_many :visitor_lists, through: :list_visitors, source: :list
 
   # Créations (On ne supprime pas les œuvres si le créateur part, on met à null)
-  has_many :oeuvres, dependent: :nullify
+  has_many :references, dependent: :nullify
   has_many :designers, dependent: :nullify
   has_many :studios, dependent: :nullify
 
   # Rejets (Admin)
-  has_many :rejected_oeuvres, dependent: :destroy
+  has_many :rejected_references, dependent: :destroy
   has_many :rejected_designers, dependent: :destroy
   has_many :rejected_studios, dependent: :destroy
 
@@ -115,7 +115,7 @@ class User < ApplicationRecord
   has_many :badges, through: :user_badges
 
   # Favoris (Lecture seule via listes)
-  has_many :saved_oeuvres, through: :lists, source: :oeuvres
+  has_many :saved_references, through: :lists, source: :references
   has_many :saved_designers, through: :lists, source: :designers
   has_many :saved_studios, through: :lists, source: :studios
 

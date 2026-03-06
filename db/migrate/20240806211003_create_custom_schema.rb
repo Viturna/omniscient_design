@@ -130,11 +130,11 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
       t.index ["user_id"], name: "index_lists_on_user_id"
     end
 
-    create_table "lists_oeuvres", id: false, force: :cascade do |t|
+    create_table "lists_references", id: false, force: :cascade do |t|
       t.bigint "list_id", null: false
-      t.bigint "oeuvre_id", null: false
-      t.index ["list_id", "oeuvre_id"], name: "index_lists_oeuvres_on_list_id_and_oeuvre_id"
-      t.index ["oeuvre_id", "list_id"], name: "index_lists_oeuvres_on_oeuvre_id_and_list_id"
+      t.bigint "reference_id", null: false
+      t.index ["list_id", "reference_id"], name: "index_lists_references_on_list_id_and_reference_id"
+      t.index ["reference_id", "list_id"], name: "index_lists_references_on_reference_id_and_list_id"
     end
 
     create_table "notifications", force: :cascade do |t|
@@ -149,13 +149,13 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
       t.index ["user_id"], name: "index_notifications_on_user_id"
     end
 
-    create_table "oeuvres", force: :cascade do |t|
+    create_table "references", force: :cascade do |t|
       t.text "domaine"
       t.text "nom_designer"
       t.integer "date_naissance"
       t.text "pays"
-      t.text "nom_oeuvre"
-      t.integer "date_oeuvre"
+      t.text "nom_reference"
+      t.integer "date_reference"
       t.text "description"
       t.text "image"
       t.datetime "created_at", null: false
@@ -165,9 +165,9 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
       t.boolean "validation", default: false
       t.bigint "user_id"
       t.bigint "validated_by_user_id"
-      t.index ["designer_id"], name: "index_oeuvres_on_designer_id"
-      t.index ["domaine_id"], name: "index_oeuvres_on_domaine_id"
-      t.index ["user_id"], name: "index_oeuvres_on_user_id"
+      t.index ["designer_id"], name: "index_references_on_designer_id"
+      t.index ["domaine_id"], name: "index_references_on_domaine_id"
+      t.index ["user_id"], name: "index_references_on_user_id"
     end
 
     create_table "referrals", force: :cascade do |t|
@@ -210,8 +210,8 @@ class CreateCustomSchema < ActiveRecord::Migration[7.1]
     add_foreign_key "list_items", "lists"
     add_foreign_key "lists", "users"
     add_foreign_key "notifications", "users"
-    add_foreign_key "oeuvres", "designers"
-    add_foreign_key "oeuvres", "domaines"
-    add_foreign_key "oeuvres", "users"
+    add_foreign_key "references", "designers"
+    add_foreign_key "references", "domaines"
+    add_foreign_key "references", "users"
   end
 end

@@ -210,7 +210,7 @@
               } %>
         </div>
         <div>
-          <%= form.label :domaine_ids, t('add_oeuvre.steps.2.domaine_id', default: "Domaines") %>
+          <%= form.label :domaine_ids, t('add_reference.steps.2.domaine_id', default: "Domaines") %>
           <%= form.collection_select :domaine_ids, 
               Domaine.order(:domaine), 
               :id, 
@@ -258,7 +258,7 @@
           <% end %>
         </div>
         <div data-controller="sources" data-sources-prefix-value="studio">
-          <%= form.label :source, t('add_oeuvre.steps.3.source', default: "Sources") %>
+          <%= form.label :source, t('add_reference.steps.3.source', default: "Sources") %>
           <div data-sources-target="container">
             <% (@studio.source || []).each do |src| %>
               <div class="source-input">
@@ -282,7 +282,7 @@
             <% end %>
           </div>
           <button type="button" data-sources-target="addButton" class="button small secondary dashed">
-            <%= t('add_oeuvre.steps.3.add_source_button', default: "+ Ajouter une autre source") %>
+            <%= t('add_reference.steps.3.add_source_button', default: "+ Ajouter une autre source") %>
           </button>
         </div>
       </div>

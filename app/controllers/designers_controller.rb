@@ -113,7 +113,7 @@ class DesignersController < ApplicationController
       if items_until_next_ad == 0 && ads.present?
         current_ad = ads[ad_index % ads.length]
         # On utilise le partial existant (qui gère désormais les objets ActiveRecord)
-        html_output += render_to_string(partial: 'oeuvres/ad_card', locals: { ad: current_ad }, formats: [:html])
+        html_output += render_to_string(partial: 'references/ad_card', locals: { ad: current_ad }, formats: [:html])
         ad_index += 1
         items_until_next_ad = rand(AD_FREQUENCY_RANGE)
       end
@@ -225,7 +225,7 @@ class DesignersController < ApplicationController
       )
       @designer.designers_domaines.delete_all if @designer.respond_to?(:designers_domaines)
       @designer.designer_countries.delete_all if @designer.respond_to?(:designer_countries)
-      @designer.designers_oeuvres.delete_all if @designer.respond_to?(:designers_oeuvres)
+      @designer.designers_references.delete_all if @designer.respond_to?(:designers_references)
 
       @designer.update!(rejection_reason: rejection_reason, validation: false)
 
@@ -253,7 +253,7 @@ class DesignersController < ApplicationController
     if @designer.update(validation: true, validated_by_user_id: current_user.id)
       create_validation_notification(@designer)
       update_suivi_references_validees(@designer.user)
-      GamificationService.new(@designer.user).check_contributor # Correction: @designer ici, pas @oeuvre
+      GamificationService.new(@designer.user).check_contributor # Correction: @designer ici, pas @reference
       redirect_to validation_path, notice: I18n.t('designer.validate.success', name: @designer.nom_designer)
     else
       redirect_to validation_path, alert: I18n.t('designer.validate.failure')

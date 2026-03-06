@@ -1,0 +1,12 @@
+<%= link_to reference do %>
+  <% if reference.reference_images.first&.file&.attached? %>
+    <div class="card-reference" style="background: url('<%= url_for(reference.reference_images.first.file.variant(:thumb)) %>'); background-size: cover; background-position: center center;">
+    <% else %>
+      <div class="card-reference" style="background: #F3F3F3;">
+      <% end %>
+      <div class="inner-card-reference">
+        <p class="domaine-card-reference"><%= reference.domaines.map(&:domaine).join(', ') %></p>
+        <p class="title-card-reference"><%= reference.nom_reference %></p>
+      </div>
+    </div>
+  <% end %>

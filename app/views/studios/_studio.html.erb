@@ -284,7 +284,7 @@
     </div>
     <div class="content-show">
       <div class="text-show">
-        <div class="title-box-oeuvre">
+        <div class="title-box-reference">
           <p class="subtitle-card">
             <% if studio.respond_to?(:countries) %>
               <%= studio.countries.map(&:country).join(' & ') %>
@@ -304,22 +304,22 @@
           </div>
         <% end %>
         <h2 class="title-description-reference">Présentation générale</h2>
-        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.presentation_generale) %></p>
+        <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.presentation_generale) %></p>
         <% if studio.formation_et_influences.present? %>
           <h2 class="title-description-reference">Formation et influences</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.formation_et_influences) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.formation_et_influences) %></p>
         <% end %>
         <% if studio.style_ou_philosophie.present? %>
           <h2 class="title-description-reference">Style ou philosophie</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.style_ou_philosophie) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.style_ou_philosophie) %></p>
         <% end %>
         <% if studio.creations_majeures.present? %>
           <h2 class="title-description-reference">Créations majeures</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.creations_majeures) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.creations_majeures) %></p>
         <% end %>
         <% if studio.heritage_et_impact.present? %>
           <h2 class="title-description-reference">Héritage et impact</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(studio.heritage_et_impact) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.heritage_et_impact) %></p>
         <% end %>
         <h2 class="title-description-reference">Sources</h2>
         <% if studio.source.present? %>
@@ -386,24 +386,24 @@
     </div>
     <% if studio.validation %>
       <div class="next-card">
-        <% studio_oeuvres = studio.oeuvres.where(validation: true) %>
-        <% if studio_oeuvres.any? %>
+        <% studio_references = studio.references.where(validation: true) %>
+        <% if studio_references.any? %>
           <h2 class="title-description-reference">Références du studio</h2>
           <div class="horizontal-scroll-section">
             <div class="horizontal-wrapper">
-              <% studio_oeuvres.each do |oeuvre| %>
-                <%= link_to oeuvre do %>
-                  <div class="oeuvre-card">
-                    <% if oeuvre.oeuvre_images.first&.file&.attached? %>
-                      <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(resize_to_limit: [400, 400])) %>');">
+              <% studio_references.each do |reference| %>
+                <%= link_to reference do %>
+                  <div class="reference-card">
+                    <% if reference.reference_images.first&.file&.attached? %>
+                      <div class="reference-card-image" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(resize_to_limit: [400, 400])) %>');">
                       <% else %>
-                        <div class="oeuvre-card-image" style="background-color: #EEE;">
+                        <div class="reference-card-image" style="background-color: #EEE;">
                         <% end %>
-                        <div class="oeuvre-card-content">
-                          <p class="oeuvre-designer">
-                            <%= oeuvre.designers.any? ? oeuvre.designers.map(&:nom_designer).join(", ") : "Designer inconnu" %>
+                        <div class="reference-card-content">
+                          <p class="reference-designer">
+                            <%= reference.designers.any? ? reference.designers.map(&:nom_designer).join(", ") : "Designer inconnu" %>
                           </p>
-                          <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
+                          <h2 class="reference-title"><%= reference.nom_reference %></h2>
                         </div>
                       </div>
                     </div>
@@ -419,17 +419,17 @@
             <% studios = Studio.where(validation: true).where.not(id: @studio.id).order("RANDOM()").limit(5) %>
             <% studios.each do |studio| %>
               <%= link_to studio do %>
-                <div class="oeuvre-card">
+                <div class="reference-card">
                   <% if studio.studio_images.first&.file&.attached? %>
-                    <div class="oeuvre-card-image" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>');">
+                    <div class="reference-card-image" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>');">
                     <% else %>
-                      <div class="oeuvre-card-image" style="background-color: #EEE;">
+                      <div class="reference-card-image" style="background-color: #EEE;">
                       <% end %>
-                      <div class="oeuvre-card-content">
-                        <p class="oeuvre-designer">
+                      <div class="reference-card-content">
+                        <p class="reference-designer">
                           <%= studio.countries.map(&:country).join(", ") %>
                         </p>
-                        <h2 class="oeuvre-title"><%= studio.nom %></h2>
+                        <h2 class="reference-title"><%= studio.nom %></h2>
                       </div>
                     </div>
                   </div>

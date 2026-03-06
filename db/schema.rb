@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_06_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -161,14 +161,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
     t.index ["list_id", "designer_id"], name: "index_designers_lists_on_list_id_and_designer_id"
   end
 
-  create_table "designers_oeuvres", force: :cascade do |t|
+  create_table "designers_references", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "designer_id", null: false
-    t.bigint "oeuvre_id", null: false
+    t.bigint "reference_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["designer_id", "oeuvre_id"], name: "index_designers_oeuvres_on_designer_id_and_oeuvre_id", unique: true
-    t.index ["designer_id"], name: "index_designers_oeuvres_on_designer_id"
-    t.index ["oeuvre_id"], name: "index_designers_oeuvres_on_oeuvre_id"
+    t.index ["designer_id", "reference_id"], name: "index_designers_references_on_designer_id_and_reference_id", unique: true
+    t.index ["designer_id"], name: "index_designers_references_on_designer_id"
+    t.index ["reference_id"], name: "index_designers_references_on_reference_id"
   end
 
   create_table "domaines", force: :cascade do |t|
@@ -283,11 +283,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
     t.index ["user_id"], name: "index_lists_on_user_id"
   end
 
-  create_table "lists_oeuvres", id: false, force: :cascade do |t|
+  create_table "lists_references", id: false, force: :cascade do |t|
     t.bigint "list_id", null: false
-    t.bigint "oeuvre_id", null: false
-    t.index ["list_id", "oeuvre_id"], name: "index_lists_oeuvres_on_list_id_and_oeuvre_id"
-    t.index ["oeuvre_id", "list_id"], name: "index_lists_oeuvres_on_oeuvre_id_and_list_id"
+    t.bigint "reference_id", null: false
+    t.index ["list_id", "reference_id"], name: "index_lists_references_on_list_id_and_reference_id"
+    t.index ["reference_id", "list_id"], name: "index_lists_references_on_reference_id_and_list_id"
   end
 
   create_table "mobility_string_translations", force: :cascade do |t|
@@ -340,45 +340,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
     t.index ["theme"], name: "index_notions_on_theme"
   end
 
-  create_table "notions_oeuvres", id: false, force: :cascade do |t|
+  create_table "notions_references", id: false, force: :cascade do |t|
     t.bigint "notion_id", null: false
-    t.bigint "oeuvre_id", null: false
-    t.index ["notion_id", "oeuvre_id"], name: "index_notions_oeuvres_on_notion_id_and_oeuvre_id", unique: true
-    t.index ["notion_id"], name: "index_notions_oeuvres_on_notion_id"
-    t.index ["oeuvre_id", "notion_id"], name: "index_notions_oeuvres_on_oeuvre_id_and_notion_id", unique: true
-    t.index ["oeuvre_id"], name: "index_notions_oeuvres_on_oeuvre_id"
+    t.bigint "reference_id", null: false
+    t.index ["notion_id", "reference_id"], name: "index_notions_references_on_notion_id_and_reference_id", unique: true
+    t.index ["notion_id"], name: "index_notions_references_on_notion_id"
+    t.index ["reference_id", "notion_id"], name: "index_notions_references_on_reference_id_and_notion_id", unique: true
+    t.index ["reference_id"], name: "index_notions_references_on_reference_id"
   end
 
-  create_table "oeuvre_images", force: :cascade do |t|
+  create_table "reference_images", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "credit"
-    t.bigint "oeuvre_id", null: false
     t.integer "position"
+    t.bigint "reference_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["oeuvre_id"], name: "index_oeuvre_images_on_oeuvre_id"
+    t.index ["reference_id"], name: "index_reference_images_on_reference_id"
   end
 
-  create_table "oeuvre_studios", force: :cascade do |t|
+  create_table "reference_studios", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.bigint "oeuvre_id", null: false
+    t.bigint "reference_id", null: false
     t.bigint "studio_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["oeuvre_id", "studio_id"], name: "index_oeuvre_studios_on_oeuvre_id_and_studio_id", unique: true
-    t.index ["oeuvre_id"], name: "index_oeuvre_studios_on_oeuvre_id"
-    t.index ["studio_id"], name: "index_oeuvre_studios_on_studio_id"
+    t.index ["reference_id", "studio_id"], name: "index_reference_studios_on_reference_id_and_studio_id", unique: true
+    t.index ["reference_id"], name: "index_reference_studios_on_reference_id"
+    t.index ["studio_id"], name: "index_reference_studios_on_studio_id"
   end
 
-  create_table "oeuvres", force: :cascade do |t|
+  create_table "references", force: :cascade do |t|
     t.text "concept_et_inspiration"
     t.text "contexte_historique"
     t.datetime "created_at", null: false
     t.integer "date_naissance"
-    t.integer "date_oeuvre"
+    t.integer "date_reference"
     t.text "dimension_esthetique"
     t.text "impact_et_message"
     t.text "materiaux_et_innovations_techniques"
     t.text "nom_designer"
-    t.text "nom_oeuvre"
+    t.text "nom_reference"
     t.text "pays"
     t.text "presentation_generale"
     t.text "rejection_reason"
@@ -388,20 +388,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
     t.boolean "validation", default: false
-    t.index ["slug"], name: "index_oeuvres_on_slug", unique: true
-    t.index ["user_id"], name: "index_oeuvres_on_user_id"
+    t.index ["slug"], name: "index_references_on_slug", unique: true
+    t.index ["user_id"], name: "index_references_on_user_id"
   end
 
-  create_table "oeuvres_domaines", id: false, force: :cascade do |t|
+  create_table "references_domaines", id: false, force: :cascade do |t|
     t.bigint "domaine_id", null: false
-    t.bigint "oeuvre_id", null: false
-    t.index ["domaine_id"], name: "index_oeuvres_domaines_on_domaine_id"
-    t.index ["oeuvre_id", "domaine_id"], name: "index_oeuvres_domaines_on_oeuvre_id_and_domaine_id", unique: true
-    t.index ["oeuvre_id"], name: "index_oeuvres_domaines_on_oeuvre_id"
+    t.bigint "reference_id", null: false
+    t.index ["domaine_id"], name: "index_references_domaines_on_domaine_id"
+    t.index ["reference_id", "domaine_id"], name: "index_references_domaines_on_reference_id_and_domaine_id", unique: true
+    t.index ["reference_id"], name: "index_references_domaines_on_reference_id"
   end
 
-  create_table "oeuvres_verbs", id: false, force: :cascade do |t|
-    t.bigint "oeuvre_id", null: false
+  create_table "references_verbs", id: false, force: :cascade do |t|
+    t.bigint "reference_id", null: false
     t.bigint "verb_id", null: false
   end
 
@@ -423,13 +423,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
     t.index ["user_id"], name: "index_rejected_designers_on_user_id"
   end
 
-  create_table "rejected_oeuvres", force: :cascade do |t|
+  create_table "rejected_references", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "nom_oeuvre"
+    t.string "nom_reference"
     t.text "reason"
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.index ["user_id"], name: "index_rejected_oeuvres_on_user_id"
+    t.index ["user_id"], name: "index_rejected_references_on_user_id"
   end
 
   create_table "rejected_studios", force: :cascade do |t|
@@ -577,8 +577,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
   add_foreign_key "designers", "users"
   add_foreign_key "designers_domaines", "designers"
   add_foreign_key "designers_domaines", "domaines"
-  add_foreign_key "designers_oeuvres", "designers"
-  add_foreign_key "designers_oeuvres", "oeuvres"
+  add_foreign_key "designers_references", "designers"
+  add_foreign_key "designers_references", "references"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "list_editors", "lists"
   add_foreign_key "list_editors", "users"
@@ -588,16 +588,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_163522) do
   add_foreign_key "lists", "users"
   add_foreign_key "notifications", "users", column: "admin_id"
   add_foreign_key "notifications", "users", on_delete: :cascade
-  add_foreign_key "notions_oeuvres", "notions"
-  add_foreign_key "notions_oeuvres", "oeuvres"
-  add_foreign_key "oeuvre_images", "oeuvres"
-  add_foreign_key "oeuvre_studios", "oeuvres"
-  add_foreign_key "oeuvre_studios", "studios"
-  add_foreign_key "oeuvres", "users"
-  add_foreign_key "oeuvres_domaines", "domaines"
-  add_foreign_key "oeuvres_domaines", "oeuvres"
+  add_foreign_key "notions_references", "notions"
+  add_foreign_key "notions_references", "references"
+  add_foreign_key "reference_images", "references"
+  add_foreign_key "reference_studios", "references"
+  add_foreign_key "reference_studios", "studios"
+  add_foreign_key "references", "users"
+  add_foreign_key "references_domaines", "domaines"
+  add_foreign_key "references_domaines", "references"
   add_foreign_key "rejected_designers", "users"
-  add_foreign_key "rejected_oeuvres", "users"
+  add_foreign_key "rejected_references", "users"
   add_foreign_key "rejected_studios", "users"
   add_foreign_key "studio_countries", "countries"
   add_foreign_key "studio_countries", "studios"

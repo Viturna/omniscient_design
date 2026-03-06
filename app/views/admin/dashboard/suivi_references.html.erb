@@ -56,7 +56,7 @@
   .kpi-value { font-size: 32px; font-weight: 600; color: #202020; margin-top: 10px; line-height: 1; }
   .kpi-subtext { font-size: 13px; color: #666; margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; }
   .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-  .dot-oeuvre { background: #333; }
+  .dot-reference { background: #333; }
   .dot-designer { background: #888; }
 
   .bg-blue-light { background-color: #E3F2FD; color: #1565C0; }
@@ -219,7 +219,7 @@
       </div>
       <span class="kpi-value"><%= @total_refs %></span>
       <div class="kpi-subtext">
-        <span><span class="dot dot-oeuvre"></span><%= @count_oeuvres %> Oeuvres</span>
+        <span><span class="dot dot-reference"></span><%= @count_references %> references</span>
         <span><span class="dot dot-designer"></span><%= @count_designers %> Designers</span>
       </div>
     </div>
@@ -232,7 +232,7 @@
       </div>
       <span class="kpi-value"><%= @refs_validees %></span>
       <div class="kpi-subtext">
-        <span><span class="dot dot-oeuvre"></span><%= @val_oeuvres %></span>
+        <span><span class="dot dot-reference"></span><%= @val_references %></span>
         <span><span class="dot dot-designer"></span><%= @val_designers %></span>
       </div>
     </div>
@@ -245,7 +245,7 @@
       </div>
       <span class="kpi-value"><%= @refs_en_attente %></span>
       <div class="kpi-subtext">
-        <span><span class="dot dot-oeuvre"></span><%= @pending_oeuvres %></span>
+        <span><span class="dot dot-reference"></span><%= @pending_references %></span>
         <span><span class="dot dot-designer"></span><%= @pending_designers %></span>
       </div>
     </div>
@@ -258,7 +258,7 @@
       </div>
       <span class="kpi-value"><%= @refs_refusees %></span>
       <div class="kpi-subtext">
-        <span><span class="dot dot-oeuvre"></span><%= @refused_oeuvres %></span>
+        <span><span class="dot dot-reference"></span><%= @refused_references %></span>
         <span><span class="dot dot-designer"></span><%= @refused_designers %></span>
       </div>
     </div>
@@ -320,19 +320,19 @@
                   <summary>Voir les items</summary>
                   <div class="refs-popover">
                     <% 
-                      last_oeuvres = suivi.user.oeuvres.order(created_at: :desc).limit(10)
+                      last_references = suivi.user.references.order(created_at: :desc).limit(10)
                       last_designers = suivi.user.designers.order(created_at: :desc).limit(10)
-                      all_items = (last_oeuvres + last_designers).sort_by(&:created_at).reverse.first(10)
+                      all_items = (last_references + last_designers).sort_by(&:created_at).reverse.first(10)
                     %>
                     <% if all_items.any? %>
                       <% all_items.each do |item| %>
-                        <% is_oeuvre = item.is_a?(Oeuvre) %>
-                        <%= link_to (is_oeuvre ? oeuvre_path(item) : designer_path(item)), class: "ref-item", target: "_blank" do %>
-                          <div class="ref-icon"><%= is_oeuvre ? "O" : "D" %></div>
+                        <% is_reference = item.is_a?(Reference) %>
+                        <%= link_to (is_reference ? reference_path(item) : designer_path(item)), class: "ref-item", target: "_blank" do %>
+                          <div class="ref-icon"><%= is_reference ? "O" : "D" %></div>
                           <div class="ref-content" style="text-align: left;">
                             <span class="ref-title"><%= item.respond_to?(:name) ? item.name : (item.respond_to?(:title) ? item.title : "Sans titre") %></span>
                             <div class="ref-meta">
-                              <span><%= is_oeuvre ? "Oeuvre" : "Designer" %></span>
+                              <span><%= is_reference ? "Reference" : "Designer" %></span>
                               <span class="badge-mini status-<%= item.validation %>">
                                 <%= item.validation ? "Validé" : "Attente" %>
                               </span>

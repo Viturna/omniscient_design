@@ -192,7 +192,7 @@ export default class extends Controller {
             if (this.checkUrlValue.includes("studios")) {
                 params = `nom=${encodeURIComponent(nom)}`;
             } else {
-                params = `nom_oeuvre=${encodeURIComponent(nom)}`;
+                params = `nom_reference=${encodeURIComponent(nom)}`;
             }
         } else {
             return true;

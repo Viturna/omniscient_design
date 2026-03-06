@@ -218,27 +218,27 @@
     </div>
     <div class="content-show">
       <div class="text-show">
-        <div class="title-box-oeuvre">
+        <div class="title-box-reference">
           <p class="subtitle-card"><%= designer.countries.map(&:name).join(' & ') %></p>
           <h1 class="title-card"><%= designer.nom_designer %></h1>
         </div>
         <h2 class="title-description-reference">Présentation générale</h2>
-        <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.presentation_generale) %></p>
+        <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.presentation_generale) %></p>
         <% if designer.formation_et_influences.present? %>
           <h2 class="title-description-reference">Formation et influences</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.formation_et_influences) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.formation_et_influences) %></p>
         <% end %>
         <% if designer.style_ou_philosophie.present? %>
           <h2 class="title-description-reference">Style ou philosophie</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.style_ou_philosophie) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.style_ou_philosophie) %></p>
         <% end %>
         <% if designer.creations_majeures.present? %>
           <h2 class="title-description-reference">Créations majeures</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.creations_majeures) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.creations_majeures) %></p>
         <% end %>
         <% if designer.heritage_et_impact.present? %>
           <h2 class="title-description-reference">Héritage et impact</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_oeuvres(designer.heritage_et_impact) %></p>
+          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.heritage_et_impact) %></p>
         <% end %>
         <h2 class="title-description-reference">Sources</h2>
         <% if designer.source.present? %>
@@ -305,22 +305,22 @@
     </div>
     <% if designer.validation %>
       <div class="next-card">
-        <% designer_oeuvres = @designer.oeuvres.where(validation: true) %>
-        <% if designer_oeuvres.any? %>
+        <% designer_references = @designer.references.where(validation: true) %>
+        <% if designer_references.any? %>
           <h2 class="title-description-reference">Références du designer</h2>
           <div class="horizontal-scroll-section">
             <div class="horizontal-wrapper">
-              <% designer_oeuvres.each do |oeuvre| %>
-                <%= link_to oeuvre do %>
-                  <div class="oeuvre-card">
-                    <% if oeuvre.oeuvre_images.first&.file&.attached? %>
-                      <div class="oeuvre-card-image" style="background-image: url('<%= url_for(oeuvre.oeuvre_images.first.file.variant(:thumb)) %>');">
+              <% designer_references.each do |reference| %>
+                <%= link_to reference do %>
+                  <div class="reference-card">
+                    <% if reference.reference_images.first&.file&.attached? %>
+                      <div class="reference-card-image" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb)) %>');">
                       <% else %>
-                        <div class="oeuvre-card-image" style="background-color: #EEE;">
+                        <div class="reference-card-image" style="background-color: #EEE;">
                         <% end %>
-                        <div class="oeuvre-card-content">
-                          <p class="oeuvre-designer"><%= safe_join(oeuvre.designers.map(&:nom_designer), ", ") %></p>
-                          <h2 class="oeuvre-title"><%= oeuvre.nom_oeuvre %></h2>
+                        <div class="reference-card-content">
+                          <p class="reference-designer"><%= safe_join(reference.designers.map(&:nom_designer), ", ") %></p>
+                          <h2 class="reference-title"><%= reference.nom_reference %></h2>
                         </div>
                       </div>
                     </div>
@@ -336,17 +336,17 @@
               <% designers.each do |designer| %>
                 <%= link_to designer do %>
                   <% image_path = "designers/desktop/#{remove_accents_and_special_chars(designer.nom_designer)}.webp" %>
-                  <div class="oeuvre-card">
+                  <div class="reference-card">
                     <% if designer.designer_images.first&.file&.attached? %>
-                      <div class="oeuvre-card-image" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb)) %>');">
+                      <div class="reference-card-image" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb)) %>');">
                       <% else %>
-                        <div class="oeuvre-card-image" style="background-color: #EEE;">
+                        <div class="reference-card-image" style="background-color: #EEE;">
                         <% end %>
-                        <div class="oeuvre-card-content">
-                          <p class="oeuvre-designer">
+                        <div class="reference-card-content">
+                          <p class="reference-designer">
                             <%= designer.countries.map(&:country).join(", ") %>
                           </p>
-                          <h2 class="oeuvre-title"><%= designer.nom_designer %></h2>
+                          <h2 class="reference-title"><%= designer.nom_designer %></h2>
                         </div>
                       </div>
                     </div>

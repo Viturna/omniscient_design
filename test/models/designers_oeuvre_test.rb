@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DesignersOeuvreTest < ActiveSupport::TestCase
+class DesignersReferenceTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

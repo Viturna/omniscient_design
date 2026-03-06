@@ -79,7 +79,7 @@
         </div>
       <% end %>
       <div class="switch-home-mobile">
-        <%= link_to t('global.references'), oeuvres_path%>
+        <%= link_to t('global.references'), references_path%>
         <%= link_to t('global.designers'), designers_path, class: "active"  %>
       </div>
       <div class="circle circle-notif openPopup" id="openPopup">
@@ -90,7 +90,7 @@
       </div>
     </div>
     <div class="switch-home">
-      <%= link_to t('global.references'), oeuvres_path %>
+      <%= link_to t('global.references'), references_path %>
       <%= link_to t('global.designers'), designers_path, class: "active" %>
     </div>
     <div class="box-card" id="boxCard" data-scroll-vertical-target="container">
@@ -104,7 +104,7 @@
             <%= render partial: 'studios/card', locals: { card: item, class_name: 'card' } %>
           </div>
         <% elsif item.is_a?(Hash) %>
-          <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
+          <%= render partial: 'references/ad_card', locals: { ad: item } %>
         <% end %>
       <% end %>
     </div>

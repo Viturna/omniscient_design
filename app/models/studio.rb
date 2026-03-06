@@ -30,8 +30,8 @@ class Studio < ApplicationRecord
   has_many :designer_studios, dependent: :destroy
   has_many :designers, through: :designer_studios
 
-  has_many :oeuvre_studios, dependent: :destroy
-  has_many :oeuvres, through: :oeuvre_studios
+  has_many :reference_studios, dependent: :destroy
+  has_many :references, through: :reference_studios
 
   accepts_nested_attributes_for :designer_studios, 
                                 allow_destroy: true, 
@@ -43,7 +43,7 @@ class Studio < ApplicationRecord
     message: "ne peut pas dépasser 10 designers." 
   }
   
-  has_many :oeuvres, through: :designers
+  has_many :references, through: :designers
 
 
   attribute :source, :json, default: []

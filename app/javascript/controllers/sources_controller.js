@@ -18,7 +18,7 @@ export default class extends Controller {
     const div = document.createElement("div")
     div.className = "source-input"
 
-    const prefix = this.prefixValue || "oeuvre"
+    const prefix = this.prefixValue || "reference"
 
     div.innerHTML = `
       <input type="text" name="${prefix}[source][]" placeholder="Ex: https://example.com" />

@@ -61,7 +61,7 @@
     <% end %>
   </div>
 </section>
-<div id="oeuvres">
+<div id="references">
   <div class="home-flex" id="cardContainer"
        data-controller="scroll-vertical"
        data-scroll-vertical-cooldown-value="500">
@@ -79,7 +79,7 @@
         </div>
       <% end %>
       <div class="switch-home-mobile">
-        <%= link_to t('global.references'), oeuvres_path, class: "active"%>
+        <%= link_to t('global.references'), references_path, class: "active"%>
         <%= link_to t('global.designers'), designers_path  %>
       </div>
       <div class="circle circle-notif openPopup" id="openPopup">
@@ -90,22 +90,22 @@
       </div>
     </div>
     <div class="switch-home">
-      <%= link_to t('global.references'), oeuvres_path, class: "active" %>
+      <%= link_to t('global.references'), references_path, class: "active" %>
       <%= link_to t('global.designers'), designers_path %>
     </div>
     <div class="box-card" id="boxCard" data-scroll-vertical-target="container">
       <% @items.each do |item| %>
-        <% if item.is_a?(Oeuvre) %>
-          <%= render partial: 'oeuvres/card', locals: { card: item, class_name: 'card' } %>
+        <% if item.is_a?(Reference) %>
+          <%= render partial: 'references/card', locals: { card: item, class_name: 'card' } %>
         <% elsif item.is_a?(Hash) %>
-          <%= render partial: 'oeuvres/ad_card', locals: { ad: item } %>
+          <%= render partial: 'references/ad_card', locals: { ad: item } %>
         <% end %>
       <% end %>
     </div>
-    <div id="oeuvres-load-more" 
+    <div id="references-load-more" 
          data-scroll-vertical-target="trigger"
-         data-offset="<%= @items.count { |i| i.is_a?(Oeuvre) } %>"
-         data-loaded-ids="<%= @items.select { |i| i.is_a?(Oeuvre) }.map(&:id).join(',') %>"
+         data-offset="<%= @items.count { |i| i.is_a?(Reference) } %>"
+         data-loaded-ids="<%= @items.select { |i| i.is_a?(Reference) }.map(&:id).join(',') %>"
          data-ad-index="0" 
          data-items-until-next-ad="<%= @items_until_next_ad %>"
          data-ads-order="<%= @ads_order_string %>">

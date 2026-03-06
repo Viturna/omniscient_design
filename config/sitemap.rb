@@ -7,14 +7,14 @@ SitemapGenerator::Sitemap.create do
 
   # --- PAGES PRINCIPALES (Contenu dynamique & forte priorité) ---
 
-  # Page d'accueil (Oeuvres#index)
+  # Page d'accueil (references#index)
   add root_path, priority: 1.0, changefreq: 'daily'
 
   # Index des Designers
   add designers_path, priority: 0.9, changefreq: 'daily'
 
   # Frise chronologique
-  add frise_oeuvres_path, priority: 0.8, changefreq: 'daily'
+  add frise_references_path, priority: 0.8, changefreq: 'daily'
 
 
   # --- CONTENU DYNAMIQUE (Les "objets" de votre site) ---
@@ -24,8 +24,8 @@ SitemapGenerator::Sitemap.create do
   end
 
 
-  Oeuvre.find_each do |oeuvre|
-    add oeuvre_path(oeuvre), lastmod: oeuvre.updated_at, priority: 0.8, changefreq: 'weekly'
+  Reference.find_each do |reference|
+    add reference_path(reference), lastmod: reference.updated_at, priority: 0.8, changefreq: 'weekly'
   end
   
 

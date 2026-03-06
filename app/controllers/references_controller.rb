@@ -1,8 +1,8 @@
-class OeuvresController < ApplicationController
+class ReferencesController < ApplicationController
   include RecaptchaHelper
   include ApplicationHelper
 
-  before_action :set_oeuvre, only: %i[show edit update destroy validate cancel reject]
+  before_action :set_reference, only: %i[show edit update destroy validate cancel reject]
   before_action :authenticate_user!, except: [:index, :load_more, :show]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
@@ -10,7 +10,7 @@ class OeuvresController < ApplicationController
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index
-    oeuvres = Oeuvre.where(validation: true).limit(10).order("RANDOM()")
+    references = Reference.where(validation: true).limit(10).order("RANDOM()")
     @current_page = 'accueil'
     @lists = user_signed_in? ? current_user.lists : []
 
@@ -24,8 +24,8 @@ class OeuvresController < ApplicationController
     ad_index = 0
     @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
 
-    oeuvres.each do |oeuvre|
-      @items << oeuvre
+    references.each do |reference|
+      @items << reference
       @items_until_next_ad -= 1
       
       # Si c'est le moment d'afficher une pub et qu'il en reste
@@ -37,18 +37,18 @@ class OeuvresController < ApplicationController
     end
 
     if user_signed_in?
-      @saved_oeuvre_ids = current_user.saved_oeuvres.pluck(:id)
+      @saved_reference_ids = current_user.saved_references.pluck(:id)
     else
-      @saved_oeuvre_ids = []
+      @saved_reference_ids = []
     end
   end
 
   def load_more
     offset = params[:offset].to_i
-    limit = 2 # Tu charges peu d'oeuvres à la fois, tu pourrais augmenter à 4 ou 6
+    limit = 2 # Tu charges peu d'references à la fois, tu pourrais augmenter à 4 ou 6
     loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
 
-    @oeuvres = Oeuvre.where(validation: true)
+    @references = Reference.where(validation: true)
                      .where.not(id: loaded_ids)
                      .order("RANDOM()")
                      .limit(limit)
@@ -68,15 +68,15 @@ class OeuvresController < ApplicationController
     end
 
     html_output = "" 
-    @oeuvres.each do |oeuvre|
-      html_output += render_to_string(partial: 'oeuvres/card', locals: { card: oeuvre, class_name: 'card' }, formats: [:html])
+    @references.each do |reference|
+      html_output += render_to_string(partial: 'references/card', locals: { card: reference, class_name: 'card' }, formats: [:html])
       
       items_until_next_ad -= 1
       if items_until_next_ad == 0 && ads.present?
         current_ad = ads[ad_index % ads.length]
         
         # On passe 'current_ad' (objet ActiveRecord) à la partial
-        html_output += render_to_string(partial: 'oeuvres/ad_card', locals: { ad: current_ad }, formats: [:html])
+        html_output += render_to_string(partial: 'references/ad_card', locals: { ad: current_ad }, formats: [:html])
         
         ad_index += 1
         items_until_next_ad = rand(AD_FREQUENCY_RANGE)
@@ -93,133 +93,133 @@ class OeuvresController < ApplicationController
   # ... Le reste du contrôleur (show, new, edit...) reste inchangé ...
   # ... (Copie-colle tes méthodes show, new, create, etc. ici) ...
 
-  # GET /oeuvres/1 or /oeuvres/1.json
+  # GET /references/1 or /references/1.json
   def show
-    @domaines = @oeuvre.domaines
-    unless @oeuvre.validation || (user_signed_in? && (current_user.admin? || @oeuvre.user == current_user || current_user.certified?))
-      redirect_to root_path, alert: t('oeuvres.access_denied')
+    @domaines = @reference.domaines
+    unless @reference.validation || (user_signed_in? && (current_user.admin? || @reference.user == current_user || current_user.certified?))
+      redirect_to root_path, alert: t('references.access_denied')
       return
     end
     @lists = user_signed_in? ? current_user.lists : []
     if user_signed_in?
-      @saved_oeuvre_ids = current_user.saved_oeuvres.pluck(:id)
+      @saved_reference_ids = current_user.saved_references.pluck(:id)
     else
-      @saved_oeuvre_ids = []
+      @saved_reference_ids = []
     end
 
-    @domaine_oeuvres = Oeuvre
+    @domaine_references = Reference
                        .joins(:domaines)
                        .where(domaines: { id: @domaines.ids })
                        .where(validation: true)
-                       .where.not(id: @oeuvre.id)
+                       .where.not(id: @reference.id)
                        .order("RANDOM()")
                        .limit(5)
   end
 
-  # GET /oeuvres/new
+  # GET /references/new
   def new
-    @oeuvre = Oeuvre.new
+    @reference = Reference.new
     3.times do |i|
-      @oeuvre.oeuvre_images.build(position: i + 1)
+      @reference.reference_images.build(position: i + 1)
     end
 
     @current_page = 'add_elements'
     @selected_designers = [] 
   end
 
-  # GET /oeuvres/1/edit
+  # GET /references/1/edit
   def edit
     @current_page = 'add_elements'
-    @selected_designers = @oeuvre.designers.pluck(:id)
+    @selected_designers = @reference.designers.pluck(:id)
 
-    existing_images = @oeuvre.oeuvre_images.count
+    existing_images = @reference.reference_images.count
   
     (3 - existing_images).times do |i|
-      max_pos = @oeuvre.oeuvre_images.map(&:position).compact.max || 0
-      @oeuvre.oeuvre_images.build(position: max_pos + i + 1)
+      max_pos = @reference.reference_images.map(&:position).compact.max || 0
+      @reference.reference_images.build(position: max_pos + i + 1)
     end
   end
 
-  # POST /oeuvres or /oeuvres.json
+  # POST /references or /references.json
   def create
-    @oeuvre = Oeuvre.new(oeuvre_params)
-    @oeuvre.user = current_user
+    @reference = Reference.new(reference_params)
+    @reference.user = current_user
 
-    if @oeuvre.save
+    if @reference.save
       Rails.cache.delete("linkify_keywords_list")
       update_suivi_references_emises(current_user)
-      create_notification(@oeuvre)
-      flash[:success] = t('oeuvres.create.success')
-      redirect_to @oeuvre
+      create_notification(@reference)
+      flash[:success] = t('references.create.success')
+      redirect_to @reference
     else
       3.times do |i|
-        @oeuvre.oeuvre_images.build(position: i + 1)
+        @reference.reference_images.build(position: i + 1)
       end
       render :new, status: :unprocessable_entity
     end
   end
   
 
-  # PATCH/PUT /oeuvres/1 or /oeuvres/1.json
+  # PATCH/PUT /references/1 or /references/1.json
    def update
-    if @oeuvre.update(oeuvre_params)
-      redirect_to @oeuvre, notice: t('oeuvres.update.success')
+    if @reference.update(reference_params)
+      redirect_to @reference, notice: t('references.update.success')
     else
-      flash.now[:alert] = t('oeuvres.update.failure')
+      flash.now[:alert] = t('references.update.failure')
       render :edit, status: :unprocessable_entity
     end
   end
 
 
- # PATCH/PUT /oeuvres/:slug/reject
+ # PATCH/PUT /references/:slug/reject
 def reject
-  rejection_reason = params[:rejection_reason].presence || I18n.t('oeuvre.reject.no_comment')
-  @oeuvre = Oeuvre.friendly.find_by(slug: params[:slug])
+  rejection_reason = params[:rejection_reason].presence || I18n.t('reference.reject.no_comment')
+  @reference = Reference.friendly.find_by(slug: params[:slug])
 
-  unless @oeuvre
-    redirect_to validation_path, alert: I18n.t('oeuvres.not_found') and return
+  unless @reference
+    redirect_to validation_path, alert: I18n.t('references.not_found') and return
   end
 
   ActiveRecord::Base.transaction do
     # Création du rejet
-    @rejected_oeuvre = RejectedOeuvre.create!(
-      nom_oeuvre: @oeuvre.nom_oeuvre,
-      user: @oeuvre.user,
+    @rejected_reference = RejectedReference.create!(
+      nom_reference: @reference.nom_reference,
+      user: @reference.user,
       reason: rejection_reason
     )
 
     # Nettoyage des associations
-    @oeuvre.notions_oeuvres.delete_all if @oeuvre.notions_oeuvres.exists?
-    @oeuvre.oeuvres_domaines.delete_all if @oeuvre.oeuvres_domaines.exists?
-    @oeuvre.designers_oeuvres.delete_all if @oeuvre.designers_oeuvres.exists?
+    @reference.notions_references.delete_all if @reference.notions_references.exists?
+    @reference.references_domaines.delete_all if @reference.references_domaines.exists?
+    @reference.designers_references.delete_all if @reference.designers_references.exists?
 
     # Mise à jour de la raison du rejet
-    @oeuvre.update!(rejection_reason: rejection_reason, validation: false)
+    @reference.update!(rejection_reason: rejection_reason, validation: false)
 
-    handle_destroy(@oeuvre, I18n.t('oeuvres.reject.success'))
+    handle_destroy(@reference, I18n.t('references.reject.success'))
   rescue => e
     Rails.logger.error("Erreur rejet œuvre : #{e.message}")
-    redirect_to validation_path, alert: I18n.t('oeuvres.reject.failure')
+    redirect_to validation_path, alert: I18n.t('references.reject.failure')
   end
 end
 
 
-  # DELETE /oeuvres/1 or /oeuvres/1.json
+  # DELETE /references/1 or /references/1.json
    def destroy
-    if @oeuvre&.destroy
-      create_rejection_notification(@oeuvre)
-      update_suivi_references_refusees(@oeuvre.user)
-      redirect_to validation_path, notice: t('oeuvres.destroy.success', name: @oeuvre.nom_oeuvre)
+    if @reference&.destroy
+      create_rejection_notification(@reference)
+      update_suivi_references_refusees(@reference.user)
+      redirect_to validation_path, notice: t('references.destroy.success', name: @reference.nom_reference)
     else
-      redirect_to validation_path, alert: t('oeuvres.destroy.failure')
+      redirect_to validation_path, alert: t('references.destroy.failure')
     end
   end
   
   def cancel
-    if user_signed_in? && (current_user.admin? || @oeuvre.user_id == current_user.id)
-      @oeuvre.destroy
+    if user_signed_in? && (current_user.admin? || @reference.user_id == current_user.id)
+      @reference.destroy
     
-      update_suivi_references_refusees(@oeuvre.user) if @oeuvre.user
+      update_suivi_references_refusees(@reference.user) if @reference.user
       
       flash[:notice] = "La contribution a été annulée avec succès."
     else
@@ -229,24 +229,24 @@ end
   end
 
  def validate
-    if @oeuvre.update(validation: true, validated_by_user_id: current_user.id)
-      create_validation_notification(@oeuvre)
-      update_suivi_references_validees(@oeuvre.user)
-      GamificationService.new(@oeuvre.user).check_contributor
-      redirect_to validation_path, notice: t('oeuvres.validate.success', name: @oeuvre.nom_oeuvre)
+    if @reference.update(validation: true, validated_by_user_id: current_user.id)
+      create_validation_notification(@reference)
+      update_suivi_references_validees(@reference.user)
+      GamificationService.new(@reference.user).check_contributor
+      redirect_to validation_path, notice: t('references.validate.success', name: @reference.nom_reference)
     else
-      redirect_to validation_path, alert: t('oeuvres.validate.failure', errors: @oeuvre.errors.full_messages.join(', '))
+      redirect_to validation_path, alert: t('references.validate.failure', errors: @reference.errors.full_messages.join(', '))
     end
   end
 
   def check_existence
-    oeuvre = Oeuvre.find_by("LOWER(nom_oeuvre) = ?", params[:nom_oeuvre].downcase)
+    reference = Reference.find_by("LOWER(nom_reference) = ?", params[:nom_reference].downcase)
   
-    if oeuvre
-      if oeuvre.validated?
+    if reference
+      if reference.validated?
         render json: { exists: true, edit_path: nil }
       else
-        render json: { exists: true, edit_path: edit_oeuvre_path(oeuvre) }
+        render json: { exists: true, edit_path: edit_reference_path(reference) }
       end
     else
       render json: { exists: false }
@@ -254,26 +254,26 @@ end
   end
   
 def save_modal
-    @oeuvre = Oeuvre.friendly.find(params[:slug])
+    @reference = Reference.friendly.find(params[:slug])
     @lists = current_user.lists
     render layout: false
   end
   
   private
-  def update_image_credits(oeuvre, params)
-    if params[:oeuvre][:existing_image_credits]
-      params[:oeuvre][:existing_image_credits].each do |blob_id, credit_text|
+  def update_image_credits(reference, params)
+    if params[:reference][:existing_image_credits]
+      params[:reference][:existing_image_credits].each do |blob_id, credit_text|
         blob = ActiveStorage::Blob.find_by(id: blob_id)
         blob&.update(metadata: { credit: credit_text.presence })
       end
     end
 
-    if params[:oeuvre][:new_image_credits]
-      new_attachments = oeuvre.images_attachments
-                              .where.not(id: oeuvre.images.map(&:id)) # Exclut les anciens
+    if params[:reference][:new_image_credits]
+      new_attachments = reference.images_attachments
+                              .where.not(id: reference.images.map(&:id)) # Exclut les anciens
                               .order(:id) # On suppose que l'ordre de création = ordre du form
                               
-      new_credits = params[:oeuvre][:new_image_credits]
+      new_credits = params[:reference][:new_image_credits]
 
       new_attachments.each_with_index do |attachment, index|
         credit_text = new_credits[index]
@@ -286,10 +286,10 @@ def save_modal
     Rails.logger.error "ERREUR update_image_credits: #{e.message}"
   end
 
-  def handle_destroy(oeuvre, success_message)
-    if oeuvre.destroy
-      create_rejection_notification(oeuvre)
-      update_suivi_references_refusees(oeuvre.user)
+  def handle_destroy(reference, success_message)
+    if reference.destroy
+      create_rejection_notification(reference)
+      update_suivi_references_refusees(reference.user)
   
       respond_to do |format|
         format.html { redirect_to validation_path, notice: success_message }
@@ -298,40 +298,40 @@ def save_modal
     else
       respond_to do |format|
         format.html { redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression de la référence." }
-        format.json { render json: oeuvre.errors, status: :unprocessable_entity }
+        format.json { render json: reference.errors, status: :unprocessable_entity }
       end
     end
   end
-  def create_notification(oeuvre)
+  def create_notification(reference)
     title = "Nouvelle référence à valider"
-    message = t('notifications.new_oeuvre', name: oeuvre.nom_oeuvre)
+    message = t('notifications.new_reference', name: reference.nom_reference)
     
     recipients = User.where("role = ? OR certified = ?", 'admin', true)
 
     recipients.each do |user|
       Notification.create(
         user_id: user.id, 
-        notifiable: oeuvre, 
+        notifiable: reference, 
         title: title,
         message: message
       )
     end
   end
 
-  def create_validation_notification(oeuvre)
+  def create_validation_notification(reference)
     title = "Référence validée"
-    message = t('notifications.oeuvre_validated', name: oeuvre.nom_oeuvre)
+    message = t('notifications.reference_validated', name: reference.nom_reference)
 
-    if oeuvre.user_id.present?
+    if reference.user_id.present?
       Notification.create(
-        user_id: oeuvre.user_id, 
-        notifiable: oeuvre, 
+        user_id: reference.user_id, 
+        notifiable: reference, 
         title: title,
         message: message
       )
     else
       Notification.create(
-        notifiable: oeuvre, 
+        notifiable: reference, 
         title: title,
         message: message
       )
@@ -340,19 +340,19 @@ def save_modal
     Rails.logger.error(t('notifications.error_creation', error: e.message))
   end
 
-  def create_rejection_notification(oeuvre)
-    if oeuvre.user_id.present?
+  def create_rejection_notification(reference)
+    if reference.user_id.present?
       title = "Référence refusée"
-      message = t('notifications.oeuvre_rejected', name: oeuvre.nom_oeuvre)
+      message = t('notifications.reference_rejected', name: reference.nom_reference)
       
       Notification.create(
-        user_id: oeuvre.user_id, 
-        notifiable: oeuvre, 
+        user_id: reference.user_id, 
+        notifiable: reference, 
         title: title,
         message: message
       )
     else
-      Rails.logger.error(t('notifications.no_user_for_rejection', oeuvre_id: oeuvre.id))
+      Rails.logger.error(t('notifications.no_user_for_rejection', reference_id: reference.id))
     end
   end
 
@@ -377,32 +377,32 @@ def save_modal
     suivi.save
   end
 
-  def set_oeuvre
-    @oeuvre = if params[:id]
-                Oeuvre.friendly.find(params[:id])
+  def set_reference
+    @reference = if params[:id]
+                Reference.friendly.find(params[:id])
               else
-                Oeuvre.friendly.find(params[:slug])
+                Reference.friendly.find(params[:slug])
               end
   rescue ActiveRecord::RecordNotFound
-   redirect_to validation_path, alert: t('oeuvres.not_found')
+    redirect_to validation_path, alert: t('references.not_found') and return
   end
 
- def oeuvre_params
-    permitted = params.require(:oeuvre).permit(
-      :nom_oeuvre,
+ def reference_params
+    permitted = params.require(:reference).permit(
+      :nom_reference,
       :presentation_generale,
       :contexte_historique,
       :materiaux_et_innovations_techniques,
       :concept_et_inspiration,
       :dimension_esthetique,
       :impact_et_message,
-      :date_oeuvre,
+      :date_reference,
       designer_ids: [],
       verb_ids: [],
       domaine_ids: [],
       studio_ids: [],
       source: [],
-      oeuvre_images_attributes: [
+      reference_images_attributes: [
           :id,    
           :file, 
           :credit,

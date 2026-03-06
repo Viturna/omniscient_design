@@ -2,13 +2,13 @@ class ContributionsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @oeuvres = current_user.oeuvres + current_user.rejected_oeuvres.map do |rejected_oeuvre|
-      Oeuvre.new(
-        nom_oeuvre: rejected_oeuvre.nom_oeuvre,
-        created_at: rejected_oeuvre.created_at,
+    @references = current_user.references + current_user.rejected_references.map do |rejected_reference|
+      Reference.new(
+        nom_reference: rejected_reference.nom_reference,
+        created_at: rejected_reference.created_at,
         validation: false,
-        user: rejected_oeuvre.user,
-        rejection_reason: rejected_oeuvre.reason
+        user: rejected_reference.user,
+        rejection_reason: rejected_reference.reason
       )
     end
     @designers = current_user.designers + current_user.rejected_designers.map do |rejected_designer|
@@ -30,7 +30,7 @@ class ContributionsController < ApplicationController
         rejection_reason: rejected_studio.reason
       )
     end
-    @oeuvres = @oeuvres.sort_by(&:created_at).reverse
+    @references = @references.sort_by(&:created_at).reverse
     @designers = @designers.sort_by(&:created_at).reverse
     @studios = @studios.sort_by(&:created_at).reverse
   end

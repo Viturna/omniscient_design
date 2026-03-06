@@ -10,7 +10,8 @@ Rails.application.routes.draw do
     get 'feedbacks/index'
     get 'reports/index'
     get 'users/index'
-    get 'oeuvres/index'
+    get 'references/index'
+    get 'references/index' # Pour la redirection SEO
     get 'dashboard/index'
     root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
@@ -20,18 +21,21 @@ Rails.application.routes.draw do
     resources :etablissements, only: [:index, :edit, :update, :destroy]
     resources :user_badges, only: [:new, :create]
 
-    get 'oeuvres/verbs', to: 'oeuvres#edit_verbs', as: :oeuvres_verbs
-    patch 'oeuvres/:id/update_verbs', to: 'oeuvres#update_verbs', as: :oeuvre_update_verbs
+    get 'references/verbs', to: 'references#edit_verbs', as: :references_verbs
+    get 'references/verbs', to: 'references#edit_verbs' # Redirection SEO
+    patch 'references/:id/update_verbs', to: 'references#update_verbs', as: :reference_update_verbs
+    patch 'references/:id/update_verbs', to: 'references#update_verbs' # Redirection SEO
   end
 
-  get 'frise/oeuvres', to: 'search#frise_oeuvres'
+  get 'frise/references', to: 'search#frise_references'
+  get 'frise/references', to: 'search#frise_references' # Redirection SEO
 
 
   # ---- LOCALISATION ----
   scope "(:locale)", locale: /fr|en/ do
 
     # Racine par défaut
-    root 'oeuvres#index'
+    root 'references#index'
 
     # Routes Devise
     devise_for :users, skip: :omniauth_callbacks, controllers: {
@@ -63,21 +67,25 @@ Rails.application.routes.draw do
 
     resources :lists, param: :slug do
       member do
-        post 'add_oeuvre'
+        post 'add_reference'
+        post 'add_reference' # Compatibilité SEO
         post :add_designer
         delete :remove_designer
-        delete 'remove_oeuvre', to: 'lists#remove_oeuvre'
+        delete 'remove_reference', to: 'lists#remove_reference'
+        delete 'remove_reference', to: 'lists#remove_reference' # Compatibilité SEO
         post 'toggle_share'
         post 'invite_editors'
         post 'change_role'
         delete 'remove_user'
         post 'toggle_privacy'
-        get :load_more_oeuvres
+        get :load_more_references
+        get :load_more_references # Compatibilité SEO
         post :add_studio
         delete :remove_studio
         get :load_more_studios
       end
-      get :load_more_oeuvres, on: :collection
+      get :load_more_references, on: :collection
+      get :load_more_references, on: :collection # Compatibilité SEO
       get :load_more_designers, on: :collection
       get :load_more_studios, on: :collection
       collection do
@@ -87,7 +95,7 @@ Rails.application.routes.draw do
 
     get '/shared/:share_token', to: 'lists#shared', as: :shared_list
 
-    resources :oeuvres, param: :slug do
+    resources :references, param: :slug do
       collection do
         get :load_more
         get 'check_existence'
@@ -100,6 +108,10 @@ Rails.application.routes.draw do
         get :save_modal
       end
     end
+
+    # Redirections SEO 301 - anciennes URLs references vers nouvelles references
+    get '/references', to: redirect { |params, req| "#{req.original_fullpath.gsub(/\/references/, '/references')}" }, status: :moved_permanently
+    get '/references/:slug', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references/#{params[:slug]}" }, status: :moved_permanently
 
     resources :designers, param: :slug do
       collection do

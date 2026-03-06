@@ -15,7 +15,7 @@
           <path d="M8 0.5L10.4453 5.93667L16 6.704L11.9573 10.5893L12.944 16.5L8 13.464L3.05533 16.5L4.04267 10.5893L0 6.704L5.55467 5.93667L8 0.5Z" fill="#202020"/>
         </svg>
         <span>
-         <span class="od-badge-highlight"> <%= Oeuvre.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • </span>Voir les références >
+         <span class="od-badge-highlight"> <%= Reference.where(validation: true).count + Designer.where(validation: true).count %> Références sur la plateforme • </span>Voir les références >
         </span>
       <% end %>
 
@@ -87,7 +87,7 @@
       </div>
       <div class="od-pres-stats">
         <div>
-          <p class="od-pres-number"><%= Oeuvre.where(validation: true).count %></p>
+          <p class="od-pres-number"><%= Reference.where(validation: true).count %></p>
           <p class="od-pres-text-stat">Références</p>
         </div>
         <div>

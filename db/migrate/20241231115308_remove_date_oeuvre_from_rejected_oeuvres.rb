@@ -1,5 +1,5 @@
-class RemoveDateOeuvreFromRejectedOeuvres < ActiveRecord::Migration[7.1]
+class RemoveDatereferenceFromRejectedreferences < ActiveRecord::Migration[7.1]
   def change
-    remove_column :rejected_oeuvres, :date_oeuvre, :date
+    remove_column :rejected_references, :date_reference, :date
   end
 end

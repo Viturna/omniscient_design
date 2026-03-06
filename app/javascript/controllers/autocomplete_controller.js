@@ -141,7 +141,7 @@ export default class extends Controller {
 
     createSection(data.domaines)
     createSection(data.designers)
-    createSection(data.oeuvres)
+    createSection(data.references)
     createSection(data.studios)
 
     if (!this.suggestions.length) {

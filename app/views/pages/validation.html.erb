@@ -61,12 +61,12 @@
     </svg>
   <% end %>
   <h1>Gestions des contenus</h1>
-  <p style="color:#FFF">Total <%= @oeuvres_count + @designers_count + @studios_count %> références</p>
+  <p style="color:#FFF">Total <%= @references_count + @designers_count + @studios_count %> références</p>
 </section>
 <!-- ========= ŒUVRES EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Références en attente de validation</h2>
-  <p>Il y a actuellement <%= @oeuvres_count_val_false %> références en attente de validation</p>
+  <p>Il y a actuellement <%= @references_count_val_false %> références en attente de validation</p>
   <div class="table-controls">
     <input type="text" placeholder="Rechercher une référence..." class="filter-input search-input">
     <select class="filter-user">
@@ -87,26 +87,26 @@
         </tr>
       </thead>
       <tbody>
-        <% @oeuvres.each do |oeuvre| %>
-          <% unless oeuvre.validation %>
+        <% @references.each do |reference| %>
+          <% unless reference.validation %>
             <tr data-load-more-table-target="row">
-              <td><%= oeuvre.nom_oeuvre %></td>
-              <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
+              <td><%= reference.nom_reference %></td>
+              <td><%= I18n.l(reference.created_at, format: :long) %></td>
               <td>
-                <% if oeuvre.user_id.present? %>
-                  <% user = User.find_by(id: oeuvre.user_id) %>
+                <% if reference.user_id.present? %>
+                  <% user = User.find_by(id: reference.user_id) %>
                   <%= user.present? ? user.email : "Omniscient Design" %>
                 <% else %>
                   Omniscient Design
                 <% end %>
               </td>
               <td style="display: flex; flex-direction:column;">
-                <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
-                <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
-                <%= link_to "Valider", validate_oeuvre_path(oeuvre), class: "btn btn-green" %>
+                <%= link_to "Voir", reference_path(reference), class: "btn" %>
+                <%= link_to "Modifier", edit_reference_path(reference), class: "btn btn-orange" %>
+                <%= link_to "Valider", validate_reference_path(reference), class: "btn btn-green" %>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
-                   data-url="<%= reject_oeuvre_path(oeuvre) %>"
-                   data-title="<%= oeuvre.nom_oeuvre %>">Refuser</a>
+                   data-url="<%= reject_reference_path(reference) %>"
+                   data-title="<%= reference.nom_reference %>">Refuser</a>
               </td>
             </tr>
           <% end %>
@@ -122,7 +122,7 @@
 <!-- ========= ŒUVRES VALIDÉES ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Références validées</h2>
-  <p>Il y a actuellement <%= @oeuvres_count %> références validées</p>
+  <p>Il y a actuellement <%= @references_count %> références validées</p>
   <div class="table-controls">
     <input type="text" placeholder="Rechercher..." class="filter-input search-input">
     <select class="filter-user">
@@ -144,32 +144,32 @@
         </tr>
       </thead>
       <tbody>
-        <% @oeuvres.each do |oeuvre| %>
-          <% if oeuvre.validation %>
+        <% @references.each do |reference| %>
+          <% if reference.validation %>
             <tr data-load-more-table-target="row">
-              <td><%= oeuvre.nom_oeuvre %></td>
-              <td><%= I18n.l(oeuvre.created_at, format: :long) %></td>
+              <td><%= reference.nom_reference %></td>
+              <td><%= I18n.l(reference.created_at, format: :long) %></td>
               <td>
-                <% if oeuvre.user_id.present? %>
-                  <% user = User.find_by(id: oeuvre.user_id) %>
+                <% if reference.user_id.present? %>
+                  <% user = User.find_by(id: reference.user_id) %>
                   <%= user.present? ? user.email : "Omniscient Design" %>
                 <% else %>
                   Omniscient Design
                 <% end %>
               </td>
               <td>
-                <% if oeuvre.validated_by_user_id.present? %>
-                  <%= User.find(oeuvre.validated_by_user_id).email %>
+                <% if reference.validated_by_user_id.present? %>
+                  <%= User.find(reference.validated_by_user_id).email %>
                 <% else %>
                   Utilisateur inconnu
                 <% end %>
               </td>
               <td style="display: flex; flex-direction:column;">
-                <%= link_to "Voir", oeuvre_path(oeuvre), class: "btn" %>
-                <%= link_to "Modifier", edit_oeuvre_path(oeuvre), class: "btn btn-orange" %>
+                <%= link_to "Voir", reference_path(reference), class: "btn" %>
+                <%= link_to "Modifier", edit_reference_path(reference), class: "btn btn-orange" %>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#globalRejectModal"
-                   data-url="<%= reject_oeuvre_path(oeuvre) %>"
-                   data-title="<%= oeuvre.nom_oeuvre %>">Refuser</a>
+                   data-url="<%= reject_reference_path(reference) %>"
+                   data-title="<%= reference.nom_reference %>">Refuser</a>
               </td>
             </tr>
           <% end %>

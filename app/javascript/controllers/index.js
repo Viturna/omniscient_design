@@ -49,8 +49,8 @@ application.register("multi-select", MultiSelectController)
 import MultiStepFormController from "./multi_step_form_controller"
 application.register("multi-step-form", MultiStepFormController)
 
-import OeuvresCounterController from "./oeuvres_counter_controller"
-application.register("oeuvres-counter", OeuvresCounterController)
+import ReferencesCounterController from "./references_counter_controller"
+application.register("references-counter", ReferencesCounterController)
 
 import PopupController from "./popup_controller"
 application.register("popup", PopupController)

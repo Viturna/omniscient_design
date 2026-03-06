@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
     static values = {
-        oeuvreId: String,
+        referenceId: String,
         designerId: String,
         studioId: String
     }
@@ -20,8 +20,8 @@ export default class extends Controller {
         modal.setAttribute("data-lenis-prevent", "true")
         if (content) content.setAttribute("data-lenis-prevent", "true")
 
-        if (this.hasOeuvreIdValue) {
-            frame.src = `/oeuvres/${this.oeuvreIdValue}/save_modal`
+        if (this.hasReferenceIdValue) {
+            frame.src = `/references/${this.referenceIdValue}/save_modal`
         } else if (this.hasDesignerIdValue) {
             frame.src = `/designers/${this.designerIdValue}/save_modal`
         } else if (this.hasStudioIdValue) {

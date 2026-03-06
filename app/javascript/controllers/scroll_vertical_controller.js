@@ -80,7 +80,7 @@ export default class extends Controller {
         let adIndex = trigger.dataset.adIndex
         let adsOrder = trigger.dataset.adsOrder
 
-        let baseUrl = window.location.pathname.includes("designers") ? "/designers/load_more" : "/oeuvres/load_more"
+        let baseUrl = window.location.pathname.includes("designers") ? "/designers/load_more" : "/references/load_more"
 
         let params = new URLSearchParams({
             offset: offset,
@@ -165,7 +165,7 @@ export default class extends Controller {
 
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
             if (deltaX > 0 && window.location.pathname === '/') window.location.href = '/designers'
-            if (deltaX < 0 && window.location.pathname.includes('designers')) window.location.href = '/oeuvres'
+            if (deltaX < 0 && window.location.pathname.includes('designers')) window.location.href = '/references'
             return
         }
 

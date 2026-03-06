@@ -1,11 +1,28 @@
-<% images = card.reference_images.select { |img| img.file.attached? }.map(&:file) %>
+<% 
+  images = card.reference_images.select { |img| img.file.attached? }.map(&:file) 
+
+  # --- LOGS SERVEUR (Visible dans le terminal Rails) ---
+  Rails.logger.info "========================================="
+  Rails.logger.info "🖼️ LOG IMAGES POUR LA CARTE : #{card.nom_reference} (ID: #{card.id})"
+  Rails.logger.info "Nombre d'images trouvées : #{images.count}"
+  images.each_with_index do |image, index|
+    Rails.logger.info " -> Image #{index + 1} : Fichier = #{image.filename} | Format = #{image.content_type}"
+  end
+  Rails.logger.info "========================================="
+  # -----------------------------------------------------
+%>
+
+<script>
+  console.log("🖼️ Images pour [<%= j card.nom_reference %>] (ID: <%= card.id %>):", <%= raw images.map { |img| img.filename.to_s }.to_json %>);
+</script>
+
 <div class="card" 
      data-id="<%= card.id %>" 
      data-controller="slider" 
      data-slider-update-background-value="true"
      style="position: relative;">
   <%= link_to reference_path(card.slug), class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
-    <span style="display:none;">Voir l'reference</span>
+    <span style="display:none;">Voir la référence</span>
   <% end %>
   <% style_bg = "position: relative; z-index: 2; pointer-events: none;" %>
   <% if card.domaines.any? %>
@@ -47,7 +64,7 @@
                     [url_for(v1200), "1200w"]
                   ],
                   sizes: "(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px",
-                  alt: card.nom_designer, 
+                  alt: card.nom_reference, 
                   class: "card-slide-image #{'active' if index == 0}", 
                   
                   # Chargement natif
@@ -87,7 +104,7 @@
                       data-controller="save-modal" 
                       data-action="click->save-modal#open"
                 data-save-modal-reference-id-value="<%= card.id %>"
-                title="Enregistrer cette référdence"
+                title="Enregistrer cette référence"
                 style="position: relative; z-index: 50; background: none; border: none; cursor: pointer; pointer-events: auto;">
                 <div class="circle">
                   <svg style="pointer-events: none;" width="40" height="40" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">

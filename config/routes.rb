@@ -109,6 +109,10 @@ Rails.application.routes.draw do
       end
     end
 
+    # Redirections SEO 301 - anciennes URLs oeuvres vers nouvelles references
+    get '/oeuvres', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references" }, status: :moved_permanently
+    get '/oeuvres/:slug', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references/#{params[:slug]}" }, status: :moved_permanently
+
     # Redirections SEO 301 - anciennes URLs references vers nouvelles references
     get '/references', to: redirect { |params, req| "#{req.original_fullpath.gsub(/\/references/, '/references')}" }, status: :moved_permanently
     get '/references/:slug', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references/#{params[:slug]}" }, status: :moved_permanently

@@ -417,14 +417,14 @@
   color: $primary-color;
 }
 
-..references {
+.reference {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
 }
 
-..references-container {
+.reference-container {
   max-height: 100px;
   overflow-y: auto;
   display: flex;
@@ -433,7 +433,7 @@
   gap: 8px;
 }
 
-..references-container::-webkit-scrollbar {
+.reference-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -443,16 +443,16 @@
   gap: 8px;
 }
 
-..references-counter {
+.reference-counter {
   overflow-y: auto;
   scrollbar-width: none;
 }
 
-..references-counter::-webkit-scrollbar {
+.reference-counter::-webkit-scrollbar {
   display: none;
 }
 
-..references-counter .hidden-.references {
+.reference-counter .hidden-.references {
   margin-top: 8px;
   display: flex;
   align-items: start;

@@ -417,14 +417,14 @@
   color: $primary-color;
 }
 
-.oeuvres {
+..references {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
 }
 
-.oeuvres-container {
+..references-container {
   max-height: 100px;
   overflow-y: auto;
   display: flex;
@@ -433,33 +433,33 @@
   gap: 8px;
 }
 
-.oeuvres-container::-webkit-scrollbar {
+..references-container::-webkit-scrollbar {
   display: none;
 }
 
-.hidden-oeuvres {
+.hidden-.references {
   display: none;
   flex-direction: column;
   gap: 8px;
 }
 
-.oeuvres-counter {
+..references-counter {
   overflow-y: auto;
   scrollbar-width: none;
 }
 
-.oeuvres-counter::-webkit-scrollbar {
+..references-counter::-webkit-scrollbar {
   display: none;
 }
 
-.oeuvres-counter .hidden-oeuvres {
+..references-counter .hidden-.references {
   margin-top: 8px;
   display: flex;
   align-items: start;
   gap: 8px;
 }
 
-.oeuvre {
+..reference {
   width: 35px;
   height: 35px;
   background-color: $primary-color;
@@ -468,25 +468,25 @@
   background-size: cover;
 }
 
-.oeuvre:hover,
+..reference:hover,
 .circle-with-number:hover {
   opacity: 0.8;
   cursor: pointer;
 }
 
-.oeuvre.empty {
+..reference.empty {
   width: 15px;
   height: 15px;
   background-color: $primary-color;
   border-radius: 50%;
 }
 
-.oeuvre.empty:hover {
+..reference.empty:hover {
   cursor: auto;
   opacity: 1;
 }
 
-.oeuvre-frise {
+..reference-frise {
   margin-top: 32px;
 }
 

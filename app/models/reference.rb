@@ -1,4 +1,5 @@
 class Reference < ApplicationRecord
+  self.table_name = 'references'
   extend FriendlyId
 
   has_many :reference_images, -> { order(position: :asc) }, dependent: :destroy

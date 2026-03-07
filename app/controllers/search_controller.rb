@@ -156,7 +156,7 @@ class SearchController < ApplicationController
       @references = Reference.where(validation: true)
                       .select(:id, :nom_reference, :date_reference, :slug)
                       .includes(:notions, :designers, :domaines)
-                      .order(:date_reference)
+                      .order(Arel.sql('date_reference'))
 
       @designers = Designer.where(validation: true)
                           .select(:id, :nom, :prenom, :date_naissance, :slug)
@@ -171,7 +171,7 @@ class SearchController < ApplicationController
       @references = Reference.where(validation: true)
                       .select(:id, :nom_reference, :date_reference, :slug)
                       .includes(:notions, :designers, :domaines)
-                      .order(:nom_reference)
+                      .order(Arel.sql('nom_reference'))
                       .page(params[:page])
                       .per(per_page)
 
@@ -193,9 +193,13 @@ class SearchController < ApplicationController
     if params[:domaine].present?
       filtered_domains = Array(params[:domaine]).reject(&:blank?)
       if filtered_domains.any?
-        @references = @references.joins(:domaines).where(domaines: { id: filtered_domains })
-        @designers = @designers.joins(:domaines).where(domaines: { id: filtered_domains })
-        @studios = @studios.joins(:domaines).where(domaines: { id: filtered_domains })
+        # Use subqueries to avoid PostgreSQL reserved keyword issues
+        domain_reference_ids = Reference.joins(:domaines).where(domaines: { id: filtered_domains }).pluck(:id)
+        @references = @references.where(id: domain_reference_ids).includes(:notions, :designers, :domaines)
+        domain_designer_ids = Designer.joins(:domaines).where(domaines: { id: filtered_domains }).pluck(:id)
+        @designers = @designers.where(id: domain_designer_ids).includes(:domaines, :countries)
+        domain_studio_ids = Studio.joins(:domaines).where(domaines: { id: filtered_domains }).pluck(:id)
+        @studios = @studios.where(id: domain_studio_ids).includes(:domaines, :countries)
       end
     end
 
@@ -213,13 +217,9 @@ class SearchController < ApplicationController
     if params[:notions].present?
       notion_ids = Array(params[:notions]).reject(&:blank?)
       if notion_ids.any?
-        @references = @references.except(:includes)
-        @references = @references
-          .joins(:notions)
-          .where(notions: { id: notion_ids })
-          .group('references.id')
-          .select('references.*')
-          .having('COUNT(DISTINCT notions.id) = ?', notion_ids.size)
+        # Use subquery to avoid PostgreSQL reserved keyword issues
+        notion_reference_ids = Reference.joins(:notions).where(notions: { id: notion_ids }).group('references.id').having('COUNT(DISTINCT notions.id) = ?', notion_ids.size).pluck(:id)
+        @references = @references.where(id: notion_reference_ids)
       end
     end
 
@@ -286,19 +286,19 @@ class SearchController < ApplicationController
   
     case params[:sort]
       when 'nom_asc'
-        @designers = @designers.reorder('designers.nom ASC')
-        @references = @references.reorder('references.nom_reference ASC')
+        @designers = @designers.reorder(Arel.sql('designers.nom ASC'))
+        @references = @references.reorder(Arel.sql('nom_reference ASC'))
       when 'nom_desc'
-        @designers = @designers.reorder('designers.nom DESC')
-        @references = @references.reorder('references.nom_reference DESC')
+        @designers = @designers.reorder(Arel.sql('designers.nom DESC'))
+        @references = @references.reorder(Arel.sql('nom_reference DESC'))
       when 'reference_asc'
-        @references = @references.reorder('references.date_reference ASC')
+        @references = @references.reorder(Arel.sql('date_reference ASC'))
       when 'reference_desc'
-        @references = @references.reorder('references.date_reference DESC')
+        @references = @references.reorder(Arel.sql('date_reference DESC'))
       when 'naissance_asc'
-        @designers = @designers.reorder('designers.date_naissance ASC')
+        @designers = @designers.reorder(Arel.sql('designers.date_naissance ASC'))
       when 'naissance_desc'
-        @designers = @designers.reorder('designers.date_naissance DESC')
+        @designers = @designers.reorder(Arel.sql('designers.date_naissance DESC'))
       end
 
     respond_to do |format|

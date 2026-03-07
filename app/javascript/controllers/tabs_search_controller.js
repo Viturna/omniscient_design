@@ -7,6 +7,10 @@ export default class extends Controller {
         "sortFilter", "sortSelect"
     ]
 
+    static values = {
+        sortData: { type: Object, default: {} }
+    }
+
     connect() {
         this.applyFiltersDisplay()
     }
@@ -89,17 +93,17 @@ export default class extends Controller {
 
         if (tabName === "references") {
             options = [
-                { text: window.I18nSearchSort.references.nom_asc, value: "nom_asc" },
-                { text: window.I18nSearchSort.references.nom_desc, value: "nom_desc" },
-                { text: window.I18nSearchSort.references.reference_asc, value: "reference_asc" },
-                { text: window.I18nSearchSort.references.reference_desc, value: "reference_desc" }
+                { text: this.sortDataValue.references.nom_asc, value: "nom_asc" },
+                { text: this.sortDataValue.references.nom_desc, value: "nom_desc" },
+                { text: this.sortDataValue.references.reference_asc, value: "reference_asc" },
+                { text: this.sortDataValue.references.reference_desc, value: "reference_desc" }
             ]
         } else if (tabName === "designers") {
             options = [
-                { text: window.I18nSearchSort.designers.nom_asc, value: "nom_asc" },
-                { text: window.I18nSearchSort.designers.nom_desc, value: "nom_desc" },
-                { text: window.I18nSearchSort.designers.naissance_asc, value: "naissance_asc" },
-                { text: window.I18nSearchSort.designers.naissance_desc, value: "naissance_desc" }
+                { text: this.sortDataValue.designers.nom_asc, value: "nom_asc" },
+                { text: this.sortDataValue.designers.nom_desc, value: "nom_desc" },
+                { text: this.sortDataValue.designers.naissance_asc, value: "naissance_asc" },
+                { text: this.sortDataValue.designers.naissance_desc, value: "naissance_desc" }
             ]
         }
 

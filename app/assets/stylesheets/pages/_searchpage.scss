@@ -327,7 +327,7 @@
 }
 
 .card-designer,
-.card-oeuvre {
+.card-reference {
   background-repeat: no-repeat;
   width: 10vw;
   height: 280px;
@@ -343,7 +343,7 @@
 }
 
 .card-designer::after,
-.card-oeuvre::after {
+.card-reference::after {
   content: "";
   position: absolute;
   top: 0;
@@ -810,7 +810,7 @@
   }
 
   .card-designer,
-  .card-oeuvre {
+  .card-reference {
     width: calc(40vw - 20px);
     height: 240px;
     padding: 15px;
@@ -879,7 +879,7 @@
   }
 
   .card-designer,
-  .card-oeuvre {
+  .card-reference {
     width: calc(38vw - 20px);
     height: 240px;
     padding: 15px;
@@ -928,7 +928,7 @@
   }
 
   .card-designer,
-  .card-oeuvre {
+  .card-reference {
     width: calc(38vw - 20px);
     height: 240px;
     padding: 15px;
@@ -953,7 +953,7 @@
   }
 
   .card-designer,
-  .card-oeuvre {
+  .card-reference {
     width: calc(24vw - 20px);
     height: 240px;
     padding: 15px;
@@ -980,7 +980,7 @@
   }
 
   .card-designer,
-  .card-oeuvre {
+  .card-reference {
     width: calc(24vw - 36px);
     height: 260px;
     padding: 15px;
@@ -1042,7 +1042,7 @@ body.dark-mode {
 
 @media screen and (min-width: 1700px) {
   .card-designer,
-  .card-oeuvre {
+  .card-reference {
     width: 9vw;
   }
 }

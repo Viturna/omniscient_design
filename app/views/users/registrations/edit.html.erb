@@ -133,21 +133,6 @@
       </div>
 
       <div class="field">
-        <%= f.label :country_id, "Pays" %>
-        <%= f.collection_select :country_id,
-            Country.order(:country),
-            :id,
-            :country,
-            { prompt: "Sélectionnez votre pays" },
-            { 
-              class: "form-control", 
-              data: { 
-                controller: "select2",
-                select2_placeholder_value: "Sélectionnez votre pays"
-              } 
-            } %>
-      </div>
-      <div class="field">
         <%= f.label t('edit_profile.first_name') %>
         <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
       </div>
@@ -163,6 +148,21 @@
         <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
       
+      <div class="field">
+        <%= f.label :country_id, "Pays" %>
+        <%= f.collection_select :country_id,
+            Country.order(:country),
+            :id,
+            :country,
+            { prompt: "Sélectionnez votre pays" },
+            { 
+              class: "form-control", 
+              data: { 
+                controller: "select2",
+                select2_placeholder_value: "Sélectionnez votre pays"
+              } 
+            } %>
+      </div>
       <hr>
       <h2><%= t('edit_profile.private_profile') %></h2>
       <div class="field">

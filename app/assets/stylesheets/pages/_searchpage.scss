@@ -417,14 +417,14 @@
   color: $primary-color;
 }
 
-..references {
+.references {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
 }
 
-..references-container {
+.references-container {
   max-height: 100px;
   overflow-y: auto;
   display: flex;
@@ -433,7 +433,7 @@
   gap: 8px;
 }
 
-..references-container::-webkit-scrollbar {
+.references-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -443,23 +443,23 @@
   gap: 8px;
 }
 
-..references-counter {
+.references-counter {
   overflow-y: auto;
   scrollbar-width: none;
 }
 
-..references-counter::-webkit-scrollbar {
+.references-counter::-webkit-scrollbar {
   display: none;
 }
 
-..references-counter .hidden-.references {
+.references-counter .hidden-.references {
   margin-top: 8px;
   display: flex;
   align-items: start;
   gap: 8px;
 }
 
-..reference {
+.reference {
   width: 35px;
   height: 35px;
   background-color: $primary-color;
@@ -468,25 +468,25 @@
   background-size: cover;
 }
 
-..reference:hover,
+.reference:hover,
 .circle-with-number:hover {
   opacity: 0.8;
   cursor: pointer;
 }
 
-..reference.empty {
+.reference.empty {
   width: 15px;
   height: 15px;
   background-color: $primary-color;
   border-radius: 50%;
 }
 
-..reference.empty:hover {
+.reference.empty:hover {
   cursor: auto;
   opacity: 1;
 }
 
-..reference-frise {
+.reference-frise {
   margin-top: 32px;
 }
 

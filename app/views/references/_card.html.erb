@@ -1,21 +1,9 @@
 <% 
   images = card.reference_images.select { |img| img.file.attached? }.map(&:file) 
-
-  # --- LOGS SERVEUR (Visible dans le terminal Rails) ---
-  Rails.logger.info "========================================="
-  Rails.logger.info "🖼️ LOG IMAGES POUR LA CARTE : #{card.nom_reference} (ID: #{card.id})"
-  Rails.logger.info "Nombre d'images trouvées : #{images.count}"
-  images.each_with_index do |image, index|
-    Rails.logger.info " -> Image #{index + 1} : Fichier = #{image.filename} | Format = #{image.content_type}"
-  end
-  Rails.logger.info "========================================="
-  # -----------------------------------------------------
 %>
-
 <script>
   console.log("🖼️ Images pour [<%= j card.nom_reference %>] (ID: <%= card.id %>):", <%= raw images.map { |img| img.filename.to_s }.to_json %>);
 </script>
-
 <div class="card" 
      data-id="<%= card.id %>" 
      data-controller="slider" 

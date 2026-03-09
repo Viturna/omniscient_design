@@ -1,176 +1,250 @@
 <% content_for :title, "Mes Contributions - Omniscient Design" %>
 <% content_for :description, "Suivez vos contributions et voyez les références que vous avez ajoutées, ainsi que leur statut de validation." %>
 <style>
-  .status {
-    display: flex;
-    width: fit-content;
-    padding: 8px 10px;
-    border-radius: 5px;
-    color: #fff;
-    &.validated {
-      background-color: #28a745;
-    }
-    &.pending {
-      background-color: #ffc107;
-    }
-    &.rejected {
-      background-color: #dc3545;
-    }
+  /* --- DESIGN DU TABLEAU --- */
+  .table-container {
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   }
 
-  table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 48px;
-
-  th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
+  .da-table {
+    margin: 0;
+    width: 100%;
+    border-collapse: collapse;
     text-align: left;
+    white-space: nowrap;
   }
 
-  th {
-    background-color: #f8f8f8;
+  .da-table th {
+    padding: 16px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    background-color: #fafafa;
+    border-bottom: 1px solid #eaeaea;
+    text-transform: capitalize;
   }
+
+  .da-table td {
+    padding: 20px 24px;
+    font-size: 15px;
+    color: #202020;
+    border-bottom: 1px solid #eaeaea;
+    vertical-align: middle;
+  }
+
+  .da-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Survol uniquement pour les lignes cliquables (non refusées) */
+  .da-table tbody tr.clickable-row:hover {
+    background-color: #fcfcfc;
+    cursor: pointer;
+  }
+
+  /* Survol léger pour les lignes non cliquables (refusées) */
+  .da-table tbody tr.non-clickable-row:hover {
+    background-color: #fafafa;
+  }
+
+  /* --- LIENS ET TEXTES --- */
+  .item-name-text {
+    font-weight: 500;
+    color: #202020;
+  }
+
+  .date-text {
+    color: #888;
+    font-size: 14px;
+  }
+
+  .reason-text {
+    font-size: 13px;
+    color: #666;
+    white-space: normal;
+    min-width: 250px;
+    max-width: 400px;
+    line-height: 1.4;
+  }
+
+  /* --- INDICATEURS DE STATUT --- */
+  .status-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #555;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-validated { background-color: #28a745; }
+  .dot-rejected { background-color: #dc3545; }
+  .dot-pending { background-color: #f5a623; }
+
+  /* --- ÉTATS VIDES --- */
+  .empty-state {
+    padding: 32px 24px;
+    color: #888;
+    font-size: 15px;
+    text-align: center;
   }
 </style>
+<% 
+  # Fonction pour trier par ordre chronologique (du plus récent au plus ancien)
+  sort_items = ->(items) {
+    items.sort_by { |item| item.created_at || Time.at(0) }.reverse
+  }
+
+  sorted_references = sort_items.call(@references)
+  sorted_designers  = sort_items.call(@designers)
+  sorted_studios    = sort_items.call(@studios)
+%>
 <section class="top-header">
   <%= link_to profil_path do %>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
     </svg>
   <% end %>
-
   <p class="subtitle-top"><%= t('contributions.subtitle_top') %></p>
   <h1><%= t('contributions.title') %></h1>
-  <p class="subtitle">
-    <%= t('contributions.description_html') %>
-  </p>
+  <p class="subtitle"><%= t('contributions.description_html') %></p>
 </section>
-
-<section class="grid-1">
+<section class="grid-1" style="margin-top: 48px;">
   <h2><%= t('contributions.added_references') %></h2>
-  <% if @references.any? %>
-    <div class="table-wrapper">
-      <table>
+  <div class="table-container">
+    <% if sorted_references.any? %>
+      <table class="da-table">
         <thead>
           <tr>
-            <th class="medium"><%= t('contributions.ref_name') %></th>
-            <th class="medium"><%= t('contributions.date_added') %></th>
-            <th class="medium"><%= t('contributions.status') %></th>
-            <th class="medium"><%= t('contributions.comment') %></th>
+            <th><%= t('contributions.ref_name') %></th>
+            <th>Statut</th>
+            <th>Ajouté le</th>
+            <th>Commentaire</th>
           </tr>
         </thead>
         <tbody>
-          <% @references.each do |reference| %>
-            <tr>
-              <td><%= reference.nom_reference %></td>
-              <td><%= reference.created_at.present? ? reference.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+          <% sorted_references.each do |reference| %>
+            <% row_class = reference.persisted? ? "clickable-row" : "non-clickable-row" %>
+            <% click_action = reference.persisted? ? "window.location='#{reference_path(reference)}'" : "" %>
+            <tr class="<%= row_class %>" onclick="<%= click_action %>">
               <td>
-                <% if reference.validation %>
-                  <span class="status validated"><%= t('contributions.validated') %></span>
-                <% elsif reference.rejection_reason.present? %>
-                  <span class="status rejected"><%= t('contributions.rejected') %></span>
-                <% else %>
-                  <span class="status pending"><%= t('contributions.pending') %></span>
-                <% end %>
+                <span class="item-name-text"><%= reference.nom_reference %></span>
               </td>
               <td>
-                <% if reference.rejection_reason.present? %>
-                  <%= reference.rejection_reason %>
-                <% end %>
+                <div class="status-cell">
+                  <% if reference.validation %>
+                    <span class="status-dot dot-validated"></span> Validée
+                  <% elsif reference.rejection_reason.present? %>
+                    <span class="status-dot dot-rejected"></span> Refusée
+                  <% else %>
+                    <span class="status-dot dot-pending"></span> En attente
+                  <% end %>
+                </div>
               </td>
+              <td class="date-text"><%= reference.created_at&.strftime("%d/%m/%Y") %></td>
+              <td class="reason-text"><%= reference.rejection_reason.presence || "-" %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    </div>
-  <% else %>
-    <p><%= t('contributions.no_references') %></p>
-  <% end %>
+    <% else %>
+      <div class="empty-state"><%= t('contributions.no_references') %></div>
+    <% end %>
+  </div>
 </section>
-
 <section class="grid-1">
   <h2><%= t('contributions.added_designers') %></h2>
-  <% if @designers.any? %>
-    <div class="table-wrapper">
-      <table>
+  <div class="table-container">
+    <% if sorted_designers.any? %>
+      <table class="da-table">
         <thead>
           <tr>
-            <th class="medium"><%= t('contributions.designer_name') %></th>
-            <th class="medium"><%= t('contributions.date_added') %></th>
-            <th class="medium"><%= t('contributions.status') %></th>
-            <th class="medium"><%= t('contributions.comment') %></th>
+            <th><%= t('contributions.designer_name') %></th>
+            <th>Statut</th>
+            <th>Ajouté le</th>
+            <th>Commentaire</th>
           </tr>
         </thead>
         <tbody>
-          <% @designers.each do |designer| %>
-            <tr>
-              <td><%= designer.nom_designer %></td>
-              <td><%= designer.created_at.present? ? designer.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+          <% sorted_designers.each do |designer| %>
+            <% designer_name = designer.nom_designer rescue "#{designer.prenom} #{designer.nom}" %>
+            <% row_class = designer.persisted? ? "clickable-row" : "non-clickable-row" %>
+            <% click_action = designer.persisted? ? "window.location='#{designer_path(designer)}'" : "" %>
+            <tr class="<%= row_class %>" onclick="<%= click_action %>">
               <td>
-                <% if designer.validation %>
-                  <span class="status validated"><%= t('contributions.validated') %></span>
-                <% elsif designer.rejection_reason.present? %>
-                  <span class="status rejected"><%= t('contributions.rejected') %></span>
-                <% else %>
-                  <span class="status pending"><%= t('contributions.pending') %></span>
-                <% end %>
+                <span class="item-name-text"><%= designer_name %></span>
               </td>
               <td>
-                <% if designer.rejection_reason.present? %>
-                  <%= designer.rejection_reason %>
-                <% end %>
+                <div class="status-cell">
+                  <% if designer.validation %>
+                    <span class="status-dot dot-validated"></span> Validée
+                  <% elsif designer.rejection_reason.present? %>
+                    <span class="status-dot dot-rejected"></span> Refusée
+                  <% else %>
+                    <span class="status-dot dot-pending"></span> En attente
+                  <% end %>
+                </div>
               </td>
+              <td class="date-text"><%= designer.created_at&.strftime("%d/%m/%Y") %></td>
+              <td class="reason-text"><%= designer.rejection_reason.presence || "-" %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    </div>
-  <% else %>
-    <p><%= t('contributions.no_designers') %></p>
-  <% end %>
+    <% else %>
+      <div class="empty-state"><%= t('contributions.no_designers') %></div>
+    <% end %>
+  </div>
 </section>
-
-<%# 🌟 NOUVEAU : Section Studios %>
 <section class="grid-1">
-  <h2><%= "Studios Ajoutés" %></h2>
-  <% if @studios.any? %>
-    <div class="table-wrapper">
-      <table>
+  <h2>Studios Ajoutés</h2>
+  <div class="table-container">
+    <% if sorted_studios.any? %>
+      <table class="da-table">
         <thead>
           <tr>
-            <th class="medium">Nom du Studio</th>
-            <th class="medium"><%= t('contributions.date_added') %></th>
-            <th class="medium"><%= t('contributions.status') %></th>
-            <th class="medium"><%= t('contributions.comment') %></th>
+            <th>Nom du Studio</th>
+            <th>Statut</th>
+            <th>Ajouté le</th>
+            <th>Commentaire</th>
           </tr>
         </thead>
         <tbody>
-          <% @studios.each do |studio| %>
-            <tr>
-              <td><%= studio.nom %></td>
-              <td><%= studio.created_at.present? ? studio.created_at.strftime("%d/%m/%Y") : "N/A" %></td>
+          <% sorted_studios.each do |studio| %>
+            <% row_class = studio.persisted? ? "clickable-row" : "non-clickable-row" %>
+            <% click_action = studio.persisted? ? "window.location='#{studio_path(studio)}'" : "" %>
+            <tr class="<%= row_class %>" onclick="<%= click_action %>">
               <td>
-                <% if studio.validation %>
-                  <span class="status validated"><%= t('contributions.validated') %></span>
-                <% elsif studio.rejection_reason.present? %>
-                  <span class="status rejected"><%= t('contributions.rejected') %></span>
-                <% else %>
-                  <span class="status pending"><%= t('contributions.pending') %></span>
-                <% end %>
+                <span class="item-name-text"><%= studio.nom %></span>
               </td>
               <td>
-                <% if studio.rejection_reason.present? %>
-                  <%= studio.rejection_reason %>
-                <% end %>
+                <div class="status-cell">
+                  <% if studio.validation %>
+                    <span class="status-dot dot-validated"></span> Validée
+                  <% elsif studio.rejection_reason.present? %>
+                    <span class="status-dot dot-rejected"></span> Refusée
+                  <% else %>
+                    <span class="status-dot dot-pending"></span> En attente
+                  <% end %>
+                </div>
               </td>
+              <td class="date-text"><%= studio.created_at&.strftime("%d/%m/%Y") %></td>
+              <td class="reason-text"><%= studio.rejection_reason.presence || "-" %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    </div>
-  <% else %>
-    <p>Aucun studio ajouté pour le moment.</p>
-  <% end %>
+    <% else %>
+      <div class="empty-state">Aucun studio ajouté pour le moment.</div>
+    <% end %>
+  </div>
 </section>

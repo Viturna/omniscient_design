@@ -8,6 +8,15 @@
       </ul>
     </div>
   <% end %>
+  <% if params[:reference_id].present? %>
+    <%= form.hidden_field :reference_ids, multiple: true, value: params[:reference_id] %>
+  <% end %>
+  <% if params[:designer_id].present? %>
+    <%= form.hidden_field :designer_ids, multiple: true, value: params[:designer_id] %>
+  <% end %>
+  <% if params[:studio_id].present? %>
+    <%= form.hidden_field :studio_ids, multiple: true, value: params[:studio_id] %>
+  <% end %>
   <div class="flex-form" style="gap: 24px; margin-top: 20px;">
     <div class="form-group">
       <%= form.label :name, "Nom de la liste"%>

@@ -171,38 +171,54 @@ class ReferencesController < ApplicationController
   end
 
 
- # PATCH/PUT /references/:slug/reject
-def reject
-  rejection_reason = params[:rejection_reason].presence || I18n.t('reference.reject.no_comment')
-  @reference = Reference.friendly.find_by(slug: params[:slug])
+# PATCH/PUT /references/:slug/reject
+  def reject
+    rejection_reason = params[:rejection_reason].presence || I18n.t('reference.reject.no_comment', default: 'Aucun motif renseigné.')
 
-  unless @reference
-    redirect_to validation_path, alert: I18n.t('references.not_found') and return
+    unless @reference
+      redirect_to validation_path, alert: I18n.t('references.not_found') and return
+    end
+
+    begin
+      ActiveRecord::Base.transaction do
+        # 1. Clean up Lists
+        ListItem.where(listable: @reference).delete_all if defined?(ListItem)
+        
+        # 2. Clean up standard many-to-many associations
+        @reference.domaines.clear
+        @reference.designers.clear
+        @reference.studios.clear
+
+        # 3. Handle complex through associations manually
+        # Delete the join table records directly instead of using .clear on the association
+        ActiveRecord::Base.connection.execute(
+          ActiveRecord::Base.sanitize_sql_array(
+            ["DELETE FROM references_verbs WHERE reference_id = ?", @reference.id]
+          )
+        )
+
+        # 4. Save the rejection history
+        RejectedReference.create!(
+          nom_reference: @reference.nom_reference,
+          user: @reference.user,
+          reason: rejection_reason
+        )
+
+        # 5. Destroy the reference safely
+        @reference.destroy!
+      end
+
+      # 6. Update stats and notifications
+      create_rejection_notification(@reference) rescue nil
+      update_suivi_references_refusees(@reference.user) rescue nil
+
+      redirect_to validation_path, notice: "La référence a bien été refusée et supprimée."
+    
+    rescue => e
+      Rails.logger.error("Erreur critique lors du rejet : #{e.message}\n#{e.backtrace.join("\n")}")
+      redirect_to validation_path, alert: "Erreur technique : #{e.message}"
+    end
   end
-
-  ActiveRecord::Base.transaction do
-    # Création du rejet
-    @rejected_reference = RejectedReference.create!(
-      nom_reference: @reference.nom_reference,
-      user: @reference.user,
-      reason: rejection_reason
-    )
-
-    # Nettoyage des associations
-    @reference.notions_references.delete_all if @reference.notions_references.exists?
-    @reference.references_domaines.delete_all if @reference.references_domaines.exists?
-    @reference.designers_references.delete_all if @reference.designers_references.exists?
-
-    # Mise à jour de la raison du rejet
-    @reference.update!(rejection_reason: rejection_reason, validation: false)
-
-    handle_destroy(@reference, I18n.t('references.reject.success'))
-  rescue => e
-    Rails.logger.error("Erreur rejet œuvre : #{e.message}")
-    redirect_to validation_path, alert: I18n.t('references.reject.failure')
-  end
-end
-
 
   # DELETE /references/1 or /references/1.json
    def destroy

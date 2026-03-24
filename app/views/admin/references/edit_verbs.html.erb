@@ -1,30 +1,30 @@
 <style>
   /* Réutilisation de ton design Admin existant */
-  .users-dash-wrapper { 
-    padding: 40px 4vw 80px 4vw; 
-    max-width: 1600px; 
-    margin: 0 auto; 
-    background-color: #f8f9fa; 
-    min-height: 100vh; 
-    font-family: 'IBM Plex Sans', sans-serif; 
-    color: #202020; 
-    box-sizing: border-box; 
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
   }
-  
-  .users-dash-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 20px; /* Réduit un peu pour rapprocher la recherche */
-    flex-wrap: wrap; 
-    gap: 16px; 
+
+  .users-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
   }
-  
-  .users-dash-title { 
-    font-size: 32px; 
-    font-weight: 500; 
-    color: #202020; 
-    margin: 0; 
+
+  .users-dash-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #202020;
+    margin: 0;
   }
 
   /* --- STYLE DE LA BARRE DE RECHERCHE --- */
@@ -72,20 +72,20 @@
     font-size: 14px;
     color: #666;
   }
-  
+
   /* --- TABLEAU --- */
-  .users-dash-table-container { 
-    background: #fff; 
-    border-radius: 16px; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02); 
-    border: 1px solid #f0f0f0; 
-    overflow: visible; 
-    margin-bottom: 48px; 
+  .users-dash-table-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    border: 1px solid #f0f0f0;
+    overflow: visible;
+    margin-bottom: 32px; /* Réduit un peu pour laisser place à la pagination */
   }
   .users-dash-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
   .users-dash-table th { background-color: #fafafa; padding: 18px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; border-bottom: 1px solid #eee; }
   .users-dash-table td { padding: 18px 24px; border-bottom: 1px solid #f5f5f5; font-size: 14px; font-weight: 500; color: #202020; vertical-align: middle; }
-  
+
   .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; text-align: center; min-width: 80px;}
   .badge-gray { background: #f5f5f5; color: #666; }
   .badge-orange { background: #FFF3E0; color: #E65100; }
@@ -96,36 +96,71 @@
   .select2-container { width: 100% !important; min-width: 400px; }
   .select2-selection--multiple { border: 2px solid #e9e9e9 !important; border-radius: 8px !important; }
   .select2-container .select2-results > .select2-results__options {
-    max-height: 400px !important; 
-    overflow-y: auto !important;  
+    max-height: 400px !important;
+    overflow-y: auto !important;
     scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch; 
+    -webkit-overflow-scrolling: touch;
   }
   .select2-results__options--nested { max-height: none !important; overflow-y: visible !important; }
-</style>
 
+  /* --- STYLE DE LA PAGINATION --- */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .pagination a, .pagination span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    color: #202020;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #fff;
+    transition: all 0.2s ease;
+  }
+  .pagination a:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+  }
+  .pagination .current {
+    background-color: #202020;
+    color: white;
+    border-color: #202020;
+  }
+  .pagination .gap {
+    border: none;
+    background-color: transparent;
+    color: #888;
+  }
+</style>
 <div class="users-dash-wrapper">
   <div class="users-dash-header">
     <h1 class="users-dash-title">Attribution rapide des Notions</h1>
   </div>
-
   <%= form_with url: admin_references_verbs_path, method: :get, local: true, class: "admin-search-form" do |f| %>
     <%= f.text_field :search, value: params[:search], placeholder: "Rechercher une référence par son nom...", class: "search-input" %>
     <%= f.submit "Rechercher", class: "btn-search" %>
-    
     <% if params[:search].present? %>
       <%= link_to "Effacer", admin_references_verbs_path, class: "btn-reset" %>
     <% end %>
   <% end %>
-
   <p class="results-count">
     <% if params[:search].present? %>
-      <%= pluralize(@references.length, "résultat trouvé", "résultats trouvés") %> pour "<strong><%= params[:search] %></strong>" (limité à 50)
+      Affichage des résultats <strong><%= @references.offset_value + 1 %> à <%= @references.offset_value + @references.length %></strong> sur <strong><%= @references.total_count %></strong> pour "<%= params[:search] %>"
     <% else %>
-      Affichage des <strong>50 dernières références</strong> ajoutées. Utilisez la barre ci-dessus pour chercher une référence spécifique.
+      Affichage des références <strong><%= @references.offset_value + 1 %> à <%= @references.offset_value + @references.length %></strong> sur un total de <strong><%= @references.total_count %></strong>.
     <% end %>
   </p>
-
   <div class="users-dash-table-container">
     <table class="users-dash-table">
       <thead>
@@ -147,33 +182,34 @@
                           class="form-control" 
                           data-controller="verb-assign" 
                           data-reference-id="<%= reference.id %>">
-                    
                     <% @grouped_verbs.each do |notion, verbs| %>
                       <optgroup label="<%= notion.name %>">
                         <% verbs.each do |verb| %>
                           <option value="<%= verb.id %>" <%= 'selected' if reference.verb_ids.include?(verb.id) %>>
                             <%= verb.name %>
                           </option>
-                        <% end %>
-                      </optgroup>
-                    <% end %>
-
-                  </select>
-                <% end %>
-              </td>
-              <td style="text-align: center;">
-                <span id="status-<%= reference.id %>" class="badge badge-gray">-</span>
+                          <% end %>
+                        </optgroup>
+                      <% end %>
+                    </select>
+                  <% end %>
+                </td>
+                <td style="text-align: center;">
+                  <span id="status-<%= reference.id %>" class="badge badge-gray">-</span>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="3" style="text-align: center; padding: 40px; color: #888;">
+                Aucune référence trouvée pour cette recherche.
               </td>
             </tr>
           <% end %>
-        <% else %>
-          <tr>
-            <td colspan="3" style="text-align: center; padding: 40px; color: #888;">
-              Aucune référence trouvée pour cette recherche.
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination-wrapper">
+      <%= paginate @references %>
+    </div>
   </div>
-</div>

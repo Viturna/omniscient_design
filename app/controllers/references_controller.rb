@@ -171,52 +171,39 @@ class ReferencesController < ApplicationController
   end
 
 
+
 # PATCH/PUT /references/:slug/reject
   def reject
-    rejection_reason = params[:rejection_reason].presence || I18n.t('reference.reject.no_comment', default: 'Aucun motif renseigné.')
+    rejection_reason = params[:rejection_reason].presence || I18n.t('reference.reject.no_comment')
+    @reference = Reference.friendly.find_by(slug: params[:slug])
 
     unless @reference
       redirect_to validation_path, alert: I18n.t('references.not_found') and return
     end
 
-    begin
-      ActiveRecord::Base.transaction do
-        # 1. Clean up Lists
-        ListItem.where(listable: @reference).delete_all if defined?(ListItem)
-        
-        # 2. Clean up standard many-to-many associations
-        @reference.domaines.clear
-        @reference.designers.clear
-        @reference.studios.clear
+    ActiveRecord::Base.transaction do
+      # 1. Création de l'historique de rejet
+      RejectedReference.create!(
+        nom_reference: @reference.nom_reference,
+        user: @reference.user,
+        reason: rejection_reason
+      )
+      
+      # 2. Nettoyage des jointures avec la même logique sécurisée que pour les designers
+      @reference.references_domaines.delete_all if @reference.respond_to?(:references_domaines)
+      @reference.designers_references.delete_all if @reference.respond_to?(:designers_references)
+      @reference.reference_studios.delete_all if @reference.respond_to?(:reference_studios)
+      @reference.references_verbs.delete_all if @reference.respond_to?(:references_verbs)
+      @reference.list_items.delete_all if @reference.respond_to?(:list_items)
 
-        # 3. Handle complex through associations manually
-        # Delete the join table records directly instead of using .clear on the association
-        ActiveRecord::Base.connection.execute(
-          ActiveRecord::Base.sanitize_sql_array(
-            ["DELETE FROM references_verbs WHERE reference_id = ?", @reference.id]
-          )
-        )
+      # 3. Mise à jour du statut avant destruction
+      @reference.update!(rejection_reason: rejection_reason, validation: false)
 
-        # 4. Save the rejection history
-        RejectedReference.create!(
-          nom_reference: @reference.nom_reference,
-          user: @reference.user,
-          reason: rejection_reason
-        )
-
-        # 5. Destroy the reference safely
-        @reference.destroy!
-      end
-
-      # 6. Update stats and notifications
-      create_rejection_notification(@reference) rescue nil
-      update_suivi_references_refusees(@reference.user) rescue nil
-
-      redirect_to validation_path, notice: "La référence a bien été refusée et supprimée."
-    
+      # 4. Délégation à handle_destroy
+      handle_destroy(@reference, I18n.t('references.reject.success', default: 'Référence refusée avec succès.'))
     rescue => e
-      Rails.logger.error("Erreur critique lors du rejet : #{e.message}\n#{e.backtrace.join("\n")}")
-      redirect_to validation_path, alert: "Erreur technique : #{e.message}"
+      Rails.logger.error("Erreur rejet référence : #{e.message}")
+      redirect_to validation_path, alert: I18n.t('references.reject.failure', default: 'Erreur lors du refus de la référence.')
     end
   end
 

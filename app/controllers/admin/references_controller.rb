@@ -11,12 +11,12 @@ class Admin::ReferencesController < ApplicationController
     
     # 2. Si une recherche est effectuée, on filtre par nom
     if params[:search].present?
-      # LOWER permet de rendre la recherche insensible aux majuscules/minuscules
       @references = @references.where("LOWER(nom_reference) LIKE ?", "%#{params[:search].downcase}%")
     end
     
-    # 3. On limite à 50 résultats maximum pour la performance
-    @references = @references.limit(50)
+    # 3. PAGINATION (remplace le .limit(50))
+    # On affiche 50 références par page
+    @references = @references.page(params[:page]).per(50)
   
     @grouped_verbs = Verb.includes(:notion).group_by(&:notion)
   end

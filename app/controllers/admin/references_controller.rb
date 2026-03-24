@@ -21,10 +21,15 @@ class Admin::ReferencesController < ApplicationController
     @grouped_verbs = Verb.includes(:notion).group_by(&:notion)
   end
 
-  def update_verbs
+ def update_verbs
     @reference = Reference.friendly.find(params[:id])
     
-    verb_ids = params.require(:reference).permit(verb_ids: [])[:verb_ids].reject(&:blank?)
+    # 1. On récupère les IDs s'ils existent, sinon on retourne un tableau vide
+    # Cela évite le crash "ParameterMissing" quand on désélectionne tout
+    raw_verb_ids = params.dig(:reference, :verb_ids) || []
+    
+    # 2. On nettoie les éventuelles chaînes vides générées par le formulaire
+    verb_ids = raw_verb_ids.reject(&:blank?)
     
     if @reference.update(verb_ids: verb_ids)
       render json: { success: true }

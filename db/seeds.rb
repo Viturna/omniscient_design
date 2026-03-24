@@ -155,6 +155,7 @@ definitions = {
     "Transposition" => ["Transfert", "Métaphore spatiale", "Décalage"]
   },
   "Stratégie & Procédés" => {
+    "Biomométisme" => ["Bio-inspiration", "Bionique", "Conception bio-assistée"],
     "Collaboration" => ["Co-création", "Partage", "Intelligence collective"],
     "Conception" => ["Idéation", "Design thinking", "Esquisse"],
     "Construction" => ["Bâtiment", "Édification", "Fabrication"],

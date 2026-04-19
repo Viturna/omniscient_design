@@ -9,13 +9,9 @@ class DailyReferenceService
     return @daily_ref if (@daily_ref = DailyReference.for_today)
 
     # Sélectionner une référence validée
-    # On évite celles déjà choisies les 30 derniers jours pour varier
-    last_ids = DailyReference.where(date: 30.days.ago..Date.yesterday).pluck(:reference_id)
-    
-    potential_references = Reference.where(validation: true)
-    potential_references = potential_references.where.not(id: last_ids) if potential_references.where.not(id: last_ids).any?
-    
-    reference = potential_references.order("RANDOM()").first
+    # On évite celles déjà choisies
+    sent_reference_ids = DailyReference.pluck(:reference_id)
+    reference = Reference.where(validation: true).where.not(id: sent_reference_ids).order("RANDOM()").first
     return nil unless reference
 
     @daily_ref = DailyReference.create!(reference: reference, date: Date.today)

@@ -1,12 +1,19 @@
 class DailyReferenceService
   def self.call
     service = new
-    service.pick_for_today
+    reference = service.pick_for_today
+    
+    if reference.nil?
+      # On utilise deliver_now pour être sûr que l'alerte parte avant la fin de la tâche
+      DailyReferenceMailer.admin_stock_alert("contact@omniscientdesign.fr").deliver_now
+      return nil
+    end
+
     service.send_notifications
   end
 
   def pick_for_today
-    return @daily_ref if (@daily_ref = DailyReference.for_today)
+    return @daily_ref.reference if (@daily_ref = DailyReference.for_today)
 
     # Sélectionner une référence validée
     # On évite celles déjà choisies
@@ -15,6 +22,7 @@ class DailyReferenceService
     return nil unless reference
 
     @daily_ref = DailyReference.create!(reference: reference, date: Date.today)
+    reference
   end
 
   def send_notifications
@@ -22,9 +30,9 @@ class DailyReferenceService
     reference = @daily_ref.reference
     title = "La réf du jour"
     message = "Aujourd'hui découvre \"#{reference.nom_reference}\" par #{reference.designers.map(&:nom_designer).join(', ')}"
-    link = "/fr/references/#{reference.slug}" # On pourrait utiliser les helpers mais Rails.application.routes.url_helpers est plus sûr ici
+    link = "/fr/references/#{reference.slug}"
 
-    # Notifications Push via le modèle Notification existant
+    # Notifications Push
     User.where(daily_reference_push: true).find_each do |user|
       Notification.create!(
         user: user,

@@ -548,6 +548,8 @@ fr:
     current_password: "Mot de passe actuel"
     current_password_hint: "entrer votre mot de passe pour modifier votre profil"
     update_button: "Mettre à jour"
+    daily_reference_push: "La réf du jour (Notification)"
+    daily_reference_email: "La réf du jour (Mail)"
     delete_account: "Supprimer votre compte"
     confirm_delete: "Êtes-vous sûr ?"
   contributions:

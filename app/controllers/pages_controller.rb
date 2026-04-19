@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul]
+  before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul, :notifications_settings, :update_notifications_settings]
   before_action :check_certified, only: [:validation]
   before_action :check_admin_role, only: [:parrainage, :parrainage_filleul]
   def presentation
@@ -18,6 +18,20 @@ class PagesController < ApplicationController
   def profil
     @current_page = 'profil'
     @user = current_user
+  end
+
+  def notifications_settings
+    @current_page = 'profil'
+    @user = current_user
+  end
+
+  def update_notifications_settings
+    @user = current_user
+    if @user.update(notification_params)
+      redirect_to notifications_settings_path, notice: t('user.profile.updated')
+    else
+      render :notifications_settings, status: :unprocessable_entity
+    end
   end
   def validation
     @current_page = 'profil'
@@ -91,12 +105,17 @@ class PagesController < ApplicationController
   end
 
   def secret_badge
-  if user_signed_in?
-    GamificationService.new(current_user).check_detail_finder
-    redirect_to profil_path, notice: "Bravo ! Vous avez l'œil ! Badge débloqué."
-  else
-    redirect_to new_user_session_path, alert: "Connectez-vous pour débloquer ce secret."
+    if user_signed_in?
+      GamificationService.new(current_user).check_detail_finder
+      redirect_to profil_path, notice: "Bravo ! Vous avez l'œil ! Badge débloqué."
+    else
+      redirect_to new_user_session_path, alert: "Connectez-vous pour débloquer ce secret."
+    end
   end
-end
 
+  private
+
+  def notification_params
+    params.require(:user).permit(:daily_reference_push, :daily_reference_email)
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_171942) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_224300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -85,6 +85,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_171942) do
     t.integer "country_numeric"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "daily_references", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.bigint "reference_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_daily_references_on_date", unique: true
+    t.index ["reference_id"], name: "index_daily_references_on_reference_id"
   end
 
   create_table "daily_visits", force: :cascade do |t|
@@ -529,6 +538,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_171942) do
     t.datetime "confirmed_at"
     t.bigint "country_id"
     t.datetime "created_at", null: false
+    t.boolean "daily_reference_email", default: false
+    t.boolean "daily_reference_push", default: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "etablissement"
@@ -568,6 +579,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_171942) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bug_reports", "users"
+  add_foreign_key "daily_references", "references"
   add_foreign_key "daily_visits", "users"
   add_foreign_key "designer_countries", "countries"
   add_foreign_key "designer_countries", "designers"

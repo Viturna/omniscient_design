@@ -3,7 +3,7 @@
   
   if notification.link.present?
     target_path = notification.link
-  elsif notification.notifiable.present?
+  elsif notification.notifiable_type&.safe_constantize && notification.notifiable.present?
     target_path = polymorphic_path(notification.notifiable) rescue "#"
   end
 %>

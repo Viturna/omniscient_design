@@ -112,7 +112,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     devise_parameter_sanitizer.permit(:account_update, keys: [
       :firstname, :lastname, :pseudo, :statut, :etablissement_id, 
       :how_did_you_hear, :study_level, :newsletter, 
-      :country_id, :profile_image
+      :country_id, :profile_image, :daily_reference_push, :daily_reference_email
     ])
   end
 

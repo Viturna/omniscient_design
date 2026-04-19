@@ -210,6 +210,8 @@ en:
     current_password: "Current password"
     current_password_hint: "enter your password to update your profile"
     update_button: "Update"
+    daily_reference_push: "Daily Discovery (Notification)"
+    daily_reference_email: "Daily Discovery (Email)"
     delete_account: "Delete your account"
     confirm_delete: "Are you sure?"
   contributions:

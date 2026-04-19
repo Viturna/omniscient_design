@@ -1,5 +1,5 @@
 # test/mailers/previews/devise_mailer_preview.rb
-class DeviseMailerPreview < ActionMailer::Preview
+class UserMailerPreview < ActionMailer::Preview
   # ➤ URL : http://localhost:3000/rails/mailers/devise_mailer/reset_password_instructions
   def reset_password_instructions
     user = User.new(

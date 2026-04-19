@@ -1,0 +1,198 @@
+<section class="top-default-page">
+  <%= link_to profil_path do %>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+    </svg>
+  <% end %>
+  <h1>Paramètres des notifications</h1>
+</section>
+
+<section class="grid-1 profil">
+  <p class="desc-profil" style="margin-bottom: 40px;">Choisissez comment vous souhaitez être informé des nouvelles découvertes sur Omniscient Design.</p>
+
+  <%= form_for(@user, url: notifications_settings_path, html: { method: :patch, data: { turbo: false } }) do |f| %>
+    <div class="notification-cards-container">
+      
+      <label class="notification-card" for="user_daily_reference_push">
+        <%= f.check_box :daily_reference_push, class: "hidden-checkbox" %>
+        <div class="notif-setting-content">
+          <div class="icon-circle">
+            <svg width="28" height="28" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23.3265 10.6025C22.5752 10.1662 22.1108 9.35417 22.1132 8.47917V8.47567C22.1132 7.10833 21.0177 6 19.6667 6C18.3157 6 17.2202 7.10833 17.2202 8.47567V8.47917C17.2225 9.35533 16.7582 10.1662 16.0068 10.6025C10.5608 13.7665 13.6898 24.27 8 26.1262V28.1667H31.3333V26.1262C25.6435 24.27 28.7725 13.7665 23.3265 10.6025ZM19.6667 7.16667C20.3107 7.16667 20.8333 7.6905 20.8333 8.33333C20.8333 8.97733 20.3107 9.5 19.6667 9.5C19.0227 9.5 18.5 8.97733 18.5 8.33333C18.5 7.6905 19.0227 7.16667 19.6667 7.16667ZM23.1667 30.5C23.1667 32.3643 21.5427 34 19.7005 34C17.8583 34 16.1667 32.3643 16.1667 30.5H23.1667Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="text-content">
+            <span class="notif-setting-title"><%= t('edit_profile.daily_reference_push') %></span>
+            <p class="notif-setting-desc">Notification push sur votre appareil chaque matin.</p>
+          </div>
+          <div class="custom-toggle"></div>
+        </div>
+      </label>
+
+      <label class="notification-card" for="user_daily_reference_email">
+        <%= f.check_box :daily_reference_email, class: "hidden-checkbox" %>
+        <div class="notif-setting-content">
+          <div class="icon-circle">
+            <svg width="28" height="28" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21.0043 18.2827C21.0043 19.2067 20.6917 20.4165 20.2063 21.365C19.0292 23.675 16.6328 23.6598 16.6328 21.2017C16.6328 20.2847 16.9478 19.1028 17.4343 18.1917C18.6255 15.9458 21.0043 16.297 21.0043 18.2827ZM33 20C33 27.7315 26.7315 34 19 34C11.2685 34 5 27.7315 5 20C5 12.2685 11.2685 6 19 6C26.7315 6 33 12.2685 33 20ZM27.1667 18.607C27.1667 14.82 24.0972 12.0725 19.868 12.0725C14.0732 12.0725 10.8333 15.7463 10.8333 20.3243C10.8333 24.6083 13.7115 27.9275 19.028 27.9275C21.968 27.9275 23.8393 27.0805 25.0037 26.4248L24.2022 25.2687C23.0098 25.9605 21.576 26.594 19.2368 26.594C15.2363 26.594 12.5483 24.0285 12.5483 20.2088C12.5483 13.5425 20.0162 12.3245 23.298 14.2927C26.3593 16.2083 26.2427 20.8003 23.977 22.5562C22.7707 23.5198 21.4115 23.4883 21.8525 21.6742C21.8525 21.6742 23.2665 16.437 23.4322 15.87H21.8408L21.5247 16.9807C21.2003 16.0648 20.4245 15.4698 19.2952 15.4698C16.9408 15.4698 14.9528 18.0248 14.9528 21.05C14.9528 23.0683 16.018 24.3213 17.7295 24.3213C19.2263 24.3213 20.0045 23.4743 20.4875 22.7195C20.1375 26.1005 27.1667 24.536 27.1667 18.607Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="text-content">
+            <span class="notif-setting-title"><%= t('edit_profile.daily_reference_email') %></span>
+            <p class="notif-setting-desc">Email détaillé envoyé directement dans votre boîte mail.</p>
+          </div>
+          <div class="custom-toggle"></div>
+        </div>
+      </label>
+
+    </div>
+
+    <div class="actions" style="margin-top: 40px; display: flex; justify-content: center;">
+      <%= f.submit t('edit_profile.update_button'), class: "button large maj dark", style: "min-width: 250px;" %>
+    </div>
+  <% end %>
+</section>
+
+<style>
+  .notification-cards-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .notification-card {
+    flex: 1;
+    min-width: 300px;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    position: relative;
+  }
+
+  .notification-card:hover {
+    border-color: #202020;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  }
+
+  .notif-setting-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+  }
+
+  .icon-circle {
+    width: 48px;
+    height: 48px;
+    background: #F8F8F8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #202020;
+    transition: all 0.3s ease;
+  }
+
+  .text-content {
+    flex: 1;
+  }
+
+  .notif-setting-title {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #202020;
+    margin-bottom: 8px;
+  }
+
+  .notif-setting-desc {
+    font-size: 14px;
+    color: #52525D;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .hidden-checkbox {
+    display: none;
+  }
+
+  /* Custom Toggle Styling */
+  .custom-toggle {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 24px;
+    background: #E5E5E5;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .custom-toggle::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .hidden-checkbox:checked + .notif-setting-content .custom-toggle {
+    background: #202020;
+  }
+
+  .hidden-checkbox:checked + .notif-setting-content .custom-toggle::after {
+    left: 22px;
+  }
+
+  .hidden-checkbox:checked + .notif-setting-content .icon-circle {
+    background: #202020;
+    color: white;
+  }
+
+  /* Dark Mode support */
+  body.dark-mode .notification-card {
+    background: #1A1A1A;
+    border-color: #333;
+  }
+  
+  body.dark-mode .notif-setting-title {
+    color: #fff;
+  }
+  
+  body.dark-mode .icon-circle {
+    background: #252525;
+    color: #fff;
+  }
+
+  body.dark-mode .notification-card:hover {
+    border-color: #fff;
+  }
+
+  body.dark-mode .hidden-checkbox:checked + .notif-setting-content .icon-circle {
+    background: #fff;
+    color: #202020;
+  }
+
+  body.dark-mode .hidden-checkbox:checked + .notif-setting-content .custom-toggle {
+    background: #fff;
+  }
+
+  body.dark-mode .hidden-checkbox:checked + .notif-setting-content .custom-toggle::after {
+    background: #202020;
+  }
+
+  @media (max-width: 768px) {
+    .notification-cards-container {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -46,7 +46,7 @@ class DailyReferenceService
 
     # Notifications Email
     User.where(daily_reference_email: true).find_each do |user|
-      DailyReferenceMailer.daily_discovery(user, reference).deliver_later
+      DailyReferenceMailer.daily_discovery(user, reference).deliver_now
     end
   end
 end

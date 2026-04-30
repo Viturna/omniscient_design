@@ -48,10 +48,27 @@ class PushNotificationService
                 notifiable_id: @notification.notifiable_id.to_s,
                 notifiable_type: @notification.notifiable_type.to_s,
                 notification_id: @notification.id.to_s,
-                link: full_url(@notification.link)
+                link: full_url(@notification.link),
+                url: full_url(@notification.link)
               },
-              apns: { payload: { aps: { sound: "default", badge: unread_count } } },
-              android: { notification: { sound: "default", default_sound: true } },
+              apns: { 
+                payload: { 
+                  aps: { 
+                    sound: "default", 
+                    badge: unread_count,
+                    "mutable-content": 1
+                  },
+                  link: full_url(@notification.link),
+                  url: full_url(@notification.link)
+                } 
+              },
+              android: { 
+                notification: { 
+                  sound: "default", 
+                  default_sound: true,
+                  click_action: full_url(@notification.link)
+                } 
+              },
               webpush: { fcm_options: { link: full_url(@notification.link) } }
             }
           }

@@ -49,17 +49,26 @@ class PushNotificationService
                 notifiable_type: @notification.notifiable_type.to_s,
                 notification_id: @notification.id.to_s,
                 link: full_url(@notification.link),
-                url: full_url(@notification.link)
+                url: full_url(@notification.link),
+                click_action: full_url(@notification.link),
+                path: @notification.link.to_s,
+                target_url: full_url(@notification.link)
               },
               apns: { 
                 payload: { 
                   aps: { 
                     sound: "default", 
                     badge: unread_count,
-                    "mutable-content": 1
+                    "mutable-content": 1,
+                    link: full_url(@notification.link),
+                    url: full_url(@notification.link),
+                    path: @notification.link.to_s,
+                    target_url: full_url(@notification.link)
                   },
                   link: full_url(@notification.link),
-                  url: full_url(@notification.link)
+                  url: full_url(@notification.link),
+                  path: @notification.link.to_s,
+                  target_url: full_url(@notification.link)
                 } 
               },
               android: { 

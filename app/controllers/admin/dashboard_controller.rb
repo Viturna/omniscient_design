@@ -12,6 +12,11 @@ class Admin::DashboardController < ApplicationController
     @avg_visits_12m = calculate_avg_visits(12.months.ago)
     @nb_etablissements_actifs = User.joins(:etablissement).distinct.count('etablissements.id')
     @notifications = Notification.where(user: current_user).order(created_at: :desc).limit(5)
+    
+    # --- La Réf du Jour Stats ---
+    @users_daily_push = User.where(daily_reference_push: true).count
+    @users_daily_email = User.where(daily_reference_email: true).count
+    @total_daily_notif_users = User.where("daily_reference_push = ? OR daily_reference_email = ?", true, true).count
 
     # --- Graphique : Nouvelles Inscriptions (User) ---
     @period = params[:period] || '30d'

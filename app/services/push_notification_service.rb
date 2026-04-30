@@ -37,9 +37,9 @@ class PushNotificationService
 
       tokens.each do |device_token|
         begin
-          # Construction du payload (identique à votre code)
+          # Construction du payload
           title_content = @notification.title.presence || "Omniscient Design"
-                        unread_count = @user.notifications.unread.count
+          unread_count = @user.notifications.unread.count
           body = {
             message: {
               token: device_token,
@@ -47,10 +47,12 @@ class PushNotificationService
               data: {
                 notifiable_id: @notification.notifiable_id.to_s,
                 notifiable_type: @notification.notifiable_type.to_s,
-                notification_id: @notification.id.to_s
+                notification_id: @notification.id.to_s,
+                link: full_url(@notification.link)
               },
               apns: { payload: { aps: { sound: "default", badge: unread_count } } },
-              android: { notification: { sound: "default", default_sound: true } }
+              android: { notification: { sound: "default", default_sound: true } },
+              webpush: { fcm_options: { link: full_url(@notification.link) } }
             }
           }
 
@@ -70,8 +72,6 @@ class PushNotificationService
           end
 
         rescue => e
-          # C'EST ICI LE SECRET DE LA DURABILITÉ :
-          # Si un envoi plante, on loggue l'erreur et on passe au token suivant !
           Rails.logger.error "🔴 [PushService] Crash sur token #{device_token.first(10)} : #{e.message}"
         end
       end
@@ -81,8 +81,6 @@ class PushNotificationService
   private
 
   def get_access_token
-    # (Garder votre méthode existante, elle est correcte)
-    # ...
     authorizer = nil
     if ENV["FIREBASE_CREDENTIALS_JSON"].present?
       authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
@@ -101,5 +99,12 @@ class PushNotificationService
   rescue => e
     Rails.logger.error "🔴 [PushService] Auth Exception : #{e.message}"
     nil
+  end
+
+  def full_url(link)
+    return link if link.blank? || link.start_with?('http')
+    
+    base_url = "https://omniscientdesign.fr"
+    "#{base_url}#{link.start_with?('/') ? '' : '/'}#{link}"
   end
 end

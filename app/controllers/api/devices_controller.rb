@@ -28,6 +28,9 @@ class Api::DevicesController < ApplicationController
     if device.save
       Rails.logger.info "✅ [Device Sync] Token synchronisé pour #{current_user.email}"
       head :ok
+    elsif device.errors.added?(:token, :taken)
+      # Si le token est déjà là, c'est parfait (évite les erreurs en cas de requêtes simultanées)
+      head :ok
     else
       Rails.logger.error "❌ [API Device] Erreur : #{device.errors.full_messages}"
       head :unprocessable_entity

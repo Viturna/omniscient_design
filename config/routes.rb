@@ -162,6 +162,8 @@ Rails.application.routes.draw do
     get 'presentation', to: 'pages#presentation', as: 'presentation'
     get 'add_elements', to: 'pages#add_elements', as: 'add_elements'
     get 'profil', to: 'pages#profil', as: 'profil'
+    get 'training', to: 'pages#training', as: 'training'
+    get 'ressources', to: 'pages#ressources', as: 'ressources'
     get 'settings/notifications', to: 'pages#notifications_settings', as: 'notifications_settings'
     patch 'settings/notifications', to: 'pages#update_notifications_settings'
     get 'validation', to: 'pages#validation', as: 'validation'

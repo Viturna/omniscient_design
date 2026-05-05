@@ -20,6 +20,14 @@ class PagesController < ApplicationController
     @user = current_user
   end
 
+  def training
+    @current_page = 'training'
+  end
+
+  def ressources
+    @current_page = 'training'
+  end
+
   def notifications_settings
     @current_page = 'profil'
     @user = current_user

@@ -1,0 +1,60 @@
+<% content_for :title, "Entraîne-toi ! - Omniscient Design" %>
+<% content_for :description, "Challenge tes connaissances de manière ludique ou consulte les différentes ressources officielles à ta disposition." %>
+<style>
+  .add-flex {
+    margin-top: 100px;
+    display: flex;
+    gap: 2vw;
+    min-height: 300px;
+    flex-wrap: wrap;
+  }
+  @media screen and (min-width:1025px) and (max-width:1280px){
+    .add-flex {
+      margin-top: 48px;
+      flex-direction:column;
+      gap:40px;
+    }
+  }
+  @media screen and (max-width:1024px){
+    .add-flex {
+      margin-top: 48px;
+      flex-direction:column;
+      gap:24px;
+    }
+  }
+  .add-elements{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100dvh;
+    height: 100%;
+    background-color: #202020;
+    h1{
+      color: #FFF;
+    }
+  }
+  @media screen and (max-width:450px){
+    .add-elements {
+      padding-top: calc(var(--safe-area-top-android, env(safe-area-inset-top, 0px)) + 32px);
+    }
+  }
+</style>
+<section class="grid-1 add-elements">
+  <p class="subtitle-top">Entraîne-toi !</p>
+  <h1 class="title-add-elements">Développe ta culture design</h1>
+  <p class="subtitle">
+    Challenge tes connaissances de manière ludique et interactive, ou explore les ressources essentielles mises à ta disposition pour approfondir ton expertise.
+  </p>
+  <div class="add-flex">
+    <%= link_to "#", style: "cursor: not-allowed; opacity: 0.6;" do %>
+      <div class="button-add">
+        Jeux (Bientôt)
+      </div>
+    <%end%>
+    <%= link_to ressources_path do %>
+      <div class="button-add">
+        Ressources
+      </div>
+    <%end%>
+  </div>
+</section>

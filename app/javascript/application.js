@@ -75,6 +75,8 @@ function initLenis() {
         }
         requestAnimationFrame(raf)
     }
+
+    lenis.scrollTo(0, { immediate: true });
 }
 
 document.addEventListener("turbo:load", initLenis)

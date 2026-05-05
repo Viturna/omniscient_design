@@ -75,9 +75,6 @@ class PushNotificationService
                 notification: { 
                   sound: "default", 
                   default_sound: true
-                },
-                fcm_options: {
-                  link: full_url(@notification.link)
                 }
               },
               webpush: { fcm_options: { link: full_url(@notification.link) } }

@@ -74,8 +74,7 @@ class PushNotificationService
               android: { 
                 notification: { 
                   sound: "default", 
-                  default_sound: true,
-                  click_action: full_url(@notification.link)
+                  default_sound: true
                 } 
               },
               webpush: { fcm_options: { link: full_url(@notification.link) } }

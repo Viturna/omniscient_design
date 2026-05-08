@@ -7,6 +7,9 @@ import { application } from "./application"
 import AdminNotificationController from "./admin_notification_controller"
 application.register("admin-notification", AdminNotificationController)
 
+import AdminSearchController from "./admin_search_controller"
+application.register("admin-search", AdminSearchController)
+
 import AlertController from "./alert_controller"
 application.register("alert", AlertController)
 
@@ -49,8 +52,11 @@ application.register("multi-select", MultiSelectController)
 import MultiStepFormController from "./multi_step_form_controller"
 application.register("multi-step-form", MultiStepFormController)
 
-import ReferencesCounterController from "./references_counter_controller"
-application.register("references-counter", ReferencesCounterController)
+import NotionAssignController from "./notion_assign_controller"
+application.register("notion-assign", NotionAssignController)
+
+import NotionPickerController from "./notion_picker_controller"
+application.register("notion-picker", NotionPickerController)
 
 import PopupController from "./popup_controller"
 application.register("popup", PopupController)
@@ -63,6 +69,9 @@ application.register("recaptcha", RecaptchaController)
 
 import ReferenceScrollController from "./reference_scroll_controller"
 application.register("reference-scroll", ReferenceScrollController)
+
+import ReferencesCounterController from "./references_counter_controller"
+application.register("references-counter", ReferencesCounterController)
 
 import RegistrationController from "./registration_controller"
 application.register("registration", RegistrationController)
@@ -108,10 +117,6 @@ application.register("timeline", TimelineController)
 
 import ToggleSingleFieldController from "./toggle_single_field_controller"
 application.register("toggle-single-field", ToggleSingleFieldController)
-
-import VerbAssignController from "./verb_assign_controller"
-application.register("verb-assign", VerbAssignController)
-
 
 import ValidationOverlayController from "./validation_overlay_controller"
 application.register("validation-overlay", ValidationOverlayController)

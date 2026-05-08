@@ -80,6 +80,7 @@ fr:
     start_year: "Année de début"
     end_year: "Année de fin"
     apply: "Appliquer"
+    apply_filter: "Filtrer"
     sort_by: "Trier par"
     name_asc: "Nom A → Z"
     name_desc: "Nom Z → A"

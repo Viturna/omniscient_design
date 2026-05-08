@@ -21,10 +21,8 @@ Rails.application.routes.draw do
     resources :etablissements, only: [:index, :edit, :update, :destroy]
     resources :user_badges, only: [:new, :create]
 
-    get 'references/verbs', to: 'references#edit_verbs', as: :references_verbs
-    get 'references/verbs', to: 'references#edit_verbs' # Redirection SEO
-    patch 'references/:id/update_verbs', to: 'references#update_verbs', as: :reference_update_verbs
-    patch 'references/:id/update_verbs', to: 'references#update_verbs' # Redirection SEO
+    get 'references/notions', to: 'references#edit_notions', as: :references_notions
+    patch 'references/:id/update_notions', to: 'references#update_notions', as: :reference_update_notions
   end
 
   get 'frise/references', to: 'search#frise_references'

@@ -7,6 +7,8 @@ export default class extends Controller {
         "button",
         "themesView",
         "notionsView",
+        "searchView",
+        "searchResults",
         "themeColumn",
         "selectedThemeTitle"
     ]
@@ -17,6 +19,7 @@ export default class extends Controller {
             if (!this.element.contains(e.target)) {
                 this.contentTarget.classList.remove('active')
                 this.buttonTarget.classList.remove('active')
+                document.body.style.overflow = '';
                 // Optionnel : tu peux décommenter la ligne ci-dessous si tu veux que 
                 // le menu revienne toujours aux thèmes quand on le ferme.
                 // this.backToThemes()
@@ -29,39 +32,104 @@ export default class extends Controller {
         document.removeEventListener('click', this.clickOutsideHandler)
     }
 
+    connect() {
+        this.updateLabel();
+        this.element.querySelectorAll('.mega-menu-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.closest('.mega-menu-item').classList.toggle('is-checked', checkbox.checked);
+        });
+    }
+
     toggle(event) {
         event.preventDefault()
-        this.contentTarget.classList.toggle('active')
+        const isActive = this.contentTarget.classList.toggle('active')
         this.buttonTarget.classList.toggle('active')
+
+        if (isActive) {
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                const searchInput = this.element.querySelector('.mega-menu-search-input');
+                if (searchInput) searchInput.focus();
+            }, 100);
+        } else {
+            document.body.style.overflow = '';
+            this.showThemes();
+        }
+    }
+
+    showThemes() {
+        this.notionsViewTarget.style.display = 'none';
+        if (this.hasSearchViewTarget) this.searchViewTarget.style.display = 'none';
+        this.themesViewTarget.style.display = 'block';
     }
 
     // --- NAVIGATION THEMES <-> NOTIONS ---
 
     selectTheme(event) {
-        // Récupère le nom du thème cliqué
         const themeName = event.currentTarget.dataset.themeName;
-
-        // 1. Cacher la vue des carrés (Thèmes)
         this.themesViewTarget.style.display = 'none';
-
-        // 2. Mettre à jour le titre dans l'en-tête de retour
         this.selectedThemeTitleTarget.innerText = themeName;
 
-        // 3. Afficher UNIQUEMENT les accordéons du thème sélectionné
         this.themeColumnTargets.forEach(column => {
-            if (column.dataset.themeName === themeName) {
-                column.style.display = 'block'; // Affiche la colonne correspondante
-            } else {
-                column.style.display = 'none';
-            }
+            column.style.display = (column.dataset.themeName === themeName) ? 'block' : 'none';
         });
 
         this.notionsViewTarget.style.display = 'block';
     }
 
     backToThemes() {
+        this.showThemes();
+    }
+
+    search(event) {
+        const query = event.target.value.toLowerCase().trim();
+        
+        if (query.length === 0) {
+            this.showThemes();
+            return;
+        }
+
+        // Cacher les autres vues
+        this.themesViewTarget.style.display = 'none';
         this.notionsViewTarget.style.display = 'none';
-        this.themesViewTarget.style.display = 'block';
+        this.searchViewTarget.style.display = 'block';
+
+        // Filtrer les notions
+        const allNotions = this.element.querySelectorAll('.mega-menu-item');
+        let hasMatch = false;
+
+        this.searchResultsTarget.innerHTML = '';
+        
+        const matches = [];
+        allNotions.forEach(item => {
+            const labelText = item.querySelector('span').innerText;
+            const text = labelText.toLowerCase();
+            if (text.includes(query)) {
+                const clone = item.cloneNode(true);
+                const originalCheckbox = item.querySelector('input');
+                const cloneCheckbox = clone.querySelector('input');
+                
+                // Sync state from original to clone
+                cloneCheckbox.checked = originalCheckbox.checked;
+                cloneCheckbox.removeAttribute('name'); // Éviter les doublons à la soumission du form
+
+                // Sync state from clone to original when changed
+                cloneCheckbox.addEventListener('change', (e) => {
+                    originalCheckbox.checked = e.target.checked;
+                    originalCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+                    this.updateLabel();
+                });
+
+                matches.push(clone);
+                hasMatch = true;
+            }
+        });
+
+        if (hasMatch) {
+            matches.forEach(m => this.searchResultsTarget.appendChild(m));
+        } else {
+            this.searchResultsTarget.innerHTML = '<p class="no-results">Aucune notion trouvée.</p>';
+        }
     }
 
     // --- ACCORDÉONS ---
@@ -81,16 +149,22 @@ export default class extends Controller {
         }
     }
 
-    updateLabel() {
-        const checkboxes = this.element.querySelectorAll('input[type="checkbox"]:checked')
-        const count = checkboxes.length
+    updateLabel(event) {
+        if (event && event.target && event.target.type === 'checkbox') {
+            event.target.closest('.mega-menu-item').classList.toggle('is-checked', event.target.checked);
+        }
 
-        if (count > 0) {
-            this.labelTarget.innerText = `${count} Notion(s)`
-            this.buttonTarget.classList.add('has-selection')
-        } else {
-            this.labelTarget.innerText = "Notions"
-            this.buttonTarget.classList.remove('has-selection')
+        const checkboxes = this.element.querySelectorAll('.mega-menu-grid input[type="checkbox"]:checked');
+        const count = checkboxes.length;
+
+        if (this.hasLabelTarget) {
+            if (count > 0) {
+                this.labelTarget.innerText = `${count} notion${count > 1 ? 's' : ''}`;
+                this.buttonTarget.classList.add('has-selection');
+            } else {
+                this.labelTarget.innerText = "Choisir des notions";
+                this.buttonTarget.classList.remove('has-selection');
+            }
         }
     }
 }

@@ -29,8 +29,7 @@ class Reference < ApplicationRecord
   has_many :reference_studios, dependent: :destroy
   has_many :studios, through: :reference_studios
 
-  has_and_belongs_to_many :verbs
-  has_many :notions, -> { distinct }, through: :verbs
+  has_and_belongs_to_many :notions
 
   attr_accessor :rejection_reason
 

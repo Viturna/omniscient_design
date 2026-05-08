@@ -108,13 +108,33 @@
       </div>
       <div class="filter" data-tabs-search-target="notionsFilter" data-controller="mega-menu">
         <label><%= t('search.notions') %></label>
-        <button type="button" class="mega-menu-btn" data-mega-menu-target="button" data-action="click->mega-menu#toggle">
-          <span data-mega-menu-target="label"><%= t('search.choose_notions') %></span>
+        <button type="button" 
+                class="mega-menu-btn <%= 'has-selection' if params[:notions].present? %>" 
+                data-mega-menu-target="button" 
+                data-action="click->mega-menu#toggle">
+          <span data-mega-menu-target="label">
+            <% if params[:notions].present? %>
+              <%= params[:notions].size %> notion<%= 's' if params[:notions].size > 1 %>
+            <% else %>
+              <%= t('search.choose_notions') %>
+            <% end %>
+          </span>
           <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
         <div class="mega-menu-content" data-mega-menu-target="content">
+          <!-- Barre de recherche rapide -->
+          <div class="mega-menu-search-wrapper">
+            <input type="text" 
+                   class="mega-menu-search-input" 
+                   placeholder="Rechercher une notion..." 
+                   data-action="input->mega-menu#search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="search-icon">
+              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
           <div class="mega-menu-themes-view" data-mega-menu-target="themesView">
             <div class="theme-cards-grid">
               <% Notion.unique_themes.each do |theme| %>
@@ -142,32 +162,35 @@
             <div class="mega-menu-grid">
               <% Notion.unique_themes.each do |theme| %>
                 <div class="mega-menu-column" data-mega-menu-target="themeColumn" data-theme-name="<%= theme %>" style="display: none;">
-                  <% Notion.by_theme(theme).ordered.each do |notion| %>
-                    <div class="mega-menu-group">
-                      <div class="mega-menu-subtitle" data-action="click->mega-menu#toggleAccordion">
+                  <div class="mega-menu-items open">
+                    <% Notion.by_theme(theme).ordered.each do |notion| %>
+                      <label class="mega-menu-item">
+                        <input type="checkbox" 
+                               name="notions[]" 
+                               value="<%= notion.id %>" 
+                               <%= "checked" if params[:notions]&.include?(notion.id.to_s) %>
+                               data-action="change->mega-menu#updateLabel">
                         <span><%= notion.name %></span>
-                        <svg class="chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" style="transition: transform 0.2s ease;">
-                          <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </div>
-                      <% has_checked_item = notion.verbs.any? { |v| params[:notions]&.include?(v.id.to_s) } %>
-                      <div class="mega-menu-items <%= 'open' if has_checked_item %>">
-                        <% notion.verbs.each do |verb| %>
-                          <label class="mega-menu-item">
-                            <input type="checkbox" 
-                           name="notions[]" 
-                           value="<%= verb.id %>" 
-                           <%= "checked" if params[:notions]&.include?(verb.id.to_s) %>
-                           data-action="change->tabs-search#update change->mega-menu#updateLabel">
-                            <span><%= verb.name %></span>
-                          </label>
-                        <% end %>
-                      </div>
-                    </div>
-                  <% end %>
+                      </label>
+                    <% end %>
+                  </div>
                 </div>
               <% end %>
             </div>
+          </div>
+          <div class="mega-menu-search-view" data-mega-menu-target="searchView" style="display: none;">
+            <div class="mega-menu-header">
+              <h4 class="mega-menu-selected-theme-title">Résultats de recherche</h4>
+            </div>
+            <div class="mega-menu-search-results" data-mega-menu-target="searchResults">
+              <!-- Les notions filtrées apparaîtront ici -->
+            </div>
+          </div>
+
+          <div class="mega-menu-footer">
+            <button type="button" class="btn-confirm-filter" data-action="click->tabs-search#update">
+              <%= t('search.apply_filter') %>
+            </button>
           </div>
         </div>
       </div>

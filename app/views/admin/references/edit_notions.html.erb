@@ -1,0 +1,523 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --primary-color: #202020;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-color: #e9ecef;
+    --text-main: #212529;
+    --text-muted: #6c757d;
+    --success-bg: #e7f5ec;
+    --success-text: #0d6832;
+    --warning-bg: #fff4e6;
+    --warning-text: #d9480f;
+    --error-bg: #fff5f5;
+    --error-text: #c92a2a;
+    --accent-color: #339af0;
+  }
+
+  body {
+    overflow-y: auto !important; /* Force le scroll si bloqué par erreur */
+  }
+
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1400px;
+    margin: 0 auto;
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    box-sizing: border-box;
+  }
+
+  .users-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 24px;
+  }
+
+  .users-dash-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--primary-color);
+    margin: 0;
+  }
+
+  /* --- SEARCH BAR --- */
+  .admin-search-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  
+  .admin-search-form .search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
+
+  .admin-search-form .search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(51, 154, 240, 0.1);
+  }
+
+  .btn-search {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .btn-search:active { transform: scale(0.98); }
+
+  .btn-reset {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text-muted);
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+  }
+
+  .results-count {
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* --- TABLE --- */
+  .users-dash-table-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+    overflow: visible;
+  }
+
+  .users-dash-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .users-dash-table th {
+    background: #fdfdfd;
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .users-dash-table td {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f8f9fa;
+    vertical-align: middle;
+  }
+
+  .ref-name {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 15px;
+  }
+
+  /* --- BADGES --- */
+  .badge {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .badge-gray { background: #f1f3f5; color: #495057; }
+  .badge-orange { background: var(--warning-bg); color: var(--warning-text); }
+  .badge-green { background: var(--success-bg); color: var(--success-text); }
+  .badge-red { background: var(--error-bg); color: var(--error-text); }
+
+  /* --- NOTION PICKER (MEGA MENU STYLE) --- */
+  .notion-picker-wrapper {
+    position: relative;
+  }
+
+  .picker-badge {
+    background: #f1f3f5;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .picker-badge.active {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: #c3e6cb;
+  }
+
+  .picker-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border: 1px solid #eee;
+    z-index: 1000;
+    padding: 16px;
+  }
+
+  .picker-content.active {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .picker-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+
+  .picker-search-wrapper {
+    position: relative;
+    flex: 1;
+  }
+
+  .picker-search-input {
+    width: 100%;
+    padding: 10px 12px 10px 42px !important;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    font-size: 13px;
+    background: #f8f9fa;
+  }
+
+  .picker-search-wrapper .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+  }
+
+  .btn-close-picker {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #adb5bd;
+    cursor: pointer;
+  }
+
+  .picker-view {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .themes-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .theme-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 12px;
+    background: #fdfdfd;
+    border: 1px solid #f8f9fa;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+
+  .theme-btn:hover {
+    background: #f1f3f5;
+    border-color: #dee2e6;
+  }
+
+  .notions-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f8f9fa;
+  }
+
+  .btn-back {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .notions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .picker-notion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .picker-notion-item:hover {
+    background: #f8f9fa;
+  }
+
+  .picker-notion-item input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .search-results-view .picker-notion-item {
+    border-bottom: 1px solid #f8f9fa;
+  }
+
+  .no-results {
+    text-align: center;
+    color: #adb5bd;
+    padding: 20px 0;
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- PAGINATION --- */
+  /* --- SPINNER --- */
+  .spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .pagination-wrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .pagination {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+  }
+
+  .pagination a, .pagination .current {
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .pagination a {
+    background: white;
+    color: var(--text-main);
+    border: 1px solid #eee;
+  }
+
+  .pagination a:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+  }
+
+  .pagination .current {
+    background: var(--primary-color);
+    color: white;
+  }
+</style>
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <h1 class="users-dash-title">Attribution rapide des Notions</h1>
+  </div>
+  <%= form_with url: admin_references_notions_path, method: :get, local: true, class: "admin-search-form", data: { turbo_frame: "notions_table", controller: "admin-search" } do |f| %>
+    <%= f.text_field :search, 
+          value: params[:search], 
+          placeholder: "Référence ou Notion (ex: 'Équilibre', 'Mobilier'...)", 
+          class: "search-input",
+          data: { action: "input->admin-search#search" } %>
+    <%= f.submit "Rechercher", class: "btn-search" %>
+    <% if params[:search].present? %>
+      <%= link_to "Effacer", admin_references_notions_path, class: "btn-reset" %>
+    <% end %>
+  <% end %>
+
+  <%= turbo_frame_tag "notions_table" do %>
+    <p class="results-count">
+    <% if params[:search].present? %>
+      Affichage des résultats <strong><%= @references.offset_value + 1 %> à <%= @references.offset_value + @references.length %></strong> sur <strong><%= @references.total_count %></strong> pour "<%= params[:search] %>"
+    <% else %>
+      Affichage des références <strong><%= @references.offset_value + 1 %> à <%= @references.offset_value + @references.length %></strong> sur un total de <strong><%= @references.total_count %></strong>.
+    <% end %>
+  </p>
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
+      <thead>
+        <tr>
+          <th style="width: 25%;">Références</th>
+          <th style="width: 60%;">Notions associées</th>
+          <th style="width: 15%; text-align: center;">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @references.any? %>
+          <% @references.each do |reference| %>
+            <tr>
+              <td><span class="ref-name"><%= reference.nom_reference %></span></td>
+                <td>
+                  <div class="notion-picker-wrapper" 
+                       data-controller="notion-picker" 
+                       data-notion-picker-reference-id-value="<%= reference.id %>"
+                       data-notion-picker-save-url-value="<%= admin_reference_update_notions_path(reference) %>"
+                       data-selected-ids="<%= reference.notion_ids.to_json %>">
+                    
+                    <button type="button" class="picker-badge" data-notion-picker-target="badge" data-action="click->notion-picker#toggle">
+                      Chargement...
+                    </button>
+
+                    <div class="picker-content" data-notion-picker-target="content">
+                      <div class="picker-header">
+                        <div class="picker-search-wrapper">
+                          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                          <input type="text" 
+                                 class="picker-search-input" 
+                                 placeholder="Chercher une notion..." 
+                                 data-notion-picker-target="searchInput"
+                                 data-action="input->notion-picker#search">
+                        </div>
+                        <button type="button" class="btn-close-picker" data-action="click->notion-picker#close">×</button>
+                      </div>
+
+                      <!-- VUE DES THÈMES -->
+                      <div class="picker-view themes-view" data-notion-picker-target="themesView">
+                        <div class="themes-grid">
+                          <% @grouped_notions.keys.each do |theme| %>
+                            <button type="button" class="theme-btn" data-theme="<%= theme %>" data-action="click->notion-picker#selectTheme">
+                              <%= theme %>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <path d="M9 18l6-6-6-6"></path>
+                              </svg>
+                            </button>
+                          <% end %>
+                        </div>
+                      </div>
+
+                      <!-- VUE DES NOTIONS PAR THÈME -->
+                      <div class="picker-view notions-view" data-notion-picker-target="notionsView" style="display: none;">
+                        <div class="notions-header">
+                          <button type="button" class="btn-back" data-action="click->notion-picker#backToThemes">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                              <path d="M15 18l-6-6 6-6"></path>
+                            </svg>
+                            Retour
+                          </button>
+                          <h4 data-notion-picker-target="selectedThemeTitle"></h4>
+                        </div>
+                        <div class="notions-grid">
+                          <% @grouped_notions.each do |theme, notions| %>
+                            <div class="theme-column" data-notion-picker-target="themeColumn" data-theme-name="<%= theme %>" style="display: none;">
+                              <% notions.each do |notion| %>
+                                <label class="picker-notion-item">
+                                  <input type="checkbox" 
+                                         value="<%= notion.id %>" 
+                                         <%= "checked" if reference.notion_ids.include?(notion.id) %>
+                                         data-action="change->notion-picker#toggleNotion">
+                                  <span><%= notion.name %></span>
+                                </label>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+
+                      <!-- RÉSULTATS DE RECHERCHE -->
+                      <div class="picker-view search-results-view" data-notion-picker-target="searchResults" style="display: none;">
+                        <!-- Injecté par JS -->
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td style="text-align: center;">
+                  <span id="status-<%= reference.id %>" class="badge badge-gray">-</span>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="3" style="text-align: center; padding: 40px; color: #888;">
+                Aucune référence trouvée pour cette recherche.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination-wrapper">
+      <%= paginate @references %>
+    </div>
+  <% end %>
+</div>

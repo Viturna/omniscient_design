@@ -239,16 +239,16 @@
           <h1 class="title-card"><%= reference.nom_reference %></h1>
         </div>
         <h2 class="title-description-reference"><%= t('references.notions') %></h2>
-        <% if reference.verbs.any? %>
+        <% if reference.notions.any? %>
           <div style="display: flex; flex-direction: column; gap: 16px">
-            <% reference.verbs.includes(:notion).group_by(&:notion).sort_by { |n, _| n.name }.each do |notion, verbs| %>
+            <% reference.notions.group_by(&:theme).sort.each do |theme, notions| %>
               <div class="notions-flex">
                 <div class="notion-container" style="background-color: #202020;">
-                  <span style="color: #FFF; font-weight: 500;"> <%= notion.name %></span>
+                  <span style="color: #FFF; font-weight: 500;"> <%= theme %></span>
                 </div>
-                <% verbs.each do |verb| %>
+                <% notions.sort_by(&:name).each do |notion| %>
                   <div class="notion-container">
-                    <%= verb.name %>
+                    <%= notion.name %>
                   </div>
                 <% end %>
               </div>

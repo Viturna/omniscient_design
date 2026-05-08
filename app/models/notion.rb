@@ -1,13 +1,10 @@
 class Notion < ApplicationRecord
   # --- RELATIONS ---
-  # Une notion possède plusieurs verbes (ex: "La matérialité" possède "Texturer", "Solliciter"...)
-  has_many :verbs, dependent: :destroy
-  
-  # On peut accéder aux references via les verbes
-  has_many :references, through: :verbs
+  # Une notion possède plusieurs references via la table notions_references
+  has_and_belongs_to_many :references
 
   # --- VALIDATIONS ---
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: { scope: :theme, case_sensitive: false }
   validates :theme, presence: true
 
   # --- SCOPES (Utilisés dans la vue) ---

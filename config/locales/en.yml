@@ -708,7 +708,7 @@ en:
     annuler: "Cancel"
     creer_liste: "Create a list"
     references: "References"
-    no_notion: "No concept is associated with this reference."
+    no_notion: "No notion is associated with this reference."
     domaine_non_specifie: "Domain not specified"
     access_denied: "You are not authorized to access this reference."
     create:

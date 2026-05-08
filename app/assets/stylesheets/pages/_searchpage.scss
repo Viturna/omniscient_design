@@ -111,6 +111,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 48px 16px;
+  position: relative;
 }
 
 .flex-category,
@@ -543,107 +544,142 @@
   }
 }
 
+.filter {
+  width: 16vw;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* 2. Le Contenu Déroulant (La "Carte Blanche") */
 .mega-menu-content {
   display: none;
   position: absolute;
-  top: 465px;
-  right: 5vw;
+  top:50%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 900px;
-  max-width: 90vw;
+  max-width: 85vw;
   background: #fff;
   border: 1px solid #e9e9e9;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  padding: 40px;
   z-index: 999;
   cursor: default;
+  max-height: 80vh;
+  overflow-y: auto;
 
   &.active {
     display: block;
-    animation: fadeIn 0.2s ease-out;
+    animation: megaMenuFadeIn 0.3s ease-out forwards;
   }
 }
 
-/* La Grille 4 Colonnes */
-.mega-menu-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  align-items: start;
+@keyframes megaMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
-.mega-menu-column {
+.mega-menu-footer {
   display: flex;
-  flex-direction: column;
-  gap: 16px; /* Espace entre les groupes */
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
 }
 
-/* Titre du Thème (ex: CONCEPTION) */
-.mega-menu-title {
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  color: #202020;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #f0f0f0;
-  margin: 0 0 8px 0;
-}
-
-/* Groupe Notion (Contient Titre + Liste) */
-.mega-menu-group {
-  display: flex;
-  flex-direction: column;
-}
-
-/* 3. Titre de la Notion (Header Accordéon) */
-.mega-menu-subtitle {
-  font-size: 14px;
+.btn-confirm-filter {
+  background: #202020;
+  color: #fff;
+  border: none;
+  padding: 12px 36px;
+  border-radius: 8px;
   font-weight: 600;
-  background: #fff;
-  border: 1px solid transparent; /* Pour éviter le saut au hover */
-  padding: 8px 0;
-  color: #333;
+  font-size: 15px;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-  transition: color 0.2s;
-  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.2s;
 
   &:hover {
-    color: #000;
+    background: #444;
+    transform: translateY(-2px);
   }
 
-  /* Rotation de la flèche quand actif */
-  &.active {
-    font-weight: 700;
-    .chevron-icon {
-      transform: rotate(180deg);
-    }
-  }
-
-  .chevron-icon {
-    transition: transform 0.3s ease;
+  &:active {
+    transform: translateY(0);
   }
 }
 
-/* 4. Liste des Verbes (Contenu Accordéon) */
-.mega-menu-items {
-  display: none; /* Caché par défaut pour éviter la liste à rallonge */
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 0 12px 8px;
-  background-color: #fafafa; /* Léger fond gris pour différencier */
-  border-radius: 4px;
-  margin-top: 4px;
+/* Grille des Thèmes (Vue 1) */
+.theme-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
 
-  /* Classe ajoutée par JS pour ouvrir */
-  &.open {
-    display: flex;
-    animation: slideDown 0.2s ease-out forwards;
+/* Grille des Notions (Vue 2) */
+.mega-menu-notions-view .mega-menu-grid {
+  display: block;
+  width: 100%;
+}
+
+.mega-menu-items.open {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.mega-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #EBEBEB;
+  border-radius: 8px;
+  color: #202020;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 100%;
+  min-height: 48px;
+
+  &:hover {
+    background: #e0e0e0;
   }
+
+  &.is-checked {
+    background: #202020;
+    color: #fff;
+  }
+
+  span {
+    line-height: 1.3;
+  }
+}
+
+/* --- RECHERCHE DANS LE MEGA MENU --- */
+.mega-menu-search-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.mega-menu-search-input {
+  width: 100%;
+  height: 48px !important;
+  padding: 0 16px 0 48px !important;
+  border: 2px solid #e9e9e9;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: all 0.2s ease;
 }
 
 /* Un Item (Checkbox + Label) */
@@ -652,16 +688,26 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  font-size: 13px;
-  color: #555;
-  transition: color 0.1s;
+  font-size: 14px;
+  color: #202020;
+  background: #EBEBEB;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
 
   &:hover {
-    color: #000;
+    background: #e0e0e0;
+  }
+
+  /* Style quand la checkbox est cochée */
+  &.is-checked {
+    background: #202020;
+    color: #fff;
   }
 
   input[type="checkbox"] {
-    accent-color: #202020;
+    accent-color: #fff;
     width: 16px;
     height: 16px;
     cursor: pointer;
@@ -712,12 +758,6 @@
 }
 
 // Filter frise
-.filter {
-  width: 16vw;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 .filter .select2 {
   height: 55px !important;
 }
@@ -1123,19 +1163,66 @@ body.dark-mode {
   color: #202020;
 }
 
-.mega-menu-notions-view .mega-menu-column {
-  column-count: 5;
-  column-gap: 32px;
-  width: 100%;
+/* --- RECHERCHE DANS LE MEGA MENU --- */
+.mega-menu-search-wrapper {
+  position: relative;
+  margin-bottom: 24px;
 }
 
-.mega-menu-notions-view .mega-menu-group {
-  break-inside: avoid;
-  margin-bottom: 16px;
+.mega-menu-search-input {
+  width: 100%;
+  padding: 12px 16px 12px 48px !important;
+  border: 2px solid #e9e9e9;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #202020;
+    background-color: #fff;
+  }
+}
+
+.mega-menu-search-wrapper .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.mega-menu-search-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 16px 0;
+
+  .mega-menu-item {
+    background: #fdfdfd;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+    font-style: italic;
+  }
 }
 
 @media screen and (max-width: 768px) {
-  .mega-menu-notions-view .mega-menu-column {
-    column-count: 1;
+  .mega-menu-search-results {
+    grid-template-columns: 1fr;
   }
 }

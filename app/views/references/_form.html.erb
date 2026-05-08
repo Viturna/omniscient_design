@@ -157,21 +157,21 @@
           </div>
         </div>
         <div>
-          <label for="reference_verb_ids">Verbes associés (Classés par Notion)</label>
-          <%= form.grouped_collection_select :verb_ids, 
-                Notion.includes(:verbs).order(:name),
-                :verbs,
-                :name,
+          <label for="reference_notion_ids">Notions associées (Classées par Grand Thème)</label>
+          <%= form.grouped_collection_select :notion_ids, 
+                Notion.all.group_by(&:theme).sort,
+                :last,
+                :first,
                 :id,
                 :name, 
-                { include_blank: false, selected: @reference.verb_ids }, 
+                { include_blank: false, selected: @reference.notion_ids }, 
                 { 
                   class: "form-control", 
                   multiple: true, 
-                  name: "reference[verb_ids][]",
+                  name: "reference[notion_ids][]",
                   data: {
                     controller: "select2",
-                    select2_placeholder_value: "Sélectionnez des verbes..."
+                    select2_placeholder_value: "Sélectionnez des notions..."
                   }
                 } %>
         </div>

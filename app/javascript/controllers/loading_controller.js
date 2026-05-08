@@ -58,6 +58,10 @@ export default class extends Controller {
       setTimeout(() => {
         this.loadingTarget.style.display = "none";
         document.body.classList.remove('overflow-hidden');
+        
+        // S'assurer que le contenu est bien affiché
+        if (this.hasContentTarget) this.contentTarget.style.display = "block";
+        if (this.hasFooterTarget) this.footerTarget.style.display = "block";
       }, 500);
     }
   }

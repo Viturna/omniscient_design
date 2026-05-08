@@ -193,7 +193,7 @@ class ReferencesController < ApplicationController
       @reference.references_domaines.delete_all if @reference.respond_to?(:references_domaines)
       @reference.designers_references.delete_all if @reference.respond_to?(:designers_references)
       @reference.reference_studios.delete_all if @reference.respond_to?(:reference_studios)
-      @reference.references_verbs.delete_all if @reference.respond_to?(:references_verbs)
+      @reference.notions.delete_all if @reference.respond_to?(:notions)
       @reference.list_items.delete_all if @reference.respond_to?(:list_items)
 
       # 3. Mise à jour du statut avant destruction
@@ -401,7 +401,7 @@ def save_modal
       :impact_et_message,
       :date_reference,
       designer_ids: [],
-      verb_ids: [],
+      notion_ids: [],
       domaine_ids: [],
       studio_ids: [],
       source: [],

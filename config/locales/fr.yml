@@ -49,7 +49,7 @@ fr:
     cgu: "CGU"
     cookie: "Cookies"
     donation: "Soutenir le projet"
-    copyright: "©2025 Omniscient Design - Tous droits réservés"
+    copyright: "©%{year} Omniscient Design - Tous droits réservés"
   badges:
     categories:
       special: "Trophées Uniques"

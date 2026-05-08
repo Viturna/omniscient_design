@@ -199,7 +199,7 @@
             <%=t('footer.goup')%>
           </a>
           <div class="footer-bottom">
-            <p><%=t('footer.copyright')%></p>
+            <p><%= t('footer.copyright', year: Time.current.year) %></p>
             <ul class="legal">
               <li><%= link_to mentionslegales_path do %><%=t('footer.legal')%><%end%></a></li>
             <li><%= link_to politiquedeconfidentialite_path do %><%=t('footer.politique')%><%end%></li>

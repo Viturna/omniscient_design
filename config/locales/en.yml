@@ -47,7 +47,7 @@ en:
     politique: "Privacy policy"
     cgu: "Terms of Use"
     cookie: "Cookies"
-    copyright: "©2025 Omniscient Design - All rights reserved"
+    copyright: "©%{year} Omniscient Design - All rights reserved"
   search:
     placeholder: "Search for a reference or a designer"
     title: "Search"

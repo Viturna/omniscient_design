@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   def set_theme
     theme = params[:theme]
     cookies[:theme] = theme
-    redirect_back(fallback_location: root_path)
+redirect_back(fallback_location: root_path, allow_other_host: false)
   end
   
   helper_method :native_app?

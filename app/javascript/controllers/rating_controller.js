@@ -46,12 +46,11 @@ export default class extends Controller {
 
   redirectAndReload(url) {
     if (url) {
+      // Pour les schémas d'URL spécifiques (itms-apps, market), on utilise location.href
+      // Mais on ne recharge pas la page immédiatement car cela peut casser la transition vers le Store sur iOS
       window.location.href = url;
-    }
-
-    // Recharger la page après un délai pour voir le badge au retour
-    setTimeout(() => {
+    } else {
       window.location.reload();
-    }, 1000);
+    }
   }
 }

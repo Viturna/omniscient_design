@@ -46,7 +46,7 @@ export default class extends Controller {
 
         if (isActive) {
             document.body.style.overflow = 'hidden';
-            
+
             setTimeout(() => {
                 const searchInput = this.element.querySelector('.mega-menu-search-input');
                 if (searchInput) searchInput.focus();
@@ -71,7 +71,7 @@ export default class extends Controller {
         this.selectedThemeTitleTarget.innerText = themeName;
 
         this.themeColumnTargets.forEach(column => {
-            column.style.display = (column.dataset.themeName === themeName) ? 'block' : 'none';
+            column.style.display = (column.dataset.themeName === themeName) ? 'grid' : 'none';
         });
 
         this.notionsViewTarget.style.display = 'block';
@@ -83,7 +83,7 @@ export default class extends Controller {
 
     search(event) {
         const query = event.target.value.toLowerCase().trim();
-        
+
         if (query.length === 0) {
             this.showThemes();
             return;
@@ -99,7 +99,7 @@ export default class extends Controller {
         let hasMatch = false;
 
         this.searchResultsTarget.innerHTML = '';
-        
+
         const matches = [];
         allNotions.forEach(item => {
             const labelText = item.querySelector('span').innerText;
@@ -108,7 +108,7 @@ export default class extends Controller {
                 const clone = item.cloneNode(true);
                 const originalCheckbox = item.querySelector('input');
                 const cloneCheckbox = clone.querySelector('input');
-                
+
                 // Sync state from original to clone
                 cloneCheckbox.checked = originalCheckbox.checked;
                 cloneCheckbox.removeAttribute('name'); // Éviter les doublons à la soumission du form
@@ -147,6 +147,19 @@ export default class extends Controller {
         } else {
             icon.style.transform = 'rotate(0deg)'
         }
+    }
+
+    clear(event) {
+        if (event) event.preventDefault();
+
+        // Décocher tout
+        this.element.querySelectorAll('.mega-menu-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+            checkbox.closest('.mega-menu-item').classList.remove('is-checked');
+        });
+
+        // Mettre à jour le label du bouton principal
+        this.updateLabel();
     }
 
     updateLabel(event) {

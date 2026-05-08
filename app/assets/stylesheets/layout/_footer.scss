@@ -1,5 +1,12 @@
 @import "abstracts/variables";
 
+.mobile-only {
+  display: none !important;
+  @media (max-width: 1024px) {
+    display: block !important;
+  }
+}
+
 .footer {
   margin-top: 64px;
   color: #fff;

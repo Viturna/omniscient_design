@@ -174,6 +174,9 @@
                 <li><%= link_to t('footer.add'), add_elements_path%></li>
                 <li><%= link_to t('footer.login'), new_user_session_path%></li>
                 <li><%= link_to t('footer.sitemap'), plan_site_path%></li>
+                <li data-controller="rating" data-rating-url-value="<%= rate_app_badge_path %>" class="mobile-only">
+                  <a href="#" data-action="click->rating#trigger"><%= t('footer.rate_app') %></a>
+                </li>
               </ul>
             </div>
             <!-- Réseaux -->

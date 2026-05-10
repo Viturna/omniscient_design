@@ -1,0 +1,40 @@
+<div class="quiz-card">
+  <div class="card-image">
+    <% reference_with_image = list.references.joins(:reference_images).first %>
+    <% if reference_with_image && reference_with_image.reference_images.first&.file&.attached? %>
+      <%= image_tag reference_with_image.reference_images.first.file.variant(resize_to_fill: [400, 300]) %>
+    <% else %>
+      <div class="placeholder-img"></div>
+    <% end %>
+  </div>
+  
+  <div class="card-content">
+    <div class="card-badges">
+      <% completed_quiz = list.quizzes.select { |q| q.completed_by?(current_user) }.max_by { |q| q.best_score_for(current_user) } %>
+      <% if completed_quiz %>
+        <span class="badge status status-completed">
+          TERMINÉ • <%= completed_quiz.best_score_for(current_user) %>/<%= completed_quiz.quiz_questions.count * 10 %> pts
+        </span>
+      <% else %>
+        <span class="badge status">MA LISTE</span>
+      <% end %>
+      <span class="badge domaine"><%= list.references.count %> Items</span>
+    </div>
+
+    <h3>Quiz : <%= list.name %></h3>
+    
+    <div class="card-info">
+      <div class="info-item">
+        <span>15 Questions</span>
+      </div>
+      <div class="info-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 6V12L16 14M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#52525D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>5 min</span>
+      </div>
+    </div>
+
+    <%= button_to "Faire le quiz", generate_from_list_quizzes_path(list_id: list.id), method: :post, class: "button dark w-full" %>
+  </div>
+</div>

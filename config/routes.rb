@@ -181,6 +181,13 @@ Rails.application.routes.draw do
     get '/go/:id', to: 'ads#click', as: :partner_click
     get '/pixel/:id/view', to: 'ads#impression', as: :partner_impression
 
+    # ---- QUIZ SYSTEM ----
+    get 'jeux', to: 'quizzes#index', as: :quizzes_hub
+    resources :quizzes, only: [:show] do
+      post :submit, on: :member
+      post :generate_from_list, on: :collection
+    end
+
     post '/api/devices', to: 'api/devices#create'
 
     # ---- ERREURS ----

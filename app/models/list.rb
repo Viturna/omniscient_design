@@ -3,6 +3,7 @@ class List < ApplicationRecord
   friendly_id :name, use: :slugged
 
   belongs_to :user
+  has_many :quizzes, dependent: :nullify
   validates :name, presence: true
 
   # ListItems pour designers et references

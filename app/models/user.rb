@@ -119,6 +119,10 @@ class User < ApplicationRecord
   has_many :saved_designers, through: :lists, source: :designers
   has_many :saved_studios, through: :lists, source: :studios
 
+  # Quiz System
+  has_many :quiz_submissions, dependent: :destroy
+  has_many :completed_quizzes, through: :quiz_submissions, source: :quiz
+
   after_create :subscribe_to_newsletter, if: :newsletter?
   after_update :sync_newsletter_status, if: :saved_change_to_newsletter?
 

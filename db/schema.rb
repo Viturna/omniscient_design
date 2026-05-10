@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_05_180118) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_10_153246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -358,6 +358,52 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_180118) do
     t.index ["reference_id"], name: "index_notions_references_on_reference_id"
   end
 
+  create_table "quiz_answers", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.boolean "is_correct", default: false
+    t.bigint "quiz_question_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_question_id"], name: "index_quiz_answers_on_quiz_question_id"
+  end
+
+  create_table "quiz_questions", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "order"
+    t.string "question_type", default: "multiple_choice"
+    t.bigint "quiz_id", null: false
+    t.bigint "reference_id"
+    t.datetime "updated_at", null: false
+    t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id"
+    t.index ["reference_id"], name: "index_quiz_questions_on_reference_id"
+  end
+
+  create_table "quiz_submissions", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.bigint "quiz_id", null: false
+    t.integer "score", default: 0
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["quiz_id"], name: "index_quiz_submissions_on_quiz_id"
+    t.index ["user_id"], name: "index_quiz_submissions_on_user_id"
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "difficulty"
+    t.bigint "domaine_id"
+    t.integer "estimated_time"
+    t.bigint "list_id"
+    t.string "quiz_type", default: "static"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["domaine_id"], name: "index_quizzes_on_domaine_id"
+    t.index ["list_id"], name: "index_quizzes_on_list_id"
+  end
+
   create_table "reference_images", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "credit"
@@ -550,6 +596,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_180118) do
     t.boolean "newsletter", default: false
     t.string "provider"
     t.string "pseudo"
+    t.integer "quiz_points", default: 0
     t.string "referral_code"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
@@ -602,6 +649,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_180118) do
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "notions_references", "notions"
   add_foreign_key "notions_references", "references"
+  add_foreign_key "quiz_answers", "quiz_questions"
+  add_foreign_key "quiz_questions", "quizzes"
+  add_foreign_key "quiz_questions", "references"
+  add_foreign_key "quiz_submissions", "quizzes"
+  add_foreign_key "quiz_submissions", "users"
+  add_foreign_key "quizzes", "domaines"
+  add_foreign_key "quizzes", "lists"
   add_foreign_key "reference_images", "references"
   add_foreign_key "reference_studios", "references"
   add_foreign_key "reference_studios", "studios"

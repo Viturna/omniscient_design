@@ -3,6 +3,7 @@ class Reference < ApplicationRecord
   extend FriendlyId
 
   has_many :reference_images, -> { order(position: :asc) }, dependent: :destroy
+  has_many :quiz_questions
   accepts_nested_attributes_for :reference_images, allow_destroy: true, 
                                 reject_if: proc { |attributes| attributes['file'].blank? }, 
                                 limit: 3

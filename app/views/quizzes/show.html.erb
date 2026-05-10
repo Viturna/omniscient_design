@@ -1,0 +1,93 @@
+<%= content_tag :div, class: "quiz-player-wrapper", data: { 
+  controller: "quiz-player",
+  quiz_player_quiz_id_value: @quiz.id,
+  quiz_player_submit_url_value: submit_quiz_path(@quiz)
+} do %>
+  <script type="application/json" data-quiz-player-target="questionsData">
+    <%= @questions_json.to_json.html_safe %>
+  </script>
+  
+  <div class="quiz-left-pane">
+    <div class="pane-header">
+       <%= link_to quizzes_hub_path, class: "back-btn", data: { action: "click->quiz-player#confirmLeave" } do %>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      <% end %>
+      <span class="hub-link">Jeux</span>
+    </div>
+
+    <div class="pane-content">
+      <div class="domaine-badge">
+        <span class="badge"><%= @quiz.domaine&.domaine || "Général" %></span>
+      </div>
+
+      <div class="question-image-container hidden" data-quiz-player-target="questionImageContainer">
+        <img src="" alt="Question Image" data-quiz-player-target="questionImage">
+      </div>
+      
+      <div class="progress-section">
+        <div class="progress-info">
+          <span class="current-step">Question <span data-quiz-player-target="currentIndex">1</span>/<%= @questions.count %></span>
+          <span class="percentage" data-quiz-player-target="progressPercentage">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" data-quiz-player-target="progressBar"></div>
+        </div>
+      </div>
+
+      <h2 class="question-title" data-quiz-player-target="questionTitle"><%= @questions.first&.content || "Chargement..." %></h2>
+      <p class="instruction" data-quiz-player-target="instruction">Sélectionne une réponse</p>
+    </div>
+
+    <div class="pane-footer">
+      <div class="branding">
+        <%= image_tag "logo-white.svg", height: 60 %>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-right-pane">
+    <div class="pane-header">
+      <a href="#" class="report-link">Signaler une erreur</a>
+      <div class="points-pill">
+         <%= image_tag "points_od.svg", width: 24, height: 24 %>
+         <span data-quiz-player-target="totalPoints"><%= current_user.quiz_points %> pts</span>
+      </div>
+    </div>
+
+    <div class="pane-content">
+      <div class="answers-grid" data-quiz-player-target="answersContainer">
+        <% @questions.first&.quiz_answers&.each do |answer| %>
+          <button class="answer-btn" 
+                  data-answer-id="<%= answer.id %>" 
+                  data-is-correct="<%= answer.is_correct %>" 
+                  data-action="click->quiz-player#selectAnswer">
+            <%= answer.content %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="pane-footer">
+      <p class="motivation-msg" data-quiz-player-target="motivationMsg">C'est que le début !</p>
+      <div class="nav-controls">
+        <span class="points-feedback hidden" data-quiz-player-target="pointsFeedback">+10 points</span>
+        <button class="btn-prev" data-action="click->quiz-player#prev" data-quiz-player-target="prevBtn">Précédent</button>
+        <button class="btn-next" data-action="click->quiz-player#next" data-quiz-player-target="nextBtn">Suivant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Fin -->
+  <div class="quiz-result-modal hidden" data-quiz-player-target="resultModal">
+    <div class="modal-content">
+      <h2>Quiz Terminé !</h2>
+      <p class="final-score">Ton score : <span data-quiz-player-target="finalScore">0</span> pts</p>
+      <div class="actions">
+        <button class="btn-secondary" data-action="click->quiz-player#review">Revoir mes réponses</button>
+        <%= link_to "Retour au hub", quizzes_hub_path, class: "btn-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -123,3 +123,9 @@ application.register("validation-overlay", ValidationOverlayController)
 
 import YearValidatorController from "./year_validator_controller"
 application.register("year-validator", YearValidatorController)
+
+import QuizPlayerController from "./quiz_player_controller"
+application.register("quiz-player", QuizPlayerController)
+
+import RatingController from "./rating_controller"
+application.register("rating", RatingController)

@@ -1,5 +1,4 @@
-puts "Cleaning old notions and verbs..."
-Verb.destroy_all
+puts "Cleaning old notions..."
 Notion.destroy_all
 
 notions_data = {

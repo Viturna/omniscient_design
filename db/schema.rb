@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_10_153246) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_11_225824) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -345,7 +345,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_153246) do
     t.string "name", null: false
     t.string "theme"
     t.datetime "updated_at", null: false
-    t.text "verbs", default: [], array: true
     t.index ["theme"], name: "index_notions_on_theme"
   end
 
@@ -453,11 +452,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_153246) do
     t.index ["domaine_id"], name: "index_references_domaines_on_domaine_id"
     t.index ["reference_id", "domaine_id"], name: "index_references_domaines_on_reference_id_and_domaine_id", unique: true
     t.index ["reference_id"], name: "index_references_domaines_on_reference_id"
-  end
-
-  create_table "references_verbs", id: false, force: :cascade do |t|
-    t.bigint "reference_id", null: false
-    t.bigint "verb_id", null: false
   end
 
   create_table "referrals", force: :cascade do |t|
@@ -615,14 +609,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_153246) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "verbs", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "name"
-    t.bigint "notion_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["notion_id"], name: "index_verbs_on_notion_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bug_reports", "users"
@@ -677,5 +663,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_153246) do
   add_foreign_key "user_badges", "users"
   add_foreign_key "user_devices", "users"
   add_foreign_key "users", "countries"
-  add_foreign_key "verbs", "notions"
 end

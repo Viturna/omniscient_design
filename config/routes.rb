@@ -165,6 +165,7 @@ Rails.application.routes.draw do
     get 'settings/notifications', to: 'pages#notifications_settings', as: 'notifications_settings'
     patch 'settings/notifications', to: 'pages#update_notifications_settings'
     get 'validation', to: 'pages#validation', as: 'validation'
+    get 'export_references', to: 'pages#export_references', as: 'export_references'
     get 'mentionslegales', to: 'pages#mentionslegales', as: 'mentionslegales'
     get 'politiquedeconfidentialite', to: 'pages#politiquedeconfidentialite', as: 'politiquedeconfidentialite'
     get 'cookies', to: 'pages#cookies', as: 'cookies'

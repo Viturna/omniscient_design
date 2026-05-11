@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul, :notifications_settings, :update_notifications_settings]
-  before_action :check_certified, only: [:validation]
+  before_action :check_certified, only: [:validation, :export_references]
   before_action :check_admin_role, only: [:parrainage, :parrainage_filleul]
   def presentation
   end
@@ -54,6 +54,20 @@ class PagesController < ApplicationController
     @references_count_val_false = Reference.where(validation: false).count
     @designers_count_val_false = Designer.where(validation: false).count
     @studios_count_val_false = Studio.where(validation: false).count
+  end
+
+  def export_references
+    require 'csv'
+    @references = Reference.all.order(:nom_reference)
+    
+    csv_data = CSV.generate(col_sep: ';', force_quotes: true) do |csv|
+      csv << ["Nom de la référence"]
+      @references.each do |ref|
+        csv << [ref.nom_reference]
+      end
+    end
+
+    send_data csv_data, filename: "references-#{Date.today}.csv", type: 'text/csv'
   end
   def mentionslegales
   end

@@ -37,7 +37,7 @@ CSV.foreach(csv_path, headers: true) do |row|
   end
 
   # Parser les notions
-  notion_names = notions_string.split(',').map(&:strip).reject(&:blank?)
+  notion_names = (notions_string || "").split(',').map(&:strip).reject(&:blank?)
   
   notions_to_add = []
   notion_names.each do |n_name|

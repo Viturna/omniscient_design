@@ -50,23 +50,23 @@ class QuizGeneratorService
 
     case type
     when :designer_from_ref
-      content = "Qui est le designer de l'œuvre \"#{reference.nom_reference}\" ?"
+      content = "Qui est le designer de la référence \"#{reference.nom_reference}\" ?"
       correct_answer = reference.designers.first&.nom_designer || reference.nom_designer || "Inconnu"
       distractors = Designer.where.not(id: reference.designer_ids).limit(3).order("RANDOM()").map(&:nom_designer)
     
     when :ref_from_designer
       designer_name = reference.designers.first&.nom_designer || reference.nom_designer || "ce designer"
-      content = "Laquelle de ces œuvres a été créée par #{designer_name} ?"
+      content = "Laquelle de ces références a été créée par #{designer_name} ?"
       correct_answer = reference.nom_reference
       distractors = Reference.where.not(id: reference.id).limit(3).order("RANDOM()").map(&:nom_reference)
     
     when :name_from_image
-      content = "Quel est le nom de cette œuvre ?"
+      content = "Quel est le nom de cette référence ?"
       correct_answer = reference.nom_reference
       distractors = Reference.where.not(id: reference.id).limit(3).order("RANDOM()").map(&:nom_reference)
     
     when :image_from_ref
-      content = "Quelle image correspond à l'œuvre \"#{reference.nom_reference}\" ?"
+      content = "Quelle image correspond à la référence \"#{reference.nom_reference}\" ?"
       correct_answer = get_image_url(reference)
       # On s'assure que les distracteurs ont aussi des images
       distractors = Reference.where.not(id: reference.id)
@@ -76,8 +76,8 @@ class QuizGeneratorService
                              .map { |r| get_image_url(r) }
     
     when :year_from_ref
-      year = reference.date_reference.year
-      content = "En quelle année l'œuvre \"#{reference.nom_reference}\" a-t-elle été créée ?"
+      year = reference.date_reference
+      content = "En quelle année la référence \"#{reference.nom_reference}\" a-t-elle été créée ?"
       correct_answer = year.to_s
       distractors = [year - 10, year + 5, year + 15].map(&:to_s).shuffle
     end

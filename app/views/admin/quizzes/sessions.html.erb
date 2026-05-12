@@ -1,0 +1,64 @@
+<style>
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
+  .users-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+  .users-dash-title { font-size: 32px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 16px; margin: 0; }
+  .users-dash-back-link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background-color: #fff; border: 1px solid #eee; transition: all 0.2s ease; }
+
+  .nav-tabs { display: flex; gap: 12px; margin-bottom: 32px; }
+  .nav-tab { padding: 10px 20px; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; background: #eee; }
+  .nav-tab.active { background: #202020; color: #fff; }
+
+  .sessions-table-container { background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; overflow: hidden; }
+  .sessions-table { width: 100%; border-collapse: collapse; }
+  .sessions-table th { background: #fafafa; padding: 18px 24px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 1px solid #eee; }
+  .sessions-table td { padding: 18px 24px; border-bottom: 1px solid #f5f5f5; }
+</style>
+
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_quizzes_path, class: "users-dash-back-link" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <% end %>
+      <h1 class="users-dash-title">Historique des Sessions</h1>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <%= link_to "Liste des Quiz", admin_quizzes_path, class: "nav-tab" %>
+    <%= link_to "Statistiques", stats_admin_quizzes_path, class: "nav-tab" %>
+    <%= link_to "Historique des Sessions", sessions_admin_quizzes_path, class: "nav-tab active" %>
+  </div>
+
+  <div class="sessions-table-container">
+    <table class="sessions-table">
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Quiz</th>
+          <th>Score</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @submissions.each do |submission| %>
+          <tr>
+            <td><%= submission.user.email %></td>
+            <td><%= submission.quiz.title %></td>
+            <td><strong><%= submission.score %> pts</strong></td>
+            <td><%= submission.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

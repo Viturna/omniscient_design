@@ -1,0 +1,44 @@
+<div class="question-block" data-new-record="<%= local_assigns[:is_new] || false %>">
+  <div class="question-header">
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <div class="question-number-badge">Q</div>
+      <span style="font-weight: 700; color: #202020; font-size: 18px;">Détails de la question</span>
+    </div>
+    <button type="button" class="action-btn delete" data-action="nested-form#remove" title="Supprimer la question">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+    </button>
+    <%= f.hidden_field :_destroy %>
+  </div>
+  
+  <div class="admin-form-group">
+    <%= f.label :content, "Énoncé de la question" %>
+    <%= f.text_area :content, class: "admin-form-input", rows: 2, placeholder: "Entrez votre question ici..." %>
+  </div>
+
+  <div class="admin-form-group">
+    <%= f.label :reference_id, "ID de la Référence associée (Image)" %>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <%= f.number_field :reference_id, class: "admin-form-input", style: "width: 150px;", placeholder: "ID" %>
+      <span style="font-size: 13px; color: #888;">L'image de la référence s'affichera automatiquement.</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 32px;">
+    <label style="display: block; font-weight: 600; margin-bottom: 16px; font-size: 13px; text-transform: uppercase; color: #666;">Réponses (Cochez la bonne réponse)</label>
+    <div class="answers-grid">
+      <% if f.object.new_record? && f.object.quiz_answers.empty? %>
+        <% 4.times { f.object.quiz_answers.build } %>
+      <% end %>
+      
+      <%= f.fields_for :quiz_answers do |a_f| %>
+        <div class="answer-item <%= 'is-correct' if a_f.object.is_correct %>">
+          <%= a_f.check_box :is_correct, 
+                            class: "answer-checkbox", 
+                            title: "Cocher si c'est la bonne réponse",
+                            onclick: "this.closest('.answer-item').classList.toggle('is-correct', this.checked)" %>
+          <%= a_f.text_field :content, class: "admin-form-input", style: "border: none; padding: 4px; background: transparent;", placeholder: "Réponse..." %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

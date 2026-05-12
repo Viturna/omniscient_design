@@ -18,76 +18,71 @@
     <p class="subtitle-top">Entraîne-toi !</p>
     <h1>Le carnet de Jeux</h1>
     <p class="subtitle">L'histoire du design, une question à la fois. Teste tes connaissances ou crée tes propres défis à partir de tes listes.</p>
-
-    <div class="search-container">
-      <div class="search-input-wrapper">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <input type="text" placeholder="Rechercher un quiz...">
-      </div>
-    </div>
   </section>
 
-  <div class="quiz-sections">
-    <% if @daily_quiz %>
-      <%
-        # Chercher une image parmi les références liées aux questions du quiz
-        daily_ref = @daily_quiz.quiz_questions.where.not(reference_id: nil).first&.reference
-        daily_image_url = nil
-        if daily_ref && daily_ref.reference_images.any?
-          daily_image_url = rails_representation_url(daily_ref.reference_images.first.file.variant(resize_to_fill: [400, 400]).processed, only_path: true)
-        end
-      %>
-      <%= link_to quiz_path(@daily_quiz), class: "daily-quiz-banner" do %>
-        <div class="banner-content">
-          <div class="text-side">
-            <div class="badge">DÉFI DU JOUR</div>
-            <h2><%= @daily_quiz.title %></h2>
-            <div class="meta-info">
-              <span><%= @daily_quiz.quiz_questions.count %> questions</span>
-              <span class="dot">•</span>
-              <span><%= @daily_quiz.estimated_time || 10 %> min</span>
-            </div>
-            <div class="action-btn">
-              <span>Commencer le défi</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          
-          <% if daily_image_url %>
-            <div class="image-side">
-              <div class="image-wrapper">
-                <%= image_tag daily_image_url %>
-              </div>
-            </div>
-          <% end %>
-        </div>
+  <!-- Barre de filtres compacte -->
+  <div class="hub-filters-toolbar">
+    <%= form_with url: quizzes_hub_path, method: :get, class: "hub-filters-form" do |f| %>
+      <div class="filter-item">
+        <label>Domaine</label>
+        <%= f.select :domaine_id, 
+                     Domaine.all.map { |d| [d.domaine, d.id] }, 
+                     { include_blank: "Tous", selected: params[:domaine_id] }, 
+                     { class: "hub-filter-select", onchange: "this.form.submit()" } %>
+      </div>
+
+      <div class="filter-item">
+        <label>Questions</label>
+        <%= f.select :count_range, 
+                     [["Court", "small"], ["Moyen", "medium"], ["Long", "large"]], 
+                     { include_blank: "Toutes", selected: params[:count_range] }, 
+                     { class: "hub-filter-select", onchange: "this.form.submit()" } %>
+      </div>
+
+      <div class="filter-item">
+        <label>Statut</label>
+        <%= f.select :status, 
+                     [["Pas commencé", "not_started"], ["En cours", "in_progress"], ["Terminé", "completed"]], 
+                     { include_blank: "Tous", selected: params[:status] }, 
+                     { class: "hub-filter-select", onchange: "this.form.submit()" } %>
+      </div>
+
+      <% if params[:domaine_id].present? || params[:count_range].present? || params[:status].present? %>
+        <%= link_to quizzes_hub_path, class: "hub-filter-reset", title: "Réinitialiser" do %>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+        <% end %>
       <% end %>
     <% end %>
-    <% if @quizzes_by_domaine.any? %>
+  </div>
+
+  <div class="quiz-sections">
+    <!-- 1. Sélection principale -->
+    <% if @quizzes.any? %>
       <section class="quiz-section">
         <div class="section-header">
           <h2>Notre sélection de quiz avant le bac</h2>
           <p>Les indispensables pour réviser. Maîtrise les mouvements et les créateurs qui ont façonné le design.</p>
         </div>
         <div class="quiz-grid">
-          <% @quizzes_by_domaine.each do |domaine, quizzes| %>
-            <% quizzes.each do |quiz| %>
-              <%= render 'quiz_card', quiz: quiz %>
-            <% end %>
+          <% @quizzes.each do |quiz| %>
+            <%= render 'quiz_card', quiz: quiz %>
           <% end %>
         </div>
       </section>
+    <% else %>
+      <div style="text-align: center; padding: 60px; color: #888;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        <p>Aucun quiz ne correspond à vos filtres.</p>
+        <%= link_to "Voir tous les quiz", quizzes_hub_path, style: "color: #202020; font-weight: 600; text-decoration: underline;" %>
+      </div>
     <% end %>
 
-    <% if @user_lists.any? %>
+    <!-- 2. Mes listes -->
+    <% if @user_lists.any? && params[:domaine_id].blank? && params[:status].blank? %>
       <section class="quiz-section">
         <div class="section-header">
           <h2>Jouer avec mes listes</h2>
-          <p>Ton terrain d'entraînement personnel. Transforme tes listes de références en quiz dynamiques pour tout retenir.</p>
+          <p>Ton terrain d'entraînement personnel. Transforme tes listes de références en quiz dynamiques.</p>
         </div>
         <div class="quiz-grid">
           <% @user_lists.each do |list| %>
@@ -97,15 +92,16 @@
       </section>
     <% end %>
 
-    <% if @recent_submissions.any? %>
+    <!-- 3. Récemment joué (tout en bas) -->
+    <% if @recent_quizzes.any? && params[:domaine_id].blank? && params[:count_range].blank? && params[:status].blank? %>
       <section class="quiz-section">
         <div class="section-header">
           <h2>Récemment joué</h2>
           <p>Ne laisse aucune question sans réponse. Reprends ta progression là où tu t'étais arrêté.</p>
         </div>
         <div class="quiz-grid">
-          <% @recent_submissions.each do |submission| %>
-            <%= render 'quiz_card', quiz: submission.quiz %>
+          <% @recent_quizzes.each do |quiz| %>
+            <%= render 'quiz_card', quiz: quiz %>
           <% end %>
         </div>
       </section>

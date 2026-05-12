@@ -1,0 +1,166 @@
+<style>
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
+
+  .users-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+  .users-dash-title { font-size: 32px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 16px; margin: 0; }
+  .users-dash-back-link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background-color: #fff; border: 1px solid #eee; transition: all 0.2s ease; flex-shrink: 0; }
+  .users-dash-back-link:hover { background-color: #f0f0f0; transform: translateX(-2px); }
+
+  .users-dash-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
+  .btn-add { background-color: #202020; color: #fff; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 500; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+  .btn-add:hover { background-color: #333; }
+
+  .users-dash-table-container { background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #f0f0f0; overflow-x: auto; margin-bottom: 48px; }
+  .users-dash-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+  .users-dash-table th { background-color: #fafafa; padding: 18px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; border-bottom: 1px solid #eee; }
+  .users-dash-table td { padding: 18px 24px; border-bottom: 1px solid #f5f5f5; font-size: 14px; font-weight: 500; color: #202020; vertical-align: middle; }
+  
+  .actions-cell { display: flex; gap: 8px; justify-content: flex-end; }
+  .action-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #eee; background: #fff; display: flex; align-items: center; justify-content: center; color: #666; transition: all 0.2s; }
+  .action-btn:hover { background: #f5f5f5; color: #202020; }
+  .action-btn.delete:hover { background: #FFEBEE; color: #C62828; border-color: #FFCDD2; }
+
+  .nav-tabs { display: flex; gap: 12px; margin-bottom: 32px; }
+  .nav-tab { padding: 10px 20px; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; background: #eee; }
+  .nav-tab.active { background: #202020; color: #fff; }
+
+  .btn-generate {
+    background: #5D5FEF;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+  }
+  .btn-generate:hover { background-color: #4a4cd9; }
+
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000;
+  }
+  .modal-card {
+    background: #fff; padding: 40px; border-radius: 24px; width: 500px; max-width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+</style>
+
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <% end %>
+      <h1 class="users-dash-title">Gestion des Quiz</h1>
+    </div>
+  </div>
+
+  <!-- Modal Générateur -->
+  <div id="generator-modal" class="modal-overlay" onclick="if(event.target == this) this.style.display='none'">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <h2 style="margin-top: 0; margin-bottom: 24px; font-size: 24px;">Générateur de Quiz</h2>
+      <%= form_with url: auto_generate_admin_quizzes_path, method: :post do |f| %>
+        <div style="margin-bottom: 20px;">
+          <%= f.label :title, "Titre du Quiz", style: "display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;" %>
+          <input type="text" name="title" class="admin-form-input" style="width: 100%;" placeholder="Ex: Quiz sur le Bauhaus" required>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <%= f.label :domaine_id, "Domaine d'études", style: "display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;" %>
+          <%= f.collection_select :domaine_id, Domaine.all, :id, :domaine, { include_blank: "Tous les domaines" }, { class: "admin-form-input", style: "width: 100%;" } %>
+        </div>
+        <div style="margin-bottom: 30px;">
+          <%= f.label :count, "Nombre de questions", style: "display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;" %>
+          <input type="number" name="count" id="count-input" class="admin-form-input" value="10" min="5" max="50" style="width: 100%;">
+          <div style="margin-top: 12px; font-size: 13px; color: #666; background: #f5f5f7; padding: 10px; border-radius: 8px;">
+            Estimation : <strong id="estimated-duration">5</strong> min
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button type="button" class="btn-add" style="background: #eee; color: #666;" onclick="document.getElementById('generator-modal').style.display='none'">Annuler</button>
+          <%= f.submit "Générer le quiz", class: "btn-generate" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('count-input')?.addEventListener('input', function(e) {
+      const count = parseInt(e.target.value) || 0;
+      document.getElementById('estimated-duration').textContent = Math.ceil(count * 0.5);
+    });
+  </script>
+
+  <div class="nav-tabs">
+    <%= link_to "Liste des Quiz", admin_quizzes_path, class: "nav-tab active" %>
+    <%= link_to "Statistiques", stats_admin_quizzes_path, class: "nav-tab" %>
+    <%= link_to "Historique des Sessions", sessions_admin_quizzes_path, class: "nav-tab" %>
+  </div>
+
+  <div class="users-dash-toolbar">
+    <div class="section-title" style="margin:0;">Quiz Statiques (<%= @quizzes.count %>)</div>
+    <div style="display: flex; gap: 12px;">
+      <button class="btn-generate" onclick="document.getElementById('generator-modal').style.display='flex'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        Générer automatiquement
+      </button>
+      <%= link_to new_admin_quiz_path, class: "btn-add" do %>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Créer un Quiz
+      <% end %>
+    </div>
+  </div>
+
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Domaine</th>
+          <th>Questions</th>
+          <th>Date de création</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @quizzes.each do |quiz| %>
+          <tr>
+            <td><strong><%= quiz.title %></strong></td>
+            <td><%= quiz.domaine&.domaine || "Général" %></td>
+            <td><%= quiz.quiz_questions.count %></td>
+            <td><%= quiz.created_at.strftime("%d/%m/%Y") %></td>
+            <td>
+              <div class="actions-cell">
+                <%= link_to edit_admin_quiz_path(quiz), class: "action-btn", title: "Modifier" do %>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                <% end %>
+                <%= link_to admin_quiz_path(quiz), 
+                      data: { turbo_method: :delete, turbo_confirm: "Supprimer ce quiz ?" },
+                      class: "action-btn delete", title: "Supprimer" do %>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

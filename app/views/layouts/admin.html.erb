@@ -220,6 +220,14 @@
                   <span>Ads / Pubs</span>
                 <% end %>
               </li>
+              <li>
+                <%= link_to admin_quizzes_path, class: "sidebar-link #{'active' if @current_page == 'quizzes'}" do %>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm0 4H7v-2h2v2zm0 4H7v-2h2v2zm4-8h-2V9h2v2zm0 4h-2v-2h2v2zm0 4h-2v-2h2v2zm4-8h-2V9h2v2zm0 4h-2v-2h2v2zm0 4h-2v-2h2v2z"/>
+                  </svg>
+                  <span>Quiz</span>
+                <% end %>
+              </li>
               <li class="divider"><span class="menu-title">Support</span></li>
               <li>
                 <%= link_to bug_reports_path, class: "sidebar-link #{'active' if @current_page == 'bug_reports'}" do %>

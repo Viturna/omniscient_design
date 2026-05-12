@@ -4,12 +4,14 @@ export default class extends Controller {
   static targets = [
     "questionsData", "currentIndex", "progressPercentage", "progressBar", "questionTitle", 
     "instruction", "answersContainer", "totalPoints", "motivationMsg", "pointsFeedback",
-    "prevBtn", "nextBtn", "resultModal", "finalScore", "questionImage", "questionImageContainer"
+    "prevBtn", "nextBtn", "resultModal", "finalScore"
   ]
   
   static values = {
     quizId: Number,
-    submitUrl: String
+    submitUrl: String,
+    saveUrl: String,
+    initialProgress: Object
   }
 
   initialize() {
@@ -22,34 +24,28 @@ export default class extends Controller {
   }
 
   connect() {
-    window.addEventListener("beforeunload", this.handleBeforeUnload)
     try {
       this.questions = JSON.parse(this.questionsDataTarget.textContent)
-      console.log("Questions loaded:", this.questions)
+      
+      // Load initial progress if available
+      if (this.hasInitialProgressValue) {
+        this.index = this.initialProgressValue.index || 0
+        this.userAnswers = this.initialProgressValue.userAnswers || {}
+        // Convert keys to numbers if they are strings from JSON
+        Object.keys(this.userAnswers).forEach(key => {
+          if (typeof key === 'string') {
+            const val = this.userAnswers[key]
+            delete this.userAnswers[key]
+            this.userAnswers[parseInt(key)] = val
+          }
+        })
+      }
+
+      console.log("Quiz initialized at index:", this.index)
       this.renderQuestion()
       this.updateProgress()
     } catch (e) {
       console.error("Failed to parse quiz questions:", e)
-    }
-  }
-
-  disconnect() {
-    window.removeEventListener("beforeunload", this.handleBeforeUnload)
-  }
-
-  handleBeforeUnload = (event) => {
-    if (Object.keys(this.userAnswers).length > 0 && !this.quizFinished && !this.reviewMode) {
-      event.preventDefault()
-      event.returnValue = ""
-    }
-  }
-
-  confirmLeave(event) {
-    if (Object.keys(this.userAnswers).length > 0 && !this.quizFinished && !this.reviewMode) {
-      const confirmed = window.confirm("Es-tu sûr de vouloir quitter ? Ta progression sur ce quiz sera perdue.")
-      if (!confirmed) {
-        event.preventDefault()
-      }
     }
   }
 
@@ -61,17 +57,24 @@ export default class extends Controller {
     this.currentIndexTarget.textContent = this.index + 1
     this.answersContainerTarget.innerHTML = ""
     this.instructionTarget.style.color = ""
-    this.instructionTarget.textContent = "Sélectionnez la bonne réponse"
+    
+    const selectedId = this.userAnswers[this.index]
+    if (selectedId) {
+      const question = this.questions[this.index]
+      const selectedAnswer = question.quiz_answers.find(a => a.id === selectedId)
+      if (selectedAnswer?.is_correct) {
+        this.instructionTarget.textContent = "Bravo ! Bonne réponse."
+        this.instructionTarget.style.color = "#22C55E"
+      } else {
+        this.instructionTarget.textContent = "Oups ! Mauvaise réponse."
+        this.instructionTarget.style.color = "#EF4444"
+      }
+    } else {
+      this.instructionTarget.textContent = "Sélectionnez la bonne réponse"
+    }
     
     // Reset points feedback
     this.pointsFeedbackTarget.classList.add("hidden")
-
-    if (question.reference_image_url) {
-      this.questionImageTarget.src = question.reference_image_url
-      this.questionImageContainerTarget.classList.remove("hidden")
-    } else {
-      this.questionImageContainerTarget.classList.add("hidden")
-    }
 
     const answers = question.quiz_answers || []
     answers.forEach(answer => {
@@ -143,6 +146,25 @@ export default class extends Controller {
     }
 
     this.updateControls()
+    this.saveProgress()
+  }
+
+  saveProgress() {
+    if (this.reviewMode || !this.hasSaveUrlValue) return
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+    fetch(this.saveUrlValue, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
+      },
+      body: JSON.stringify({
+        current_index: this.index,
+        user_answers: this.userAnswers
+      })
+    })
+    .catch(error => console.error("Failed to save progress:", error))
   }
 
   next() {
@@ -222,7 +244,10 @@ export default class extends Controller {
         "Content-Type": "application/json",
         "X-CSRF-Token": csrfToken
       },
-      body: JSON.stringify({ score: this.score })
+      body: JSON.stringify({ 
+        score: this.score,
+        user_answers: this.userAnswers
+      })
     })
     .then(response => {
       if (!response.ok) throw new Error("Server error")

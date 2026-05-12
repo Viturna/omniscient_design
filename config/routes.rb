@@ -5,6 +5,13 @@ Rails.application.routes.draw do
   # ---- ADMIN ----
   namespace :admin do
     resources :ads
+    resources :quizzes do
+      collection do
+        get :stats
+        get :sessions
+        post :auto_generate
+      end
+    end
     get 'suivi_references/index'
     get 'validation/index'
     get 'feedbacks/index'
@@ -186,6 +193,7 @@ Rails.application.routes.draw do
     get 'jeux', to: 'quizzes#index', as: :quizzes_hub
     resources :quizzes, only: [:show] do
       post :submit, on: :member
+      patch :save_progress, on: :member
       post :generate_from_list, on: :collection
     end
 

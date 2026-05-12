@@ -388,9 +388,15 @@
                       <% end %>
                       <div class="reference-card-content">
                         <span class="reference-designer">
-                          <%= safe_join(reference.designers.map(&:nom_designer), ", ")%>
-                          <% if reference.studios.any? %>
-                            <%= (" — " + safe_join(reference.studios.map(&:nom), ", ")) %>
+                          <% if reference.designers.any? %>
+                            <%= safe_join(reference.designers.map(&:nom_designer), ", ") %>
+                            <% if reference.studios.any? %>
+                              <%= (" — " + safe_join(reference.studios.map(&:nom), ", ")) %>
+                            <% end %>
+                          <% elsif reference.studios.any? %>
+                            <%= safe_join(reference.studios.map(&:nom), ", ") %>
+                          <% else %>
+                            Designer inconnu
                           <% end %>
                         </span>
                         <p class="reference-title"><%= reference.nom_reference %></p>

@@ -401,12 +401,17 @@
                         <% end %>
                         <div class="reference-card-content">
                           <p class="reference-designer">
-                            <%= reference.designers.any? ? reference.designers.map(&:nom_designer).join(", ") : "Designer inconnu" %>
+                            <% if reference.designers.any? %>
+                              <%= reference.designers.map(&:nom_designer).join(", ") %>
+                            <% elsif reference.studios.any? %>
+                              <%= reference.studios.map(&:nom).join(", ") %>
+                            <% else %>
+                              Designer inconnu
+                            <% end %>
                           </p>
                           <h2 class="reference-title"><%= reference.nom_reference %></h2>
                         </div>
                       </div>
-                    </div>
                   <% end %>
                 <% end %>
               </div>

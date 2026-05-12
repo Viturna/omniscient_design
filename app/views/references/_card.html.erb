@@ -133,7 +133,13 @@
       </div>
       <div class="container-text-card">
         <p class="subtitle-card">
-          <%= card.designers.map(&:nom_designer).join(', ') %>
+          <% if card.designers.any? %>
+            <%= card.designers.map(&:nom_designer).join(', ') %>
+          <% elsif card.studios.any? %>
+            <%= card.studios.map(&:nom).join(', ') %>
+          <% else %>
+            Designer inconnu
+          <% end %>
         </p>
         <h2 class="title-card"><%= card.nom_reference %></h2>
         <p class="description-card description-card-home"><%= card.presentation_generale %></p>

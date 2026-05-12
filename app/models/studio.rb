@@ -43,7 +43,7 @@ class Studio < ApplicationRecord
     message: "ne peut pas dépasser 10 designers." 
   }
   
-  has_many :references, through: :designers
+  has_many :designer_references, through: :designers, source: :references
 
 
   attribute :source, :json, default: []

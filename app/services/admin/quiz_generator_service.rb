@@ -26,38 +26,55 @@ class Admin::QuizGeneratorService
     end
 
     references.each do |ref|
-      # On cherche un nom pour la question (Designer ou premier Domaine trouvé)
-      correct_answer_content = ref.designers.first&.nom_designer || ref.domaines.first&.domaine
-      next if correct_answer_content.blank? # On saute si on n'a pas de réponse valable
-
-      question = quiz.quiz_questions.build(
-        content: "À quel designer ou mouvement associez-vous cette œuvre : '#{ref.nom_reference}' ?",
-        reference_id: ref.id
-      )
-
-      # Ajouter la bonne réponse
-      question.quiz_answers.build(content: correct_answer_content, is_correct: true)
-
-      # Ajouter des mauvaises réponses (on pioche d'autres designers au hasard)
-      wrong_designers = Designer.where(validation: true)
-                                .where("nom IS NOT NULL AND nom != ''")
-                                .order("RANDOM()")
-                                .limit(10) # On en prend un peu plus pour filtrer en Ruby
+      # Choisir un type de question aléatoirement parmi les données disponibles
+      available_types = []
+      available_types << :designer if ref.designers.any?
+      available_types << :date if ref.date_reference.present?
+      available_types << :domaine if ref.domaines.any?
       
-      wrong_count = 0
-      wrong_designers.each do |d|
-        name = d.nom_designer
-        next if name == correct_answer_content || name.blank?
+      type = available_types.sample
+      next if type.nil?
+
+      case type
+      when :designer
+        correct_answer = ref.designers.first.nom_designer
+        question = quiz.quiz_questions.build(
+          content: "À quel designer associez-vous cette référence : '#{ref.nom_reference}' ?",
+          reference_id: ref.id
+        )
+        # Distracteurs : autres designers
+        wrong_pool = Designer.where.not(id: ref.designer_ids).where(validation: true).order("RANDOM()").limit(3)
+        wrong_pool.each { |d| question.quiz_answers.build(content: d.nom_designer, is_correct: false) }
         
-        question.quiz_answers.build(content: name, is_correct: false)
-        wrong_count += 1
-        break if wrong_count >= 3
+      when :date
+        correct_answer = ref.date_reference.to_s
+        question = quiz.quiz_questions.build(
+          content: "En quelle année a été créée la référence : '#{ref.nom_reference}' ?",
+          reference_id: ref.id
+        )
+        # Distracteurs : années proches (+/- 2, 5, 10 ans)
+        [2, -2, 5, -5, 10, -10].sample(3).each do |offset|
+          question.quiz_answers.build(content: (ref.date_reference + offset).to_s, is_correct: false)
+        end
+
+      when :domaine
+        correct_answer = ref.domaines.first.domaine
+        question = quiz.quiz_questions.build(
+          content: "À quel domaine appartient la référence : '#{ref.nom_reference}' ?",
+          reference_id: ref.id
+        )
+        # Distracteurs : autres domaines
+        wrong_pool = Domaine.where.not(id: ref.domaine_ids).order("RANDOM()").limit(3)
+        wrong_pool.each { |d| question.quiz_answers.build(content: d.domaine, is_correct: false) }
       end
 
-      # Si on n'a pas assez de designers, on pioche dans les domaines
-      if question.quiz_answers.size < 4
-        Domaine.where.not(domaine: [nil, "", correct_answer_content]).order("RANDOM()").limit(4 - question.quiz_answers.size).each do |dom|
-          question.quiz_answers.build(content: dom.domaine, is_correct: false)
+      # Ajouter la bonne réponse
+      question.quiz_answers.build(content: correct_answer, is_correct: true) if question
+
+      # Compléter à 4 réponses si nécessaire
+      if question && question.quiz_answers.size < 4
+        (4 - question.quiz_answers.size).times do
+          question.quiz_answers.build(content: "Autre option", is_correct: false)
         end
       end
     end

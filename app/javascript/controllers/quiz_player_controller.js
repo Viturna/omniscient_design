@@ -77,6 +77,14 @@ export default class extends Controller {
     this.pointsFeedbackTarget.classList.add("hidden")
 
     const answers = question.quiz_answers || []
+    const hasImages = answers.some(a => this.isImageUrl(a.content))
+    
+    if (hasImages) {
+      this.answersContainerTarget.classList.add("has-images")
+    } else {
+      this.answersContainerTarget.classList.remove("has-images")
+    }
+
     answers.forEach(answer => {
       const button = document.createElement("button")
       button.className = "answer-btn"

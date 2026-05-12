@@ -129,3 +129,6 @@ application.register("quiz-player", QuizPlayerController)
 
 import RatingController from "./rating_controller"
 application.register("rating", RatingController)
+
+import NotionToggleController from "./notion_toggle_controller"
+application.register("notion-toggle", NotionToggleController)

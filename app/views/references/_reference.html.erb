@@ -240,17 +240,27 @@
         </div>
         <h2 class="title-description-reference"><%= t('references.notions') %></h2>
         <% if reference.notions.any? %>
-          <div style="display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; flex-direction: column; gap: 16px" data-controller="notion-toggle">
             <% reference.notions.group_by(&:theme).sort.each do |theme, notions| %>
-              <div class="notions-flex">
-                <div class="notion-container" style="background-color: #202020;">
-                  <span style="color: #FFF; font-weight: 500;"> <%= theme %></span>
-                </div>
-                <% notions.sort_by(&:name).each do |notion| %>
-                  <div class="notion-container">
-                    <%= notion.name %>
+              <div class="notion-theme-group">
+                <div class="notions-flex">
+                  <div class="notion-container theme-trigger" 
+                       style="background-color: #202020; cursor: pointer; transition: background-color 0.3s ease; display: flex; align-items: center; gap: 8px;"
+                       data-action="click->notion-toggle#toggle">
+                    <span style="color: #FFF; font-weight: 500;"> <%= theme %></span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                         style="transition: transform 0.3s ease; transform-origin: center;" data-notion-toggle-target="chevron">
+                      <path d="M9 6L15 12L9 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   </div>
-                <% end %>
+                  <div class="notions-flex" data-notion-toggle-target="content" style="display: none;">
+                    <% notions.sort_by(&:name).each do |notion| %>
+                      <div class="notion-container">
+                        <%= notion.name %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
               </div>
             <% end %>
           </div>

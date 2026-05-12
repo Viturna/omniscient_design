@@ -3,7 +3,8 @@ class Reference < ApplicationRecord
   extend FriendlyId
 
   has_many :reference_images, -> { order(position: :asc) }, dependent: :destroy
-  has_many :quiz_questions
+  has_many :quiz_questions, dependent: :nullify
+  has_many :daily_references, dependent: :destroy
   accepts_nested_attributes_for :reference_images, allow_destroy: true, 
                                 reject_if: proc { |attributes| attributes['file'].blank? }, 
                                 limit: 3
@@ -15,11 +16,11 @@ class Reference < ApplicationRecord
 
   validates :nom_reference, uniqueness: true, presence: true
     
-  has_many :references_domaines, dependent: :destroy
+  has_many :references_domaines, dependent: :delete_all
   has_many :domaines, through: :references_domaines
 
 
-  has_many :list_items, as: :listable
+  has_many :list_items, as: :listable, dependent: :destroy
   has_many :lists, through: :list_items
   belongs_to :user, optional: true
   belongs_to :validated_by_user, class_name: 'User', foreign_key: 'validated_by_user_id', optional: true

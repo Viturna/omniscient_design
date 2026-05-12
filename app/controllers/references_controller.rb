@@ -172,9 +172,9 @@ class ReferencesController < ApplicationController
 
 
 
-# PATCH/PUT /references/:slug/reject
+  # PATCH/PUT /references/:slug/reject
   def reject
-    rejection_reason = params[:rejection_reason].presence || I18n.t('reference.reject.no_comment')
+    rejection_reason = params[:rejection_reason].presence || I18n.t('references.reject.no_comment', default: 'Sans commentaire')
     @reference = Reference.friendly.find_by(slug: params[:slug])
 
     unless @reference
@@ -189,17 +189,10 @@ class ReferencesController < ApplicationController
         reason: rejection_reason
       )
       
-      # 2. Nettoyage des jointures avec la même logique sécurisée que pour les designers
-      @reference.references_domaines.delete_all if @reference.respond_to?(:references_domaines)
-      @reference.designers_references.delete_all if @reference.respond_to?(:designers_references)
-      @reference.reference_studios.delete_all if @reference.respond_to?(:reference_studios)
-      @reference.notions.delete_all if @reference.respond_to?(:notions)
-      @reference.list_items.delete_all if @reference.respond_to?(:list_items)
-
-      # 3. Mise à jour du statut avant destruction
+      # 2. Mise à jour du statut avant destruction (optionnel mais conservé pour cohérence si besoin)
       @reference.update!(rejection_reason: rejection_reason, validation: false)
 
-      # 4. Délégation à handle_destroy
+      # 3. Délégation à handle_destroy qui gère la suppression propre via dependent: :destroy
       handle_destroy(@reference, I18n.t('references.reject.success', default: 'Référence refusée avec succès.'))
     rescue => e
       Rails.logger.error("Erreur rejet référence : #{e.message}")

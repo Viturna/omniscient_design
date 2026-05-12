@@ -969,6 +969,7 @@ fr:
       success: "La référence a été refusée avec succès."
       failure: "Une erreur est survenue lors du refus de la référence."
       not_found: "Référence introuvable."
+      no_comment: "Sans commentaire"
     not_found: "La référence n'a pas été trouvée."
   theme:
     updated: "Thème mis à jour avec succès."

@@ -94,10 +94,9 @@ class Admin::QuizGeneratorService
           reference_id: ref.id
         )
         # Distracteurs : autres références avec images
-        wrong_pool = Reference.where.not(id: ref.id)
-                              .joins(:reference_images)
+        wrong_pool = Reference.where(id: ReferenceImage.select(:reference_id))
+                              .where.not(id: ref.id)
                               .where(validation: true)
-                              .distinct
                               .order("RANDOM()")
                               .limit(3)
         wrong_pool.each { |r| question.quiz_answers.build(content: get_image_url(r), is_correct: false) }

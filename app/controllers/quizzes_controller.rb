@@ -47,7 +47,7 @@ class QuizzesController < ApplicationController
     @quiz_covers = Reference.joins(:quiz_questions)
                             .where(quiz_questions: { quiz_id: quiz_ids })
                             .select('"references".*, quiz_questions.quiz_id as q_id')
-                            .with_attached_reference_images
+                            .includes(reference_images: { file_attachment: :blob })
                             .group_by(&:q_id)
                             .transform_values(&:first)
     
@@ -56,7 +56,7 @@ class QuizzesController < ApplicationController
     @domaine_covers = Reference.joins(:domaines)
                                .where(domaines: { id: domaine_ids })
                                .select('"references".*, domaines.id as d_id')
-                               .with_attached_reference_images
+                               .includes(reference_images: { file_attachment: :blob })
                                .group_by(&:d_id)
                                .transform_values(&:first)
     

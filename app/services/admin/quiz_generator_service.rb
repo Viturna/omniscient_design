@@ -26,6 +26,7 @@ class Admin::QuizGeneratorService
     end
 
     references.each do |ref|
+      available_types = []
       # Choisir un type de question aléatoirement parmi les données disponibles
       # Priorité aux designers : si un designer est présent, on augmente ses chances
       # (on l'ajoute deux fois dans la liste pour doubler sa probabilité)

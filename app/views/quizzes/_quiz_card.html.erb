@@ -4,8 +4,10 @@
       submission = @user_submissions_by_quiz[quiz.id]
       reference_with_image = @quiz_covers[quiz.id] if @quiz_covers
       
-      # Fallback domaine si pas d'image pré-chargée via les questions
-      reference_with_image ||= quiz.domaine&.references&.joins(:reference_images)&.first if @quiz_covers.nil? || !@quiz_covers.has_key?(quiz.id)
+      # Fallback domaine via les données pré-chargées
+      if (reference_with_image.nil? || !@quiz_covers.has_key?(quiz.id)) && quiz.domaine_id
+        reference_with_image = @domaine_covers[quiz.domaine_id] if @domaine_covers
+      end
     %>
     <% if reference_with_image && reference_with_image.reference_images.first&.file&.attached? %>
       <%= image_tag reference_with_image.reference_images.first.file.variant(resize_to_fill: [400, 300]) %>

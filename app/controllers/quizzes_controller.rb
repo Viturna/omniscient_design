@@ -40,14 +40,25 @@ class QuizzesController < ApplicationController
 
     @quizzes = @quizzes.order(created_at: :desc)
     
-    # Optimisation ultime : On pré-charge une image par quiz pour éviter le N+1 dans la vue
+    # Optimisation ultime : On pré-charge une image par quiz
     quiz_ids = @quizzes.pluck(:id)
-    @quiz_covers = Reference.joins(:quiz_questions, :reference_images)
+    
+    # 1. On cherche d'abord dans les questions
+    @quiz_covers = Reference.joins(:quiz_questions)
                             .where(quiz_questions: { quiz_id: quiz_ids })
                             .select('"references".*, quiz_questions.quiz_id as q_id')
-                            .includes(reference_images: { file_attachment: :blob })
+                            .with_attached_reference_images
                             .group_by(&:q_id)
                             .transform_values(&:first)
+    
+    # 2. On pré-charge les images des domaines pour les fallbacks
+    domaine_ids = @quizzes.map(&:domaine_id).compact.uniq
+    @domaine_covers = Reference.joins(:domaines)
+                               .where(domaines: { id: domaine_ids })
+                               .select('"references".*, domaines.id as d_id')
+                               .with_attached_reference_images
+                               .group_by(&:d_id)
+                               .transform_values(&:first)
     
     # On charge TOUTES les soumissions de l'utilisateur pour éviter les N+1 dans la vue
     @user_submissions_by_quiz = current_user.quiz_submissions.index_by(&:quiz_id)

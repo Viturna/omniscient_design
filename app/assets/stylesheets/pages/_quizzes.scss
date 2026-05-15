@@ -720,24 +720,75 @@
 
   .quiz-player-wrapper {
     flex-direction: column;
+    height: 100vh;
+    height: -webkit-fill-available;
+    position: fixed;
     overflow-y: auto;
-    
+
     .quiz-left-pane {
       width: 100%;
-      height: auto;
-      min-height: 30vh;
-      padding: 30px 20px;
-      .question-title { font-size: 24px; }
+      min-height: 40vh; /* Moins haut sur mobile pour laisser de la place aux réponses */
+      padding: 24px;
+      padding-top: 60px; /* Espace pour l'encoche/bouton retour */
+
+      .pane-content {
+        .domaine-badge { margin-bottom: 20px; }
+        .progress-section { margin-bottom: 30px; }
+        h2.question-title { 
+          font-size: 24px; 
+          margin-bottom: 8px;
+          line-height: 1.2;
+        }
+        .instruction { font-size: 14px; }
+      }
+      
+      .pane-footer { display: none; } /* On cache le branding en bas sur mobile pour gagner de l'espace */
     }
-    
+
     .quiz-right-pane {
       width: 100%;
-      padding: 20px;
+      min-height: 60vh;
+      padding: 24px;
+      padding-bottom: 120px; /* Espace pour la barre de nav du bas */
+      margin-top: -20px; /* Petit chevauchement stylé mais contrôlé */
+      border-radius: 24px 24px 0 0;
       
-      .answers-grid {
-        max-width: 100%;
+      .pane-header {
+        margin-bottom: 24px;
+        flex-direction: row; /* On garde les points et l'erreur sur la même ligne */
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .answers-container {
         gap: 12px;
-        &.has-images { grid-template-columns: 1fr; }
+        &.has-images {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          .answer-btn { height: 140px; }
+        }
+        
+        .answer-btn {
+          padding: 16px;
+          font-size: 15px;
+        }
+      }
+
+      .pane-footer {
+        position: relative;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #EEE;
+        
+        .footer-nav {
+          width: 100%;
+          gap: 12px;
+          .nav-btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 14px;
+          }
+        }
       }
     }
   }
@@ -748,4 +799,3 @@
     h2 { font-size: 28px; }
   }
 }
-

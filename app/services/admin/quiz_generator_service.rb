@@ -27,8 +27,11 @@ class Admin::QuizGeneratorService
 
     references.each do |ref|
       # Choisir un type de question aléatoirement parmi les données disponibles
-      available_types = []
+      # Priorité aux designers : si un designer est présent, on augmente ses chances
+      # (on l'ajoute deux fois dans la liste pour doubler sa probabilité)
       available_types << :designer if ref.designers.any?
+      available_types << :designer if ref.designers.any? 
+      
       available_types << :date if ref.date_reference.present?
       available_types << :domaine if ref.domaines.any?
       
@@ -127,9 +130,8 @@ class Admin::QuizGeneratorService
     image = reference.reference_images.first
     return nil unless image&.file&.attached?
     
-    Rails.application.routes.url_helpers.rails_representation_url(
-      image.file.variant(resize_to_fill: [400, 400]).processed,
-      only_path: true
-    )
+    Rails.application.routes.url_helpers.rails_blob_url(image.file, only_path: true)
+  rescue
+    nil
   end
 end

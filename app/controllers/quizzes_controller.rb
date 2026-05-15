@@ -160,10 +160,11 @@ class QuizzesController < ApplicationController
     image = reference.reference_images.first
     return nil unless image&.file&.attached?
     
-    Rails.application.routes.url_helpers.rails_representation_url(
-      image.file.variant(resize_to_fill: [600, 400]).processed,
-      only_path: true
-    )
+    # On utilise l'URL directe pour plus de stabilité dans un premier temps
+    # ou une représentation simple
+    Rails.application.routes.url_helpers.rails_blob_url(image.file, only_path: true)
+  rescue
+    nil
   end
 
   def set_quiz

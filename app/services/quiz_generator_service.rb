@@ -110,9 +110,8 @@ class QuizGeneratorService
     image = reference.reference_images.first
     return nil unless image&.file&.attached?
     
-    Rails.application.routes.url_helpers.rails_representation_url(
-      image.file.variant(resize_to_fill: [300, 200]).processed,
-      only_path: true
-    )
+    Rails.application.routes.url_helpers.rails_blob_url(image.file, only_path: true)
+  rescue
+    nil
   end
 end

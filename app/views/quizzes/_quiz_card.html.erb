@@ -1,12 +1,18 @@
 <div class="quiz-card">
   <div class="card-image">
     <% 
-      # On cherche une image parmi les références liées aux questions du quiz
-      reference_with_image = Reference.joins(:quiz_questions, :reference_images)
-                                      .where(quiz_questions: { quiz_id: quiz.id })
+      # On cherche l'image du quiz de manière plus efficace
+      # On prend la première question qui a une référence avec image
+      submission = @user_submissions_by_quiz[quiz.id]
+      
+      # Optimisation : On essaie de récupérer une image via les associations déjà chargées si possible
+      # Sinon on fait une requête ciblée
+      first_question = quiz.quiz_questions.first
+      reference_with_image = Reference.joins(:reference_images)
+                                      .where(id: quiz.quiz_questions.select(:reference_id))
                                       .first
       
-      # Fallback sur le domaine si rien trouvé dans les questions
+      # Fallback domaine
       reference_with_image ||= quiz.domaine&.references&.joins(:reference_images)&.first
     %>
     <% if reference_with_image && reference_with_image.reference_images.first&.file&.attached? %>
@@ -18,11 +24,11 @@
   
   <div class="card-content">
     <div class="card-badges">
-      <% if quiz.completed_by?(current_user) %>
+      <% if submission&.status == "completed" %>
         <span class="badge status status-completed">
-          TERMINÉ • <%= quiz.best_score_for(current_user) %>/<%= quiz.quiz_questions.count * 10 %> pts
+          TERMINÉ • <%= submission.score %>/<%= quiz.quiz_questions.size * 10 %> pts
         </span>
-      <% elsif quiz.in_progress_by?(current_user) %>
+      <% elsif submission&.status == "in_progress" %>
         <span class="badge status status-in-progress">EN COURS</span>
       <% else %>
         <span class="badge status">À FAIRE</span>

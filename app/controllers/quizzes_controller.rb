@@ -4,6 +4,8 @@ class QuizzesController < ApplicationController
 
   def index
     @current_page = 'jeux'
+    
+    # Eager loading massif pour éviter les N+1 sur les domaines et questions
     @quizzes = Quiz.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
 
     # Filtrage par Domaine
@@ -36,17 +38,19 @@ class QuizzesController < ApplicationController
       end
     end
 
-    # On récupère les quiz
     @quizzes = @quizzes.order(created_at: :desc)
+    
+    # On charge TOUTES les soumissions de l'utilisateur pour éviter les N+1 dans la vue
+    @user_submissions_by_quiz = current_user.quiz_submissions.index_by(&:quiz_id)
     
     # Pour les filtres
     @user_lists = current_user.lists.joins(:references).group('lists.id').having('count("references".id) >= 5')
     
-    # On récupère les quiz uniques les plus récents (pour la section du haut)
+    # Quiz récents
     @recent_quizzes = current_user.quiz_submissions
-                                  .order(created_at: :desc)
-                                  .limit(20)
                                   .includes(:quiz)
+                                  .order(updated_at: :desc)
+                                  .limit(10)
                                   .map(&:quiz)
                                   .compact
                                   .uniq

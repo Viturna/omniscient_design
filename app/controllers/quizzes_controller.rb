@@ -40,6 +40,15 @@ class QuizzesController < ApplicationController
 
     @quizzes = @quizzes.order(created_at: :desc)
     
+    # Optimisation ultime : On pré-charge une image par quiz pour éviter le N+1 dans la vue
+    quiz_ids = @quizzes.pluck(:id)
+    @quiz_covers = Reference.joins(:quiz_questions, :reference_images)
+                            .where(quiz_questions: { quiz_id: quiz_ids })
+                            .select('"references".*, quiz_questions.quiz_id as q_id')
+                            .includes(reference_images: { file_attachment: :blob })
+                            .group_by(&:q_id)
+                            .transform_values(&:first)
+    
     # On charge TOUTES les soumissions de l'utilisateur pour éviter les N+1 dans la vue
     @user_submissions_by_quiz = current_user.quiz_submissions.index_by(&:quiz_id)
     
@@ -58,7 +67,7 @@ class QuizzesController < ApplicationController
   end
 
   def show
-    @questions = @quiz.quiz_questions.includes(:quiz_answers).order(:order)
+    @questions = @quiz.quiz_questions.includes(:quiz_answers, :reference).order(:order)
     
     # Trouver ou créer une session en cours
     @submission = current_user.quiz_submissions.find_or_create_by!(
@@ -74,7 +83,7 @@ class QuizzesController < ApplicationController
       {
         id: q.id,
         content: q.content,
-        reference_image_url: q.reference_id ? get_image_url(Reference.find(q.reference_id)) : nil,
+        reference_image_url: q.reference ? get_image_url(q.reference) : nil,
         quiz_answers: q.quiz_answers.map { |a|
           {
             id: a.id,

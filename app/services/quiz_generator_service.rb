@@ -79,7 +79,18 @@ class QuizGeneratorService
       year = reference.date_reference
       content = "En quelle année la référence \"#{reference.nom_reference}\" a-t-elle été créée ?"
       correct_answer = year.to_s
-      distractors = [year - 10, year + 5, year + 15].map(&:to_s).shuffle
+      
+      current_year = Time.current.year
+      offsets = [5, -5, 10, -10, 15, -15, 20, -20, 25, -25].shuffle
+      wrong_years = []
+      offsets.each do |offset|
+        y = year + offset
+        if y <= current_year && y != year && !wrong_years.include?(y)
+          wrong_years << y
+        end
+        break if wrong_years.size >= 3
+      end
+      distractors = wrong_years.map(&:to_s)
     end
 
     question = quiz.quiz_questions.create!(

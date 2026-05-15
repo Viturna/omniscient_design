@@ -32,7 +32,7 @@
       </div>
 
       <div class="filter-item">
-        <label>Questions</label>
+        <label>Quiz</label>
         <%= f.select :count_range, 
                      [["Court", "small"], ["Moyen", "medium"], ["Long", "large"]], 
                      { include_blank: "Toutes", selected: params[:count_range] }, 
@@ -63,7 +63,7 @@
           <h2>Notre sélection de quiz avant le bac</h2>
           <p>Les indispensables pour réviser. Maîtrise les mouvements et les créateurs qui ont façonné le design.</p>
         </div>
-        <div class="quiz-grid">
+        <div class="quiz-grid" data-controller="scroll-horizontal" data-scroll-horizontal-target="wrapper">
           <% @quizzes.each do |quiz| %>
             <%= render 'quiz_card', quiz: quiz %>
           <% end %>
@@ -84,7 +84,7 @@
           <h2>Jouer avec mes listes</h2>
           <p>Ton terrain d'entraînement personnel. Transforme tes listes de références en quiz dynamiques.</p>
         </div>
-        <div class="quiz-grid">
+        <div class="quiz-grid" data-controller="scroll-horizontal" data-scroll-horizontal-target="wrapper">
           <% @user_lists.each do |list| %>
             <%= render 'list_quiz_card', list: list %>
           <% end %>
@@ -99,7 +99,7 @@
           <h2>Récemment joué</h2>
           <p>Ne laisse aucune question sans réponse. Reprends ta progression là où tu t'étais arrêté.</p>
         </div>
-        <div class="quiz-grid">
+        <div class="quiz-grid" data-controller="scroll-horizontal" data-scroll-horizontal-target="wrapper">
           <% @recent_quizzes.each do |quiz| %>
             <%= render 'quiz_card', quiz: quiz %>
           <% end %>

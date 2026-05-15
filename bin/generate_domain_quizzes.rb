@@ -1,7 +1,7 @@
-# Utilisation : rails runner lib/scripts/generate_domain_quizzes.rb COUNT=15
-# Par défaut COUNT=10 si non précisé
+# Utilisation : rails runner bin/generate_domain_quizzes.rb COUNT=15
+# Par défaut COUNT=10 si non précisé, MAX=25
 
-count = (ENV['COUNT'] || 10).to_i
+count = [(ENV['COUNT'] || 10).to_i, 25].min
 puts "🚀 Lancement de la génération des quiz par domaine (Questions par quiz : #{count})..."
 
 Domaine.all.each do |domaine|

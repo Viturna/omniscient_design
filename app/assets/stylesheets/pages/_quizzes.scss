@@ -87,7 +87,10 @@
       -ms-overflow-style: none;  /* IE/Edge */
       &::-webkit-scrollbar { display: none; } /* Chrome/Safari */
       
-      scroll-snap-type: x mandatory;
+      cursor: grab;
+      &:active { cursor: grabbing; }
+      
+      // scroll-snap-type: x mandatory;
       
       & > * {
         flex: 0 0 350px;
@@ -145,7 +148,10 @@
         &.status { background: #F2F2F2; color: #52525D; }
         &.status-completed { background: #E8F5E9; color: #2E7D32; }
         &.status-in-progress { background: #E3F2FD; color: #1565C0; }
-        &.domaine { background: #FFF4D0; color: #F2AD22; }
+        &.domaine { 
+          background: #F2F2F2; 
+          color: #52525D; 
+        }
       }
     }
 
@@ -193,7 +199,7 @@
 .quiz-player-wrapper {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -588,52 +594,15 @@
   from { transform: scale(0.5); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .quizzes-hub {
-    .top-header {
-      .header-main-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 40px;
-
-        .header-daily-side {
-          width: 100%;
-          max-width: 500px;
-        }
-      }
-    }
-  }
-
-  .quiz-player-wrapper {
-    flex-direction: column;
-    overflow-y: auto;
-    
-    .quiz-left-pane {
-      width: 100%;
-      height: auto;
-      min-height: 40vh;
-    }
-    
-    .quiz-right-pane {
-      width: 100%;
-      padding: 24px;
-    }
-  }
-}
-
 /* --- FILTERS TOOLBAR --- */
 .hub-filters-toolbar {
   background: #FFFFFF;
-  border: 1px solid #EEEEEE;
   padding: 8px 20px;
-  border-radius: 12px;
-  margin: -25px 6vw 40px 6vw;
+  border-radius: 8px;
+  margin: 45px 6vw 20px 6vw;
   position: relative;
   z-index: 10;
   width: fit-content; /* S'adapte au contenu */
-  box-shadow: none; /* Plus d'ombre */
 
   .hub-filters-form {
     display: flex;
@@ -700,13 +669,83 @@
   }
 }
 
+/* --- RESPONSIVE --- */
+
+@media (max-width: 1024px) {
+  .quizzes-hub {
+    .top-header {
+      .header-main-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 40px;
+        .header-daily-side { width: 100%; max-width: 500px; }
+      }
+    }
+  }
+}
+
 @media (max-width: 992px) {
   .hub-filters-toolbar {
     width: auto;
     margin: 20px 6vw;
     padding: 12px;
     .hub-filters-form { gap: 12px; }
-    .filter-item { flex: 1; min-width: 100%; justify-content: space-between; }
-    .hub-filter-reset { border: 1px solid #eee; width: 100%; }
+    .filter-item { flex: 1; min-width: 140px; }
   }
 }
+
+@media (max-width: 768px) {
+  .quizzes-hub {
+    .top-header {
+      padding: 40px 6vw;
+      h1 { font-size: 32px; }
+      .search-container { width: 100%; margin-top: 30px; }
+    }
+    
+    .quiz-grid {
+      display: flex;
+      gap: 16px;
+      padding-right: 0;
+      
+      .quiz-card {
+        flex: 0 0 280px; /* Un peu plus petit sur mobile */
+      }
+    }
+    
+    .quiz-section {
+      margin-bottom: 40px;
+      .section-header h2 { font-size: 24px; }
+    }
+  }
+
+  .quiz-player-wrapper {
+    flex-direction: column;
+    overflow-y: auto;
+    
+    .quiz-left-pane {
+      width: 100%;
+      height: auto;
+      min-height: 30vh;
+      padding: 30px 20px;
+      .question-title { font-size: 24px; }
+    }
+    
+    .quiz-right-pane {
+      width: 100%;
+      padding: 20px;
+      
+      .answers-grid {
+        max-width: 100%;
+        gap: 12px;
+        &.has-images { grid-template-columns: 1fr; }
+      }
+    }
+  }
+
+  .quiz-result-modal .modal-content {
+    width: 95%;
+    padding: 30px 20px;
+    h2 { font-size: 28px; }
+  }
+}
+

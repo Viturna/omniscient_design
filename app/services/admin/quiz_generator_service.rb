@@ -2,7 +2,7 @@ class Admin::QuizGeneratorService
   def initialize(params)
     @title = params[:title]
     @domaine_id = params[:domaine_id]
-    @count = params[:count].to_i
+    @count = [params[:count].to_i, 25].min
     @domaine = Domaine.find(@domaine_id) if @domaine_id.present?
   end
 
@@ -32,6 +32,12 @@ class Admin::QuizGeneratorService
       available_types << :date if ref.date_reference.present?
       available_types << :domaine if ref.domaines.any?
       
+      has_image = ref.reference_images.any? && ref.reference_images.first.file.attached?
+      if has_image
+        available_types << :name_from_image
+        available_types << :image_from_name
+      end
+      
       type = available_types.sample
       next if type.nil?
 
@@ -42,7 +48,6 @@ class Admin::QuizGeneratorService
           content: "À quel designer associez-vous cette référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
-        # Distracteurs : autres designers
         wrong_pool = Designer.where.not(id: ref.designer_ids).where(validation: true).order("RANDOM()").limit(3)
         wrong_pool.each { |d| question.quiz_answers.build(content: d.nom_designer, is_correct: false) }
         
@@ -52,10 +57,17 @@ class Admin::QuizGeneratorService
           content: "En quelle année a été créée la référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
-        # Distracteurs : années proches (+/- 2, 5, 10 ans)
-        [2, -2, 5, -5, 10, -10].sample(3).each do |offset|
-          question.quiz_answers.build(content: (ref.date_reference + offset).to_s, is_correct: false)
+        current_year = Time.current.year
+        offsets = [2, -2, 5, -5, 10, -10, 15, -15, 20, -20].shuffle
+        wrong_years = []
+        offsets.each do |offset|
+          year = ref.date_reference + offset
+          if year <= current_year && year != ref.date_reference && !wrong_years.include?(year)
+            wrong_years << year
+          end
+          break if wrong_years.size >= 3
         end
+        wrong_years.each { |y| question.quiz_answers.build(content: y.to_s, is_correct: false) }
 
       when :domaine
         correct_answer = ref.domaines.first.domaine
@@ -63,9 +75,32 @@ class Admin::QuizGeneratorService
           content: "À quel domaine appartient la référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
-        # Distracteurs : autres domaines
         wrong_pool = Domaine.where.not(id: ref.domaine_ids).order("RANDOM()").limit(3)
         wrong_pool.each { |d| question.quiz_answers.build(content: d.domaine, is_correct: false) }
+
+      when :name_from_image
+        correct_answer = ref.nom_reference
+        question = quiz.quiz_questions.build(
+          content: "Quel est le nom de cette référence ?",
+          reference_id: ref.id
+        )
+        wrong_pool = Reference.where.not(id: ref.id).where(validation: true).order("RANDOM()").limit(3)
+        wrong_pool.each { |r| question.quiz_answers.build(content: r.nom_reference, is_correct: false) }
+
+      when :image_from_name
+        correct_answer = get_image_url(ref)
+        question = quiz.quiz_questions.build(
+          content: "Laquelle de ces images correspond à la référence : '#{ref.nom_reference}' ?",
+          reference_id: ref.id
+        )
+        # Distracteurs : autres références avec images
+        wrong_pool = Reference.where.not(id: ref.id)
+                              .joins(:reference_images)
+                              .where(validation: true)
+                              .distinct
+                              .order("RANDOM()")
+                              .limit(3)
+        wrong_pool.each { |r| question.quiz_answers.build(content: get_image_url(r), is_correct: false) }
       end
 
       # Ajouter la bonne réponse
@@ -85,5 +120,17 @@ class Admin::QuizGeneratorService
 
     quiz.save!
     quiz
+  end
+
+  private
+
+  def get_image_url(reference)
+    image = reference.reference_images.first
+    return nil unless image&.file&.attached?
+    
+    Rails.application.routes.url_helpers.rails_representation_url(
+      image.file.variant(resize_to_fill: [400, 400]).processed,
+      only_path: true
+    )
   end
 end

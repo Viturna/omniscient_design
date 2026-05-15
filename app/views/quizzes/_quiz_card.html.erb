@@ -1,19 +1,11 @@
 <div class="quiz-card">
   <div class="card-image">
     <% 
-      # On cherche l'image du quiz de manière plus efficace
-      # On prend la première question qui a une référence avec image
       submission = @user_submissions_by_quiz[quiz.id]
+      reference_with_image = @quiz_covers[quiz.id] if @quiz_covers
       
-      # Optimisation : On essaie de récupérer une image via les associations déjà chargées si possible
-      # Sinon on fait une requête ciblée
-      first_question = quiz.quiz_questions.first
-      reference_with_image = Reference.joins(:reference_images)
-                                      .where(id: quiz.quiz_questions.select(:reference_id))
-                                      .first
-      
-      # Fallback domaine
-      reference_with_image ||= quiz.domaine&.references&.joins(:reference_images)&.first
+      # Fallback domaine si pas d'image pré-chargée via les questions
+      reference_with_image ||= quiz.domaine&.references&.joins(:reference_images)&.first if @quiz_covers.nil? || !@quiz_covers.has_key?(quiz.id)
     %>
     <% if reference_with_image && reference_with_image.reference_images.first&.file&.attached? %>
       <%= image_tag reference_with_image.reference_images.first.file.variant(resize_to_fill: [400, 300]) %>
@@ -34,7 +26,9 @@
         <span class="badge status">À FAIRE</span>
       <% end %>
       <% if quiz.domaine %>
-        <span class="badge domaine"><%= quiz.domaine.domaine %></span>
+        <span class="badge domaine" style="background-color: color-mix(in srgb, <%= quiz.domaine.couleur %>, transparent 80%); color: <%= quiz.domaine.couleur %>;">
+          <%= quiz.domaine.domaine %>
+        </span>
       <% end %>
     </div>
 

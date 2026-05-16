@@ -80,11 +80,13 @@ class QuizzesController < ApplicationController
   end
 
   def leaderboard
-    @users = User.where('quiz_points > 0').order(quiz_points: :desc).limit(50)
+    @users = User.where('quiz_points > 0').order(quiz_points: :desc)
     
     if params[:query].present?
       @users = @users.where('pseudo ILIKE ?', "%#{params[:query]}%")
     end
+
+    @users = @users.page(params[:page]).per(25)
   end
 
   def show

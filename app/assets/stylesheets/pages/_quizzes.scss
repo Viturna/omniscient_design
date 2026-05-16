@@ -774,7 +774,7 @@
     .quiz-left-pane {
       width: 100%;
       padding: 24px;
-      padding-top: 60px; /* Espace pour l'encoche/bouton retour */
+      padding-top: calc(env(safe-area-inset-top) + 24px); /* Gère l'encoche/status bar sur mobile */
 
       .pane-header {
         margin-bottom: 24px;

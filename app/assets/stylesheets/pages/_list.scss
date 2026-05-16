@@ -175,15 +175,21 @@
   }
 }
 @media screen and (max-width: 768px) {
+  .button_to{
+    width: 10vw !important;
+  }
   .bottom-list {
+    justify-content: flex-end;
     width: 100vw;
-    padding-right: 8vw;
+    padding:0 8vw;
     bottom: var(--native-bottom, 70px);
+    gap:32px;
     .delete {
       margin-top: 0;
+      width: fit-content;
     }
     #openPopupAdd {
-      width: 40vw;
+      width: 70vw;
     }
   }
 }

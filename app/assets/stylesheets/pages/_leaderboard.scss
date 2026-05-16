@@ -265,11 +265,11 @@
 @media (max-width: 768px) {
   .leaderboard-container {
     .top-header {
-      padding: calc(env(safe-area-inset-top) + 24px) 24px 0;
+      padding: calc(env(safe-area-inset-top) + 24px) 24px 32px;
       h1 { font-size: 36px; }
     }
     .leaderboard-content {
-      margin-top: 30px;
+      margin-top: 60px;
       .leaderboard-card {
         padding: 60px 15px 20px;
         .search-section { 

@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = [
     "questionsData", "currentIndex", "progressPercentage", "progressBar", "questionTitle", 
     "instruction", "answersContainer", "totalPoints", "motivationMsg", "pointsFeedback",
-    "prevBtn", "nextBtn", "resultModal", "finalScore"
+    "prevBtn", "nextBtn", "resultModal", "finalScore", "imageContainer", "questionImage"
   ]
   
   static values = {

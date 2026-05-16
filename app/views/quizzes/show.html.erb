@@ -54,6 +54,8 @@
     <div class="pane-header">
       <%= link_to "Signaler une erreur", new_bug_report_path, class: "report-link" %>
       <div class="points-pill">
+         <span style="color: rgba(255,255,255,0.6); font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
+         <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
          <div class="icon-points-wrapper">
            <%= image_tag "points_od.svg", width: 16, height: 16 %>
          </div>

@@ -9,6 +9,8 @@
 
       <div class="header-actions">
         <div class="points-pill">
+           <span style="color: #888; font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
+           <div style="width: 1px; height: 16px; background: rgba(0,0,0,0.1); margin: 0 2px;"></div>
            <%= image_tag "points_od_black.svg", width: 20, height: 20 %>
            <span><%= current_user.quiz_points %> pts</span>
         </div>

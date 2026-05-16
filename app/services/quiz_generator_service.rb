@@ -46,7 +46,21 @@ class QuizGeneratorService
       possible_types << :year_from_ref
     end
 
-    type = possible_types.sample
+    # Définition d'un roulement idéal pour garantir la diversité et favoriser les questions à images
+    ideal_rotation = [
+      :name_from_image,
+      :designer_from_ref,
+      :image_from_ref,
+      :year_from_ref,
+      :name_from_image,
+      :ref_from_designer,
+      :image_from_ref
+    ]
+    
+    preferred_type = ideal_rotation[index % ideal_rotation.length]
+    
+    # Si le type préféré est possible, on le prend, sinon on se rabat sur un choix aléatoire possible
+    type = possible_types.include?(preferred_type) ? preferred_type : possible_types.sample
 
     case type
     when :designer_from_ref

@@ -34,7 +34,6 @@ class Admin::QuizGeneratorService
       available_types << :designer if ref.designers.any? 
       
       available_types << :date if ref.date_reference.present?
-      available_types << :domaine if ref.domaines.any?
       
       has_image = ref.reference_images.any? && ref.reference_images.first.file.attached?
       if has_image
@@ -72,15 +71,6 @@ class Admin::QuizGeneratorService
           break if wrong_years.size >= 3
         end
         wrong_years.each { |y| question.quiz_answers.build(content: y.to_s, is_correct: false) }
-
-      when :domaine
-        correct_answer = ref.domaines.first.domaine
-        question = quiz.quiz_questions.build(
-          content: "À quel domaine appartient la référence : '#{ref.nom_reference}' ?",
-          reference_id: ref.id
-        )
-        wrong_pool = Domaine.where.not(id: ref.domaine_ids).order("RANDOM()").limit(3)
-        wrong_pool.each { |d| question.quiz_answers.build(content: d.domaine, is_correct: false) }
 
       when :name_from_image
         correct_answer = ref.nom_reference

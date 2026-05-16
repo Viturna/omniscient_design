@@ -742,7 +742,7 @@
 @media (max-width: 768px) {
   .quizzes-hub {
     .top-header {
-      padding: 40px 6vw;
+      padding: calc(env(safe-area-inset-top) + 40px) 6vw 40px;
       h1 { font-size: 32px; }
       .search-container { width: 100%; margin-top: 30px; }
     }

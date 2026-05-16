@@ -78,7 +78,7 @@ class Admin::QuizGeneratorService
           content: "Quel est le nom de cette référence ?",
           reference_id: ref.id
         )
-        wrong_pool = Reference.where.not(id: ref.id).where(validation: true).order("RANDOM()").limit(3)
+        wrong_pool = wrong_references_pool(exclude_id: ref.id).limit(3)
         wrong_pool.each { |r| question.quiz_answers.build(content: r.nom_reference, is_correct: false) }
 
       when :image_from_name
@@ -87,12 +87,10 @@ class Admin::QuizGeneratorService
           content: "Laquelle de ces images correspond à la référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
-        # Distracteurs : autres références avec images
-        wrong_pool = Reference.where(id: ReferenceImage.select(:reference_id))
-                              .where.not(id: ref.id)
-                              .where(validation: true)
-                              .order("RANDOM()")
-                              .limit(3)
+        # Distracteurs : autres références avec images, du même domaine si possible
+        wrong_pool = wrong_references_pool(exclude_id: ref.id)
+                          .where(id: ReferenceImage.select(:reference_id))
+                          .limit(3)
         wrong_pool.each { |r| question.quiz_answers.build(content: get_image_url(r), is_correct: false) }
       end
 
@@ -116,6 +114,14 @@ class Admin::QuizGeneratorService
   end
 
   private
+
+  # Retourne un scope de références distracteurs :
+  # - du même domaine si le quiz est filtré par domaine
+  # - sinon toutes les références validées
+  def wrong_references_pool(exclude_id:)
+    pool = Reference.where.not(id: exclude_id).where(validation: true).order("RANDOM()")
+    @domaine ? pool.joins(:domaines).where(domaines: { id: @domaine.id }) : pool
+  end
 
   def get_image_url(reference)
     image = reference.reference_images.first

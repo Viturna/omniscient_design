@@ -48,6 +48,6 @@
       </div>
     </div>
 
-    <%= link_to (quiz.in_progress_by?(current_user) ? "Continuer" : "Faire le quizz"), quiz_path(quiz), class: "button dark w-full" %>
+    <%= link_to (quiz.in_progress_by?(current_user) ? "Continuer" : "Faire le quiz"), quiz_path(quiz), class: "button dark w-full" %>
   </div>
 </div>

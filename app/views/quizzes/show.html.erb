@@ -35,6 +35,10 @@
         </div>
       </div>
 
+      <div class="question-image-container hidden" data-quiz-player-target="imageContainer">
+        <img src="" alt="" data-quiz-player-target="questionImage">
+      </div>
+
       <h2 class="question-title" data-quiz-player-target="questionTitle"><%= @questions.first&.content || "Chargement..." %></h2>
       <p class="instruction" data-quiz-player-target="instruction">Sélectionne une réponse</p>
     </div>

@@ -147,8 +147,6 @@ class QuizzesController < ApplicationController
   def generate_from_list
     list = current_user.lists.find(params[:list_id])
     
-    # On peut soit créer un nouveau quiz à chaque fois, soit réutiliser un existant
-    # Ici on va en créer un nouveau pour la fraîcheur des questions dynamiques
     quiz = QuizGeneratorService.new(list, current_user).call
     
     redirect_to quiz_path(quiz)
@@ -160,8 +158,6 @@ class QuizzesController < ApplicationController
     image = reference.reference_images.first
     return nil unless image&.file&.attached?
     
-    # On utilise l'URL directe pour plus de stabilité dans un premier temps
-    # ou une représentation simple
     Rails.application.routes.url_helpers.rails_blob_url(image.file, only_path: true)
   rescue
     nil

@@ -57,6 +57,17 @@ export default class extends Controller {
     this.currentIndexTarget.textContent = this.index + 1
     this.answersContainerTarget.innerHTML = ""
     this.instructionTarget.style.color = ""
+
+    // Gestion de l'image de la question
+    if (this.hasImageContainerTarget && this.hasQuestionImageTarget) {
+      if (question.reference_image_url) {
+        this.questionImageTarget.src = question.reference_image_url
+        this.imageContainerTarget.classList.remove("hidden")
+      } else {
+        this.imageContainerTarget.classList.add("hidden")
+        this.questionImageTarget.src = ""
+      }
+    }
     
     const selectedId = this.userAnswers[this.index]
     if (selectedId) {

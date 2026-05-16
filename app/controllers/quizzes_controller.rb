@@ -29,9 +29,11 @@ class QuizzesController < ApplicationController
     if params[:status].present? && current_user
       case params[:status]
       when "in_progress"
-        @quizzes = @quizzes.joins(:quiz_submissions).where(quiz_submissions: { user: current_user, status: 'in_progress' }).distinct
+        in_progress_ids = current_user.quiz_submissions.where(status: 'in_progress').pluck(:quiz_id)
+        @quizzes = @quizzes.where(id: in_progress_ids)
       when "completed"
-        @quizzes = @quizzes.joins(:quiz_submissions).where(quiz_submissions: { user: current_user, status: 'completed' }).distinct
+        completed_ids = current_user.quiz_submissions.where(status: 'completed').pluck(:quiz_id)
+        @quizzes = @quizzes.where(id: completed_ids)
       when "not_started"
         started_ids = current_user.quiz_submissions.pluck(:quiz_id)
         @quizzes = @quizzes.where.not(id: started_ids)

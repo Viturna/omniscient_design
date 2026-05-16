@@ -191,6 +191,7 @@ Rails.application.routes.draw do
 
     # ---- QUIZ SYSTEM ----
     get 'jeux', to: 'quizzes#index', as: :quizzes_hub
+    get 'classement', to: 'quizzes#leaderboard', as: :leaderboard
     resources :quizzes, only: [:show] do
       post :submit, on: :member
       patch :save_progress, on: :member

@@ -1,0 +1,81 @@
+<div class="leaderboard-container">
+  <section class="top-header">
+    <div class="header-navigation-wrapper">
+      <%= link_to quizzes_hub_path, class: "back-link" do %>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+        </svg>
+      <% end %>
+
+      <div class="header-actions">
+        <div class="points-pill">
+           <%= image_tag "points_od_black.svg", width: 20, height: 20 %>
+           <span><%= current_user.quiz_points %> pts</span>
+        </div>
+        <div class="leaderboard-icon-btn active">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <p class="subtitle-top">Jeux</p>
+    <h1>Classement</h1>
+    <p class="subtitle">Découvre qui sont les meilleurs historiens du design de la communauté.</p>
+  </section>
+
+  <div class="leaderboard-content">
+    <div class="floating-icon">
+      <div class="icon-inner">
+        <%= image_tag "points_od_black.svg" %>
+      </div>
+    </div>
+
+    <div class="leaderboard-card">
+      <div class="search-section">
+        <%= form_with url: leaderboard_path, method: :get, data: { turbo_frame: "leaderboard_table", controller: "search-leaderboard" } do |f| %>
+          <div class="search-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <%= f.text_field :query, 
+                placeholder: "Rechercher une personne", 
+                value: params[:query],
+                data: { action: "input->search-leaderboard#search" } %>
+          </div>
+        <% end %>
+      </div>
+
+      <%= turbo_frame_tag "leaderboard_table" do %>
+        <div class="leaderboard-list">
+          <div class="leaderboard-header">
+            <div class="rank-col">Rang</div>
+            <div class="user-col">Pseudo</div>
+            <div class="points-col">Points</div>
+          </div>
+          
+          <div class="leaderboard-rows">
+            <% @users.each_with_index do |user, index| %>
+              <div class="leaderboard-row <%= 'current-user-row' if user == current_user %>">
+                <div class="rank-cell">#<%= index + 1 %></div>
+                <div class="user-cell">
+                  <% if user.profile_image.attached? %>
+                    <%= image_tag user.profile_image.variant(resize_to_fill: [80, 80]), class: "avatar" %>
+                  <% else %>
+                    <div class="avatar-placeholder">
+                      <%= user.pseudo[0].upcase %>
+                    </div>
+                  <% end %>
+                  <span class="pseudo"><%= user.pseudo %></span>
+                </div>
+                <div class="points-cell">
+                  <div class="points-badge">
+                    <%= image_tag "points_od.svg", width: 14, height: 14 %>
+                    <span><%= user.quiz_points %> pts</span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

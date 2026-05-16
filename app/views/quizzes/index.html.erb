@@ -7,11 +7,14 @@
         </svg>
       <% end %>
 
-      <div class="points-display">
+      <div class="header-actions">
         <div class="points-pill">
-           <%= image_tag "points_od_black.svg", width: 24, height: 24 %>
+           <%= image_tag "points_od_black.svg", width: 20, height: 20 %>
            <span><%= current_user.quiz_points %> pts</span>
         </div>
+        <%= link_to leaderboard_path, class: "leaderboard-icon-btn" do %>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <% end %>
       </div>
     </div>
 

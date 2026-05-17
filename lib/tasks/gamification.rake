@@ -16,7 +16,8 @@ namespace :gamification do
       service.check_ambassador
       
       service.check_multi_support
-
+      service.check_gamer
+      service.check_competitor
     end
 
     puts "✅ Terminé ! Tous les utilisateurs ont été mis à jour."

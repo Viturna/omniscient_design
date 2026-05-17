@@ -132,7 +132,17 @@ require 'uri'
 #   # --- DONATEURS (Niveaux) ---
 #   { name: "Donateur Bronze", category: "donor", level: "bronze", threshold: 5, description: "Don cumulé de 5€.", filename: "donateur_bronze.png" },
 #   { name: "Donateur Argent", category: "donor", level: "silver", threshold: 20, description: "Don cumulé de 20€.", filename: "donateur_argent.png" },
-#   { name: "Donateur Or", category: "donor", level: "gold", threshold: 50, description: "Don cumulé de 50€.", filename: "donateur_or.png" }
+#   { name: "Donateur Or", category: "donor", level: "gold", threshold: 50, description: "Don cumulé de 50€.", filename: "donateur_or.png" },
+# 
+#   # --- GAMERS (Niveaux) ---
+#   { name: "Gamer Bronze", category: "gamer", level: "bronze", threshold: 500, description: "Tu as cumulé 500 points aux quiz. Bon début !", filename: "gamer_bronze.png" },
+#   { name: "Gamer Argent", category: "gamer", level: "silver", threshold: 1000, description: "Tu as cumulé 1000 points aux quiz. La passion grandit !", filename: "gamer_argent.png" },
+#   { name: "Gamer Or", category: "gamer", level: "gold", threshold: 2500, description: "Tu as cumulé 2500 points aux quiz. Un(e) véritable expert(e) !", filename: "gamer_or.png" },
+# 
+#   # --- COMPÉTITEURS (Niveaux) ---
+#   { name: "Compétiteur Bronze", category: "competitor", level: "bronze", threshold: 3, description: "Tu as atteint le Top 3 du classement général. Quel exploit !", filename: "competiteur_bronze.png" },
+#   { name: "Compétiteur Argent", category: "competitor", level: "silver", threshold: 2, description: "Tu as atteint le Top 2 du classement général. Presque au sommet !", filename: "competiteur_argent.png" },
+#   { name: "Compétiteur Or", category: "competitor", level: "gold", threshold: 1, description: "Tu as atteint le Top 1 du classement général. Le roi/la reine du design !", filename: "competiteur_or.png" }
 # ]
 
 # badges_data.each do |data|

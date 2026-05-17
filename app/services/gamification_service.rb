@@ -105,6 +105,41 @@ end
     })
   end
 
+  # "Gamer" : Points aux quiz
+  def check_gamer
+    points = @user.quiz_points || 0
+
+    assign_badge_by_level("gamer", points, {
+      500 => "bronze",
+      1000 => "silver",
+      2500 => "gold"
+    })
+  end
+
+  # "Compétiteur" : Top 1, Top 2, Top 3 du classement général
+  def check_competitor
+    points = @user.quiz_points || 0
+    return if points <= 0
+
+    rank = User.where('quiz_points > ?', points).count + 1
+
+    if rank <= 3
+      badge = Badge.find_by(category: "competitor", level: "bronze")
+      give_badge(badge) if badge
+    end
+
+    if rank <= 2
+      badge = Badge.find_by(category: "competitor", level: "silver")
+      give_badge(badge) if badge
+    end
+
+    if rank <= 1
+      badge = Badge.find_by(category: "competitor", level: "gold")
+      give_badge(badge) if badge
+    end
+  end
+
+
   private
 
   # Méthode générique pour attribuer un badge unique par nom

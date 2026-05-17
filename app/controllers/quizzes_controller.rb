@@ -149,6 +149,10 @@ class QuizzesController < ApplicationController
     # Ajouter les points au profil de l'utilisateur
     current_user.increment!(:quiz_points, score)
 
+    # Vérifier l'attribution des badges Gamer
+    GamificationService.new(current_user).check_gamer
+    GamificationService.new(current_user).check_competitor
+
     render json: { 
       status: 'success', 
       total_points: current_user.quiz_points,

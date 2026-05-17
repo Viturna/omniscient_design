@@ -8,7 +8,9 @@ class Badge < ApplicationRecord
     donor: "donor",             # Donateur
     contributor: "contributor", # Contributeur (Refs)
     ambassador: "ambassador",   # Ambassadeur (Parrainage)
-    investigator: "investigator" # Investigateur (Feedback/Bugs)
+    investigator: "investigator", # Investigateur (Feedback/Bugs)
+    gamer: "gamer",
+    competitor: "competitor"
   }
 
   # Niveaux

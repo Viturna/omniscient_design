@@ -314,7 +314,7 @@
                               <% if references_year.size > 1 %>
                                 <div class="references-counter" data-controller="references-counter">
                                   <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= references_year.size %></span>
-                                  <div class="hidden-references" data-references-counter-target="hiddenreferences" style="display: none;">
+                                  <div class="hidden-references" data-references-counter-target="hidden-references" style="display: none;">
                                     <% references_year.each do |reference| %>
                                       <%= link_to reference, class: "reference-point" do %>
                                         <% if reference.reference_images.first&.file&.attached? %>
@@ -354,7 +354,7 @@
                               <% if designers_year.size > 1 %>
                                 <div class="references-counter" data-controller="references-counter">
                                   <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= designers_year.size %></span>
-                                  <div class="hidden-references" data-references-counter-target="hiddenreferences" style="display: none;">
+                                 <div class="hidden-references" data-references-counter-target="hidden-references" style="display: none;">
                                     <% designers_year.each do |designer| %>
                                       <%= link_to designer, class: "reference-point" do %>
                                         <% if designer.designer_images.first&.file&.attached? %>
@@ -394,7 +394,7 @@
                               <% if studios_year.size > 1 %>
                                 <div class="references-counter" data-controller="references-counter">
                                   <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= studios_year.size %></span>
-                                  <div class="hidden-references" data-references-counter-target="hiddenreferences" style="display: none;">
+                                  <div class="hidden-references" data-references-counter-target="hidden-references" style="display: none;">
                                     <% studios_year.each do |studio| %>
                                       <%= link_to studio, class: "reference-point" do %>
                                         <% if studio.studio_images.first&.file&.attached? %>

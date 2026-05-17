@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
     layout 'admin', only: [:index, :show]
   before_action :set_user, only: [:ban, :unban]
-  before_action :check_admin_role, only: [:index, :certify, :uncertify, :admin_resend_confirmation, :ban, :unban]
+  before_action :check_admin_role, only: [:index, :certify, :uncertify, :admin_resend_confirmation, :ban, :unban, :export_newsletter]
 
  def index
     @current_page = "users"
@@ -160,6 +160,30 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: "Mail de relance envoyé à #{@user.email}."
   end
 end
+
+  def export_newsletter
+    require 'csv'
+    @newsletter_users = User.where(newsletter: true).order(created_at: :desc)
+    
+    csv_data = CSV.generate(col_sep: ';', force_quotes: true) do |csv|
+      csv << ["ID", "Prénom", "Nom", "Email", "Pseudo", "Statut", "Établissement", "Date d'inscription"]
+      @newsletter_users.each do |user|
+        csv << [
+          user.id,
+          user.firstname,
+          user.lastname,
+          user.email,
+          user.pseudo,
+          user.statut,
+          user.etablissement&.name,
+          user.created_at.strftime("%d/%m/%Y %H:%M:%S")
+        ]
+      end
+    end
+
+    send_data csv_data, filename: "newsletter_users_#{Date.today}.csv", type: 'text/csv'
+  end
+
   private
 
   

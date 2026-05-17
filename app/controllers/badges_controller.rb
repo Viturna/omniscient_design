@@ -4,6 +4,8 @@ class BadgesController < ApplicationController
   def index
     @current_page = 'profil'
     
+    GamificationService.new(current_user).check_seniority
+    
     @badges = Badge.all
     
     @my_badge_ids = current_user.badge_ids

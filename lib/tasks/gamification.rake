@@ -10,6 +10,7 @@ namespace :gamification do
 
       service.check_omniscient_user
       service.check_early_adopter
+      service.check_seniority
 
       service.check_contributor
       service.check_investigator

@@ -51,6 +51,20 @@ end
     assign_badge(name: "Omniscient Supporter", category: "special")
   end
 
+  # "L'Aaaancien" : Un an d'ancienneté
+  def check_seniority
+    badge = Badge.find_or_create_by!(name: "L'Aaaancien") do |b|
+      b.category = :special
+      b.level = :standard
+      b.description = "Un an d'ancienneté sur la plateforme. Un vrai pilier !"
+      b.image_name = "l_aaaancien.png"
+    end
+
+    if @user.created_at <= 1.year.ago
+      give_badge(badge)
+    end
+  end
+
   # --- 2. BADGES À NIVEAUX ---
 
   # "Donateur" : Appelé manuellement ou via webhook paiement

@@ -77,6 +77,7 @@ redirect_back(fallback_location: root_path, allow_other_host: false)
       service = GamificationService.new(resource)
       
       service.check_multi_support 
+      service.check_seniority
     end
 
     stored_location_for(resource) || super

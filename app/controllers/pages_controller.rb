@@ -18,6 +18,7 @@ class PagesController < ApplicationController
   def profil
     @current_page = 'profil'
     @user = current_user
+    GamificationService.new(@user).check_seniority
   end
 
   def training

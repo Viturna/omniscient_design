@@ -3,7 +3,7 @@ class QuizzesController < ApplicationController
   before_action :set_quiz, only: [:show, :submit]
 
   def index
-    @current_page = 'jeux'
+    @current_page = 'training'
     
     # Eager loading massif pour éviter les N+1 sur les domaines et questions
     @quizzes = Quiz.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
@@ -80,6 +80,7 @@ class QuizzesController < ApplicationController
   end
 
   def leaderboard
+    @current_page = 'training'
     @users = User.where('quiz_points > 0').order(quiz_points: :desc)
     
     if params[:query].present?

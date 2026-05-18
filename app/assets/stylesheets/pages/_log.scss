@@ -258,8 +258,8 @@
 }
 .avatar-circle {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 145px;
+  height: 145px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -302,13 +302,16 @@
 .avatar-actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: center;
+  gap: 10px;
 }
 .avatar-actions .button {
-  font-size: 14px;
+  font-size: 13px;
   padding: 8px 16px !important;
-  width: fit-content;
+  width: fit-content !important;
   white-space: nowrap;
+  min-height: 0 !important;
+  height: 45px !important;
 }
 
 .avatar-actions .button.delete {

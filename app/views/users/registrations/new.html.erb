@@ -150,13 +150,15 @@
           
           <div class="avatar-upload-container">
             <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
-              <% if resource.persisted? && resource.profile_image.attached? %>
-                <%= image_tag resource.profile_image.variant(resize_to_fill: [150, 150]), data: { avatar_upload_target: "preview" }, class: "avatar-image" %>
-              <% else %>
-                <div class="avatar-placeholder" data-avatar-upload-target="preview">
-                   <span class="avatar-initials"><%= resource.firstname&.first || '?' %></span>
-                </div>
-              <% end %>
+              <% has_avatar = resource.persisted? && resource.profile_image.attached? %>
+              <%= image_tag (has_avatar ? resource.profile_image.variant(resize_to_fill: [150, 150]) : ""), 
+                    data: { avatar_upload_target: "previewImg" }, 
+                    class: "avatar-image", 
+                    style: has_avatar ? "" : "display: none;" %>
+              
+              <div class="avatar-placeholder" data-avatar-upload-target="placeholder" style="<%= has_avatar ? 'display: none;' : '' %>">
+                 <span class="avatar-initials"><%= resource.firstname&.first || '?' %></span>
+              </div>
               
               <div class="avatar-overlay">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

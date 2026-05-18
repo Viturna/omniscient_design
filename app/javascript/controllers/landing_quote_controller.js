@@ -118,13 +118,16 @@ export default class extends Controller {
 
       if (distance === 0) {
         opacity = 1
-        scale = 1.05
+        scale = 1
       } else if (distance === 1) {
-        opacity = 0.25 // Rendre les mots adjacents légèrement visibles pour un effet de transition sublime
-        scale = 0.98
-      } else {
-        opacity = 0
+        opacity = 0.4
         scale = 0.95
+      } else if (distance === 2) {
+        opacity = 0.15
+        scale = 0.9
+      } else {
+        opacity = 0.05
+        scale = 0.9
       }
 
       gsap.to(word, {

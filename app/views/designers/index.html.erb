@@ -103,7 +103,7 @@
           <div data-entity-type="studio" data-id="<%= item.id %>" class="entity-wrapper">
             <%= render partial: 'studios/card', locals: { card: item, class_name: 'card' } %>
           </div>
-        <% elsif item.is_a?(Hash) %>
+        <% elsif item.is_a?(Hash) || item.is_a?(Ad) %>
           <%= render partial: 'references/ad_card', locals: { ad: item } %>
         <% end %>
       <% end %>

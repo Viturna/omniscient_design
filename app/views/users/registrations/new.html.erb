@@ -1,5 +1,7 @@
 <% content_for :title, "S'inscrire - Omniscient Design" %>
 <% content_for :description, "Inscris-toi sur Omniscient Design pour devenir un vrai pro dans l'univers du design. Rejoins une communauté de passionnés prête à tout pour rendre le design accessible." %>
+
+
 <div class="log" style="color:#FFF; min-height:100vh;">
   <section class="box-log">
     <div class="form"  data-controller="registration"
@@ -52,18 +54,25 @@
           </div>
         <% end %>
         <% unless resource.provider.present? %>
-          <div class="field input-flex">
+          <div class="field input-flex" data-controller="live-validation"
+               data-live-validation-available-text-value="<%= t('devise.registration.email_available') %>"
+               data-live-validation-taken-text-value="<%= t('devise.registration.email_taken') %>">
             <%= f.label :email, t('devise.registration.label_email') %>
-            <%= f.email_field :email, autocomplete: "email", placeholder: t('devise.registration.email_placeholder') %>
+            <%= f.email_field :email, autocomplete: "email", placeholder: t('devise.registration.email_placeholder'), data: { "live-validation-target": "input", action: "blur->live-validation#checkEmail" } %>
+            <span data-live-validation-target="message" style="font-size: 0.85rem; margin-top: 4px; display: block;"></span>
           </div>
-          <div class="field input-flex" data-controller="show-password">
+          <div class="field input-flex" data-controller="show-password password-strength">
             <%= f.label :password, t('devise.registration.label_password') %>
             <div class="password-container">
               <%= f.password_field :password,
                     autocomplete: "new-password",
                     placeholder: t('devise.registration.password_placeholder'),
                     id: "password-field-1",
-                    data: { "show-password-target": "passwordField" } %>
+                    data: { 
+                      "show-password-target": "passwordField",
+                      "password-strength-target": "input",
+                      action: "input->password-strength#check"
+                    } %>
               <button type="button" 
                     data-action="click->show-password#toggle" class="toggle-password">
                 <svg class="show-password-icon" data-show-password-target="showIcon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +84,16 @@
                 </svg>
               </button>
             </div>
-            <i style="margin-bottom: 16px;">Votre mot de passe doit comporter au moins 6 caractères, incluant une majuscule, une minuscule, un chiffre et un caractère spécial.</i>
+            
+            <div class="password-strength-bar" style="height: 4px; background: #333; border-radius: 2px; margin-top: 8px; overflow: hidden; display: flex;">
+              <div data-password-strength-target="progress" style="height: 100%; width: 0%; background-color: #E61818; transition: width 0.3s, background-color 0.3s;"></div>
+            </div>
+            <div class="password-requirements" style="font-size: 0.8rem; margin-top: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; color: #aaa;">
+              <span data-password-strength-target="length"><%= t('devise.registration.password_min_length') %></span>
+              <span data-password-strength-target="uppercase"><%= t('devise.registration.password_uppercase') %></span>
+              <span data-password-strength-target="number"><%= t('devise.registration.password_number') %></span>
+              <span data-password-strength-target="special"><%= t('devise.registration.password_special') %></span>
+            </div>
           </div>
           <div class="field input-flex" data-controller="show-password">
             <%= f.label :password_confirmation, t('devise.registration.label_password_confirmation') %>
@@ -109,22 +127,52 @@
         <div class="field input-flex">
           <p class="title-boxlog"><%= t('devise.registration.additional_info') %></p>
         </div>
-        <div class="field input-flex">
-          <%= f.label :firstname, t('devise.registration.label_firstname') %>
-          <%= f.text_field :firstname, autocomplete: "firstname", placeholder: t('devise.registration.firstname_placeholder') %>
+        <div style="display: flex; gap: 16px; width: 100%;">
+          <div class="field input-flex" style="flex: 1;">
+            <%= f.label :firstname, t('devise.registration.label_firstname') %>
+            <%= f.text_field :firstname, autocomplete: "firstname", placeholder: t('devise.registration.firstname_placeholder') %>
+          </div>
+          <div class="field input-flex" style="flex: 1;">
+            <%= f.label :lastname, t('devise.registration.label_lastname') %>
+            <%= f.text_field :lastname, autocomplete: "lastname", placeholder: t('devise.registration.lastname_placeholder') %>
+          </div>
         </div>
-        <div class="field input-flex">
-          <%= f.label :lastname, t('devise.registration.label_lastname') %>
-          <%= f.text_field :lastname, autocomplete: "lastname", placeholder: t('devise.registration.lastname_placeholder') %>
-        </div>
-        <div class="field input-flex">
+        <div class="field input-flex" data-controller="live-validation"
+             data-live-validation-available-text-value="<%= t('devise.registration.pseudo_available') %>"
+             data-live-validation-taken-text-value="<%= t('devise.registration.pseudo_taken') %>">
           <%= f.label :pseudo, t('devise.registration.label_pseudo') %>
-          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: t('devise.registration.pseudo_placeholder') %>
+          <%= f.text_field :pseudo, autocomplete: "pseudo", placeholder: t('devise.registration.pseudo_placeholder'), data: { "live-validation-target": "input", action: "blur->live-validation#checkPseudo" } %>
+          <span data-live-validation-target="message" style="font-size: 0.85rem; margin-top: 4px; display: block;"></span>
         </div>
 
-        <div class="field input-flex">
-          <%= f.label :profile_image, "Photo de profil" %>
-          <%= f.file_field :profile_image, class: "form-control", accept: "image/*" %>
+        <div class="field input-flex avatar-upload-field" data-controller="avatar-upload">
+          <%= f.label :profile_image, "Photo de profil <span style='font-size: 0.85em; opacity: 0.7; font-weight: 400;'>#{t('devise.registration.optional')}</span>".html_safe %>
+          
+          <div class="avatar-upload-container">
+            <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
+              <% if resource.profile_image.attached? %>
+                <%= image_tag resource.profile_image.variant(resize_to_fill: [150, 150]), data: { avatar_upload_target: "preview" }, class: "avatar-image" %>
+              <% else %>
+                <div class="avatar-placeholder" data-avatar-upload-target="preview">
+                   <span class="avatar-initials"><%= resource.firstname&.first || '?' %></span>
+                </div>
+              <% end %>
+              
+              <div class="avatar-overlay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div class="avatar-actions">
+              <button type="button" class="button" data-action="click->avatar-upload#triggerInput">Sélectionner une photo</button>
+              <button type="button" class="button delete" data-action="click->avatar-upload#remove" style="<%= resource.profile_image.attached? ? '' : 'display: none;' %>">Supprimer la photo</button>
+            </div>
+          </div>
+          
+          <%= f.file_field :profile_image, class: "hidden-file-input", accept: "image/*", data: { avatar_upload_target: "input", action: "change->avatar-upload#preview" }, style: "display: none;" %>
+          <%= f.hidden_field :remove_profile_image, value: 0, data: { avatar_upload_target: "removeInput" } %>
         </div>
 
         <div class="field input-flex">
@@ -133,7 +181,7 @@
               Country.order(:country),
               :id,
               :country,
-              { prompt: "Sélectionnez votre pays" },
+              { prompt: "Sélectionnez votre pays", selected: Country.find_by(country: 'France')&.id },
               { 
                 class: "form-control", 
                 data: { 

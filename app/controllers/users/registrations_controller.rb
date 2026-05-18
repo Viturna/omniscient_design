@@ -70,6 +70,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    if params[:user][:remove_profile_image] == '1'
+      resource.profile_image.purge
+    end
+
     if resource.provider.present? && account_update_params[:password].blank?
       params[:user].delete(:current_password)
       resource.update_without_password(account_update_params)
@@ -100,6 +104,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     redirect_to edit_user_registration_path, notice: "Votre compte a été délié avec succès. Pensez à définir un mot de passe si ce n'est pas déjà fait."
   end
 
+  def check_email
+    exists = User.exists?(email: params[:email])
+    render json: { available: !exists }
+  end
+
+  def check_pseudo
+    exists = User.exists?(pseudo: params[:pseudo])
+    render json: { available: !exists }
+  end
+
   protected
 
   def configure_permitted_parameters
@@ -112,7 +126,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     devise_parameter_sanitizer.permit(:account_update, keys: [
       :firstname, :lastname, :pseudo, :statut, :etablissement_id, 
       :how_did_you_hear, :study_level, :newsletter, 
-      :country_id, :profile_image, :daily_reference_push, :daily_reference_email
+      :country_id, :profile_image, :daily_reference_push, :daily_reference_email, :remove_profile_image
     ])
   end
 

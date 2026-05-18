@@ -6,7 +6,7 @@ class DesignersController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
-  AD_FREQUENCY_RANGE = 4..7
+  AD_FREQUENCY_RANGE = 4..6
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index

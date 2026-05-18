@@ -58,17 +58,19 @@
 <!-- SECTION BESOIN -->
 <section class="od-pres-section">
   <div class="od-pres-container">
-    <div class="od-pres-text left">
-      <p>Un problème ?</p>
-      <h2>Une plateforme née d’un besoin</h2>
-      <p>
-        Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués. 
-        Le manque <span class="od-strong">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span>
-        <br><br>
-        Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel 
-        <span class="od-strong">“carnet de références”</span> en 
-        <span class="od-strong">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
-      </p>
+    <div class="od-pres-text-wrapper">
+      <div class="od-pres-text left">
+        <p>Un problème ?</p>
+        <h2>Une plateforme née d’un besoin</h2>
+        <p>
+          Omniscient Design est né d’une frustration partagée par de nombreux étudiants en arts appliqués. 
+          Le manque <span class="od-strong">d’un outil centralisé, fiable et vivant pour retrouver des références de design.</span>
+          <br><br>
+          Ce qui n’était au départ qu’une idée – celle de transformer le traditionnel 
+          <span class="od-strong">“carnet de références”</span> en 
+          <span class="od-strong">une ressource numérique</span> – s’est progressivement mué en projet de fond, pensé pour durer.
+        </p>
+      </div>
     </div>
     <div class="od-pres-image">
       <%= image_tag "landing/image-2.png", alt: "", class: "od-rounded-img right" %>
@@ -82,24 +84,24 @@
     <div class="od-pres-image">
       <%= image_tag "landing/image-3.png", alt: "", class: "od-rounded-img left" %>
     </div>
-    <div>
-      <div class="od-pres-text">
+    <div class="od-pres-text-wrapper">
+      <div class="od-pres-text right">
         <p>Une solution</p>
         <h2>Un carnet de références numériques</h2>
         <p>Accède à une base riche de références en constante évolution. Alimenté directement par la communauté.</p>
       </div>
       <div class="od-pres-stats">
-        <div>
-          <p class="od-pres-number"><%= Reference.where(validation: true).count %></p>
+        <div data-controller="number-counter" data-number-counter-end-value="<%= Reference.where(validation: true).count %>">
+          <p class="od-pres-number" data-number-counter-target="value">+0</p>
           <p class="od-pres-text-stat">Références</p>
         </div>
-        <div>
-          <p class="od-pres-number"><%= Designer.where(validation: true).count %></p>
+        <div data-controller="number-counter" data-number-counter-end-value="<%= Designer.where(validation: true).count %>">
+          <p class="od-pres-number" data-number-counter-target="value">+0</p>
           <p class="od-pres-text-stat">Designers</p>
         </div>
-        <div>
-          <p class="od-pres-number">5</p>
-          <p class="od-pres-text-stat">Modérateurs</p>
+        <div data-controller="number-counter" data-number-counter-end-value="<%= User.count %>">
+          <p class="od-pres-number" data-number-counter-target="value">+0</p>
+          <p class="od-pres-text-stat">Membres</p>
         </div>
       </div>
     </div>
@@ -191,12 +193,166 @@
       </div>
     </div>
 </section>
-<section>
-  <div>
-    <h2>Besoin d’aide ?</h2>
-    <%= link_to "Nous contacter", "mailto:", class: "button" %>
+<!-- SECTION FAQ -->
+<section class="od-faq-section">
+  <div class="od-faq-container">
+    
+    <!-- Colonne Gauche -->
+    <div class="od-faq-left">
+      <h2>Besoin d’aide ?</h2>
+      <p>Une question sur le fonctionnement de la plateforme, une suggestion d'amélioration ou un problème technique ? N'hésitez pas à nous contacter.</p>
+      <%= link_to "Nous contacter", "mailto:contact@omniscientdesign.fr", class: "button dark" %>
+    </div>
+
+    <!-- Colonne Droite (Accordéon FAQ) -->
+    <div class="faq-accordion">
+      
+      <details class="faq-item" open>
+        <summary class="faq-question">
+          <span>Comment ajouter une référence ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Pour enrichir le carnet, cliquez sur le bouton "+" en haut à droite. Remplissez le formulaire en renseignant le nom, le domaine, le designer et une image. Après validation par notre équipe de modération, votre contribution sera visible par tous !</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Peut-on contribuer sans compte ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Non, la création d'un compte gratuit est nécessaire pour proposer de nouveaux éléments. Cela nous permet de créditer vos contributions et de maintenir une base de données de haute qualité.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Comment sont vérifiées les informations ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Chaque référence ou designer proposé par la communauté passe par une phase de modération. Notre équipe vérifie l'exactitude des sources et des dates avant de valider définitivement la publication sur le site.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Puis-je utiliser la plateforme sur mobile ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Absolument ! La plateforme a été entièrement optimisée en "mobile-first" pour vous permettre de réviser ou de consulter vos fiches de références n'importe où, directement depuis votre smartphone.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Est-ce que c’est gratuit ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Oui, Omniscient Design est un projet éducatif 100% gratuit et sans publicité intrusive. Notre but est de rendre l'histoire du design accessible au plus grand nombre d'étudiants.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>À qui s’adresse ce projet ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Principalement aux étudiants en arts appliqués (DNMADE, DSAA, Écoles d'Art), mais aussi aux enseignants, professionnels et à tous les curieux qui souhaitent explorer et réviser l'histoire du design.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Comment fonctionnent les quiz et le classement ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Vous pouvez vous entraîner avec des quiz basés sur les mouvements et designers du programme. Chaque bonne réponse sur les quiz officiels statiques vous rapporte des points, vous faisant grimper dans le classement général de la communauté !</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Puis-je collaborer à plusieurs sur une même liste ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Oui ! Vous pouvez inviter d'autres membres à éditer et enrichir vos listes de références en utilisant l'option de partage collaboratif intégrée. C'est parfait pour préparer des exposés ou des révisions en groupe.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Comment signaler une erreur sur une référence ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Si vous repérez une information inexacte, vous pouvez utiliser le bouton "Signaler" présent sur chaque fiche. Un modérateur vérifiera et corrigera l'information dans les plus brefs délais.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Quelles sont les sources acceptées pour les références ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Nous privilégions les sources fiables : musées, fondations de designers, ouvrages académiques et sites officiels. L'objectif est de garantir la qualité historique et technique des fiches.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-question">
+          <span>Puis-je enregistrer mes designers favoris ?</span>
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </summary>
+        <div class="faq-answer">
+          <p>Oui ! En cliquant sur le bouton "Sauvegarder" (l'icône de signet) sur une carte, vous pouvez retrouver tous vos designers, références ou studios favoris directement dans votre profil.</p>
+        </div>
+      </details>
+
+    </div>
+
   </div>
-   
 </section>
 
 <footer>

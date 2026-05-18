@@ -6,7 +6,7 @@ class ReferencesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :load_more, :show]
   before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
 
-  AD_FREQUENCY_RANGE = 4..7
+  AD_FREQUENCY_RANGE = 4..6
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index
@@ -89,9 +89,6 @@ class ReferencesController < ApplicationController
       ad_index: ad_index
     }
   end
-
-  # ... Le reste du contrôleur (show, new, edit...) reste inchangé ...
-  # ... (Copie-colle tes méthodes show, new, create, etc. ici) ...
 
   # GET /references/1 or /references/1.json
   def show

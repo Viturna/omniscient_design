@@ -1,9 +1,6 @@
 <% 
   images = card.reference_images.select { |img| img.file.attached? }.map(&:file) 
 %>
-<script>
-  console.log("🖼️ Images pour [<%= j card.nom_reference %>] (ID: <%= card.id %>):", <%= raw images.map { |img| img.filename.to_s }.to_json %>);
-</script>
 <div class="card" 
      data-id="<%= card.id %>" 
      data-controller="slider" 

@@ -176,47 +176,62 @@
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 40px;
 
     @media (min-width: 1024px) {
       flex-direction: row;
-      gap: 32px;
       align-items: center;
+      justify-content: space-between;
+      gap: 0;
+    }
+
+    .od-pres-text-wrapper {
+      width: 100%;
+      padding: 0 8vw;
+      
+      @media (min-width: 1024px) {
+        width: 45vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
     }
 
     .od-pres-text {
-      &.left {
-        padding-left: 8vw;
-      }
-      &.right {
-        padding-right: 8vw;
-      }
-    }
-    .od-pres-text {
-      width: 35vw;
-
       p:first-of-type {
         text-transform: uppercase;
+        font-size: 14px;
         letter-spacing: 1px;
         color: $primary-color;
         font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      h2 {
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 24px;
+      }
+      
+      p {
+        font-size: 18px;
+        color: #4b5563;
       }
     }
 
     .od-pres-image {
-      width: fit-content;
-      background-color: $secondary-color;
+      width: 100%;
+      display: flex;
+
+      @media (min-width: 1024px) {
+        width: 50vw;
+      }
 
       .od-rounded-img {
-        border-radius: 8px;
-        width: 48vw;
-
-        &.right {
-          padding: 55px 0 55px 55px;
-        }
-        &.left {
-          padding: 55px 55px 55px 0px;
-        }
+        width: 100%;
+        height: auto;
+        object-fit: cover;
       }
     }
   }
@@ -224,18 +239,20 @@
 
 .od-pres-stats {
   display: flex;
-  gap: 3rem;
-  margin-top: 12px;
+  gap: 4rem;
+  margin-top: 32px;
 }
 
 .od-pres-number {
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 600;
   color: $primary-color;
+  margin: 0;
 }
 .od-pres-text-stat {
   margin-top: 4px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: $primary-color;
 }
 /* SECTION CITATION */
@@ -271,14 +288,16 @@
 }
 
 .flex-quote-wrapper {
-  height: 50px; // Affiche uniquement 1 mot à la fois
+  height: 250px; // Affiche jusqu'à 5 mots
   overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
 
   @media (max-width: 768px) {
-    height: 40px; // 40px sur mobile
+    height: 200px;
   }
 }
 
@@ -430,3 +449,113 @@
 //     color: $primary-color;
 //   }
 // }
+
+/* SECTION FAQ */
+.od-faq-section {
+  padding: 96px 8vw;
+  background-color: transparent;
+  border-top: 1px solid #E5E5E5;
+
+  @media (max-width: 768px) {
+    padding: 64px 7vw;
+  }
+}
+
+.od-faq-container {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+.od-faq-left {
+  align-self: start;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: $primary-color;
+    margin: 0 0 16px 0;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: $primary-color;
+    margin: 0 0 32px 0;
+    max-width: 380px;
+
+    @media (max-width: 1024px) {
+      max-width: 100%;
+    }
+  }
+}
+
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-item {
+  border-bottom: 1px solid #E5E5E5;
+  padding: 24px 0;
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  &[open] {
+    padding-bottom: 24px;
+  }
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: $primary-color;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    color: $primary-color;
+    transition: transform 0.2s ease;
+  }
+}
+
+details[open] {
+  .faq-icon {
+    transform: rotate(45deg);
+  }
+}
+
+.faq-answer {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $primary-color;
+
+  p {
+    margin: 0;
+  }
+}

@@ -16,6 +16,15 @@ application.register("alert", AlertController)
 import AutocompleteController from "./autocomplete_controller"
 application.register("autocomplete", AutocompleteController)
 
+import LiveValidationController from "./live_validation_controller"
+application.register("live-validation", LiveValidationController)
+
+import PasswordStrengthController from "./password_strength_controller"
+application.register("password-strength", PasswordStrengthController)
+
+import AvatarUploadController from "./avatar_upload_controller"
+application.register("avatar-upload", AvatarUploadController)
+
 import BackController from "./back_controller"
 application.register("back", BackController)
 
@@ -66,6 +75,9 @@ application.register("notion-picker", NotionPickerController)
 
 import NotionToggleController from "./notion_toggle_controller"
 application.register("notion-toggle", NotionToggleController)
+
+import NumberCounterController from "./number_counter_controller"
+application.register("number-counter", NumberCounterController)
 
 import PopupController from "./popup_controller"
 application.register("popup", PopupController)

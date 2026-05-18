@@ -140,18 +140,24 @@ class Admin::DashboardController < ApplicationController
     @notification = Notification.find(params[:id])
     
     # On récupère toutes les notifications appartenant à cette même campagne
-    @campaign_notifications = Notification.where(
+    all_campaign_notifications = Notification.where(
       title: @notification.title,
       message: @notification.message,
       link: @notification.link,
       admin_id: @notification.admin_id
-    ).includes(:user).order("clicked_at DESC NULLS LAST, created_at DESC")
+    )
     
     # Stats rapides de campagne
-    @total_sent = @campaign_notifications.count
-    @total_read = @campaign_notifications.where(status: :read).count
-    @total_clicks = @campaign_notifications.where.not(clicked_at: nil).count
+    @total_sent = all_campaign_notifications.count
+    @total_read = all_campaign_notifications.where(status: :read).count
+    @total_clicks = all_campaign_notifications.where.not(clicked_at: nil).count
     @ctr = @total_sent > 0 ? (@total_clicks.to_f / @total_sent * 100).round(2) : 0
+
+    # Liste des notifications paginée
+    @campaign_notifications = all_campaign_notifications
+                                .includes(:user)
+                                .order("clicked_at DESC NULLS LAST, created_at DESC")
+                                .page(params[:page]).per(25)
   end
 
   private

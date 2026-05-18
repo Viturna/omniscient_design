@@ -14,7 +14,7 @@ class NotificationsController < ApplicationController
     @users = User.all
     @notification = Notification.new 
 
-    @campaigns = Notification.where.not(admin_id: nil)
+    @campaigns = Notification.where("admin_id IS NOT NULL OR title = ?", "La réf du jour")
                              .group(:title, :message, :link, :admin_id)
                              .select("MIN(id) as id, title, message, link, admin_id, COUNT(*) as total_sent, COUNT(CASE WHEN status = 1 THEN 1 END) as total_read, COUNT(clicked_at) as total_clicks, MIN(created_at) as sent_at")
                              .order("sent_at DESC")

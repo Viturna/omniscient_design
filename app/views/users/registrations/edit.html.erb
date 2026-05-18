@@ -129,9 +129,7 @@
                   class: "avatar-image", 
                   style: has_avatar ? "" : "display: none;" %>
             
-            <div class="avatar-placeholder" data-avatar-upload-target="placeholder" style="<%= has_avatar ? 'display: none;' : '' %>">
-               <span class="avatar-initials"><%= resource.firstname&.first || '?' %></span>
-            </div>
+            <%= image_tag "profil.png", data: { avatar_upload_target: "placeholder" }, class: "avatar-image", style: has_avatar ? "display: none;" : "" %>
             
             <div class="avatar-overlay">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

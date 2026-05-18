@@ -15,7 +15,12 @@ class BadgesController < ApplicationController
   end
 
   def rate_app
-  GamificationService.new(current_user).check_omniscient_supporter
-  head :ok 
-end
+    GamificationService.new(current_user).check_omniscient_supporter
+    head :ok 
+  end
+
+  def community
+    GamificationService.new(current_user).check_community_member
+    head :ok
+  end
 end

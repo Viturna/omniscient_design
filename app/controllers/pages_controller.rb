@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul, :notifications_settings, :update_notifications_settings]
   before_action :check_certified, only: [:validation, :export_references]
-  before_action :check_admin_role, only: [:parrainage, :parrainage_filleul]
+
   def presentation
   end
 

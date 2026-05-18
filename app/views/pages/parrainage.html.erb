@@ -1,3 +1,4 @@
+<div data-controller="popup">
 <section class="top-header">
   <%= link_to profil_path do %>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -9,32 +10,31 @@
   <p class="subtitle">Profitez des avantages du parrainage et partagez votre passion pour l'apprentissage avec vos amis et collègues.</p>
 </section>
 <section class="grid-1">
-  <div style="display: inline-flex; align-items:center; gap:8px; margin-top:32px" id="openPopup">
+  <div style="display: inline-flex; align-items:center; gap:8px; margin-top:32px; cursor: pointer;" data-action="click->popup#open">
     <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M7.87802 11.8587C7.84273 11.8977 7.80986 11.9388 7.77956 11.9817C7.74851 12.0275 7.72368 12.0771 7.70573 12.1294C7.68207 12.1759 7.66548 12.2257 7.6565 12.2771C7.65247 12.3317 7.65247 12.3866 7.6565 12.4412C7.65373 12.5488 7.67621 12.6556 7.72213 12.7529C7.75898 12.8548 7.81777 12.9472 7.89433 13.0238C7.97089 13.1003 8.06336 13.1591 8.16517 13.196C8.26338 13.2394 8.36956 13.2618 8.47694 13.2618C8.58431 13.2618 8.69049 13.2394 8.7887 13.196C8.89051 13.1591 8.98298 13.1003 9.05954 13.0238C9.1361 12.9472 9.19489 12.8548 9.23174 12.7529C9.26817 12.6532 9.28489 12.5473 9.28096 12.4412C9.28159 12.3332 9.26089 12.2262 9.22006 12.1262C9.17923 12.0262 9.11907 11.9353 9.04304 11.8587C8.96677 11.7818 8.87602 11.7207 8.77605 11.6791C8.67607 11.6374 8.56883 11.616 8.46053 11.616C8.35222 11.616 8.24498 11.6374 8.14501 11.6791C8.04503 11.7207 7.95429 11.7818 7.87802 11.8587ZM8.46053 0.955078C6.83786 0.955078 5.25163 1.43626 3.90243 2.33776C2.55323 3.23927 1.50166 4.52061 0.880688 6.01976C0.259719 7.51891 0.0972457 9.16854 0.413813 10.76C0.73038 12.3515 1.51177 13.8134 2.65917 14.9608C3.80657 16.1082 5.26845 16.8896 6.85994 17.2061C8.45143 17.5227 10.101 17.3602 11.6002 16.7393C13.0993 16.1183 14.3807 15.0667 15.2822 13.7175C16.1837 12.3683 16.6649 10.7821 16.6649 9.15944C16.6649 8.08202 16.4527 7.01516 16.0404 6.01976C15.6281 5.02437 15.0237 4.11992 14.2619 3.35808C13.5 2.59623 12.5956 1.99191 11.6002 1.5796C10.6048 1.16729 9.53794 0.955078 8.46053 0.955078ZM8.46053 15.7229C7.16239 15.7229 5.89341 15.338 4.81405 14.6168C3.73469 13.8956 2.89343 12.8705 2.39666 11.6712C1.89988 10.4719 1.7699 9.15215 2.02316 7.87896C2.27641 6.60577 2.90152 5.43627 3.81944 4.51835C4.73736 3.60043 5.90686 2.97532 7.18005 2.72207C8.45325 2.46881 9.77294 2.59879 10.9723 3.09557C12.1716 3.59234 13.1967 4.4336 13.9179 5.51296C14.6391 6.59232 15.024 7.8613 15.024 9.15944C15.024 10.9002 14.3325 12.5696 13.1016 13.8005C11.8707 15.0314 10.2013 15.7229 8.46053 15.7229ZM8.46053 5.05726C8.02821 5.05698 7.60344 5.17058 7.22898 5.38661C6.85451 5.60265 6.54355 5.91351 6.32739 6.28791C6.26803 6.38129 6.22817 6.48571 6.21021 6.5949C6.19225 6.70408 6.19657 6.81577 6.22289 6.92324C6.24922 7.03072 6.29701 7.13176 6.3634 7.22028C6.42978 7.30881 6.51339 7.38299 6.60919 7.43836C6.70499 7.49374 6.811 7.52916 6.92084 7.5425C7.03069 7.55585 7.14209 7.54683 7.24836 7.516C7.35463 7.48517 7.45357 7.43316 7.53922 7.36311C7.62486 7.29305 7.69546 7.20639 7.74675 7.10835C7.81903 6.98314 7.92312 6.87927 8.04846 6.80723C8.1738 6.73519 8.31596 6.69755 8.46053 6.69813C8.67812 6.69813 8.8868 6.78457 9.04066 6.93843C9.19452 7.09229 9.28096 7.30097 9.28096 7.51856C9.28096 7.73616 9.19452 7.94484 9.04066 8.0987C8.8868 8.25256 8.67812 8.339 8.46053 8.339C8.24293 8.339 8.03425 8.42544 7.88039 8.5793C7.72653 8.73316 7.64009 8.94184 7.64009 9.15944V9.97987C7.64009 10.1975 7.72653 10.4061 7.88039 10.56C8.03425 10.7139 8.24293 10.8003 8.46053 10.8003C8.67812 10.8003 8.8868 10.7139 9.04066 10.56C9.19452 10.4061 9.28096 10.1975 9.28096 9.97987V9.83219C9.82357 9.63531 10.2797 9.25397 10.5697 8.75485C10.8596 8.25573 10.9649 7.67058 10.8672 7.10169C10.7694 6.5328 10.4749 6.01636 10.0349 5.64265C9.59501 5.26894 9.03774 5.06174 8.46053 5.05726Z" fill="#52525D"/>
     </svg>
     <p>En savoir plus sur les règles de parrainages</p>
   </div>
-  <h2>Vos avantages au parrainage</h2>
+  <h2>Parrainez pour la gloire !</h2>
   <div class="flex-avantages">
     <div class="box-avantage">
-      <svg width="66" height="66" viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M53.6934 2.05078H12.6716C7.00756 2.05078 2.4162 6.64215 2.4162 12.3062V53.328C2.4162 58.9921 7.00756 63.5835 12.6716 63.5835H53.6934C59.3575 63.5835 63.9489 58.9921 63.9489 53.328V12.3062C63.9489 6.64215 59.3575 2.05078 53.6934 2.05078ZM18.8249 26.6639H13.6049V31.2788H18.8249V34.3554H13.6049V42.047H10.6206V23.5872H18.8249V26.6639ZM31.6186 42.047H28.5204L25.9863 34.3554H24.8326V42.047H21.9015V23.5872H27.0293C29.8577 23.5872 32.157 26.0024 32.157 28.9713C32.157 31.2245 30.831 33.1597 28.9563 33.9606L31.6186 42.047ZM43.438 26.6639H38.218V31.2788H43.438V34.3554H38.218V38.9704H43.438V42.047H35.2336V23.5872H43.438V26.6639ZM55.7445 26.6639H50.5245V31.2788H55.7445V34.3554H50.5245V38.9704H55.7445V42.047H47.5402V23.5872H55.7445V26.6639Z" fill="#202020"/>
-        <path d="M27.0293 26.6641H24.8316V31.279H27.0293C28.2415 31.279 29.2271 30.2432 29.2271 28.9715C29.2271 27.6999 28.2415 26.6641 27.0293 26.6641Z" fill="#202020"/>
+      <svg width="66" height="66" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#202020" stroke="#202020" stroke-width="2" stroke-linejoin="round"/>
       </svg>
       <div>
-        <p class="title-avantage">Codes promos</p>
-        <p>Obtenez 5% de réduction sur votre abonnement </p>
+        <p class="title-avantage">Les Badges d'Ambassadeur</p>
+        <p>Débloquez les paliers Bronze (3), Argent (10) et Or (20 filleul.e.s) pour briller !</p>
       </div>
     </div>
     <p class="and">et</p>
     <div class="box-avantage">
-      <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M31.57 53.53L46.4925 38.605L50.1375 47.88L19.2875 60L7.2675 29.405L31.57 53.53ZM28.38 0H5V23.6325L31.5625 50L55 26.5625L28.38 0ZM38.4425 23.69C37.405 22.6525 36.28 22.1475 34.9975 22.1475C33.5525 22.1475 31.93 22.75 29.57 24.1575C27.865 25.1825 26.775 25.6175 25.93 25.6175C25.0275 25.6175 23.2225 24.5975 23.5275 22.5725C23.6575 21.71 24.1525 20.83 24.9575 20.0225C26.5875 18.395 28.8175 17.9025 30.6475 19.7575L32.5075 17.8975C31.3175 16.7075 29.7675 15.9175 28.105 15.9175C26.69 15.9175 25.2925 16.485 23.9475 17.61L22.3825 16.0425L20.6375 17.79L22.27 19.42C20.8475 21.485 20.165 24.4725 22.46 26.765C24.9875 29.2925 27.93 28.1175 30.9925 26.185C32.4925 25.2375 33.7 24.7775 34.68 24.7775C36.1525 24.7775 37.63 26.0225 37.375 27.9225C37.245 28.8875 36.725 29.83 35.8225 30.7275C34.695 31.855 33.5625 32.425 32.455 32.425C31.41 32.425 30.5875 31.945 29.8325 31.27L27.985 33.1175C29.1425 34.2625 30.69 35 32.3225 35C33.6825 35 35.04 34.4975 36.3525 33.5075L37.7025 34.8525L39.445 33.11L38.145 31.8075C40.0025 29.5675 41.0375 26.285 38.4425 23.69ZM14.2475 5C16.5925 5 18.495 6.9025 18.495 9.2475C18.495 11.5925 16.5925 13.495 14.2475 13.495C11.9025 13.495 10 11.5925 10 9.2475C10 6.9025 11.9025 5 14.2475 5Z" fill="#202020"/>
+      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm14 14v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div>
-        <p class="title-avantage">1 mois gratuit</p>
-        <p>Votre filleul obtiens 1 mois gratuit</p>
+        <p class="title-avantage">Faites connaître Omniscient Design</p>
+        <p>Faites grandir la plus belle communauté de design et gagnez en notoriété.</p>
       </div>
     </div>
   </div>
@@ -53,8 +53,8 @@
 </section>
 <section class="grid-1 filleul">
   <div class="title-filleul">
-    <h2>Liste de vos filleuls</h2>
-    <p>Vous avez <%= @referred_count %> filleul(s).</p>
+    <h2>Liste de vos filleul.e.s</h2>
+    <p>Vous avez <%= @referred_count %> filleul.e(s).</p>
   </div>
   <% if @referred_users.any? %>
     <ul>
@@ -80,10 +80,10 @@
     alert("Code de parrainage copié : " + copyText.value);
   }
 </script>
-<div id="popup" class="popup">
+<div id="popup" class="popup" data-popup-target="modal" data-action="click->popup#backgroundClick">
   <div class="popup-content">
     <div class="top-popup">
-      <svg class="close-popup" id="closePopupSave" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="close-popup" data-action="click->popup#close" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
       </svg>
     </div>
@@ -91,61 +91,27 @@
       <p class="title-popup">Règles de parrainage</p>
       <p class="subtitle-popup">Règles de base</p>
       <p>1. Qui peut parrainer ?<br>
-      &nbsp;&nbsp;• Tout utilisateur inscrit depuis au moins 7 jours peut devenir parrain.<br>
-      &nbsp;&nbsp;• Les parrains doivent avoir une adresse e-mail vérifié.<br>
+      &nbsp;&nbsp;• Toute personne inscrite peut partager son code de parrainage.<br>
+      &nbsp;&nbsp;• Il n'y a aucune restriction d'ancienneté pour propager la passion du design !<br>
       <br>
-      2. Qui peut être parrainé ?<br>
-      &nbsp;&nbsp;• Les filleuls doivent être de nouveaux utilisateurs (Compte créé depuis maximum 30j).<br>
-      &nbsp;&nbsp;• Un utilisateur ne peut être parrainé qu'une seule fois.</p>
-      <p class="subtitle-popup">Avantages pour les parrains</p>
-      <p>1. Récompenses pour chaque parrainage réussi :<br>
-      &nbsp;&nbsp;• Un parrain reçoit une récompense (5% de réduction sur son abonnement) une fois que le filleul remplit les conditions.<br>
-      &nbsp;&nbsp;• Les récompenses sont cumulables.<br>
+      2. Qui peut être parrainé.e ?<br>
+      &nbsp;&nbsp;• Les filleul.e.s doivent être de nouveaux.elles utilisateur.rice.s (compte créé depuis maximum 30 jours).<br>
+      &nbsp;&nbsp;• Un.e utilisateur.rice ne peut être parrainé.e qu'une seule fois.</p>
+
+      <p class="subtitle-popup">La Fame & Les Badges d'Ambassadeur</p>
+      <p>Pas d'argent ou de réductions matérielles ici, tout est pour la gloire et le prestige d'aider Omniscient Design à conquérir le monde ! Bâtissez la plus grande communauté de design en débloquant les badges de parrainage :<br>
       <br>
-      2. Récompenses supplémentaires :<br>
-      &nbsp;&nbsp;• Les parrains atteignant un certain nombre de filleuls actifs (5 filleuls) obtiennent des bonus supplémentaires.</p>
-      <p class="subtitle-popup">Avantages pour les filleuls</p>
-      <p>Réduction ou bonus de bienvenue :<br>
-      &nbsp;&nbsp;• Chaque filleul bénéficie d’un cadeau exclusif à l’inscription grâce au code parrainage.<br>
-      &nbsp;&nbsp;• Cette offre est valable uniquement lors de la première inscription.</p>
-      <p class="subtitle-popup">Conditions et limitations</p>
-      <p>1. Période de validité des codes :<br>
-      &nbsp;&nbsp;• Les codes de parrainage sont valables pendant une période illimitée.<br>
+      &nbsp;&nbsp;🥉 Ambassadeur de Bronze : Obtenu dès 3 parrainages réussis.<br>
+      &nbsp;&nbsp;🥈 Ambassadeur d'Argent : Obtenu à partir de 10 parrainages réussis.<br>
+      &nbsp;&nbsp;🥇 Ambassadeur d'Or : Obtenu à partir de 20 parrainages réussis.<br>
       <br>
-      2. Conditions pour valider un parrainage :<br>
-      &nbsp;&nbsp;• Le filleul doit remplir une action spécifique pour activer le parrainage (valider son compte).<br>
+      Affichez fièrement vos badges sur votre profil pour prouver votre influence et votre dévouement à la communauté !</p>
+
+      <p class="subtitle-popup">Fair-play et validation</p>
+      <p>1. Éthique :<br>
+      &nbsp;&nbsp;• Les auto-parrainages ou la création de comptes fictifs pour gonfler ses statistiques de badges sont strictement interdits.<br>
+      &nbsp;&nbsp;• Les comptes filleul.e.s doivent correspondre à de réels profils actifs pour que vos paliers de badges soient validés.<br>
       <br>
-      3. Limite de parrainages :<br>
-      &nbsp;&nbsp;• Les filleuls ne peuvent pas utiliser plus d’un code parrainage à la fois.</p>
-      <p class="subtitle-popup">Sanctions et prévention des abus</p>
-      <p>1. Détection des abus :<br>
-      &nbsp;&nbsp;• Toute tentative de fraude (ex. : auto-parrainage, création de comptes multiples) entraînera la suspension des avantages liés au parrainage.<br>
-      &nbsp;&nbsp;• Les parrains identifiés comme abusifs seront exclus du programme.<br>
-      <br>
-      2. Validation des comptes :<br>
-      &nbsp;&nbsp;• Les comptes filleuls doivent être authentiques et actifs pour que les parrainages soient validés.</p>
-    </div>
-  </div>
+      2. Objectif commun :<br>
+      &nbsp;&nbsp;• Faisons découvrir Omniscient Design au monde entier, un.e designer à la fois !</p>
 </div>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const openPopupButton = document.getElementById("openPopup");
-    const closePopupButton = document.getElementById("closePopupSave");
-    const popup = document.getElementById("popup");
-
-    openPopupButton.addEventListener("click", function() {
-      popup.style.display = "flex";
-    });
-
-    closePopupButton.addEventListener("click", function() {
-      popup.style.display = "none";
-    });
-
-    // Fermer la popup en cliquant en dehors de celle-ci
-    window.addEventListener("click", function(event) {
-      if (event.target === popup) {
-        popup.style.display = "none";
-      }
-    });
-  });
-</script>

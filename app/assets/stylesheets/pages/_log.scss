@@ -264,7 +264,7 @@
   overflow: hidden;
   cursor: pointer;
   border: 2px solid #E5E5E5;
-  background: #f9f9f9;
+  // background: #f9f9f9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -328,4 +328,9 @@
   .avatar-upload-container {
     align-items: center;
   } 
+
+  .avatar-circle {
+    width: 95px;
+    height: 95px;
+  }
 }

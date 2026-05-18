@@ -153,3 +153,6 @@ application.register("validation-overlay", ValidationOverlayController)
 
 import YearValidatorController from "./year_validator_controller"
 application.register("year-validator", YearValidatorController)
+
+import SocialFollowController from "./social_follow_controller"
+application.register("social-follow", SocialFollowController)

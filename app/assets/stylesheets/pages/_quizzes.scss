@@ -83,6 +83,16 @@
         }
       }
     }
+
+    .feedback-quiz-btn {
+      margin-top: 24px;
+      width: fit-content;
+      text-decoration: none;
+
+      @media (max-width: 600px) {
+        width: 100%;
+      }
+    }
   }
 
 

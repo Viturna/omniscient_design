@@ -127,6 +127,35 @@
         <div class="field input-flex">
           <p class="title-boxlog"><%= t('devise.registration.additional_info') %></p>
         </div>
+           <div class="field input-flex avatar-upload-field" data-controller="avatar-upload">
+          <%= f.label :profile_image, "Photo de profil <span style='font-size: 0.85em; opacity: 0.7; font-weight: 400;'>#{t('devise.registration.optional')}</span>".html_safe %>
+          
+          <div class="avatar-upload-container">
+            <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
+              <% has_avatar = resource.persisted? && resource.profile_image.attached? %>
+              <%= image_tag (has_avatar ? resource.profile_image.variant(resize_to_fill: [150, 150]) : ""), 
+                    data: { avatar_upload_target: "previewImg" }, 
+                    class: "avatar-image", 
+                    style: has_avatar ? "" : "display: none;" %>
+              
+              <%= image_tag "profil.png", data: { avatar_upload_target: "placeholder" }, class: "avatar-image", style: has_avatar ? "display: none;" : "" %>
+              
+              <div class="avatar-overlay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div class="avatar-actions">
+              <button type="button" class="button" data-action="click->avatar-upload#triggerInput">Sélectionner une photo</button>
+              <button type="button" class="button delete" data-action="click->avatar-upload#remove" style="<%= resource.profile_image.attached? ? '' : 'display: none;' %>">Supprimer la photo</button>
+            </div>
+          </div>
+          
+          <%= f.file_field :profile_image, class: "hidden-file-input", accept: "image/*", data: { avatar_upload_target: "input", action: "change->avatar-upload#preview" }, style: "display: none;" %>
+          <%= f.hidden_field :remove_profile_image, value: 0, data: { avatar_upload_target: "removeInput" } %>
+        </div>
         <div style="display: flex; gap: 16px; width: 100%;">
           <div class="field input-flex" style="flex: 1;">
             <%= f.label :firstname, t('devise.registration.label_firstname') %>
@@ -145,64 +174,34 @@
           <span data-live-validation-target="message" style="font-size: 0.85rem; margin-top: 4px; display: block;"></span>
         </div>
 
-        <div class="field input-flex avatar-upload-field" data-controller="avatar-upload">
-          <%= f.label :profile_image, "Photo de profil <span style='font-size: 0.85em; opacity: 0.7; font-weight: 400;'>#{t('devise.registration.optional')}</span>".html_safe %>
-          
-          <div class="avatar-upload-container">
-            <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
-              <% has_avatar = resource.persisted? && resource.profile_image.attached? %>
-              <%= image_tag (has_avatar ? resource.profile_image.variant(resize_to_fill: [150, 150]) : ""), 
-                    data: { avatar_upload_target: "previewImg" }, 
-                    class: "avatar-image", 
-                    style: has_avatar ? "" : "display: none;" %>
-              
-              <div class="avatar-placeholder" data-avatar-upload-target="placeholder" style="<%= has_avatar ? 'display: none;' : '' %>">
-                 <span class="avatar-initials"><%= resource.firstname&.first || '?' %></span>
-              </div>
-              
-              <div class="avatar-overlay">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="avatar-actions">
-              <button type="button" class="button" data-action="click->avatar-upload#triggerInput">Sélectionner une photo</button>
-              <button type="button" class="button delete" data-action="click->avatar-upload#remove" style="<%= resource.profile_image.attached? ? '' : 'display: none;' %>">Supprimer la photo</button>
-            </div>
+        <div style="display: flex; gap: 16px; width: 100%;">
+          <div class="field input-flex" style="flex: 1;">
+            <%= f.label :country_id, "Pays" %>
+            <%= f.collection_select :country_id,
+                Country.order(:country),
+                :id,
+                :country,
+                { prompt: "Sélectionnez votre pays", selected: Country.find_by(country: 'France')&.id },
+                { 
+                  class: "form-control", 
+                  data: { 
+                    controller: "select2",
+                    select2_placeholder_value: "Sélectionnez votre pays"
+                  } 
+                } %>
           </div>
-          
-          <%= f.file_field :profile_image, class: "hidden-file-input", accept: "image/*", data: { avatar_upload_target: "input", action: "change->avatar-upload#preview" }, style: "display: none;" %>
-          <%= f.hidden_field :remove_profile_image, value: 0, data: { avatar_upload_target: "removeInput" } %>
-        </div>
-
-        <div class="field input-flex">
-          <%= f.label :country_id, "Pays" %>
-          <%= f.collection_select :country_id,
-              Country.order(:country),
-              :id,
-              :country,
-              { prompt: "Sélectionnez votre pays", selected: Country.find_by(country: 'France')&.id },
-              { 
-                class: "form-control", 
-                data: { 
-                  controller: "select2",
-                  select2_placeholder_value: "Sélectionnez votre pays"
-                } 
-              } %>
-        </div>
-        <div class="field input-flex">
-          <%= f.label t('edit_profile.status') %>
-          <%= f.select :statut,
-          User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
-            { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
-            { class: "role-select form-control",
-              required: true,
-              data: {
-                action: "change->registration#toggleFields",
-                registration_target: "statutSelect"
-              } } %>
+          <div class="field input-flex" style="flex: 1;">
+            <%= f.label t('edit_profile.status') %>
+            <%= f.select :statut,
+            User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
+              { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
+              { class: "role-select form-control",
+                required: true,
+                data: {
+                  action: "change->registration#toggleFields",
+                  registration_target: "statutSelect"
+                } } %>
+          </div>
         </div>
         <div class="field input-flex" data-registration-target="establishmentField"
               style="<%= resource.statut == 'etudiant' || resource.statut == 'enseignant' ? '' : 'display: none;' %>">
@@ -254,9 +253,10 @@
             } 
           } %>
         </div>
-        <%# <div class="field">
-          <%= f.text_field :referral_code, placeholder: "Code de parrainage" %>
-        <%# </div> %>
+        <div class="field input-flex">
+          <%= f.label :referral_code, "Code de parrainage (Optionnel)" %>
+          <%= f.text_field :referral_code, placeholder: "Entrez le code de votre parrain" %>
+        </div>
         <div class="field rgpd">
           <%= f.check_box :newsletter, class: "checkbox-input", id: "user_newsletter" %>
           <%= f.label :newsletter, "Je souhaite recevoir les actualités et nouveautés d'Omniscient Design", style: "margin: 0; cursor: pointer;", for: "user_newsletter" %>

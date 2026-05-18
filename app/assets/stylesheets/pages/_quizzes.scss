@@ -224,11 +224,6 @@
     }
   }
 }
-.button_to{
-  display: flex;
-  width: 100%;
-}
-
 /* --- PLAYER --- */
 
 .quiz-player-wrapper {
@@ -358,7 +353,27 @@
       justify-content: space-between;
       align-items: center;
 
-      .report-link { color: #202020; text-decoration: underline; font-size: 14px; }
+      .header-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .report-link {
+          color: #202020;
+          text-decoration: underline;
+          font-size: 14px;
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+
+        .separator {
+          color: rgba(0, 0, 0, 0.2);
+          font-size: 12px;
+        }
+      }
       .points-pill {
         display: flex;
         align-items: center;
@@ -615,6 +630,7 @@
           transform: translateX(4px);
         }
       }
+
 
       .btn-text {
         background: transparent;

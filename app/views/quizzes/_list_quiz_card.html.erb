@@ -13,7 +13,8 @@
       <% completed_quiz = list.quizzes.select { |q| q.completed_by?(current_user) }.max_by { |q| q.best_score_for(current_user) } %>
       <% if completed_quiz %>
         <span class="badge status status-completed">
-          TERMINÉ • <%= completed_quiz.best_score_for(current_user) %>/<%= completed_quiz.quiz_questions.count * 10 %> pts
+          <% correct_count = completed_quiz.best_score_for(current_user) / 10 %>
+          TERMINÉ • <%= correct_count %>/<%= completed_quiz.quiz_questions.count %> bonne<%= 's' if correct_count != 1 %> réponse<%= 's' if correct_count != 1 %>
         </span>
       <% else %>
         <span class="badge status">MA LISTE</span>

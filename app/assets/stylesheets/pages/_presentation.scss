@@ -242,29 +242,75 @@
 .od-quote-section {
   margin-top: 96px;
   background-color: $primary-color;
-  text-align: center;
-  padding: 8rem 0;
+  padding: 8rem 8vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 44px;
+  gap: 32px; /* Espacement plus resserré pour s'unifier à 32px */
+  overflow: hidden;
 
-  p {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+    padding: 6rem 1.5rem;
+  }
+}
+
+.od-quote-static {
+  font-size: 32px;
+  font-weight: 600; /* Semibold */
+  color: $secondary-color;
+  margin: 0;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
     font-size: 24px;
-    color: $secondary-color;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+.flex-quote-wrapper {
+  height: 50px; // Affiche uniquement 1 mot à la fois
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    height: 40px; // 40px sur mobile
+  }
+}
+
+.flex-quote {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  transform-style: preserve-3d;
+
+  @media (max-width: 768px) {
+    align-items: center;
   }
 }
 
 .od-quote-text {
-  font-size: 48px;
-  font-weight: 600;
+  font-size: 32px; /* Même taille de 32px */
+  font-weight: 600; /* Semibold */
   color: #fff;
-}
-.flex-quote {
-  display: flex;
-  gap: 32px;
-  flex-direction: column;
-  align-items: start;
+  height: 50px;
+  line-height: 50px;
+  margin: 0;
+  white-space: nowrap;
+  transform-origin: left center;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+    height: 40px;
+    line-height: 40px;
+    transform-origin: center center;
+    text-align: center;
+  }
 }
 /* SECTION RECHERCHE */
 .od-search-section {

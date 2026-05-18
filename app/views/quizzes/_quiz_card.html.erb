@@ -19,9 +19,16 @@
   <div class="card-content">
     <div class="card-badges">
       <% if submission&.status == "completed" %>
-        <span class="badge status status-completed">
-          TERMINÉ • <%= submission.score %>/<%= quiz.quiz_questions.size * 10 %> pts
-        </span>
+        <% if quiz.quiz_type == 'static' %>
+          <span class="badge status status-completed">
+            TERMINÉ • <%= submission.score %>/<%= quiz.quiz_questions.size * 10 %> pts
+          </span>
+        <% else %>
+          <span class="badge status status-completed">
+            <% correct_count = submission.score / 10 %>
+            TERMINÉ • <%= correct_count %>/<%= quiz.quiz_questions.size %> bonne<%= 's' if correct_count != 1 %> réponse<%= 's' if correct_count != 1 %>
+          </span>
+        <% end %>
       <% elsif submission&.status == "in_progress" %>
         <span class="badge status status-in-progress">EN COURS</span>
       <% else %>

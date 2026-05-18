@@ -3,7 +3,8 @@
   quiz_player_quiz_id_value: @quiz.id,
   quiz_player_submit_url_value: submit_quiz_path(@quiz),
   quiz_player_save_url_value: save_progress_quiz_path(@quiz),
-  quiz_player_initial_progress_value: @initial_progress.to_json
+  quiz_player_initial_progress_value: @initial_progress.to_json,
+  quiz_player_quiz_type_value: @quiz.quiz_type
 } do %>
   <script type="application/json" data-quiz-player-target="questionsData">
     <%= @questions_json.to_json.html_safe %>
@@ -52,7 +53,11 @@
 
   <div class="quiz-right-pane">
     <div class="pane-header">
-      <%= link_to "Signaler une erreur", new_bug_report_path, class: "report-link" %>
+      <div class="header-links">
+        <%= link_to "Signaler une erreur", new_bug_report_path, class: "report-link" %>
+        <span class="separator">•</span>
+        <%= link_to "Évaluer les quiz OD", "https://docs.google.com/forms/d/e/1FAIpQLSdT8y0ogWPEgbrhzjNGIp6rBz9q0aiTMuhQezRTxnD79InvBw/viewform", class: "report-link", target: "_blank", rel: "noopener" %>
+      </div>
       <div class="points-pill">
          <span style="color: rgba(255,255,255,0.6); font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
          <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
@@ -90,14 +95,23 @@
   <div class="quiz-result-modal hidden" data-quiz-player-target="resultModal">
     <div class="modal-content">
       <div class="success-icon-wrapper">
-        <%= image_tag "points_od.svg", width: 48, height: 48 %>
+          <%= image_tag "points_od.svg", width: 48, height: 48 %>
       </div>
       <h2>Félicitations !</h2>
       <p class="congrats-text">Tu as terminé le quiz avec brio.</p>
       
       <div class="score-display-card">
-        <span class="score-label">Ton score final</span>
-        <div class="score-value"><span data-quiz-player-target="finalScore">0</span> <small>pts</small></div>
+        <% if @quiz.quiz_type == 'static' %>
+          <span class="score-label">Ton score final</span>
+          <div class="score-value">
+            <span data-quiz-player-target="finalScore">0</span> <small>pts</small>
+          </div>
+        <% else %>
+          <span class="score-label">Bonnes réponses</span>
+          <div class="score-value">
+            <span data-quiz-player-target="finalScore">0</span> / <span><%= @questions.count %></span>
+          </div>
+        <% end %>
       </div>
 
       <div class="modal-actions">
@@ -106,6 +120,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         <% end %>
         <button class="btn-text" data-action="click->quiz-player#review">Revoir mes réponses</button>
+        <%= link_to "Évaluer les quiz OD", "https://docs.google.com/forms/d/e/1FAIpQLSdT8y0ogWPEgbrhzjNGIp6rBz9q0aiTMuhQezRTxnD79InvBw/viewform", class: "btn-text", target: "_blank", rel: "noopener" %>
       </div>
     </div>
   </div>

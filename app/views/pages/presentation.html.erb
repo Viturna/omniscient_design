@@ -1,3 +1,6 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
 <!-- SECTION HERO -->
 <section class="od-hero">
   <div class="od-hero-container">
@@ -104,14 +107,16 @@
 </section>
 
 <!-- SECTION CITATION -->
-<section class="od-quote-section">
-  <p>Omniscient design est une plateforme</p>
-  <div class="flex-quote">
-  <p class="od-quote-text">Communautaire</p>
-  <p class="od-quote-text">Accessible</p>
-  <p class="od-quote-text">Collaborative</p>
-  <p class="od-quote-text">Éducative</p>
-  <p class="od-quote-text">Riche</p>
+<section class="od-quote-section" data-controller="landing-quote">
+  <p class="od-quote-static">Omniscient design est une plateforme</p>
+  <div class="flex-quote-wrapper">
+    <div class="flex-quote" data-landing-quote-target="list">
+      <p class="od-quote-text" data-landing-quote-target="word">Communautaire</p>
+      <p class="od-quote-text" data-landing-quote-target="word">avec du sens</p>
+      <p class="od-quote-text" data-landing-quote-target="word">Collaborative</p>
+      <p class="od-quote-text" data-landing-quote-target="word">Éducative</p>
+      <p class="od-quote-text" data-landing-quote-target="word">Riche</p>
+    </div>
   </div>
 </section>
 

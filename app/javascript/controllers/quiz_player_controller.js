@@ -11,7 +11,8 @@ export default class extends Controller {
     quizId: Number,
     submitUrl: String,
     saveUrl: String,
-    initialProgress: Object
+    initialProgress: Object,
+    quizType: String
   }
 
   initialize() {
@@ -159,7 +160,11 @@ export default class extends Controller {
     
     // Feedback points
     this.pointsFeedbackTarget.classList.remove("hidden")
-    this.pointsFeedbackTarget.textContent = isCorrect ? "+10 points" : "0 points"
+    if (this.quizTypeValue === "static") {
+      this.pointsFeedbackTarget.textContent = isCorrect ? "+10 points" : "0 points"
+    } else {
+      this.pointsFeedbackTarget.textContent = isCorrect ? "Bonne réponse !" : "Mauvaise réponse"
+    }
     this.pointsFeedbackTarget.style.color = isCorrect ? "#22C55E" : "#EF4444"
 
     if (isCorrect) {
@@ -292,7 +297,13 @@ export default class extends Controller {
 
   showResultModal() {
     this.quizFinished = true
-    if (this.hasFinalScoreTarget) this.finalScoreTarget.textContent = this.score
+    if (this.hasFinalScoreTarget) {
+      if (this.quizTypeValue === "static") {
+        this.finalScoreTarget.textContent = this.score
+      } else {
+        this.finalScoreTarget.textContent = Math.round(this.score / 10)
+      }
+    }
     if (this.hasResultModalTarget) this.resultModalTarget.classList.remove("hidden")
   }
 }

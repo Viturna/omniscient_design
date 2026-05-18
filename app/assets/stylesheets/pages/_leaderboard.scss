@@ -178,12 +178,14 @@
           display: flex;
           align-items: center;
           gap: 16px;
+          min-width: 0; /* Empêche le débordement de la grille */
           
           .avatar, .avatar-placeholder {
             width: 40px;
             height: 40px;
             border-radius: 4px;
             object-fit: cover;
+            flex-shrink: 0; /* Évite que l'avatar soit écrasé sur petit écran */
           }
           .avatar-placeholder {
             background: #333;
@@ -192,8 +194,15 @@
             justify-content: center;
             font-size: 14px;
             color: #999;
+            flex-shrink: 0;
           }
-          .pseudo { font-size: 16px; font-weight: 500; }
+          .pseudo {
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
 
         .points-cell {
@@ -282,12 +291,12 @@
         }
         .leaderboard-list {
           .leaderboard-header, .leaderboard-row {
-            grid-template-columns: 50px 1fr auto;
-            gap: 10px;
+            grid-template-columns: 32px 1fr auto;
+            gap: 8px;
             padding-left: 10px;
             padding-right: 10px;
           }
-          .user-cell { gap: 10px; }
+          .user-cell { gap: 8px; }
           .points-badge { padding: 5px 10px; font-size: 12px; }
         }
       }

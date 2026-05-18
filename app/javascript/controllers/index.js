@@ -34,6 +34,9 @@ application.register("image-modal-slider", ImageModalSliderController)
 import ImagePreviewController from "./image_preview_controller"
 application.register("image-preview", ImagePreviewController)
 
+import LandingQuoteController from "./landing_quote_controller"
+application.register("landing-quote", LandingQuoteController)
+
 import LangSwitcherController from "./lang_switcher_controller"
 application.register("lang-switcher", LangSwitcherController)
 
@@ -52,17 +55,29 @@ application.register("multi-select", MultiSelectController)
 import MultiStepFormController from "./multi_step_form_controller"
 application.register("multi-step-form", MultiStepFormController)
 
+import NestedFormController from "./nested_form_controller"
+application.register("nested-form", NestedFormController)
+
 import NotionAssignController from "./notion_assign_controller"
 application.register("notion-assign", NotionAssignController)
 
 import NotionPickerController from "./notion_picker_controller"
 application.register("notion-picker", NotionPickerController)
 
+import NotionToggleController from "./notion_toggle_controller"
+application.register("notion-toggle", NotionToggleController)
+
 import PopupController from "./popup_controller"
 application.register("popup", PopupController)
 
 import ProgressFormController from "./progress_form_controller"
 application.register("progress-form", ProgressFormController)
+
+import QuizPlayerController from "./quiz_player_controller"
+application.register("quiz-player", QuizPlayerController)
+
+import RatingController from "./rating_controller"
+application.register("rating", RatingController)
 
 import RecaptchaController from "./recaptcha_controller"
 application.register("recaptcha", RecaptchaController)
@@ -84,6 +99,9 @@ application.register("scroll-horizontal", ScrollHorizontalController)
 
 import ScrollVerticalController from "./scroll_vertical_controller"
 application.register("scroll-vertical", ScrollVerticalController)
+
+import SearchLeaderboardController from "./search_leaderboard_controller"
+application.register("search-leaderboard", SearchLeaderboardController)
 
 import Select2Controller from "./select2_controller"
 application.register("select2", Select2Controller)
@@ -123,12 +141,3 @@ application.register("validation-overlay", ValidationOverlayController)
 
 import YearValidatorController from "./year_validator_controller"
 application.register("year-validator", YearValidatorController)
-
-import QuizPlayerController from "./quiz_player_controller"
-application.register("quiz-player", QuizPlayerController)
-
-import RatingController from "./rating_controller"
-application.register("rating", RatingController)
-
-import NotionToggleController from "./notion_toggle_controller"
-application.register("notion-toggle", NotionToggleController)

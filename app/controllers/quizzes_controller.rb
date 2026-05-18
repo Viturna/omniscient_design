@@ -147,12 +147,14 @@ class QuizzesController < ApplicationController
       user_answers: params[:user_answers] # On s'assure d'avoir les dernières réponses
     )
 
-    # Ajouter les points au profil de l'utilisateur
-    current_user.increment!(:quiz_points, score)
-
-    # Vérifier l'attribution des badges Gamer
-    GamificationService.new(current_user).check_gamer
-    GamificationService.new(current_user).check_competitor
+    # Ajouter les points au profil de l'utilisateur uniquement si c'est un quiz statique
+    if submission.quiz.quiz_type == 'static'
+      current_user.increment!(:quiz_points, score)
+      
+      # Vérifier l'attribution des badges Gamer (uniquement pour les quiz officiels)
+      GamificationService.new(current_user).check_gamer
+      GamificationService.new(current_user).check_competitor
+    end
 
     render json: { 
       status: 'success', 

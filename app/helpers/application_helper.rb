@@ -29,7 +29,8 @@ module ApplicationHelper
       {controller: 'registrations',  actions: %w[new edit]},
       {controller: 'passwords',  actions: %w[new edit]},
       {controller: 'confirmations',  actions: %w[new]},
-      {controller: 'sessions',  actions: %w[new]}
+      {controller: 'sessions',  actions: %w[new]},
+      {controller: 'pages',      actions: %w[training]}
     ]
     !excluded_pages.any? { |p| p[:controller] == controller_name && p[:actions].include?(action_name) }
   end

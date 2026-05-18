@@ -150,7 +150,7 @@
           
           <div class="avatar-upload-container">
             <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
-              <% if resource.profile_image.attached? %>
+              <% if resource.persisted? && resource.profile_image.attached? %>
                 <%= image_tag resource.profile_image.variant(resize_to_fill: [150, 150]), data: { avatar_upload_target: "preview" }, class: "avatar-image" %>
               <% else %>
                 <div class="avatar-placeholder" data-avatar-upload-target="preview">

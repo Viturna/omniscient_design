@@ -73,6 +73,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if params[:user][:remove_profile_image] == '1'
       resource.profile_image.purge
     end
+    params[:user].delete(:remove_profile_image)
 
     if resource.provider.present? && account_update_params[:password].blank?
       params[:user].delete(:current_password)

@@ -135,6 +135,25 @@ class Admin::DashboardController < ApplicationController
       .page(params[:invited_page]).per(15)
   end
 
+  def notification_clicks
+    @current_page = "notifications"
+    @notification = Notification.find(params[:id])
+    
+    # On récupère toutes les notifications appartenant à cette même campagne
+    @campaign_notifications = Notification.where(
+      title: @notification.title,
+      message: @notification.message,
+      link: @notification.link,
+      admin_id: @notification.admin_id
+    ).includes(:user).order("clicked_at DESC NULLS LAST, created_at DESC")
+    
+    # Stats rapides de campagne
+    @total_sent = @campaign_notifications.count
+    @total_read = @campaign_notifications.where(status: :read).count
+    @total_clicks = @campaign_notifications.where.not(clicked_at: nil).count
+    @ctr = @total_sent > 0 ? (@total_clicks.to_f / @total_sent * 100).round(2) : 0
+  end
+
   private
 
   def authenticate_admin!

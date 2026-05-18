@@ -262,4 +262,52 @@
       <% end %>
     </div>
   </div>
+
+  <div style="margin-top: 50px;">
+    <h2 class="users-dash-title" style="margin-bottom: 24px;">Historique & Statistiques des Campagnes</h2>
+    
+    <div class="dash-card" style="padding: 0; overflow: hidden; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
+        <thead>
+          <tr style="background-color: #fafafa; border-bottom: 1px solid #eee;">
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Date d'envoi</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Titre</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Message</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Destinataires</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Lectures</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Clics</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Taux de clic (CTR)</th>
+            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @campaigns.any? %>
+            <% @campaigns.each do |campaign| %>
+              <% ctr = campaign.total_sent > 0 ? (campaign.total_clicks.to_f / campaign.total_sent * 100).round(2) : 0 %>
+              <tr style="border-bottom: 1px solid #f5f5f5;" onmouseover="this.style.backgroundColor='#fcfcfc'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding: 18px 24px; font-size: 14px; font-weight: 500; white-space: nowrap;"><%= campaign.sent_at.strftime("%d/%m/%Y à %H:%M") %></td>
+                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; white-space: nowrap;"><%= campaign.title %></td>
+                <td style="padding: 18px 24px; font-size: 13px; color: #666; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<%= campaign.message %>"><%= campaign.message %></td>
+                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #1E88E5;"><%= campaign.total_sent %></td>
+                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #009688;"><%= campaign.total_read %></td>
+                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #FF8F00;"><%= campaign.total_clicks %></td>
+                <td style="padding: 18px 24px; font-size: 14px; font-weight: 700; text-align: center; color: #2E7D32;"><%= ctr %>%</td>
+                <td style="padding: 18px 24px; text-align: right; white-space: nowrap;">
+                  <%= link_to admin_notification_clicks_path(campaign.id), class: "btn-submit", style: "padding: 8px 16px; font-size: 12px; border-radius: 20px; text-decoration: none;" do %>
+                    Voir les détails
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="8" style="padding: 40px; text-align: center; color: #888; font-weight: 500;">
+                Aucune notification admin n'a encore été envoyée.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

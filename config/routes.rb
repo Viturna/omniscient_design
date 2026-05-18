@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     get "feedbacks", to: "dashboard#feedbacks"
     resources :etablissements, only: [:index, :edit, :update, :destroy]
     resources :user_badges, only: [:new, :create]
+    get "notifications/:id/clicks", to: "dashboard#notification_clicks", as: :notification_clicks
 
     get 'references/notions', to: 'references#edit_notions', as: :references_notions
     patch 'references/:id/update_notions', to: 'references#update_notions', as: :reference_update_notions
@@ -73,7 +74,11 @@ Rails.application.routes.draw do
     end
     
     get 'notifications/new', to: 'notifications#new', as: :notifications_new
-    resources :notifications, only: [:index, :show, :destroy, :new, :create]
+    resources :notifications, only: [:index, :show, :destroy, :new, :create] do
+      member do
+        get :click
+      end
+    end
 
     resources :lists, param: :slug do
       member do

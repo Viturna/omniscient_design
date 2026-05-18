@@ -13,6 +13,11 @@ class NotificationsController < ApplicationController
     @current_page = "notifications"
     @users = User.all
     @notification = Notification.new 
+
+    @campaigns = Notification.where.not(admin_id: nil)
+                             .group(:title, :message, :link, :admin_id)
+                             .select("MIN(id) as id, title, message, link, admin_id, COUNT(*) as total_sent, COUNT(CASE WHEN status = 1 THEN 1 END) as total_read, COUNT(clicked_at) as total_clicks, MIN(created_at) as sent_at")
+                             .order("sent_at DESC")
   end
 
   def create
@@ -74,6 +79,25 @@ class NotificationsController < ApplicationController
   def show
     @notification = current_user.notifications.find(params[:id])
     @notification.update(status: :read) if @notification
+  end
+
+  def click
+    @notification = current_user.notifications.find_by(id: params[:id])
+    if @notification.nil?
+      redirect_to root_path, alert: "Notification introuvable."
+      return
+    end
+
+    @notification.update(status: :read, clicked_at: Time.current) if @notification.clicked_at.nil?
+
+    target_path = if @notification.link.present?
+                    @notification.link
+                  elsif @notification.notifiable_type&.safe_constantize && @notification.notifiable.present?
+                    polymorphic_path(@notification.notifiable) rescue nil
+                  end
+
+    target_path ||= root_path
+    redirect_to target_path
   end
 
   def destroy

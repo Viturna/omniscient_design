@@ -698,6 +698,7 @@ en:
     actions: "Actions"
     partager: "Share"
     signaler_erreur: "Report an error"
+    signaler_copyright: "Report a copyright issue"
     contribution: "Contribution"
     enrichissement: "Enriched your learning by adding this reference on"
     validation: "validated the reference"

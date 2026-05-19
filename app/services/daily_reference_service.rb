@@ -28,8 +28,8 @@ class DailyReferenceService
   def send_notifications
     return unless @daily_ref
     reference = @daily_ref.reference
-    title = "La réf du jour"
-    message = "Aujourd'hui découvre \"#{reference.nom_reference}\" par #{reference.designers.map(&:nom_designer).join(', ')}"
+    title = "La réf du jour ! ☕️"
+    message = "Aujourd'hui, focus sur \"#{reference.nom_reference}\" par #{reference.designers.map(&:nom_designer).join(', ')}"
     link = "/fr/references/#{reference.slug}"
 
     # Notifications Push

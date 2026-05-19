@@ -938,6 +938,7 @@ fr:
     actions: "Actions"
     partager: "Partager"
     signaler_erreur: "Suggérer une modification"
+    signaler_copyright: "Signaler une contrefaçon / droit d'auteur"
     contribution: "Contribution"
     enrichissement: "A enrichi votre apprentissage en ajoutant cette référence le"
     validation: "a validé la référence"

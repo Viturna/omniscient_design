@@ -366,7 +366,9 @@
 
 .flex-actions {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
   margin-top: 32px;
 
   .circle {

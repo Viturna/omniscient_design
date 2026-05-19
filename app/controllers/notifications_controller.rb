@@ -6,7 +6,7 @@ class NotificationsController < ApplicationController
   def index
     @current_page = 'profil'
     current_user.notifications.unread.update_all(status: :read)
-    @notifications = current_user.notifications.order(created_at: :desc)
+    @notifications = current_user.notifications.order(created_at: :desc).page(params[:page]).per(25)
   end
 
   def new
@@ -18,6 +18,7 @@ class NotificationsController < ApplicationController
                              .group(:title, :message, :link, :admin_id)
                              .select("MIN(id) as id, title, message, link, admin_id, COUNT(*) as total_sent, COUNT(CASE WHEN status = 1 THEN 1 END) as total_read, COUNT(clicked_at) as total_clicks, MIN(created_at) as sent_at")
                              .order("sent_at DESC")
+                             .page(params[:page]).per(10)
   end
 
   def create

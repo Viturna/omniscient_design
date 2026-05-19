@@ -358,6 +358,18 @@
               </div>
               <p>Suggérer une modification</p>
             <% end %>
+            <%= link_to new_bug_report_path(category: 'probleme_copyright', url: request.original_url), class: "button-circle" do %>
+              <div class="circle">
+                <svg width="35" height="35" viewBox="0 0 197 197" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                  <circle cx="98" cy="98" r="98" fill="white"/>
+                  <circle cx="98" cy="98" r="78" fill="#202020"/>
+                  <circle cx="98" cy="98" r="55" fill="white"/>
+                  <circle cx="98" cy="98" r="30" fill="#202020"/>
+                  <rect x="115" y="85" width="45" height="25" fill="#202020"/>
+                </svg>
+              </div>
+              <p><%= t('references.signaler_copyright') %></p>
+            <% end %>
           <% end %>
         </div>
         <div class="contribution">
@@ -368,7 +380,7 @@
                 <% user = User.find_by(id: studio.user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
               <% else %>
-                <span class="contributor">Omniscient Design</span>
+                <span class="contributor">Inconnu</span>
               <% end %>
               <p class="text-contributor">A enrichi votre apprentissage en ajoutant ce studio le <%= I18n.l(studio.created_at, format: :default) %></p>
             </div>

@@ -48,8 +48,9 @@
           ["Bug sur l'image", "bug_image"],
           ["Coquille dans le texte", "coquille_texte"],
           ["Autre bug technique", "autre_bug"],
-          ["Idée d'amélioration", "amelioration"]
-        ], { prompt: "Que souhaitez-vous nous remonter ?" }, { class: "category-select", required: true } %>
+          ["Idée d'amélioration", "amelioration"],
+          ["Problème de copyright", "probleme_copyright"]
+        ], { selected: params[:category] || @bug_report.category, prompt: "Que souhaitez-vous nous remonter ?" }, { class: "category-select", required: true } %>
       </div>
       <div class="field">
         <%= form.text_area :description, placeholder: t('bug_report.placeholder_description') %>

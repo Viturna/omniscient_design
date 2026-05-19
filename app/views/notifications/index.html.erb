@@ -73,6 +73,10 @@
         <% end %>
       </div>
     <% end %>
+    
+    <div style="margin-top: 40px; display: flex; justify-content: center; width: 100%;">
+      <%= paginate @notifications %>
+    </div>
   <% else %>
     <p><%= t('notifications.none') %></p>
   <% end %>

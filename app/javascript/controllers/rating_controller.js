@@ -39,44 +39,33 @@ export default class extends Controller {
       url = "https://www.google.com/search?q=Omniscient+Design";
     }
 
-    // Appel serveur pour débloquer le badge
+    // 3. Débloquer le badge en arrière-plan (fetch asynchrone sans bloquer le thread principal)
     if (this.urlValue) {
-        fetch(this.urlValue, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
-            "Content-Type": "application/json"
-          }
-        }).then(() => {
-          this.redirectAndReload(url, isWebview);
-        }).catch(err => {
-          console.error("Erreur serveur :", err);
-          this.redirectAndReload(url, isWebview);
-        });
-    } else {
-        this.redirectAndReload(url, isWebview);
+      fetch(this.urlValue, {
+        method: "POST",
+        headers: {
+          "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+          "Content-Type": "application/json"
+        }
+      }).catch(err => console.error("Erreur serveur :", err));
     }
-  }
 
-  redirectAndReload(url, isWebview) {
-    if (url) {
-      if (isWebview) {
-        // LE POINT CLÉ : '_system' indique au wrapper mobile (Capacitor/Cordova/WKWebView) 
-        // de sortir complètement de l'application pour lancer l'application externe du téléphone.
-        // Cela va ouvrir directement la VRAIE application App Store ou Google Play Store.
-        window.open(url, '_system');
-        window.location.reload();
-      } else if (url.includes('google.com/search')) {
-        // Sur ordinateur (Desktop) : ouvre le lien de recherche dans un nouvel onglet
-        window.open(url, '_blank');
-        window.location.reload();
-      } else {
-        // Sur mobile classique (Web hors application) : on ouvre dans un nouvel onglet
-        window.open(url, '_blank');
-        window.location.reload();
-      }
+    // 4. Redirection SYNCHRONE (essentiel pour ne pas être bloqué par le bloqueur de pub/popups des WebViews)
+    if (isWebview) {
+      // Les WebViews bloquent les popups (window.open). Utiliser location.href est 100% sûr,
+      // et l'OS intercepte l'URL HTTPS pour ouvrir l'App Store/Play Store externe.
+      window.location.href = url;
+    } else if (url.includes('google.com/search')) {
+      // Sur ordinateur (Desktop) : ouvre le lien de recherche dans un nouvel onglet
+      window.open(url, '_blank');
     } else {
-      window.location.reload();
+      // Sur navigateur mobile classique : ouvre dans un nouvel onglet
+      window.open(url, '_blank');
     }
+
+    // 5. Recharger la page après un court délai pour que le fetch d'attribution du badge ait le temps de se terminer
+    setTimeout(() => {
+      window.location.reload();
+    }, 800);
   }
 }

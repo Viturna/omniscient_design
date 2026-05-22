@@ -37,13 +37,20 @@ export default class extends Controller {
     let url = "";
 
     // 2. Sélectionner l'URL optimale. Les liens HTTPS officiels sont interceptés nativement
-    // par iOS/Android pour ouvrir directement l'App Store / Play Store sans planter de WebView.
+    // par iOS/Android, mais les WebViews nécessitent des protocoles spécifiques (itms-apps / market)
+    // pour forcer la sortie de la WebView/In-app browser vers la boutique native.
+    const useDeepLink = isWebview || this.redirectSelfValue;
+
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
       // iOS : Ouvre nativement l'application App Store
-      url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      url = useDeepLink 
+        ? "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review"
+        : "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
       // Android : Ouvre nativement l'application Google Play Store
-      url = "https://play.google.com/store/apps/details?id=" + androidPackage;
+      url = useDeepLink
+        ? "market://details?id=" + androidPackage
+        : "https://play.google.com/store/apps/details?id=" + androidPackage;
     } else {
       // Desktop : Pas de redirection
       url = "";

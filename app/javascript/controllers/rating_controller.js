@@ -36,21 +36,13 @@ export default class extends Controller {
 
     let url = "";
 
-    // 2. Sélectionner l'URL optimale. Les liens HTTPS officiels sont interceptés nativement
-    // par iOS/Android, mais les WebViews nécessitent des protocoles spécifiques (itms-apps / market)
-    // pour forcer la sortie de la WebView/In-app browser vers la boutique native.
-    const useDeepLink = isWebview || this.redirectSelfValue;
-
+    // 2. Sélectionner l'URL optimale. Les liens HTTPS officiels sont reconnus et sécurisés.
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      // iOS : Ouvre nativement l'application App Store
-      url = useDeepLink 
-        ? "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review"
-        : "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      // iOS : URL de l'App Store
+      url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
-      // Android : Ouvre nativement l'application Google Play Store
-      url = useDeepLink
-        ? "market://details?id=" + androidPackage
-        : "https://play.google.com/store/apps/details?id=" + androidPackage;
+      // Android : URL du Google Play Store
+      url = "https://play.google.com/store/apps/details?id=" + androidPackage;
     } else {
       // Desktop : Pas de redirection
       url = "";
@@ -67,14 +59,42 @@ export default class extends Controller {
       }).catch(err => console.error("Erreur serveur :", err));
     }
 
-    // 4. Redirection SYNCHRONE (essentiel pour ne pas être bloqué par le bloqueur de pub/popups des WebViews)
+    // 4. Redirection SYNCHRONE
     if (url) {
-      if (isWebview || this.redirectSelfValue) {
-        // Les WebViews bloquent les popups (window.open). Utiliser location.href est 100% sûr,
-        // et l'OS intercepte l'URL HTTPS pour ouvrir l'App Store/Play Store externe.
+      if (isWebview) {
+        // Pour les WebViews/In-App Browsers : Utiliser window.open avec '_system' ou '_blank' 
+        // ou simuler un vrai clic utilisateur sur un élément <a> avec target="_system".
+        // Cela force le wrapper natif de l'application à ouvrir l'URL HTTPS dans le navigateur système / store externe.
+        let opened = false;
+        try {
+          const win = window.open(url, '_system');
+          if (win) opened = true;
+        } catch (e) {
+          console.error("Échec _system :", e);
+        }
+
+        if (!opened) {
+          try {
+            const win = window.open(url, '_blank');
+            if (win) opened = true;
+          } catch (e) {
+            console.error("Échec _blank :", e);
+          }
+        }
+
+        if (!opened) {
+          const link = document.createElement('a');
+          link.href = url;
+          link.target = '_system';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } else if (this.redirectSelfValue) {
+        // Redirection directe dans le même onglet pour les navigateurs mobiles classiques
         window.location.href = url;
       } else {
-        // Sur navigateur mobile classique : ouvre dans un nouvel onglet
+        // Sur navigateur mobile classique depuis la page des badges : ouvre dans un nouvel onglet
         window.open(url, '_blank');
       }
     }

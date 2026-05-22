@@ -14,9 +14,19 @@ export default class extends Controller {
     const iosAppId = "6754964970";
     const androidPackage = "com.thomasriq.omniscientdesign";
 
+    // 1. Détecter si on est à l'intérieur d'une application hybride (WebView de l'App iOS/Android)
+    const isWebview = !!(
+      window.Capacitor || 
+      window.cordova || 
+      window.navigator.standalone || 
+      userAgent.includes('wv') || 
+      userAgent.includes('WebView') || 
+      (/iPhone|iPad|iPod/.test(userAgent) && !userAgent.includes('Safari'))
+    );
+
     let url = "";
 
-    // Sélectionner l'URL optimale. Les liens HTTPS officiels sont interceptés nativement
+    // 2. Sélectionner l'URL optimale. Les liens HTTPS officiels sont interceptés nativement
     // par iOS/Android pour ouvrir directement l'App Store / Play Store sans planter de WebView.
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
       // iOS : Ouvre nativement l'application App Store
@@ -38,30 +48,32 @@ export default class extends Controller {
             "Content-Type": "application/json"
           }
         }).then(() => {
-          this.redirectAndReload(url);
+          this.redirectAndReload(url, isWebview);
         }).catch(err => {
           console.error("Erreur serveur :", err);
-          this.redirectAndReload(url);
+          this.redirectAndReload(url, isWebview);
         });
     } else {
-        this.redirectAndReload(url);
+        this.redirectAndReload(url, isWebview);
     }
   }
 
-  redirectAndReload(url) {
+  redirectAndReload(url, isWebview) {
     if (url) {
-      if (url.includes('google.com/search')) {
+      if (isWebview) {
+        // LE POINT CLÉ : '_system' indique au wrapper mobile (Capacitor/Cordova/WKWebView) 
+        // de sortir complètement de l'application pour lancer l'application externe du téléphone.
+        // Cela va ouvrir directement la VRAIE application App Store ou Google Play Store.
+        window.open(url, '_system');
+        window.location.reload();
+      } else if (url.includes('google.com/search')) {
         // Sur ordinateur (Desktop) : ouvre le lien de recherche dans un nouvel onglet
         window.open(url, '_blank');
         window.location.reload();
       } else {
-        // Sur mobile (Web & App WebView) : location.href avec l'URL HTTPS officielle lance directement
-        // l'App Store ou le Google Play Store natif du téléphone de l'utilisateur.
-        window.location.href = url;
-        // On recharge la page après 1.2 seconde afin que le badge apparaisse débloqué
-        setTimeout(() => {
-          window.location.reload();
-        }, 1200);
+        // Sur mobile classique (Web hors application) : on ouvre dans un nouvel onglet
+        window.open(url, '_blank');
+        window.location.reload();
       }
     } else {
       window.location.reload();

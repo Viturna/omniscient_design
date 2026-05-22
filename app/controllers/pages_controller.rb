@@ -136,6 +136,28 @@ class PagesController < ApplicationController
     end
   end
 
+  def rate_redirect
+    if user_signed_in?
+      GamificationService.new(current_user).check_omniscient_supporter
+    end
+
+    user_agent = request.user_agent.to_s.downcase
+    
+    ios_app_id = "6754964970"
+    android_package = "com.thomasriq.omniscientdesign"
+
+    if user_agent.include?('ipad') || user_agent.include?('iphone') || user_agent.include?('ipod')
+      # iOS : App Store
+      redirect_to "https://apps.apple.com/app/id#{ios_app_id}?action=write-review", allow_other_host: true
+    elsif user_agent.include?('android')
+      # Android : Play Store
+      redirect_to "https://play.google.com/store/apps/details?id=#{android_package}", allow_other_host: true
+    else
+      # Ordinateur : recherche Google fallback
+      redirect_to "https://www.google.com/search?q=Omniscient+Design", allow_other_host: true
+    end
+  end
+
   private
 
   def notification_params

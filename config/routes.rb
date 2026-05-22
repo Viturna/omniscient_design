@@ -26,7 +26,9 @@ Rails.application.routes.draw do
     get "suivi_lists", to: "dashboard#suivi_lists"
     get "feedbacks", to: "dashboard#feedbacks"
     resources :etablissements, only: [:index, :edit, :update, :destroy]
-    resources :user_badges, only: [:new, :create]
+    resources :user_badges, only: [:new, :create, :destroy] do
+      get :search_users, on: :collection
+    end
     get "notifications/:id/clicks", to: "dashboard#notification_clicks", as: :notification_clicks
 
     get 'references/notions', to: 'references#edit_notions', as: :references_notions

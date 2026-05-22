@@ -80,7 +80,42 @@ class UsersController < ApplicationController
     @users = @users.where(statut: params[:statut]) if params[:statut].present?
     @users = @users.where(role: params[:role]) if params[:role].present?
 
-    @paginated_users = @users.order(created_at: :desc).page(params[:page]).per(20)
+    # --- 5. Tri des utilisateurs ---
+    sort_param = params[:sort]
+    if sort_param.present?
+      case sort_param
+      when "etablissement_asc"
+        @users = @users.left_outer_joins(:etablissement).order("etablissements.name ASC NULLS LAST")
+      when "etablissement_desc"
+        @users = @users.left_outer_joins(:etablissement).order("etablissements.name DESC NULLS LAST")
+      when "nom_asc"
+        @users = @users.order("firstname ASC, lastname ASC")
+      when "nom_desc"
+        @users = @users.order("firstname DESC, lastname DESC")
+      when "inscription_asc"
+        @users = @users.order(created_at: :asc)
+      when "inscription_desc"
+        @users = @users.order(created_at: :desc)
+      when "etablissement"
+        direction = params[:direction] == "desc" ? "DESC" : "ASC"
+        @users = @users.left_outer_joins(:etablissement).order("etablissements.name #{direction} NULLS LAST")
+      when "utilisateur"
+        direction = params[:direction] == "desc" ? "DESC" : "ASC"
+        @users = @users.order("firstname #{direction}, lastname #{direction}")
+      when "statut"
+        direction = params[:direction] == "desc" ? "DESC" : "ASC"
+        @users = @users.order("statut #{direction}")
+      when "inscription"
+        direction = params[:direction] == "desc" ? "DESC" : "ASC"
+        @users = @users.order("created_at #{direction}")
+      else
+        @users = @users.order(created_at: :desc)
+      end
+    else
+      @users = @users.order(created_at: :desc)
+    end
+
+    @paginated_users = @users.includes(:etablissement).page(params[:page]).per(20)
     @users_for_map = @users.includes(:etablissement).where.not(etablissement_id: nil)
   end
 

@@ -9,7 +9,7 @@
 <section class="grid-1">
   <p>
     <strong>Utilisateur:</strong>
-    <%= @bug_report.user.email %>
+    <%= @bug_report.user&.email || "Visiteur anonyme" %>
   </p>
   <p>
     <strong>Description:</strong>

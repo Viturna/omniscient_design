@@ -120,7 +120,8 @@
     "bug_image" => "🖼️ Bug image",
     "coquille_texte" => "✍️ Coquille texte",
     "autre_bug" => "🐛 Autre bug",
-    "amelioration" => "✨ Amélioration"
+    "amelioration" => "✨ Amélioration",
+    "probleme_copyright" => "⚖️ Droit d'auteur / Contrefaçon"
   }
 %>
 <div class="users-dash-wrapper">
@@ -203,8 +204,8 @@
                     <%= bug.user&.pseudo&.first&.upcase || "?" %>
                   </div>
                   <div class="user-info">
-                    <span class="user-name"><%= bug.user&.pseudo || "Utilisateur inconnu" %></span>
-                    <span class="user-email"><%= bug.user&.email %></span>
+                    <span class="user-name"><%= bug.user&.pseudo || "Visiteur anonyme" %></span>
+                    <span class="user-email"><%= bug.user&.email || "Non renseigné" %></span>
                   </div>
                 </div>
               </td>

@@ -1,5 +1,5 @@
 class BugReportsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create]
+  before_action :authenticate_user!, only: []
   before_action :authenticate_admin!, only: [:index, :show, :destroy, :update_status]
   before_action :set_bug_report, only: [:show, :destroy, :update_status]
   layout 'admin', only: [:index]
@@ -45,11 +45,17 @@ class BugReportsController < ApplicationController
     @bug_report.user = current_user
     
     # Check investigator (Gamification)
-    GamificationService.new(current_user).check_investigator
+    GamificationService.new(current_user).check_investigator if current_user.present?
 
     if @bug_report.save
       notify_admins_of_new_bug(@bug_report)
-      redirect_to profil_path, notice: I18n.t('bug_report.create.success')
+      if current_user.present?
+        redirect_to profil_path, notice: I18n.t('bug_report.create.success')
+      elsif @bug_report.url.present?
+        redirect_to @bug_report.url, notice: I18n.t('bug_report.create.success')
+      else
+        redirect_to root_path, notice: I18n.t('bug_report.create.success')
+      end
     else
       render :new
     end
@@ -94,9 +100,10 @@ class BugReportsController < ApplicationController
 
   def notify_admins_of_new_bug(bug_report)
     title = "Nouveau bug signalé"
+    user_name = bug_report.user.present? ? bug_report.user.pseudo : "Visiteur anonyme"
     message = I18n.t('notifications.new_bug_report', 
-                     user_name: bug_report.user.pseudo, 
-                     default: "Nouveau bug signalé par #{bug_report.user.pseudo}.")
+                     user_name: user_name, 
+                     default: "Nouveau bug signalé par #{user_name}.")
 
     User.where(role: 'admin').each do |user| 
       Notification.create(user_id: user.id, notifiable: bug_report, title: title, message: message, status: :unread)

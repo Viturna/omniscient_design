@@ -6,6 +6,7 @@ class Admin::EtablissementsController < ApplicationController
   before_action :set_etablissement, only: [:edit, :update, :destroy]
 
   def index
+    @current_page = "etablissements"
     # 1. Requête de base : On joint les users et on prépare le comptage
     @etablissements_scope = Etablissement
                               .left_joins(:users)

@@ -43,4 +43,51 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get export_newsletter_users_url(format: :csv)
     assert_redirected_to root_path
   end
+
+  test "should sort users by establishment name for admin" do
+    sign_in @admin
+    
+    etab_a = Etablissement.create!(name: "Academy A")
+    etab_b = Etablissement.create!(name: "School B")
+
+    user_a = User.create!(
+      firstname: "Alice",
+      lastname: "User",
+      email: "alice@example.com",
+      pseudo: "alice_user",
+      password: "Password123!",
+      role: "user",
+      statut: "etudiant",
+      rgpd_consent: true,
+      confirmed_at: Time.current,
+      etablissement: etab_b
+    )
+
+    user_b = User.create!(
+      firstname: "Bob",
+      lastname: "User",
+      email: "bob@example.com",
+      pseudo: "bob_user",
+      password: "Password123!",
+      role: "user",
+      statut: "etudiant",
+      rgpd_consent: true,
+      confirmed_at: Time.current,
+      etablissement: etab_a
+    )
+
+    # Sort ASC: etab_a (Academy A) first, then etab_b (School B)
+    get users_url, params: { sort: "etablissement_asc" }
+    assert_response :success
+    
+    # We can inspect the order of users in the assigned instance variable
+    users = assigns(:paginated_users)
+    assert_includes users, user_a
+    assert_includes users, user_b
+    
+    # Filter only those with establishment to compare easily
+    sorted_users = users.select { |u| [user_a.id, user_b.id].include?(u.id) }
+    assert_equal user_b.id, sorted_users.first.id # etab_a is "Academy A" (Bob)
+    assert_equal user_a.id, sorted_users.last.id  # etab_b is "School B" (Alice)
+  end
 end

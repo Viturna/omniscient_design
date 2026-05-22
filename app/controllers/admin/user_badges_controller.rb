@@ -7,6 +7,29 @@ module Admin
     def new
       @users = User.order(:email)
       @badges = Badge.order(:name)
+      
+      @user_badges = UserBadge.includes(:user, :badge)
+
+      if params[:search].present?
+        query = "%#{params[:search].downcase}%"
+        @user_badges = @user_badges.joins(:user, :badge)
+                                   .where("LOWER(users.email) LIKE ? OR LOWER(users.pseudo) LIKE ? OR LOWER(badges.name) LIKE ?", query, query, query)
+      end
+
+      sort_column = params[:sort]
+      sort_direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+
+      if sort_column == "user"
+        @user_badges = @user_badges.references(:user).order("LOWER(COALESCE(users.pseudo, users.email)) #{sort_direction}")
+      elsif sort_column == "badge"
+        @user_badges = @user_badges.references(:badge).order("LOWER(badges.name) #{sort_direction}")
+      elsif sort_column == "date"
+        @user_badges = @user_badges.order(created_at: sort_direction.to_sym)
+      else
+        @user_badges = @user_badges.order(created_at: :desc)
+      end
+
+      @user_badges = @user_badges.page(params[:page]).per(25)
     end
 
     def create
@@ -20,6 +43,18 @@ module Admin
       end
     rescue ActiveRecord::RecordNotFound
       redirect_to new_admin_user_badge_path, alert: "Utilisateur ou Badge introuvable."
+    end
+
+    def destroy
+      @user_badge = UserBadge.find(params[:id])
+      user = @user_badge.user
+      badge = @user_badge.badge
+
+      if @user_badge.destroy
+        redirect_to new_admin_user_badge_path, notice: "Le badge '#{badge.name}' a été retiré avec succès à #{user.pseudo || user.email}."
+      else
+        redirect_to new_admin_user_badge_path, alert: "Impossible de retirer le badge."
+      end
     end
 
     private

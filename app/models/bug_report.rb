@@ -1,5 +1,5 @@
 class BugReport < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
 
   attribute :status, :integer, default: :a_faire
 

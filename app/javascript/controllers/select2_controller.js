@@ -3,7 +3,7 @@ import $ from "jquery"
 import "select2"
 
 export default class extends Controller {
-  static values = { 
+  static values = {
     placeholder: String,
     submitOnChange: Boolean
   }

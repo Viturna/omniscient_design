@@ -158,6 +158,176 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
 
+  /* --- STYLES POUR LA LISTE DES BADGES --- */
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #202020;
+    margin-top: 48px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .users-dash-table-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f0f0f0;
+    overflow-x: auto;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .users-dash-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 600px;
+  }
+
+  .users-dash-table th {
+    background-color: #fafafa;
+    padding: 18px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+
+  .users-dash-table td {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 14px;
+    font-weight: 500;
+    color: #202020;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .users-dash-table tr:hover {
+    background-color: #fcfcfc;
+  }
+
+  /* User Info */
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-name {
+    font-weight: 600;
+    color: #202020;
+  }
+
+  .user-email {
+    font-size: 12px;
+    color: #888;
+  }
+
+  .badge-mini {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .status-true {
+    background: #E8F5E9;
+    color: #2E7D32;
+  }
+
+  .actions-cell {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .action-btn:hover {
+    background: #f5f5f5;
+    color: #202020;
+  }
+
+  .action-btn.delete:hover {
+    background: #FFEBEE;
+    color: #C62828;
+    border-color: #FFCDD2;
+  }
+
+  /* Recherche */
+  .search-container {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+
+  .search-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    max-width: 600px;
+  }
+
+  .search-input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .btn-reset {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-reset:hover {
+    color: #202020;
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .admin-dashboard-wrapper {
@@ -172,6 +342,14 @@
     .btn-submit {
       width: 100%;
     }
+    .search-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .btn-reset {
+      text-align: center;
+      margin-top: 8px;
+    }
   }
 </style>
 <div class="admin-dashboard-wrapper">
@@ -183,8 +361,8 @@
         </svg>
       <% end %>
       <div>
-        <h1 class="dashboard-title">Attribuer un Badge</h1>
-        <p class="dashboard-subtitle">Donner un badge spécifique (Donateur, Vainqueur...) à un membre.</p>
+        <h1 class="dashboard-title">Gestion des Badges Membres</h1>
+        <p class="dashboard-subtitle">Attribuer ou retirer un badge spécifique (Donateur, Vainqueur...) à un membre.</p>
       </div>
     </div>
   </div>
@@ -218,6 +396,106 @@
               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
             </svg>
           <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div style="max-width: 1200px; margin: 40px auto 0 auto;">
+    <h2 class="section-title">Badges Actuellement Attribués</h2>
+
+    <div class="search-container">
+      <%= form_with url: new_admin_user_badge_path, method: :get, local: true, class: "search-form" do |f| %>
+        <%= f.text_field :search, value: params[:search], placeholder: "Rechercher par email, pseudo ou badge...", class: "form-control search-input" %>
+        <%= f.button type: "submit", class: "btn-submit", style: "padding: 12px 24px; font-size: 14px;" do %>
+          <span>Rechercher</span>
+        <% end %>
+        <% if params[:search].present? %>
+          <%= link_to "Réinitialiser", new_admin_user_badge_path, class: "btn-reset" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="users-dash-table-container">
+      <table class="users-dash-table">
+        <thead>
+          <%
+            def sort_header(column, label)
+              is_active = (params[:sort] == column)
+              next_direction = (is_active && params[:direction] == "asc") ? "desc" : "asc"
+              arrow = is_active ? (params[:direction] == "asc" ? " ↑" : " ↓") : ""
+              link_to new_admin_user_badge_path(
+                search: params[:search],
+                sort: column,
+                direction: next_direction
+              ), style: "text-decoration: none; color: #{is_active ? '#202020' : '#666'}; font-weight: 600;" do
+                "#{label}#{arrow}".html_safe
+              end
+            end
+          %>
+          <tr>
+            <th><%= sort_header("user", "Utilisateur") %></th>
+            <th><%= sort_header("badge", "Badge") %></th>
+            <th>Catégorie / Niveau</th>
+            <th><%= sort_header("date", "Attribué le") %></th>
+            <th style="text-align: right; padding-right: 32px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @user_badges.present? %>
+            <% @user_badges.each do |ub| %>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-avatar">
+                      <%= (ub.user.pseudo.present? ? ub.user.pseudo[0] : ub.user.email[0]).upcase %>
+                    </div>
+                    <div class="user-info">
+                      <span class="user-name"><%= ub.user.pseudo || "Sans pseudo" %></span>
+                      <span class="user-email"><%= ub.user.email %></span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 18px;">🏆</span>
+                    <span style="font-weight: 600;"><%= ub.badge.name %></span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge-mini status-true">
+                    <%= ub.badge.category %> / <%= ub.badge.level %>
+                  </span>
+                </td>
+                <td>
+                  <span style="font-size: 13px; color: #666;">
+                    Le <%= ub.created_at.strftime("%d/%m/%Y à %H:%M") %>
+                  </span>
+                </td>
+                <td>
+                  <div class="actions-cell" style="padding-right: 8px;">
+                    <%= link_to admin_user_badge_path(ub), 
+                          data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir retirer le badge '#{ub.badge.name}' à #{ub.user.pseudo || ub.user.email} ?" },
+                          class: "action-btn delete", title: "Retirer le badge" do %>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5" style="text-align: center; color: #999; padding: 40px 0;">
+                Aucun badge trouvé.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <% if @user_badges.respond_to?(:total_pages) && @user_badges.total_pages > 1 %>
+        <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
+          <%= paginate @user_badges %>
         </div>
       <% end %>
     </div>

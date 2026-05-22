@@ -11,6 +11,9 @@ Rails.application.routes.draw do
         get :sessions
         post :auto_generate
       end
+      member do
+        patch :toggle_archive
+      end
     end
     get 'suivi_references/index'
     get 'validation/index'

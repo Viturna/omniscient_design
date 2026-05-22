@@ -35,8 +35,8 @@ export default class extends Controller {
       // Android : Ouvre nativement l'application Google Play Store
       url = "https://play.google.com/store/apps/details?id=" + androidPackage;
     } else {
-      // Desktop : Recherche Google de repli
-      url = "https://www.google.com/search?q=Omniscient+Design";
+      // Desktop : Pas de redirection
+      url = "";
     }
 
     // 3. Débloquer le badge en arrière-plan (fetch asynchrone sans bloquer le thread principal)
@@ -51,16 +51,15 @@ export default class extends Controller {
     }
 
     // 4. Redirection SYNCHRONE (essentiel pour ne pas être bloqué par le bloqueur de pub/popups des WebViews)
-    if (isWebview) {
-      // Les WebViews bloquent les popups (window.open). Utiliser location.href est 100% sûr,
-      // et l'OS intercepte l'URL HTTPS pour ouvrir l'App Store/Play Store externe.
-      window.location.href = url;
-    } else if (url.includes('google.com/search')) {
-      // Sur ordinateur (Desktop) : ouvre le lien de recherche dans un nouvel onglet
-      window.open(url, '_blank');
-    } else {
-      // Sur navigateur mobile classique : ouvre dans un nouvel onglet
-      window.open(url, '_blank');
+    if (url) {
+      if (isWebview) {
+        // Les WebViews bloquent les popups (window.open). Utiliser location.href est 100% sûr,
+        // et l'OS intercepte l'URL HTTPS pour ouvrir l'App Store/Play Store externe.
+        window.location.href = url;
+      } else {
+        // Sur navigateur mobile classique : ouvre dans un nouvel onglet
+        window.open(url, '_blank');
+      }
     }
 
     // 5. Recharger la page après un court délai pour que le fetch d'attribution du badge ait le temps de se terminer

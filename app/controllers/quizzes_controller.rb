@@ -6,7 +6,7 @@ class QuizzesController < ApplicationController
     @current_page = 'training'
     
     # Eager loading massif pour éviter les N+1 sur les domaines et questions
-    @quizzes = Quiz.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
+    @quizzes = Quiz.active.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
 
     # Filtrage par Domaine
     if params[:domaine_id].present?
@@ -149,11 +149,15 @@ class QuizzesController < ApplicationController
 
     # Ajouter les points au profil de l'utilisateur uniquement si c'est un quiz statique
     if submission.quiz.quiz_type == 'static'
-      current_user.increment!(:quiz_points, score)
+      already_completed = current_user.quiz_submissions.where(quiz_id: submission.quiz_id, status: :completed).where.not(id: submission.id).exists?
       
-      # Vérifier l'attribution des badges Gamer (uniquement pour les quiz officiels)
-      GamificationService.new(current_user).check_gamer
-      GamificationService.new(current_user).check_competitor
+      unless already_completed
+        current_user.increment!(:quiz_points, score)
+        
+        # Vérifier l'attribution des badges Gamer (uniquement pour les quiz officiels)
+        GamificationService.new(current_user).check_gamer
+        GamificationService.new(current_user).check_competitor
+      end
     end
 
     render json: { 

@@ -66,6 +66,13 @@ class Admin::QuizzesController < ApplicationController
     redirect_to admin_quizzes_path, notice: "Quiz supprimé."
   end
 
+  def toggle_archive
+    @quiz = Quiz.find(params[:id])
+    @quiz.update!(archived: !@quiz.archived)
+    status_msg = @quiz.archived? ? "archivé" : "désarchivé"
+    redirect_to admin_quizzes_path, notice: "Le quiz a été #{status_msg} avec succès."
+  end
+
   private
 
   def set_quiz
@@ -74,7 +81,7 @@ class Admin::QuizzesController < ApplicationController
 
   def quiz_params
     params.require(:quiz).permit(
-      :title, :domaine_id, :estimated_time,
+      :title, :domaine_id, :estimated_time, :archived,
       quiz_questions_attributes: [
         :id, :content, :reference_id, :order, :_destroy,
         quiz_answers_attributes: [:id, :content, :is_correct, :_destroy]

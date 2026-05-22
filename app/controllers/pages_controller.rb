@@ -137,9 +137,7 @@ class PagesController < ApplicationController
   end
 
   def rate_redirect
-    if user_signed_in?
-      GamificationService.new(current_user).check_omniscient_supporter
-    end
+ 
 
     user_agent = request.user_agent.to_s.downcase
     
@@ -148,13 +146,19 @@ class PagesController < ApplicationController
 
     if user_agent.include?('ipad') || user_agent.include?('iphone') || user_agent.include?('ipod')
       # iOS : App Store
+         if user_signed_in?
+            GamificationService.new(current_user).check_omniscient_supporter
+         end
       redirect_to "https://apps.apple.com/app/id#{ios_app_id}?action=write-review", allow_other_host: true
     elsif user_agent.include?('android')
       # Android : Play Store
+         if user_signed_in?
+      GamificationService.new(current_user).check_omniscient_supporter
+    end
       redirect_to "https://play.google.com/store/apps/details?id=#{android_package}", allow_other_host: true
     else
-      # Ordinateur : recherche Google fallback
-      redirect_to "https://www.google.com/search?q=Omniscient+Design", allow_other_host: true
+      # Ordinateur : On reste sur la page courante et on affiche une notification explicative
+      redirect_back fallback_location: root_path
     end
   end
 

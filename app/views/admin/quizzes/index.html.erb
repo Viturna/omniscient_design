@@ -142,12 +142,28 @@
       <tbody>
         <% @quizzes.each do |quiz| %>
           <tr>
-            <td><strong><%= quiz.title %></strong></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <strong><%= quiz.title %></strong>
+                <% if quiz.archived? %>
+                  <span style="background-color: #FFE0B2; color: #E65100; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase;">Archivé</span>
+                <% end %>
+              </div>
+            </td>
             <td><%= quiz.domaine&.domaine || "Général" %></td>
             <td><%= quiz.quiz_questions.count %></td>
             <td><%= quiz.created_at.strftime("%d/%m/%Y") %></td>
             <td>
               <div class="actions-cell">
+                <% if quiz.archived? %>
+                  <%= link_to toggle_archive_admin_quiz_path(quiz), data: { turbo_method: :patch }, class: "action-btn", style: "background-color: #E8F5E9; color: #2E7D32; border-color: #A5D6A7;", title: "Désarchiver" do %>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  <% end %>
+                <% else %>
+                  <%= link_to toggle_archive_admin_quiz_path(quiz), data: { turbo_method: :patch }, class: "action-btn", style: "background-color: #FFF3E0; color: #E65100; border-color: #FFE0B2;", title: "Archiver" do %>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                  <% end %>
+                <% end %>
                 <%= link_to edit_admin_quiz_path(quiz), class: "action-btn", title: "Modifier" do %>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                 <% end %>

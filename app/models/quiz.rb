@@ -9,6 +9,8 @@ class Quiz < ApplicationRecord
   validates :title, presence: true
   validates :quiz_type, inclusion: { in: %w[static dynamic] }
 
+  scope :active, -> { where(archived: false) }
+
   def completed_by?(user)
     quiz_submissions.completed.where(user: user).exists?
   end

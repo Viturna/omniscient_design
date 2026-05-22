@@ -221,6 +221,11 @@
           <%= f.number_field :estimated_time, class: "admin-form-input", placeholder: "Ex: 10" %>
         </div>
       </div>
+
+      <div class="admin-form-group" style="display: flex; align-items: center; gap: 12px; margin-top: 10px; margin-bottom: 0;">
+        <%= f.check_box :archived, class: "answer-checkbox" %>
+        <%= f.label :archived, "Archiver ce quiz (ne sera plus visible par les utilisateurs)", style: "margin: 0; text-transform: none; letter-spacing: normal; font-weight: 500; cursor: pointer;" %>
+      </div>
     </div>
 
     <div class="section-header-admin">

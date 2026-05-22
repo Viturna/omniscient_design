@@ -51,7 +51,7 @@ class Admin::QuizGeneratorService
           content: "À quel designer associez-vous cette référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
-        wrong_pool = Designer.where.not(id: ref.designer_ids).where(validation: true).order("RANDOM()").limit(3)
+        wrong_pool = wrong_designers_pool(exclude_ids: ref.designer_ids).limit(3)
         wrong_pool.each { |d| question.quiz_answers.build(content: d.nom_designer, is_correct: false) }
         
       when :date
@@ -119,8 +119,21 @@ class Admin::QuizGeneratorService
   # - du même domaine si le quiz est filtré par domaine
   # - sinon toutes les références validées
   def wrong_references_pool(exclude_id:)
-    pool = Reference.where.not(id: exclude_id).where(validation: true).order("RANDOM()")
-    @domaine ? pool.joins(:domaines).where(domaines: { id: @domaine.id }) : pool
+    pool = Reference.where.not(id: exclude_id).where(validation: true)
+    if @domaine
+      domain_pool = pool.joins(:domaines).where(domaines: { id: @domaine.id })
+      pool = domain_pool if domain_pool.limit(3).count >= 3
+    end
+    pool.order("RANDOM()")
+  end
+
+  def wrong_designers_pool(exclude_ids:)
+    pool = Designer.where.not(id: exclude_ids).where(validation: true)
+    if @domaine
+      domain_pool = pool.joins(:domaines).where(domaines: { id: @domaine.id })
+      pool = domain_pool if domain_pool.limit(3).count >= 3
+    end
+    pool.order("RANDOM()")
   end
 
   def get_image_url(reference)

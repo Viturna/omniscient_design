@@ -216,6 +216,7 @@ Rails.application.routes.draw do
     end
 
     post '/api/devices', to: 'api/devices#create'
+    get '/api/daily_reference', to: 'api/daily_references#show'
 
     # ---- ERREURS ----
     match "/404", to: "errors#not_found", via: :all

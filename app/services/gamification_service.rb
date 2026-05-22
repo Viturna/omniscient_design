@@ -48,7 +48,13 @@ end
 
   # "Omniscient Supporter" : Clic sur le lien de notation
   def check_omniscient_supporter
-    assign_badge(name: "Omniscient Supporter", category: "special")
+    badge = Badge.find_or_create_by!(name: "Omniscient Supporter") do |b|
+      b.category = :special
+      b.level = :standard
+      b.description = "Merci d'avoir noté l'application sur les stores !"
+      b.image_name = "omniscient_supporter.png"
+    end
+    give_badge(badge)
   end
 
   # "L'Aaaancien" : Un an d'ancienneté

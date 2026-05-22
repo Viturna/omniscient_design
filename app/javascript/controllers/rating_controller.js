@@ -8,24 +8,46 @@ export default class extends Controller {
   trigger(event) {
     event.preventDefault();
     
-    // 1. Définir une URL par défaut (Fallback pour Desktop)
-    let url = "https://www.google.com/search?q=Omniscient+Design";
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
+    
     // IDs
     const iosAppId = "6754964970";
     const androidPackage = "com.thomasriq.omniscientdesign";
 
-    // 2. Détection de l'OS
+    // 1. Détecter si on est à l'intérieur d'une application hybride (WebView de l'App iOS/Android)
+    const isWebview = !!(
+      window.Capacitor || 
+      window.cordova || 
+      window.navigator.standalone || 
+      userAgent.includes('wv') || 
+      userAgent.includes('WebView') || 
+      (/iPhone|iPad|iPod/.test(userAgent) && !userAgent.includes('Safari'))
+    );
+
+    let url = "";
+
+    // 2. Sélectionner l'URL optimale de notation
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
       // iOS
-      url = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+      if (isWebview) {
+        // Les liens HTTPS standards sont plus sûrs dans les WebViews et s'ouvrent via _system
+        url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      } else {
+        url = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+      }
     } else if (/android/i.test(userAgent)) {
       // Android
-      url = "market://details?id=" + androidPackage;
+      if (isWebview) {
+        url = "https://play.google.com/store/apps/details?id=" + androidPackage;
+      } else {
+        url = "market://details?id=" + androidPackage;
+      }
+    } else {
+      // Bureau (Desktop)
+      url = "https://www.google.com/search?q=Omniscient+Design";
     }
 
-    // 3. Appel serveur pour débloquer le badge (AJAX) si l'URL de l'API est fournie
+    // 3. Appel serveur pour débloquer le badge
     if (this.urlValue) {
         fetch(this.urlValue, {
           method: "POST",
@@ -34,26 +56,30 @@ export default class extends Controller {
             "Content-Type": "application/json"
           }
         }).then(() => {
-          this.redirectAndReload(url);
+          this.redirectAndReload(url, isWebview);
         }).catch(err => {
           console.error("Erreur serveur :", err);
-          this.redirectAndReload(url);
+          this.redirectAndReload(url, isWebview);
         });
     } else {
-        this.redirectAndReload(url);
+        this.redirectAndReload(url, isWebview);
     }
   }
 
-  redirectAndReload(url) {
+  redirectAndReload(url, isWebview) {
     if (url) {
-      if (url.startsWith('http')) {
-        // Open web link in a new tab so the user does not leave the site
+      if (isWebview) {
+        // Dans une application hybride, _system force le système à ouvrir le navigateur externe natif du téléphone
+        // évitant l'erreur "pas de connexion internet" ou "protocole non supporté" de la WebView
+        window.open(url, '_system');
+        window.location.reload();
+      } else if (url.startsWith('http')) {
+        // Navigateur Bureau / Mobile classique
         window.open(url, '_blank');
         window.location.reload();
       } else {
-        // Custom app store URI schemes (itms-apps, market)
+        // Redirection profonde (Deep link) pour les stores natifs en dehors des WebViews
         window.location.href = url;
-        // Reload after a short timeout so that the badge is updated when they return
         setTimeout(() => {
           window.location.reload();
         }, 1000);

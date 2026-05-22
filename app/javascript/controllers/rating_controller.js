@@ -2,11 +2,21 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = {
-    url: String
+    url: String,
+    autoTrigger: Boolean,
+    redirectSelf: Boolean
+  }
+
+  connect() {
+    if (this.autoTriggerValue) {
+      setTimeout(() => {
+        this.trigger();
+      }, 100);
+    }
   }
 
   trigger(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
     
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     
@@ -52,7 +62,7 @@ export default class extends Controller {
 
     // 4. Redirection SYNCHRONE (essentiel pour ne pas être bloqué par le bloqueur de pub/popups des WebViews)
     if (url) {
-      if (isWebview) {
+      if (isWebview || this.redirectSelfValue) {
         // Les WebViews bloquent les popups (window.open). Utiliser location.href est 100% sûr,
         // et l'OS intercepte l'URL HTTPS pour ouvrir l'App Store/Play Store externe.
         window.location.href = url;
@@ -64,7 +74,11 @@ export default class extends Controller {
 
     // 5. Recharger la page après un court délai pour que le fetch d'attribution du badge ait le temps de se terminer
     setTimeout(() => {
-      window.location.reload();
+      if (this.redirectSelfValue) {
+        window.location.href = this.hasUrlValue ? "/mes-badges" : "/";
+      } else {
+        window.location.reload();
+      }
     }, 800);
   }
 }

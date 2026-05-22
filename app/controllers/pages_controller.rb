@@ -137,28 +137,15 @@ class PagesController < ApplicationController
   end
 
   def rate_redirect
- 
-
     user_agent = request.user_agent.to_s.downcase
-    
-    ios_app_id = "6754964970"
-    android_package = "com.thomasriq.omniscientdesign"
 
-    if user_agent.include?('ipad') || user_agent.include?('iphone') || user_agent.include?('ipod')
-      # iOS : App Store
-         if user_signed_in?
-            GamificationService.new(current_user).check_omniscient_supporter
-         end
-      redirect_to "https://apps.apple.com/app/id#{ios_app_id}?action=write-review", allow_other_host: true
-    elsif user_agent.include?('android')
-      # Android : Play Store
-         if user_signed_in?
-      GamificationService.new(current_user).check_omniscient_supporter
-    end
-      redirect_to "https://play.google.com/store/apps/details?id=#{android_package}", allow_other_host: true
+    if user_agent.include?('ipad') || user_agent.include?('iphone') || user_agent.include?('ipod') || user_agent.include?('android')
+      if user_signed_in?
+        GamificationService.new(current_user).check_omniscient_supporter
+      end
+      render :rate_redirect
     else
-      # Ordinateur : On reste sur la page courante et on affiche une notification explicative
-      redirect_back fallback_location: root_path
+      redirect_back fallback_location: root_path, alert: "L'évaluation de l'application est disponible uniquement sur smartphone (iOS & Android)."
     end
   end
 

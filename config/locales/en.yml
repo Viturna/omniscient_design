@@ -604,6 +604,10 @@ en:
     message_html: "A confirmation email has been sent to you. Click the link in the email to activate your account.<br>If you do not receive the email, please check your spam folder or %{resend_link}."
     resend: "request a new one"
     back_home: "Back to Home"
+  rate_redirect:
+    title: "Redirecting..."
+    message: "We are redirecting you to the App Store or Google Play Store to rate the Omniscient Design application."
+    button: "Open the Store"
   devise:
     login:
       title: "Login"

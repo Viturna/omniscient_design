@@ -903,6 +903,10 @@ fr:
     message_html: "Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour activer votre compte.<br>Si vous ne recevez pas l'email, vérifiez votre dossier spam ou %{resend_link}."
     resend: "demandez un nouvel envoi"
     back_home: "Retour à l'accueil"
+  rate_redirect:
+    title: "Redirection en cours..."
+    message: "Nous vous redirigeons vers l'App Store ou le Google Play Store pour évaluer l'application Omniscient Design."
+    button: "Ouvrir la boutique"
   designer:
     create:
       success: "Designer créé avec succès."

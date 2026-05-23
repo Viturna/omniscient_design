@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   def autocomplete
     query = params[:query].to_s.strip
 
-    if query.length < 2
+    if query.length < 1
       return render json: { error: "Query too short" }, status: :bad_request
     end
 

@@ -64,7 +64,7 @@ export default class extends Controller {
     const query = this.fieldTarget.value.trim()
     this.clearBtnTarget.style.display = query.length ? "block" : "none"
 
-    if (query.length <= this.minLengthValue) {
+    if (query.length < this.minLengthValue) {
       this.resultsTarget.innerHTML = ""
       this.resultsTarget.style.display = "none"
       this.suggestions = []

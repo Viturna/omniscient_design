@@ -38,10 +38,22 @@
           <% unlocked = @my_badge_ids.include?(badge.id) %>
           <% next if badge.name == "Early Adopter" && !unlocked %>
           <% if badge.name == "Omniscient Supporter" && !unlocked %>
+            <%
+              user_agent_lc = request.user_agent.to_s.downcase
+              ios_app_id = "6754964970"
+              android_package = "com.thomasriq.omniscientdesign"
+              if user_agent_lc.include?('ipad') || user_agent_lc.include?('iphone') || user_agent_lc.include?('ipod')
+                store_url = "https://apps.apple.com/app/id#{ios_app_id}?action=write-review"
+              elsif user_agent_lc.include?('android')
+                store_url = "https://play.google.com/store/apps/details?id=#{android_package}"
+              else
+                store_url = "#"
+              end
+            %>
             <div data-controller="rating" data-rating-url-value="<%= rate_app_badge_path %>">
-              <div data-action="click->rating#trigger" style="cursor: pointer;">
+              <%= link_to store_url, target: "_blank", data: { action: "click->rating#trigger" }, style: "text-decoration: none; color: inherit; cursor: pointer; display: block;" do %>
                 <%= render partial: "badge_card", locals: { badge: badge, unlocked: false } %>
-              </div>
+              <% end %>
             </div>
           <% else %>
             <%= render partial: "badge_card", locals: { badge: badge, unlocked: unlocked } %>

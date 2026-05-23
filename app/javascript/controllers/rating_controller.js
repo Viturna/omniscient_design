@@ -10,45 +10,58 @@ export default class extends Controller {
   connect() {
     if (this.autoTriggerValue) {
       setTimeout(() => {
-        this.trigger();
+        // En cas d'auto-déclenchement (au chargement), les navigateurs et WebViews
+        // bloquent l'ouverture de nouvelles fenêtres (window.open) sans geste utilisateur.
+        // On tente une redirection "best-effort" en modifiant window.location.href.
+        // Si la WebView le bloque, l'utilisateur a toujours le bouton réel sur lequel cliquer.
+        this.autoRedirect();
       }, 100);
     }
   }
 
-  trigger(event) {
-    if (event) event.preventDefault();
-    
+  autoRedirect() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    
-    // IDs officiels
     const iosAppId = "6754964970";
     const androidPackage = "com.thomasriq.omniscientdesign";
 
-    // 1. Détecter si on est à l'intérieur d'une application hybride (WebView de l'App iOS/Android)
-    const isWebview = !!(
-      window.Capacitor || 
-      window.cordova || 
-      window.navigator.standalone || 
-      userAgent.includes('wv') || 
-      userAgent.includes('WebView') || 
-      (/iPhone|iPad|iPod/.test(userAgent) && !userAgent.includes('Safari'))
-    );
-
     let url = "";
-
-    // 2. Sélectionner l'URL optimale. Les liens HTTPS officiels sont reconnus et sécurisés.
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      // iOS : URL de l'App Store
       url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
-      // Android : URL du Google Play Store
       url = "https://play.google.com/store/apps/details?id=" + androidPackage;
-    } else {
-      // Desktop : Pas de redirection
-      url = "";
     }
 
-    // 3. Débloquer le badge en arrière-plan (fetch asynchrone sans bloquer le thread principal)
+    if (url) {
+      // 1. Tenter Capacitor Browser si disponible
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+        try {
+          window.Capacitor.Plugins.Browser.open({ url: url });
+          return;
+        } catch (e) {
+          console.error("Erreur Capacitor Browser autoRedirect :", e);
+        }
+      }
+
+      // 2. Redirection location.href
+      window.location.href = url;
+    }
+  }
+
+  trigger(event) {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const isMobile = /iPad|iPhone|iPod|android/i.test(userAgent);
+    
+    // Si c'est sur ordinateur (pas de redirection vers un store), on bloque le clic inutile
+    if (!isMobile) {
+      if (event) event.preventDefault();
+      return;
+    }
+
+    // IMPORTANT : On ne fait PAS event.preventDefault() pour le clic utilisateur mobile !
+    // Cela permet de préserver le geste utilisateur natif (User Gesture), garantissant
+    // que la WebView laisse le lien s'ouvrir et lance le Store externe en quittant l'app.
+
+    // Débloquer le badge en arrière-plan (fetch asynchrone sans bloquer le thread principal)
     if (this.urlValue) {
       fetch(this.urlValue, {
         method: "POST",
@@ -59,48 +72,7 @@ export default class extends Controller {
       }).catch(err => console.error("Erreur serveur :", err));
     }
 
-    // 4. Redirection SYNCHRONE
-    if (url) {
-      if (isWebview) {
-        // 1. Si on est dans Capacitor avec le plugin Browser, l'utiliser pour ouvrir directement en externe
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
-          try {
-            window.Capacitor.Plugins.Browser.open({ url: url });
-            return;
-          } catch (e) {
-            console.error("Erreur Capacitor Browser :", e);
-          }
-        }
-
-        // 2. Si on est dans Cordova avec InAppBrowser
-        if (window.cordova && window.cordova.InAppBrowser) {
-          try {
-            window.cordova.InAppBrowser.open(url, '_system');
-            return;
-          } catch (e) {
-            console.error("Erreur Cordova InAppBrowser :", e);
-          }
-        }
-
-        // 3. Fallback universel : Simuler un clic physique sur un tag <a> avec target="_blank"
-        // Les WebViews (iOS WKWebView, Android WebView) interceptent nativement 'target="_blank"'
-        // pour ouvrir le lien HTTPS externe dans le navigateur système ou lancer l'application native (App Store/Play Store).
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else if (this.redirectSelfValue) {
-        // Redirection directe dans le même onglet pour les navigateurs mobiles classiques
-        window.location.href = url;
-      } else {
-        // Sur navigateur mobile classique depuis la page des badges : ouvre dans un nouvel onglet
-        window.open(url, '_blank');
-      }
-    }
-
-    // 5. Recharger la page après un court délai pour que le fetch d'attribution du badge ait le temps de se terminer
+    // Recharger la page ou rediriger après un court délai pour que le fetch d'attribution du badge ait le temps de se terminer
     setTimeout(() => {
       if (this.redirectSelfValue) {
         window.location.href = this.hasUrlValue ? "/mes-badges" : "/";

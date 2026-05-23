@@ -26,9 +26,9 @@ export default class extends Controller {
 
     let url = "";
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      url = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
-      url = "https://play.google.com/store/apps/details?id=" + androidPackage;
+      url = "market://details?id=" + androidPackage;
     }
 
     if (url) {
@@ -63,7 +63,7 @@ export default class extends Controller {
         }
       }
 
-      // 4. Redirection location.href (uniquement des liens HTTPS standards pour éviter les erreurs de protocole sur les chargeurs automatiques)
+      // 4. Redirection location.href
       window.location.href = url;
     }
   }
@@ -84,11 +84,11 @@ export default class extends Controller {
     let storeUrl = "";
     let deepLink = "";
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      storeUrl = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
-      deepLink = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+      storeUrl = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+      deepLink = storeUrl;
     } else if (/android/i.test(userAgent)) {
-      storeUrl = "https://play.google.com/store/apps/details?id=" + androidPackage;
-      deepLink = "market://details?id=" + androidPackage;
+      storeUrl = "market://details?id=" + androidPackage;
+      deepLink = storeUrl;
     }
 
     // Détecter si on est à l'intérieur d'une application hybride (WebView de l'App iOS/Android)

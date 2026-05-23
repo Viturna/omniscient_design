@@ -32,17 +32,38 @@ export default class extends Controller {
     }
 
     if (url) {
-      // 1. Tenter Capacitor Browser si disponible
-      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
-        try {
-          window.Capacitor.Plugins.Browser.open({ url: url });
-          return;
-        } catch (e) {
-          console.error("Erreur Capacitor Browser autoRedirect :", e);
+      // 1. Tenter le plugin Capacitor App.openUrl (inclus par défaut dans le core)
+      if (window.Capacitor && window.Capacitor.Plugins) {
+        if (window.Capacitor.Plugins.App && window.Capacitor.Plugins.App.openUrl) {
+          try {
+            window.Capacitor.Plugins.App.openUrl({ url: url });
+            return;
+          } catch (e) {
+            console.error("Erreur Capacitor App autoRedirect :", e);
+          }
+        }
+        // 2. Tenter le plugin Capacitor Browser
+        if (window.Capacitor.Plugins.Browser && window.Capacitor.Plugins.Browser.open) {
+          try {
+            window.Capacitor.Plugins.Browser.open({ url: url });
+            return;
+          } catch (e) {
+            console.error("Erreur Capacitor Browser autoRedirect :", e);
+          }
         }
       }
 
-      // 2. Redirection location.href
+      // 3. Tenter Cordova InAppBrowser
+      if (window.cordova && window.cordova.InAppBrowser) {
+        try {
+          window.cordova.InAppBrowser.open(url, '_system');
+          return;
+        } catch (e) {
+          console.error("Erreur Cordova InAppBrowser autoRedirect :", e);
+        }
+      }
+
+      // 4. Redirection location.href (uniquement des liens HTTPS standards pour éviter les erreurs de protocole sur les chargeurs automatiques)
       window.location.href = url;
     }
   }
@@ -57,9 +78,74 @@ export default class extends Controller {
       return;
     }
 
-    // IMPORTANT : On ne fait PAS event.preventDefault() pour le clic utilisateur mobile !
-    // Cela permet de préserver le geste utilisateur natif (User Gesture), garantissant
-    // que la WebView laisse le lien s'ouvrir et lance le Store externe en quittant l'app.
+    const iosAppId = "6754964970";
+    const androidPackage = "com.thomasriq.omniscientdesign";
+
+    let storeUrl = "";
+    let deepLink = "";
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      storeUrl = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      deepLink = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+    } else if (/android/i.test(userAgent)) {
+      storeUrl = "https://play.google.com/store/apps/details?id=" + androidPackage;
+      deepLink = "market://details?id=" + androidPackage;
+    }
+
+    // Détecter si on est à l'intérieur d'une application hybride (WebView de l'App iOS/Android)
+    const isWebview = !!(
+      window.Capacitor || 
+      window.cordova || 
+      window.navigator.standalone || 
+      userAgent.includes('wv') || 
+      userAgent.includes('WebView') || 
+      (/iPhone|iPad|iPod/.test(userAgent) && !userAgent.includes('Safari'))
+    );
+
+    let openedExternally = false;
+
+    if (isWebview && storeUrl) {
+      // 1. Tenter le plugin Capacitor App.openUrl (inclus par défaut dans le core)
+      if (window.Capacitor && window.Capacitor.Plugins) {
+        if (window.Capacitor.Plugins.App && window.Capacitor.Plugins.App.openUrl) {
+          try {
+            window.Capacitor.Plugins.App.openUrl({ url: storeUrl });
+            openedExternally = true;
+          } catch (e) {
+            console.error("Capacitor App.openUrl error:", e);
+          }
+        }
+        
+        // 2. Tenter le plugin Capacitor Browser
+        if (!openedExternally && window.Capacitor.Plugins.Browser && window.Capacitor.Plugins.Browser.open) {
+          try {
+            window.Capacitor.Plugins.Browser.open({ url: storeUrl });
+            openedExternally = true;
+          } catch (e) {
+            console.error("Capacitor Browser.open error:", e);
+          }
+        }
+      }
+
+      // 3. Tenter Cordova InAppBrowser
+      if (!openedExternally && window.cordova && window.cordova.InAppBrowser) {
+        try {
+          window.cordova.InAppBrowser.open(storeUrl, '_system');
+          openedExternally = true;
+        } catch (e) {
+          console.error("Cordova InAppBrowser error:", e);
+        }
+      }
+
+      // 4. Si ouvert par plugin natif, on empêche le comportement par défaut de l'ancre HTML
+      if (openedExternally) {
+        if (event) event.preventDefault();
+      } else {
+        // Fallback ultime pour WebView basique : on tente de forcer via le protocole profond (itms-apps / market)
+        // et on empêche le comportement par défaut pour éviter le chargement de la page HTTPS en interne.
+        if (event) event.preventDefault();
+        window.location.href = deepLink;
+      }
+    }
 
     // Débloquer le badge en arrière-plan (fetch asynchrone sans bloquer le thread principal)
     if (this.urlValue) {

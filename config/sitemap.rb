@@ -7,43 +7,45 @@ SitemapGenerator::Sitemap.create do
 
   # --- PAGES PRINCIPALES (Contenu dynamique & forte priorité) ---
 
-  # Page d'accueil (references#index)
+  # Page d'accueil par défaut
   add root_path, priority: 1.0, changefreq: 'daily'
 
-  # Index des Designers
-  add designers_path, priority: 0.9, changefreq: 'daily'
-
-  # Frise chronologique
-  add frise_references_path, priority: 0.8, changefreq: 'daily'
-
+  [:fr, :en].each do |locale|
+    add root_path(locale: locale), priority: 1.0, changefreq: 'daily'
+    add designers_path(locale: locale), priority: 0.9, changefreq: 'daily'
+    add frise_references_path(locale: locale), priority: 0.8, changefreq: 'daily'
+  end
 
   # --- CONTENU DYNAMIQUE (Les "objets" de votre site) ---
 
   Designer.find_each do |designer|
-    add designer_path(designer), lastmod: designer.updated_at, priority: 0.8, changefreq: 'weekly'
+    [:fr, :en].each do |locale|
+      add designer_path(slug: designer.slug, locale: locale), lastmod: designer.updated_at, priority: 0.8, changefreq: 'weekly'
+    end
   end
 
-
   Reference.find_each do |reference|
-    add reference_path(reference), lastmod: reference.updated_at, priority: 0.8, changefreq: 'weekly'
+    [:fr, :en].each do |locale|
+      add reference_path(slug: reference.slug, locale: locale), lastmod: reference.updated_at, priority: 0.8, changefreq: 'weekly'
+    end
   end
   
 
   # --- PAGES "STATIQUES" (Contenu de présentation) ---
 
-  add presentation_path, priority: 0.7, changefreq: 'monthly'
-  add add_elements_path, priority: 0.7, changefreq: 'monthly'
-  add parrainage_path, priority: 0.5, changefreq: 'monthly'
-  add changelog_path, priority: 0.5, changefreq: 'monthly'
-  add kit_presse_path, priority: 0.4, changefreq: 'monthly'
-  add plan_site_path, priority: 0.4, changefreq: 'monthly'
+  [:fr, :en].each do |locale|
+    add presentation_path(locale: locale), priority: 0.7, changefreq: 'monthly'
+    add add_elements_path(locale: locale), priority: 0.7, changefreq: 'monthly'
+    add parrainage_path(locale: locale), priority: 0.5, changefreq: 'monthly'
+    add changelog_path(locale: locale), priority: 0.5, changefreq: 'monthly'
+    add kit_presse_path(locale: locale), priority: 0.4, changefreq: 'monthly'
+    add plan_site_path(locale: locale), priority: 0.4, changefreq: 'monthly'
 
-  # --- PAGES LÉGALES (Basse priorité) ---
-  
-  add mentionslegales_path, priority: 0.2, changefreq: 'yearly'
-  add cookies_path, priority: 0.2, changefreq: 'yearly'
-  add politiquedeconfidentialite_path, priority: 0.2, changefreq: 'yearly'
-  add cgu_path, priority: 0.2, changefreq: 'yearly'
-  
-  
+    # --- PAGES LÉGALES (Basse priorité) ---
+    add mentionslegales_path(locale: locale), priority: 0.2, changefreq: 'yearly'
+    add cookies_path(locale: locale), priority: 0.2, changefreq: 'yearly'
+    add politiquedeconfidentialite_path(locale: locale), priority: 0.2, changefreq: 'yearly'
+    add cgu_path(locale: locale), priority: 0.2, changefreq: 'yearly'
+  end
+
 end

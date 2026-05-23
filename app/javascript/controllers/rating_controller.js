@@ -62,34 +62,35 @@ export default class extends Controller {
     // 4. Redirection SYNCHRONE
     if (url) {
       if (isWebview) {
-        // Pour les WebViews/In-App Browsers : Utiliser window.open avec '_system' ou '_blank' 
-        // ou simuler un vrai clic utilisateur sur un élément <a> avec target="_system".
-        // Cela force le wrapper natif de l'application à ouvrir l'URL HTTPS dans le navigateur système / store externe.
-        let opened = false;
-        try {
-          const win = window.open(url, '_system');
-          if (win) opened = true;
-        } catch (e) {
-          console.error("Échec _system :", e);
-        }
-
-        if (!opened) {
+        // 1. Si on est dans Capacitor avec le plugin Browser, l'utiliser pour ouvrir directement en externe
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
           try {
-            const win = window.open(url, '_blank');
-            if (win) opened = true;
+            window.Capacitor.Plugins.Browser.open({ url: url });
+            return;
           } catch (e) {
-            console.error("Échec _blank :", e);
+            console.error("Erreur Capacitor Browser :", e);
           }
         }
 
-        if (!opened) {
-          const link = document.createElement('a');
-          link.href = url;
-          link.target = '_system';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+        // 2. Si on est dans Cordova avec InAppBrowser
+        if (window.cordova && window.cordova.InAppBrowser) {
+          try {
+            window.cordova.InAppBrowser.open(url, '_system');
+            return;
+          } catch (e) {
+            console.error("Erreur Cordova InAppBrowser :", e);
+          }
         }
+
+        // 3. Fallback universel : Simuler un clic physique sur un tag <a> avec target="_blank"
+        // Les WebViews (iOS WKWebView, Android WebView) interceptent nativement 'target="_blank"'
+        // pour ouvrir le lien HTTPS externe dans le navigateur système ou lancer l'application native (App Store/Play Store).
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       } else if (this.redirectSelfValue) {
         // Redirection directe dans le même onglet pour les navigateurs mobiles classiques
         window.location.href = url;

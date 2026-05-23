@@ -906,7 +906,7 @@ fr:
   rate_redirect:
     title: "Redirection en cours..."
     message: "Nous vous redirigeons vers l'App Store ou le Google Play Store pour évaluer l'application Omniscient Design."
-    button: "Ouvrir la boutique"
+    button: "Ouvrir le store"
   designer:
     create:
       success: "Designer créé avec succès."

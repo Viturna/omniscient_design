@@ -25,28 +25,32 @@ export default class extends Controller {
     const androidPackage = "com.thomasriq.omniscientdesign";
 
     let url = "";
+    // Pour la redirection automatique au chargement, on utilise UNIQUEMENT des URLs HTTPS.
+    // Les navigateurs mobiles classiques (Safari, Chrome) bloquent les redirections automatiques vers des protocoles custom (itms-apps / market).
+    // De plus, les liens HTTPS officiels sont interceptés nativement par iOS/Android et par la SceneDelegate de notre WebView.
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      url = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
+      url = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
-      url = "market://details?id=" + androidPackage;
+      url = "https://play.google.com/store/apps/details?id=" + androidPackage;
     }
 
     if (url) {
-      // 1. Tenter le plugin Capacitor App.openUrl (inclus par défaut dans le core)
+      let opened = false;
+      // 1. Tenter le plugin Capacitor App.openUrl (si disponible)
       if (window.Capacitor && window.Capacitor.Plugins) {
         if (window.Capacitor.Plugins.App && window.Capacitor.Plugins.App.openUrl) {
           try {
             window.Capacitor.Plugins.App.openUrl({ url: url });
-            return;
+            opened = true;
           } catch (e) {
             console.error("Erreur Capacitor App autoRedirect :", e);
           }
         }
         // 2. Tenter le plugin Capacitor Browser
-        if (window.Capacitor.Plugins.Browser && window.Capacitor.Plugins.Browser.open) {
+        if (!opened && window.Capacitor.Plugins.Browser && window.Capacitor.Plugins.Browser.open) {
           try {
             window.Capacitor.Plugins.Browser.open({ url: url });
-            return;
+            opened = true;
           } catch (e) {
             console.error("Erreur Capacitor Browser autoRedirect :", e);
           }
@@ -54,17 +58,39 @@ export default class extends Controller {
       }
 
       // 3. Tenter Cordova InAppBrowser
-      if (window.cordova && window.cordova.InAppBrowser) {
+      if (!opened && window.cordova && window.cordova.InAppBrowser) {
         try {
           window.cordova.InAppBrowser.open(url, '_system');
-          return;
+          opened = true;
         } catch (e) {
           console.error("Erreur Cordova InAppBrowser autoRedirect :", e);
         }
       }
 
-      // 4. Redirection location.href
-      window.location.href = url;
+      // 4. Redirection location.href (100% fonctionnel sur Safari/Chrome et intercepté par SceneDelegate.swift)
+      if (!opened) {
+        window.location.href = url;
+      }
+
+      // Débloquer le badge en arrière-plan
+      if (this.urlValue) {
+        fetch(this.urlValue, {
+          method: "POST",
+          headers: {
+            "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+            "Content-Type": "application/json"
+          }
+        }).catch(err => console.error("Erreur serveur :", err));
+      }
+
+      // Rediriger la page après un court délai pour ne pas rester bloqué sur le spinner
+      setTimeout(() => {
+        if (this.redirectSelfValue) {
+          window.location.href = this.hasUrlValue ? "/mes-badges" : "/";
+        } else {
+          window.location.reload();
+        }
+      }, 800);
     }
   }
 
@@ -84,11 +110,11 @@ export default class extends Controller {
     let storeUrl = "";
     let deepLink = "";
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-      storeUrl = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
-      deepLink = storeUrl;
+      storeUrl = "https://apps.apple.com/app/id" + iosAppId + "?action=write-review";
+      deepLink = "itms-apps://itunes.apple.com/app/id" + iosAppId + "?action=write-review";
     } else if (/android/i.test(userAgent)) {
-      storeUrl = "market://details?id=" + androidPackage;
-      deepLink = storeUrl;
+      storeUrl = "https://play.google.com/store/apps/details?id=" + androidPackage;
+      deepLink = "market://details?id=" + androidPackage;
     }
 
     // Détecter si on est à l'intérieur d'une application hybride (WebView de l'App iOS/Android)
@@ -145,6 +171,12 @@ export default class extends Controller {
         if (event) event.preventDefault();
         window.location.href = deepLink;
       }
+    } else if (storeUrl) {
+      // Sur navigateur mobile classique : le geste utilisateur est présent !
+      // On peut utiliser window.open(storeUrl, '_blank') de manière synchrone et sécurisée,
+      // ce qui ouvre le Store proprement sans laisser l'utilisateur sur une page blanche.
+      if (event) event.preventDefault();
+      window.open(storeUrl, '_blank');
     }
 
     // Débloquer le badge en arrière-plan (fetch asynchrone sans bloquer le thread principal)
@@ -158,7 +190,7 @@ export default class extends Controller {
       }).catch(err => console.error("Erreur serveur :", err));
     }
 
-    // Recharger la page ou rediriger après un court délai pour que le fetch d'attribution du badge ait le temps de se terminer
+    // Recharger la page ou rediriger après un court délai pour que le badge ait le temps d'être attribué
     setTimeout(() => {
       if (this.redirectSelfValue) {
         window.location.href = this.hasUrlValue ? "/mes-badges" : "/";
@@ -168,3 +200,4 @@ export default class extends Controller {
     }, 800);
   }
 }
+

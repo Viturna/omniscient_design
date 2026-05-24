@@ -47,14 +47,15 @@
     </section>
 
     <div class="quiz-sections">
-      <% if @quizzes_a_la_une.any? %>
+      <% if @quizzes_jeux_a_la_une.any? %>
         <section class="quiz-section" style="margin-top: 0;">
           <div class="section-header">
             <h2>Quiz à la une</h2>
             <p>Lorem ipsum dolor sit amet consectetur. Sed lacinia neque eu gravida adipiscing egestas. Et eget phasellus netus libero ac euismod.</p>
           </div>
+          <%= render 'filters' %>
           <div class="quiz-grid">
-            <% @quizzes_a_la_une.each do |quiz| %>
+            <% @quizzes_jeux_a_la_une.each do |quiz| %>
               <%= render 'quiz_card', quiz: quiz %>
             <% end %>
           </div>
@@ -66,6 +67,7 @@
           <h2>Tout les quiz</h2>
           <p>Lorem ipsum dolor sit amet consectetur. Sed lacinia neque eu gravida adipiscing egestas. Et eget phasellus netus libero ac euismod.</p>
         </div>
+        <%= render 'filters' %>
         <div class="wide-cards-list">
           <%= link_to quizzes_hub_path(category: 'this_week'), class: 'wide-card', style: 'border: none;' do %>
             <div class="card-image">

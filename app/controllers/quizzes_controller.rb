@@ -47,11 +47,19 @@ class QuizzesController < ApplicationController
                                .group('quizzes.id, domaines.domaine')
                                .order('domaines.domaine ASC, COUNT(quiz_questions.id) ASC')
     
-    target_domaines = Domaine.where(domaine: ['Architecture', 'Objet', 'Mode'])
-    a_la_une_ids = target_domaines.map { |d| base_quizzes.where(domaine_id: d.id).first&.id }.compact
+    @quizzes_a_la_une = base_quizzes.where('quizzes.created_at >= ?', 7.days.ago)
+    @quizzes_normaux = base_quizzes.where('quizzes.created_at < ?', 7.days.ago)
     
-    @quizzes_a_la_une = base_quizzes.where(id: a_la_une_ids)
-    @quizzes_normaux = base_quizzes.where.not(id: a_la_une_ids)
+    # Sélection spéciale pour la page d'accueil (Hub)
+    target_domaines = Domaine.where(domaine: ['Architecture', 'Objet', 'Mode'])
+    hub_a_la_une_ids = target_domaines.map do |d|
+      @quizzes_a_la_une.where(domaine_id: d.id)
+                       .left_joins(:quiz_questions)
+                       .group('quizzes.id')
+                       .order('COUNT(quiz_questions.id) ASC')
+                       .first&.id
+    end.compact
+    @quizzes_jeux_a_la_une = base_quizzes.where(id: hub_a_la_une_ids)
     
     # Optimisation ultime : On pré-charge une image par quiz
     quiz_ids = base_quizzes.pluck(:id)
@@ -93,15 +101,22 @@ class QuizzesController < ApplicationController
     else
       @view_mode = 'hub'
       
-      # Quiz à la une (même logique, mais juste les 3 derniers)
-      @quizzes_a_la_une = Quiz.active.where(quiz_type: 'static')
-                                     .includes(:domaine, :quiz_questions)
-                                     .where('quizzes.created_at >= ?', 7.days.ago)
-                                     .order(created_at: :desc)
-                                     .limit(3)
+      # Quiz à la une pour la page hub : Architecture, Objet, Mode avec le moins de questions
+      target_domaines = Domaine.where(domaine: ['Architecture', 'Objet', 'Mode'])
+      recent_quizzes = Quiz.active.where(quiz_type: 'static').where('quizzes.created_at >= ?', 7.days.ago)
+      
+      hub_a_la_une_ids = target_domaines.map do |d|
+        recent_quizzes.where(domaine_id: d.id)
+                      .left_joins(:quiz_questions)
+                      .group('quizzes.id')
+                      .order('COUNT(quiz_questions.id) ASC')
+                      .first&.id
+      end.compact
+      
+      @quizzes_jeux_a_la_une = Quiz.active.where(id: hub_a_la_une_ids).includes(:domaine, :quiz_questions)
                                      
       # Préchargement des images pour la vue hub
-      quiz_ids = @quizzes_a_la_une.pluck(:id)
+      quiz_ids = @quizzes_jeux_a_la_une.pluck(:id)
       @quiz_covers = Reference.joins(:quiz_questions)
                               .where(quiz_questions: { quiz_id: quiz_ids })
                               .select('"references".*, quiz_questions.quiz_id as q_id')
@@ -109,7 +124,7 @@ class QuizzesController < ApplicationController
                               .group_by(&:q_id)
                               .transform_values(&:first)
                               
-      domaine_ids = @quizzes_a_la_une.map(&:domaine_id).compact.uniq
+      domaine_ids = @quizzes_jeux_a_la_une.map(&:domaine_id).compact.uniq
       @domaine_covers = Reference.joins(:domaines)
                                  .where(domaines: { id: domaine_ids })
                                  .select('"references".*, domaines.id as d_id')

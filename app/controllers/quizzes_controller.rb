@@ -6,22 +6,22 @@ class QuizzesController < ApplicationController
     @current_page = 'training'
     
     # Eager loading massif pour éviter les N+1 sur les domaines et questions
-    @quizzes = Quiz.active.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
+    base_quizzes = Quiz.active.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
 
     # Filtrage par Domaine
     if params[:domaine_id].present?
-      @quizzes = @quizzes.where(domaine_id: params[:domaine_id])
+      base_quizzes = base_quizzes.where(domaine_id: params[:domaine_id])
     end
 
     # Filtrage par Nombre de questions
     if params[:count_range].present?
       case params[:count_range]
       when "small"  
-        @quizzes = @quizzes.where(id: QuizQuestion.group(:quiz_id).having('count(id) < 10').select(:quiz_id))
+        base_quizzes = base_quizzes.where(id: QuizQuestion.group(:quiz_id).having('count(id) < 10').select(:quiz_id))
       when "medium" 
-        @quizzes = @quizzes.where(id: QuizQuestion.group(:quiz_id).having('count(id) BETWEEN 10 AND 20').select(:quiz_id))
+        base_quizzes = base_quizzes.where(id: QuizQuestion.group(:quiz_id).having('count(id) BETWEEN 10 AND 20').select(:quiz_id))
       when "large"  
-        @quizzes = @quizzes.where(id: QuizQuestion.group(:quiz_id).having('count(id) > 20').select(:quiz_id))
+        base_quizzes = base_quizzes.where(id: QuizQuestion.group(:quiz_id).having('count(id) > 20').select(:quiz_id))
       end
     end
 
@@ -30,20 +30,23 @@ class QuizzesController < ApplicationController
       case params[:status]
       when "in_progress"
         in_progress_ids = current_user.quiz_submissions.where(status: 'in_progress').pluck(:quiz_id)
-        @quizzes = @quizzes.where(id: in_progress_ids)
+        base_quizzes = base_quizzes.where(id: in_progress_ids)
       when "completed"
         completed_ids = current_user.quiz_submissions.where(status: 'completed').pluck(:quiz_id)
-        @quizzes = @quizzes.where(id: completed_ids)
+        base_quizzes = base_quizzes.where(id: completed_ids)
       when "not_started"
         started_ids = current_user.quiz_submissions.pluck(:quiz_id)
-        @quizzes = @quizzes.where.not(id: started_ids)
+        base_quizzes = base_quizzes.where.not(id: started_ids)
       end
     end
 
-    @quizzes = @quizzes.order(created_at: :desc)
+    base_quizzes = base_quizzes.order(created_at: :desc)
+    
+    @quizzes_a_la_une = base_quizzes.where('quizzes.created_at >= ?', 7.days.ago)
+    @quizzes_normaux = base_quizzes.where('quizzes.created_at < ?', 7.days.ago)
     
     # Optimisation ultime : On pré-charge une image par quiz
-    quiz_ids = @quizzes.pluck(:id)
+    quiz_ids = base_quizzes.pluck(:id)
     
     # 1. On cherche d'abord dans les questions
     @quiz_covers = Reference.joins(:quiz_questions)
@@ -54,7 +57,7 @@ class QuizzesController < ApplicationController
                             .transform_values(&:first)
     
     # 2. On pré-charge les images des domaines pour les fallbacks
-    domaine_ids = @quizzes.map(&:domaine_id).compact.uniq
+    domaine_ids = base_quizzes.map(&:domaine_id).compact.uniq
     @domaine_covers = Reference.joins(:domaines)
                                .where(domaines: { id: domaine_ids })
                                .select('"references".*, domaines.id as d_id')

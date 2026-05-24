@@ -16,12 +16,6 @@ application.register("alert", AlertController)
 import AutocompleteController from "./autocomplete_controller"
 application.register("autocomplete", AutocompleteController)
 
-import LiveValidationController from "./live_validation_controller"
-application.register("live-validation", LiveValidationController)
-
-import PasswordStrengthController from "./password_strength_controller"
-application.register("password-strength", PasswordStrengthController)
-
 import AvatarUploadController from "./avatar_upload_controller"
 application.register("avatar-upload", AvatarUploadController)
 
@@ -30,6 +24,9 @@ application.register("back", BackController)
 
 import CookieConsentController from "./cookie_consent_controller"
 application.register("cookie-consent", CookieConsentController)
+
+import CountdownController from "./countdown_controller"
+application.register("countdown", CountdownController)
 
 import DeviceSyncController from "./device_sync_controller"
 application.register("device-sync", DeviceSyncController)
@@ -48,6 +45,9 @@ application.register("landing-quote", LandingQuoteController)
 
 import LangSwitcherController from "./lang_switcher_controller"
 application.register("lang-switcher", LangSwitcherController)
+
+import LiveValidationController from "./live_validation_controller"
+application.register("live-validation", LiveValidationController)
 
 import LoadMoreTableController from "./load_more_table_controller"
 application.register("load-more-table", LoadMoreTableController)
@@ -78,6 +78,9 @@ application.register("notion-toggle", NotionToggleController)
 
 import NumberCounterController from "./number_counter_controller"
 application.register("number-counter", NumberCounterController)
+
+import PasswordStrengthController from "./password_strength_controller"
+application.register("password-strength", PasswordStrengthController)
 
 import PopupController from "./popup_controller"
 application.register("popup", PopupController)
@@ -127,6 +130,9 @@ application.register("show-password", ShowPasswordController)
 import SliderController from "./slider_controller"
 application.register("slider", SliderController)
 
+import SocialFollowController from "./social_follow_controller"
+application.register("social-follow", SocialFollowController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 
@@ -153,6 +159,3 @@ application.register("validation-overlay", ValidationOverlayController)
 
 import YearValidatorController from "./year_validator_controller"
 application.register("year-validator", YearValidatorController)
-
-import SocialFollowController from "./social_follow_controller"
-application.register("social-follow", SocialFollowController)

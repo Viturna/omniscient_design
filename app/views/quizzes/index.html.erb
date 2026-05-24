@@ -67,20 +67,49 @@
   </div>
 
   <div class="quiz-sections">
-    <!-- 1. Sélection principale -->
-    <% if @quizzes.any? %>
+    <!-- 1. À la une -->
+    <% if @quizzes_a_la_une.any? %>
       <section class="quiz-section">
         <div class="section-header">
-          <h2>Notre sélection de quiz avant le bac</h2>
-          <p>Les indispensables pour réviser. Maîtrise les mouvements et les créateurs qui ont façonné le design.</p>
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            <h2 style="margin: 0;">À la une cette semaine</h2>
+            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85em; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 500;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Nouveaux dans <span data-controller="countdown" data-countdown-target-value="<%= Time.current.next_week(:monday).change(hour: 3).iso8601 %>"></span></span>
+            </div>
+          </div>
+          <p style="margin: 0;">Les quiz fraîchement générés pour vous entraîner.</p>
         </div>
         <div class="quiz-grid" data-controller="scroll-horizontal" data-scroll-horizontal-target="wrapper">
-          <% @quizzes.each do |quiz| %>
+          <% @quizzes_a_la_une.each do |quiz| %>
             <%= render 'quiz_card', quiz: quiz %>
           <% end %>
         </div>
       </section>
-    <% else %>
+    <% end %>
+
+    <!-- 1b. Quiz classiques -->
+    <% if @quizzes_normaux.any? %>
+      <section class="quiz-section">
+        <div class="section-header">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            <h2 style="margin: 0;">Sélection de la semaine dernière</h2>
+            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.85em; color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 500;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+              <span>Suppression dans <span data-controller="countdown" data-countdown-target-value="<%= Time.current.next_week(:monday).change(hour: 3).iso8601 %>"></span></span>
+            </div>
+          </div>
+          <p style="margin: 0;">Les indispensables pour réviser. Maîtrise les mouvements et les créateurs qui ont façonné le design.</p>
+        </div>
+        <div class="quiz-grid" data-controller="scroll-horizontal" data-scroll-horizontal-target="wrapper">
+          <% @quizzes_normaux.each do |quiz| %>
+            <%= render 'quiz_card', quiz: quiz %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @quizzes_a_la_une.empty? && @quizzes_normaux.empty? %>
       <div style="text-align: center; padding: 60px; color: #888;">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
         <p>Aucun quiz ne correspond à vos filtres.</p>

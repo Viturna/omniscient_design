@@ -1,6 +1,3 @@
-# Utilisation : rails runner bin/generate_domain_quizzes.rb COUNT=15
-# Par défaut COUNT=10 si non précisé, MAX=25
-
 count_arg = ARGV.find { |arg| arg.start_with?('COUNT=') }
 count_val = count_arg ? count_arg.split('=').last : ENV['COUNT']
 count = [(count_val || 10).to_i, 25].min

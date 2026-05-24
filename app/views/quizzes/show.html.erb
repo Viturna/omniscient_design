@@ -54,7 +54,7 @@
   <div class="quiz-right-pane">
     <div class="pane-header">
       <div class="header-links">
-        <%= link_to "Signaler une erreur", new_bug_report_path, class: "report-link" %>
+        <%= link_to "Signaler une erreur", new_bug_report_path(url: request.original_url), class: "report-link", data: { quiz_player_target: "reportLink" } %>
         <span class="separator">•</span>
         <%= link_to "Évaluer les quiz OD", "https://docs.google.com/forms/d/e/1FAIpQLSdT8y0ogWPEgbrhzjNGIp6rBz9q0aiTMuhQezRTxnD79InvBw/viewform", class: "report-link", target: "_blank", rel: "noopener" %>
       </div>

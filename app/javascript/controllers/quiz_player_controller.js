@@ -4,7 +4,8 @@ export default class extends Controller {
   static targets = [
     "questionsData", "currentIndex", "progressPercentage", "progressBar", "questionTitle", 
     "instruction", "answersContainer", "totalPoints", "motivationMsg", "pointsFeedback",
-    "prevBtn", "nextBtn", "resultModal", "finalScore", "imageContainer", "questionImage"
+    "prevBtn", "nextBtn", "resultModal", "finalScore", "imageContainer", "questionImage",
+    "reportLink"
   ]
   
   static values = {
@@ -53,6 +54,18 @@ export default class extends Controller {
   renderQuestion() {
     const question = this.questions[this.index]
     if (!question) return
+
+    if (this.hasReportLinkTarget) {
+      try {
+        const baseUrl = new URL(this.reportLinkTarget.href, window.location.origin)
+        const currentUrl = new URL(window.location.href)
+        currentUrl.searchParams.set("question", this.index + 1)
+        baseUrl.searchParams.set("url", currentUrl.toString())
+        this.reportLinkTarget.href = baseUrl.toString()
+      } catch (e) {
+        console.error("Failed to update report link URL:", e)
+      }
+    }
 
     this.questionTitleTarget.textContent = question.content
     this.currentIndexTarget.textContent = this.index + 1

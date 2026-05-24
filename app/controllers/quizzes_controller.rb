@@ -5,8 +5,11 @@ class QuizzesController < ApplicationController
   def index
     @current_page = 'training'
     
-    # Eager loading massif pour éviter les N+1 sur les domaines et questions
-    base_quizzes = Quiz.active.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
+    if params[:category].present? || params[:domaine_id].present? || params[:count_range].present? || params[:status].present?
+      @view_mode = 'explore'
+      
+      # Eager loading massif pour éviter les N+1 sur les domaines et questions
+      base_quizzes = Quiz.active.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
 
     # Filtrage par Domaine
     if params[:domaine_id].present?
@@ -71,15 +74,47 @@ class QuizzesController < ApplicationController
     # Pour les filtres
     @user_lists = current_user.lists.joins(:references).group('lists.id').having('count("references".id) >= 5')
     
-    # Quiz récents
-    @recent_quizzes = current_user.quiz_submissions
-                                  .includes(:quiz)
-                                  .order(updated_at: :desc)
-                                  .limit(10)
-                                  .map(&:quiz)
-                                  .compact
-                                  .uniq
-                                  .first(4)
+      # Quiz récents
+      @recent_quizzes = current_user.quiz_submissions
+                                    .joins(:quiz)
+                                    .where(quizzes: { archived: false })
+                                    .includes(:quiz)
+                                    .order(updated_at: :desc)
+                                    .limit(15)
+                                    .map(&:quiz)
+                                    .compact
+                                    .uniq
+                                    .first(4)
+    else
+      @view_mode = 'hub'
+      
+      # Quiz à la une (même logique, mais juste les 3 derniers)
+      @quizzes_a_la_une = Quiz.active.where(quiz_type: 'static')
+                                     .includes(:domaine, :quiz_questions)
+                                     .where('quizzes.created_at >= ?', 7.days.ago)
+                                     .order(created_at: :desc)
+                                     .limit(3)
+                                     
+      # Préchargement des images pour la vue hub
+      quiz_ids = @quizzes_a_la_une.pluck(:id)
+      @quiz_covers = Reference.joins(:quiz_questions)
+                              .where(quiz_questions: { quiz_id: quiz_ids })
+                              .select('"references".*, quiz_questions.quiz_id as q_id')
+                              .includes(reference_images: { file_attachment: :blob })
+                              .group_by(&:q_id)
+                              .transform_values(&:first)
+                              
+      domaine_ids = @quizzes_a_la_une.map(&:domaine_id).compact.uniq
+      @domaine_covers = Reference.joins(:domaines)
+                                 .where(domaines: { id: domaine_ids })
+                                 .select('"references".*, domaines.id as d_id')
+                                 .includes(reference_images: { file_attachment: :blob })
+                                 .group_by(&:d_id)
+                                 .transform_values(&:first)
+                                 
+      # Préchargement des soumissions
+      @user_submissions_by_quiz = current_user.quiz_submissions.where(quiz_id: quiz_ids).index_by(&:quiz_id)
+    end
   end
 
   def leaderboard

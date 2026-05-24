@@ -81,11 +81,11 @@ class QuizGeneratorService
     
     when :image_from_ref
       content = "Quelle image correspond à la référence \"#{reference.nom_reference}\" ?"
-      correct_answer = get_image_url(reference)
+      correct_answer = "reference_image:#{reference.id}"
       # On s'assure que les distracteurs ont aussi des images
       distractors = wrong_references_pool(reference, with_images: true)
                              .limit(3)
-                             .map { |r| get_image_url(r) }
+                             .map { |r| "reference_image:#{r.id}" }
     
     when :year_from_ref
       year = reference.date_reference

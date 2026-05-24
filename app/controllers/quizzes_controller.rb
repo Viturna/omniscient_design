@@ -102,6 +102,10 @@ class QuizzesController < ApplicationController
       s.user_answers = {}
     end
 
+    # On pré-charge les références pour les réponses images dynamiques
+    ref_ids_in_answers = @questions.flat_map(&:quiz_answers).map(&:content).select { |c| c.to_s.start_with?("reference_image:") }.map { |c| c.split(":").last }
+    @references_for_answers = Reference.includes(reference_images: { file_attachment: :blob }).where(id: ref_ids_in_answers).index_by(&:id)
+
     # Préparer les données JSON avec les URLs d'images
     @questions_json = @questions.map do |q|
       {
@@ -109,9 +113,16 @@ class QuizzesController < ApplicationController
         content: q.content,
         reference_image_url: q.reference ? get_image_url(q.reference) : nil,
         quiz_answers: q.quiz_answers.map { |a|
+          processed_content = a.content
+          if processed_content.to_s.start_with?("reference_image:")
+            ref_id = processed_content.split(":").last.to_i
+            ref = @references_for_answers[ref_id]
+            processed_content = ref ? get_image_url(ref) : ""
+          end
+
           {
             id: a.id,
-            content: a.content,
+            content: processed_content,
             is_correct: a.is_correct
           }
         }.shuffle

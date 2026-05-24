@@ -82,7 +82,7 @@ class Admin::QuizGeneratorService
         wrong_pool.each { |r| question.quiz_answers.build(content: r.nom_reference, is_correct: false) }
 
       when :image_from_name
-        correct_answer = get_image_url(ref)
+        correct_answer = "reference_image:#{ref.id}"
         question = quiz.quiz_questions.build(
           content: "Laquelle de ces images correspond à la référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
@@ -91,7 +91,7 @@ class Admin::QuizGeneratorService
         wrong_pool = wrong_references_pool(exclude_id: ref.id)
                           .where(id: ReferenceImage.select(:reference_id))
                           .limit(3)
-        wrong_pool.each { |r| question.quiz_answers.build(content: get_image_url(r), is_correct: false) }
+        wrong_pool.each { |r| question.quiz_answers.build(content: "reference_image:#{r.id}", is_correct: false) }
       end
 
       # Ajouter la bonne réponse

@@ -43,10 +43,15 @@ class QuizzesController < ApplicationController
       end
     end
 
-    base_quizzes = base_quizzes.order(created_at: :desc)
+    base_quizzes = base_quizzes.left_joins(:domaine, :quiz_questions)
+                               .group('quizzes.id, domaines.domaine')
+                               .order('domaines.domaine ASC, COUNT(quiz_questions.id) ASC')
     
-    @quizzes_a_la_une = base_quizzes.where('quizzes.created_at >= ?', 7.days.ago)
-    @quizzes_normaux = base_quizzes.where('quizzes.created_at < ?', 7.days.ago)
+    target_domaines = Domaine.where(domaine: ['Architecture', 'Objet', 'Mode'])
+    a_la_une_ids = target_domaines.map { |d| base_quizzes.where(domaine_id: d.id).first&.id }.compact
+    
+    @quizzes_a_la_une = base_quizzes.where(id: a_la_une_ids)
+    @quizzes_normaux = base_quizzes.where.not(id: a_la_une_ids)
     
     # Optimisation ultime : On pré-charge une image par quiz
     quiz_ids = base_quizzes.pluck(:id)

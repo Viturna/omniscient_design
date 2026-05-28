@@ -46,12 +46,19 @@ class QuizGeneratorService
       possible_types << :year_from_ref
     end
 
+    if reference.notions.any?
+      possible_types << :notion_from_ref
+      possible_types << :ref_from_notion
+    end
+
     # Définition d'un roulement idéal pour garantir la diversité et favoriser les questions à images
     ideal_rotation = [
       :name_from_image,
       :designer_from_ref,
+      :notion_from_ref,
       :image_from_ref,
       :year_from_ref,
+      :ref_from_notion,
       :name_from_image,
       :ref_from_designer,
       :image_from_ref
@@ -103,6 +110,22 @@ class QuizGeneratorService
         break if wrong_years.size >= 3
       end
       distractors = wrong_years.map(&:to_s)
+
+    when :notion_from_ref
+      notion = reference.notions.sample
+      content = "Quelle notion est associée à la référence \"#{reference.nom_reference}\" ?"
+      correct_answer = notion&.name || "Inconnue"
+      distractors = Notion.where.not(id: reference.notion_ids).order("RANDOM()").limit(3).map(&:name)
+
+    when :ref_from_notion
+      notion = reference.notions.sample
+      content = "Laquelle de ces références est associée à la notion \"#{notion&.name}\" ?"
+      correct_answer = reference.nom_reference
+      wrong_refs = Reference.where.not(id: Reference.joins(:notions).where(notions: { id: notion&.id }).pluck(:id))
+      if wrong_refs.count < 3
+        wrong_refs = Reference.where.not(id: reference.id)
+      end
+      distractors = wrong_refs.order("RANDOM()").limit(3).map(&:nom_reference)
     end
 
     question = quiz.quiz_questions.create!(

@@ -40,6 +40,11 @@ class Admin::QuizGeneratorService
         available_types << :name_from_image
         available_types << :image_from_name
       end
+
+      if ref.notions.any?
+        available_types << :notion_from_ref
+        available_types << :ref_from_notion
+      end
       
       type = available_types.sample
       next if type.nil?
@@ -92,6 +97,30 @@ class Admin::QuizGeneratorService
                           .where(id: ReferenceImage.select(:reference_id))
                           .limit(3)
         wrong_pool.each { |r| question.quiz_answers.build(content: "reference_image:#{r.id}", is_correct: false) }
+
+      when :notion_from_ref
+        notion = ref.notions.sample
+        correct_answer = notion.name
+        question = quiz.quiz_questions.build(
+          content: "Quelle notion est principalement associée à la référence : '#{ref.nom_reference}' ?",
+          reference_id: ref.id
+        )
+        wrong_pool = Notion.where.not(id: ref.notion_ids).order("RANDOM()").limit(3)
+        wrong_pool.each { |n| question.quiz_answers.build(content: n.name, is_correct: false) }
+
+      when :ref_from_notion
+        notion = ref.notions.sample
+        correct_answer = ref.nom_reference
+        question = quiz.quiz_questions.build(
+          content: "Laquelle de ces références est associée à la notion : '#{notion.name}' ?",
+          reference_id: ref.id
+        )
+        wrong_refs = Reference.where.not(id: Reference.joins(:notions).where(notions: { id: notion.id }).pluck(:id)).where(validation: true)
+        if wrong_refs.count < 3
+          wrong_refs = Reference.where.not(id: ref.id).where(validation: true)
+        end
+        wrong_pool = wrong_refs.order("RANDOM()").limit(3)
+        wrong_pool.each { |r| question.quiz_answers.build(content: r.nom_reference, is_correct: false) }
       end
 
       # Ajouter la bonne réponse

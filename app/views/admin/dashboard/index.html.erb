@@ -420,7 +420,7 @@
             <span>Search Console</span>
           </div>
         </a>
-        <a href="https://play.google.com/console/u/2/developers/5247559831990082412/app/4975714253861986880/app-dashboard" class="shortcut-pill">
+        <a href="https://play.google.com/console/u/2/developers/5247559831990082412/app/4975714253861986880/app-dashboard" target="_blank"  class="shortcut-pill">
           <div class="shortcut-icon-circle" style="background-color: #E1F5FE;">
             <%= image_tag "admin/play-console.png", alt: "Play Console" %>
           </div>
@@ -429,7 +429,7 @@
             <span>Play Console</span>
           </div>
         </a>
-        <a href="https://appstoreconnect.apple.com/analytics/app/d30/6754964970/overview?iaemeasure=totalDownloads" class="shortcut-pill">
+        <a href="https://appstoreconnect.apple.com/analytics/app/d30/6754964970/overview?iaemeasure=totalDownloads" target="_blank" class="shortcut-pill">
           <div class="shortcut-icon-circle" style="background-color: #F0F2F5;">
             <%= image_tag "admin/app-store.png", alt: "App Store" %>
           </div>
@@ -454,7 +454,8 @@
     <div class="right-column">
       <h3 class="section-label">Les statistiques</h3>
       <div class="pie-chart-card">
-        <%= pie_chart User.group(:role).count, donut: false, colors: ["#5D5FEF", "#A5A6F6", "#E5E5E5"], height: "180px", legend: false %>
+        <% status_data = User.group(:statut).count.transform_keys { |k| k.present? ? t("devise.registration.status_options.#{k}", default: k.capitalize) : "Non renseigné" } %>
+        <%= pie_chart status_data, donut: false, colors: ["#5D5FEF", "#A5A6F6", "#36A2EB", "#FF6384", "#FFCD56", "#4BC0C0"], height: "180px", legend: false %>
       </div>
       <div class="mini-stats-grid">
         <div class="mini-stat-card">
@@ -489,6 +490,13 @@
           <h3><%= Quiz.count %></h3>
           <p>Quiz</p>
         </div>
+         <div class="mini-stat-card">
+          <div class="icon-small">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+          </div>
+          <h3><%= @total_quiz_submissions %></h3>
+          <p>Quiz joués</p>
+        </div>
         <div class="mini-stat-card">
           <div class="icon-small">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
@@ -503,6 +511,7 @@
           <h3><%= @avg_visits_12m %></h3>
           <p>Visites / user (12 mois)</p>
         </div>
+       
       </div>
 
       <h3 class="section-label" style="margin-top: 20px;">La Réf du Jour</h3>

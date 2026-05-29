@@ -22,21 +22,28 @@
     <ul>
       <% combined_lists.each do |list| %>
         <li>
-          <%= link_to list_path(list) do %>
-            <div class="list-card">
-              <div>
-                <%= list.name %>
-                <% if list.share_token.present? %>
-                   <p class="share-list"><%= t('lists.shared') %></p>
-                <%else%>
-                 <p class="share-list"><%= t('lists.private') %></p>
-                <%end%>
+          <div style="display: flex; gap: 16px; align-items: stretch; margin-top: 16px;">
+            <%= link_to list_path(list), style: "flex-grow: 1; text-decoration: none; display: block;" do %>
+              <div class="list-card" style="margin-top: 0; height: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <%= list.name %>
+                  <% if list.share_token.present? %>
+                     <p class="share-list"><%= t('lists.shared') %></p>
+                  <%else%>
+                   <p class="share-list"><%= t('lists.private') %></p>
+                  <%end%>
+                </div>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19.368 25.0551C19.368 25.0551 25.3693 19.0484 27.7067 16.7098C27.9027 16.5151 28 16.2591 28 16.0031C28 15.7471 27.9027 15.4911 27.7067 15.2965C25.3707 12.9578 19.3707 6.95378 19.3707 6.95378C19.1773 6.76045 18.9227 6.66445 18.668 6.66445C18.4133 6.66578 18.1573 6.76312 17.9613 6.95912C17.5707 7.34978 17.5693 7.98045 17.956 8.36845L24.5907 15.0031H5.00133C4.44933 15.0031 4.00133 15.4511 4.00133 16.0031C4.00133 16.5551 4.44933 17.0031 5.00133 17.0031H24.5907L17.9533 23.6418C17.568 24.0271 17.5707 24.6564 17.9613 25.0471C18.1573 25.2431 18.4133 25.3418 18.668 25.3418C18.9227 25.3431 19.1747 25.2471 19.368 25.0551Z" fill="#202020"/>
+                </svg>
               </div>
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.368 25.0551C19.368 25.0551 25.3693 19.0484 27.7067 16.7098C27.9027 16.5151 28 16.2591 28 16.0031C28 15.7471 27.9027 15.4911 27.7067 15.2965C25.3707 12.9578 19.3707 6.95378 19.3707 6.95378C19.1773 6.76045 18.9227 6.66445 18.668 6.66445C18.4133 6.66578 18.1573 6.76312 17.9613 6.95912C17.5707 7.34978 17.5693 7.98045 17.956 8.36845L24.5907 15.0031H5.00133C4.44933 15.0031 4.00133 15.4511 4.00133 16.0031C4.00133 16.5551 4.44933 17.0031 5.00133 17.0031H24.5907L17.9533 23.6418C17.568 24.0271 17.5707 24.6564 17.9613 25.0471C18.1573 25.2431 18.4133 25.3418 18.668 25.3418C18.9227 25.3431 19.1747 25.2471 19.368 25.0551Z" fill="#202020"/>
-              </svg>
-            </div>
-          <% end %>
+            <% end %>
+            <% if list.references.any? %>
+              <%= button_to generate_from_list_quizzes_path(list_id: list.id), method: :post, form: { style: "display: flex;" }, class: "button dark", style: "margin-top: 0; padding: 0 25px; white-space: nowrap; height: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; width: auto;" do %>
+                <%= t('list.play', default: "Jouer") %>
+              <% end %>
+            <% end %>
+          </div>
         </li>
       <% end %>
     </ul>

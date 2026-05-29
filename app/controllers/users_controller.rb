@@ -64,12 +64,11 @@ class UsersController < ApplicationController
     @total_users = User.count # Total indépendant de la période
     @new_users_period = User.where(created_at: range.first.beginning_of_day..range.last.end_of_day).count
     @active_users_period = DailyVisit.where(visited_on: range).distinct.count(:user_id)
-    @certified_count = User.where(certified: true).count
 
     # Graphiques secondaires (Données globales)
     @distrib_statut = User.group(:statut).count
-    @distrib_acquisition = User.where.not(how_did_you_hear: [nil, ""]).group(:how_did_you_hear).count
-    @distrib_levels = User.where.not(study_level: [nil, ""]).group(:study_level).count
+    @distrib_acquisition = User.where.not(how_did_you_hear: [nil, ""]).group(:how_did_you_hear).count.sort_by { |_k, v| -v }.to_h
+    @distrib_levels = User.where.not(study_level: [nil, ""]).group(:study_level).count.sort_by { |_k, v| -v }.to_h
 
     # --- 4. Tableau & Filtres ---
     @users = User.all

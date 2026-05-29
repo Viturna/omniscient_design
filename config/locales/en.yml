@@ -364,6 +364,8 @@ en:
     load_more_references: "Load more references"
     no_references_found: "No references found in this list."
     save_list: "Save the list"
+    play: "Play"
+    play_quiz: "Play with this list"
   add_references:
     subtitle_top: "Your contribution"
     main_title: "Add designers or references"

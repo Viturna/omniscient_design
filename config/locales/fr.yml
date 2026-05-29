@@ -719,6 +719,8 @@ fr:
     load_more_references: "Charger plus de références"
     no_references_found: "Aucune référence trouvée dans cette liste."
     save_list: "Enregistrer la liste"
+    play: "Jouer"
+    play_quiz: "Jouer avec cette liste"
   add_references:
     subtitle_top: "Votre contribution"
     main_title: "Contribuer à la base de références"

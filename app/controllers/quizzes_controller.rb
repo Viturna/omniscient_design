@@ -237,7 +237,14 @@ class QuizzesController < ApplicationController
   end
 
   def generate_from_list
-    list = current_user.lists.find(params[:list_id])
+    list = current_user.lists.find_by(id: params[:list_id]) || 
+           current_user.editable_lists.find_by(id: params[:list_id]) || 
+           current_user.visitor_lists.find_by(id: params[:list_id])
+    
+    if list.nil?
+      redirect_to root_path, alert: I18n.t('lists.access_denied', default: "Accès refusé")
+      return
+    end
     
     quiz = QuizGeneratorService.new(list, current_user).call
     

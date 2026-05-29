@@ -178,16 +178,42 @@
   .bottom-list {
     justify-content: flex-end;
     width: 100vw;
-    padding:0 8vw;
+    padding: 0 4vw;
     bottom: var(--native-bottom, 70px);
-    gap:12px;
+    gap: 8px;
+    height: 80px;
+
+    > form, > a {
+      flex: 0 0 auto;
+      display: flex;
+    }
+
     .delete {
       margin-top: 0;
-      width: fit-content;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
     }
+
+    .button:not(.delete) {
+      width: auto;
+      height: 50px;
+      padding: 0 20px;
+      font-size: 14px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
     #openPopupAdd {
-      width: 60vw;
-      max-width: 280px;
+      width: auto;
+      max-width: none;
     }
   }
 }

@@ -197,7 +197,7 @@
 
   .users-dash-secondary-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
     margin-bottom: 48px;
   }
@@ -208,6 +208,10 @@
     padding: 24px;
     border: 1px solid #f0f0f0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+
+  .secondary-card.span-2 {
+    grid-column: span 2;
   }
 
   .secondary-title {
@@ -416,6 +420,10 @@
       grid-template-columns: 1fr;
     }
 
+    .secondary-card.span-2 {
+      grid-column: span 1;
+    }
+
     /* Toolbar Filtres : Stack vertical */
     .users-dash-toolbar {
       flex-direction: column;
@@ -497,17 +505,6 @@
     </div>
     <div class="users-dash-kpi-card">
       <div class="kpi-top">
-        <span class="kpi-label">Certifiés</span>
-        <div class="kpi-icon bg-purple-light">
-          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        </div>
-      </div>
-      <div style="margin-top: auto;">
-        <span class="kpi-value"><%= @certified_count %></span>
-      </div>
-    </div>
-    <div class="users-dash-kpi-card">
-      <div class="kpi-top">
         <span class="kpi-label">Newsletter</span>
         <div class="kpi-icon bg-yellow-light">
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
@@ -547,9 +544,9 @@
       <span class="secondary-title">Répartition Statut</span>
       <%= pie_chart @distrib_statut, donut: true, height: "200px", colors: ["#2E7D32", "#1565C0", "#F9A825"], legend: "bottom" %>
     </div>
-    <div class="secondary-card">
+    <div class="secondary-card span-2">
       <span class="secondary-title">Niveau d'études</span>
-      <%= bar_chart @distrib_levels, height: "200px", colors: ["#202020"] %>
+      <%= column_chart @distrib_levels, height: "400px", colors: ["#202020"], library: { scales: { x: { grid: { display: false } }, y: { grid: { borderDash: [5, 5] } } } } %>
     </div>
   </div>
   <div class="users-dash-toolbar">
@@ -600,6 +597,7 @@
             <th><%= sort_header("utilisateur", "Utilisateur") %></th>
             <th><%= sort_header("statut", "Statut") %></th>
             <th><%= sort_header("etablissement", "Établissement") %></th>
+            <th>Source</th>
             <th><%= sort_header("inscription", "Inscription") %></th>
             <th style="text-align: right; padding-right: 32px;">Actions</th>
           </tr>
@@ -630,7 +628,22 @@
                   <span class="badge badge-dark">Admin</span>
                 <% end %>
               </td>
-              <td><%= user.etablissement&.name || "-" %></td>
+              <td>
+                <% if user.etablissement.present? %>
+                  <div style="font-weight: 600; color: #202020; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<%= user.etablissement.name %>">
+                    <%= user.etablissement.name %>
+                  </div>
+                  <div style="font-size: 12px; color: #888;">
+                    <%= user.etablissement.city %>
+                    <% if user.etablissement.academy.present? %>
+                      • Académie de <%= user.etablissement.academy %>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <span style="color: #bbb;">-</span>
+                <% end %>
+              </td>
+              <td><%= user.how_did_you_hear.presence || "-" %></td>
               <td>
                 <%= user.created_at.strftime("%d/%m/%Y") %>
                 <div style="font-size: 11px; color: #999;"><%= time_ago_in_words(user.created_at) %></div>

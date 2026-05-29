@@ -11,6 +11,7 @@ class Admin::DashboardController < ApplicationController
     @avg_visits_30d = calculate_avg_visits(30.days.ago)
     @avg_visits_12m = calculate_avg_visits(12.months.ago)
     @nb_etablissements_actifs = User.joins(:etablissement).distinct.count('etablissements.id')
+    @total_quiz_submissions = QuizSubmission.count
     @notifications = Notification.where(user: current_user).order(created_at: :desc).limit(5)
     
     # --- La Réf du Jour Stats ---
@@ -167,7 +168,9 @@ class Admin::DashboardController < ApplicationController
   end
 
   def calculate_avg_visits(since_date)
-    visits = DailyVisit.joins(:user).where.not(users: { role: 'admin' }).where('daily_visits.visited_on >= ?', since_date)
+    visits = DailyVisit.joins(:user)
+                        .where("users.role IS NULL OR users.role != 'admin'")
+                        .where('daily_visits.visited_on >= ?', since_date)
     unique_users = visits.distinct.count(:user_id)
     unique_users > 0 ? (visits.count.to_f / unique_users).round(1) : 0
   end

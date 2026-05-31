@@ -79,6 +79,25 @@ class UsersController < ApplicationController
     @users = @users.where(statut: params[:statut]) if params[:statut].present?
     @users = @users.where(role: params[:role]) if params[:role].present?
 
+    # Filtre par tranche de visites
+    if params[:visits].present?
+      visits_subquery = DailyVisit.select(:user_id)
+                                  .group(:user_id)
+                                  .having(
+                                    case params[:visits]
+                                    when '0'   then 'COUNT(*) = 0'
+                                    when '1-5' then 'COUNT(*) BETWEEN 1 AND 5'
+                                    when '5-20' then 'COUNT(*) BETWEEN 5 AND 20'
+                                    when '20+' then 'COUNT(*) > 20'
+                                    end
+                                  )
+      if params[:visits] == '0'
+        @users = @users.where.not(id: DailyVisit.select(:user_id).distinct)
+      else
+        @users = @users.where(id: visits_subquery)
+      end
+    end
+
     # --- 5. Tri des utilisateurs ---
     sort_param = params[:sort]
     if sort_param.present?
@@ -107,6 +126,12 @@ class UsersController < ApplicationController
       when "inscription"
         direction = params[:direction] == "desc" ? "DESC" : "ASC"
         @users = @users.order("created_at #{direction}")
+      when "visites", "visites_asc", "visites_desc"
+        direction = (sort_param == "visites_desc" || (sort_param == "visites" && params[:direction] == "desc")) ? "DESC" : "ASC"
+        @users = @users
+          .select("users.*, COALESCE(v.visits_count, 0) AS visits_count")
+          .joins("LEFT JOIN (SELECT user_id, COUNT(*) AS visits_count FROM daily_visits GROUP BY user_id) v ON v.user_id = users.id")
+          .order("COALESCE(v.visits_count, 0) #{direction}")
       else
         @users = @users.order(created_at: :desc)
       end
@@ -114,7 +139,7 @@ class UsersController < ApplicationController
       @users = @users.order(created_at: :desc)
     end
 
-    @paginated_users = @users.includes(:etablissement).page(params[:page]).per(20)
+    @paginated_users = @users.includes(:etablissement, :daily_visits).page(params[:page]).per(20)
     @users_for_map = @users.includes(:etablissement).where.not(etablissement_id: nil)
   end
 

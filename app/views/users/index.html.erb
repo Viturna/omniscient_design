@@ -558,6 +558,13 @@
         <%= f.text_field :query, value: params[:query], placeholder: "Rechercher par nom, email..." %>
       </div>
       <%= f.select :statut, options_for_select([["Tous les statuts", ""], "etudiant", "enseignant", "entreprise", "artiste", "autre"], params[:statut]), {}, { class: "users-dash-select", onchange: "this.form.submit()" } %>
+      <%= f.select :visits, options_for_select([
+            ["Toutes les visites", ""],
+            ["Jamais connecté", "0"],
+            ["1 à 5 visites", "1-5"],
+            ["5 à 20 visites", "5-20"],
+            ["Plus de 20 visites", "20+"]
+          ], params[:visits]), {}, { class: "users-dash-select", onchange: "this.form.submit()" } %>
       <%= f.select :sort, options_for_select([
             ["Trier par...", ""],
             ["Établissement (A-Z)", "etablissement_asc"],
@@ -565,9 +572,11 @@
             ["Date d'inscription (Plus récent)", "inscription_desc"],
             ["Date d'inscription (Plus ancien)", "inscription_asc"],
             ["Nom (A-Z)", "nom_asc"],
-            ["Nom (Z-A)", "nom_desc"]
+            ["Nom (Z-A)", "nom_desc"],
+            ["Visites (Plus actifs)", "visites_desc"],
+            ["Visites (Moins actifs)", "visites_asc"]
           ], params[:sort]), {}, { class: "users-dash-select", onchange: "this.form.submit()" } %>
-      <% if params[:query].present? || params[:statut].present? || params[:role].present? || params[:sort].present? %>
+      <% if params[:query].present? || params[:statut].present? || params[:role].present? || params[:sort].present? || params[:visits].present? %>
         <%= link_to "Effacer", users_path(period: @period), style: "font-weight: 500; color: #666; font-size: 14px; white-space: nowrap;" %>
       <% end %>
     <% end %>
@@ -599,6 +608,7 @@
             <th><%= sort_header("etablissement", "Établissement") %></th>
             <th>Source</th>
             <th><%= sort_header("inscription", "Inscription") %></th>
+            <th><%= sort_header("visites", "Visites") %></th>
             <th style="text-align: right; padding-right: 32px;">Actions</th>
           </tr>
         </thead>
@@ -647,6 +657,17 @@
               <td>
                 <%= user.created_at.strftime("%d/%m/%Y") %>
                 <div style="font-size: 11px; color: #999;"><%= time_ago_in_words(user.created_at) %></div>
+              </td>
+              <td>
+                <% visits_count = user.daily_visits.size %>
+                <span style="font-weight: 600; color: <%= visits_count == 0 ? '#bbb' : visits_count > 20 ? '#2E7D32' : '#202020' %>;">
+                  <%= visits_count %>
+                </span>
+                <% if visits_count > 20 %>
+                  <span style="font-size: 11px; color: #2E7D32;">🔥 très actif</span>
+                <% elsif visits_count == 0 %>
+                  <span style="font-size: 11px; color: #bbb;">jamais connecté</span>
+                <% end %>
               </td>
               <td style="text-align: right;">
                 <%= link_to user_path(user), style: "text-decoration:none;", data: { turbo_frame: "_top" } do %>

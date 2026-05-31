@@ -53,9 +53,10 @@
 }
 
 .flex-profils {
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
 }
 
 @media screen and (min-width: 601px) and (max-width: 1024px) {

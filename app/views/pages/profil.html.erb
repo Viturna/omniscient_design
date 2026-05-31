@@ -44,6 +44,17 @@
       <%end%>
     <%end%>
   <div class="flex-profils">
+    <%= link_to donateurs_path, class: "nav-link-profil" do %>
+      <div class="nav-link-inner">
+        <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 31.5C19 31.5 6 23.5 6 15C6 11.134 9.134 8 13 8C15.387 8 17.491 9.193 19 11C20.509 9.193 22.613 8 25 8C28.866 8 32 11.134 32 15C32 23.5 19 31.5 19 31.5Z" fill="#202020"/>
+        </svg>
+        Soutenir le projet ❤️
+      </div>
+      <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
+      </svg>
+    <% end %>
     <h2><%= t('profile.general') %></h2>
     <%= link_to edit_user_registration_path, class: "nav-link-profil" do %>
       <div class="nav-link-inner">
@@ -281,6 +292,57 @@
       <% end %>
     <% end %>
  
+    <% if native_app? %>
+      <h2>Légal</h2>
+      <%= link_to mentionslegales_path, class: "nav-link-profil" do %>
+        <div class="nav-link-inner">
+          <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6C11.268 6 5 12.268 5 20C5 27.732 11.268 34 19 34C26.732 34 33 27.732 33 20C33 12.268 26.732 6 19 6ZM20.167 26.333H17.833V17.833H20.167V26.333ZM20.167 15.5H17.833V13.167H20.167V15.5Z" fill="#202020"/>
+          </svg>
+          Mentions légales
+        </div>
+        <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
+        </svg>
+      <% end %>
+
+      <%= link_to politiquedeconfidentialite_path, class: "nav-link-profil" do %>
+        <div class="nav-link-inner">
+          <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6L7 10.667V19.2C7 25.613 12.227 31.627 19 33.333C25.773 31.627 31 25.613 31 19.2V10.667L19 6ZM19 19.987H28.333C27.68 24.88 23.96 29.173 19 30.853V20H9.667V12.24L19 8.453V19.987Z" fill="#202020"/>
+          </svg>
+          Politique de confidentialité
+        </div>
+        <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
+        </svg>
+      <% end %>
+
+      <%= link_to cgu_path, class: "nav-link-profil" do %>
+        <div class="nav-link-inner">
+          <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M27.667 6H11.333C9.493 6 8 7.493 8 9.333V29.667C8 31.507 9.493 33 11.333 33H27.667C29.507 33 31 31.507 31 29.667V9.333C31 7.493 29.507 6 27.667 6ZM15.833 26.167H13.5V23.833H15.833V26.167ZM15.833 21.5H13.5V19.167H15.833V21.5ZM15.833 16.833H13.5V14.5H15.833V16.833ZM25.5 26.167H18.167V23.833H25.5V26.167ZM25.5 21.5H18.167V19.167H25.5V21.5ZM25.5 16.833H18.167V14.5H25.5V16.833Z" fill="#202020"/>
+          </svg>
+          CGU
+        </div>
+        <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
+        </svg>
+      <% end %>
+
+      <%= link_to cookies_path, class: "nav-link-profil" do %>
+        <div class="nav-link-inner">
+          <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6C11.268 6 5 12.268 5 20C5 27.732 11.268 34 19 34C26.732 34 33 27.732 33 20C33.0 12.268 26.732 6 19 6ZM19 31.667C12.56 31.667 7.333 26.44 7.333 20C7.333 13.56 12.56 8.333 19 8.333C25.44 8.333 30.667 13.56 30.667 20C30.667 26.44 25.44 31.667 19 31.667ZM16.667 22.333C16.667 23.253 15.92 24 15 24C14.08 24 13.333 23.253 13.333 22.333C13.333 21.413 14.08 20.667 15 20.667C15.92 20.667 16.667 21.413 16.667 22.333ZM22.333 15.833C22.333 16.753 21.587 17.5 20.667 17.5C19.747 17.5 19 16.753 19 15.833C19 14.913 19.747 14.167 20.667 14.167C21.587 14.167 22.333 14.913 22.333 15.833ZM24.667 23.167C24.667 24.087 23.92 24.833 23 24.833C22.08 24.833 21.333 24.087 21.333 23.167C21.333 22.247 22.08 21.5 23 21.5C23.92 21.5 24.667 22.247 24.667 23.167Z" fill="#202020"/>
+          </svg>
+          Gestion des cookies
+        </div>
+        <svg width="13" height="26" viewBox="0 0 13 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2.40039L11.2625 12.8504L2 23.3004" stroke="#202020" stroke-width="2.54357" stroke-linecap="square"/>
+        </svg>
+      <% end %>
+    <% end %>
+
     <%= link_to t('header.logout'), destroy_user_session_path, method: :delete, data: { turbo_method: :delete}, class: "nav-link-profil deco"%>
     <%= link_to changelog_path do %>
       <p class="version">version 1.1.0</p>

@@ -156,7 +156,9 @@ class QuizGeneratorService
       pool = Reference.where.not(id: reference.id)
       pool = pool.joins(:reference_images) if with_images
     end
-    pool.order("RANDOM()")
+    
+    # Avoid PG::InvalidColumnReference with SELECT DISTINCT and ORDER BY RANDOM()
+    Reference.where(id: pool.select(:id)).order("RANDOM()")
   end
 
   def wrong_designers_pool(reference)
@@ -170,7 +172,9 @@ class QuizGeneratorService
     else
       pool = Designer.where.not(id: reference.designer_ids)
     end
-    pool.order("RANDOM()")
+    
+    # Avoid PG::InvalidColumnReference with SELECT DISTINCT and ORDER BY RANDOM()
+    Designer.where(id: pool.select(:id)).order("RANDOM()")
   end
 
   def get_image_url(reference)

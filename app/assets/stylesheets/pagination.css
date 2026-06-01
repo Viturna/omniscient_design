@@ -4,6 +4,7 @@
     padding: 20px 0;
 }
 
+/* Styles par défaut (fond clair) */
 .pagination a,
 .pagination span {
     margin: 0 5px;
@@ -19,10 +20,8 @@
     text-decoration-thickness: 2px;
 }
 
-.pagination .prev {
-    display: none !important;
-}
-
-.pagination .next {
+/* Cacher prev/next sauf sur le leaderboard */
+body:not([data-action-name="leaderboard"]) .pagination .prev,
+body:not([data-action-name="leaderboard"]) .pagination .next {
     display: none !important;
 }

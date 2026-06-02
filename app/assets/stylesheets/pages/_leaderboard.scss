@@ -258,17 +258,27 @@
               }
             }
 
-            &.current span {
-              background: #FFF !important;
-              color: #202020 !important;
-              font-weight: 500;
-              text-decoration: none !important;
-            }
-
             &.disabled span {
               opacity: 0.3;
               pointer-events: none;
             }
+          }
+
+          /* Page active — Kaminari génère <span class="current"> directement dans nav */
+          span.current {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 8px;
+            margin: 0;
+            background: #FFF !important;
+            border-radius: 8px;
+            color: #202020 !important;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none !important;
           }
         }
       }
@@ -303,6 +313,38 @@
           }
           .user-cell { gap: 8px; }
           .points-badge { padding: 5px 10px; font-size: 12px; }
+        }
+
+        .leaderboard-pagination {
+          margin-top: 24px;
+          overflow: hidden; /* empêche le dépassement du card */
+
+          .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+
+            .page, .first, .last, .prev, .next {
+              a, span {
+                min-width: 34px;
+                height: 34px;
+                font-size: 13px;
+                padding: 0 6px;
+              }
+            }
+
+            /* Cacher "Première" et "Dernière" sur mobile pour gagner de la place */
+            .first, .last {
+              display: none;
+            }
+
+            span.current {
+              min-width: 34px;
+              height: 34px;
+              font-size: 13px;
+              padding: 0 6px;
+            }
+          }
         }
       }
     }

@@ -103,35 +103,35 @@ class UsersController < ApplicationController
     if sort_param.present?
       case sort_param
       when "etablissement_asc"
-        @users = @users.left_outer_joins(:etablissement).order("etablissements.name ASC NULLS LAST")
+        @users = @users.left_outer_joins(:etablissement).order(Arel.sql("etablissements.name ASC NULLS LAST"))
       when "etablissement_desc"
-        @users = @users.left_outer_joins(:etablissement).order("etablissements.name DESC NULLS LAST")
+        @users = @users.left_outer_joins(:etablissement).order(Arel.sql("etablissements.name DESC NULLS LAST"))
       when "nom_asc"
-        @users = @users.order("firstname ASC, lastname ASC")
+        @users = @users.order(firstname: :asc, lastname: :asc)
       when "nom_desc"
-        @users = @users.order("firstname DESC, lastname DESC")
+        @users = @users.order(firstname: :desc, lastname: :desc)
       when "inscription_asc"
         @users = @users.order(created_at: :asc)
       when "inscription_desc"
         @users = @users.order(created_at: :desc)
       when "etablissement"
         direction = params[:direction] == "desc" ? "DESC" : "ASC"
-        @users = @users.left_outer_joins(:etablissement).order("etablissements.name #{direction} NULLS LAST")
+        @users = @users.left_outer_joins(:etablissement).order(Arel.sql("etablissements.name #{direction} NULLS LAST"))
       when "utilisateur"
-        direction = params[:direction] == "desc" ? "DESC" : "ASC"
-        @users = @users.order("firstname #{direction}, lastname #{direction}")
+        direction = params[:direction] == "desc" ? :desc : :asc
+        @users = @users.order(firstname: direction, lastname: direction)
       when "statut"
-        direction = params[:direction] == "desc" ? "DESC" : "ASC"
-        @users = @users.order("statut #{direction}")
+        direction = params[:direction] == "desc" ? :desc : :asc
+        @users = @users.order(statut: direction)
       when "inscription"
-        direction = params[:direction] == "desc" ? "DESC" : "ASC"
-        @users = @users.order("created_at #{direction}")
+        direction = params[:direction] == "desc" ? :desc : :asc
+        @users = @users.order(created_at: direction)
       when "visites", "visites_asc", "visites_desc"
         direction = (sort_param == "visites_desc" || (sort_param == "visites" && params[:direction] == "desc")) ? "DESC" : "ASC"
         @users = @users
           .select("users.*, COALESCE(v.visits_count, 0) AS visits_count")
           .joins("LEFT JOIN (SELECT user_id, COUNT(*) AS visits_count FROM daily_visits GROUP BY user_id) v ON v.user_id = users.id")
-          .order("COALESCE(v.visits_count, 0) #{direction}")
+          .order(Arel.sql("COALESCE(v.visits_count, 0) #{direction}"))
       else
         @users = @users.order(created_at: :desc)
       end

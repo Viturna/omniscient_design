@@ -14,7 +14,7 @@ class Api::DailyReferencesController < ApplicationController
     image = reference.reference_images.first
     image_url = if image&.file&.attached?
       # On génère une version JPEG (support garanti par UIImage) redimensionnée (pour éviter les crashs OOM du Widget)
-      variant = image.file.variant(resize_to_limit: [1000, 1000], format: :jpeg).processed
+      variant = image.file.variant(resize_to_limit: [500, 500], format: :jpeg).processed
       request.base_url + Rails.application.routes.url_helpers.rails_representation_path(variant, only_path: true)
     else
       nil

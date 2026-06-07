@@ -142,6 +142,9 @@ application.register("sources", SourcesController)
 import StarRatingController from "./star_rating_controller"
 application.register("star-rating", StarRatingController)
 
+import SubTabsController from "./sub_tabs_controller"
+application.register("sub-tabs", SubTabsController)
+
 import TabsController from "./tabs_controller"
 application.register("tabs", TabsController)
 

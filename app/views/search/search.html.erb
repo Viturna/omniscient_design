@@ -304,125 +304,161 @@
                     <% end %>
                   </div>
                   <div id="frise" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'frise' ? 'display:block;' : 'display:none;' %>">
-                    <h2><%= t('global.references') %></h2>
-                    <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
-                      <% @timeline_years.each do |year| %>
-                        <div class="timeline-item">
-                          <div class="references">
-                            <div class="references-container">
-                              <% references_year = @references.select { |o| o.date_reference.to_i == year } %>
-                              <% if references_year.size > 1 %>
-                                <div class="references-counter" data-controller="references-counter">
-                                  <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= references_year.size %></span>
-                                  <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
-                                    <% references_year.each do |reference| %>
-                                      <%= link_to reference, class: "reference-point" do %>
-                                        <% if reference.reference_images.first&.file&.attached? %>
-                                          <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
+                    <turbo-frame id="frise_timeline" <%= "src='#{search_path(request.query_parameters.merge(tab: 'frise'))}' loading='lazy'".html_safe if params[:tab] != 'frise' %>>
+                      <% if params[:tab] == 'frise' %>
+                        <% references_by_year = @references.group_by { |r| r.date_reference.to_i } %>
+                        <% designers_by_year = @designers.group_by { |d| d.date_naissance.to_i } %>
+                        <% studios_by_year = @studios.group_by { |s| s.date_creation.to_i } %>
+                        <div data-controller="sub-tabs">
+                          <div class="tabs sub-tabs" style="margin-bottom: 20px;">
+                            <button class="tab active" data-sub-tabs-target="tab" data-sub-tab="references" data-action="click->sub-tabs#switch">
+                              <%= t('global.references') %>
+                            </button>
+                            <button class="tab" data-sub-tabs-target="tab" data-sub-tab="designers" data-action="click->sub-tabs#switch">
+                              <%= t('global.designers') %>
+                            </button>
+                            <button class="tab" data-sub-tabs-target="tab" data-sub-tab="studios" data-action="click->sub-tabs#switch">
+                              Studios
+                            </button>
+                          </div>
+
+                          <div data-sub-tabs-target="content" data-sub-tab="references">
+                            <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                              <% @timeline_years.each do |year| %>
+                                <% references_year = references_by_year[year] || [] %>
+                                <% if references_year.any? %>
+                                  <div class="timeline-item">
+                                    <div class="references">
+                                      <div class="references-container">
+                                        <% if references_year.size > 1 %>
+                                          <div class="references-counter" data-controller="references-counter">
+                                            <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= references_year.size %></span>
+                                            <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
+                                              <% references_year.each do |reference| %>
+                                                <%= link_to reference, class: "reference-point" do %>
+                                                  <% if reference.reference_images.first&.file&.attached? %>
+                                                    <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
+                                                  <% else %>
+                                                    <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-color: #D9D9D9;"></div>
+                                                  <% end %>
+                                                <% end %>
+                                              <% end %>
+                                            </div>
+                                          </div>
                                         <% else %>
-                                          <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-color: #D9D9D9;"></div>
+                                          <% references_year.each do |reference| %>
+                                            <%= link_to reference, class: "reference-point" do %>
+                                              <% if reference.reference_images.first&.file&.attached? %>
+                                                <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
+                                              <% else %>
+                                                <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-color: #D9D9D9;"></div>
+                                              <% end %>
+                                            <% end %>
+                                          <% end %>
                                         <% end %>
-                                      <% end %>
-                                    <% end %>
+                                      </div>
+                                      <div class="reference empty"></div>
+                                      <div class="year"><%= year %></div>
+                                    </div>
                                   </div>
-                                </div>
-                              <% else %>
-                                <% references_year.each do |reference| %>
-                                  <%= link_to reference, class: "reference-point" do %>
-                                    <% if reference.reference_images.first&.file&.attached? %>
-                                      <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
-                                    <% else %>
-                                      <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-color: #D9D9D9;"></div>
-                                    <% end %>
-                                  <% end %>
                                 <% end %>
                               <% end %>
                             </div>
-                            <div class="reference empty"></div>
-                            <div class="year"><%= year %></div>
                           </div>
-                        </div>
-                      <% end %>
-                    </div>
-                    <h2><%= t('global.designers') %></h2>
-                    <div class="timeline"  data-tabs-search-target="timeline" data-controller="timeline">
-                      <% @timeline_years.each do |year| %>
-                        <div class="timeline-item">
-                          <div class="references">
-                            <div class="references-container">
-                              <% designers_year = @designers.select { |d| d.date_naissance.to_i == year } %>
-                              <% if designers_year.size > 1 %>
-                                <div class="references-counter" data-controller="references-counter">
-                                  <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= designers_year.size %></span>
-                                  <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
-                                    <% designers_year.each do |designer| %>
-                                      <%= link_to designer, class: "reference-point" do %>
-                                        <% if designer.designer_images.first&.file&.attached? %>
-                                          <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
+
+                          <div data-sub-tabs-target="content" data-sub-tab="designers" style="display: none;">
+                            <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                              <% @timeline_years.each do |year| %>
+                                <% designers_year = designers_by_year[year] || [] %>
+                                <% if designers_year.any? %>
+                                  <div class="timeline-item">
+                                    <div class="references">
+                                      <div class="references-container">
+                                        <% if designers_year.size > 1 %>
+                                          <div class="references-counter" data-controller="references-counter">
+                                            <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= designers_year.size %></span>
+                                            <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
+                                              <% designers_year.each do |designer| %>
+                                                <%= link_to designer, class: "reference-point" do %>
+                                                  <% if designer.designer_images.first&.file&.attached? %>
+                                                    <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
+                                                  <% else %>
+                                                    <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
+                                                  <% end %>
+                                                <% end %>
+                                              <% end %>
+                                            </div>
+                                          </div>
                                         <% else %>
-                                          <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
+                                          <% designers_year.each do |designer| %>
+                                            <%= link_to designer, class: "reference-point" do %>
+                                              <% if designer.designer_images.first&.file&.attached? %>
+                                                <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
+                                              <% else %>
+                                                <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
+                                              <% end %>
+                                            <% end %>
+                                          <% end %>
                                         <% end %>
-                                      <% end %>
-                                    <% end %>
+                                      </div>
+                                      <div class="reference empty"></div>
+                                      <div class="year"><%= year %></div>
+                                    </div>
                                   </div>
-                                </div>
-                              <% else %>
-                                <% designers_year.each do |designer| %>
-                                  <%= link_to designer, class: "reference-point" do %>
-                                    <% if designer.designer_images.first&.file&.attached? %>
-                                      <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
-                                    <% else %>
-                                      <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
-                                    <% end %>
-                                  <% end %>
                                 <% end %>
                               <% end %>
                             </div>
-                            <div class="reference empty"></div>
-                            <div class="year"><%= year %></div>
                           </div>
-                        </div>
-                      <% end %>
-                    </div>
-                    <h2>Studios</h2>
-                    <div class="timeline"  data-tabs-search-target="timeline" data-controller="timeline">
-                      <% @timeline_years.each do |year| %>
-                        <div class="timeline-item">
-                          <div class="references">
-                            <div class="references-container">
-                              <% studios_year = @studios.select { |d| d.date_creation.to_i == year } %>
-                              <% if studios_year.size > 1 %>
-                                <div class="references-counter" data-controller="references-counter">
-                                  <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= studios_year.size %></span>
-                                  <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
-                                    <% studios_year.each do |studio| %>
-                                      <%= link_to studio, class: "reference-point" do %>
-                                        <% if studio.studio_images.first&.file&.attached? %>
-                                          <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
+
+                          <div data-sub-tabs-target="content" data-sub-tab="studios" style="display: none;">
+                            <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                              <% @timeline_years.each do |year| %>
+                                <% studios_year = studios_by_year[year] || [] %>
+                                <% if studios_year.any? %>
+                                  <div class="timeline-item">
+                                    <div class="references">
+                                      <div class="references-container">
+                                        <% if studios_year.size > 1 %>
+                                          <div class="references-counter" data-controller="references-counter">
+                                            <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= studios_year.size %></span>
+                                            <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
+                                              <% studios_year.each do |studio| %>
+                                                <%= link_to studio, class: "reference-point" do %>
+                                                  <% if studio.studio_images.first&.file&.attached? %>
+                                                    <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
+                                                  <% else %>
+                                                    <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
+                                                  <% end %>
+                                                <% end %>
+                                              <% end %>
+                                            </div>
+                                          </div>
                                         <% else %>
-                                          <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
+                                          <% studios_year.each do |studio| %>
+                                            <%= link_to studio, class: "reference-point" do %>
+                                              <% if studio.studio_images.first&.file&.attached? %>
+                                                <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
+                                              <% else %>
+                                                <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
+                                              <% end %>
+                                            <% end %>
+                                          <% end %>
                                         <% end %>
-                                      <% end %>
-                                    <% end %>
+                                      </div>
+                                      <div class="reference empty"></div>
+                                      <div class="year"><%= year %></div>
+                                    </div>
                                   </div>
-                                </div>
-                              <% else %>
-                                <% studios_year.each do |studio| %>
-                                  <%= link_to studio, class: "reference-point" do %>
-                                    <% if studio.studio_images.first&.file&.attached? %>
-                                      <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
-                                    <% else %>
-                                      <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
-                                    <% end %>
-                                  <% end %>
                                 <% end %>
                               <% end %>
                             </div>
-                            <div class="reference empty"></div>
-                            <div class="year"><%= year %></div>
                           </div>
                         </div>
-                      <% end %>
+                  <% else %>
+                    <div style="text-align: center; padding: 40px; color: #666; width: 100%;">
+                      Chargement de la frise chronologique...
                     </div>
+                  <% end %>
+                  </turbo-frame>
                   </div>
                 </section>

@@ -155,17 +155,17 @@ class SearchController < ApplicationController
     if params[:tab] == "frise"
       @references = Reference.where(validation: true)
                       .select(:id, :nom_reference, :date_reference, :slug)
-                      .includes(:notions, :designers, :domaines)
+                      .includes(:notions, :designers, :domaines, reference_images: { file_attachment: :blob })
                       .order(Arel.sql('date_reference'))
 
       @designers = Designer.where(validation: true)
                           .select(:id, :nom, :prenom, :date_naissance, :slug)
-                          .includes(:domaines, :countries)
+                          .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
                           .order(:date_naissance)
                         
       @studios = Studio.where(validation: true)
                           .select(:id, :nom, :date_creation, :slug)
-                          .includes(:domaines, :countries)
+                          .includes(:domaines, :countries, studio_images: { file_attachment: :blob })
                           .order(:date_creation)
     else
       @references = Reference.where(validation: true)

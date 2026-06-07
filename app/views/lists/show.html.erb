@@ -677,6 +677,7 @@
           const searchInput = type === 'references' ? 'reference-search' : (type === 'designers' ? 'designer-search' : 'studio-search');
           const query = document.getElementById(searchInput)?.value || '';
           let url = `/lists/load_more_${type}?offset=${offset}&q=${encodeURIComponent(query)}`;
+          if (slug) url += `&slug=${slug}`;
           
           if (type === 'references') {
             const notionInputs = document.querySelectorAll('input[name="notions[]"]:checked');
@@ -915,6 +916,9 @@
             const query = input ? input.value.trim() : '';
             
             let url = `/lists/search_items?q=${encodeURIComponent(query)}&type=${type}`;
+            const slug = loadMoreButton ? loadMoreButton.dataset.slug : null;
+            if (slug) url += `&slug=${slug}`;
+            
             if (type === 'references') {
               const notionInputs = document.querySelectorAll('input[name="notions[]"]:checked');
               notionInputs.forEach(input => {

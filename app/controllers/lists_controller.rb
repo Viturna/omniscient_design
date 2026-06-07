@@ -310,8 +310,12 @@ class ListsController < ApplicationController
     when 'studios'
       @studios = Studio.where(validation: true)
                        .where("LOWER(nom) LIKE ?", "%#{query}%")
+      if params[:slug].present?
+        list = List.friendly.find_by(slug: params[:slug])
+        @studios = @studios.where.not(id: list.studio_ids) if list
+      end
       @studios = apply_popup_filters(@studios, 'studios')
-      @studios = @studios.limit(limit)
+      @studios = @studios.order(:nom).limit(limit)
       if @studios.any?
         render partial: 'studios_list', collection: @studios, as: :studio
       else
@@ -321,8 +325,12 @@ class ListsController < ApplicationController
     when 'designers'
       @designers = Designer.where(validation: true)
                            .where("LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?", "%#{query}%", "%#{query}%")
+      if params[:slug].present?
+        list = List.friendly.find_by(slug: params[:slug])
+        @designers = @designers.where.not(id: list.designer_ids) if list
+      end
       @designers = apply_popup_filters(@designers, 'designers')
-      @designers = @designers.limit(limit)
+      @designers = @designers.order(:nom).limit(limit)
       if @designers.any?
         render partial: 'designers_list', collection: @designers, as: :designer
       else
@@ -332,8 +340,12 @@ class ListsController < ApplicationController
     when 'references'
       @references = Reference.where(validation: true)
                        .where("LOWER(nom_reference) LIKE ?", "%#{query}%")
+      if params[:slug].present?
+        list = List.friendly.find_by(slug: params[:slug])
+        @references = @references.where.not(id: list.reference_ids) if list
+      end
       @references = apply_popup_filters(@references, 'references')
-      @references = @references.limit(limit)
+      @references = @references.order(:nom_reference).limit(limit)
       if @references.any?
         render partial: 'references_list', collection: @references, as: :reference
       else
@@ -349,8 +361,10 @@ class ListsController < ApplicationController
 
 def load_more_references
   offset = params[:offset].to_i
-  if params[:slug].present?
+  if params[:slug].present? && params[:slug] != 'undefined'
     @list = List.friendly.find_by(slug: params[:slug])
+  end
+  if @list
     selected_reference_ids = @list.reference_ids
     @references = Reference.where(validation: true)
                      .where.not(id: selected_reference_ids)
@@ -377,8 +391,10 @@ end
 
 def load_more_designers
   offset = params[:offset].to_i
-  if params[:slug].present?
+  if params[:slug].present? && params[:slug] != 'undefined'
     @list = List.friendly.find_by(slug: params[:slug])
+  end
+  if @list
     selected_designer_ids = @list.designer_ids
     @designers = Designer.where(validation: true)
                          .where.not(id: selected_designer_ids)
@@ -405,8 +421,10 @@ end
 
   def load_more_studios
     offset = params[:offset].to_i
-    if params[:slug].present?
+    if params[:slug].present? && params[:slug] != 'undefined'
       @list = List.friendly.find_by(slug: params[:slug])
+    end
+    if @list
       selected_studio_ids = @list.studio_ids
       @studios = Studio.where(validation: true)
                           .where.not(id: selected_studio_ids)

@@ -170,6 +170,8 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   padding: 24px;
+  width: 15vw !important;
+  min-width: 15vw !important;
 }
 
 .dropdown-menu {

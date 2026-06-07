@@ -184,54 +184,47 @@ class ListsController < ApplicationController
     redirect_to save_modal_studio_path(@studio)
   end
   
-  def filtered_scopes
-    references   = Reference.where(validation: true)
-    designers = Designer.where(validation: true)
-    studios   = Studio.where(validation: true)
-    # ----- années -----
+  def apply_popup_filters(scope, type)
     if params[:start_year].present? && params[:end_year].present?
       sy, ey = params[:start_year].to_i, params[:end_year].to_i
       if sy > 0 && ey > 0 && sy <= ey
-        designers = designers.where(date_naissance: sy..ey)
-        studios   = studios.where(date_creation: sy..ey)
-        references   = references.where(date_reference: sy..ey)
+        case type
+        when 'designers'  then scope = scope.where(date_naissance: sy..ey)
+        when 'studios'    then scope = scope.where(date_creation: sy..ey)
+        when 'references' then scope = scope.where(date_reference: sy..ey)
+        end
       end
     end
 
-    # ----- domaines -----
-    domaines_params = params.dig(:list, :domaine)
-      if domaines_params.present?
-        domaine_ids = Array(domaines_params).reject(&:blank?)
-        if domaine_ids.any?
-          designers = designers.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-          studios   = studios.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-          references   = references.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-        end
+    if params[:domaines].present?
+      domaine_ids = Array(params[:domaines]).reject(&:blank?)
+      if domaine_ids.any?
+        scope = scope.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
       end
-
-
-    # ----- notions -----
-    notions_params = params[:notions] || params.dig(:list, :notions)
-    if notions_params.present?
-      notion_ids = Array(notions_params).reject(&:blank?)
-      designers  = designers.joins(:notions).where(notions: { id: notion_ids }).distinct
-      references    = references.joins(:notions).where(notions: { id: notion_ids }).distinct
     end
 
-    # ----- pays -----
-    countries_params = params[:country] || params.dig(:list, :country)
-      if countries_params.present?
-        country_ids = Array(countries_params).reject(&:blank?)
-        if country_ids.any?
-          designers = designers.joins(:designer_countries).where(designer_countries: { country_id: country_ids }).distinct
-          # Si StudioCountry existe :
-          studios   = studios.joins(:studio_countries).where(studio_countries: { country_id: country_ids }).distinct
-          references   = references.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+    if params[:notions].present? && type == 'references'
+      notion_ids = Array(params[:notions]).reject(&:blank?)
+      if notion_ids.any?
+        scope = scope.joins(:notions).where(notions: { id: notion_ids }).distinct
+      end
+    end
+
+    if params[:countries].present?
+      country_ids = Array(params[:countries]).reject(&:blank?)
+      if country_ids.any?
+        case type
+        when 'designers'
+          scope = scope.joins(:designer_countries).where(designer_countries: { country_id: country_ids }).distinct
+        when 'studios'
+          scope = scope.joins(:studio_countries).where(studio_countries: { country_id: country_ids }).distinct
+        when 'references'
+          scope = scope.joins(designers: :designer_countries).where(designer_countries: { country_id: country_ids }).distinct
         end
       end
+    end
 
-
-    [references, designers, studios]
+    scope
   end
   def toggle_privacy
     if params[:privacy] == 'public'
@@ -317,20 +310,35 @@ class ListsController < ApplicationController
     when 'studios'
       @studios = Studio.where(validation: true)
                        .where("LOWER(nom) LIKE ?", "%#{query}%")
-                       .limit(limit)
-      render partial: 'studios_list', collection: @studios, as: :studio
+      @studios = apply_popup_filters(@studios, 'studios')
+      @studios = @studios.limit(limit)
+      if @studios.any?
+        render partial: 'studios_list', collection: @studios, as: :studio
+      else
+        render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+      end
 
     when 'designers'
       @designers = Designer.where(validation: true)
                            .where("LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?", "%#{query}%", "%#{query}%")
-                           .limit(limit)
-      render partial: 'designers_list', collection: @designers, as: :designer
+      @designers = apply_popup_filters(@designers, 'designers')
+      @designers = @designers.limit(limit)
+      if @designers.any?
+        render partial: 'designers_list', collection: @designers, as: :designer
+      else
+        render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+      end
 
     when 'references'
       @references = Reference.where(validation: true)
                        .where("LOWER(nom_reference) LIKE ?", "%#{query}%")
-                       .limit(limit)
-      render partial: 'references_list', collection: @references, as: :reference
+      @references = apply_popup_filters(@references, 'references')
+      @references = @references.limit(limit)
+      if @references.any?
+        render partial: 'references_list', collection: @references, as: :reference
+      else
+        render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+      end
 
     else
       head :bad_request # Renvoie une erreur 400 si le type est inconnu
@@ -346,16 +354,25 @@ def load_more_references
     selected_reference_ids = @list.reference_ids
     @references = Reference.where(validation: true)
                      .where.not(id: selected_reference_ids)
-                     .order(:nom_reference)
-                     .offset(offset)
-                     .limit(10)
   else
     @references = Reference.where(validation: true)
-                     .order(:nom_reference)
-                     .offset(offset)
-                     .limit(10)
   end
-  render partial: 'references_list', collection: @references, as: :reference
+
+  query = params[:q].to_s.downcase.strip
+  if query.present?
+    @references = @references.where("LOWER(nom_reference) LIKE ?", "%#{query}%")
+  end
+
+  @references = apply_popup_filters(@references, 'references')
+  @references = @references.order(:nom_reference).offset(offset).limit(10)
+
+  if @references.any?
+    render partial: 'references_list', collection: @references, as: :reference
+  elsif offset == 0
+    render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+  else
+    head :no_content
+  end
 end
 
 def load_more_designers
@@ -365,16 +382,25 @@ def load_more_designers
     selected_designer_ids = @list.designer_ids
     @designers = Designer.where(validation: true)
                          .where.not(id: selected_designer_ids)
-                         .order(:nom)
-                         .offset(offset)
-                         .limit(10)
   else
     @designers = Designer.where(validation: true)
-                         .order(:nom)
-                         .offset(offset)
-                         .limit(10)
   end
-  render partial: 'designers_list', collection: @designers, as: :designer
+
+  query = params[:q].to_s.downcase.strip
+  if query.present?
+    @designers = @designers.where("LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?", "%#{query}%", "%#{query}%")
+  end
+
+  @designers = apply_popup_filters(@designers, 'designers')
+  @designers = @designers.order(:nom).offset(offset).limit(10)
+
+  if @designers.any?
+    render partial: 'designers_list', collection: @designers, as: :designer
+  elsif offset == 0
+    render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+  else
+    head :no_content
+  end
 end
 
   def load_more_studios
@@ -384,16 +410,25 @@ end
       selected_studio_ids = @list.studio_ids
       @studios = Studio.where(validation: true)
                           .where.not(id: selected_studio_ids)
-                          .order(:nom)
-                          .offset(offset)
-                          .limit(10)
     else
       @studios = Studio.where(validation: true)
-                          .order(:nom)
-                          .offset(offset)
-                          .limit(10)
     end
-    render partial: 'studios_list', collection: @studios, as: :studio
+
+    query = params[:q].to_s.downcase.strip
+    if query.present?
+      @studios = @studios.where("LOWER(nom) LIKE ?", "%#{query}%")
+    end
+
+    @studios = apply_popup_filters(@studios, 'studios')
+    @studios = @studios.order(:nom).offset(offset).limit(10)
+
+    if @studios.any?
+      render partial: 'studios_list', collection: @studios, as: :studio
+    elsif offset == 0
+      render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+    else
+      head :no_content
+    end
   end
 
 

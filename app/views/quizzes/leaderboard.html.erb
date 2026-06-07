@@ -64,14 +64,23 @@
         <% end %>
       </div>
 
+      <div style="display: flex; gap: 10px; margin-bottom: 24px; justify-content: center;">
+        <%= link_to "Saison en cours", leaderboard_path(type: 'season'), class: "tab-btn #{'active' if @leaderboard_type == 'season'}", style: "padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: 500; font-size: 14px; background: #{@leaderboard_type == 'season' ? '#FFF' : 'rgba(255,255,255,0.1)'}; color: #{@leaderboard_type == 'season' ? '#202020' : '#FFF'};" %>
+        <%= link_to "Général", leaderboard_path(type: 'global'), class: "tab-btn #{'active' if @leaderboard_type == 'global'}", style: "padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: 500; font-size: 14px; background: #{@leaderboard_type == 'global' ? '#FFF' : 'rgba(255,255,255,0.1)'}; color: #{@leaderboard_type == 'global' ? '#202020' : '#FFF'};" %>
+      </div>
+
       <%= turbo_frame_tag "leaderboard_table" do %>
         <div class="leaderboard-list">
           <div class="leaderboard-header">
             <div class="rank-col">Rang</div>
             <div class="user-col">Pseudo</div>
             <div class="points-col">
-              <div class="points-header-item">Saison</div>
-              <div class="points-header-item">Global</div>
+              <% if @leaderboard_type == 'season' %>
+                <div class="points-header-item">Saison</div>
+                <div class="points-header-item">Global</div>
+              <% else %>
+                <div class="points-header-item">Points</div>
+              <% end %>
             </div>
           </div>
           
@@ -90,19 +99,28 @@
                   <span class="pseudo"><%= user.pseudo %></span>
                 </div>
                 <div class="points-cell">
-                  <div class="points-wrapper">
-                    <div class="points-badge" style="white-space: nowrap;">
-                      <span class="mobile-label">Saison :</span>
-                      <%= image_tag "points_od.svg", width: 14, height: 14 %>
-                      <span><%= user.quiz_points %> pts</span>
+                  <% if @leaderboard_type == 'season' %>
+                    <div class="points-wrapper">
+                      <div class="points-badge" style="white-space: nowrap;">
+                        <span class="mobile-label">Saison :</span>
+                        <%= image_tag "points_od.svg", width: 14, height: 14 %>
+                        <span><%= user.quiz_points %> pts</span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="points-wrapper">
-                    <div class="points-badge global-points-badge">
-                      <span class="mobile-label">Global :</span>
-                      <span><%= user.total_quiz_points %> pts</span>
+                    <div class="points-wrapper">
+                      <div class="points-badge global-points-badge">
+                        <span class="mobile-label">Global :</span>
+                        <span><%= user.total_quiz_points %> pts</span>
+                      </div>
                     </div>
-                  </div>
+                  <% else %>
+                    <div class="points-wrapper" style="justify-content: flex-end;">
+                      <div class="points-badge" style="white-space: nowrap;">
+                        <%= image_tag "points_od.svg", width: 14, height: 14 %>
+                        <span><%= user.total_quiz_points %> pts</span>
+                      </div>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             <% end %>

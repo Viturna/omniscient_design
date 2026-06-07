@@ -139,7 +139,13 @@ class QuizzesController < ApplicationController
 
   def leaderboard
     @current_page = 'training'
-    @users = User.where('quiz_points > 0').order(quiz_points: :desc)
+    @leaderboard_type = params[:type] || 'season'
+    
+    if @leaderboard_type == 'global'
+      @users = User.where('total_quiz_points > 0').order(total_quiz_points: :desc)
+    else
+      @users = User.where('quiz_points > 0').order(quiz_points: :desc)
+    end
     
     if params[:query].present?
       @users = @users.where('pseudo ILIKE ?', "%#{params[:query]}%")

@@ -5,7 +5,11 @@ export default class extends Controller {
 
   connect() {
     if (this.hasTabTarget) {
-      this.switchTab(this.tabTargets[0].dataset.subTab)
+      let savedTab = sessionStorage.getItem("activeSubTab")
+      if (!savedTab || !this.tabTargets.some(t => t.dataset.subTab === savedTab)) {
+        savedTab = this.tabTargets[0].dataset.subTab
+      }
+      this.switchTab(savedTab)
     }
   }
 
@@ -15,6 +19,7 @@ export default class extends Controller {
   }
 
   switchTab(tabName) {
+    sessionStorage.setItem("activeSubTab", tabName)
     this.tabTargets.forEach(t => {
       t.classList.toggle("active", t.dataset.subTab === tabName)
     })

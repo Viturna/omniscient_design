@@ -226,7 +226,6 @@ class QuizzesController < ApplicationController
         
         # Vérifier l'attribution des badges Gamer (uniquement pour les quiz officiels)
         GamificationService.new(current_user).check_gamer
-        GamificationService.new(current_user).check_competitor
       end
     end
 

@@ -52,7 +52,14 @@ namespace :quizzes do
     )
     puts "💾 Historique de la saison sauvegardé avec #{top_users.count} joueurs dans le top."
 
-    # 2. Réinitialiser
+    # 2. Distribuer les badges Compétiteur au Top 3
+    top_3_users = User.where('quiz_points > 0').order(quiz_points: :desc).limit(3)
+    top_3_users.each do |user|
+      GamificationService.new(user).check_competitor
+    end
+    puts "🏆 Badges Compétiteur distribués au Top 3 de la saison."
+
+    # 3. Réinitialiser
     User.update_all(quiz_points: 0)
     puts "✅ Points de saison réinitialisés pour tous les utilisateurs."
   end

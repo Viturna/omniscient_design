@@ -27,7 +27,18 @@
 
     <p class="subtitle-top">Jeux</p>
     <h1>Classement</h1>
-    <p class="subtitle">Découvre qui sont les meilleurs historiens du design de la communauté.</p>
+    <p class="subtitle">Découvre qui sont les meilleurs historiens du design de la communauté. Les points de la saison sont remis à zéro chaque 1er du mois !</p>
+    
+    <div style="margin-top: 15px; display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span style="color: white; font-weight: normal;">Fin de la saison dans :</span>
+      <span style="color: #fff; font-weight: 500;" data-controller="countdown" data-countdown-target-value="<%= Date.today.next_month.beginning_of_month.iso8601 %>">
+        Calcul...
+      </span>
+    </div>
   </section>
 
   <div class="leaderboard-content">
@@ -58,7 +69,10 @@
           <div class="leaderboard-header">
             <div class="rank-col">Rang</div>
             <div class="user-col">Pseudo</div>
-            <div class="points-col">Points</div>
+            <div class="points-col">
+              <div class="points-header-item">Saison</div>
+              <div class="points-header-item">Global</div>
+            </div>
           </div>
           
           <div class="leaderboard-rows">
@@ -76,9 +90,18 @@
                   <span class="pseudo"><%= user.pseudo %></span>
                 </div>
                 <div class="points-cell">
-                  <div class="points-badge">
-                    <%= image_tag "points_od.svg", width: 14, height: 14 %>
-                    <span><%= user.quiz_points %> pts</span>
+                  <div class="points-wrapper">
+                    <div class="points-badge" style="white-space: nowrap;">
+                      <span class="mobile-label">Saison :</span>
+                      <%= image_tag "points_od.svg", width: 14, height: 14 %>
+                      <span><%= user.quiz_points %> pts</span>
+                    </div>
+                  </div>
+                  <div class="points-wrapper">
+                    <div class="points-badge global-points-badge">
+                      <span class="mobile-label">Global :</span>
+                      <span><%= user.total_quiz_points %> pts</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -86,7 +109,7 @@
           </div>
 
           <div class="leaderboard-pagination">
-            <%= paginate @users %>
+            <%= paginate @users, window: 1, outer_window: 1 %>
           </div>
         </div>
       <% end %>

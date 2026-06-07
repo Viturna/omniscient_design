@@ -6,3 +6,7 @@ every :monday, at: '3:00 am' do
   rake 'quizzes:generate_weekly'
 end
 
+
+every 1.month, at: 'start of the month at 0:00 am' do
+  rake 'quizzes:reset_monthly_points'
+end

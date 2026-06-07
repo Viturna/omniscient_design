@@ -30,4 +30,10 @@ namespace :quizzes do
 
     puts "✨ Terminé ! Les nouveaux quiz sont en ligne."
   end
+  desc "Réinitialise les points de saison de tous les utilisateurs (à exécuter chaque mois)"
+  task reset_monthly_points: :environment do
+    puts "🔄 Début de la réinitialisation des points de saison..."
+    User.update_all(quiz_points: 0)
+    puts "✅ Points de saison réinitialisés pour tous les utilisateurs."
+  end
 end

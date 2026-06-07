@@ -222,6 +222,7 @@ class QuizzesController < ApplicationController
       
       unless already_completed
         current_user.increment!(:quiz_points, score)
+        current_user.increment!(:total_quiz_points, score)
         
         # Vérifier l'attribution des badges Gamer (uniquement pour les quiz officiels)
         GamificationService.new(current_user).check_gamer
@@ -231,7 +232,8 @@ class QuizzesController < ApplicationController
 
     render json: { 
       status: 'success', 
-      total_points: current_user.quiz_points,
+      total_points: current_user.total_quiz_points,
+      season_points: current_user.quiz_points,
       submission_id: submission.id 
     }
   end

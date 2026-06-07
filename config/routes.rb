@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       collection do
         get :stats
         get :sessions
+        get :seasons
+        delete 'seasons/:id', to: 'quizzes#destroy_season', as: :destroy_season
         post :auto_generate
       end
       member do

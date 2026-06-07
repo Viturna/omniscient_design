@@ -109,7 +109,7 @@
           </div>
 
           <div class="leaderboard-pagination">
-            <%= paginate @users, window: 1, outer_window: 1 %>
+            <%= paginate @users, window: 1, left: 0, right: 1 %>
           </div>
         </div>
       <% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_07_210557) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_07_214148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -493,6 +493,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_210557) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_rejected_studios_on_user_id"
+  end
+
+  create_table "season_histories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "month"
+    t.jsonb "top_users"
+    t.datetime "updated_at", null: false
   end
 
   create_table "studio_countries", force: :cascade do |t|

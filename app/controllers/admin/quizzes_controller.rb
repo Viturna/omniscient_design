@@ -27,6 +27,17 @@ class Admin::QuizzesController < ApplicationController
     @submissions = QuizSubmission.includes(:user, :quiz).order(created_at: :desc).limit(100)
   end
 
+  def seasons
+    @current_page = 'quizzes'
+    @season_histories = SeasonHistory.order(month: :desc).page(params[:page]).per(10)
+  end
+
+  def destroy_season
+    @season_history = SeasonHistory.find(params[:id])
+    @season_history.destroy
+    redirect_to seasons_admin_quizzes_path, notice: "L'historique a été supprimé."
+  end
+
   def auto_generate
     @quiz = Admin::QuizGeneratorService.new(auto_generate_params).call
     redirect_to admin_quizzes_path, notice: "Le quiz '#{@quiz.title}' a été généré avec succès.", status: :see_other

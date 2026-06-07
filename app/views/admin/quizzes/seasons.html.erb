@@ -1,0 +1,85 @@
+<style>
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
+
+  .users-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+  .users-dash-title { font-size: 32px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 16px; margin: 0; }
+  .users-dash-back-link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background-color: #fff; border: 1px solid #eee; transition: all 0.2s ease; flex-shrink: 0; }
+  .users-dash-back-link:hover { background-color: #f0f0f0; transform: translateX(-2px); }
+
+  .nav-tabs { display: flex; gap: 12px; margin-bottom: 32px; }
+  .nav-tab { padding: 10px 20px; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; background: #eee; }
+  .nav-tab.active { background: #202020; color: #fff; }
+</style>
+
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <% end %>
+      <h1 class="users-dash-title">Gestion des Quiz</h1>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <%= link_to "Liste des Quiz", admin_quizzes_path, class: "nav-tab" %>
+    <%= link_to "Statistiques", stats_admin_quizzes_path, class: "nav-tab" %>
+    <%= link_to "Historique des Sessions", sessions_admin_quizzes_path, class: "nav-tab" %>
+    <%= link_to "Historique des Saisons", seasons_admin_quizzes_path, class: "nav-tab active" %>
+  </div>
+
+  <% if @season_histories.any? %>
+    <% @season_histories.each do |season| %>
+      <div class="dash-card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; padding-bottom: 16px; margin-bottom: 16px;">
+          <h2 class="card-title-dashboard" style="margin: 0; font-size: 18px;">
+            Saison : <%= l(season.month, format: "%B %Y").capitalize %>
+          </h2>
+          <%= button_to "Supprimer", destroy_season_admin_quizzes_path(season), method: :delete, data: { turbo_confirm: "Confirmer la suppression ?" }, class: "btn-danger", style: "background: #ef4444; color: white; padding: 6px 12px; border-radius: 6px; border: none; font-size: 12px; cursor: pointer;" %>
+        </div>
+
+        <table class="table-dash" style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr style="color: #6B7280; font-size: 12px; border-bottom: 1px solid #E5E7EB;">
+              <th style="padding: 12px; font-weight: 500;">Rang</th>
+              <th style="padding: 12px; font-weight: 500;">Joueur</th>
+              <th style="padding: 12px; font-weight: 500; text-align: right;">Points (Saison)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if season.top_users.present? %>
+              <% season.top_users.each_with_index do |user, index| %>
+                <tr style="border-bottom: 1px solid #F3F4F6;">
+                  <td style="padding: 12px; font-weight: 600;">#<%= index + 1 %></td>
+                  <td style="padding: 12px; color: #111827;"><%= user['pseudo'] || user[:pseudo] %></td>
+                  <td style="padding: 12px; font-weight: 600; text-align: right; color: #10B981;"><%= user['points'] || user[:points] %> pts</td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="3" style="padding: 12px; text-align: center; color: #6B7280;">Aucun joueur n'a marqué de points cette saison.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <div style="margin-top: 24px;">
+      <%= paginate @season_histories %>
+    </div>
+  <% else %>
+    <div class="dash-card" style="text-align: center; padding: 40px;">
+      <p style="color: #6B7280;">L'historique est vide. La première saison sera enregistrée à la fin du mois en cours.</p>
+    </div>
+  <% end %>
+</div>

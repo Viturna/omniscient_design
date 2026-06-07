@@ -33,6 +33,26 @@ namespace :quizzes do
   desc "Réinitialise les points de saison de tous les utilisateurs (à exécuter chaque mois)"
   task reset_monthly_points: :environment do
     puts "🔄 Début de la réinitialisation des points de saison..."
+    
+    # 1. Sauvegarder le top 10 de la saison
+    top_users = User.where('quiz_points > 0')
+                    .order(quiz_points: :desc)
+                    .limit(10)
+                    .map do |u|
+                      {
+                        id: u.id,
+                        pseudo: u.pseudo,
+                        points: u.quiz_points
+                      }
+                    end
+
+    SeasonHistory.create!(
+      month: Date.today.beginning_of_month,
+      top_users: top_users
+    )
+    puts "💾 Historique de la saison sauvegardé avec #{top_users.count} joueurs dans le top."
+
+    # 2. Réinitialiser
     User.update_all(quiz_points: 0)
     puts "✅ Points de saison réinitialisés pour tous les utilisateurs."
   end

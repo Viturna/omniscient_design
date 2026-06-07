@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  month: 2026-06-07
+  top_users: 
+
+two:
+  month: 2026-06-07
+  top_users: 

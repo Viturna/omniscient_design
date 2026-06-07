@@ -15,7 +15,31 @@ export default class extends Controller {
 
   switch(event) {
     event.preventDefault()
-    this.switchTab(event.currentTarget.dataset.subTab)
+    const tabName = event.currentTarget.dataset.subTab
+    const currentTab = sessionStorage.getItem("activeSubTab") || this.tabTargets[0].dataset.subTab
+    
+    if (tabName === currentTab) return;
+
+    const url = new URL(window.location)
+    let hasFilters = false
+    for (const [key, value] of url.searchParams.entries()) {
+      if (!['tab', 'q', 'page', 'sort', 'direction'].includes(key)) {
+        hasFilters = true
+        break
+      }
+    }
+
+    if (hasFilters) {
+      sessionStorage.setItem("activeSubTab", tabName)
+      const q = url.searchParams.get("q")
+      url.search = ""
+      if (q) url.searchParams.set("q", q)
+      url.searchParams.set("tab", "frise")
+      Turbo.visit(url.toString())
+      return
+    }
+
+    this.switchTab(tabName)
   }
 
   switchTab(tabName) {

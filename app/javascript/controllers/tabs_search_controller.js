@@ -51,6 +51,10 @@ export default class extends Controller {
         this.showLoadingOverlay()
 
         const url = new URL(window.location)
+        const q = url.searchParams.get("q")
+        url.search = ""
+        if (q) url.searchParams.set("q", q)
+        
         url.searchParams.set("tab", tabName)
         url.searchParams.set("page", "1")
 

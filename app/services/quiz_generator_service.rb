@@ -180,7 +180,7 @@ class QuizGeneratorService
   def wrong_notions_pool(reference)
     domaine_ids = reference.domaine_ids
     if domaine_ids.any?
-      pool = Notion.where.not(id: reference.notion_ids).joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+      pool = Notion.where.not(id: reference.notion_ids).joins(references: :domaines).where(domaines: { id: domaine_ids }).distinct
       
       if pool.limit(3).count < 3
         pool = Notion.where.not(id: reference.notion_ids)

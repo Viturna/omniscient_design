@@ -75,9 +75,9 @@ export default class extends Controller {
     // Gestion de l'image de la question
     // On masque l'image de gauche dans deux cas :
     // 1. Les réponses sont des images (ex: "Laquelle de ces images correspond à la réf")
-    // 2. La question demande d'identifier une référence (ex: "Laquelle de ces références a été créée par X ?")
+    // 2. La question demande d'identifier une référence par son designer (ex: "Laquelle de ces références a été créée par X ?")
     const answersAreImages = (question.quiz_answers || []).some(a => this.isImageUrl(a.content))
-    const isRefFromDesignerQuestion = /laquelle de ces références/i.test(question.content)
+    const isRefFromDesignerQuestion = /laquelle de ces références a été créée/i.test(question.content)
     const shouldHideImage = answersAreImages || isRefFromDesignerQuestion
     if (this.hasImageContainerTarget && this.hasQuestionImageTarget) {
       if (question.reference_image_url && !shouldHideImage) {

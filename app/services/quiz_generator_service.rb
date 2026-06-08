@@ -46,7 +46,7 @@ class QuizGeneratorService
       possible_types << :year_from_ref
     end
 
-    if reference.notions.any?
+    if reference.notions.any? && has_image
       possible_types << :notion_from_ref
       possible_types << :ref_from_notion
     end
@@ -115,17 +115,17 @@ class QuizGeneratorService
       notion = reference.notions.sample
       content = "Quelle notion est associée à la référence \"#{reference.nom_reference}\" ?"
       correct_answer = notion&.name || "Inconnue"
-      distractors = Notion.where.not(id: reference.notion_ids).order("RANDOM()").limit(3).map(&:name)
+      distractors = wrong_notions_pool(reference).limit(3).map(&:name)
 
     when :ref_from_notion
       notion = reference.notions.sample
       content = "Laquelle de ces références est associée à la notion \"#{notion&.name}\" ?"
       correct_answer = reference.nom_reference
-      wrong_refs = Reference.where.not(id: Reference.joins(:notions).where(notions: { id: notion&.id }).pluck(:id))
-      if wrong_refs.count < 3
-        wrong_refs = Reference.where.not(id: reference.id)
+      wrong_refs = wrong_references_pool(reference).where.not(id: Reference.joins(:notions).where(notions: { id: notion&.id }).select(:id))
+      if wrong_refs.limit(3).count < 3
+        wrong_refs = wrong_references_pool(reference).where.not(id: reference.id)
       end
-      distractors = wrong_refs.order("RANDOM()").limit(3).map(&:nom_reference)
+      distractors = wrong_refs.limit(3).map(&:nom_reference)
     end
 
     question = quiz.quiz_questions.create!(
@@ -175,6 +175,21 @@ class QuizGeneratorService
     
     # Avoid PG::InvalidColumnReference with SELECT DISTINCT and ORDER BY RANDOM()
     Designer.where(id: pool.select(:id)).order("RANDOM()")
+  end
+
+  def wrong_notions_pool(reference)
+    domaine_ids = reference.domaine_ids
+    if domaine_ids.any?
+      pool = Notion.where.not(id: reference.notion_ids).joins(:domaines).where(domaines: { id: domaine_ids }).distinct
+      
+      if pool.limit(3).count < 3
+        pool = Notion.where.not(id: reference.notion_ids)
+      end
+    else
+      pool = Notion.where.not(id: reference.notion_ids)
+    end
+    
+    Notion.where(id: pool.select(:id)).order("RANDOM()")
   end
 
   def get_image_url(reference)

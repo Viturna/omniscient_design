@@ -69,7 +69,7 @@
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>
-  <body class="<%= body_class %>" 
+  <body class="<%= body_class %> <%= 'body-searchpage' if controller_name == 'search' %>" 
         data-controller-name="<%= controller_name %>" 
         data-action-name="<%= action_name %>" 
         data-controller="loading device-sync" 

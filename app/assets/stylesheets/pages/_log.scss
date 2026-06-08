@@ -147,6 +147,13 @@
   gap: 10px;
 }
 
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+}
+
 @media screen and (min-width: 601px) and (max-width: 950px) {
   .log {
     padding-bottom: 96px;
@@ -244,6 +251,9 @@
     font-size: 18px;
   }
   .flex-login-oauth {
+    flex-direction: column;
+  }
+  .form-row {
     flex-direction: column;
   }
 }

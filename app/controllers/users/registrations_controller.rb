@@ -75,15 +75,23 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
     params[:user].delete(:remove_profile_image)
 
-    if resource.provider.present? && account_update_params[:password].blank?
-      params[:user].delete(:current_password)
-      resource.update_without_password(account_update_params)
-       redirect_to edit_user_registration_path, notice: I18n.t('user.profile.updated')
-       return
+    update_params = account_update_params
+
+    if resource.provider.present?
+      update_params = update_params.except(:current_password)
+      
+      if update_params[:password].blank?
+        update_params = update_params.except(:password, :password_confirmation)
+      end
+      
+      updated = resource.update(update_params)
+    else
+      updated = resource.update_with_password(update_params)
     end
 
-    if resource.update_with_password(account_update_params)
-       redirect_to edit_user_registration_path, notice: I18n.t('user.profile.updated')
+    if updated
+      bypass_sign_in(resource) if respond_to?(:bypass_sign_in)
+      redirect_to edit_user_registration_path, notice: I18n.t('user.profile.updated')
     else
       clean_up_passwords(resource)
       set_minimum_password_length

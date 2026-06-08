@@ -133,7 +133,7 @@
 }
 
 /* Appliquer un style global aux select */
-.select2 {
+.filter .select2 {
   display: flex !important;
 }
 
@@ -163,7 +163,7 @@
   margin: 0 !important;
 }
 /* Style du dropdown Select2 */
-.select2-dropdown {
+.body-searchpage .select2-dropdown {
   margin-top: 5px !important;
   border-radius: 10px !important;
   border: 2px solid #e9e9e9 !important;
@@ -172,6 +172,11 @@
   padding: 24px;
   width: 15vw !important;
   min-width: 15vw !important;
+
+  @media screen and (max-width: 768px) {
+    width: auto !important;
+    min-width: 100% !important;
+  }
 }
 
 .dropdown-menu {
@@ -218,6 +223,7 @@
   flex-direction: column !important;
   gap: 12px !important;
   max-height: 230px !important;
+  padding: 16px !important;
 }
 
 .select2-selection__rendered {

@@ -156,7 +156,7 @@
           <%= f.file_field :profile_image, class: "hidden-file-input", accept: "image/*", data: { avatar_upload_target: "input", action: "change->avatar-upload#preview" }, style: "display: none;" %>
           <%= f.hidden_field :remove_profile_image, value: 0, data: { avatar_upload_target: "removeInput" } %>
         </div>
-        <div style="display: flex; gap: 16px; width: 100%;">
+        <div class="form-row">
           <div class="field input-flex" style="flex: 1;">
             <%= f.label :firstname, t('devise.registration.label_firstname') %>
             <%= f.text_field :firstname, autocomplete: "firstname", placeholder: t('devise.registration.firstname_placeholder') %>
@@ -174,7 +174,7 @@
           <span data-live-validation-target="message" style="font-size: 0.85rem; margin-top: 4px; display: block;"></span>
         </div>
 
-        <div style="display: flex; gap: 16px; width: 100%;">
+        <div class="form-row">
           <div class="field input-flex" style="flex: 1;">
             <%= f.label :country_id, "Pays" %>
             <%= f.collection_select :country_id,

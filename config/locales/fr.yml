@@ -55,6 +55,16 @@ fr:
     donation: "Soutenir le projet"
     copyright: "©%{year} Omniscient Design - Tous droits réservés"
   badges:
+    index:
+      page_title: "Mes badges - Omniscient Design"
+      subtitle_top: "Mes badges"
+      title: "Ton tableau de badges"
+      description: "Gagne des badges en contribuant à la communauté Omniscient Design et en explorant toutes les fonctionnalités du site."
+      progress: "Progression"
+      badges_count: "Badges"
+      unique_badges: "Badges Uniques"
+    card:
+      locked: "Badge verrouillé"
     categories:
       special: "Trophées Uniques"
       donor: "Mécénat"
@@ -952,6 +962,30 @@ fr:
     enrichissement: "A enrichi ton apprentissage en ajoutant cette référence le"
     validation: "a validé la référence"
     decouvrir_autres: "Découvrir d'autres références"
+    admin:
+      users:
+        index:
+          title: "Gestion des Utilisateurs"
+          total_members: "Total Membres"
+          new_members: "Nouveaux"
+          active_members: "Actifs"
+          newsletter: "Newsletter"
+          out_of_members: "sur %{count} membres"
+          export_csv: "Exporter la liste en CSV"
+          signups: "Inscriptions"
+          visits: "Visites"
+          acquisition: "Acquisition"
+          status_distribution: "Répartition Statut"
+      etablissements:
+        index:
+          title: "Gestion des Établissements"
+          total_etablissements: "Total Établissements"
+          active_etablissements: "Établissements Actifs"
+          linked_users: "Utilisateurs Rattachés"
+          search_placeholder: "Rechercher par nom, UAI, ville..."
+          search: "Rechercher"
+          clear: "Effacer"
+          export_csv: "Exporter Actifs CSV"
     panneau_admin: "Panneau d'administration"
     valider_reference: "Valider l'reference"
     modifier_reference: "Modifier l'reference"

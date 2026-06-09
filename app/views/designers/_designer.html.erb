@@ -302,14 +302,14 @@
               <% else %>
                 <span class="contributor">Inconnu</span>
               <% end %>
-              <p class="text-contributor">A enrichi votre apprentissage en ajoutant ce/cette designer le <%= I18n.l(designer.created_at, format: :default) %></p>
+              <p class="text-contributor"><%= t('designers.show.enrichissement', default: "A enrichi ton apprentissage en ajoutant ce/cette designer le") %> <%= I18n.l(designer.created_at, format: :default) %></p>
             </div>
             <% if @designer.validated_by_user_id.present? %>
               <div class="vertical-divider"></div>
               <div class="box-contributor">
                 <% user = User.find_by(id: @designer.validated_by_user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
-                <p class="text-contributor">a validé le/la designer <%= @designer.nom_designer %></p>
+                <p class="text-contributor"><%= t('designers.show.validation', default: "a validé le/la designer") %> <%= @designer.nom_designer %></p>
               </div>
             <% end %>
           </div>
@@ -321,7 +321,7 @@
       <div class="next-card">
         <% designer_references = @designer.references.where(validation: true) %>
         <% if designer_references.any? %>
-          <h2 class="title-description-reference">Références du designer</h2>
+          <h2 class="title-description-reference"><%= t('designers.show.designer_references', default: "Références du designer") %></h2>
           <div class="horizontal-scroll-section">
             <div class="horizontal-wrapper">
               <% designer_references.each do |reference| %>
@@ -343,7 +343,7 @@
               </div>
             </div>
           <% end %>
-          <h2 class="title-description-reference">Découvrir d'autres designers</h2>
+          <h2 class="title-description-reference"><%= t('designers.show.discover_others', default: "Découvrir d'autres designers") %></h2>
           <div class="horizontal-scroll-section">
             <div class="horizontal-wrapper">
               <% designers = Designer.where(validation: true).where.not(id: @designer.id).order("RANDOM()").limit(5) %>

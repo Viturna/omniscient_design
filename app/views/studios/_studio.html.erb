@@ -294,7 +294,7 @@
         </div>
         <% designers_associes = @studio.designer_studios.includes(designer: { designer_images: { file_attachment: :blob } }) %>
         <% if designers_associes.any? %>
-          <h2 class="title-description-reference">Designers associés</h2>
+          <h2 class="title-description-reference"><%= t('studios.show.associated_designers', default: "Designers associés") %></h2>
           <div style="display:flex; flex-wrap: wrap; gap:1rem; justify-content: flex-start;">
             <% designers_associes.each do |liaison| %>
               <% designer = liaison.designer %>
@@ -303,25 +303,25 @@
             <% end %>
           </div>
         <% end %>
-        <h2 class="title-description-reference">Présentation générale</h2>
+        <h2 class="title-description-reference"><%= t('studios.show.general_presentation', default: "Présentation générale") %></h2>
         <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.presentation_generale) %></p>
         <% if studio.formation_et_influences.present? %>
-          <h2 class="title-description-reference">Formation et influences</h2>
+          <h2 class="title-description-reference"><%= t('studios.show.education_influences', default: "Formation et influences") %></h2>
           <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.formation_et_influences) %></p>
         <% end %>
         <% if studio.style_ou_philosophie.present? %>
-          <h2 class="title-description-reference">Style ou philosophie</h2>
+          <h2 class="title-description-reference"><%= t('studios.show.style_philosophy', default: "Style ou philosophie") %></h2>
           <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.style_ou_philosophie) %></p>
         <% end %>
         <% if studio.creations_majeures.present? %>
-          <h2 class="title-description-reference">Créations majeures</h2>
+          <h2 class="title-description-reference"><%= t('studios.show.major_creations', default: "Créations majeures") %></h2>
           <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.creations_majeures) %></p>
         <% end %>
         <% if studio.heritage_et_impact.present? %>
-          <h2 class="title-description-reference">Héritage et impact</h2>
+          <h2 class="title-description-reference"><%= t('studios.show.heritage_impact', default: "Héritage et impact") %></h2>
           <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.heritage_et_impact) %></p>
         <% end %>
-        <h2 class="title-description-reference">Sources</h2>
+        <h2 class="title-description-reference"><%= t('studios.show.sources', default: "Sources") %></h2>
         <% if studio.source.present? %>
           <div class="sources-flex" style="display: flex; flex-wrap: wrap; gap: 64px;">
             <% JSON.parse(studio.source.to_s).each do |url| %>
@@ -338,7 +338,7 @@
           </div>
         <% end %>
         <% if studio.validation %>
-          <h2 class="title-description-reference">Actions</h2>
+          <h2 class="title-description-reference"><%= t('global.actions', default: "Actions") %></h2>
           <div class="flex-actions">
           <% if studio.validation %>
             <a href="#" id="shareButton" class="button-circle" data-action="click->share#open">
@@ -349,7 +349,7 @@
                   </g>
                 </svg>
               </div>
-              <p>Partager</p>
+              <p><%= t('global.partager', default: "Partager") %></p>
             </a>
             <%= link_to new_bug_report_path(url: request.original_url), class: "button-circle" do %>
               <div class="circle">
@@ -357,7 +357,7 @@
                   <path d="M23.75 25.3125C23.75 24.81 23.305 24.375 22.8125 24.375C19.6112 24.375 7.88875 24.375 4.6875 24.375C4.195 24.375 3.75 24.81 3.75 25.3125C3.75 25.815 4.195 26.25 4.6875 26.25H22.8125C23.305 26.25 23.75 25.815 23.75 25.3125ZM8.72125 16.4587C7.05375 21.3537 6.87125 21.7487 6.87125 22.1925C6.87125 22.8512 7.44625 23.1288 7.8075 23.1288C8.2475 23.1288 8.6425 22.9575 13.525 21.2625L8.72125 16.4587ZM10.0462 15.1325L14.8538 19.94L25.8838 8.9225C26.1275 8.67875 26.25 8.35875 26.25 8.03875C26.25 7.72 26.1275 7.4 25.8838 7.15625C25.0188 6.2925 23.7062 4.98 22.84 4.11625C22.5962 3.8725 22.2763 3.75 21.9563 3.75C21.6388 3.75 21.3187 3.8725 21.0737 4.11625L10.0462 15.1325Z" fill="white"/>
                 </svg>
               </div>
-              <p>Suggérer une modification</p>
+              <p><%= t('global.suggerer_modification', default: "Suggérer une modification") %></p>
             <% end %>
             <%= link_to new_bug_report_path(category: 'probleme_copyright', url: request.original_url), class: "button-circle" do %>
               <div class="circle">
@@ -374,23 +374,23 @@
           <% end %>
         </div>
         <div class="contribution">
-          <h2 class="title-description-reference">Contribution</h2>
+          <h2 class="title-description-reference"><%= t('global.contribution', default: "Contribution") %></h2>
           <div class="flex-contributor">
             <div class="box-contributor">
               <% if studio.user_id.present? %>
                 <% user = User.find_by(id: studio.user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
               <% else %>
-                <span class="contributor">Inconnu</span>
+                <span class="contributor"><%= t('global.unknown', default: "Inconnu") %></span>
               <% end %>
-              <p class="text-contributor">A enrichi votre apprentissage en ajoutant ce studio le <%= I18n.l(studio.created_at, format: :default) %></p>
+              <p class="text-contributor"><%= t('studios.show.enrichissement', default: "A enrichi ton apprentissage en ajoutant ce studio le") %> <%= I18n.l(studio.created_at, format: :default) %></p>
             </div>
             <% if @studio.validated_by_user_id.present? %>
               <div class="vertical-divider"></div>
               <div class="box-contributor">
                 <% user = User.find_by(id: studio.validated_by_user_id) %>
                 <span class="contributor"> <%= user.present? ? user.pseudo : "Omniscient Design" %></span>
-                <p class="text-contributor">a validé le studio <%= studio.nom %></p>
+                <p class="text-contributor"><%= t('studios.show.validation', default: "a validé le studio") %> <%= studio.nom %></p>
               </div>
             <% end %>
           </div>
@@ -402,7 +402,7 @@
       <div class="next-card">
         <% studio_references = studio.references.where(validation: true) %>
         <% if studio_references.any? %>
-          <h2 class="title-description-reference">Références du studio</h2>
+          <h2 class="title-description-reference"><%= t('studios.show.studio_references', default: "Références du studio") %></h2>
           <div class="horizontal-scroll-section">
             <div class="horizontal-wrapper">
               <% studio_references.each do |reference| %>
@@ -432,7 +432,7 @@
             </div>
           </div>
         <% end %>
-        <h2 class="title-description-reference">Découvrir d'autres studios</h2>
+        <h2 class="title-description-reference"><%= t('studios.show.discover_others', default: "Découvrir d'autres studios") %></h2>
         <div class="horizontal-scroll-section">
           <div class="horizontal-wrapper">
             <% studios = Studio.where(validation: true).where.not(id: @studio.id).order("RANDOM()").limit(5) %>

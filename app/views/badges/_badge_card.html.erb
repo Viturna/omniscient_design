@@ -1,7 +1,7 @@
 <div class="badge-card <%= unlocked ? 'unlocked' : 'locked' %> level-<%= badge.level %>">
   <div class="badge-visual">
     <% if !unlocked %>
-      <%= image_tag "badges/default.png", class: "badge-img", alt: "Badge verrouillé" %>
+      <%= image_tag "badges/default.png", class: "badge-img", alt: t('badges.card.locked') %>
     
     <% elsif badge.image_name.present? %>
       <%= image_tag "badges/#{badge.image_name}", class: "badge-img", alt: badge.name %>

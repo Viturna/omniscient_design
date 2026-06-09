@@ -462,10 +462,9 @@
 
 .references-counter .hidden-references {
   margin-top: 8px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  justify-items: center;
   align-items: center;
   max-height: 130px;
   overflow-y: auto;

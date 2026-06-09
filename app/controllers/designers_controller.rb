@@ -4,7 +4,8 @@ class DesignersController < ApplicationController
 
   before_action :set_designer, only: %i[show edit update destroy cancel validate reject]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
-  before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
+  before_action :check_certified, only: [:validate, :destroy, :reject]
+  before_action :check_edit_permission, only: [:edit, :update]
 
   AD_FREQUENCY_RANGE = 4..6
   AD_FIRST_POSITION_RANGE = 3..5
@@ -173,7 +174,8 @@ class DesignersController < ApplicationController
       Rails.cache.delete("linkify_keywords_list")
       update_suivi_references_emises(current_user)
       create_notification(@designer)
-      flash[:success] = I18n.t('designer.create.success')
+      create_author_notification(@designer)
+      flash[:success] = "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais."
       redirect_to @designer
     else
       @countries = Country.order(:country)
@@ -187,6 +189,9 @@ class DesignersController < ApplicationController
 
   def update
     if @designer.update(designer_params)
+      if !@designer.validation && @designer.user == current_user
+        notify_admin_of_update(@designer)
+      end
       flash[:success] = I18n.t('designer.update.success')
       redirect_to @designer
     else
@@ -278,6 +283,24 @@ class DesignersController < ApplicationController
 
   private
 
+  def check_edit_permission
+    unless current_user.admin? || current_user.certified? || (@designer.user == current_user && !@designer.validated?)
+      redirect_to root_path, alert: I18n.t('designer.access.denied', default: 'Accès refusé')
+    end
+  end
+
+  def create_author_notification(designer)
+    if designer.user_id.present?
+      Notification.create(
+        user_id: designer.user_id,
+        notifiable: designer,
+        title: "Contribution reçue",
+        message: "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais. Si tu souhaites la modifier avant sa validation, clique ici.",
+        link: edit_designer_path(designer)
+      )
+    end
+  end
+
   def handle_destroy(designer, success_message)
     if designer.destroy
       create_rejection_notification(designer)
@@ -342,6 +365,22 @@ class DesignersController < ApplicationController
       Notification.create(user_id: designer.user_id, notifiable: designer, title: title, message: message)
     else
       Rails.logger.error(t('notifications.no_user_for_rejection_designer', designer_id: designer.id))
+    end
+  end
+
+  def notify_admin_of_update(designer)
+    title = "Contribution modifiée"
+    message = "L'auteur a modifié sa contribution : #{designer.nom_designer}"
+    
+    recipients = User.where("role = ? OR certified = ?", 'admin', true)
+
+    recipients.each do |user|
+      Notification.create(
+        user_id: user.id, 
+        notifiable: designer, 
+        title: title,
+        message: message
+      )
     end
   end
 

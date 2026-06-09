@@ -128,13 +128,13 @@
             <th>Statut</th>
             <th>Ajouté le</th>
             <th>Commentaire</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <% sorted_references.each do |reference| %>
             <% row_class = reference.persisted? ? "clickable-row" : "non-clickable-row" %>
-            <% click_action = reference.persisted? ? "window.location='#{reference_path(reference)}'" : "" %>
-            <tr class="<%= row_class %>" onclick="<%= click_action %>">
+            <tr class="<%= row_class %>">
               <td>
                 <span class="item-name-text"><%= reference.nom_reference %></span>
               </td>
@@ -151,6 +151,15 @@
               </td>
               <td class="date-text"><%= reference.created_at&.strftime("%d/%m/%Y") %></td>
               <td class="reason-text"><%= reference.rejection_reason.presence || "-" %></td>
+              <td>
+                <% if reference.persisted? %>
+                  <% if !reference.validation %>
+                    <%= link_to "Modifier", edit_reference_path(reference), class: "button secondary", style: "padding: 8px 12px; font-size: 13px; height: auto;" %>
+                  <% else %>
+                    <%= link_to "Voir", reference_path(reference), class: "button", style: "padding: 8px 12px; font-size: 13px; height: auto;" %>
+                  <% end %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>
@@ -171,14 +180,14 @@
             <th>Statut</th>
             <th>Ajouté le</th>
             <th>Commentaire</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <% sorted_designers.each do |designer| %>
             <% designer_name = designer.nom_designer rescue "#{designer.prenom} #{designer.nom}" %>
             <% row_class = designer.persisted? ? "clickable-row" : "non-clickable-row" %>
-            <% click_action = designer.persisted? ? "window.location='#{designer_path(designer)}'" : "" %>
-            <tr class="<%= row_class %>" onclick="<%= click_action %>">
+            <tr class="<%= row_class %>">
               <td>
                 <span class="item-name-text"><%= designer_name %></span>
               </td>
@@ -195,6 +204,15 @@
               </td>
               <td class="date-text"><%= designer.created_at&.strftime("%d/%m/%Y") %></td>
               <td class="reason-text"><%= designer.rejection_reason.presence || "-" %></td>
+              <td>
+                <% if designer.persisted? %>
+                  <% if !designer.validation %>
+                    <%= link_to "Modifier", edit_designer_path(designer), class: "button secondary", style: "padding: 8px 12px; font-size: 13px; height: auto;" %>
+                  <% else %>
+                    <%= link_to "Voir", designer_path(designer), class: "button", style: "padding: 8px 12px; font-size: 13px; height: auto;" %>
+                  <% end %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>
@@ -215,13 +233,13 @@
             <th>Statut</th>
             <th>Ajouté le</th>
             <th>Commentaire</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <% sorted_studios.each do |studio| %>
             <% row_class = studio.persisted? ? "clickable-row" : "non-clickable-row" %>
-            <% click_action = studio.persisted? ? "window.location='#{studio_path(studio)}'" : "" %>
-            <tr class="<%= row_class %>" onclick="<%= click_action %>">
+            <tr class="<%= row_class %>">
               <td>
                 <span class="item-name-text"><%= studio.nom %></span>
               </td>
@@ -238,6 +256,15 @@
               </td>
               <td class="date-text"><%= studio.created_at&.strftime("%d/%m/%Y") %></td>
               <td class="reason-text"><%= studio.rejection_reason.presence || "-" %></td>
+              <td>
+                <% if studio.persisted? %>
+                  <% if !studio.validation %>
+                    <%= link_to "Modifier", edit_studio_path(studio), class: "button secondary", style: "padding: 8px 12px; font-size: 13px; height: auto;" %>
+                  <% else %>
+                    <%= link_to "Voir", studio_path(studio), class: "button", style: "padding: 8px 12px; font-size: 13px; height: auto;" %>
+                  <% end %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>

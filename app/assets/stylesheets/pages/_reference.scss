@@ -625,25 +625,25 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 20dvh;
-  background-color: rgba(0, 0, 0, 0.5);
-  /* couleur semi-transparente */
+  box-sizing: border-box;
+  height: auto;
+  min-height: 20dvh;
+  padding: 32px 16px calc(env(safe-area-inset-bottom, 24px) + 16px) 16px;
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 999;
-  /* assurez-vous que l'overlay est au-dessus de tous les autres éléments */
+  backdrop-filter: blur(5px);
 }
 
 .naviguation {
-  bottom: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
+  box-sizing: border-box;
   z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   color: #fff;
-  gap: 32px;
+  gap: 24px;
 }
 
 .naviguation-buttons {
@@ -651,7 +651,14 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.naviguation-buttons .button {
+  text-align: center;
+  /* Optional: we can make buttons full width on small screens below */
 }
 
 .naviguation-title {

@@ -4,11 +4,11 @@ fr:
     default_description: "Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d'art"
     all_rights_reserved: "Tous droits réservés"
   cookies:
-    banner_text: "Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous l'utilisation des cookies ?"
+    banner_text: "Nous utilisons des cookies pour améliorer ton expérience. Acceptez-tu l'utilisation des cookies ?"
     accept: "Accepter"
     decline: "Refuser"
   loader:
-    unsupported_browser: "Votre navigateur ne supporte pas la vidéo."
+    unsupported_browser: "Ton navigateur ne supporte pas la vidéo."
   global:
     designers: "Designers"
     references: "Références"
@@ -108,13 +108,13 @@ fr:
     subtitle_project: "Découvrir le projet"
     description_project: "Omniscient Design est né de la volonté de centraliser, sur une plateforme unique, toutes les connaissances liées au monde du design. Qu'il s'agisse de design d'objet, de stylisme ou de scénographie, Omniscient Design aspire à rendre chaque travail, chaque projet et chaque référence aussi accessibles et complets que possible.\n\nNotre mission est de favoriser le partage, l'exploration et l'enrichissement des savoirs dans tous les domaines du design, en mettant à disposition des ressources exhaustives et facilement consultables, que ce soit pour les étudiants, les professionnels ou les passionnés."
     button_project: "En savoir plus"
-    subtitle_feedback: "Vos feedbacks"
-    description_feedback: "Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
-    button_feedback: "Donner votre avis"
+    subtitle_feedback: "Tes feedbacks"
+    description_feedback: "Tes retours sont essentiels pour nous ! Partage tes impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Ton avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
+    button_feedback: "Donner ton avis"
   profile:
-    your_profile: "Votre profil"
+    your_profile: "Ton profil"
     general: "Général"
-    account: "Votre compte"
+    account: "Mon compte"
     sponsorship: "Parrainage"
     contributions: "Mes Contributions"
     notifications: "Notifications"
@@ -202,7 +202,7 @@ fr:
         other: "presque %{count} ans"
   helpers:
     select:
-      prompt: "Veuillez sélectionner"
+      prompt: "Merci de sélectionner"
     submit:
       create: "Créer %{model}"
       update: "Mettre à jour %{model}"
@@ -236,13 +236,13 @@ fr:
       wrong_length: "n'a pas la bonne longueur (doit être de %{count} caractères)"
       country_already_associated: "Ce designer a déjà ce pays associé."
       max_countries: "Un designer peut être associé à un maximum de 3 pays."
-      birth_year_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
-      death_year_invalid: "Veuillez entrer une année de décès valide entre 0 et %{current_year}."
+      birth_year_invalid: "Entre une année de naissance valide entre 0 et %{current_year}."
+      death_year_invalid: "Entre une année de décès valide entre 0 et %{current_year}."
       designer_already_associated: "Ce designer est déjà associé."
       name_already_taken: "Ce nom d'établissement est déjà pris."
     403:
       subtitle: "Erreur 403"
-      title: "Oups ! Vous n'avez pas la permission d'accéder à cette page."
+      title: "Oups ! Tu n'as pas la permission d'accéder à cette page."
       back_home: "Retour à l'accueil"
     500:
       subtitle: "Erreur 500"
@@ -265,16 +265,16 @@ fr:
     invalid_statut: "%{value} n'est pas un statut valide"
     forbidden_word: "Le %{field} contient un mot interdit."
     registration:
-      confirmation_sent: "Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception."
+      confirmation_sent: "Un email de confirmation t'as été envoyé. Merci de vérifier ta boîte de réception."
     profile:
-      updated: "Votre profil a été mis à jour avec succès."
+      updated: "Ton profil a été mis à jour avec succès."
     access:
-      denied_admin: "Vous n'avez pas la permission d'accéder à cette page."
-      denied_certified: "Vous n'avez pas la permission d'accéder à cette page."
-      banned: "Votre compte a été banni."
+      denied_admin: "Tu n'as pas la permission d'accéder à cette page."
+      denied_certified: "Tu n'as pas la permission d'accéder à cette page."
+      banned: "Ton compte a été banni."
     banned_success: "Utilisateur banni avec succès."
     unbanned_success: "L'utilisateur a été débanni."
-    unbanned_denied: "Vous ne pouvez pas débannir cet utilisateur."
+    unbanned_denied: "Tu ne peux pas débannir cet utilisateur."
     certified_success: "%{name} a été certifié avec succès."
     certified_failure: "Une erreur est survenue lors de la certification."
     uncertified_success: "La certification de %{name} a été retirée avec succès."
@@ -316,24 +316,24 @@ fr:
   devise:
     login:
       title: "Connexion"
-      email: "Entrez votre adresse e-mail"
-      password: "Entrez votre mot de passe"
+      email: "Entre ton adresse e-mail"
+      password: "Entre ton mot de passe"
       forgot_password: "Mot de passe oublié ?"
       remember_me: "Se souvenir de moi"
       submit: "Se connecter"
-      no_account: "Vous n'avez pas de compte ? S'inscrire"
+      no_account: "Tu n'as pas de compte ? Inscris-toi"
       resend_confirmation: "Renvoyer l'email de confirmation"  
     registration:
       title: "S’inscrire"
       main_info: "Informations principales"
-      email_placeholder: "Entrez votre email"
-      password_placeholder: "Entrez votre mot de passe"
-      password_confirmation_placeholder: "Entrez de nouveau votre mot de passe"
+      email_placeholder: "Entre ton email"
+      password_placeholder: "Entre ton mot de passe"
+      password_confirmation_placeholder: "Entre de nouveau ton mot de passe"
       additional_info: "Informations supplémentaires"
-      firstname_placeholder: "Entrez votre prénom"
-      lastname_placeholder: "Entrez votre nom"
-      pseudo_placeholder: "Entrez votre nom d'utilisateur"
-      status_prompt: "Choisissez un statut"
+      firstname_placeholder: "Entre ton prénom"
+      lastname_placeholder: "Entre ton nom"
+      pseudo_placeholder: "Entre ton nom d'utilisateur"
+      status_prompt: "Choisis un statut"
       status_options:
         etudiant: "Étudiant"
         enseignant: "Enseignant"
@@ -346,15 +346,15 @@ fr:
       label_firstname: "Prénom*"
       label_lastname: "Nom"
       label_pseudo: "Nom d'utilisateur*"
-      label_statut: "Votre statut"
-      label_etablissement: "Votre établissement (école)"
+      label_statut: "Ton statut"
+      label_etablissement: "Ton établissement (école)"
       label_how_did_you_hear: "Source de découverte du site"
       establishment_blank: "Aucun établissement"
       establishment_search: "Rechercher un établissement..."
       rgpd_label: "J'accepte que mes données personnelles soient collectées et traitées conformément à la %{privacy_policy}"
       privacy_policy: "Politique de confidentialité"
       submit: "S’inscrire"
-      login_link: "Vous avez déjà un compte ? Se connecter"
+      login_link: "Tu as déjà un compte ? Connecte-toi"
       resend_confirmation: "Déjà inscrit mais pas encore confirmé ? %{resend_link}"
       resend_link_text: "Renvoyer l'email de confirmation"
       optional: "(Optionnel)"
@@ -367,7 +367,7 @@ fr:
       pseudo_available: "Ce pseudo est disponible"
       pseudo_taken: "Ce pseudo est déjà pris"
       select2:
-        input_too_short: "Veuillez entrer plus de caractères..."
+        input_too_short: "Entre plus de caractères..."
         searching: "Recherche en cours..."
         no_results: "Aucun résultat trouvé"
     password_reset:
@@ -380,15 +380,15 @@ fr:
       submit: "Renvoyer l'email"
       login_link: "Se connecter"
     failure:
-      already_authenticated: "Vous êtes déjà connecté."
-      inactive: "Votre compte n'est pas activé."
+      already_authenticated: "Tu es déjà connecté."
+      inactive: "Ton compte n'est pas activé."
       invalid: "Email ou mot de passe invalide."
-      locked: "Votre compte est verrouillé."
-      last_attempt: "Dernière tentative avant que votre compte ne soit verrouillé."
+      locked: "Ton compte est verrouillé."
+      last_attempt: "Dernière tentative avant que ton compte ne soit verrouillé."
       not_found_in_database: "Email ou mot de passe invalide."
-      timeout: "Votre session a expiré. Veuillez vous reconnecter."
-      unauthenticated: "Vous devez vous connecter pour continuer."
-      unconfirmed: "Vous devez confirmer votre compte avant de continuer."
+      timeout: "Ta session a expiré. Merci de te reconnecter."
+      unauthenticated: "Tu dois te connecter pour continuer."
+      unconfirmed: "Tu dois confirmer ton compte avant de continuer."
     sessions:
       signed_in: "Connexion réussie."
       signed_out: "Déconnexion réussie."
@@ -399,15 +399,15 @@ fr:
       destroyed: "Compte supprimé avec succès."
       signed_up_but_unconfirmed: "Inscription réussie. Un email de confirmation a été envoyé."
     passwords:
-      send_instructions: "Vous allez recevoir un email avec les instructions pour réinitialiser votre mot de passe."
-      updated: "Votre mot de passe a été changé avec succès."
-      updated_not_active: "Votre mot de passe a été changé avec succès, mais votre compte n'est pas activé."
+      send_instructions: "Tu vas recevoir un email avec les instructions pour réinitialiser ton mot de passe."
+      updated: "Ton mot de passe a été changé avec succès."
+      updated_not_active: "Ton mot de passe a été changé avec succès, mais ton compte n'est pas activé."
     confirmations:
-      send_instructions: "Vous allez recevoir un email avec les instructions pour confirmer votre compte."
-      confirmed: "Votre compte a été confirmé avec succès."
+      send_instructions: "Tu vas recevoir un email avec les instructions pour confirmer ton compte."
+      confirmed: "Ton compte a été confirmé avec succès."
     unlocks:
-      send_instructions: "Vous allez recevoir un email avec les instructions pour déverrouiller votre compte."
-      unlocked: "Votre compte a été déverrouillé avec succès."
+      send_instructions: "Tu vas recevoir un email avec les instructions pour déverrouiller ton compte."
+      unlocked: "Ton compte a été déverrouillé avec succès."
     omniauth_callbacks:
       success: "Connexion réussie via %{kind}."
       failure: "Échec de la connexion via %{kind}. %{reason}"
@@ -480,13 +480,13 @@ fr:
       2:
         title: "Données collectées"
         content:
-          "Nous collectons différentes données personnelles selon vos interactions avec notre site. Types de données :
+          "Nous collectons différentes données personnelles selon tes interactions avec notre site. Types de données :
           \n• Données d'identification : nom, prénom, email, téléphone, adresse postale, statut (étudiant, professeur, autre), établissement scolaire.
           \n• Données de connexion : adresse IP, type de navigateur, fournisseur d’accès Internet, date et heure d’accès, historique de navigation.
           \n• Données soumises via des formulaires : contenu des messages envoyés via les formulaires ou soumissions de contenu."
       3:
         title: "Finalités du traitement"
-        content: "Nous collectons et traitons vos données personnelles pour :
+        content: "Nous collectons et traitons tes données personnelles pour :
           \n• Expérience : analyser l’audience et améliorer l’expérience utilisateur.
           \n• Gestion des comptes utilisateurs : création, maintenance, gestion des comptes.
           \n• Modération des contenus : vérification et validation des références et designers soumis par les utilisateurs.
@@ -495,61 +495,61 @@ fr:
       4:
         title: "Base légale du traitement"
         content: "Le traitement repose sur :
-          \n• Votre consentement lors de la fourniture volontaire d’informations.
+          \n• Ton consentement lors de la fourniture volontaire d’informations.
           \n• Notre intérêt légitime à améliorer nos services et assurer la sécurité.
           \n• Le respect d’une obligation légale lorsque certaines données doivent être conservées pour raisons fiscales ou juridiques."
       5:
         title: "Destinataires des données"
         content:
-          "Vos données personnelles sont strictement confidentielles et accessibles à des tiers uniquement :
+          "Tes données personnelles sont strictement confidentielles et accessibles à des tiers uniquement :
           \n• Sous-traitants : partage avec prestataires (hébergement, maintenance, marketing, etc.) sous notre contrôle.
           \n• Obligations légales : divulgation si requise par la loi (autorité judiciaire ou administrative)."
       6:
         title: "Durée de conservation des données"
         content:
-          "Nous conservons vos données personnelles uniquement le temps nécessaire aux finalités et conformément à la loi :
+          "Nous conservons tes données personnelles uniquement le temps nécessaire aux finalités et conformément à la loi :
           \n• Données de contact : 3 ans après dernier contact.
           \n• Données de navigation (cookies) : 13 mois.
           \n• Données contractuelles : durée de la relation contractuelle, puis archivage légal.
           \n• Données soumises par les utilisateurs : conservées tant que le contenu reste en ligne ; suppression à la demande ou automatique si contenu non pertinent. Une copie peut être conservée 3 ans pour sécurité ou preuve.
           \n• Données de connexion : maximum 12 mois pour sécurité, utilisées pour prévenir fraudes ou activités illicites."
       7:
-        title: "Vos droits"
+        title: "Tes droits"
         content: "Conformément au RGPD :
           \n• Droit d'accès : demander l’accès aux données.
           \n• Droit de rectification : corriger des données inexactes ou incomplètes.
           \n• Droit à l'effacement : demander la suppression (sous réserve des obligations légales).
           \n• Droit à la limitation : limiter le traitement dans certains cas.
-          \n• Droit à la portabilité : recevoir vos données dans un format structuré et lisible.
-          \n• Droit d'opposition : s'opposer pour votre situation particulière ou marketing direct.
+          \n• Droit à la portabilité : recevoir tes données dans un format structuré et lisible.
+          \n• Droit d'opposition : s'opposer pour ta situation particulière ou marketing direct.
           \n
-          \nPour exercer vos droits : <a href=\"mailto:contact@omniscientdesign.fr\" class=\"black underline\">>contact@omniscientdesign.fr</a>"
+          \nPour exercer tes droits : <a href=\"mailto:contact@omniscientdesign.fr\" class=\"black underline\">>contact@omniscientdesign.fr</a>"
       8:
         title: "Sécurité des données"
-        content: "Nous mettons en œuvre des mesures techniques et organisationnelles pour sécuriser vos données et éviter perte, détournement, altération ou accès non autorisé."
+        content: "Nous mettons en œuvre des mesures techniques et organisationnelles pour sécuriser tes données et éviter perte, détournement, altération ou accès non autorisé."
       9:
         title: "Politique de l’hébergeur"
-        content: 'Notre hébergeur possède sa propre politique de confidentialité concernant vos données : <a href="https://www.hostinger.fr/politique-de-confidentialite" target="_blank" class="black underline">>https://www.hostinger.fr/politique-de-confidentialite</a>'
+        content: 'Notre hébergeur possède sa propre politique de confidentialité concernant tes données : <a href="https://www.hostinger.fr/politique-de-confidentialite" target="_blank" class="black underline">>https://www.hostinger.fr/politique-de-confidentialite</a>'
       10:
         title: "Modifications de la politique"
         content: "Nous nous réservons le droit de modifier cette politique à tout moment. Les changements prennent effet dès leur publication sur cette page. Nous recommandons de consulter régulièrement cette page."
       11:
         title: "Contact"
-        content: 'Pour toute question concernant la politique de confidentialité : <a href="mailto:contact@omniscientdesign.fr" class="black underline">>contact@omniscientdesign.fr</a><br><br>Le respect de vos droits est notre priorité<br>Fondateurs de Omniscient Design'
+        content: 'Pour toute question concernant la politique de confidentialité : <a href="mailto:contact@omniscientdesign.fr" class="black underline">>contact@omniscientdesign.fr</a><br><br>Le respect de tes droits est notre priorité<br>Fondateurs de Omniscient Design'
   edit_profile:
-    account: "Votre compte"
+    account: "Ton compte"
     public_profile: "Profil public"
-    public_desc: "Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, veuillez modifier les informations ci-dessous."
+    public_desc: "Les informations figurant dans le profil public sont accessibles à tous. Pour les supprimer ou les modifier, merci de modifier les informations ci-dessous."
     first_name: "Prénom"
     last_name: "Nom de famille"
     username: "Pseudo"
     password: "Mot de passe"
-    password_hint: "Ne pas remplir si vous ne souhaitez pas le changer"
+    password_hint: "Ne pas remplir si tu ne souhaites pas le changer"
     password_confirmation: "Confirmer mot de passe"
     private_profile: "Profil privé"
     email: "Email"
     status: "Statut"
-    choose_status: "Choisissez un statut*"
+    choose_status: "Choisis un statut*"
     student: "Étudiant"
     teacher: "Enseignant"
     company: "Entreprise"
@@ -558,18 +558,18 @@ fr:
     artist: "Artiste"
     other: "Autre"
     institution: "Établissement"
-    choose_institution: "Choisissez un établissement"
+    choose_institution: "Choisis un établissement"
     current_password: "Mot de passe actuel"
-    current_password_hint: "entrer votre mot de passe pour modifier votre profil"
+    current_password_hint: "entrer ton mot de passe pour modifier ton profil"
     update_button: "Mettre à jour"
     daily_reference_push: "La réf du jour (Notification)"
     daily_reference_email: "La réf du jour (Mail)"
-    delete_account: "Supprimer votre compte"
-    confirm_delete: "Êtes-vous sûr ?"
+    delete_account: "Supprimer ton compte"
+    confirm_delete: "Êtes-tu sûr ?"
   contributions:
-    subtitle_top: "Votre contribution"
+    subtitle_top: "Ta contribution"
     title: "Suivi de mes contributions"
-    description_html: "Ici, vous pouvez consulter toutes vos participations au sein d’Omniscient Design.<br>Suivez en détail vos contenus en attente de validation et ceux déjà publiés. Gardez un œil sur les interactions et les retours générés par vos contributions.<br>Merci de contribuer à enrichir notre univers collaboratif !"
+    description_html: "Ici, tu peux consulter toutes tes participations au sein d’Omniscient Design.<br>Suis en détail tes contenus en attente de validation et ceux déjà publiés. Garde un œil sur les interactions et les retours générés par tes contributions.<br>Merci de contribuer à enrichir notre univers collaboratif !"
     added_references: "Mes références ajoutées"
     added_designers: "Mes designers ajouté(e)s"
     ref_name: "Nom de la référence"
@@ -580,12 +580,12 @@ fr:
     validated: "Validée"
     rejected: "Refusée"
     pending: "En attente"
-    no_references: "Vous n'avez ajouté aucune référence pour le moment."
-    no_designers: "Vous n'avez ajouté aucun designer pour le moment."
+    no_references: "Tu n'as ajouté aucune référence pour le moment."
+    no_designers: "Tu n'as ajouté aucun designer pour le moment."
   press:
     subtitle_top: "Presse"
     title: "Kit de presse"
-    description: "Téléchargez le logo, des captures d’écran ou encore le dossier de présentation d’Omniscient Design pour partager la plateforme."
+    description: "Télécharge le logo, des captures d’écran ou encore le dossier de présentation d’Omniscient Design pour partager la plateforme."
     download_button: "Télécharger le kit de presse (18,1 Mo)"
     logos: "Logos"
     screenshots: "Captures d’écran"
@@ -603,10 +603,10 @@ fr:
       screenshot7: "53 ko"
       dossier: "18,8 Mo"
   bug_report:
-    subtitle_top: "Votre contribution"
+    subtitle_top: "Ta contribution"
     title: "Signaler un problème/Suggérer une modification"
-    description: "Si vous rencontrez un problème avec notre site, une fonctionnalité ou un service, nous vous invitons à nous en informer afin que nous puissions résoudre rapidement la situation."
-    help_title: "Votre aide nous est précieuse"
+    description: "Si tu rencontres un problème avec notre site, une fonctionnalité ou un service, nous t'invitons à nous en informer afin que nous puissions résoudre rapidement la situation."
+    help_title: "Ton aide nous est précieuse"
     placeholder_description: "Description du problème"
     placeholder_url: "URL où se situe le bug (ou lien vers une image)"
     submit_button: "Envoyer"
@@ -618,22 +618,22 @@ fr:
       one: "%{count} erreur empêche l’envoi du rapport :"
       other: "%{count} erreurs empêchent l’envoi du rapport :"
     create:
-      success: "Votre signalement a été soumis avec succès."
+      success: "Ton signalement a été soumis avec succès."
     destroy:
       success: "Le rapport de bug a été supprimé avec succès."
     update_status:
       success: "Le statut du rapport de bug a été mis à jour avec succès."
       error: "Erreur lors de la mise à jour du statut."
     access:
-      denied: "Vous n'êtes pas autorisé à accéder à cette page."
+      denied: "Tu n'es pas autorisé à accéder à cette page."
   lists:
-    title: "Trier, modifier, créer vos listes"
-    subtitle: "Créez des listes de références pour retrouver facilement vos sources et concentrez-vous sur ce qui compte vraiment."
-    your_lists: "Vos listes"
-    create_list: "Créer votre liste"
+    title: "Trier, modifier, créer tes listes"
+    subtitle: "Crée des listes de références pour retrouver facilement tes sources et concentre-toi sur ce qui compte vraiment."
+    your_lists: "Tes listes"
+    create_list: "Créer ta liste"
     shared: "(Liste partagée)"
     private: "(Liste privée)"
-    no_list: "Aucune liste trouvée pour le moment. Créez-en une pour commencer !"
+    no_list: "Aucune liste trouvée pour le moment. Crée-en une pour commencer !"
     create:
       title: "Créer une liste"
       name_placeholder: "Nom de la liste"
@@ -679,7 +679,7 @@ fr:
     invite:
       success: "Utilisateur invité avec succès."
       failure: "Utilisateur introuvable."
-      cannot_self: "Vous ne pouvez pas vous inviter vous-même dans votre propre liste."
+      cannot_self: "Tu ne peux pas t'inviter toi-même dans ta propre liste."
     role:
       remove:
         success: "Utilisateur supprimé avec succès."
@@ -688,7 +688,7 @@ fr:
       visitor: "Utilisateur désigné comme visiteur."
       invalid: "Rôle invalide."
     not_found: "Liste introuvable ou accès refusé."
-    shared_message: "La liste %{name} a été partagée avec vous."
+    shared_message: "La liste %{name} a été partagée avec toi."
   list:
     share: "Partager ma liste"
     invite_editors: "Inviter des éditeurs"
@@ -713,7 +713,7 @@ fr:
     selected_references: "Références sélectionnées"
     no_designers: "Aucun designer disponible."
     no_references: "Aucune référence disponible."
-    confirm_delete: "Êtes-vous sûr de vouloir supprimer cette liste ?"
+    confirm_delete: "Êtes-tu sûr de vouloir supprimer cette liste ?"
     edit_list: "Ajouter à ma liste"
     load_more_designers: "Charger plus de designers"
     load_more_references: "Charger plus de références"
@@ -722,32 +722,32 @@ fr:
     play: "Jouer"
     play_quiz: "Jouer avec cette liste"
   add_references:
-    subtitle_top: "Votre contribution"
+    subtitle_top: "Ta contribution"
     main_title: "Contribuer à la base de références"
-    subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
-    contributions_html: "Vous pouvez consulter vos contributions %{link}."
+    subtitle: "Partage tes références sur Omniscient Design ! Soumets tes découvertes et tes connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+    contributions_html: "Tu peux consulter tes contributions %{link}."
     contributions_link_text: "en cliquant ici"
     buttons:
       designers: "Designers"
       references: "Références"
   feedback:
-    title: "Exprimer votre avis - Omniscient Design"
-    description: "Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design."
-    subtitle_top: "Votre contribution"
-    main_title: "Exprimer votre avis"
-    subtitle: "Vos retours sont essentiels pour nous ! Partagez vos impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Votre avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
+    title: "Exprimer ton avis - Omniscient Design"
+    description: "Tes retours sont essentiels pour nous ! Partage tes impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design."
+    subtitle_top: "Ta contribution"
+    main_title: "Exprimer ton avis"
+    subtitle: "Tes retours sont essentiels pour nous ! Partage tes impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Ton avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
     questions:
-      question_1: "Sur une échelle de 1 à 5, comment évalueriez-vous votre expérience globale sur notre site ?*"
-      question_2: "Sur une échelle de 1 à 5, comment évalueriez-vous la facilité pour rechercher une information sur le site ?*"
-      question_3: "Sur une échelle de 1 à 5, comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?*"
-      question_5: "Sur une échelle de 1 à 5, comment évalueriez-vous l’utilité des listes ?*"
-      question_6: "Sur une échelle de 1 à 5, comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)"
-      question_7: "Sur une échelle de 1 à 5, comment évalueriez-vous la vitesse et la performance générale du site ?*"
-      question_8: "Quels sont, selon vous, les points forts de notre site ?"
-      question_9: "Quels sont les aspects que vous aimeriez voir améliorés ?"
-      question_10: "Avez-vous des suggestions pour améliorer l'expérience utilisateur ?"
-      question_11: "Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?"
-      question_12: "Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?"
+      question_1: "Sur une échelle de 1 à 5, comment évalueriez-tu ton expérience globale sur notre site ?*"
+      question_2: "Sur une échelle de 1 à 5, comment évalueriez-tu la facilité pour rechercher une information sur le site ?*"
+      question_3: "Sur une échelle de 1 à 5, comment évalueriez-tu la qualité et la pertinence du contenu proposé sur le site ?*"
+      question_5: "Sur une échelle de 1 à 5, comment évalueriez-tu l’utilité des listes ?*"
+      question_6: "Sur une échelle de 1 à 5, comment évalueriez-tu la réactivité et l’efficacité de notre support client ? (Répondre seulement si tu as déjà utilisé le support)"
+      question_7: "Sur une échelle de 1 à 5, comment évalueriez-tu la vitesse et la performance générale du site ?*"
+      question_8: "Quels sont, selon toi, les points forts de notre site ?"
+      question_9: "Quels sont les aspects que tu aimerais voir améliorés ?"
+      question_10: "As-tu des suggestions pour améliorer l'expérience utilisateur ?"
+      question_11: "Y a-t-il des fonctionnalités que tu aimerais voir ajoutées ou supprimées ?"
+      question_12: "As-tu des commentaires généraux ou des remarques supplémentaires que tu souhaiterais partager ?"
     rating_labels:
       1: "Très mauvaise"
       2: "Mauvaise"
@@ -758,15 +758,15 @@ fr:
       default: "Répondre ici"
     submit: "Envoyer"
     create:
-      success: "Votre feedback a été enregistré avec succès."
-      failure: "Une erreur s'est produite. Veuillez vérifier le formulaire et réessayer."
+      success: "Ton avis a été enregistré avec succès."
+      failure: "Une erreur s'est produite. Merci de vérifier le formulaire et réessayer."
     destroy:
       success: "Le feedback a été supprimé avec succès."
-    already_submitted: "Vous avez déjà soumis un feedback."
+    already_submitted: "Tu as déjà soumis un avis."
   add_designer:
-    subtitle_top: "Votre contribution"
+    subtitle_top: "Ta contribution"
     main_title: "Ajouter un/une designer"
-    subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+    subtitle: "Partage tes références sur Omniscient Design ! Soumets tes découvertes et tes connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
     progress:
       percent: "%{percent}%"
     steps:
@@ -807,18 +807,18 @@ fr:
       submit: "Envoyer"
     errors:   
       designer_exists: "Ce designer existe déjà et est validé."
-      nom_required: "Veuillez entrer le nom du designer."
-      birth_year_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
-      death_year_invalid: "Veuillez entrer une année de décès valide entre 0 et %{current_year}."
+      nom_required: "Entre le nom du designer."
+      birth_year_invalid: "Entre une année de naissance valide entre 0 et %{current_year}."
+      death_year_invalid: "Entre une année de décès valide entre 0 et %{current_year}."
     select2:
       placeholder: "Rechercher un pays..."
-      inputTooShort: "Veuillez entrer plus de caractères..."
+      inputTooShort: "Entre plus de caractères..."
       searching: "Recherche en cours..."
       noResults: "Aucun résultat trouvé"
   add_reference:
-    subtitle_top: "Votre contribution"
+    subtitle_top: "Ta contribution"
     main_title: "Ajouter une référence"
-    subtitle: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et notre équipe les validera pour les intégrer à notre base de données."
+    subtitle: "Partage tes références sur Omniscient Design ! Soumets tes découvertes et notre équipe les validera pour les intégrer à notre base de données."
     progress:
       percent: "%{percent}%"
     steps:
@@ -871,18 +871,18 @@ fr:
     select2:
       placeholder_designer: "Rechercher un/une designer…"
       placeholder_notion: "Rechercher des notions…"
-      inputTooShort: "Veuillez entrer plus de caractères…"
+      inputTooShort: "Entre plus de caractères…"
       searching: "Recherche en cours…"
       noResults: "Aucun résultat trouvé"
     errors:
-      date_reference_invalid: "Veuillez entrer une année de naissance valide entre 0 et %{current_year}."
+      date_reference_invalid: "Entre une année de naissance valide entre 0 et %{current_year}."
   edit:
-    subtitle_top: "Votre contribution"
+    subtitle_top: "Ta contribution"
     edit_reference_title: "Modifier une référence"
     edit_designer_title: "Modifier un designer"
-    description: "Partagez vos références sur Omniscient Design ! Soumettez vos découvertes et vos connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
+    description: "Partage tes références sur Omniscient Design ! Soumets tes découvertes et tes connaissances, et notre équipe les validera pour les intégrer à notre base de données. Bientôt, nous récompenserons les contributeurs les plus actifs pour leur précieuse aide !"
   notifications:
-    title: "Vos notifications"
+    title: "Tes notifications"
     today: "Aujourd'hui"
     last_7_days: "7 derniers jours"
     last_30_days: "30 derniers jours"
@@ -890,29 +890,29 @@ fr:
     none: "Aucune notification."
     new_reference: "Une nouvelle œuvre est à valider : %{name}"
     reference_validated: "La référence %{name} a été validée. Encore un grand merci pour ta contribution."
-    reference_rejected: "Votre référence %{name} a été rejetée. (Vous pouvez consulter la raison sur votre profil)"
+    reference_rejected: "Ta référence %{name} a été rejetée. (Tu peux consulter la raison sur ton profil)"
     no_user_for_rejection: "La référence %{reference_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_designer: "Un nouveau designer est à valider : %{name}"
     designer_validated: "Le/La designer %{name} a été validé(e). Encore un grand merci pour ta contribution."
-    designer_rejected: "Votre designer %{name} a été rejeté(e). (Vous pouvez consulter la raison sur votre profil)"
+    designer_rejected: "Ton/ta designer %{name} a été rejeté(e). (Tu peux consulter la raison sur ton profil)"
     no_user_for_rejection_designer: "Le/La designer %{designer_id} n'a pas d'utilisateur associé pour la notification de rejet."
     new_user_registered: "Nouvel utilisateur inscrit : %{name}"
     new_bug_report: "Nouveau bug signalé par %{user_name}"
-    bug_report_updated: "Votre rapport de bug est passé au statut : %{status}"
+    bug_report_updated: "Ton rapport de bug est passé au statut : %{status}"
     new_feedback: "Nouveau feedback reçu de %{user_name}"
   email_confirmation:
-    heading: "Confirmez votre email"
-    message_html: "Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour activer votre compte.<br>Si vous ne recevez pas l'email, vérifiez votre dossier spam ou %{resend_link}."
+    heading: "Confirmez ton email"
+    message_html: "Un email de confirmation tu as été envoyé. Clique sur le lien dans l'email pour activer ton compte.<br>Si tu ne recevez pas l'email, vérifiez ton dossier spam ou %{resend_link}."
     resend: "demandez un nouvel envoi"
     back_home: "Retour à l'accueil"
   rate_redirect:
     title: "Redirection en cours..."
-    message: "Nous vous redirigeons vers l'App Store ou le Google Play Store pour évaluer l'application Omniscient Design."
+    message: "Nous redirigeons vers l'App Store ou le Google Play Store pour évaluer l'application Omniscient Design."
     button: "Ouvrir le store"
   designer:
     create:
       success: "Designer créé avec succès."
-      failure: "Veuillez corriger les erreurs avant de soumettre à nouveau."
+      failure: "Merci de corriger les erreurs avant de soumettre à nouveau."
     update:
       success: "Designer mis à jour avec succès."
       failure: "Erreur lors de la mise à jour du designer."
@@ -920,7 +920,7 @@ fr:
       success: "Le/La designer %{name} a été supprimé avec succès."
     cancel:
       success: "La soumission du designer a été annulée avec succès."
-      denied: "Vous n'avez pas l'autorisation d'annuler cette soumission."
+      denied: "Tu n'as pas l'autorisation d'annuler cette soumission."
     validate:
       success: "Le/La designer %{name} a été validé(e) avec succès."
       failure: "Une erreur s'est produite lors de la validation du designer."
@@ -929,7 +929,7 @@ fr:
       failure: "Une erreur s'est produite lors du refus du designer."
       no_comment: "Sans commentaire"
     access:
-      denied: "Vous n'avez pas l'autorisation d'accéder à cette œuvre."
+      denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
     not_found: "Designer non trouvé."
   references:
     notions: "Notion(s)"
@@ -946,20 +946,20 @@ fr:
     signaler_erreur: "Suggérer une modification"
     signaler_copyright: "Signaler une contrefaçon / droit d'auteur"
     contribution: "Contribution"
-    enrichissement: "A enrichi votre apprentissage en ajoutant cette référence le"
+    enrichissement: "A enrichi ton apprentissage en ajoutant cette référence le"
     validation: "a validé la référence"
     decouvrir_autres: "Découvrir d'autres références"
     panneau_admin: "Panneau d'administration"
     valider_reference: "Valider l'reference"
     modifier_reference: "Modifier l'reference"
     supprimer_reference: "Supprimer la référence"
-    ajouter_autre: "Ajouter une autre référence"
+    ajouter_autre: "Contribuer à nouveau"
     retour: "Retour"
-    que_souhaitez_faire: "Que souhaitez-vous faire ?"
+    que_souhaites_faire: "Que souhaites-tu faire ?"
     annuler_soumission: "Annuler la soumission"
     retour_accueil: "Retour à l'accueil"
-    merci_contribution: "Merci pour votre contribution !"
-    en_cours_traitement: "Votre fiche est actuellement en cours de traitement. Veuillez noter que ce processus peut prendre quelques jours. Vous serez informé(e) via votre compte dès que celle-ci sera traitée."
+    merci_contribution: "Merci pour ta contribution !"
+    en_cours_traitement: "Ta fiche est actuellement en cours de traitement. Merci de noter que ce processus peut prendre quelques jours. Tu seras informé(e) via ton compte dès que celle-ci sera traitée."
     refuser_entree: "Refuser l'entrée"
     raison_refus: "Raison du refus"
     annuler: "Annuler"
@@ -967,20 +967,20 @@ fr:
     references: "Références"
     no_notion: "Aucune notion n'est associée à cette référence."
     domaine_non_specifie: "Domaine non spécifié"
-    access_denied: "Vous n'avez pas l'autorisation d'accéder à cette référence."
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
     create:
       success: "Référence créée avec succès."
-      failure: "Impossible de créer la référence. Veuillez corriger les erreurs et réessayer."
+      failure: "Impossible de créer la référence. Merci de corriger les erreurs et réessayer."
     update:
       success: "Référence mise à jour avec succès."
-      failure: "Impossible de mettre à jour la référence. Veuillez corriger les erreurs et réessayer."
+      failure: "Impossible de mettre à jour la référence. Merci de corriger les erreurs et réessayer."
     destroy:
       success: "La référence %{name} a été supprimée avec succès."
       failure: "Une erreur est survenue lors de la suppression de la référence."
       not_found: "Référence introuvable."
     cancel:
       success: "La soumission de la référence a été annulée avec succès."
-      failure: "Vous n'avez pas l'autorisation d'annuler cette soumission."
+      failure: "Tu n'as pas l'autorisation d'annuler cette soumission."
     validate:
       success: "La référence %{name} a été validée avec succès."
       failure: "Échec de la validation : %{errors}"
@@ -996,11 +996,11 @@ fr:
     confirmation:
       welcome: "Merci et bienvenue chez Omniscient Design,"
       greeting: "Bonjour"
-      title: "VALIDATION DE VOTRE COMPTE"
-      body_intro: "Merci de vous être inscrit sur notre site ! Nous avons besoin de vérifier votre adresse e-mail pour activer votre compte."
-      body_action: "Veuillez cliquer sur le lien ci-dessous pour confirmer votre compte :"
+      title: "VALIDATION DE TON COMPTE"
+      body_intro: "Merci de t'être inscrit sur notre site ! Nous avons besoin de vérifier ton adresse e-mail pour activer ton compte."
+      body_action: "Merci de cliquer sur le lien ci-dessous pour confirmer ton compte :"
       button: "Confirmer mon compte"
-      ignore: "Si vous n'avez pas créé de compte avec nous, vous pouvez ignorer ce message."
+      ignore: "Si tu n'as pas créé de compte avec nous, tu peux ignorer ce message."
       signature: "À bientôt,"
       team: "L’équipe"
       od: "Omniscient Design"
@@ -1010,19 +1010,19 @@ fr:
       all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
     reconfirmation:
       welcome: "Un petit rappel..."
-      title: "Finalisez votre inscription"
-      body: "Oups ! Il semble que vous n'ayez pas encore confirmé votre adresse e-mail. C'est la dernière étape pour activer votre compte et accéder à toutes les fonctionnalités d'Omniscient Design.<br/><br/>Veuillez cliquer sur le bouton ci-dessous pour valider votre inscription."
+      title: "Finalise ton inscription"
+      body: "Oups ! Il semble que tu n'aies pas encore confirmé ton adresse e-mail. C'est la dernière étape pour activer ton compte et accéder à toutes les fonctionnalités d'Omniscient Design.<br/><br/>Merci de cliquer sur le bouton ci-dessous pour valider ton inscription."
       button: "Je valide mon compte"
     reset_password:
-      top: "Il semblerait que vous ayez perdu votre mot de passe."
+      top: "Il semblerait que tu aies perdu ton mot de passe."
       title: "réinitialisation du mot de passe"
       greeting: "Bonjour"
-      body_intro: "Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte. Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer ce message."
-      body_action: "Pour réinitialiser votre mot de passe, cliquez sur le lien ci-dessous :"
-      validity_html: "Ce lien est valable pendant <span class='semibold'>%{hours} heures</span>. Après expiration, vous devrez faire une nouvelle demande de réinitialisation si vous avez toujours besoin d'aide."
+      body_intro: "Nous avons reçu une demande de réinitialisation de mot de passe pour ton compte. Si tu n'es pas à l'origine de cette demande, merci de ignorer ce message."
+      body_action: "Pour réinitialiser ton mot de passe, clique sur le lien ci-dessous :"
+      validity_html: "Ce lien est valable pendant <span class='semibold'>%{hours} heures</span>. Après expiration, tu devras faire une nouvelle demande de réinitialisation si tu as toujours besoin d'aide."
       button: "Réinitialiser mon mot de passe"
-      help_html: "Si vous avez besoin d'aide supplémentaire ou si vous avez des questions, n'hésitez pas à contacter notre support technique à <span class=\"semibold\">%{email}</span>."
-      signature: "Pensez à noter votre mot de passe,"
+      help_html: "Si tu as besoin d'aide supplémentaire ou si tu as des questions, n'hésite pas à contacter notre support technique à <span class=\"semibold\">%{email}</span>."
+      signature: "Pense à noter ton mot de passe,"
       team: "L’équipe"
       od: "Omniscient Design"
       legales: "Mentions légales"
@@ -1030,19 +1030,19 @@ fr:
       cgu: "CGU"
       all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
     email_changed:
-      top: "Il semblerait que vous ayez changé votre email."
+      top: "Il semblerait que tu aies changé ton email."
       title: "Changement d’adresse e-mail"
       greeting: "Bonjour"
       in_progress_html: |
-        Nous vous contactons pour vous informer que votre adresse e-mail est en cours de modification.<br>
+        Nous te contactons pour t'informer que ton adresse e-mail est en cours de modification.<br>
         La nouvelle adresse e-mail sera : <strong class="black">%{new_email}</strong>.<br>
-        Veuillez suivre les instructions envoyées à cette nouvelle adresse pour confirmer le changement.
+        Merci de suivre les instructions envoyées à cette nouvelle adresse pour confirmer le changement.
       changed_html: |
-        Nous vous informons que votre adresse e-mail a été modifiée avec succès.<br>
-        La nouvelle adresse associée à votre compte est :
+        Nous t'informons que ton adresse e-mail a été modifiée avec succès.<br>
+        La nouvelle adresse associée à ton compte est :
         <strong class="black">%{new_email}</strong>.
-      ignore: "Si vous n’avez pas demandé ce changement, veuillez contacter notre support immédiatement."
-      signature: "Merci pour votre attention,"
+      ignore: "Si tu n’avez pas demandé ce changement, merci de contacter notre support immédiatement."
+      signature: "Merci pour ton attention,"
       team: "L’équipe"
       od: "Omniscient Design"
       legales: "Mentions légales"
@@ -1051,12 +1051,12 @@ fr:
       all_rights_reserved: "©%{year} Omniscient Design — Tous droits réservés"
     list_editor:
       subject: "Invitation à rejoindre la liste %{list}"
-      top: "%{name} vous à invité.e"
+      top: "%{name} t'a invité.e"
       title: "Invitation à rejoindre la liste"
       greeting: "Bonjour"
-      body_intro: "Vous avez été invité·e à éditer la liste : « %{list_name} »."
-      body_action: "%{inviter} vous a attribué le rôle de <strong>%{role}</strong>."
-      ignore: "Si vous n’attendiez pas cette invitation, vous pouvez simplement ignorer ce message."
+      body_intro: "Tu as été invité·e à éditer la liste : « %{list_name} »."
+      body_action: "%{inviter} t'a attribué le rôle de <strong>%{role}</strong>."
+      ignore: "Si tu n'attendais pas cette invitation, tu peux simplement ignorer ce message."
       signature: "Merci de contribuer à la vie d’Omniscient Design,"
       team: "L’équipe"
       od: "Omniscient Design"

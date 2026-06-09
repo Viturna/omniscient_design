@@ -4,7 +4,8 @@ class ReferencesController < ApplicationController
 
   before_action :set_reference, only: %i[show edit update destroy validate cancel reject]
   before_action :authenticate_user!, except: [:index, :load_more, :show]
-  before_action :check_certified, only: [:validate, :destroy, :edit, :reject]
+  before_action :check_certified, only: [:validate, :destroy, :reject]
+  before_action :check_edit_permission, only: [:edit, :update]
 
   AD_FREQUENCY_RANGE = 4..6
   AD_FIRST_POSITION_RANGE = 3..5
@@ -146,7 +147,8 @@ class ReferencesController < ApplicationController
       Rails.cache.delete("linkify_keywords_list")
       update_suivi_references_emises(current_user)
       create_notification(@reference)
-      flash[:success] = t('references.create.success')
+      create_author_notification(@reference)
+      flash[:success] = "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais."
       redirect_to @reference
     else
       3.times do |i|
@@ -160,6 +162,9 @@ class ReferencesController < ApplicationController
   # PATCH/PUT /references/1 or /references/1.json
    def update
     if @reference.update(reference_params)
+      if !@reference.validation && @reference.user == current_user
+        notify_admin_of_update(@reference)
+      end
       redirect_to @reference, notice: t('references.update.success')
     else
       flash.now[:alert] = t('references.update.failure')
@@ -253,6 +258,25 @@ def save_modal
   end
   
   private
+
+  def check_edit_permission
+    unless current_user.admin? || current_user.certified? || (@reference.user == current_user && !@reference.validated?)
+      redirect_to root_path, alert: t('references.access_denied', default: 'Accès refusé')
+    end
+  end
+
+  def create_author_notification(reference)
+    if reference.user_id.present?
+      Notification.create(
+        user_id: reference.user_id,
+        notifiable: reference,
+        title: "Contribution reçue",
+        message: "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais. Si tu souhaites la modifier avant sa validation, clique ici.",
+        link: edit_reference_path(reference)
+      )
+    end
+  end
+
   def update_image_credits(reference, params)
     if params[:reference][:existing_image_credits]
       params[:reference][:existing_image_credits].each do |blob_id, credit_text|
@@ -346,6 +370,22 @@ def save_modal
       )
     else
       Rails.logger.error(t('notifications.no_user_for_rejection', reference_id: reference.id))
+    end
+  end
+
+  def notify_admin_of_update(reference)
+    title = "Contribution modifiée"
+    message = "L'auteur a modifié sa contribution : #{reference.nom_reference}"
+    
+    recipients = User.where("role = ? OR certified = ?", 'admin', true)
+
+    recipients.each do |user|
+      Notification.create(
+        user_id: user.id, 
+        notifiable: reference, 
+        title: title,
+        message: message
+      )
     end
   end
 

@@ -453,8 +453,7 @@
 }
 
 .references-counter {
-  overflow-y: auto;
-  scrollbar-width: none;
+  /* removed overflow-y so the button itself doesn't scroll */
 }
 
 .references-counter::-webkit-scrollbar {
@@ -468,6 +467,14 @@
   gap: 8px;
   justify-items: center;
   align-items: center;
+  max-height: 130px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-right: 2px;
+}
+
+.references-counter .hidden-references::-webkit-scrollbar {
+  display: none;
 }
 
 .reference {

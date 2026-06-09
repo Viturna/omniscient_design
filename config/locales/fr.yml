@@ -10,6 +10,9 @@ fr:
   loader:
     unsupported_browser: "Ton navigateur ne supporte pas la vidéo."
   global:
+    modifier: "Modifier"
+    supprimer: "Supprimer"
+    confirm_delete_contribution: "Es-tu sûr(e) de vouloir supprimer cette contribution ?"
     designers: "Designers"
     references: "Références"
   header:

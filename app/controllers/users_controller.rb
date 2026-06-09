@@ -123,6 +123,9 @@ class UsersController < ApplicationController
       when "statut"
         direction = params[:direction] == "desc" ? :desc : :asc
         @users = @users.order(statut: direction)
+      when "study_level"
+        direction = params[:direction] == "desc" ? :desc : :asc
+        @users = @users.order(study_level: direction)
       when "inscription"
         direction = params[:direction] == "desc" ? :desc : :asc
         @users = @users.order(created_at: direction)

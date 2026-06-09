@@ -396,7 +396,7 @@
   white-space: nowrap;
   position: relative;
   gap: 54px;
-  height: 140px;
+  height: 200px;
   margin: 48px 0;
 }
 
@@ -434,7 +434,7 @@
 }
 
 .references-container {
-  max-height: 100px;
+  max-height: 150px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -446,7 +446,7 @@
   display: none;
 }
 
-.hidden-.references {
+.hidden-references {
   display: none;
   flex-direction: column;
   gap: 8px;
@@ -461,11 +461,13 @@
   display: none;
 }
 
-.references-counter .hidden-.references {
+.references-counter .hidden-references {
   margin-top: 8px;
-  display: flex;
-  align-items: start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  justify-items: center;
+  align-items: center;
 }
 
 .reference {

@@ -1,75 +1,97 @@
 <style>
-  .table-admin .col-links {
+  .col-links {
     white-space: normal;
     min-width: 250px;
     max-width: 350px;
   }
-  .table-admin .col-links a {
+  .col-links a {
     color: #007bff;
     word-break: break-all;
   }
-  .table-admin .col-actions {
+  .col-actions {
     white-space: nowrap;
   }
-  .bool-true { color: #28a745; font-weight: 500; }
-  .bool-false { color: #999; }
-
-  /* Flexbox pour aligner recherche et bouton */
-  .toolbar-admin {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin: 20px 0;
+  .badge-gray {
+    background: #eee;
+    color: #666;
   }
 </style>
-<section class="top-default-page">
-  <%= link_to users_path do %>
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_3256_104)">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z" fill="#FFF"/>
-      </g>
-      <defs>
-        <clipPath id="clip0_3256_104">
-          <rect width="36" height="36" fill="white"/>
-        </clipPath>
-      </defs>
-    </svg>
-  <% end %>
-  <h1>Gestion des Établissements</h1>
-</section>
-<section class="grid-1">
-  <div class="toolbar-admin">
-    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form", style: "display: flex; gap: 10px; flex: 1; max-width: 600px;" do |f| %>
-      <%= f.text_field :query, 
-            value: params[:query], 
-            placeholder: "Rechercher par nom, UAI, ville...", 
-            class: "form-control", style: "width: 100%;" %>
-      <%= f.submit "Rechercher", class: "btn btn-primary" %>
+
+<div class="users-dash-wrapper">
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      <% end %>
+      <h1 class="users-dash-title">Gestion des Établissements</h1>
+    </div>
+  </div>
+
+  <div class="users-dash-kpi-grid">
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Établissements</span>
+        <div class="kpi-icon bg-blue-light">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value"><%= @total_etablissements %></div>
+    </div>
+    
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Établissements Actifs</span>
+        <div class="kpi-icon bg-green-light">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value"><%= @active_etablissements %></div>
+    </div>
+    
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Utilisateurs Rattachés</span>
+        <div class="kpi-icon bg-yellow-light">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value"><%= @total_users_linked %></div>
+    </div>
+  </div>
+
+  <div class="users-dash-toolbar">
+    <%= form_with url: admin_etablissements_path, method: :get, local: true, class: "search-form" do |f| %>
+      <div class="users-dash-search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <%= f.text_field :query, value: params[:query], placeholder: "Rechercher par nom, UAI, ville..." %>
+      </div>
+      <%= f.submit "Rechercher", class: "users-dash-btn-export", style: "background-color: #202020; color: white; padding: 12px 24px;" %>
       <% if params[:query].present? %>
-        <%= link_to "X", admin_etablissements_path, class: "btn btn-secondary", title: "Effacer" %>
+        <%= link_to "Effacer", admin_etablissements_path, class: "users-dash-btn-export", style: "background-color: #f5f5f5; color: #202020; border-color: #e0e0e0;" %>
       <% end %>
     <% end %>
-    <%= link_to admin_etablissements_path(format: :csv, query: params[:query]), class: "btn btn-green", style: "display: flex; align-items: center; gap: 8px;" do %>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+
+    <%= link_to admin_etablissements_path(format: :csv, query: params[:query]), class: "users-dash-btn-export", style: "background-color: #28a745; border-color: #28a745;" do %>
+      <svg style="margin-right: 8px;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
       Exporter Actifs CSV
     <% end %>
   </div>
-  <%= paginate @etablissements %>
-  <div class="table-wrapper">
-    <table>
+
+  <div class="users-dash-table-container">
+    <table class="users-dash-table">
       <thead>
         <tr>
           <th>Nom</th>
-          <th style="min-width: 100px;">Utilisateurs</th>
- 
+          <th>Utilisateurs</th>
           <th>UAI</th>
           <th>Statut</th>
           <th>Type</th>
           <th>Localisation</th>
           <th>Coordonnées</th>
-          <th>Actions</th>
+          <th style="text-align: right;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -78,10 +100,9 @@
             <td>
               <strong><%= etab.name %></strong>
             </td>
-            <td style="text-align: center;">
+            <td>
               <% count = etab.users_count %>
-              <span class="badge <%= count > 0 ? 'badge-green' : 'badge-gray' %>" 
-                    style="padding: 4px 10px; border-radius: 12px; background: <%= count > 0 ? '#d4edda' : '#eee' %>; color: <%= count > 0 ? '#155724' : '#666' %>; font-weight: 600;">
+              <span class="badge <%= count > 0 ? 'badge-green' : 'badge-gray' %>">
                 <%= count %>
               </span>
             </td>
@@ -93,17 +114,15 @@
               <small style="color:#666;"><%= etab.region %></small>
             </td>
             <td class="col-links">
-              <% if etab.phone.present? %><%= etab.phone %><br>
-              <% end %>
-              <% if etab.messagerie.present? %><%= mail_to etab.messagerie %><br>
-              <% end %>
+              <% if etab.phone.present? %><%= etab.phone %><br><% end %>
+              <% if etab.messagerie.present? %><%= mail_to etab.messagerie %><br><% end %>
               <% if etab.website.present? %><%= link_to "Site web", etab.website, target: "_blank" %><% end %>
             </td>
-            <td class="col-actions">
-              <%= link_to "Modifier", edit_admin_etablissement_path(etab), class: "btn btn-sm btn-primary" %>
+            <td class="col-actions" style="text-align: right; display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+              <%= link_to "Modifier", edit_admin_etablissement_path(etab), class: "badge badge-blue", style: "text-decoration: none;" %>
               <% if count == 0 %>
                 <%= link_to "Supprimer", admin_etablissement_path(etab), 
-                      class: "btn btn-sm btn-danger",
+                      class: "badge badge-red", style: "text-decoration: none;",
                       data: { turbo_method: :delete, turbo_confirm: "Supprimer cet établissement ?" } %>
               <% end %>
             </td>
@@ -112,7 +131,8 @@
       </tbody>
     </table>
   </div>
-  <div style="margin-top: 20px;">
+  
+  <div style="margin-top: 24px;">
     <%= paginate @etablissements %>
   </div>
-</section>
+</div>

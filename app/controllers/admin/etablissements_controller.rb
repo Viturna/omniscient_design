@@ -26,6 +26,11 @@ class Admin::EtablissementsController < ApplicationController
       )
     end
 
+    # KPIs
+    @total_etablissements = Etablissement.count
+    @active_etablissements = Etablissement.joins(:users).distinct.count
+    @total_users_linked = User.where.not(etablissement_id: nil).count
+
     respond_to do |format|
       format.html do
         # Affichage HTML : On affiche tout, avec pagination

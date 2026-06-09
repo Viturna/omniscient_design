@@ -12,6 +12,7 @@ class Admin::DashboardController < ApplicationController
     @avg_visits_12m = calculate_avg_visits(12.months.ago)
     @nb_etablissements_actifs = User.joins(:etablissement).distinct.count('etablissements.id')
     @total_quiz_submissions = QuizSubmission.count
+    @unique_quiz_users = QuizSubmission.distinct.count(:user_id)
     @notifications = Notification.where(user: current_user).order(created_at: :desc).limit(5)
     
     # --- La Réf du Jour Stats ---

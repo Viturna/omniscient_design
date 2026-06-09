@@ -418,7 +418,8 @@
   display: inline-block;
   text-align: center;
   position: relative;
-  width: 50px;
+  min-width: 50px;
+  flex-shrink: 0;
   z-index: 1; /* les points passent au-dessus de la ligne */
 }
 
@@ -453,7 +454,9 @@
 }
 
 .references-counter {
-  /* removed overflow-y so the button itself doesn't scroll */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .references-counter::-webkit-scrollbar {
@@ -461,15 +464,11 @@
 }
 
 .references-counter .hidden-references {
-  margin-top: 8px;
+  margin-left: 12px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
   align-items: center;
-  max-height: 130px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  padding-right: 2px;
 }
 
 .references-counter .hidden-references::-webkit-scrollbar {
@@ -483,6 +482,9 @@
   border-radius: 50%;
   cursor: pointer;
   background-size: cover;
+  -webkit-user-drag: none;
+  user-select: none;
+  flex-shrink: 0;
 }
 
 .reference:hover,
@@ -518,6 +520,7 @@
   justify-content: center;
   align-items: center;
   user-select: none;
+  flex-shrink: 0;
 }
 
 /* --- MEGA MENU & ACCORDÉON --- */

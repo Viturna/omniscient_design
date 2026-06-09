@@ -8,7 +8,7 @@
 </section>
 
 <section class="grid-1 profil">
-  <p class="desc-profil" style="margin-bottom: 40px;">Choisissez comment vous souhaitez être informé des nouvelles découvertes sur Omniscient Design.</p>
+  <p class="desc-profil" style="margin-bottom: 40px;">Choisis comment tu souhaites être informé des nouvelles découvertes sur Omniscient Design.</p>
 
   <%= form_for(@user, url: notifications_settings_path, html: { method: :patch, data: { turbo: false } }) do |f| %>
     <div class="notification-cards-container">
@@ -23,7 +23,7 @@
           </div>
           <div class="text-content">
             <span class="notif-setting-title"><%= t('edit_profile.daily_reference_push') %></span>
-            <p class="notif-setting-desc">Notification push sur votre appareil chaque matin.</p>
+            <p class="notif-setting-desc">Notification push sur ton appareil chaque matin.</p>
           </div>
           <div class="custom-toggle"></div>
         </div>
@@ -39,7 +39,7 @@
           </div>
           <div class="text-content">
             <span class="notif-setting-title"><%= t('edit_profile.daily_reference_email') %></span>
-            <p class="notif-setting-desc">Email détaillé envoyé directement dans votre boîte mail.</p>
+            <p class="notif-setting-desc">Email détaillé envoyé directement dans ta boîte mail.</p>
           </div>
           <div class="custom-toggle"></div>
         </div>

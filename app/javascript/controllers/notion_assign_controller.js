@@ -25,7 +25,7 @@ export default class extends Controller {
       const searchField = document.querySelector('.select2-search__field');
       if (searchField) {
         searchField.focus();
-        searchField.placeholder = "Tapez pour chercher une notion...";
+        searchField.placeholder = "Tape pour chercher une notion...";
       }
     });
 

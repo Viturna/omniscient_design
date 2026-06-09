@@ -45,7 +45,7 @@
 
         <!-- Corps du mail -->
         <p style="font-size:16px; line-height:1.5; color:#52525D;">
-          Aujourd'hui, nous vous proposons de découvrir <strong>"<%= @reference.nom_reference %>"</strong>.
+          Aujourd'hui, nous te proposons de découvrir <strong>"<%= @reference.nom_reference %>"</strong>.
           <% if @reference.designers.any? %>
             Une référence de <strong><%= @reference.designers.map(&:nom_designer).join(', ') %></strong>.
           <% end %>
@@ -70,7 +70,7 @@
         </table>
 
         <p style="font-size:14px; line-height:1.5; color:#888;">
-          Vous recevez ce mail car vous avez activé la découverte quotidienne dans vos réglages.
+          Tu reçois ce mail car tu as activé la découverte quotidienne dans tes réglages.
           <a href="<%= notifications_settings_url(locale: I18n.locale) %>" style="color: #888; text-decoration: underline;">Se désabonner</a>
         </p>
 

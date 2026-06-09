@@ -30,7 +30,6 @@ class NotificationsController < ApplicationController
     message = vals[:message]
     link = vals[:link]
 
-    # Debug: Affiche ça dans votre terminal serveur pour vérifier
     Rails.logger.info "📢 Tentative envoi Notif - Titre: #{title} | Message: #{message}"
 
     if title.blank? || message.blank?
@@ -51,7 +50,7 @@ class NotificationsController < ApplicationController
               end
 
     if targets.empty?
-      flash[:alert] = "Veuillez sélectionner au moins un destinataire."
+      flash[:alert] = "Sélectionne au moins un destinataire."
       redirect_to new_notification_path and return
     end
 
@@ -65,7 +64,7 @@ class NotificationsController < ApplicationController
           message: message,
           link: link,
           status: :unread,
-          notifiable: nil # On garde nil comme dans votre test console qui marchait
+          notifiable: nil
         )
         count += 1
       rescue => e

@@ -382,6 +382,7 @@
               <p class="text-contributor"><%= t('references.validation') %> <%= @reference.nom_reference %></p>
             </div>
           </div>
+        </div>
         <% end %>
       </div>
     </div>
@@ -578,7 +579,6 @@
       </div>
     </div>
     <%# --- FIN DU CONTENEUR PRINCIPAL (.body-show) --- %>
-    <%# Scripts inline (Optionnel si vous migrez tout vers Stimulus) %>
     <script>
       document.addEventListener("turbo:load", () => {
         // Ouvrir le modal (Bootstrap style)

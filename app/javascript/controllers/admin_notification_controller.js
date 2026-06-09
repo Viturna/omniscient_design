@@ -45,7 +45,7 @@ export default class extends Controller {
 
     if (!isAllSelected && (!selectedUsers || selectedUsers.length === 0)) {
       event.preventDefault()
-      alert("Veuillez sélectionner au moins un utilisateur ou cocher 'Tous les Utilisateurs'.")
+      alert("Sélectionne au moins un utilisateur ou coche 'Tous les Utilisateurs'.")
     }
 
   }

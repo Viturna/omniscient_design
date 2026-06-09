@@ -91,15 +91,15 @@
             <span>Lié à <strong>Apple</strong></span>
           <% end %>
         </div>
-        <%= button_to unlink_provider_path, method: :delete, data: { turbo: false, confirm: "Êtes-vous sûr de vouloir délier ce compte ? Vous devrez utiliser votre email et mot de passe pour vous connecter." }, class: "button large" do %>
+        <%= button_to unlink_provider_path, method: :delete, data: { turbo: false, confirm: "Es-tu sûr de vouloir délier ce compte ? Tu devras utiliser ton email et mot de passe pour te reconnecter." }, class: "button large" do %>
           Délier
         <% end %>
       </div>
       <% unless resource.encrypted_password.present? %>
-        <p style="font-size: 0.8rem; color: #E61818; margin-top: 5px;">Attention : Vous n'avez pas de mot de passe défini. Si vous déliez ce compte, vous devrez utiliser "Mot de passe oublié" pour vous reconnecter.</p>
+        <p style="font-size: 0.8rem; color: #E61818; margin-top: 5px;">Attention : Tu n'as pas de mot de passe défini. Si tu délies ce compte, tu devras utiliser "Mot de passe oublié" pour te reconnecter.</p>
       <% end %>
     <% else %>
-      <p style="margin-bottom: 15px;">Liez votre compte pour vous connecter en un clic :</p>
+      <p style="margin-bottom: 15px;">Lie ton compte pour te connecter en un clic :</p>
       <div style="display: flex; flex-direction: row; gap: 10px;">
         <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, class: "button", style: "display: flex; justify-content: center; align-items: center; gap: 10px; background-color: #fff; color: #202020; border: 1px solid #ddd;" do %>
           Lier mon compte Google
@@ -170,12 +170,12 @@
             Country.order(:country),
             :id,
             :country,
-            { prompt: "Sélectionnez votre pays" },
+            { prompt: "Sélectionne ton pays" },
             { 
               class: "form-control", 
               data: { 
                 controller: "select2",
-                select2_placeholder_value: "Sélectionnez votre pays"
+                select2_placeholder_value: "Sélectionne ton pays"
               } 
             } %>
       </div>
@@ -189,7 +189,7 @@
         <%= f.label t('edit_profile.status') %>
         <%= f.select :statut,
           User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
-            { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
+            { include_blank: t('devise.registration.status_blank', default: "Sélectionne ton statut") },
             { class: "role-select form-control",
               required: true,
               data: { 
@@ -224,7 +224,7 @@
           <button type="button" data-action="click->show-password#toggle" class="toggle-password">
             </button>
         </div>
-        <i>Votre mot de passe doit comporter au moins 6 caractères...</i>
+        <i>Ton mot de passe doit comporter au moins 6 caractères...</i>
       </div>
       <div class="field ">
         <%= f.label t('edit_profile.password_confirmation') %>
@@ -271,8 +271,8 @@
     </button>
     <div class="modal-overlay" data-popup-target="modal" data-action="click->popup#backgroundClick" style="display: none;">
       <div class="modal-content profil">
-        <h3>Nous sommes tristes de vous voir partir 😢</h3>
-        <p>Pourriez-vous nous dire pourquoi vous supprimez votre compte ? Cela nous aide à nous améliorer.</p>
+        <h3>Nous sommes tristes de te voir partir 😢</h3>
+        <p>Pourrais-tu nous dire pourquoi tu supprimes ton compte ?</p>
         <%= form_with(url: registration_path(resource_name), method: :delete, local: true, data: { turbo: false }) do |f| %>
           <div class="field">
             <%= f.label :delete_reason, "Raison du départ (optionnel)", style: "margin-bottom: 8px; display: block;" %>

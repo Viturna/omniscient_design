@@ -110,7 +110,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
  def unlink_provider
     current_user.update(provider: nil, uid: nil)
     
-    redirect_to edit_user_registration_path, notice: "Votre compte a été délié avec succès. Pensez à définir un mot de passe si ce n'est pas déjà fait."
+    redirect_to edit_user_registration_path, notice: "Ton compte a été délié avec succès. Pense à définir un mot de passe si ce n'est pas déjà fait."
   end
 
   def check_email

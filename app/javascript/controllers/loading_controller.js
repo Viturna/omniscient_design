@@ -43,7 +43,6 @@ export default class extends Controller {
     sessionStorage.setItem("loaderSeen", "true");
 
     // Petit délai de confort (500ms) pour voir au moins un tout petit peu le logo/vidéo
-    // Si vous voulez de l'instantané pur, mettez 0 ou enlevez le setTimeout
     setTimeout(() => {
       this.loadingTarget.style.opacity = "0";
       this.hideWithTransition();

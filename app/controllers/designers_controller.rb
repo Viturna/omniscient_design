@@ -249,7 +249,7 @@ class DesignersController < ApplicationController
       
       flash[:notice] = "La contribution a été annulée avec succès."
     else
-      flash[:alert] = "Vous n'avez pas l'autorisation d'annuler cette contribution."
+      flash[:alert] = "Tu n'as pas l'autorisation d'annuler cette contribution."
     end
     redirect_to add_elements_path
   end

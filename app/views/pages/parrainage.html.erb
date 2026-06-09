@@ -6,8 +6,8 @@
     </svg>
   <% end %>
   <p class="subtitle-top">Parrainage </p>
-  <h1>Apprenez à plusieurs</h1>
-  <p class="subtitle">Profitez des avantages du parrainage et partagez votre passion pour l'apprentissage avec vos amis et collègues.</p>
+  <h1>Apprend à plusieurs</h1>
+  <p class="subtitle">Profite des avantages du parrainage et partage ta passion pour l'apprentissage avec tes amis et collègues.</p>
 </section>
 <section class="grid-1">
   <div style="display: inline-flex; align-items:center; gap:8px; margin-top:32px; cursor: pointer;" data-action="click->popup#open">
@@ -16,7 +16,7 @@
     </svg>
     <p>En savoir plus sur les règles de parrainages</p>
   </div>
-  <h2>Parrainez pour la gloire !</h2>
+  <h2>Parraine pour la gloire !</h2>
   <div class="flex-avantages">
     <div class="box-avantage">
       <svg width="66" height="66" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@
       </svg>
       <div>
         <p class="title-avantage">Les Badges d'Ambassadeur</p>
-        <p>Débloquez les paliers Bronze (3), Argent (10) et Or (20 filleul.e.s) pour briller !</p>
+        <p>Débloque les paliers Bronze (3), Argent (10) et Or (20 filleul.e.s) pour briller !</p>
       </div>
     </div>
     <p class="and">et</p>
@@ -34,12 +34,12 @@
       </svg>
       <div>
         <p class="title-avantage">Faites connaître Omniscient Design</p>
-        <p>Faites grandir la plus belle communauté de design et gagnez en notoriété.</p>
+        <p>Faites grandir la plus belle communauté de design et gagne en notoriété.</p>
       </div>
     </div>
   </div>
   <div class="code">
-    <p class="title-code">Votre code de parrainage :</p>
+    <p class="title-code">Ton code de parrainage :</p>
     <div class="code-input">
       <input type="text" value="<%= @user.referral_code %>" id="referral-code" readonly>
       <button class="button dark" onclick="copyReferralCode()">Copier
@@ -53,8 +53,8 @@
 </section>
 <section class="grid-1 filleul">
   <div class="title-filleul">
-    <h2>Liste de vos filleul.e.s</h2>
-    <p>Vous avez <%= @referred_count %> filleul.e(s).</p>
+    <h2>Liste de tes filleul.e.s</h2>
+    <p>Tu as <%= @referred_count %> filleul.e(s).</p>
   </div>
   <% if @referred_users.any? %>
     <ul>
@@ -105,12 +105,12 @@
       &nbsp;&nbsp;🥈 Ambassadeur d'Argent : Obtenu à partir de 10 parrainages réussis.<br>
       &nbsp;&nbsp;🥇 Ambassadeur d'Or : Obtenu à partir de 20 parrainages réussis.<br>
       <br>
-      Affichez fièrement vos badges sur votre profil pour prouver votre influence et votre dévouement à la communauté !</p>
+      Affiche fièrement tes badges sur ton profil pour prouver ton influence et ta dévotion à la communauté !</p>
 
       <p class="subtitle-popup">Fair-play et validation</p>
       <p>1. Éthique :<br>
-      &nbsp;&nbsp;• Les auto-parrainages ou la création de comptes fictifs pour gonfler ses statistiques de badges sont strictement interdits.<br>
-      &nbsp;&nbsp;• Les comptes filleul.e.s doivent correspondre à de réels profils actifs pour que vos paliers de badges soient validés.<br>
+      &nbsp;&nbsp;• Les auto-parrainages ou la création de comptes fictifs pour gonfler tes statistiques de badges sont strictement interdits.<br>
+      &nbsp;&nbsp;• Les comptes filleul.e.s doivent correspondre à de réels profils actifs pour que tes paliers de badges soient validés.<br>
       <br>
       2. Objectif commun :<br>
       &nbsp;&nbsp;• Faisons découvrir Omniscient Design au monde entier, un.e designer à la fois !</p>

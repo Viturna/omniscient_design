@@ -203,7 +203,7 @@ end
     Notification.create(
       user: user,
       title: "Badge Spécial Reçu !",
-      message: "L'équipe vous a décerné le badge : #{badge.name}",
+      message: "L'équipe t'a décerné le badge : #{badge.name}",
       link: "/mes-badges",
       status: :unread
     )

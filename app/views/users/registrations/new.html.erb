@@ -119,7 +119,7 @@
           <div class="field input-flex">
             <p class="title-boxlog">Inscription via Google</p>
             <p style="color: #FFF; opacity: 0.8; margin-bottom: 20px;">
-              Vous vous inscrivez avec : <strong><%= resource.email %></strong>
+              Tu t'inscris avec : <strong><%= resource.email %></strong>
             </p>
             <%= f.hidden_field :email %>
           </div>
@@ -181,12 +181,12 @@
                 Country.order(:country),
                 :id,
                 :country,
-                { prompt: "Sélectionnez votre pays", selected: Country.find_by(country: 'France')&.id },
+                { prompt: "Sélectionne ton pays", selected: Country.find_by(country: 'France')&.id },
                 { 
                   class: "form-control", 
                   data: { 
                     controller: "select2",
-                    select2_placeholder_value: "Sélectionnez votre pays"
+                    select2_placeholder_value: "Sélectionne ton pays"
                   } 
                 } %>
           </div>
@@ -194,7 +194,7 @@
             <%= f.label t('edit_profile.status') %>
             <%= f.select :statut,
             User::STATUTS.map { |key| [t("devise.registration.status_options.#{key}"), key] },
-              { include_blank: t('devise.registration.status_blank', default: "Sélectionnez votre statut") },
+              { include_blank: t('devise.registration.status_blank', default: "Sélectionne ton statut") },
               { class: "role-select form-control",
                 required: true,
                 data: {
@@ -223,12 +223,12 @@
           <%= f.label :study_level, "Niveau d'étude" %>
           <%= f.select :study_level,
             User::STUDY_LEVELS,
-            { include_blank: "Sélectionnez votre niveau scolaire" },
+            { include_blank: "Sélectionne ton niveau scolaire" },
             { 
               class: "form-control",
               data: { 
                 controller: "select2",
-                select2_placeholder_value: "Sélectionnez votre niveau scolaire"
+                select2_placeholder_value: "Sélectionne ton niveau scolaire"
               }
             } %>
         </div>
@@ -249,13 +249,13 @@
             class: "form-control", 
             data: { 
               controller: "select2",
-              select2_placeholder_value: "Comment avez-vous connu le site ?"
+              select2_placeholder_value: "Comment as-tu connu le site ?"
             } 
           } %>
         </div>
         <div class="field input-flex">
           <%= f.label :referral_code, "Code de parrainage (Optionnel)" %>
-          <%= f.text_field :referral_code, placeholder: "Entrez le code de votre parrain" %>
+          <%= f.text_field :referral_code, placeholder: "Entre le code de ton parrain" %>
         </div>
         <div class="field rgpd">
           <%= f.check_box :newsletter, class: "checkbox-input", id: "user_newsletter" %>

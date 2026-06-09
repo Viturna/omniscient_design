@@ -2,7 +2,7 @@ La réf du jour : <%= @reference.nom_reference %>
 
 Bonjour <%= @user.firstname.presence || @user.pseudo.presence || @user.email %>,
 
-Aujourd'hui, nous vous proposons de découvrir "<%= @reference.nom_reference %>".
+Aujourd'hui, nous te proposons de découvrir "<%= @reference.nom_reference %>".
 <% if @reference.designers.any? %>
 Une référence de <%= @reference.designers.map(&:nom_designer).join(', ') %>.
 <% end %>
@@ -10,7 +10,7 @@ Une référence de <%= @reference.designers.map(&:nom_designer).join(', ') %>.
 Lien vers la référence : <%= reference_url(@reference, locale: I18n.locale) %>
 
 ---
-Vous recevez ce mail car vous avez activé la découverte quotidienne dans vos réglages.
-Pour vous désabonner : <%= notifications_settings_url(locale: I18n.locale) %>
+Tu reçois ce mail car tu as activé la découverte quotidienne dans tes réglages.
+Pour te désabonner : <%= notifications_settings_url(locale: I18n.locale) %>
 
 © <%= Time.current.year %> Omniscient Design

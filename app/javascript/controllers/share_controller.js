@@ -4,16 +4,14 @@ export default class extends Controller {
   static targets = ["modal", "link", "copyBtn"]
 
   connect() {
-    // Log pour vérifier que le contrôleur est bien chargé
     console.log("Share controller connecté !")
 
     if (this.hasModalTarget) {
       console.log("Modal target trouvée !")
     } else {
-      console.error("ERREUR : Modal target introuvable. Vérifiez votre HTML.")
+      console.error("ERREUR : Modal target introuvable. Vérifie ton HTML.")
     }
 
-    // Pré-remplir l'input si présent
     this.urlToShare = window.location.href
     this.textToShare = "Découvrez cette référence incroyable !"
 

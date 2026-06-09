@@ -50,7 +50,7 @@
           ["Autre bug technique", "autre_bug"],
           ["Idée d'amélioration", "amelioration"],
           ["Problème de copyright", "probleme_copyright"]
-        ], { selected: params[:category] || @bug_report.category, prompt: "Que souhaitez-vous nous remonter ?" }, { class: "category-select", required: true } %>
+        ], { selected: params[:category] || @bug_report.category, prompt: "Que souhaites-tu nous remonter ?" }, { class: "category-select", required: true } %>
       </div>
       <div class="field">
         <%= form.text_area :description, placeholder: t('bug_report.placeholder_description') %>

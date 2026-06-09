@@ -7,7 +7,7 @@ class QuizGeneratorService
   def call
     quiz = Quiz.create!(
       title: "Quiz : #{@list.name}",
-      description: "Quiz généré à partir de votre liste #{@list.name}",
+      description: "Quiz généré à partir de ta liste #{@list.name}",
       quiz_type: 'dynamic',
       list: @list
     )

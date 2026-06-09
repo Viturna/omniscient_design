@@ -661,8 +661,6 @@
         });
       </script>
       <script>
-        // 1. Créez un objet global pour stocker nos fonctions et notre état (offsets)
-        //    Cela nous permet de les supprimer et de les recréer proprement.
         window.myListApp = window.myListApp || {};
 
         window.myListApp.loadMoreHandler = function(e) {
@@ -670,7 +668,6 @@
           const type = this.dataset.type;
           const slug = this.dataset.slug;
 
-          // 3. Utilisez les offsets stockés sur l'objet global
           const offset = window.myListApp.offsets[type];
           
           // Get filters
@@ -708,7 +705,6 @@
           const endYear = document.getElementById(`${type}-filter-end-year`)?.value;
           if (endYear) url += `&end_year=${endYear}`;
 
-          // Votre code fetch (qui est parfait)
           fetch(url, {
             headers: {
               'Accept': 'text/html'
@@ -718,9 +714,7 @@
           .then(html => {
             if (html.trim() !== "" && !html.includes("Aucun résultat")) {
               document.getElementById(`${type}-load-more`).insertAdjacentHTML("beforeend", html);
-              // 4. Incrémentez l'offset global
               window.myListApp.offsets[type] += 10;
-              // Re-run initialization for selections
               if (typeof window.myListApp.initializeSelections === 'function') {
                 window.myListApp.initializeSelections();
               }
@@ -735,25 +729,17 @@
           .catch(error => console.error(`Erreur lors du chargement des ${type}:`, error));
         };
 
-        // 5. Créez une fonction d'installation qui nettoie d'abord
         function setupLoadMore(buttonId) {
           const button = document.getElementById(buttonId);
           if (button) {
-            // ÉTAPE CLÉ : Supprimez l'ancien listener pour éviter les doublons
             button.removeEventListener("click", window.myListApp.loadMoreHandler);
-
-            // Ajoutez le nouveau listener
             button.addEventListener("click", window.myListApp.loadMoreHandler);
           }
         }
 
-        // 6. Votre listener turbo:load est maintenant propre
         document.addEventListener("turbo:load", () => {
-          // (Re)initialisez les offsets à chaque chargement de page,
-          // car le DOM (votre liste) est aussi réinitialisé.
           window.myListApp.offsets = { references: 10, designers: 10, studios: 10 };
 
-          // (Re)attachez les listeners en toute sécurité
           setupLoadMore("load-more-references");
           setupLoadMore("load-more-designers");
           setupLoadMore("load-more-studios");

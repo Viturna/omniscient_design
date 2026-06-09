@@ -275,12 +275,12 @@ Devise.setup do |config|
   config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {prompt: 'select_account'}
   config.omniauth :apple,
       ENV['APPLE_CLIENT_ID'],           # Le Service ID (ex: com.omniscientdesign.service)
-      '',                               # Laissez le secret vide, la gem le génère avec la clé privée
+      '',                              
       {
         scope: 'email name',
-        team_id: ENV['APPLE_TEAM_ID'],  # Votre Team ID Apple (ex: 12345ABCDE)
-        key_id: ENV['APPLE_KEY_ID'],    # L'ID de la clé .p8 (ex: ABC123DEFG)
-        pem: ENV['APPLE_PRIVATE_KEY']   # Le contenu du fichier .p8
+        team_id: ENV['APPLE_TEAM_ID'], 
+        key_id: ENV['APPLE_KEY_ID'],  
+        pem: ENV['APPLE_PRIVATE_KEY'] 
       }
   
   # ==> Warden configuration

@@ -26,7 +26,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       else
         begin
           current_user.update!(provider: auth.provider, uid: auth.uid)
-          flash[:notice] = "Votre compte a été lié à #{kind} avec succès."
+          flash[:notice] = "Ton compte a été lié à #{kind} avec succès."
         rescue ActiveRecord::RecordInvalid => e
           flash[:alert] = "Erreur lors de la liaison : #{e.record.errors.full_messages.join(', ')}"
         end

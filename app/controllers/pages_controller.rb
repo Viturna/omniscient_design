@@ -90,7 +90,7 @@ class PagesController < ApplicationController
       referral_code = params[:referral_code]
   
       if referral_code.blank?
-        flash[:error] = "Veuillez fournir un code de parrainage."
+        flash[:error] = "Fournir un code de parrainage."
         redirect_to parrainage_filleul_path and return
       end
   
@@ -98,21 +98,21 @@ class PagesController < ApplicationController
   
       if referrer
         if referrer == @user
-          flash[:error] = "Vous ne pouvez pas être votre propre parrain."
+          flash[:error] = "Tu ne peux pas être ton propre parrain."
         elsif Referral.exists?(referrer: referrer, referee: @user)
-          flash[:notice] = "Vous êtes déjà lié à ce parrain."
+          flash[:notice] = "Tu es déjà lié à ce parrain."
         elsif @user.created_at < 30.days.ago
-          flash[:error] = "Votre compte a plus de 30 jours. Vous ne pouvez pas utiliser un code de parrainage."
+          flash[:error] = "Ton compte a plus de 30 jours. Tu ne peux pas utiliser un code de parrainage."
         else
           begin
             # Créer la relation de parrainage
             Rails.logger.debug "user: #{@user.inspect}"
             Referral.create!(referrer: referrer, referee: @user)
-            flash[:success] = "Vous avez été lié à votre parrain : #{referrer.pseudo}."
+            flash[:success] = "Tu as été lié à ton parrain : #{referrer.pseudo}."
           rescue ActiveRecord::RecordInvalid => e
             Rails.logger.debug "user: #{@user.inspect}"
             Rails.logger.error "Erreur lors de la création de la relation de parrainage : #{e.message}"
-            flash[:error] = "Une erreur est survenue. Veuillez réessayer."
+            flash[:error] = "Une erreur est survenue. Tu peux réessayer."
           end
         end
       else
@@ -130,9 +130,9 @@ class PagesController < ApplicationController
   def secret_badge
     if user_signed_in?
       GamificationService.new(current_user).check_detail_finder
-      redirect_to profil_path, notice: "Bravo ! Vous avez l'œil ! Badge débloqué."
+      redirect_to profil_path, notice: "Bravo ! Tu as l'œil ! Badge débloqué."
     else
-      redirect_to new_user_session_path, alert: "Connectez-vous pour débloquer ce secret."
+      redirect_to new_user_session_path, alert: "Connecte-toi pour débloquer ce secret."
     end
   end
 

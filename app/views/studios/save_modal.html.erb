@@ -12,7 +12,7 @@
     <%= link_to 'Créer une liste', new_list_path(studio_id: @studio.id), class: "popup-link-add", data: { turbo_frame: "_top" } %>
   </div>
   <% if @lists.empty? %>
-    <p style="color: #999; margin-top: 20px;">Vous n'avez pas encore de liste.</p>
+    <p style="color: #999; margin-top: 20px;">Tu n'as pas encore de liste.</p>
   <% else %>
     <% @lists.each do |list| %>
       <div class="field">

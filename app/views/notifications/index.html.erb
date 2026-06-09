@@ -12,10 +12,8 @@
 <section class="grid-1">
   <% if @notifications.any? %>
     <% 
-      # On définit la date actuelle selon la TimeZone de l'app (ex: Paris) et non celle du serveur (UTC)
       today_date = Date.current 
       
-      # On initialise les groupes
       today_notifs = []
       week_notifs = []
       month_notifs = []
@@ -23,7 +21,6 @@
 
       # On trie en une seule passe propre
       @notifications.each do |n|
-        # Important : Convertir la date de la notif dans la TimeZone locale avant de prendre la date
         n_date = n.created_at.in_time_zone.to_date
 
         if n_date == today_date

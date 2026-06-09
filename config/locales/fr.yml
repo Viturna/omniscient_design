@@ -4,7 +4,7 @@ fr:
     default_description: "Omniscient design - Le carnet de références pour tous les passionné.e.s et étudiants d'art"
     all_rights_reserved: "Tous droits réservés"
   cookies:
-    banner_text: "Nous utilisons des cookies pour améliorer ton expérience. Acceptez-tu l'utilisation des cookies ?"
+    banner_text: "Nous utilisons des cookies pour améliorer ton expérience. Acceptes-tu l'utilisation des cookies ?"
     accept: "Accepter"
     decline: "Refuser"
   loader:
@@ -750,12 +750,12 @@ fr:
     main_title: "Exprimer ton avis"
     subtitle: "Tes retours sont essentiels pour nous ! Partage tes impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design. Ton avis est précieux et nous guide dans l'optimisation de notre plateforme. Merci de faire partie de cette aventure !"
     questions:
-      question_1: "Sur une échelle de 1 à 5, comment évalueriez-tu ton expérience globale sur notre site ?*"
-      question_2: "Sur une échelle de 1 à 5, comment évalueriez-tu la facilité pour rechercher une information sur le site ?*"
-      question_3: "Sur une échelle de 1 à 5, comment évalueriez-tu la qualité et la pertinence du contenu proposé sur le site ?*"
-      question_5: "Sur une échelle de 1 à 5, comment évalueriez-tu l’utilité des listes ?*"
-      question_6: "Sur une échelle de 1 à 5, comment évalueriez-tu la réactivité et l’efficacité de notre support client ? (Répondre seulement si tu as déjà utilisé le support)"
-      question_7: "Sur une échelle de 1 à 5, comment évalueriez-tu la vitesse et la performance générale du site ?*"
+      question_1: "Sur une échelle de 1 à 5, comment évalues-tu ton expérience globale sur notre site ?*"
+      question_2: "Sur une échelle de 1 à 5, comment évalues-tu la facilité pour rechercher une information sur le site ?*"
+      question_3: "Sur une échelle de 1 à 5, comment évalues-tu la qualité et la pertinence du contenu proposé sur le site ?*"
+      question_5: "Sur une échelle de 1 à 5, comment évalues-tu l’utilité des listes ?*"
+      question_6: "Sur une échelle de 1 à 5, comment évalues-tu la réactivité et l’efficacité de notre support client ? (Réponds seulement si tu as déjà utilisé le support)"
+      question_7: "Sur une échelle de 1 à 5, comment évalues-tu la vitesse et la performance générale du site ?*"
       question_8: "Quels sont, selon toi, les points forts de notre site ?"
       question_9: "Quels sont les aspects que tu aimerais voir améliorés ?"
       question_10: "As-tu des suggestions pour améliorer l'expérience utilisateur ?"
@@ -914,9 +914,9 @@ fr:
     bug_report_updated: "Ton rapport de bug est passé au statut : %{status}"
     new_feedback: "Nouveau feedback reçu de %{user_name}"
   email_confirmation:
-    heading: "Confirmez ton email"
-    message_html: "Un email de confirmation tu as été envoyé. Clique sur le lien dans l'email pour activer ton compte.<br>Si tu ne recevez pas l'email, vérifiez ton dossier spam ou %{resend_link}."
-    resend: "demandez un nouvel envoi"
+    heading: "Confirme ton email"
+    message_html: "Un email de confirmation tu as été envoyé. Clique sur le lien dans l'email pour activer ton compte.<br>Si tu ne reçois pas l'email, vérifie ton dossier spam ou %{resend_link}."
+    resend: "demande un nouvel envoi"
     back_home: "Retour à l'accueil"
   rate_redirect:
     title: "Redirection en cours..."
@@ -1078,7 +1078,7 @@ fr:
         Nous t'informons que ton adresse e-mail a été modifiée avec succès.<br>
         La nouvelle adresse associée à ton compte est :
         <strong class="black">%{new_email}</strong>.
-      ignore: "Si tu n’avez pas demandé ce changement, merci de contacter notre support immédiatement."
+      ignore: "Si tu n’a pas demandé ce changement, merci de contacter notre support immédiatement."
       signature: "Merci pour ton attention,"
       team: "L’équipe"
       od: "Omniscient Design"

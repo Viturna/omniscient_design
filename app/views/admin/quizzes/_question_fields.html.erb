@@ -12,7 +12,7 @@
   
   <div class="admin-form-group">
     <%= f.label :content, "Énoncé de la question" %>
-    <%= f.text_area :content, class: "admin-form-input", rows: 2, placeholder: "Entrez votre question ici..." %>
+    <%= f.text_area :content, class: "admin-form-input", rows: 2, placeholder: "Entre ta question ici..." %>
   </div>
 
   <div class="admin-form-group">
@@ -24,7 +24,7 @@
   </div>
 
   <div style="margin-top: 32px;">
-    <label style="display: block; font-weight: 600; margin-bottom: 16px; font-size: 13px; text-transform: uppercase; color: #666;">Réponses (Cochez la bonne réponse)</label>
+    <label style="display: block; font-weight: 600; margin-bottom: 16px; font-size: 13px; text-transform: uppercase; color: #666;">Réponses (Coche la bonne réponse)</label>
     <div class="answers-grid">
       <% if f.object.new_record? && f.object.quiz_answers.empty? %>
         <% 4.times { f.object.quiz_answers.build } %>

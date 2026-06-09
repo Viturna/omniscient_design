@@ -61,7 +61,7 @@
       <h4>1. Authenticité et Existence</h4>
       <ul>
         <li>La fiche doit concerner un studio, une agence ou un collectif <strong>réel</strong> et identifié.</li>
-        <li>Vérifiez au préalable que ce studio n'existe pas déjà sur la plateforme.</li>
+        <li>Vérifie au préalable que ce studio n'existe pas déjà sur la plateforme.</li>
       </ul>
       <h4>2. Qualité visuelle</h4>
       <ul>
@@ -71,7 +71,7 @@
       </ul>
       <h4>3. Respect des droits d’auteur</h4>
       <ul>
-        <li>Vous devez avoir les <strong>droits d’utilisation</strong> pour les images du studio ou de ses projets.</li>
+        <li>Tu dois avoir les <strong>droits d’utilisation</strong> pour les images du studio ou de ses projets.</li>
         <li>Pas d’infraction aux droits d’auteur.</li>
       </ul>
       <h4>4. Présentation détaillée</h4>
@@ -92,7 +92,7 @@
       <ul>
         <li>Omniscient Design se réserve le droit de <strong>corriger</strong>, <strong>reformuler</strong> ou <strong>adapter</strong> les contenus soumis afin de garantir la qualité et la cohérence éditoriale de la plateforme.</li>
       </ul>
-      <p style="margin-top:32px;">Soumettre une fiche studio sur omniscientdesign.fr signifie que vous acceptez pleinement ces conditions et vous engagez à les respecter.</p>
+      <p style="margin-top:32px;">Soumettre une fiche studio sur omniscientdesign.fr signifie que tu acceptes pleinement ces conditions et tu t’engages à les respecter.</p>
       <div style="margin-top:8px;">
         <label style="font-weight: 500; cursor: pointer;">
           <input type="checkbox" 
@@ -222,7 +222,7 @@
                 name: "studio[domaine_ids][]",
                 data: {
                   controller: "select2",
-                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
+                  select2_placeholder_value: "Sélectionne un ou plusieurs domaines..."
                 }
               } %>
         </div>
@@ -237,7 +237,7 @@
       <div class="flex-form">
         <div>
           <%= form.label :presentation_generale, t("add_studio.steps.3.presentation_generale", default: "Présentation générale") %>
-          <%= form.text_area :presentation_generale, placeholder: t("add_studio.steps.3.presentation_generale_placeholder", default: "Renseignez ce champ...") %>
+          <%= form.text_area :presentation_generale, placeholder: t("add_studio.steps.3.presentation_generale_placeholder", default: "Renseigne ce champ...") %>
         </div>
         <div class="flex-button">
           <% [:formation_et_influences, :style_ou_philosophie, :creations_majeures, :heritage_et_impact].each do |field| %>
@@ -251,7 +251,7 @@
               <div data-toggle-single-field-target="container" style="display: none;">
                 <%= form.label field, t("add_studio.steps.3.#{field}", default: field.to_s.humanize) %>
                 <%= form.text_area field, 
-                  placeholder: t("add_studio.steps.3.#{field}_placeholder", default: "Renseignez ce champ..."),
+                  placeholder: t("add_studio.steps.3.#{field}_placeholder", default: "Renseigne ce champ..."),
                   data: { toggle_single_field_target: "input" } %>
               </div>
             </div>
@@ -295,7 +295,7 @@
       <h2 data-multi-step-form-target="stepTitle"><%= t('add_studio.steps.4.title', default: "Images") %></h2>
       <div class="flex-form">
         <div>
-          <%= form.label :images, "#{t('add_studio.steps.4.image', default: 'Ajouter des images')} (3 max - Glissez pour réorganiser)" %>
+          <%= form.label :images, "#{t('add_studio.steps.4.image', default: 'Ajouter des images')} (3 max - Glisse pour réorganiser)" %>
           <div id="image-fields-container" 
                class="image-grid-container"
                data-controller="sortable">

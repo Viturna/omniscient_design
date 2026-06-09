@@ -19,18 +19,18 @@
       <thead>
         <tr>
           <th>Utilisateur</th>
-          <th>Comment évalueriez-vous votre expérience globale sur notre site ?</th>
-          <th>Comment évalueriez-vous la facilité pour rechercher une information sur le site ?</th>
-          <th>comment évalueriez-vous la qualité et la pertinence du contenu proposé sur le site ?</th>
-          <th>Comment évalueriez-vous l’efficacité du quiz ?</th>
-          <th>Comment évalueriez-vous l’utilité des listes ?</th>
-          <th>Comment évalueriez-vous la réactivité et l’efficacité de notre support client ? (Répondre seulement si vous avez déjà utilisé le support)</th>
-          <th>Comment évalueriez-vous la vitesse et la performance générale du site ?</th>
-          <th>Quels sont, selon vous, les points forts de notre site ?</th>
-          <th>Quels sont les aspects que vous aimeriez voir améliorés ?</th>
-          <th>Avez-vous des suggestions pour améliorer l'expérience utilisateur ?</th>
-          <th>Y a-t-il des fonctionnalités que vous aimeriez voir ajoutées ou supprimées ?</th>
-          <th>Avez-vous des commentaires généraux ou des remarques supplémentaires que vous souhaiteriez partager ?</th>
+          <th><%= t('feedback.questions.question_1') %></th>
+          <th><%= t('feedback.questions.question_2') %></th>
+          <th><%= t('feedback.questions.question_3') %></th>
+          <th><%= t('feedback.questions.question_4') %></th>
+          <th><%= t('feedback.questions.question_5') %></th>
+          <th><%= t('feedback.questions.question_6') %></th>
+          <th><%= t('feedback.questions.question_7') %></th>
+          <th><%= t('feedback.questions.question_8') %></th>
+          <th><%= t('feedback.questions.question_9') %></th>
+          <th><%= t('feedback.questions.question_10') %></th>
+          <th><%= t('feedback.questions.question_11') %></th>
+          <th><%= t('feedback.questions.question_12') %></th>
           <th>Supprimer</th>
         </tr>
       </thead>
@@ -52,7 +52,7 @@
             <td><%= feedback.question_12 %></td>
             <td>
               <%= link_to 'Supprimer', feedback_path(feedback), 
-              data: { turbo_method: :delete, turbo_confirm: 'Êtes-vous sûr?' }, 
+              data: { turbo_method: :delete, turbo_confirm: 'Es-tu sûr?' }, 
               class: 'btn btn-danger' %>
             </td>
           </tr>

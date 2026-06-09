@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    // Assurez-vous que les targets correspondent à votre HTML
     static targets = ["statutSelect", "studentField", "establishmentField"]
 
     connect() {
@@ -29,7 +28,6 @@ export default class extends Controller {
             this.establishmentFieldTargets.forEach(field => {
                 field.style.display = showEstablishment ? "" : "none"
                 const input = field.querySelector('select, input')
-                // On ne force pas 'required' pour l'établissement car parfois optionnel, à ajuster selon votre besoin
                 if (input && showEstablishment) {
                     // input.required = true
                 } else if (input) {
@@ -40,14 +38,11 @@ export default class extends Controller {
             })
         }
     }
-
-    // --- ALIAS POUR LA COMPATIBILITÉ HTML ---
-    // C'est cette méthode que votre HTML cherche actuellement
+    
     toggleStudentFields() {
         this.toggleFields()
     }
 
-    // Alias au cas où votre HTML utiliserait encore l'ancien nom pour l'établissement
     toggleEstablishment() {
         this.toggleFields()
     }

@@ -110,9 +110,9 @@ class StudiosController < ApplicationController
     
       update_suivi_references_refusees(@studio.user) if @studio.user
       
-      flash[:notice] = "La contribution a été annulée avec succès."
+      flash[:notice] = "Ta contribution a été annulée avec succès."
     else
-      flash[:alert] = "Vous n'avez pas l'autorisation d'annuler cette contribution."
+      flash[:alert] = "Tu n'as pas l'autorisation d'annuler cette contribution."
     end
     redirect_to add_elements_path
   end
@@ -208,7 +208,7 @@ class StudiosController < ApplicationController
     return unless studio.user_id
     
     title = "Fiche validée"
-    message = I18n.t('notifications.studio_validated', name: studio.nom, default: "Votre studio #{studio.nom} a été validé.")
+    message = I18n.t('notifications.studio_validated', name: studio.nom, default: "Le studio #{studio.nom} a été validé.")
     
     Notification.create(
       user_id: studio.user_id, 
@@ -222,7 +222,7 @@ class StudiosController < ApplicationController
      return unless studio.user_id
      
      title = "Fiche refusée"
-     message = I18n.t('notifications.studio_rejected', name: studio.nom, default: "Votre studio #{studio.nom} a été refusé.")
+     message = I18n.t('notifications.studio_rejected', name: studio.nom, default: "Le studio #{studio.nom} a été refusé.")
      
      Notification.create(
        user_id: studio.user_id, 

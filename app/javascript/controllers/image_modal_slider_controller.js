@@ -14,7 +14,6 @@ export default class extends Controller {
 
         // Attacher l'écouteur d'événement pour le déclencheur d'ouverture
         document.querySelectorAll('.image-modal-trigger').forEach(el => {
-            // Assurez-vous que le déclencheur dans le HTML utilise data-action="click->image-modal-slider#openModal"
             el.addEventListener('click', this.openModal.bind(this));
         });
     }

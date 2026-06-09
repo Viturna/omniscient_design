@@ -28,7 +28,7 @@
       <h4>1. Authenticité et Unicité</h4>
       <ul>
         <li>La fiche doit concerner un designer <strong>réel</strong> et identifié.</li>
-        <li>Vérifiez au préalable que ce designer n'existe pas déjà sur la plateforme.</li>
+        <li>Vérifie au préalable que ce designer n'existe pas déjà sur la plateforme.</li>
       </ul>
       <h4>2. Qualité visuelle</h4>
       <ul>
@@ -38,7 +38,7 @@
       </ul>
       <h4>3. Respect des droits d’auteur</h4>
       <ul>
-        <li>Vous devez avoir les <strong>droits d’utilisation</strong> pour les images du designer ou de ses travaux.</li>
+        <li>Tu dois avoir les <strong>droits d’utilisation</strong> pour les images du designer ou de ses travaux.</li>
         <li>Pas d’infraction aux droits d’auteur.</li>
       </ul>
       <h4>4. Biographie détaillée</h4>
@@ -59,7 +59,7 @@
       <ul>
         <li>Omniscient Design se réserve le droit de <strong>corriger</strong>, <strong>reformuler</strong> ou <strong>adapter</strong> les contenus soumis afin de garantir la qualité et la cohérence éditoriale de la plateforme.</li>
       </ul>
-      <p style="margin-top:32px;">Soumettre une fiche designer sur omniscientdesign.fr signifie que vous acceptez pleinement ces conditions et vous engagez à les respecter.</p>
+      <p style="margin-top:32px;">Soumettre une fiche designer sur omniscientdesign.fr signifie que tu acceptes pleinement ces conditions et tu t’engages à les respecter.</p>
       <div style="margin-top:8px;">
         <label style="font-weight: 500; cursor: pointer;">
           <input type="checkbox" 
@@ -152,7 +152,7 @@
                 name: "designer[domaine_ids][]",
                 data: {
                   controller: "select2",
-                  select2_placeholder_value: "Sélectionnez un ou plusieurs domaines..."
+                  select2_placeholder_value: "Sélectionne un ou plusieurs domaines..."
                 }
               } %>
         </div>
@@ -225,7 +225,7 @@
       <h2 data-multi-step-form-target="stepTitle"><%= t('add_designer.steps.4.title', default: "Images") %></h2>
       <div class="flex-form">
         <div>
-          <%= form.label :images, "#{t('add_designer.steps.4.image', default: 'Ajouter des images')} (3 max - Glissez pour réorganiser)" %>
+          <%= form.label :images, "#{t('add_designer.steps.4.image', default: 'Ajouter des images')} (3 max - Glisse pour réorganiser)" %>
           <div id="image-fields-container" 
              class="image-grid-container"
              data-controller="sortable">

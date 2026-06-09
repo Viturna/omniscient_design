@@ -98,7 +98,7 @@ class ListsController < ApplicationController
 
     if @list.save
       # REDIRECTION ETAPE 2 : On va sur la liste avec le paramètre newly_created
-      redirect_to list_path(@list, newly_created: true), notice: I18n.t('list.create.success', default: "Liste créée ! Ajoutez maintenant vos éléments.")
+      redirect_to list_path(@list, newly_created: true), notice: I18n.t('list.create.success', default: "Liste créée ! Ajoute maintenant tes éléments.")
     else
       flash.now[:alert] = I18n.t('list.create.failure', default: "Erreur lors de la création.")
       render :new, status: :unprocessable_entity

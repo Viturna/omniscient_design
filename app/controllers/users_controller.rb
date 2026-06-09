@@ -170,7 +170,7 @@ class UsersController < ApplicationController
       @user.update(banned: true)
       redirect_to user_path(@user), notice: I18n.t('user.banned_success', default: 'Utilisateur banni avec succès.')
     else
-      redirect_to user_path(@user), alert: I18n.t('user.access.denied_admin', default: "Vous n'avez pas les permissions nécessaires.")
+      redirect_to user_path(@user), alert: I18n.t('user.access.denied_admin', default: "Tu n'as pas les permissions nécessaires.")
     end
   end
   def unban
@@ -178,7 +178,7 @@ class UsersController < ApplicationController
       @user.update(banned: false)
       flash[:notice] = I18n.t('user.unbanned_success', default: "L'utilisateur a été débanni.")
     else
-      flash[:alert] = I18n.t('user.unbanned_denied', default: "Vous ne pouvez pas débannir cet utilisateur.")
+      flash[:alert] = I18n.t('user.unbanned_denied', default: "Tu ne peux pas débannir cet utilisateur.")
     end
     redirect_to user_path(@user)
   end

@@ -22,4 +22,4 @@ Domaine.all.each do |domaine|
   end
 end
 
-puts "✨ Terminé ! Vos quiz sont disponibles dans le Hub."
+puts "✨ Terminé ! Tes quiz sont disponibles dans le Hub."

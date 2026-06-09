@@ -475,7 +475,7 @@
                 <td>
                   <div class="actions-cell" style="padding-right: 8px;">
                     <%= link_to admin_user_badge_path(ub), 
-                          data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir retirer le badge '#{ub.badge.name}' à #{ub.user.pseudo || ub.user.email} ?" },
+                          data: { turbo_method: :delete, turbo_confirm: "Es-tu sûr de vouloir retirer le badge '#{ub.badge.name}' à #{ub.user.pseudo || ub.user.email} ?" },
                           class: "action-btn delete", title: "Retirer le badge" do %>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                     <% end %>

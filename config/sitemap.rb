@@ -16,8 +16,6 @@ SitemapGenerator::Sitemap.create do
     add frise_references_path(locale: locale), priority: 0.8, changefreq: 'daily'
   end
 
-  # --- CONTENU DYNAMIQUE (Les "objets" de votre site) ---
-
   Designer.find_each do |designer|
     [:fr, :en].each do |locale|
       add designer_path(slug: designer.slug, locale: locale), lastmod: designer.updated_at, priority: 0.8, changefreq: 'weekly'

@@ -116,12 +116,12 @@ class BugReportsController < ApplicationController
     return unless bug_report.user.present?
     return if bug_report.user == current_user && current_user.admin?
 
-    title = "Suivi de votre signalement"
+    title = "Suivi de ton signalement"
     # Traduction propre du statut
     status_key = bug_report.status
     status_text = I18n.t("enums.bug_report.status.#{status_key}", default: status_key.humanize)
     
-    message = "Votre rapport est passé au statut : #{status_text}"
+    message = "Ton rapport est passé au statut : #{status_text}"
                      
     Notification.create(user: bug_report.user, notifiable: bug_report, title: title, message: message, status: :unread)
   rescue => e

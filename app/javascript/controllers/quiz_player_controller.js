@@ -101,7 +101,7 @@ export default class extends Controller {
         this.instructionTarget.style.color = "#EF4444"
       }
     } else {
-      this.instructionTarget.textContent = "Sélectionnez la bonne réponse"
+      this.instructionTarget.textContent = "Sélectionne la bonne réponse"
     }
     
     // Reset points feedback
@@ -223,7 +223,7 @@ export default class extends Controller {
       
       // Reset instruction style
       this.instructionTarget.style.color = ""
-      this.instructionTarget.textContent = this.questions[this.index].instruction || "Sélectionnez la bonne réponse"
+      this.instructionTarget.textContent = this.questions[this.index].instruction || "Sélectionne la bonne réponse"
     } else {
       this.finish()
     }

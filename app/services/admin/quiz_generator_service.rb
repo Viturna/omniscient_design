@@ -53,7 +53,7 @@ class Admin::QuizGeneratorService
       when :designer
         correct_answer = ref.designers.first.nom_designer
         question = quiz.quiz_questions.build(
-          content: "À quel designer associez-vous cette référence : '#{ref.nom_reference}' ?",
+          content: "À quel designer associes-tu cette référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
         wrong_pool = wrong_designers_pool(exclude_ids: ref.designer_ids).limit(3)

@@ -128,17 +128,13 @@ export default class extends Controller {
      * Loader vidéo plein écran bloquant jusqu’au turbo:load complet
      */
     showLoadingOverlay() {
-        // retire tout overlay existant
         const old = document.getElementById("loading")
         if (old) old.remove()
 
         const overlay = document.createElement("div")
-        // On utilise l'ID 'loading' comme demandé dans votre HTML
         overlay.id = "loading"
         overlay.setAttribute("aria-hidden", "true")
 
-        // Styles CSS intégrés pour garantir l'affichage par dessus tout (overlay)
-        // Vous pouvez retirer ceci si vous gérez le style de #loading entièrement dans votre CSS
         overlay.style.cssText = `
           position: fixed;
           inset: 0;

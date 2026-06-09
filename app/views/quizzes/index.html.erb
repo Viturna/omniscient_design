@@ -162,7 +162,7 @@
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
               <h2 style="margin: 0;">À la une cette semaine</h2>
             </div>
-            <p style="margin: 0;">Les quiz fraîchement générés pour vous entraîner.</p>
+            <p style="margin: 0;">Les quiz fraîchement générés pour t'entraîner.</p>
           </div>
           <%= render 'filters' %>
           <div class="quiz-grid">
@@ -208,7 +208,7 @@
       <% if @quizzes_a_la_une.empty? && @quizzes_normaux.empty? && @user_lists.empty? %>
         <div style="text-align: center; padding: 60px; color: #888;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-          <p>Aucun quiz ne correspond à vos filtres.</p>
+          <p>Aucun quiz ne correspond à tes filtres.</p>
           <%= link_to "Voir tous les quiz", quizzes_hub_path(category: params[:category]), style: "color: #202020; font-weight: 600; text-decoration: underline;" %>
         </div>
       <% end %>

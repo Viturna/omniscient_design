@@ -335,7 +335,7 @@
                                             <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= references_year.size %></span>
                                             <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
                                               <% references_year.each do |reference| %>
-                                                <%= link_to reference, class: "reference-point" do %>
+                                                <%= link_to reference, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                                   <% if reference.reference_images.first&.file&.attached? %>
                                                     <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
                                                   <% else %>
@@ -347,7 +347,7 @@
                                           </div>
                                         <% else %>
                                           <% references_year.each do |reference| %>
-                                            <%= link_to reference, class: "reference-point" do %>
+                                            <%= link_to reference, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                               <% if reference.reference_images.first&.file&.attached? %>
                                                 <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
                                               <% else %>
@@ -379,7 +379,7 @@
                                             <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= designers_year.size %></span>
                                             <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
                                               <% designers_year.each do |designer| %>
-                                                <%= link_to designer, class: "reference-point" do %>
+                                                <%= link_to designer, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                                   <% if designer.designer_images.first&.file&.attached? %>
                                                     <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
                                                   <% else %>
@@ -391,7 +391,7 @@
                                           </div>
                                         <% else %>
                                           <% designers_year.each do |designer| %>
-                                            <%= link_to designer, class: "reference-point" do %>
+                                            <%= link_to designer, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                               <% if designer.designer_images.first&.file&.attached? %>
                                                 <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
                                               <% else %>
@@ -423,7 +423,7 @@
                                             <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= studios_year.size %></span>
                                             <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
                                               <% studios_year.each do |studio| %>
-                                                <%= link_to studio, class: "reference-point" do %>
+                                                <%= link_to studio, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                                   <% if studio.studio_images.first&.file&.attached? %>
                                                     <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
                                                   <% else %>
@@ -435,7 +435,7 @@
                                           </div>
                                         <% else %>
                                           <% studios_year.each do |studio| %>
-                                            <%= link_to studio, class: "reference-point" do %>
+                                            <%= link_to studio, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                               <% if studio.studio_images.first&.file&.attached? %>
                                                 <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
                                               <% else %>

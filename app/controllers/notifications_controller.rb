@@ -92,7 +92,7 @@ class NotificationsController < ApplicationController
 
     target_path = if @notification.link.present?
                     @notification.link
-                  elsif @notification.notifiable_type&.safe_constantize && @notification.notifiable.present?
+                  elsif @notification.notifiable.present?
                     polymorphic_path(@notification.notifiable) rescue nil
                   end
 

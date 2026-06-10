@@ -17,14 +17,7 @@ Rails.application.routes.draw do
         patch :toggle_archive
       end
     end
-    get 'suivi_references/index'
-    get 'validation/index'
-    get 'feedbacks/index'
-    get 'reports/index'
-    get 'users/index'
-    get 'references/index'
-    get 'references/index' # Pour la redirection SEO
-    get 'dashboard/index'
+
     root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
     get "suivi_references", to: "dashboard#suivi_references"

@@ -11,11 +11,11 @@ class ReferencesController < ApplicationController
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index
-    references = Reference.where(validation: true).limit(10).order("RANDOM()")
+    references = Reference.where(validation: true).includes(:domaines, :designers, :studios, reference_images: :file_attachment).limit(10).order("RANDOM()")
     @current_page = 'accueil'
     @lists = user_signed_in? ? current_user.lists : []
 
-    candidate_ads = Ad.currently_active.relevant_for(current_user)
+    candidate_ads = Ad.currently_active.includes(image_attachment: :blob, image_mobile_attachment: :blob).relevant_for(current_user)
 
     ads = candidate_ads.sort_by { |ad| -1 * (rand * ad.weight) }
 
@@ -50,6 +50,7 @@ class ReferencesController < ApplicationController
     loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
 
     @references = Reference.where(validation: true)
+                     .includes(:domaines, :designers, :studios, reference_images: :file_attachment)
                      .where.not(id: loaded_ids)
                      .order("RANDOM()")
                      .limit(limit)
@@ -60,7 +61,8 @@ class ReferencesController < ApplicationController
     if params[:ads_order].present?
       ordered_ad_ids = params[:ads_order].split(',').map(&:to_i)
       
-      ads = Ad.where(id: ordered_ad_ids)
+      ads = Ad.includes(image_attachment: :blob, image_mobile_attachment: :blob)
+              .where(id: ordered_ad_ids)
               .index_by(&:id)
               .values_at(*ordered_ad_ids)
               .compact
@@ -91,7 +93,7 @@ class ReferencesController < ApplicationController
     }
   end
 
-  # GET /references/1 or /references/1.json
+
   def show
     @domaines = @reference.domaines
     unless @reference.validation || (user_signed_in? && (current_user.admin? || @reference.user == current_user || current_user.certified?))
@@ -110,11 +112,12 @@ class ReferencesController < ApplicationController
                        .where(domaines: { id: @domaines.ids })
                        .where(validation: true)
                        .where.not(id: @reference.id)
+                       .includes(:domaines, :designers, :studios, reference_images: :file_attachment)
                        .order("RANDOM()")
                        .limit(5)
   end
 
-  # GET /references/new
+
   def new
     @reference = Reference.new
     3.times do |i|
@@ -125,7 +128,7 @@ class ReferencesController < ApplicationController
     @selected_designers = [] 
   end
 
-  # GET /references/1/edit
+
   def edit
     @current_page = 'add_elements'
     @selected_designers = @reference.designers.pluck(:id)
@@ -138,7 +141,7 @@ class ReferencesController < ApplicationController
     end
   end
 
-  # POST /references or /references.json
+
   def create
     @reference = Reference.new(reference_params)
     @reference.user = current_user
@@ -159,7 +162,7 @@ class ReferencesController < ApplicationController
   end
   
 
-  # PATCH/PUT /references/1 or /references/1.json
+
    def update
     if @reference.update(reference_params)
       if !@reference.validation && @reference.user == current_user
@@ -174,7 +177,7 @@ class ReferencesController < ApplicationController
 
 
 
-  # PATCH/PUT /references/:slug/reject
+
   def reject
     rejection_reason = params[:rejection_reason].presence || I18n.t('references.reject.no_comment', default: 'Sans commentaire')
     @reference = Reference.friendly.find_by(slug: params[:slug])
@@ -202,7 +205,7 @@ class ReferencesController < ApplicationController
     end
   end
 
-  # DELETE /references/1 or /references/1.json
+
    def destroy
     if @reference&.destroy
       create_rejection_notification(@reference)
@@ -277,31 +280,7 @@ def save_modal
     end
   end
 
-  def update_image_credits(reference, params)
-    if params[:reference][:existing_image_credits]
-      params[:reference][:existing_image_credits].each do |blob_id, credit_text|
-        blob = ActiveStorage::Blob.find_by(id: blob_id)
-        blob&.update(metadata: { credit: credit_text.presence })
-      end
-    end
 
-    if params[:reference][:new_image_credits]
-      new_attachments = reference.images_attachments
-                              .where.not(id: reference.images.map(&:id)) # Exclut les anciens
-                              .order(:id) # On suppose que l'ordre de création = ordre du form
-                              
-      new_credits = params[:reference][:new_image_credits]
-
-      new_attachments.each_with_index do |attachment, index|
-        credit_text = new_credits[index]
-        if credit_text.present?
-          attachment.blob.update(metadata: { credit: credit_text })
-        end
-      end
-    end
-  rescue => e
-    Rails.logger.error "ERREUR update_image_credits: #{e.message}"
-  end
 
   def handle_destroy(reference, success_message)
     if reference.destroy
@@ -411,10 +390,11 @@ def save_modal
   end
 
   def set_reference
+    base_query = Reference.includes(:designers, :studios)
     @reference = if params[:id]
-                Reference.friendly.find(params[:id])
+                base_query.friendly.find(params[:id])
               else
-                Reference.friendly.find(params[:slug])
+                base_query.friendly.find(params[:slug])
               end
   rescue ActiveRecord::RecordNotFound
     redirect_to validation_path, alert: t('references.not_found') and return

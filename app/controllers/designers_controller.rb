@@ -13,7 +13,7 @@ class DesignersController < ApplicationController
   def index
     # --- OPTIMISATION ---
     designers = Designer.where(validation: true)
-                        .includes(:domaines, designer_images: { file_attachment: :blob })
+                        .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
                         .order("RANDOM()")
                         .limit(9)
 
@@ -28,7 +28,7 @@ class DesignersController < ApplicationController
 
     # --- NOUVELLE LOGIQUE DE PUB (Poids + Ciblage) ---
     # 1. On récupère les pubs actives et pertinentes pour l'utilisateur
-    candidate_ads = Ad.currently_active.relevant_for(current_user)
+    candidate_ads = Ad.currently_active.includes(image_attachment: :blob, image_mobile_attachment: :blob).relevant_for(current_user)
 
     # 2. Tri pondéré (les pubs avec un gros poids sortent plus souvent au début)
     ads = candidate_ads.sort_by { |ad| -1 * (rand * ad.weight) }
@@ -71,7 +71,7 @@ class DesignersController < ApplicationController
     # Chargement des items suivants
     new_designers = Designer.where(validation: true)
                          .where.not(id: loaded_designer_ids)
-                         .includes(:domaines, designer_images: { file_attachment: :blob })
+                         .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
                          .order("RANDOM()")
                          .limit(3)
     
@@ -91,7 +91,8 @@ class DesignersController < ApplicationController
     if params[:ads_order].present?
       ordered_ad_ids = params[:ads_order].split(',').map(&:to_i)
       # On recharge les objets Ad depuis la BDD en respectant l'ordre exact
-      ads = Ad.where(id: ordered_ad_ids)
+      ads = Ad.includes(image_attachment: :blob, image_mobile_attachment: :blob)
+              .where(id: ordered_ad_ids)
               .index_by(&:id)
               .values_at(*ordered_ad_ids)
               .compact
@@ -385,7 +386,7 @@ class DesignersController < ApplicationController
   end
 
   def set_designer
-    @designer = Designer.friendly.find(params[:slug])
+    @designer = Designer.includes(:countries).friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound
     redirect_to validation_path, alert: "Designer n'a pas été trouvée."
   end

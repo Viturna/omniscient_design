@@ -142,7 +142,7 @@ class UsersController < ApplicationController
       @users = @users.order(created_at: :desc)
     end
 
-    @paginated_users = @users.includes(:etablissement, :daily_visits).page(params[:page]).per(20)
+    @paginated_users = @users.includes(:etablissement, profile_image_attachment: :blob).page(params[:page]).per(20)
     @users_for_map = @users.includes(:etablissement).where.not(etablissement_id: nil)
   end
 

@@ -188,7 +188,7 @@
     <div class="flex-title-list">
       <h2><%= t('list.all') %></h2>
     </div>
-    <% if @list.designers.empty? && @list.references.empty? && @list.studios.empty? %>
+    <% if @selected_designers.empty? && @selected_references.empty? && @selected_studios.empty? %>
       <div class="list-empty">
         <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M36.0056 64.6022C52.5596 64.6022 65.9996 51.1622 65.9996 34.6082C65.9996 18.0542 52.5596 4.61719 36.0056 4.61719C19.4546 4.61719 6.01465 18.0542 6.01465 34.6082C6.01465 51.1622 19.4546 64.6022 36.0056 64.6022ZM36.0056 40.6022C34.7636 40.6022 33.7556 39.5942 33.7556 38.3522V21.8522C33.7556 20.6102 34.7636 19.6022 36.0056 19.6022C37.2476 19.6022 38.2556 20.6102 38.2556 21.8522V38.3522C38.2556 39.5942 37.2476 40.6022 36.0056 40.6022ZM35.9996 49.6022C34.3436 49.6022 32.9996 48.2582 32.9996 46.6022C32.9996 44.9462 34.3436 43.6022 35.9996 43.6022C37.6556 43.6022 38.9996 44.9462 38.9996 46.6022C38.9996 48.2582 37.6556 49.6022 35.9996 49.6022Z" fill="#52525D"/>
@@ -197,7 +197,7 @@
       </div>
     <% else %>
       <div class="flex-card-list">
-        <% (@list.designers + @list.references + @list.studios).sort_by { |item| item.is_a?(Reference) ? item.nom_reference.downcase : item.nom.downcase }.each do |item| %>
+        <% (@selected_designers + @selected_references + @selected_studios).sort_by { |item| item.is_a?(Reference) ? item.nom_reference.downcase : item.nom.downcase }.each do |item| %>
           <% if item.is_a?(Designer) %>
             <%= render 'designers/designer_card', designer: item %>
           <% elsif item.is_a?(Reference) %>
@@ -215,7 +215,7 @@
     <div class="flex-title-list">
       <h2><%= t('list.references') %></h2>
     </div>
-    <% if @list.references.empty? %>
+    <% if @selected_references.empty? %>
       <div class="list-empty">
         <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M36.0056 64.6022C52.5596 64.6022 65.9996 51.1622 65.9996 34.6082C65.9996 18.0542 52.5596 4.61719 36.0056 4.61719C19.4546 4.61719 6.01465 18.0542 6.01465 34.6082C6.01465 51.1622 19.4546 64.6022 36.0056 64.6022ZM36.0056 40.6022C34.7636 40.6022 33.7556 39.5942 33.7556 38.3522V21.8522C33.7556 20.6102 34.7636 19.6022 36.0056 19.6022C37.2476 19.6022 38.2556 20.6102 38.2556 21.8522V38.3522C38.2556 39.5942 37.2476 40.6022 36.0056 40.6022ZM35.9996 49.6022C34.3436 49.6022 32.9996 48.2582 32.9996 46.6022C32.9996 44.9462 34.3436 43.6022 35.9996 43.6022C37.6556 43.6022 38.9996 44.9462 38.9996 46.6022C38.9996 48.2582 37.6556 49.6022 35.9996 49.6022Z" fill="#52525D"/>
@@ -224,7 +224,7 @@
       </div>
     <% else %>
       <div class="flex-card-list">
-        <% @list.references.each do |reference| %>
+        <% @selected_references.each do |reference| %>
           <%= render 'references/reference_card', reference: reference %>
         <% end %>
       </div>
@@ -236,7 +236,7 @@
     <div class="flex-title-list">
       <h2><%= t('list.designers') %></h2>
     </div>
-    <% if @list.designers.empty?%>
+    <% if @selected_designers.empty?%>
       <div class="list-empty">
         <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M36.0056 64.6022C52.5596 64.6022 65.9996 51.1622 65.9996 34.6082C65.9996 18.0542 52.5596 4.61719 36.0056 4.61719C19.4546 4.61719 6.01465 18.0542 6.01465 34.6082C6.01465 51.1622 19.4546 64.6022 36.0056 64.6022ZM36.0056 40.6022C34.7636 40.6022 33.7556 39.5942 33.7556 38.3522V21.8522C33.7556 20.6102 34.7636 19.6022 36.0056 19.6022C37.2476 19.6022 38.2556 20.6102 38.2556 21.8522V38.3522C38.2556 39.5942 37.2476 40.6022 36.0056 40.6022ZM35.9996 49.6022C34.3436 49.6022 32.9996 48.2582 32.9996 46.6022C32.9996 44.9462 34.3436 43.6022 35.9996 43.6022C37.6556 43.6022 38.9996 44.9462 38.9996 46.6022C38.9996 48.2582 37.6556 49.6022 35.9996 49.6022Z" fill="#52525D"/>
@@ -245,7 +245,7 @@
       </div>
     <% else %>
       <div class="flex-card-list">
-        <% @list.designers.each do |designer| %>
+        <% @selected_designers.each do |designer| %>
           <%= render 'designers/designer_card', designer: designer %>
         <% end %>
       </div>
@@ -257,7 +257,7 @@
     <div class="flex-title-list">
       <h2>Studios</h2>
     </div>
-    <% if @list.studios.empty?%>
+    <% if @selected_studios.empty?%>
       <div class="list-empty">
         <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M36.0056 64.6022C52.5596 64.6022 65.9996 51.1622 65.9996 34.6082C65.9996 18.0542 52.5596 4.61719 36.0056 4.61719C19.4546 4.61719 6.01465 18.0542 6.01465 34.6082C6.01465 51.1622 19.4546 64.6022 36.0056 64.6022ZM36.0056 40.6022C34.7636 40.6022 33.7556 39.5942 33.7556 38.3522V21.8522C33.7556 20.6102 34.7636 19.6022 36.0056 19.6022C37.2476 19.6022 38.2556 20.6102 38.2556 21.8522V38.3522C38.2556 39.5942 37.2476 40.6022 36.0056 40.6022ZM35.9996 49.6022C34.3436 49.6022 32.9996 48.2582 32.9996 46.6022C32.9996 44.9462 34.3436 43.6022 35.9996 43.6022C37.6556 43.6022 38.9996 44.9462 38.9996 46.6022C38.9996 48.2582 37.6556 49.6022 35.9996 49.6022Z" fill="#52525D"/>
@@ -266,7 +266,7 @@
       </div>
     <% else %>
       <div class="flex-card-list">
-        <% @list.studios.each do |studio| %>
+        <% @selected_studios.each do |studio| %>
           <%= render 'studios/studio_card', studio: studio %>
         <% end %>
       </div>

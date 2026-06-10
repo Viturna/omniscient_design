@@ -155,36 +155,36 @@ class SearchController < ApplicationController
     if params[:tab] == "frise"
       @references = Reference.where(validation: true)
                       .select(:id, :nom_reference, :date_reference, :slug)
-                      .includes(:notions, :designers, :domaines, reference_images: { file_attachment: :blob })
+                      .includes(:domaines, reference_images: { file_attachment: :blob })
                       .order(Arel.sql('date_reference'))
 
       @designers = Designer.where(validation: true)
                           .select(:id, :nom, :prenom, :date_naissance, :slug)
-                          .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
+                          .includes(:countries, designer_images: { file_attachment: :blob })
                           .order(:date_naissance)
                         
       @studios = Studio.where(validation: true)
                           .select(:id, :nom, :date_creation, :slug)
-                          .includes(:domaines, :countries, studio_images: { file_attachment: :blob })
+                          .includes(:countries, studio_images: { file_attachment: :blob })
                           .order(:date_creation)
     else
       @references = Reference.where(validation: true)
                       .select(:id, :nom_reference, :date_reference, :slug)
-                      .includes(:notions, :designers, :domaines)
+                      .includes(:domaines)
                       .order(Arel.sql('nom_reference'))
                       .page(params[:page])
                       .per(per_page)
 
       @designers = Designer.where(validation: true)
                        .select(:id, :nom, :prenom, :date_naissance, :slug)
-                       .includes(:domaines, :countries)
+                       .includes(:countries)
                        .order(:nom)
                        .page(params[:page])
                        .per(per_page)
 
       @studios = Studio.where(validation: true)
                           .select(:id, :nom, :date_creation, :slug)
-                          .includes(:domaines, :countries)
+                          .includes(:countries)
                           .order(:nom)
                           .page(params[:page])
                           .per(per_page)
@@ -195,11 +195,11 @@ class SearchController < ApplicationController
       if filtered_domains.any?
         # Use subqueries to avoid PostgreSQL reserved keyword issues
         domain_reference_ids = Reference.joins(:domaines).where(domaines: { id: filtered_domains }).pluck(:id)
-        @references = @references.where(id: domain_reference_ids).includes(:notions, :designers, :domaines)
+        @references = @references.where(id: domain_reference_ids).includes(:domaines)
         domain_designer_ids = Designer.joins(:domaines).where(domaines: { id: filtered_domains }).pluck(:id)
-        @designers = @designers.where(id: domain_designer_ids).includes(:domaines, :countries)
+        @designers = @designers.where(id: domain_designer_ids).includes(:countries)
         domain_studio_ids = Studio.joins(:domaines).where(domaines: { id: filtered_domains }).pluck(:id)
-        @studios = @studios.where(id: domain_studio_ids).includes(:domaines, :countries)
+        @studios = @studios.where(id: domain_studio_ids).includes(:countries)
       end
     end
 

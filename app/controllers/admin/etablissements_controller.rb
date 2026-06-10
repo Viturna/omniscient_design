@@ -114,7 +114,13 @@ class Admin::EtablissementsController < ApplicationController
   end
 
   def etablissement_params
-    params.require(:etablissement).permit! # Permet tout pour simplifier ici
+    params.require(:etablissement).permit(
+      :name, :uai, :city, :zip_code, :address, :academy, :region, 
+      :statut_public_prive, :type_etablissement, :phone, :messagerie, 
+      :website, :voie_generale, :voie_technologique, :voie_professionnelle, 
+      :post_bac, :section_arts, :section_cinema, :section_theatre, 
+      :latitude, :longitude
+    )
   end
 
   def authenticate_admin!

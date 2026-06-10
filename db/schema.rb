@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_07_214148) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_093118) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -154,6 +154,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_214148) do
     t.boolean "validation", default: false
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
+    t.index ["validated_by_user_id"], name: "index_designers_on_validated_by_user_id"
   end
 
   create_table "designers_domaines", id: false, force: :cascade do |t|
@@ -449,6 +450,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_214148) do
     t.boolean "validation", default: false
     t.index ["slug"], name: "index_references_on_slug", unique: true
     t.index ["user_id"], name: "index_references_on_user_id"
+    t.index ["validated_by_user_id"], name: "index_references_on_validated_by_user_id"
   end
 
   create_table "references_domaines", id: false, force: :cascade do |t|
@@ -465,6 +467,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_214148) do
     t.integer "referrer_id"
     t.boolean "reward_claimed"
     t.datetime "updated_at", null: false
+    t.index ["referee_id"], name: "index_referrals_on_referee_id"
+    t.index ["referrer_id"], name: "index_referrals_on_referrer_id"
   end
 
   create_table "rejected_designers", force: :cascade do |t|
@@ -618,6 +622,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_214148) do
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["etablissement_id"], name: "index_users_on_etablissement_id"
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

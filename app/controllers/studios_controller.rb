@@ -249,7 +249,7 @@ class StudiosController < ApplicationController
   end
 
   def set_studio
-    @studio = Studio.friendly.find(params[:slug])
+    @studio = Studio.includes(:countries).friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound
     redirect_to studios_path, alert: "Studio introuvable."
   end

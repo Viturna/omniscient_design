@@ -104,4 +104,6 @@ Rails.application.configure do
   # -------------------------------------------------------
 
   config.log_level = :debug
+
+
 end

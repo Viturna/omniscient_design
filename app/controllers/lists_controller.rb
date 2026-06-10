@@ -8,9 +8,9 @@ class ListsController < ApplicationController
     ]
     
   def index
-    @lists = current_user.lists
-    @editor_lists = current_user.editable_lists
-    @visitor_lists = current_user.visitor_lists
+    @lists = current_user.lists.includes(:references)
+    @editor_lists = current_user.editable_lists.includes(:references)
+    @visitor_lists = current_user.visitor_lists.includes(:references)
     @current_page = 'listes'
   end
 
@@ -23,14 +23,14 @@ class ListsController < ApplicationController
 
     # Designers
     selected_designer_ids = @list.designer_ids
-    @selected_designers = Designer.where(id: selected_designer_ids, validation: true).order(:nom)
+    @selected_designers = Designer.where(id: selected_designer_ids, validation: true).includes(:countries).order(:nom)
     @other_designers = Designer.where(validation: true)
                                .where.not(id: selected_designer_ids)
                                .order(:nom)
                                .page(params[:designers_page]).per(10)
 
     selected_studio_ids = @list.studio_ids
-    @selected_studios = Studio.where(id: selected_studio_ids, validation: true).order(:nom)
+    @selected_studios = Studio.where(id: selected_studio_ids, validation: true).includes(:countries).order(:nom)
     @other_studios = Studio.where(validation: true)
                            .where.not(id: selected_studio_ids)
                            .order(:nom)
@@ -38,7 +38,7 @@ class ListsController < ApplicationController
 
     # Œuvres
     selected_reference_ids = @list.reference_ids
-    @selected_references = Reference.where(id: selected_reference_ids, validation: true).order(:nom_reference)
+    @selected_references = Reference.where(id: selected_reference_ids, validation: true).includes(:domaines).order(:nom_reference)
     @other_references = Reference.where(validation: true)
                            .where.not(id: selected_reference_ids)
                            .order(:nom_reference)
@@ -59,14 +59,14 @@ class ListsController < ApplicationController
     if @list
       # Designers
       selected_designer_ids = @list.designer_ids
-      @selected_designers = Designer.where(id: selected_designer_ids, validation: true).order(:nom)
+      @selected_designers = Designer.where(id: selected_designer_ids, validation: true).includes(:countries).order(:nom)
       @other_designers = Designer.where(validation: true)
                                  .where.not(id: selected_designer_ids)
                                  .order(:nom)
                                  .page(params[:designers_page]).per(10)
 
       selected_studio_ids = @list.studio_ids
-      @selected_studios = Studio.where(id: selected_studio_ids, validation: true).order(:nom)
+      @selected_studios = Studio.where(id: selected_studio_ids, validation: true).includes(:countries).order(:nom)
       @other_studios = Studio.where(validation: true)
                              .where.not(id: selected_studio_ids)
                              .order(:nom)
@@ -74,7 +74,7 @@ class ListsController < ApplicationController
 
       # Œuvres
       selected_reference_ids = @list.reference_ids
-      @selected_references = Reference.where(id: selected_reference_ids, validation: true).order(:nom_reference)
+      @selected_references = Reference.where(id: selected_reference_ids, validation: true).includes(:domaines).order(:nom_reference)
       @other_references = Reference.where(validation: true)
                              .where.not(id: selected_reference_ids)
                              .order(:nom_reference)

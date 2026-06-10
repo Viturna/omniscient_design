@@ -8,7 +8,7 @@ class QuizzesController < ApplicationController
     if params[:category].present? || params[:domaine_id].present? || params[:count_range].present? || params[:status].present?
       @view_mode = 'explore'
       
-      # Eager loading massif pour éviter les N+1 sur les domaines et questions
+      # Eager loading restauré
       base_quizzes = Quiz.active.where(quiz_type: 'static').includes(:domaine, :quiz_questions)
 
     # Filtrage par Domaine
@@ -67,19 +67,15 @@ class QuizzesController < ApplicationController
     # 1. On cherche d'abord dans les questions
     @quiz_covers = Reference.joins(:quiz_questions)
                             .where(quiz_questions: { quiz_id: quiz_ids })
-                            .select('"references".*, quiz_questions.quiz_id as q_id')
-                            .includes(reference_images: { file_attachment: :blob })
-                            .group_by(&:q_id)
-                            .transform_values(&:first)
+                            .select('DISTINCT ON (quiz_questions.quiz_id) "references".*, quiz_questions.quiz_id as q_id')
+                            .index_by(&:q_id)
     
     # 2. On pré-charge les images des domaines pour les fallbacks
-    domaine_ids = base_quizzes.map(&:domaine_id).compact.uniq
+    domaine_ids = base_quizzes.pluck(:domaine_id).compact.uniq
     @domaine_covers = Reference.joins(:domaines)
                                .where(domaines: { id: domaine_ids })
-                               .select('"references".*, domaines.id as d_id')
-                               .includes(reference_images: { file_attachment: :blob })
-                               .group_by(&:d_id)
-                               .transform_values(&:first)
+                               .select('DISTINCT ON (domaines.id) "references".*, domaines.id as d_id')
+                               .index_by(&:d_id)
     
     # On charge TOUTES les soumissions de l'utilisateur pour éviter les N+1 dans la vue
     @user_submissions_by_quiz = current_user.quiz_submissions.index_by(&:quiz_id)
@@ -119,18 +115,14 @@ class QuizzesController < ApplicationController
       quiz_ids = @quizzes_jeux_a_la_une.pluck(:id)
       @quiz_covers = Reference.joins(:quiz_questions)
                               .where(quiz_questions: { quiz_id: quiz_ids })
-                              .select('"references".*, quiz_questions.quiz_id as q_id')
-                              .includes(reference_images: { file_attachment: :blob })
-                              .group_by(&:q_id)
-                              .transform_values(&:first)
+                              .select('DISTINCT ON (quiz_questions.quiz_id) "references".*, quiz_questions.quiz_id as q_id')
+                              .index_by(&:q_id)
                               
-      domaine_ids = @quizzes_jeux_a_la_une.map(&:domaine_id).compact.uniq
+      domaine_ids = @quizzes_jeux_a_la_une.pluck(:domaine_id).compact.uniq
       @domaine_covers = Reference.joins(:domaines)
                                  .where(domaines: { id: domaine_ids })
-                                 .select('"references".*, domaines.id as d_id')
-                                 .includes(reference_images: { file_attachment: :blob })
-                                 .group_by(&:d_id)
-                                 .transform_values(&:first)
+                                 .select('DISTINCT ON (domaines.id) "references".*, domaines.id as d_id')
+                                 .index_by(&:d_id)
                                  
       # Préchargement des soumissions
       @user_submissions_by_quiz = current_user.quiz_submissions.where(quiz_id: quiz_ids).index_by(&:quiz_id)
@@ -142,9 +134,9 @@ class QuizzesController < ApplicationController
     @leaderboard_type = params[:type] || 'season'
     
     if @leaderboard_type == 'global'
-      @users = User.where('total_quiz_points > 0').order(total_quiz_points: :desc)
+      @users = User.where('total_quiz_points > 0').includes(profile_image_attachment: :blob).order(total_quiz_points: :desc)
     else
-      @users = User.where('quiz_points > 0').order(quiz_points: :desc)
+      @users = User.where('quiz_points > 0').includes(profile_image_attachment: :blob).order(quiz_points: :desc)
     end
     
     if params[:query].present?

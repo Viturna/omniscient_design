@@ -90,7 +90,7 @@
         <div class="slider-dots">
           <% designer.designer_images.each_with_index do |designer_image, index| %>
             <button class="slider-dot <%= 'active' if index == 0 %>" 
-                    data-action="click- aria-label="Diapositive">slider#switchSlide" 
+                    data-action="click->slider#switchSlide" 
               data-slider-index-value="<%= index %>" 
               data-slider-target="dot"></button>
           <% end %>

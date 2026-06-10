@@ -26,6 +26,19 @@ export default class extends Controller {
         noResults: () => "Aucun résultat trouvé"
       }
     })
+
+    const ariaLabel = this.selectTarget.getAttribute('aria-label') || "Sélection d'utilisateurs";
+    const selection = $(this.selectTarget).next('.select2-container').find('.select2-selection');
+    if (selection.length) {
+      selection.attr('aria-label', ariaLabel);
+    }
+
+    $(this.selectTarget).on('select2:open', () => {
+      const searchField = document.querySelector('.select2-search__field');
+      if (searchField) {
+        searchField.setAttribute('aria-label', ariaLabel);
+      }
+    });
   }
 
   toggleSelection() {

@@ -16,6 +16,12 @@ export default class extends Controller {
       dropdownParent: $(this.element).closest('td') // Évite les problèmes de scroll parent
     });
 
+    const ariaLabel = this.element.getAttribute('aria-label') || "Attribuer des notions...";
+    const selection = $(this.element).next('.select2-container').find('.select2-selection');
+    if (selection.length) {
+      selection.attr('aria-label', ariaLabel);
+    }
+
     // 2. Écoute l'ouverture pour corriger le scroll et focus
     $(this.element).on('select2:open', () => {
       const results = document.querySelector('.select2-results__options');
@@ -24,6 +30,7 @@ export default class extends Controller {
       // Auto-focus sur le champ de recherche
       const searchField = document.querySelector('.select2-search__field');
       if (searchField) {
+        searchField.setAttribute('aria-label', ariaLabel);
         searchField.focus();
         searchField.placeholder = "Tape pour chercher une notion...";
       }

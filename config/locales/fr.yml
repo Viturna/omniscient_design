@@ -10,11 +10,18 @@ fr:
   loader:
     unsupported_browser: "Ton navigateur ne supporte pas la vidéo."
   global:
+    merci_contribution: "Merci pour ta contribution !"
+    en_cours_traitement: "Ta fiche est actuellement en cours de traitement. Merci de noter que ce processus peut prendre quelques jours. Tu seras informé(e) via ton compte dès que celle-ci sera traitée."
+
     modifier: "Modifier"
     supprimer: "Supprimer"
     confirm_delete_contribution: "Es-tu sûr(e) de vouloir supprimer cette contribution ?"
     designers: "Designers"
     references: "Références"
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
+
   header:
     explore: "Explorer"
     training: "Entraîne-toi !"
@@ -115,6 +122,10 @@ fr:
     domains: "Domaines"
     designers: "Designers"
     references: "Références"
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
+
     server_error: "Erreur serveur"
   mainpopup:
     title: "Omniscient design"
@@ -720,6 +731,10 @@ fr:
     copy_link: "Copier le lien"
     link_copied: "Lien copié"
     references: "Références"
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
+
     designers: "Designers"
     all: "Tout"
     selected_designers: "Designers sélectionnés"
@@ -743,6 +758,10 @@ fr:
     buttons:
       designers: "Designers"
       references: "Références"
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
+
   feedback:
     title: "Exprimer ton avis - Omniscient Design"
     description: "Tes retours sont essentiels pour nous ! Partage tes impressions, suggestions et commentaires pour nous aider à améliorer Omniscient Design."
@@ -945,6 +964,10 @@ fr:
       denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
     not_found: "Designer non trouvé."
   references:
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
+
     notions: "Notion(s)"
     presentation_generale: "Présentation générale"
     contexte_historique: "Contexte Historique"
@@ -962,30 +985,30 @@ fr:
     enrichissement: "A enrichi ton apprentissage en ajoutant cette référence le"
     validation: "a validé la référence"
     decouvrir_autres: "Découvrir d'autres références"
-    admin:
-      users:
-        index:
-          title: "Gestion des Utilisateurs"
-          total_members: "Total Membres"
-          new_members: "Nouveaux"
-          active_members: "Actifs"
-          newsletter: "Newsletter"
-          out_of_members: "sur %{count} membres"
-          export_csv: "Exporter la liste en CSV"
-          signups: "Inscriptions"
-          visits: "Visites"
-          acquisition: "Acquisition"
-          status_distribution: "Répartition Statut"
-      etablissements:
-        index:
-          title: "Gestion des Établissements"
-          total_etablissements: "Total Établissements"
-          active_etablissements: "Établissements Actifs"
-          linked_users: "Utilisateurs Rattachés"
-          search_placeholder: "Rechercher par nom, UAI, ville..."
-          search: "Rechercher"
-          clear: "Effacer"
-          export_csv: "Exporter Actifs CSV"
+  admin:
+    users:
+      index:
+        title: "Gestion des Utilisateurs"
+        total_members: "Total Membres"
+        new_members: "Nouveaux"
+        active_members: "Actifs"
+        newsletter: "Newsletter"
+        out_of_members: "sur %{count} membres"
+        export_csv: "Exporter la liste en CSV"
+        signups: "Inscriptions"
+        visits: "Visites"
+        acquisition: "Acquisition"
+        status_distribution: "Répartition Statut"
+    etablissements:
+      index:
+        title: "Gestion des Établissements"
+        total_etablissements: "Total Établissements"
+        active_etablissements: "Établissements Actifs"
+        linked_users: "Utilisateurs Rattachés"
+        search_placeholder: "Rechercher par nom, UAI, ville..."
+        search: "Rechercher"
+        clear: "Effacer"
+        export_csv: "Exporter Actifs CSV"
     panneau_admin: "Panneau d'administration"
     valider_reference: "Valider l'reference"
     modifier_reference: "Modifier l'reference"
@@ -1002,6 +1025,10 @@ fr:
     annuler: "Annuler"
     creer_liste: "Créer une liste"
     references: "Références"
+    no_notion: "Aucune notion n'est associée à cette référence."
+    domaine_non_specifie: "Domaine non spécifié"
+    access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."
+
     no_notion: "Aucune notion n'est associée à cette référence."
     domaine_non_specifie: "Domaine non spécifié"
     access_denied: "Tu n'as pas l'autorisation d'accéder à cette référence."

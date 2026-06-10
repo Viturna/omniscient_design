@@ -13,7 +13,7 @@ class BugReport < ApplicationRecord
   validates :url,
             format: {
               with: URI::DEFAULT_PARSER.make_regexp(%w[http https]),
-              message: "doit être une URL HTTP ou HTTPS valide"
+              message: 'doit être une URL HTTP ou HTTPS valide'
             },
             allow_blank: true
 end

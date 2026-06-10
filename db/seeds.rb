@@ -23,7 +23,6 @@ require 'uri'
 #   puts "⚠️ Fichier 'domaine.csv' non trouvé."
 # end
 
-
 # --- Établissements ---
 # puts "\n--- Import des Établissements ---"
 # def extract_uai_from_email(email_string)
@@ -98,7 +97,6 @@ require 'uri'
 #   puts "⚠️ Fichier 'pays.csv' non trouvé."
 # end
 
-
 # ==============================================================================
 # --- 2. GESTION DES BADGES (Simple String) ---
 # ==============================================================================
@@ -133,12 +131,12 @@ require 'uri'
 #   { name: "Donateur Bronze", category: "donor", level: "bronze", threshold: 5, description: "Don cumulé de 5€.", filename: "donateur_bronze.png" },
 #   { name: "Donateur Argent", category: "donor", level: "silver", threshold: 20, description: "Don cumulé de 20€.", filename: "donateur_argent.png" },
 #   { name: "Donateur Or", category: "donor", level: "gold", threshold: 50, description: "Don cumulé de 50€.", filename: "donateur_or.png" },
-# 
+#
 #   # --- GAMERS (Niveaux) ---
 #   { name: "Gamer Bronze", category: "gamer", level: "bronze", threshold: 500, description: "Tu as cumulé 500 points aux quiz. Bon début !", filename: "gamer_bronze.png" },
 #   { name: "Gamer Argent", category: "gamer", level: "silver", threshold: 1000, description: "Tu as cumulé 1000 points aux quiz. La passion grandit !", filename: "gamer_argent.png" },
 #   { name: "Gamer Or", category: "gamer", level: "gold", threshold: 2500, description: "Tu as cumulé 2500 points aux quiz. Un(e) véritable expert(e) !", filename: "gamer_or.png" },
-# 
+#
 #   # --- COMPÉTITEURS (Niveaux) ---
 #   { name: "Compétiteur Bronze", category: "competitor", level: "bronze", threshold: 3, description: "Tu as atteint le Top 3 du classement général. Quel exploit !", filename: "competiteur_bronze.png" },
 #   { name: "Compétiteur Argent", category: "competitor", level: "silver", threshold: 2, description: "Tu as atteint le Top 2 du classement général. Presque au sommet !", filename: "competiteur_argent.png" },
@@ -154,7 +152,7 @@ require 'uri'
 #     description: data[:description],
 #     image_name: data[:filename]
 #   )
-  
+
 #   if badge.save
 #     puts "✅ Badge '#{badge.name}' : OK (Image liée : #{badge.image_name})"
 #   else

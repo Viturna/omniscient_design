@@ -10,7 +10,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         resource.email = data['info']['email'] if resource.email.blank?
         resource.firstname = data['info']['first_name'] if resource.firstname.blank?
         resource.lastname = data['info']['last_name'] if resource.lastname.blank?
-        
+
         # Très important : on fixe le provider et l'uid pour le formulaire caché
         resource.provider = data['provider']
         resource.uid = data['uid']
@@ -19,24 +19,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
- def create
+  def create
     build_resource(sign_up_params)
 
-    if session['devise.omniauth_data'].present?
-      resource.skip_confirmation!
-    end
+    resource.skip_confirmation! if session['devise.omniauth_data'].present?
 
     resource.save
 
     yield resource if block_given?
 
     if resource.persisted?
-      
+
       if params[:user][:referral_code].present?
         referrer = User.find_by(referral_code: params[:user][:referral_code])
-        if referrer
-          Referral.create(referrer: referrer, referee: resource, reward_claimed: false)
-        end
+        Referral.create(referrer: referrer, referee: resource, reward_claimed: false) if referrer
       end
 
       session.delete('devise.omniauth_data') # Nettoyage session
@@ -44,7 +40,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       service = GamificationService.new(resource)
       service.check_omniscient_user
       service.check_early_adopter
-      
+
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
         sign_up(resource_name, resource)
@@ -58,32 +54,29 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else
       clean_up_passwords resource
       set_minimum_password_length
-      
-      @etablissements = Etablissement.order(:city) 
-      
+
+      @etablissements = Etablissement.order(:city)
+
       respond_with resource
     end
   end
+
   def edit
     @current_page = 'profil'
     super
   end
 
   def update
-    if params[:user][:remove_profile_image] == '1'
-      resource.profile_image.purge
-    end
+    resource.profile_image.purge if params[:user][:remove_profile_image] == '1'
     params[:user].delete(:remove_profile_image)
 
     update_params = account_update_params
 
     if resource.provider.present?
       update_params = update_params.except(:current_password)
-      
-      if update_params[:password].blank?
-        update_params = update_params.except(:password, :password_confirmation)
-      end
-      
+
+      update_params = update_params.except(:password, :password_confirmation) if update_params[:password].blank?
+
       updated = resource.update(update_params)
     else
       updated = resource.update_with_password(update_params)
@@ -101,16 +94,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def destroy
     delete_reason = params[:delete_reason]
-    
+
     notify_admins_of_deletion(resource, delete_reason)
 
     super
   end
-  
- def unlink_provider
+
+  def unlink_provider
     current_user.update(provider: nil, uid: nil)
-    
-    redirect_to edit_user_registration_path, notice: "Ton compte a été délié avec succès. Pense à définir un mot de passe si ce n'est pas déjà fait."
+
+    redirect_to edit_user_registration_path,
+                notice: "Ton compte a été délié avec succès. Pense à définir un mot de passe si ce n'est pas déjà fait."
   end
 
   def check_email
@@ -126,33 +120,35 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [
-      :firstname, :lastname, :pseudo, :rgpd_consent, :statut, 
-      :etablissement_id, :how_did_you_hear, :study_level, :newsletter, 
-      :provider, :uid, :country_id, :profile_image
-    ])
-    
-    devise_parameter_sanitizer.permit(:account_update, keys: [
-      :firstname, :lastname, :pseudo, :statut, :etablissement_id, 
-      :how_did_you_hear, :study_level, :newsletter, 
-      :country_id, :profile_image, :daily_reference_push, :daily_reference_email, :remove_profile_image
-    ])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[
+                                        firstname lastname pseudo rgpd_consent statut
+                                        etablissement_id how_did_you_hear study_level newsletter
+                                        provider uid country_id profile_image
+                                      ])
+
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[
+                                        firstname lastname pseudo statut etablissement_id
+                                        how_did_you_hear study_level newsletter
+                                        country_id profile_image daily_reference_push daily_reference_email remove_profile_image
+                                      ])
   end
 
-  def after_inactive_sign_up_path_for(resource)
+  def after_inactive_sign_up_path_for(_resource)
     new_user_session_path(verification_sent: true)
   end
+
   private
 
-def create_admin_notification_for_signup(user)
-    title = "Nouvelle inscription"
-    message = I18n.t('notifications.new_user_registered', name: user.full_name, default: "Nouvel utilisateur inscrit : #{user.full_name} - Cliquer pour voir les utilisateurs.")
-    
+  def create_admin_notification_for_signup(user)
+    title = 'Nouvelle inscription'
+    message = I18n.t('notifications.new_user_registered', name: user.full_name,
+                                                          default: "Nouvel utilisateur inscrit : #{user.full_name} - Cliquer pour voir les utilisateurs.")
+
     User.where(role: 'admin').each do |recipient|
       Notification.create!(
-        user: recipient, 
-        notifiable: user, 
-        title: title, 
+        user: recipient,
+        notifiable: user,
+        title: title,
         message: message,
         link: users_path,
         status: :unread
@@ -161,21 +157,21 @@ def create_admin_notification_for_signup(user)
   end
 
   def notify_admins_of_deletion(user, reason)
-    title = "Compte supprimé"
-    reason_text = reason.present? ? reason : "Aucune raison spécifiée."
-    
+    title = 'Compte supprimé'
+    reason_text = reason.present? ? reason : 'Aucune raison spécifiée.'
+
     message = "Compte supprimé : #{user.full_name} (ID: #{user.id}). Raison du départ : #{reason_text}"
 
     User.where(role: 'admin').each do |recipient|
       Notification.create(
-        user: recipient, 
+        user: recipient,
         notifiable: recipient,
         title: title,
         message: message,
         status: :unread
       )
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Erreur lors de la notification de suppression de compte : #{e.message}"
   end
 end

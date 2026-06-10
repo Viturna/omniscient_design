@@ -1,7 +1,7 @@
 class BugReportsController < ApplicationController
   before_action :authenticate_user!, only: []
-  before_action :authenticate_admin!, only: [:index, :show, :destroy, :update_status]
-  before_action :set_bug_report, only: [:show, :destroy, :update_status]
+  before_action :authenticate_admin!, only: %i[index show destroy update_status]
+  before_action :set_bug_report, only: %i[show destroy update_status]
   layout 'admin', only: [:index]
 
   def index
@@ -16,16 +16,16 @@ class BugReportsController < ApplicationController
     # --- 2. GRAPHIQUE ÉVOLUTION ---
     # Par défaut sur 6 mois, groupé par mois
     start_date = 6.months.ago.to_date
-    @evolution_bugs = BugReport.where("created_at >= ?", start_date)
-                               .group_by_month(:created_at, format: "%b %Y")
+    @evolution_bugs = BugReport.where('created_at >= ?', start_date)
+                               .group_by_month(:created_at, format: '%b %Y')
                                .count
 
     # --- 3. GRAPHIQUE RÉPARTITION ---
     # Utilisation des clés de l'enum ou traduction
     @repartition_status = {
-      "À faire" => @bugs_todo,
-      "En cours" => @bugs_in_progress,
-      "Corrigé" => @bugs_resolved
+      'À faire' => @bugs_todo,
+      'En cours' => @bugs_in_progress,
+      'Corrigé' => @bugs_resolved
     }
 
     # --- 4. TABLEAU PRINCIPAL ---
@@ -43,7 +43,7 @@ class BugReportsController < ApplicationController
   def create
     @bug_report = BugReport.new(bug_report_params)
     @bug_report.user = current_user
-    
+
     # Check investigator (Gamification)
     GamificationService.new(current_user).check_investigator if current_user.present?
 
@@ -71,8 +71,8 @@ class BugReportsController < ApplicationController
   end
 
   def update_status
-    # On convertit le paramètre en integer si l'enum est stocké en integer, 
-    # ou on passe la string si c'est stocké en string. 
+    # On convertit le paramètre en integer si l'enum est stocké en integer,
+    # ou on passe la string si c'est stocké en string.
     # Rails gère souvent ça tout seul, mais attention aux conversions.
     new_status = params[:status]
 
@@ -99,16 +99,16 @@ class BugReportsController < ApplicationController
   end
 
   def notify_admins_of_new_bug(bug_report)
-    title = "Nouveau bug signalé"
-    user_name = bug_report.user.present? ? bug_report.user.pseudo : "Visiteur anonyme"
-    message = I18n.t('notifications.new_bug_report', 
-                     user_name: user_name, 
+    title = 'Nouveau bug signalé'
+    user_name = bug_report.user.present? ? bug_report.user.pseudo : 'Visiteur anonyme'
+    message = I18n.t('notifications.new_bug_report',
+                     user_name: user_name,
                      default: "Nouveau bug signalé par #{user_name}.")
 
-    User.where(role: 'admin').each do |user| 
+    User.where(role: 'admin').each do |user|
       Notification.create(user_id: user.id, notifiable: bug_report, title: title, message: message, status: :unread)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "ERREUR notify_admins_of_new_bug: #{e.message}"
   end
 
@@ -116,15 +116,15 @@ class BugReportsController < ApplicationController
     return unless bug_report.user.present?
     return if bug_report.user == current_user && current_user.admin?
 
-    title = "Suivi de ton signalement"
+    title = 'Suivi de ton signalement'
     # Traduction propre du statut
     status_key = bug_report.status
     status_text = I18n.t("enums.bug_report.status.#{status_key}", default: status_key.humanize)
-    
+
     message = "Ton rapport est passé au statut : #{status_text}"
-                     
+
     Notification.create(user: bug_report.user, notifiable: bug_report, title: title, message: message, status: :unread)
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "ERREUR notify_user_of_status_update: #{e.message}"
   end
 end

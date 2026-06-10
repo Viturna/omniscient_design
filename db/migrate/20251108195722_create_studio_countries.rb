@@ -6,6 +6,6 @@ class CreateStudioCountries < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    add_index :studio_countries, [:studio_id, :country_id], unique: true
+    add_index :studio_countries, %i[studio_id country_id], unique: true
   end
 end

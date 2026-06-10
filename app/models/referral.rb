@@ -12,9 +12,9 @@ class Referral < ApplicationRecord
   private
 
   def referrer_cannot_be_referee
-    if referrer == referee
-      errors.add(:referrer, "ne peut pas être le même que le filleul.")
-    end
+    return unless referrer == referee
+
+    errors.add(:referrer, 'ne peut pas être le même que le filleul.')
   end
 
   def check_referrer_badge
@@ -25,9 +25,9 @@ class Referral < ApplicationRecord
     Notification.create(
       user: referrer,
       notifiable: self,
-      title: "Nouveau.elle filleul.e !",
+      title: 'Nouveau.elle filleul.e !',
       message: "#{referee&.pseudo || 'Un.e utilisateur.rice'} a utilisé ton code de parrainage. Merci pour ton soutien !",
-      link: "/parrainage",
+      link: '/parrainage',
       status: :unread
     )
   end

@@ -1,4 +1,3 @@
-
 class Designer < ApplicationRecord
   extend FriendlyId
   friendly_id :nom_designer, use: :slugged
@@ -17,7 +16,6 @@ class Designer < ApplicationRecord
   validates :countries, length: { maximum: 3,
                                   message: I18n.t('errors.messages.max_countries') }
 
-  
   has_many :designers_domaines, dependent: :destroy
   has_many :domaines, through: :designers_domaines
 
@@ -32,9 +30,9 @@ class Designer < ApplicationRecord
   attribute :source, :json, default: []
 
   has_many :designer_images, -> { order(position: :asc) }, dependent: :destroy
-  accepts_nested_attributes_for :designer_images, allow_destroy: true, 
-                                reject_if: proc { |attributes| attributes['file'].blank? }, 
-                                limit: 3
+  accepts_nested_attributes_for :designer_images, allow_destroy: true,
+                                                  reject_if: proc { |attributes| attributes['file'].blank? },
+                                                  limit: 3
 
   attr_accessor :rejection_reason
 
@@ -49,27 +47,27 @@ class Designer < ApplicationRecord
   private
 
   def valid_birth_year
-    if date_naissance.present?
-      year = date_naissance.to_i
-      current_year = Date.current.year
-      if year < 0 || year > current_year
-      errors.add(:date_naissance,
-                 I18n.t('errors.messages.birth_year_invalid',
-                        current_year: current_year))
-      end
-    end
+    return unless date_naissance.present?
+
+    year = date_naissance.to_i
+    current_year = Date.current.year
+    return unless year < 0 || year > current_year
+
+    errors.add(:date_naissance,
+               I18n.t('errors.messages.birth_year_invalid',
+                      current_year: current_year))
   end
 
   def valid_death_year
-    if date_deces.present?
-      year = date_deces.to_i
-      current_year = Date.current.year
-      if year < 0 || year > current_year
-        errors.add(:date_deces,
-                 I18n.t('errors.messages.death_year_invalid',
-                        current_year: current_year))
-      end
-    end
+    return unless date_deces.present?
+
+    year = date_deces.to_i
+    current_year = Date.current.year
+    return unless year < 0 || year > current_year
+
+    errors.add(:date_deces,
+               I18n.t('errors.messages.death_year_invalid',
+                      current_year: current_year))
   end
 
   validates :slug, uniqueness: true, presence: true

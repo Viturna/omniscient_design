@@ -5,7 +5,7 @@ class Admin::DashboardController < ApplicationController
 
   def index
     @current_page = 'dashboard'
-    
+
     # --- Statistiques des cartes ---
     @new_users_this_week = User.where(created_at: 1.week.ago..Time.current).count
     @avg_visits_30d = calculate_avg_visits(30.days.ago)
@@ -14,11 +14,11 @@ class Admin::DashboardController < ApplicationController
     @total_quiz_submissions = QuizSubmission.count
     @unique_quiz_users = QuizSubmission.distinct.count(:user_id)
     @notifications = Notification.where(user: current_user).order(created_at: :desc).limit(5)
-    
+
     # --- La Réf du Jour Stats ---
     @users_daily_push = User.where(daily_reference_push: true).count
     @users_daily_email = User.where(daily_reference_email: true).count
-    @total_daily_notif_users = User.where("daily_reference_push = ? OR daily_reference_email = ?", true, true).count
+    @total_daily_notif_users = User.where('daily_reference_push = ? OR daily_reference_email = ?', true, true).count
 
     # --- Graphique : Nouvelles Inscriptions (User) ---
     @period = params[:period] || '30d'
@@ -29,38 +29,39 @@ class Admin::DashboardController < ApplicationController
       # Récupération et groupement manuel
       users_data = User.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
                        .pluck(:created_at)
-      
+
       grouped_data = users_data.group_by { |d| d.beginning_of_month.to_date }
-      
+
       months_range = (start_date..end_date).map { |d| d.beginning_of_month.to_date }.uniq
       @users_over_time = months_range.map do |date|
-        [date.strftime("%b %Y"), grouped_data[date]&.count || 0]
+        [date.strftime('%b %Y'), grouped_data[date]&.count || 0]
       end
 
     else # 7d ou 30d
       start_date = (@period == '7d' ? 7.days.ago : 30.days.ago).to_date
-      
+
       users_data = User.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
                        .pluck(:created_at)
-      
+
       grouped_data = users_data.group_by { |d| d.to_date }
-      
+
       @users_over_time = (start_date..end_date).map do |date|
-        [date.strftime("%d/%m"), grouped_data[date]&.count || 0]
+        [date.strftime('%d/%m'), grouped_data[date]&.count || 0]
       end
     end
   end
 
- def suivi_references
+  def suivi_references
     @current_page = 'suivi_references'
-    
+
     # --- 1. KPIs ---
     @count_references = Reference.count
     @count_designers = Designer.count
     @total_refs = @count_references + @count_designers
 
     @refs_validees = Reference.where(validation: true).count + Designer.where(validation: true).count
-    @refs_en_attente = Reference.where(validation: [false, nil]).count + Designer.where(validation: [false, nil]).count
+    @refs_en_attente = Reference.where(validation: [false,
+                                                    nil]).count + Designer.where(validation: [false, nil]).count
     @refs_refusees = RejectedReference.count + RejectedDesigner.count
 
     # --- 2. GRAPHIQUE AVEC FILTRE ---
@@ -84,34 +85,34 @@ class Admin::DashboardController < ApplicationController
 
     # Requêtes avec la méthode de groupement dynamique
     references_data = Reference.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
-                         .send(group_method, :created_at, format: (@ref_period.include?('m') ? "%b %Y" : "%d/%m"))
-                         .count
-                             
+                               .send(group_method, :created_at, format: (@ref_period.include?('m') ? '%b %Y' : '%d/%m'))
+                               .count
+
     designers_data = Designer.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
-                             .send(group_method, :created_at, format: (@ref_period.include?('m') ? "%b %Y" : "%d/%m"))
+                             .send(group_method, :created_at, format: (@ref_period.include?('m') ? '%b %Y' : '%d/%m'))
                              .count
-    
+
     @evolution_detail = [
-      { name: "References", data: references_data },
-      { name: "Designers", data: designers_data }
+      { name: 'References', data: references_data },
+      { name: 'Designers', data: designers_data }
     ]
 
     # --- 3. REPARTITION ---
     @repartition_status = {
-      "Validées" => @refs_validees,
-      "En attente" => @refs_en_attente,
-      "Refusées" => @refs_refusees
+      'Validées' => @refs_validees,
+      'En attente' => @refs_en_attente,
+      'Refusées' => @refs_refusees
     }
 
     # --- 4. TABLEAU ---
-    @suivis = Suivi.includes(user: [:references, :designers])
+    @suivis = Suivi.includes(user: %i[references designers])
                    .order(nb_references_emises: :desc)
-                   .page(params[:page]).per(20) 
+                   .page(params[:page]).per(20)
   end
-  
+
   def suivi_lists
     @current_page = 'suivi_lists'
-    
+
     # KPIs
     @total_lists = List.count
     @users_with_lists = User.joins(:lists).distinct.count
@@ -119,28 +120,28 @@ class Admin::DashboardController < ApplicationController
     @total_editors = ListEditor.count
 
     # Top Créateurs
-    # On précharge pas les listes ici car le group by complique l'includes, 
+    # On précharge pas les listes ici car le group by complique l'includes,
     # mais on s'assure d'avoir les données nécessaires.
     @top_creators = User
-      .select("users.*, COUNT(lists.id) AS lists_count")
-      .joins(:lists)
-      .group("users.id")
-      .order("lists_count DESC")
-      .page(params[:creators_page]).per(15)
+                    .select('users.*, COUNT(lists.id) AS lists_count')
+                    .joins(:lists)
+                    .group('users.id')
+                    .order('lists_count DESC')
+                    .page(params[:creators_page]).per(15)
 
     # Top Invités
     @top_invited = User
-      .select("users.*, COUNT(list_visitors.id) AS invites_count")
-      .joins(:list_visitors)
-      .group("users.id")
-      .order("invites_count DESC")
-      .page(params[:invited_page]).per(15)
+                   .select('users.*, COUNT(list_visitors.id) AS invites_count')
+                   .joins(:list_visitors)
+                   .group('users.id')
+                   .order('invites_count DESC')
+                   .page(params[:invited_page]).per(15)
   end
 
   def notification_clicks
-    @current_page = "notifications"
+    @current_page = 'notifications'
     @notification = Notification.find(params[:id])
-    
+
     # On récupère toutes les notifications appartenant à cette même campagne
     all_campaign_notifications = Notification.where(
       title: @notification.title,
@@ -148,7 +149,7 @@ class Admin::DashboardController < ApplicationController
       link: @notification.link,
       admin_id: @notification.admin_id
     )
-    
+
     # Stats rapides de campagne
     @total_sent = all_campaign_notifications.count
     @total_read = all_campaign_notifications.where(status: :read).count
@@ -157,21 +158,21 @@ class Admin::DashboardController < ApplicationController
 
     # Liste des notifications paginée
     @campaign_notifications = all_campaign_notifications
-                                .includes(:user)
-                                .order("clicked_at DESC NULLS LAST, created_at DESC")
-                                .page(params[:page]).per(25)
+                              .includes(:user)
+                              .order('clicked_at DESC NULLS LAST, created_at DESC')
+                              .page(params[:page]).per(25)
   end
 
   private
 
   def authenticate_admin!
-    redirect_to root_path, alert: "Accès interdit." unless current_user&.admin?
+    redirect_to root_path, alert: 'Accès interdit.' unless current_user&.admin?
   end
 
   def calculate_avg_visits(since_date)
     visits = DailyVisit.joins(:user)
-                        .where("users.role IS NULL OR users.role != 'admin'")
-                        .where('daily_visits.visited_on >= ?', since_date)
+                       .where("users.role IS NULL OR users.role != 'admin'")
+                       .where('daily_visits.visited_on >= ?', since_date)
     unique_users = visits.distinct.count(:user_id)
     unique_users > 0 ? (visits.count.to_f / unique_users).round(1) : 0
   end

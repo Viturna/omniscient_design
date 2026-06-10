@@ -3,9 +3,10 @@ class NotionsReference < ApplicationRecord
   belongs_to :notion
 
   attr_accessor :attribute
+
   before_save :set_default_notion
 
-   def set_default_notion
-    self.attribute = I18n.t('notions_reference.no_association') if self.attribute.blank?
+  def set_default_notion
+    self.attribute = I18n.t('notions_reference.no_association') if attribute.blank?
   end
 end

@@ -1,41 +1,40 @@
 class DesignersController < ApplicationController
+  include ContributionManageable
   include RecaptchaHelper
   include ApplicationHelper
 
   before_action :set_designer, only: %i[show edit update destroy cancel validate reject]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
-  before_action :check_certified, only: [:validate, :destroy, :reject]
-  before_action :check_edit_permission, only: [:edit, :update]
+  before_action :authenticate_user!, only: %i[new create edit update destroy cancel validate]
+  before_action :check_certified, only: %i[validate destroy reject]
+  before_action :check_edit_permission, only: %i[edit update]
 
   AD_FREQUENCY_RANGE = 4..6
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index
-    # --- OPTIMISATION ---
     designers = Designer.where(validation: true)
                         .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
-                        .order("RANDOM()")
+                        .order('RANDOM()')
                         .limit(9)
 
     studios = Studio.where(validation: true)
                     .includes(:domaines, studio_images: { file_attachment: :blob })
-                    .order("RANDOM()")
+                    .order('RANDOM()')
                     .limit(1)
 
     raw_items = (designers + studios).shuffle
 
     @current_page = 'accueil'
-
-    # --- NOUVELLE LOGIQUE DE PUB (Poids + Ciblage) ---
     # 1. On récupère les pubs actives et pertinentes pour l'utilisateur
-    candidate_ads = Ad.currently_active.includes(image_attachment: :blob, image_mobile_attachment: :blob).relevant_for(current_user)
+    candidate_ads = Ad.currently_active.includes(image_attachment: :blob,
+                                                 image_mobile_attachment: :blob).relevant_for(current_user)
 
     # 2. Tri pondéré (les pubs avec un gros poids sortent plus souvent au début)
     ads = candidate_ads.sort_by { |ad| -1 * (rand * ad.weight) }
 
     # 3. On sauvegarde l'ordre pour le "load more"
     @ads_order_string = ads.map(&:id).join(',')
-    
+
     @items = []
     ad_index = 0
     @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
@@ -51,11 +50,11 @@ class DesignersController < ApplicationController
     raw_items.each do |item|
       @items << item
       @items_until_next_ad -= 1
-      if @items_until_next_ad == 0 && ads.present?
-        @items << ads[ad_index % ads.length]
-        ad_index += 1
-        @items_until_next_ad = rand(AD_FREQUENCY_RANGE)
-      end
+      next unless @items_until_next_ad == 0 && ads.present?
+
+      @items << ads[ad_index % ads.length]
+      ad_index += 1
+      @items_until_next_ad = rand(AD_FREQUENCY_RANGE)
     end
   end
 
@@ -63,23 +62,23 @@ class DesignersController < ApplicationController
     # Récupération des IDs déjà chargés
     loaded_designer_ids = params[:loaded_designer_ids]&.split(',')&.map(&:to_i) || []
     loaded_studio_ids = params[:loaded_studio_ids]&.split(',')&.map(&:to_i) || []
-    
+
     if loaded_designer_ids.empty? && params[:loaded_ids].present?
-       loaded_designer_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
+      loaded_designer_ids = params[:loaded_ids]&.split(',')&.map(&:to_i) || []
     end
 
     # Chargement des items suivants
     new_designers = Designer.where(validation: true)
-                         .where.not(id: loaded_designer_ids)
-                         .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
-                         .order("RANDOM()")
-                         .limit(3)
-    
+                            .where.not(id: loaded_designer_ids)
+                            .includes(:domaines, :countries, designer_images: { file_attachment: :blob })
+                            .order('RANDOM()')
+                            .limit(3)
+
     new_studios = Studio.where(validation: true)
-                         .where.not(id: loaded_studio_ids)
-                         .includes(:domaines, studio_images: { file_attachment: :blob })
-                         .order("RANDOM()")
-                         .limit(1)
+                        .where.not(id: loaded_studio_ids)
+                        .includes(:domaines, studio_images: { file_attachment: :blob })
+                        .order('RANDOM()')
+                        .limit(1)
 
     mixed_items = (new_designers + new_studios).shuffle
 
@@ -100,29 +99,31 @@ class DesignersController < ApplicationController
       ads = []
     end
 
-    html_output = "" 
+    html_output = ''
 
     mixed_items.each do |item|
       if item.is_a?(Designer)
-        card_html = render_to_string(partial: 'designers/card', locals: { card: item, class_name: 'card' }, formats: [:html])
+        card_html = render_to_string(partial: 'designers/card', locals: { card: item, class_name: 'card' },
+                                     formats: [:html])
         html_output += "<div data-entity-type='designer' data-id='#{item.id}' class='entity-wrapper'>#{card_html}</div>"
       elsif item.is_a?(Studio)
-        card_html = render_to_string(partial: 'studios/card', locals: { card: item, class_name: 'card' }, formats: [:html])
+        card_html = render_to_string(partial: 'studios/card', locals: { card: item, class_name: 'card' },
+                                     formats: [:html])
         html_output += "<div data-entity-type='studio' data-id='#{item.id}' class='entity-wrapper'>#{card_html}</div>"
       end
-      
+
       items_until_next_ad -= 1
-      if items_until_next_ad == 0 && ads.present?
-        current_ad = ads[ad_index % ads.length]
-        # On utilise le partial existant (qui gère désormais les objets ActiveRecord)
-        html_output += render_to_string(partial: 'references/ad_card', locals: { ad: current_ad }, formats: [:html])
-        ad_index += 1
-        items_until_next_ad = rand(AD_FREQUENCY_RANGE)
-      end
+      next unless items_until_next_ad == 0 && ads.present?
+
+      current_ad = ads[ad_index % ads.length]
+      # On utilise le partial existant (qui gère désormais les objets ActiveRecord)
+      html_output += render_to_string(partial: 'references/ad_card', locals: { ad: current_ad }, formats: [:html])
+      ad_index += 1
+      items_until_next_ad = rand(AD_FREQUENCY_RANGE)
     end
-    
-    render json: { 
-      html: html_output.html_safe, 
+
+    render json: {
+      html: html_output.html_safe,
       items_until_next_ad: items_until_next_ad,
       ad_index: ad_index
     }
@@ -136,16 +137,23 @@ class DesignersController < ApplicationController
       end
       @lists = current_user.lists
     else
-      unless @designer.validation
-        redirect_to root_path, alert: I18n.t('designer.access.denied')
-      end
+      redirect_to root_path, alert: I18n.t('designer.access.denied') unless @designer.validation
       @lists = []
     end
-    if user_signed_in?
-      @saved_designer_ids = current_user.saved_designers.pluck(:id)
-    else
-      @saved_designer_ids = []
-    end
+
+    image_url = @designer.designer_images.first&.file&.attached? ? view_context.url_for(@designer.designer_images.first.file) : nil
+    set_meta_tags(
+      title: "#{@designer.prenom} #{@designer.nom}".strip + " : Biographie et réalisations",
+      description: view_context.truncate(@designer.presentation_generale, length: 160),
+      og: { image: image_url },
+      twitter: { image: image_url }
+    )
+
+    @saved_designer_ids = if user_signed_in?
+                            current_user.saved_designers.pluck(:id)
+                          else
+                            []
+                          end
   end
 
   def new
@@ -158,8 +166,8 @@ class DesignersController < ApplicationController
 
   def edit
     @current_page = 'add_elements'
-   existing_images = @designer.designer_images.count
-  
+    existing_images = @designer.designer_images.count
+
     (3 - existing_images).times do |i|
       max_pos = @designer.designer_images.map(&:position).compact.max || 0
       @designer.designer_images.build(position: max_pos + i + 1)
@@ -172,11 +180,11 @@ class DesignersController < ApplicationController
     token = params[:recaptcha_token]
 
     if verify_recaptcha(token) && @designer.save
-      Rails.cache.delete("linkify_keywords_list")
+      Rails.cache.delete('linkify_keywords_list')
       update_suivi_references_emises(current_user)
       create_notification(@designer)
       create_author_notification(@designer)
-      flash[:success] = "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais."
+      flash[:success] = 'Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais.'
       redirect_to @designer
     else
       @countries = Country.order(:country)
@@ -190,9 +198,7 @@ class DesignersController < ApplicationController
 
   def update
     if @designer.update(designer_params)
-      if !@designer.validation && @designer.user == current_user
-        notify_admin_of_update(@designer)
-      end
+      notify_admin_of_update(@designer) if !@designer.validation && @designer.user == current_user
       flash[:success] = I18n.t('designer.update.success')
       redirect_to @designer
     else
@@ -205,8 +211,8 @@ class DesignersController < ApplicationController
 
   def destroy
     @designer = Designer.find_by(slug: params[:slug])
-      create_rejection_notification(@designer)
-      update_suivi_references_refusees(@designer.user)
+    create_rejection_notification(@designer)
+    update_suivi_references_refusees(@designer.user)
     if @designer
       handle_destroy(@designer, I18n.t('designer.destroy.success', name: @designer.nom_designer))
     else
@@ -218,9 +224,7 @@ class DesignersController < ApplicationController
     rejection_reason = params[:rejection_reason].presence || I18n.t('designer.reject.no_comment')
     @designer = Designer.friendly.find_by(slug: params[:slug])
 
-    unless @designer
-      redirect_to validation_path, alert: I18n.t('designer.not_found') and return
-    end
+    redirect_to validation_path, alert: I18n.t('designer.not_found') and return unless @designer
 
     ActiveRecord::Base.transaction do
       RejectedDesigner.create!(
@@ -236,7 +240,7 @@ class DesignersController < ApplicationController
       @designer.update!(rejection_reason: rejection_reason, validation: false)
 
       handle_destroy(@designer, I18n.t('designer.reject.success'))
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error("Erreur rejet designer : #{e.message}")
       redirect_to validation_path, alert: I18n.t('designer.reject.failure')
     end
@@ -245,10 +249,10 @@ class DesignersController < ApplicationController
   def cancel
     if user_signed_in? && (current_user.admin? || @designer.user_id == current_user.id)
       @designer.destroy
-    
+
       update_suivi_references_refusees(@designer.user) if @designer.user
-      
-      flash[:notice] = "La contribution a été annulée avec succès."
+
+      flash[:notice] = 'La contribution a été annulée avec succès.'
     else
       flash[:alert] = "Tu n'as pas l'autorisation d'annuler cette contribution."
     end
@@ -267,7 +271,7 @@ class DesignersController < ApplicationController
   end
 
   def check_existence
-    designer = Designer.find_by("LOWER(prenom) = ? AND LOWER(nom) = ?", params[:prenom].downcase, params[:nom].downcase)
+    designer = Designer.find_by('LOWER(prenom) = ? AND LOWER(nom) = ?', params[:prenom].downcase, params[:nom].downcase)
 
     if designer
       render json: { exists: true, edit_path: designer.validated? ? nil : edit_designer_path(designer) }
@@ -290,100 +294,14 @@ class DesignersController < ApplicationController
     end
   end
 
-  def create_author_notification(designer)
-    if designer.user_id.present?
-      Notification.create(
-        user_id: designer.user_id,
-        notifiable: designer,
-        title: "Contribution reçue",
-        message: "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais. Si tu souhaites la modifier avant sa validation, clique ici.",
-        link: edit_designer_path(designer)
-      )
-    end
-  end
 
-  def handle_destroy(designer, success_message)
-    if designer.destroy
-      create_rejection_notification(designer)
-      update_suivi_references_refusees(designer.user)
-  
-      respond_to do |format|
-        format.html { redirect_to validation_path, notice: success_message }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to validation_path, alert: "Une erreur est survenue lors de la suppression du designer." }
-        format.json { render json: designer.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
-  def update_suivi_references_emises(user)
-    suivi = user.suivis.first_or_create
-    suivi.increment(:nb_references_emises)
-    suivi.save
-  end
 
-  def update_suivi_references_validees(user)
-    return unless user
-    suivi = user.suivis.first_or_create
-    suivi.increment(:nb_references_validees)
-    suivi.save
-  end
 
-  def update_suivi_references_refusees(user)
-    suivi = user.suivis.first_or_create
-    suivi.increment(:nb_references_refusees)
-    suivi.save
-  end
-  
-  def create_notification(designer)
-    title = "Nouveau designer à valider"
-    message = t('notifications.new_designer', name: designer.nom_designer)
-    recipients = User.where("role = ? OR certified = ?", 'admin', true)
-    recipients.each do |user|
-      Notification.create(user_id: user.id, notifiable: designer, title: title, message: message)
-    end
-  end
 
-  def create_validation_notification(designer)
-    title = "Designer validé"
-    message = t('notifications.designer_validated', name: designer.nom_designer)
-    if designer.user_id.present?
-      Notification.create(user_id: designer.user_id, notifiable: designer, title: title, message: message)
-    else
-      Notification.create(notifiable: designer, title: title, message: message)
-    end
-  rescue ActiveRecord::NotNullViolation => e
-    Rails.logger.error(t('notifications.error_creation', error: e.message))
-  end
 
-  def create_rejection_notification(designer)
-    if designer.user_id.present?
-      title = "Designer refusé"
-      message = t('notifications.designer_rejected', name: designer.nom_designer)
-      Notification.create(user_id: designer.user_id, notifiable: designer, title: title, message: message)
-    else
-      Rails.logger.error(t('notifications.no_user_for_rejection_designer', designer_id: designer.id))
-    end
-  end
 
-  def notify_admin_of_update(designer)
-    title = "Contribution modifiée"
-    message = "L'auteur a modifié sa contribution : #{designer.nom_designer}"
-    
-    recipients = User.where("role = ? OR certified = ?", 'admin', true)
 
-    recipients.each do |user|
-      Notification.create(
-        user_id: user.id, 
-        notifiable: designer, 
-        title: title,
-        message: message
-      )
-    end
-  end
 
   def set_designer
     @designer = Designer.includes(:countries).friendly.find(params[:slug])
@@ -407,7 +325,7 @@ class DesignersController < ApplicationController
       domaine_ids: [],
       country_ids: [],
       source: [],
-      designer_images_attributes: [:id, :file, :credit, :_destroy, :position]
+      designer_images_attributes: %i[id file credit _destroy position]
     )
   end
 end

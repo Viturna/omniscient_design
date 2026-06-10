@@ -1,1 +1,1 @@
-json.partial! "references/reference", reference: @reference
+json.partial! 'references/reference', reference: @reference

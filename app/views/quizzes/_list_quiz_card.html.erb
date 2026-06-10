@@ -2,7 +2,7 @@
   <div class="card-image">
     <% reference_with_image = list.references.joins(:reference_images).first %>
     <% if reference_with_image && reference_with_image.reference_images.first&.file&.attached? %>
-      <%= image_tag reference_with_image.reference_images.first.file.variant(resize_to_fill: [400, 300]) %>
+      <%= image_tag reference_with_image.reference_images.first.file.variant(resize_to_fill: [400, 300]), loading: "lazy" %>
     <% else %>
       <div class="placeholder-img"></div>
     <% end %>

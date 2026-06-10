@@ -245,7 +245,6 @@ Devise.setup do |config|
   # are using only default views.
   config.scoped_views = true
 
-
   # Configure the default scope given to Warden. By default it's the first
   # devise role declared in your routes (usually :user).
   # config.default_scope = :user
@@ -272,17 +271,17 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {prompt: 'select_account'}
+  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], { prompt: 'select_account' }
   config.omniauth :apple,
-      ENV['APPLE_CLIENT_ID'],           # Le Service ID (ex: com.omniscientdesign.service)
-      '',                              
-      {
-        scope: 'email name',
-        team_id: ENV['APPLE_TEAM_ID'], 
-        key_id: ENV['APPLE_KEY_ID'],  
-        pem: ENV['APPLE_PRIVATE_KEY'] 
-      }
-  
+                  ENV['APPLE_CLIENT_ID'], # Le Service ID (ex: com.omniscientdesign.service)
+                  '',
+                  {
+                    scope: 'email name',
+                    team_id: ENV['APPLE_TEAM_ID'],
+                    key_id: ENV['APPLE_KEY_ID'],
+                    pem: ENV['APPLE_PRIVATE_KEY']
+                  }
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

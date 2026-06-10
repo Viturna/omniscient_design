@@ -14,27 +14,7 @@
       import "application"
     </script>
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
-    <title><%= content_for?(:title) ? yield(:title) : t('meta.default_title') %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="copyright" content="© Omniscient Design - <%= t('meta.all_rights_reserved') %>">
-    <meta name="robots" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <meta name="googlebot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <meta name="bingbot" content="<%= should_not_index? ? 'noindex, nofollow' : 'index, follow' %>">
-    <%= tag :link, rel: 'canonical', href: request.original_url.split('?').first %>
-    <meta property="og:locale" content="<%= I18n.locale %>">
-    <meta property="og:site_name" content="Omniscient Design">
-    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : t('meta.default_title') %>">
-    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
-    <meta property="og:url" content="<%= request.original_url %>">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="<%= asset_url('logo-od-rs.jpg') %>">
-    <meta name="twitter:site" content="@OmniscientDesign">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : t('meta.default_title') %>">
-    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : t('meta.default_description') %>">
-    <meta name="twitter:url" content="<%= request.original_url %>">
-    <meta name="twitter:image" content="<%= asset_url('logo-od-rs.jpg') %>">
+    <%= display_meta_tags site: 'Omniscient Design' %>
     <meta name="recaptcha-site-key" content="<%= ENV['RECAPTCHA_SITE_KEY'] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
     <%= render 'application/favicon' %>
     <noscript>
@@ -65,6 +45,7 @@
       window.loaderWebmPath = "<%= asset_path('loader.webm') %>";
       window.loaderMp4Path = "<%= asset_path('loader.mp4') %>";
     </script>
+    <%= yield :json_ld %>
   </head>
   <% theme = cookies&.[](:theme).presence || 'light-mode' %>
   <% body_class = %w[dark-mode light-mode].include?(theme) ? theme : '' %>

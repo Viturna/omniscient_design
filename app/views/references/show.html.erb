@@ -1,5 +1,9 @@
-<% content_for :title, "#{@reference.nom_reference} | #{@reference.designers.map(&:nom_designer).join(', ')}  - Omniscient Design" %>
-<% content_for :description, @reference.presentation_generale.truncate(160) %>
+<% content_for :json_ld do %>
+  <script type="application/ld+json">
+    <%= json_ld_reference(@reference) %>
+  </script>
+<% end %>
+
 
 
 <%= render @reference %>

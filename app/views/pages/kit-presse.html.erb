@@ -1,5 +1,5 @@
-<% content_for :title, "Kit de presse - Omniscient Design" %>
-<% content_for :description, "Télécharge notre kit de presse pour faire rayonner Omniscient design, le premier carnet de référence numérique" %>
+<% set_meta_tags title: "Kit de Presse | Omniscient Design" %>
+<% set_meta_tags description: "Télécharge les ressources de communication d'Omniscient Design." %>
 <section class="top-header">
   <%= link_to profil_path do %>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,54 +17,54 @@
   <h2><%= t('press.logos') %></h2>
   <div class="flex-kit">
     <div class="logo-kit-container">
-      <%= image_tag "kit_presse/logo1.svg", alt: "Logo 1", class: "logo-kit" %>
+      <%= image_tag "kit_presse/logo1.svg", loading: "lazy", alt: "Logo 1", class: "logo-kit" %>
       <p><%= t('press.file_size.logo1') %></p>
     </div>
     <div class="logo-kit-container">
-      <%= image_tag "kit_presse/logo2.svg", alt: "Logo 2", class: "logo-kit" %>
+      <%= image_tag "kit_presse/logo2.svg", loading: "lazy", alt: "Logo 2", class: "logo-kit" %>
       <p><%= t('press.file_size.logo2') %></p>
     </div>
     <div class="logo-kit-container">
-      <%= image_tag "kit_presse/logo3.svg", alt: "Logo 3", class: "logo-kit" %>
+      <%= image_tag "kit_presse/logo3.svg", loading: "lazy", alt: "Logo 3", class: "logo-kit" %>
       <p><%= t('press.file_size.logo3') %></p>
     </div>
   </div>
   <h2><%= t('press.screenshots') %></h2>
   <div class="flex-kit">
     <div class="screen-kit">
-      <%= image_tag "kit_presse/screenshot1", 
+      <%= image_tag "kit_presse/screenshot1", loading: "lazy", 
         alt: "Screenshot", 
         class: "w-full max-w-md h-auto border border-black mx-auto" %>
         <p><%= t('press.file_size.screenshot1') %></p>
       </div>
     <div class="screen-kit">
-       <%= image_tag "kit_presse/screenshot2", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
+       <%= image_tag "kit_presse/screenshot2", loading: "lazy", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
         <p><%= t('press.file_size.screenshot2') %></p>
       </div>
     <div class="screen-kit">
-      <%= image_tag "kit_presse/screenshot3", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
+      <%= image_tag "kit_presse/screenshot3", loading: "lazy", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
       <p><%= t('press.file_size.screenshot3') %></p>
     </div>
           <div class="screen-kit">
-       <%= image_tag "kit_presse/screenshot4", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
+       <%= image_tag "kit_presse/screenshot4", loading: "lazy", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
         <p><%= t('press.file_size.screenshot4') %></p>
       </div>
           <div class="screen-kit">
-       <%= image_tag "kit_presse/screenshot5", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
+       <%= image_tag "kit_presse/screenshot5", loading: "lazy", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
        <p><%= t('press.file_size.screenshot5') %></p>
       </div>
           <div class="screen-kit">
-       <%= image_tag "kit_presse/screenshot6", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
+       <%= image_tag "kit_presse/screenshot6", loading: "lazy", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
         <p><%= t('press.file_size.screenshot6') %></p>
       </div>
           <div class="screen-kit">
-       <%= image_tag "kit_presse/screenshot7", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
+       <%= image_tag "kit_presse/screenshot7", loading: "lazy", alt: "Screenshot", class: "w-full max-w-md h-auto border border-black mx-auto" %>
         <p><%= t('press.file_size.screenshot7') %></p>
       </div>
     </div>
   <h2><%= t('press.presentation_folder') %></h2>
   <div class="screen-kit">
-    <%= image_tag "kit_presse/cover-dossier.jpg",
+    <%= image_tag "kit_presse/cover-dossier.jpg", loading: "lazy",
         alt: "Page de couverture du dossier de présentation",
         class: "kit-dossier-img" %>
     <p><%= t('press.file_size.dossier') %></p>

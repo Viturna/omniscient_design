@@ -3,24 +3,24 @@ require 'csv' # Nécessaire pour l'export
 class Admin::EtablissementsController < ApplicationController
   layout 'admin'
   before_action :authenticate_admin!
-  before_action :set_etablissement, only: [:edit, :update, :destroy]
+  before_action :set_etablissement, only: %i[edit update destroy]
 
   def index
-    @current_page = "etablissements"
+    @current_page = 'etablissements'
     # 1. Requête de base : On joint les users et on prépare le comptage
     @etablissements_scope = Etablissement
-                              .left_joins(:users)
-                              .group('etablissements.id')
-                              .select('etablissements.*, COUNT(users.id) AS users_count')
-                              .order('users_count DESC, etablissements.name ASC')
-    
+                            .left_joins(:users)
+                            .group('etablissements.id')
+                            .select('etablissements.*, COUNT(users.id) AS users_count')
+                            .order('users_count DESC, etablissements.name ASC')
+
     # 2. Recherche (si applicable)
     if params[:query].present?
       query = "%#{params[:query]}%"
       @etablissements_scope = @etablissements_scope.where(
-        "etablissements.name ILIKE ? OR 
-         etablissements.uai ILIKE ? OR 
-         etablissements.city ILIKE ? OR 
+        "etablissements.name ILIKE ? OR
+         etablissements.uai ILIKE ? OR
+         etablissements.city ILIKE ? OR
          etablissements.academy ILIKE ?",
         query, query, query, query
       )
@@ -40,14 +40,14 @@ class Admin::EtablissementsController < ApplicationController
       format.csv do
         # Export CSV : FILTRE SPÉCIFIQUE -> Uniquement ceux avec au moins 1 user
         @export_etablissements = @etablissements_scope.having('COUNT(users.id) > 0')
-        
-        send_data generate_csv(@export_etablissements), 
+
+        send_data generate_csv(@export_etablissements),
                   filename: "etablissements_actifs-#{Date.today}.csv"
       end
     end
   end
-  def edit
-  end
+
+  def edit; end
 
   def update
     if @etablissement.update(etablissement_params)
@@ -75,12 +75,12 @@ class Admin::EtablissementsController < ApplicationController
     CSV.generate(headers: true, col_sep: ';', encoding: 'UTF-8') do |csv|
       # En-têtes exhaustifs
       csv << [
-        "ID", "Nom", "Nb Utilisateurs", "UAI", "Ville", "CP", "Adresse", 
-        "Académie", "Région", "Statut", "Type", 
-        "Téléphone", "Email", "Site Web",
-        "Voie Générale", "Voie Techno", "Voie Pro", "Post-Bac",
-        "Section Arts", "Section Cinéma", "Section Théâtre",
-        "Latitude", "Longitude"
+        'ID', 'Nom', 'Nb Utilisateurs', 'UAI', 'Ville', 'CP', 'Adresse',
+        'Académie', 'Région', 'Statut', 'Type',
+        'Téléphone', 'Email', 'Site Web',
+        'Voie Générale', 'Voie Techno', 'Voie Pro', 'Post-Bac',
+        'Section Arts', 'Section Cinéma', 'Section Théâtre',
+        'Latitude', 'Longitude'
       ]
 
       etablissements.each do |etab|
@@ -90,7 +90,11 @@ class Admin::EtablissementsController < ApplicationController
           etab.users_count, # Le nombre de personnes (calculé dans la requête)
           etab.uai,
           etab.city,
-          (etab.try(:zip_code) rescue ""), # Gestion erreur si colonne manquante
+          begin
+            etab.try(:zip_code)
+          rescue StandardError
+            ''
+          end, # Gestion erreur si colonne manquante
           etab.address,
           etab.academy,
           etab.region,
@@ -115,15 +119,15 @@ class Admin::EtablissementsController < ApplicationController
 
   def etablissement_params
     params.require(:etablissement).permit(
-      :name, :uai, :city, :zip_code, :address, :academy, :region, 
-      :statut_public_prive, :type_etablissement, :phone, :messagerie, 
-      :website, :voie_generale, :voie_technologique, :voie_professionnelle, 
-      :post_bac, :section_arts, :section_cinema, :section_theatre, 
+      :name, :uai, :city, :zip_code, :address, :academy, :region,
+      :statut_public_prive, :type_etablissement, :phone, :messagerie,
+      :website, :voie_generale, :voie_technologique, :voie_professionnelle,
+      :post_bac, :section_arts, :section_cinema, :section_theatre,
       :latitude, :longitude
     )
   end
 
   def authenticate_admin!
-    redirect_to root_path, alert: "Accès refusé." unless current_user&.admin?
+    redirect_to root_path, alert: 'Accès refusé.' unless current_user&.admin?
   end
 end

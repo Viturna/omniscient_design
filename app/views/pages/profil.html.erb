@@ -1,14 +1,14 @@
-<% content_for :title, "Profil - Omniscient Design" %>
-<% content_for :description, "Bienvenue dans ton profil, ton espace personnel. Modifie tes informations, contacte-nous ou découvre notre superbe accessibilité !" %>
+<% set_meta_tags title: "Profil | Omniscient Design" %>
+<% set_meta_tags description: "Gère tes infos et personnalise ton espace pour des recherches de références toujours plus efficaces." %>
 <section class="top-profil">
   <h1><%= t('profile.your_profile') %></h1>
   <div class="flex-profil">
     <div class="profile">
      <% if current_user.profile_image.attached? %>
         <%# On utilise variant pour optimiser la taille et object-fit pour ne pas déformer %>
-        <%= image_tag current_user.profile_image.variant(resize_to_fill: [200, 200]), class: "img-profil", style: "object-fit: cover; border-radius: 50%;" %>
+        <%= image_tag current_user.profile_image.variant(resize_to_fill: [200, 200]), loading: "lazy", class: "img-profil", style: "object-fit: cover; border-radius: 50%;" %>
       <% else %>
-        <%= image_tag "profil.png", class: "img-profil" %>
+        <%= image_tag "profil.png", loading: "lazy", class: "img-profil" %>
       <% end %>
     </div>
     <div>

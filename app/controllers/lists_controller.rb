@@ -1,12 +1,12 @@
 class ListsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_list, only: [
-      :show, :edit, :update, :destroy, :invite_editors,
-      :change_role, :remove_user, :toggle_privacy,
-      :remove_designer, :remove_reference, :remove_studio,
-      :add_reference, :add_designer, :add_studio 
-    ]
-    
+  before_action :set_list, only: %i[
+    show edit update destroy invite_editors
+    change_role remove_user toggle_privacy
+    remove_designer remove_reference remove_studio
+    add_reference add_designer add_studio
+  ]
+
   def index
     @lists = current_user.lists.includes(:references)
     @editor_lists = current_user.editable_lists.includes(:references)
@@ -38,11 +38,12 @@ class ListsController < ApplicationController
 
     # Œuvres
     selected_reference_ids = @list.reference_ids
-    @selected_references = Reference.where(id: selected_reference_ids, validation: true).includes(:domaines).order(:nom_reference)
+    @selected_references = Reference.where(id: selected_reference_ids,
+                                           validation: true).includes(:domaines).order(:nom_reference)
     @other_references = Reference.where(validation: true)
-                           .where.not(id: selected_reference_ids)
-                           .order(:nom_reference)
-                           .page(params[:references_page]).per(10)
+                                 .where.not(id: selected_reference_ids)
+                                 .order(:nom_reference)
+                                 .page(params[:references_page]).per(10)
 
     # Autorisation
     if @list.share_token.present? && @list.share_token == params[:share_token]
@@ -74,11 +75,12 @@ class ListsController < ApplicationController
 
       # Œuvres
       selected_reference_ids = @list.reference_ids
-      @selected_references = Reference.where(id: selected_reference_ids, validation: true).includes(:domaines).order(:nom_reference)
+      @selected_references = Reference.where(id: selected_reference_ids,
+                                             validation: true).includes(:domaines).order(:nom_reference)
       @other_references = Reference.where(validation: true)
-                             .where.not(id: selected_reference_ids)
-                             .order(:nom_reference)
-                             .page(params[:references_page]).per(10)
+                                   .where.not(id: selected_reference_ids)
+                                   .order(:nom_reference)
+                                   .page(params[:references_page]).per(10)
 
       render :show
     else
@@ -91,16 +93,16 @@ class ListsController < ApplicationController
     @list = current_user.lists.build
   end
 
-
- def create
+  def create
     @list = List.new(list_params)
     @list.user = current_user
 
     if @list.save
       # REDIRECTION ETAPE 2 : On va sur la liste avec le paramètre newly_created
-      redirect_to list_path(@list, newly_created: true), notice: I18n.t('list.create.success', default: "Liste créée ! Ajoute maintenant tes éléments.")
+      redirect_to list_path(@list, newly_created: true),
+                  notice: I18n.t('list.create.success', default: 'Liste créée ! Ajoute maintenant tes éléments.')
     else
-      flash.now[:alert] = I18n.t('list.create.failure', default: "Erreur lors de la création.")
+      flash.now[:alert] = I18n.t('list.create.failure', default: 'Erreur lors de la création.')
       render :new, status: :unprocessable_entity
     end
   end
@@ -123,20 +125,18 @@ class ListsController < ApplicationController
   end
 
   def add_reference
-    @list = List.friendly.find(params[:slug]) 
-    
+    @list = List.friendly.find(params[:slug])
+
     @reference = Reference.find(params[:reference_id])
 
-    unless @list.references.include?(@reference)
-      @list.references << @reference
-    end
+    @list.references << @reference unless @list.references.include?(@reference)
 
     redirect_to save_modal_reference_path(@reference)
   end
 
   def remove_reference
-    @list = List.friendly.find(params[:slug]) 
-    
+    @list = List.friendly.find(params[:slug])
+
     @reference = Reference.find(params[:reference_id])
 
     @list.references.delete(@reference)
@@ -148,9 +148,7 @@ class ListsController < ApplicationController
     @list = List.friendly.find(params[:slug])
     @designer = Designer.find(params[:designer_id])
 
-    unless @list.designers.include?(@designer)
-      @list.designers << @designer
-    end
+    @list.designers << @designer unless @list.designers.include?(@designer)
 
     redirect_to save_modal_designer_path(@designer)
   end
@@ -168,9 +166,7 @@ class ListsController < ApplicationController
     @list = List.friendly.find(params[:slug])
     @studio = Studio.find(params[:studio_id])
 
-    unless @list.studios.include?(@studio)
-      @list.studios << @studio
-    end
+    @list.studios << @studio unless @list.studios.include?(@studio)
 
     redirect_to save_modal_studio_path(@studio)
   end
@@ -183,10 +179,11 @@ class ListsController < ApplicationController
 
     redirect_to save_modal_studio_path(@studio)
   end
-  
+
   def apply_popup_filters(scope, type)
     if params[:start_year].present? && params[:end_year].present?
-      sy, ey = params[:start_year].to_i, params[:end_year].to_i
+      sy = params[:start_year].to_i
+      ey = params[:end_year].to_i
       if sy > 0 && ey > 0 && sy <= ey
         case type
         when 'designers'  then scope = scope.where(date_naissance: sy..ey)
@@ -198,16 +195,12 @@ class ListsController < ApplicationController
 
     if params[:domaines].present?
       domaine_ids = Array(params[:domaines]).reject(&:blank?)
-      if domaine_ids.any?
-        scope = scope.joins(:domaines).where(domaines: { id: domaine_ids }).distinct
-      end
+      scope = scope.joins(:domaines).where(domaines: { id: domaine_ids }).distinct if domaine_ids.any?
     end
 
     if params[:notions].present? && type == 'references'
       notion_ids = Array(params[:notions]).reject(&:blank?)
-      if notion_ids.any?
-        scope = scope.joins(:notions).where(notions: { id: notion_ids }).distinct
-      end
+      scope = scope.joins(:notions).where(notions: { id: notion_ids }).distinct if notion_ids.any?
     end
 
     if params[:countries].present?
@@ -226,6 +219,7 @@ class ListsController < ApplicationController
 
     scope
   end
+
   def toggle_privacy
     if params[:privacy] == 'public'
       @list.update(share_token: @list.previous_share_token || SecureRandom.hex(10))
@@ -259,7 +253,6 @@ class ListsController < ApplicationController
       redirect_to @list, alert: I18n.t('lists.invite.failure')
     end
   end
-
 
   def change_role
     user = User.find(params[:user_id])
@@ -309,7 +302,7 @@ class ListsController < ApplicationController
     case type
     when 'studios'
       @studios = Studio.where(validation: true)
-                       .where("LOWER(nom) LIKE ?", "%#{query}%")
+                       .where('LOWER(nom) LIKE ?', "%#{query}%")
       if params[:slug].present?
         list = List.friendly.find_by(slug: params[:slug])
         @studios = @studios.where.not(id: list.studio_ids) if list
@@ -324,7 +317,7 @@ class ListsController < ApplicationController
 
     when 'designers'
       @designers = Designer.where(validation: true)
-                           .where("LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?", "%#{query}%", "%#{query}%")
+                           .where('LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?', "%#{query}%", "%#{query}%")
       if params[:slug].present?
         list = List.friendly.find_by(slug: params[:slug])
         @designers = @designers.where.not(id: list.designer_ids) if list
@@ -339,7 +332,7 @@ class ListsController < ApplicationController
 
     when 'references'
       @references = Reference.where(validation: true)
-                       .where("LOWER(nom_reference) LIKE ?", "%#{query}%")
+                             .where('LOWER(nom_reference) LIKE ?', "%#{query}%")
       if params[:slug].present?
         list = List.friendly.find_by(slug: params[:slug])
         @references = @references.where.not(id: list.reference_ids) if list
@@ -357,85 +350,73 @@ class ListsController < ApplicationController
     end
   end
 
+  def load_more_references
+    offset = params[:offset].to_i
+    @list = List.friendly.find_by(slug: params[:slug]) if params[:slug].present? && params[:slug] != 'undefined'
+    if @list
+      selected_reference_ids = @list.reference_ids
+      @references = Reference.where(validation: true)
+                             .where.not(id: selected_reference_ids)
+    else
+      @references = Reference.where(validation: true)
+    end
 
+    query = params[:q].to_s.downcase.strip
+    @references = @references.where('LOWER(nom_reference) LIKE ?', "%#{query}%") if query.present?
 
-def load_more_references
-  offset = params[:offset].to_i
-  if params[:slug].present? && params[:slug] != 'undefined'
-    @list = List.friendly.find_by(slug: params[:slug])
-  end
-  if @list
-    selected_reference_ids = @list.reference_ids
-    @references = Reference.where(validation: true)
-                     .where.not(id: selected_reference_ids)
-  else
-    @references = Reference.where(validation: true)
-  end
+    @references = apply_popup_filters(@references, 'references')
+    @references = @references.order(:nom_reference).offset(offset).limit(10)
 
-  query = params[:q].to_s.downcase.strip
-  if query.present?
-    @references = @references.where("LOWER(nom_reference) LIKE ?", "%#{query}%")
-  end
-
-  @references = apply_popup_filters(@references, 'references')
-  @references = @references.order(:nom_reference).offset(offset).limit(10)
-
-  if @references.any?
-    render partial: 'references_list', collection: @references, as: :reference
-  elsif offset == 0
-    render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
-  else
-    head :no_content
-  end
-end
-
-def load_more_designers
-  offset = params[:offset].to_i
-  if params[:slug].present? && params[:slug] != 'undefined'
-    @list = List.friendly.find_by(slug: params[:slug])
-  end
-  if @list
-    selected_designer_ids = @list.designer_ids
-    @designers = Designer.where(validation: true)
-                         .where.not(id: selected_designer_ids)
-  else
-    @designers = Designer.where(validation: true)
+    if @references.any?
+      render partial: 'references_list', collection: @references, as: :reference
+    elsif offset == 0
+      render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+    else
+      head :no_content
+    end
   end
 
-  query = params[:q].to_s.downcase.strip
-  if query.present?
-    @designers = @designers.where("LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?", "%#{query}%", "%#{query}%")
-  end
+  def load_more_designers
+    offset = params[:offset].to_i
+    @list = List.friendly.find_by(slug: params[:slug]) if params[:slug].present? && params[:slug] != 'undefined'
+    if @list
+      selected_designer_ids = @list.designer_ids
+      @designers = Designer.where(validation: true)
+                           .where.not(id: selected_designer_ids)
+    else
+      @designers = Designer.where(validation: true)
+    end
 
-  @designers = apply_popup_filters(@designers, 'designers')
-  @designers = @designers.order(:nom).offset(offset).limit(10)
+    query = params[:q].to_s.downcase.strip
+    if query.present?
+      @designers = @designers.where('LOWER(nom) LIKE ? OR LOWER(prenom) LIKE ?', "%#{query}%", "%#{query}%")
+    end
 
-  if @designers.any?
-    render partial: 'designers_list', collection: @designers, as: :designer
-  elsif offset == 0
-    render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
-  else
-    head :no_content
+    @designers = apply_popup_filters(@designers, 'designers')
+    @designers = @designers.order(:nom).offset(offset).limit(10)
+
+    if @designers.any?
+      render partial: 'designers_list', collection: @designers, as: :designer
+    elsif offset == 0
+      render plain: "<p style='text-align:center; width:100%; margin-top:20px;'>Aucun résultat</p>"
+    else
+      head :no_content
+    end
   end
-end
 
   def load_more_studios
     offset = params[:offset].to_i
-    if params[:slug].present? && params[:slug] != 'undefined'
-      @list = List.friendly.find_by(slug: params[:slug])
-    end
+    @list = List.friendly.find_by(slug: params[:slug]) if params[:slug].present? && params[:slug] != 'undefined'
     if @list
       selected_studio_ids = @list.studio_ids
       @studios = Studio.where(validation: true)
-                          .where.not(id: selected_studio_ids)
+                       .where.not(id: selected_studio_ids)
     else
       @studios = Studio.where(validation: true)
     end
 
     query = params[:q].to_s.downcase.strip
-    if query.present?
-      @studios = @studios.where("LOWER(nom) LIKE ?", "%#{query}%")
-    end
+    @studios = @studios.where('LOWER(nom) LIKE ?', "%#{query}%") if query.present?
 
     @studios = apply_popup_filters(@studios, 'studios')
     @studios = @studios.order(:nom).offset(offset).limit(10)
@@ -449,7 +430,6 @@ end
     end
   end
 
-
   def set_list
     @list = List.friendly.find_by(slug: params[:slug])
     redirect_to lists_path, alert: I18n.t('lists.not_found') unless @list
@@ -460,13 +440,13 @@ end
   end
 
   def create_share_notification(list)
-    title = "Liste partagée"
+    title = 'Liste partagée'
     message = I18n.t('lists.shared_message', name: list.name)
-    
+
     list.editors.each do |editor|
       Notification.create(
-        user_id: editor.id, 
-        notifiable: list, 
+        user_id: editor.id,
+        notifiable: list,
         title: title,
         message: message,
         status: :unread

@@ -1,9 +1,9 @@
 <% if @view_mode == 'hub' %>
-  <% content_for :title, "Quiz Révisions BAC STD2A | Omniscient Design" %>
-  <% content_for :description, "Prépare ton BAC STD2A avec nos quiz interactifs sur l'histoire de l'art et du design. Entraîne-toi, teste tes connaissances et réussis tes épreuves." %>
+  <% set_meta_tags title: "Quiz Design & Histoire des Arts | Omniscient Design" %>
+  <% set_meta_tags description: "Entraîne-toi sur l'histoire du design, les mouvements et l'analyse de références pour assurer à tes épreuves d'AMD." %>
 <% else %>
-  <% content_for :title, "Tous les Quiz Design - Entraînement BAC STD2A | Omniscient Design" %>
-  <% content_for :description, "Explore notre collection complète de quiz spécialisés en design et arts appliqués. Révise efficacement tes cours de STD2A par domaine et par époque." %>
+  <% set_meta_tags title: "Quiz Design & Histoire des Arts | Omniscient Design" %>
+  <% set_meta_tags description: "Entraîne-toi sur l'histoire du design, les mouvements et l'analyse de références pour assurer à tes épreuves d'AMD." %>
 <% end %>
 
 <% if @view_mode == 'hub' %>
@@ -21,7 +21,7 @@
           <div class="points-pill">
              <span style="color: #888; font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
              <div style="width: 1px; height: 16px; background: rgba(0,0,0,0.1); margin: 0 2px;"></div>
-             <%= image_tag "points_od_black.svg", width: 20, height: 20 %>
+             <%= image_tag "points_od_black.svg", loading: "lazy", width: 20, height: 20 %>
              <span><%= current_user.quiz_points %> pts</span>
           </div>
           <%= link_to leaderboard_path, class: "leaderboard-icon-btn" do %>
@@ -86,7 +86,7 @@
             <div class="card-image">
               <% random_ref_2 = Reference.joins(:reference_images).order("RANDOM()").first %>
               <% if random_ref_2&.reference_images&.first&.file&.attached? %>
-                <%= image_tag random_ref_2.reference_images.first.file.variant(resize_to_fill: [800, 500]), style: "border: none;" %>
+                <%= image_tag random_ref_2.reference_images.first.file.variant(resize_to_fill: [800, 500]), loading: "lazy", style: "border: none;" %>
               <% else %>
                 <div class="placeholder-img" style="border: none; width: 100%; height: 100%; background: #EEE;"></div>
               <% end %>
@@ -102,7 +102,7 @@
             <div class="card-image">
               <% random_ref_3 = Reference.joins(:reference_images).where.not(id: defined?(random_ref_2) ? random_ref_2&.id : nil).order("RANDOM()").first %>
               <% if random_ref_3&.reference_images&.first&.file&.attached? %>
-                <%= image_tag random_ref_3.reference_images.first.file.variant(resize_to_fill: [800, 500]), style: "border: none;" %>
+                <%= image_tag random_ref_3.reference_images.first.file.variant(resize_to_fill: [800, 500]), loading: "lazy", style: "border: none;" %>
               <% else %>
                 <div class="placeholder-img" style="border: none; width: 100%; height: 100%; background: #EEE;"></div>
               <% end %>
@@ -136,7 +136,7 @@
           <div class="points-pill">
              <span style="color: #888; font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
              <div style="width: 1px; height: 16px; background: rgba(0,0,0,0.1); margin: 0 2px;"></div>
-             <%= image_tag "points_od_black.svg", width: 20, height: 20 %>
+             <%= image_tag "points_od_black.svg", loading: "lazy", width: 20, height: 20 %>
              <span><%= current_user.quiz_points %> pts</span>
           </div>
           <%= link_to leaderboard_path, class: "leaderboard-icon-btn" do %>

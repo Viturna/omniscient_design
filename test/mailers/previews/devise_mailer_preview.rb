@@ -4,12 +4,12 @@ class DeviseMailerPreview < ActionMailer::Preview
   # http://localhost:3000/rails/mailers/devise_mailer/reset_password_instructions
   def reset_password_instructions
     user = User.new(
-      firstname: "Prénom",
-      pseudo: "pseudo_demo",
-      email: "demo@example.com"
+      firstname: 'Prénom',
+      pseudo: 'pseudo_demo',
+      email: 'demo@example.com'
     )
 
-    token = "faketoken123"
+    token = 'faketoken123'
 
     # Essaie d'appeler le mailer configuré pour Devise.
     # On tente Devise.mailer (si tu as overridé le mailer dans config) puis Devise::Mailer.

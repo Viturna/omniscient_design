@@ -6,8 +6,8 @@ class ListMailer < ApplicationMailer
     @role          = role
 
     mail(
-      to:       @invited_user.email,
-      subject:  I18n.t('mailer.list_editor.subject', list: @list.name)
+      to: @invited_user.email,
+      subject: I18n.t('mailer.list_editor.subject', list: @list.name)
     )
   end
 end

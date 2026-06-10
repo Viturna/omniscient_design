@@ -1,30 +1,37 @@
 class StudiosController < ApplicationController
+  include ContributionManageable
   include RecaptchaHelper
 
   before_action :set_studio, only: %i[show edit update destroy cancel validate reject]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :cancel, :validate]
-  before_action :check_certified, only: [:validate, :destroy, :reject]
-  before_action :check_edit_permission, only: [:edit, :update]
+  before_action :authenticate_user!, only: %i[new create edit update destroy cancel validate]
+  before_action :check_certified, only: %i[validate destroy reject]
+  before_action :check_edit_permission, only: %i[edit update]
 
   def show
     @domaines = @studio.domaines
     if user_signed_in?
       unless @studio.validation || current_user.admin? || @studio.user == current_user || current_user.certified?
-        redirect_to root_path, alert: I18n.t('studio.access.denied', default: "Accès refusé")
+        redirect_to root_path, alert: I18n.t('studio.access.denied', default: 'Accès refusé')
       end
       @lists = current_user.lists
     else
-      unless @studio.validation
-        redirect_to root_path, alert: I18n.t('studio.access.denied', default: "Accès refusé")
-      end
+      redirect_to root_path, alert: I18n.t('studio.access.denied', default: 'Accès refusé') unless @studio.validation
       @lists = []
     end
 
-    if user_signed_in?
-      @saved_studio_ids = current_user.saved_studios.pluck(:id)
-    else
-      @saved_studio_ids = []
-    end
+    image_url = @studio.studio_images.first&.file&.attached? ? view_context.url_for(@studio.studio_images.first.file) : nil
+    set_meta_tags(
+      title: "#{@studio.nom} : Histoire et créations du studio",
+      description: view_context.truncate(@studio.presentation_generale, length: 160),
+      og: { image: image_url },
+      twitter: { image: image_url }
+    )
+
+    @saved_studio_ids = if user_signed_in?
+                          current_user.saved_studios.pluck(:id)
+                        else
+                          []
+                        end
   end
 
   def new
@@ -39,7 +46,7 @@ class StudiosController < ApplicationController
   def edit
     @current_page = 'add_elements'
     existing_images = @studio.studio_images.count
-  
+
     (3 - existing_images).times do |i|
       max_pos = @studio.studio_images.map(&:position).compact.max || 0
       @studio.studio_images.build(position: max_pos + i + 1)
@@ -54,30 +61,28 @@ class StudiosController < ApplicationController
     token = params[:recaptcha_token]
 
     if verify_recaptcha(token) && @studio.save
-      Rails.cache.delete("linkify_keywords_list")
+      Rails.cache.delete('linkify_keywords_list')
       update_suivi_references_emises(current_user)
       create_notification(@studio)
       create_author_notification(@studio)
-      flash[:success] = "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais."
+      flash[:success] = 'Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais.'
       redirect_to @studio
     else
       3.times do |i|
         @studio.studio_images.build(position: i + 1)
       end
-      flash.now[:alert] = I18n.t('studio.create.failure', default: "Erreur lors de la création")
+      flash.now[:alert] = I18n.t('studio.create.failure', default: 'Erreur lors de la création')
       render :new, status: :unprocessable_entity
     end
   end
 
   def update
     if @studio.update(studio_params)
-      if !@studio.validation && @studio.user == current_user
-        notify_admin_of_update(@studio)
-      end
-      flash[:success] = I18n.t('studio.update.success', default: "Studio mis à jour")
+      notify_admin_of_update(@studio) if !@studio.validation && @studio.user == current_user
+      flash[:success] = I18n.t('studio.update.success', default: 'Studio mis à jour')
       redirect_to @studio
     else
-      flash.now[:alert] = I18n.t('studio.update.failure', default: "Erreur lors de la mise à jour")
+      flash.now[:alert] = I18n.t('studio.update.failure', default: 'Erreur lors de la mise à jour')
       render :edit, status: :unprocessable_entity
     end
   end
@@ -86,31 +91,32 @@ class StudiosController < ApplicationController
     if @studio.destroy
       handle_destroy_success(@studio)
     else
-      redirect_to validation_path, alert: I18n.t('studio.destroy.error', default: "Erreur lors de la suppression")
+      redirect_to validation_path, alert: I18n.t('studio.destroy.error', default: 'Erreur lors de la suppression')
     end
   end
 
   def reject
-    rejection_reason = params[:rejection_reason].presence || I18n.t('studio.reject.no_comment', default: "Aucun commentaire")
-    
+    params[:rejection_reason].presence || I18n.t('studio.reject.no_comment',
+                                                 default: 'Aucun commentaire')
+
     @studio.studios_domaines.delete_all if @studio.respond_to?(:studios_domaines)
 
     if @studio.destroy
       create_rejection_notification(@studio)
       update_suivi_references_refusees(@studio.user)
-      redirect_to validation_path, notice: I18n.t('studio.reject.success', default: "Studio rejeté")
+      redirect_to validation_path, notice: I18n.t('studio.reject.success', default: 'Studio rejeté')
     else
-      redirect_to validation_path, alert: I18n.t('studio.reject.failure', default: "Erreur lors du rejet")
+      redirect_to validation_path, alert: I18n.t('studio.reject.failure', default: 'Erreur lors du rejet')
     end
   end
 
   def cancel
     if user_signed_in? && (current_user.admin? || @studio.user_id == current_user.id)
       @studio.destroy
-    
+
       update_suivi_references_refusees(@studio.user) if @studio.user
-      
-      flash[:notice] = "Ta contribution a été annulée avec succès."
+
+      flash[:notice] = 'Ta contribution a été annulée avec succès.'
     else
       flash[:alert] = "Tu n'as pas l'autorisation d'annuler cette contribution."
     end
@@ -122,20 +128,21 @@ class StudiosController < ApplicationController
       create_validation_notification(@studio)
       update_suivi_references_validees(@studio.user)
       GamificationService.new(@studio.user).check_contributor
-      redirect_to validation_path, notice: I18n.t('studio.validate.success', name: @studio.nom, default: "Studio validé")
+      redirect_to validation_path,
+                  notice: I18n.t('studio.validate.success', name: @studio.nom, default: 'Studio validé')
     else
-      redirect_to validation_path, alert: I18n.t('studio.validate.failure', default: "Erreur de validation")
+      redirect_to validation_path, alert: I18n.t('studio.validate.failure', default: 'Erreur de validation')
     end
   end
 
   def check_existence
-    studio = Studio.where("LOWER(nom) = ?", params[:nom].to_s.downcase.strip).first
+    studio = Studio.where('LOWER(nom) = ?', params[:nom].to_s.downcase.strip).first
 
     if studio
-      render json: { 
-        exists: true, 
+      render json: {
+        exists: true,
         validated: studio.validation,
-        edit_path: (user_signed_in? && studio.user_id == current_user.id) ? edit_studio_path(studio) : nil 
+        edit_path: user_signed_in? && studio.user_id == current_user.id ? edit_studio_path(studio) : nil
       }
     else
       render json: { exists: false }
@@ -151,107 +158,24 @@ class StudiosController < ApplicationController
   private
 
   def check_edit_permission
-    unless current_user.admin? || current_user.certified? || (@studio.user == current_user && !@studio.validated?)
-      redirect_to root_path, alert: I18n.t('studio.access.denied', default: 'Accès refusé')
-    end
+    return if current_user.admin? || current_user.certified? || (@studio.user == current_user && !@studio.validated?)
+
+    redirect_to root_path, alert: I18n.t('studio.access.denied', default: 'Accès refusé')
   end
 
-  def create_author_notification(studio)
-    if studio.user_id.present?
-      Notification.create(
-        user_id: studio.user_id,
-        notifiable: studio,
-        title: "Contribution reçue",
-        message: "Nous avons bien reçu ta contribution ! Elle sera traitée dans les plus brefs délais. Si tu souhaites la modifier avant sa validation, clique ici.",
-        link: edit_studio_path(studio)
-      )
-    end
-  end
 
-  def handle_destroy_success(studio)
-    redirect_to validation_path, notice: I18n.t('studio.destroy.success', name: studio.nom, default: "Studio supprimé")
-  end
 
-  def update_suivi_references_emises(user)
-    return unless user
-    suivi = user.suivis.first_or_create
-    suivi.increment!(:nb_references_emises)
-  end
 
-  def update_suivi_references_validees(user)
-    return unless user
-    suivi = user.suivis.first_or_create
-    suivi.increment!(:nb_references_validees)
-  end
 
-  def update_suivi_references_refusees(user)
-    return unless user
-    suivi = user.suivis.first_or_create
-    suivi.increment!(:nb_references_refusees)
-  end
 
-  def create_notification(studio)
-    title = "Nouvelle proposition"
-    message = I18n.t('notifications.new_studio', name: studio.nom, default: "Nouveau studio à valider : #{studio.nom}")
-    
-    User.where("role = ? OR certified = ?", 'admin', true).each do |user|
-      Notification.create(
-        user_id: user.id, 
-        notifiable: studio, 
-        title: title,
-        message: message
-      )
-    end
-  end
 
-  def create_validation_notification(studio)
-    return unless studio.user_id
-    
-    title = "Fiche validée"
-    message = I18n.t('notifications.studio_validated', name: studio.nom, default: "Le studio #{studio.nom} a été validé.")
-    
-    Notification.create(
-      user_id: studio.user_id, 
-      notifiable: studio, 
-      title: title,
-      message: message
-    )
-  end
 
-  def create_rejection_notification(studio)
-     return unless studio.user_id
-     
-     title = "Fiche refusée"
-     message = I18n.t('notifications.studio_rejected', name: studio.nom, default: "Le studio #{studio.nom} a été refusé.")
-     
-     Notification.create(
-       user_id: studio.user_id, 
-       notifiable: studio,
-       title: title,
-       message: message
-     ) 
-  end
 
-  def notify_admin_of_update(studio)
-    title = "Contribution modifiée"
-    message = "L'auteur a modifié sa contribution : #{studio.nom}"
-    
-    recipients = User.where("role = ? OR certified = ?", 'admin', true)
-
-    recipients.each do |user|
-      Notification.create(
-        user_id: user.id, 
-        notifiable: studio, 
-        title: title,
-        message: message
-      )
-    end
-  end
 
   def set_studio
     @studio = Studio.includes(:countries).friendly.find(params[:slug])
   rescue ActiveRecord::RecordNotFound
-    redirect_to studios_path, alert: "Studio introuvable."
+    redirect_to studios_path, alert: 'Studio introuvable.'
   end
 
   def studio_params
@@ -269,19 +193,19 @@ class StudiosController < ApplicationController
       domaine_ids: [],
       country_ids: [],
       source: [],
-      studio_images_attributes: [
-        :id, 
-        :file, 
-        :credit, 
-        :_destroy,
-        :position
+      studio_images_attributes: %i[
+        id
+        file
+        credit
+        _destroy
+        position
       ],
-      designer_studios_attributes: [
-        :id, 
-        :designer_id, 
-        :date_entree, 
-        :date_sortie, 
-        :_destroy
+      designer_studios_attributes: %i[
+        id
+        designer_id
+        date_entree
+        date_sortie
+        _destroy
       ]
     )
   end

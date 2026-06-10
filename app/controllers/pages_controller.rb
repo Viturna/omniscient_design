@@ -1,19 +1,18 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!, only: [:add_elements, :profil, :parrainage, :parrainage_filleul, :notifications_settings, :update_notifications_settings]
-  before_action :check_certified, only: [:validation, :export_references]
+  before_action :authenticate_user!,
+                only: %i[add_elements profil parrainage parrainage_filleul notifications_settings
+                         update_notifications_settings]
+  before_action :check_certified, only: %i[validation export_references]
 
-  def presentation
-  end
+  def presentation; end
 
   def add_elements
     @current_page = 'add_elements'
   end
 
-  def users
-  end
+  def users; end
 
-  def admin
-  end
+  def admin; end
 
   def profil
     @current_page = 'profil'
@@ -42,6 +41,7 @@ class PagesController < ApplicationController
       render :notifications_settings, status: :unprocessable_entity
     end
   end
+
   def validation
     @current_page = 'profil'
     @references = Reference.all.order(created_at: :desc)
@@ -60,9 +60,9 @@ class PagesController < ApplicationController
   def export_references
     require 'csv'
     @references = Reference.all.order(:nom_reference)
-    
+
     csv_data = CSV.generate(col_sep: ';', force_quotes: true) do |csv|
-      csv << ["Nom de la référence"]
+      csv << ['Nom de la référence']
       @references.each do |ref|
         csv << [ref.nom_reference]
       end
@@ -70,59 +70,60 @@ class PagesController < ApplicationController
 
     send_data csv_data, filename: "references-#{Date.today}.csv", type: 'text/csv'
   end
-  def mentionslegales
-  end
-  def politiquedeconfidentialite
-  end
-  def cookies
-  end
-  
+
+  def mentionslegales; end
+
+  def politiquedeconfidentialite; end
+
+  def cookies; end
+
   def parrainage
     @current_page = 'profil'
     @user = current_user
     @referred_users = @user.referred_users
     @referred_count = @referred_users.count
   end
+
   def parrainage_filleul
     @user = current_user
-  
-    if request.post?
-      referral_code = params[:referral_code]
-  
-      if referral_code.blank?
-        flash[:error] = "Fournir un code de parrainage."
-        redirect_to parrainage_filleul_path and return
-      end
-  
-      referrer = User.find_by(referral_code: referral_code)
-  
-      if referrer
-        if referrer == @user
-          flash[:error] = "Tu ne peux pas être ton propre parrain."
-        elsif Referral.exists?(referrer: referrer, referee: @user)
-          flash[:notice] = "Tu es déjà lié à ce parrain."
-        elsif @user.created_at < 30.days.ago
-          flash[:error] = "Ton compte a plus de 30 jours. Tu ne peux pas utiliser un code de parrainage."
-        else
-          begin
-            # Créer la relation de parrainage
-            Rails.logger.debug "user: #{@user.inspect}"
-            Referral.create!(referrer: referrer, referee: @user)
-            flash[:success] = "Tu as été lié à ton parrain : #{referrer.pseudo}."
-          rescue ActiveRecord::RecordInvalid => e
-            Rails.logger.debug "user: #{@user.inspect}"
-            Rails.logger.error "Erreur lors de la création de la relation de parrainage : #{e.message}"
-            flash[:error] = "Une erreur est survenue. Tu peux réessayer."
-          end
-        end
-      else
-        flash[:error] = "Code de parrainage invalide."
-      end
-  
-      redirect_to parrainage_path
+
+    return unless request.post?
+
+    referral_code = params[:referral_code]
+
+    if referral_code.blank?
+      flash[:error] = 'Fournir un code de parrainage.'
+      redirect_to parrainage_filleul_path and return
     end
+
+    referrer = User.find_by(referral_code: referral_code)
+
+    if referrer
+      if referrer == @user
+        flash[:error] = 'Tu ne peux pas être ton propre parrain.'
+      elsif Referral.exists?(referrer: referrer, referee: @user)
+        flash[:notice] = 'Tu es déjà lié à ce parrain.'
+      elsif @user.created_at < 30.days.ago
+        flash[:error] = 'Ton compte a plus de 30 jours. Tu ne peux pas utiliser un code de parrainage.'
+      else
+        begin
+          # Créer la relation de parrainage
+          Rails.logger.debug "user: #{@user.inspect}"
+          Referral.create!(referrer: referrer, referee: @user)
+          flash[:success] = "Tu as été lié à ton parrain : #{referrer.pseudo}."
+        rescue ActiveRecord::RecordInvalid => e
+          Rails.logger.debug "user: #{@user.inspect}"
+          Rails.logger.error "Erreur lors de la création de la relation de parrainage : #{e.message}"
+          flash[:error] = 'Une erreur est survenue. Tu peux réessayer.'
+        end
+      end
+    else
+      flash[:error] = 'Code de parrainage invalide.'
+    end
+
+    redirect_to parrainage_path
   end
-  
+
   def changelog
     @current_page = 'profil'
   end
@@ -132,7 +133,7 @@ class PagesController < ApplicationController
       GamificationService.new(current_user).check_detail_finder
       redirect_to profil_path, notice: "Bravo ! Tu as l'œil ! Badge débloqué."
     else
-      redirect_to new_user_session_path, alert: "Connecte-toi pour débloquer ce secret."
+      redirect_to new_user_session_path, alert: 'Connecte-toi pour débloquer ce secret.'
     end
   end
 
@@ -140,12 +141,11 @@ class PagesController < ApplicationController
     user_agent = request.user_agent.to_s.downcase
 
     if user_agent.include?('ipad') || user_agent.include?('iphone') || user_agent.include?('ipod') || user_agent.include?('android')
-      if user_signed_in?
-        GamificationService.new(current_user).check_omniscient_supporter
-      end
+      GamificationService.new(current_user).check_omniscient_supporter if user_signed_in?
       render :rate_redirect
     else
-      redirect_back fallback_location: root_path, alert: "L'évaluation de l'application est disponible uniquement sur smartphone (iOS & Android)."
+      redirect_back fallback_location: root_path,
+                    alert: "L'évaluation de l'application est disponible uniquement sur smartphone (iOS & Android)."
     end
   end
 

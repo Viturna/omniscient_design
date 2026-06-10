@@ -1,7 +1,7 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
-  before_action :authenticate_admin!, only: [:new, :create]
-  layout 'admin', only: [:new, :create]
+  before_action :authenticate_admin!, only: %i[new create]
+  layout 'admin', only: %i[new create]
 
   def index
     @current_page = 'profil'
@@ -10,22 +10,22 @@ class NotificationsController < ApplicationController
   end
 
   def new
-    @current_page = "notifications"
+    @current_page = 'notifications'
     @users = User.all
-    @notification = Notification.new 
+    @notification = Notification.new
 
-    @campaigns = Notification.where("admin_id IS NOT NULL OR title = ?", "La réf du jour")
+    @campaigns = Notification.where('admin_id IS NOT NULL OR title = ?', 'La réf du jour')
                              .group(:title, :message, :link, :admin_id)
-                             .select("MIN(id) as id, title, message, link, admin_id, COUNT(*) as total_sent, COUNT(CASE WHEN status = 1 THEN 1 END) as total_read, COUNT(clicked_at) as total_clicks, MIN(created_at) as sent_at")
-                             .order("sent_at DESC")
+                             .select('MIN(id) as id, title, message, link, admin_id, COUNT(*) as total_sent, COUNT(CASE WHEN status = 1 THEN 1 END) as total_read, COUNT(clicked_at) as total_clicks, MIN(created_at) as sent_at')
+                             .order('sent_at DESC')
                              .page(params[:page]).per(10)
   end
 
   def create
     # 1. On récupère les données proprement via strong params
     # Cela gère le cas où le formulaire envoie "notification[title]" ou juste "title"
-    vals = params[:notification] || params 
-    
+    vals = params[:notification] || params
+
     title = vals[:title]
     message = vals[:message]
     link = vals[:link]
@@ -33,15 +33,15 @@ class NotificationsController < ApplicationController
     Rails.logger.info "📢 Tentative envoi Notif - Titre: #{title} | Message: #{message}"
 
     if title.blank? || message.blank?
-      flash[:alert] = "Le titre et le message sont obligatoires."
+      flash[:alert] = 'Le titre et le message sont obligatoires.'
       redirect_to new_notification_path and return
     end
-    
+
     # Compteur pour le feedback
     count = 0
 
     # 2. Définition des cibles
-    targets = if params[:select_all] == "all" || params[:user_id] == "all"
+    targets = if params[:select_all] == 'all' || params[:user_id] == 'all'
                 User.all
               elsif params[:user_ids].present?
                 User.where(id: params[:user_ids].reject(&:blank?))
@@ -50,28 +50,26 @@ class NotificationsController < ApplicationController
               end
 
     if targets.empty?
-      flash[:alert] = "Sélectionne au moins un destinataire."
+      flash[:alert] = 'Sélectionne au moins un destinataire.'
       redirect_to new_notification_path and return
     end
 
     # 3. Création boucle (Sans transaction globale pour éviter les timeouts sur le push synchrone)
     targets.find_each do |target_user|
-      begin
-        Notification.create!(
-          user: target_user,
-          admin: current_user,
-          title: title,
-          message: message,
-          link: link,
-          status: :unread,
-          notifiable: nil
-        )
-        count += 1
-      rescue => e
-        Rails.logger.error "❌ Erreur envoi notif user #{target_user.id}: #{e.message}"
-      end
+      Notification.create!(
+        user: target_user,
+        admin: current_user,
+        title: title,
+        message: message,
+        link: link,
+        status: :unread,
+        notifiable: nil
+      )
+      count += 1
+    rescue StandardError => e
+      Rails.logger.error "❌ Erreur envoi notif user #{target_user.id}: #{e.message}"
     end
-    
+
     flash[:notice] = "Notification envoyée avec succès à #{count} utilisateur(s)."
     redirect_to notifications_path
   end
@@ -84,7 +82,7 @@ class NotificationsController < ApplicationController
   def click
     @notification = current_user.notifications.find_by(id: params[:id])
     if @notification.nil?
-      redirect_to root_path, alert: "Notification introuvable."
+      redirect_to root_path, alert: 'Notification introuvable.'
       return
     end
 
@@ -93,7 +91,11 @@ class NotificationsController < ApplicationController
     target_path = if @notification.link.present?
                     @notification.link
                   elsif @notification.notifiable.present?
-                    polymorphic_path(@notification.notifiable) rescue nil
+                    begin
+                      polymorphic_path(@notification.notifiable)
+                    rescue StandardError
+                      nil
+                    end
                   end
 
     target_path ||= root_path
@@ -103,14 +105,14 @@ class NotificationsController < ApplicationController
   def destroy
     @notification = current_user.notifications.find(params[:id])
     @notification.destroy
-    redirect_to notifications_path, notice: "Notification supprimée."
+    redirect_to notifications_path, notice: 'Notification supprimée.'
   end
 
-  private 
+  private
 
   def authenticate_admin!
-    unless current_user&.admin?
-      redirect_to root_path, alert: "Accès interdit."
-    end
+    return if current_user&.admin?
+
+    redirect_to root_path, alert: 'Accès interdit.'
   end
 end

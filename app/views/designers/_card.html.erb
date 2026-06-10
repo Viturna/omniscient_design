@@ -1,4 +1,4 @@
-<% images = card.designer_images.select { |img| img.file.attached? }.map(&:file) %>
+<% images = card.designer_images.select { |img| img.file.attached? }.sort_by { |img| img.position || 999 }.map(&:file) %>
 <%= link_to designer_path(card.slug) do %>
   <div class="card" data-id="<%= card.id %>" data-controller="slider" data-slider-update-background-value="true">
     <%# --------- Couleur de fond --------- %>
@@ -17,7 +17,7 @@
             <%# --- Background Blurred Image (Pas de priorité haute) --- %>
             <% if images.any? %>
               <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
-              <%= image_tag bg_variant,
+              <%= image_tag bg_variant, loading: "lazy",
               class: "card-slider-blurred-bg",
               alt: "",
               data: { slider_target: "background" },
@@ -34,7 +34,7 @@
                   <% v400 = image.variant(resize_to_limit: [400, 400], format: :webp) %>
                   <% v800 = image.variant(resize_to_limit: [800, 800], format: :webp) %>
                   <% v1200 = image.variant(resize_to_limit: [1200, 1200], format: :webp) %>
-                  <%= image_tag v400, 
+                  <%= image_tag v400, loading: "lazy", 
                   srcset: [
                     [url_for(v400), "400w"],
                     [url_for(v800), "800w"],

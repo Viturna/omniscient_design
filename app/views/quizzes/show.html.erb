@@ -1,5 +1,5 @@
-<% content_for :title, "Quiz #{@quiz.domaine&.domaine || 'Design'} - Révisions Bac STD2A | Omniscient Design" %>
-<% content_for :description, "Entraîne-toi pour le Bac STD2A avec ce quiz de #{@quiz.quiz_questions.count} questions sur l'histoire du design et des arts appliqués. Identifie les références et améliore tes connaissances." %>
+<% set_meta_tags title: "Quiz #{@quiz.domaine&.domaine || 'Design'} - Révisions Bac STD2A | Omniscient Design" %>
+<% set_meta_tags description: "Entraîne-toi pour le Bac STD2A avec ce quiz de #{@quiz.quiz_questions.count} questions sur l'histoire du design et des arts appliqués. Identifie les références et améliore tes connaissances." %>
 
 <%= content_tag :div, class: "quiz-player-wrapper", data: { 
   controller: "quiz-player",
@@ -49,7 +49,7 @@
 
     <div class="pane-footer">
       <div class="branding">
-        <%= image_tag "logo-white.svg", height: 60 %>
+        <%= image_tag "logo-white.svg", loading: "lazy", height: 60 %>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@
          <span style="color: rgba(255,255,255,0.6); font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
          <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
          <div class="icon-points-wrapper">
-           <%= image_tag "points_od.svg", width: 16, height: 16 %>
+           <%= image_tag "points_od.svg", loading: "lazy", width: 16, height: 16 %>
          </div>
          <span data-quiz-player-target="totalPoints"><%= current_user.quiz_points %> pts</span>
       </div>
@@ -98,7 +98,7 @@
   <div class="quiz-result-modal hidden" data-quiz-player-target="resultModal">
     <div class="modal-content">
       <div class="success-icon-wrapper">
-          <%= image_tag "points_od.svg", width: 48, height: 48 %>
+          <%= image_tag "points_od.svg", loading: "lazy", width: 48, height: 48 %>
       </div>
       <h2>Félicitations !</h2>
       <p class="congrats-text">Tu as terminé le quiz avec brio.</p>

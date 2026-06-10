@@ -11,7 +11,7 @@
         <div class="points-pill">
            <span style="color: #888; font-weight: 600;">#<%= User.where('quiz_points > ?', current_user.quiz_points).count + 1 %></span>
            <div style="width: 1px; height: 16px; background: rgba(0,0,0,0.1); margin: 0 2px;"></div>
-           <%= image_tag "points_od_black.svg", width: 20, height: 20 %>
+           <%= image_tag "points_od_black.svg", loading: "lazy", width: 20, height: 20 %>
            <span><%= current_user.quiz_points %> pts</span>
         </div>
         <div class="leaderboard-icon-btn active">
@@ -44,7 +44,7 @@
   <div class="leaderboard-content">
     <div class="floating-icon">
       <div class="icon-inner">
-        <%= image_tag "points_od_black.svg" %>
+        <%= image_tag "points_od_black.svg" , loading: "lazy" %>
       </div>
     </div>
 
@@ -90,7 +90,7 @@
                 <div class="rank-cell">#<%= @users.offset_value + index + 1 %></div>
                 <div class="user-cell">
                   <% if user.profile_image.attached? %>
-                    <%= image_tag user.profile_image.variant(resize_to_fill: [80, 80]), class: "avatar" %>
+                    <%= image_tag user.profile_image.variant(resize_to_fill: [80, 80]), loading: "lazy", class: "avatar" %>
                   <% else %>
                     <div class="avatar-placeholder">
                       <%= user.pseudo[0].upcase %>
@@ -103,7 +103,7 @@
                     <div class="points-wrapper">
                       <div class="points-badge" style="white-space: nowrap;">
                         <span class="mobile-label">Saison :</span>
-                        <%= image_tag "points_od.svg", width: 14, height: 14 %>
+                        <%= image_tag "points_od.svg", loading: "lazy", width: 14, height: 14 %>
                         <span><%= user.quiz_points %> pts</span>
                       </div>
                     </div>
@@ -116,7 +116,7 @@
                   <% else %>
                     <div class="points-wrapper" style="justify-content: flex-end;">
                       <div class="points-badge" style="white-space: nowrap;">
-                        <%= image_tag "points_od.svg", width: 14, height: 14 %>
+                        <%= image_tag "points_od.svg", loading: "lazy", width: 14, height: 14 %>
                         <span><%= user.total_quiz_points %> pts</span>
                       </div>
                     </div>

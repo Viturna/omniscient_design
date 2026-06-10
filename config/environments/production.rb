@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -25,15 +25,15 @@ Rails.application.configure do
   config.public_file_server.enabled = true
 
   config.public_file_server.headers = {
-  "Cache-Control" => "public, max-age=31536000",
-  "Expires" => 1.year.from_now.to_fs(:rfc822)
-}
+    'Cache-Control' => 'public, max-age=31536000',
+    'Expires' => 1.year.from_now.to_fs(:rfc822)
+  }
 
   # Compress CSS using a preprocessor.
   config.assets.css_compressor = :sass
 
   # Do not fall back to assets pipeline if a precompiled asset is missed.
- config.assets.compile = true
+  config.assets.compile = true
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -61,29 +61,29 @@ Rails.application.configure do
 
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+                                       .tap { |logger| logger.formatter = ::Logger::Formatter.new }
+                                       .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # "info" includes generic and useful information about system operation, but avoids logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
   config.cache_classes = true
   config.public_file_server.enabled = true
-  
+
   config.assets.digest = true # Générer des hachages pour les assets
   config.assets.js_compressor = :terser # Compresser les fichiers JS
   config.assets.css_compressor = :sass # Compresser les fichiers CSS
-  
- config.public_file_server.headers = {
-    "Cache-Control" => "public, max-age=#{1.year.to_i}",
-    "Expires" => 1.year.from_now.to_fs(:rfc822)
+
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{1.year.to_i}",
+    'Expires' => 1.year.from_now.to_fs(:rfc822)
   }
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
@@ -107,29 +107,29 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
-    "omniscientdesign.fr",
-    "www.omniscientdesign.fr",
+    'omniscientdesign.fr',
+    'www.omniscientdesign.fr',
     /.*\.omniscientdesign\.fr/
   ]
-  
+
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { host: "omniscientdesign.fr", protocol: "https" }
+  config.action_mailer.default_url_options = { host: 'omniscientdesign.fr', protocol: 'https' }
 
   config.action_mailer.smtp_settings = {
-    address: "in-v3.mailjet.com",
+    address: 'in-v3.mailjet.com',
     port: 587,
-    user_name: ENV["MAILJET_API_KEY"],
-    password: ENV["MAILJET_SECRET_KEY"],
+    user_name: ENV['MAILJET_API_KEY'],
+    password: ENV['MAILJET_SECRET_KEY'],
     authentication: :plain,
     enable_starttls_auto: true
   }
 
   config.middleware.insert_before 0, Rack::Rewrite do
-    r301 %r{.*}, 'https://omniscientdesign.fr$&', if: Proc.new { |rack_env|
+    r301(/.*/, 'https://omniscientdesign.fr$&', if: proc { |rack_env|
       rack_env['SERVER_NAME'] =~ /^www\./
-    }
+    })
   end
 
   config.action_controller.forgery_protection_origin_check = false

@@ -5,42 +5,75 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :track_visit, if: :user_signed_in?
   before_action :check_gamification_badges, if: :user_signed_in?
+  before_action :prepare_meta_tags
 
   def set_theme
     theme = params[:theme]
     cookies[:theme] = theme
-redirect_back(fallback_location: root_path, allow_other_host: false)
+    redirect_back(fallback_location: root_path, allow_other_host: false)
   end
-  
+
   helper_method :native_app?
 
   def native_app?
-    request.user_agent.to_s.include?("Turbo Native")
+    request.user_agent.to_s.include?('Turbo Native')
   end
+
   private
+
+  def prepare_meta_tags
+    set_meta_tags(
+      site: 'Omniscient Design',
+      title: I18n.t('meta.default_title'),
+      reverse: true,
+      separator: '|',
+      description: I18n.t('meta.default_description'),
+      keywords: %w[design architecture art reference inspiration],
+      noindex: view_context.should_not_index?,
+      twitter: {
+        site: '@OmniscientDesign',
+        card: 'summary_large_image',
+        title: :title,
+        description: :description,
+        image: ActionController::Base.helpers.asset_url('logo-od-rs.jpg')
+      },
+      og: {
+        site_name: 'Omniscient Design',
+        title: :title,
+        description: :description,
+        type: 'website',
+        url: request.original_url,
+        image: ActionController::Base.helpers.asset_url('logo-od-rs.jpg'),
+        locale: I18n.locale
+      }
+    )
+  end
 
   def set_unread_notifications_count
     @unread_notifications_count = current_user.notifications.unread.count if user_signed_in?
   end
+
   def set_active_storage_url_options
     ActiveStorage::Current.url_options = Rails.application.config.action_mailer.default_url_options
   end
 
   def check_admin_role
-    unless user_signed_in? && current_user.admin?
-      redirect_to root_path, alert: I18n.t('user.access.denied_admin')
-    end
+    return if user_signed_in? && current_user.admin?
+
+    redirect_to root_path, alert: I18n.t('user.access.denied_admin')
   end
+
   def check_certified
-    unless user_signed_in? && (current_user.certified? || current_user&.admin?)
-      redirect_to root_path, alert: I18n.t('user.access.denied_certified')
-    end
+    return if user_signed_in? && (current_user.certified? || current_user&.admin?)
+
+    redirect_to root_path, alert: I18n.t('user.access.denied_certified')
   end
+
   def check_if_banned
-    if user_signed_in? && current_user.banned?
-      sign_out_and_redirect(current_user)
-      flash[:alert] = I18n.t('user.access.banned')
-    end
+    return unless user_signed_in? && current_user.banned?
+
+    sign_out_and_redirect(current_user)
+    flash[:alert] = I18n.t('user.access.banned')
   end
 
   def track_visit
@@ -54,7 +87,7 @@ redirect_back(fallback_location: root_path, allow_other_host: false)
     session[:last_activity_at] = Time.current
   end
 
-   def set_locale
+  def set_locale
     I18n.locale = params[:locale] || I18n.default_locale
   end
 
@@ -65,18 +98,18 @@ redirect_back(fallback_location: root_path, allow_other_host: false)
   protected
 
   def check_gamification_badges
-    current_hour = Time.current.in_time_zone("Europe/Paris").hour
-    
-    if current_hour >= 0 && current_hour < 5
-      GamificationService.new(current_user).check_noctambule
-    end
+    current_hour = Time.current.in_time_zone('Europe/Paris').hour
+
+    return unless current_hour >= 0 && current_hour < 5
+
+    GamificationService.new(current_user).check_noctambule
   end
 
   def after_sign_in_path_for(resource)
     if resource.is_a?(User)
       service = GamificationService.new(resource)
-      
-      service.check_multi_support 
+
+      service.check_multi_support
       service.check_seniority
     end
 

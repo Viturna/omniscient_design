@@ -18,16 +18,16 @@ Rails.application.routes.draw do
       end
     end
 
-    root to: "dashboard#index"
-    get "dashboard", to: "dashboard#index"
-    get "suivi_references", to: "dashboard#suivi_references"
-    get "suivi_lists", to: "dashboard#suivi_lists"
-    get "feedbacks", to: "dashboard#feedbacks"
-    resources :etablissements, only: [:index, :edit, :update, :destroy]
-    resources :user_badges, only: [:new, :create, :destroy] do
+    root to: 'dashboard#index'
+    get 'dashboard', to: 'dashboard#index'
+    get 'suivi_references', to: 'dashboard#suivi_references'
+    get 'suivi_lists', to: 'dashboard#suivi_lists'
+    get 'feedbacks', to: 'dashboard#feedbacks'
+    resources :etablissements, only: %i[index edit update destroy]
+    resources :user_badges, only: %i[new create destroy] do
       get :search_users, on: :collection
     end
-    get "notifications/:id/clicks", to: "dashboard#notification_clicks", as: :notification_clicks
+    get 'notifications/:id/clicks', to: 'dashboard#notification_clicks', as: :notification_clicks
 
     get 'references/notions', to: 'references#edit_notions', as: :references_notions
     patch 'references/:id/update_notions', to: 'references#update_notions', as: :reference_update_notions
@@ -36,10 +36,8 @@ Rails.application.routes.draw do
   get 'frise/references', to: 'search#frise_references'
   get 'frise/references', to: 'search#frise_references' # Redirection SEO
 
-
   # ---- LOCALISATION ----
-  scope "(:locale)", locale: /fr|en/ do
-
+  scope '(:locale)', locale: /fr|en/ do
     # Racine par défaut
     root 'references#index'
 
@@ -59,8 +57,8 @@ Rails.application.routes.draw do
       get 'users/check_pseudo', to: 'users/registrations#check_pseudo'
     end
     # Tes routes publiques
-    resources :feedbacks, only: [:new, :create, :index, :destroy]
-    resources :users, only: [:index, :show] do
+    resources :feedbacks, only: %i[new create index destroy]
+    resources :users, only: %i[index show] do
       collection do
         get :export_newsletter
       end
@@ -72,9 +70,9 @@ Rails.application.routes.draw do
         post :admin_resend_confirmation
       end
     end
-    
+
     get 'notifications/new', to: 'notifications#new', as: :notifications_new
-    resources :notifications, only: [:index, :show, :destroy, :new, :create] do
+    resources :notifications, only: %i[index show destroy new create] do
       member do
         get :click
       end
@@ -125,12 +123,18 @@ Rails.application.routes.draw do
     end
 
     # Redirections SEO 301 - anciennes URLs oeuvres vers nouvelles references
-    get '/oeuvres', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references" }, status: :moved_permanently
-    get '/oeuvres/:slug', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references/#{params[:slug]}" }, status: :moved_permanently
+    get '/oeuvres', to: redirect { |params, _req| "/#{params[:locale] || 'fr'}/references" }, status: :moved_permanently
+    get '/oeuvres/:slug', to: redirect { |params, _req|
+      "/#{params[:locale] || 'fr'}/references/#{params[:slug]}"
+    }, status: :moved_permanently
 
     # Redirections SEO 301 - anciennes URLs references vers nouvelles references
-    get '/references', to: redirect { |params, req| "#{req.original_fullpath.gsub(/\/references/, '/references')}" }, status: :moved_permanently
-    get '/references/:slug', to: redirect { |params, req| "/#{params[:locale] || 'fr'}/references/#{params[:slug]}" }, status: :moved_permanently
+    get '/references', to: redirect { |_params, req|
+      "#{req.original_fullpath.gsub(%r{/references}, '/references')}"
+    }, status: :moved_permanently
+    get '/references/:slug', to: redirect { |params, _req|
+      "/#{params[:locale] || 'fr'}/references/#{params[:slug]}"
+    }, status: :moved_permanently
 
     resources :designers, param: :slug do
       collection do
@@ -160,7 +164,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :bug_reports, only: [:index, :new, :create, :show, :destroy] do
+    resources :bug_reports, only: %i[index new create show destroy] do
       patch :update_status, on: :member
     end
 
@@ -197,7 +201,7 @@ Rails.application.routes.draw do
     get 'confirmation_pending', to: 'pages#confirmation_pending', as: 'confirmation_pending'
     get 'secret/legal_found', to: 'pages#secret_badge', as: :secret_badge
 
-    #ADS
+    # ADS
     get '/go/:id', to: 'ads#click', as: :partner_click
     get '/pixel/:id/view', to: 'ads#impression', as: :partner_impression
 
@@ -214,13 +218,11 @@ Rails.application.routes.draw do
     get '/api/daily_reference', to: 'api/daily_references#show'
 
     # ---- ERREURS ----
-    match "/404", to: "errors#not_found", via: :all
-    match "/500", to: "errors#internal_server_error", via: :all
-    match "/422", to: "errors#unprocessable_entity", via: :all
-    match "/403", to: "errors#forbidden", via: :all
-
+    match '/404', to: 'errors#not_found', via: :all
+    match '/500', to: 'errors#internal_server_error', via: :all
+    match '/422', to: 'errors#unprocessable_entity', via: :all
+    match '/403', to: 'errors#forbidden', via: :all
   end
-
 
   # Healthcheck
   get 'up', to: 'rails/health#show', as: :rails_health_check

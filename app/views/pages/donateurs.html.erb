@@ -1,4 +1,4 @@
-<% content_for :title, "Soutenir le projet - Omniscient Design" %> <% content_for :description, "Comprendre pourquoi nous avons besoin de ton soutien et comment sont utilisés les dons." %>
+<% set_meta_tags title: "Soutenir Omniscient Design" %> <% set_meta_tags description: "Découvre comment nous aider à maintenir cette plateforme gratuite et accessible à tous les étudiants en design." %>
 
 <style>
 .donators-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 60px; }
@@ -189,7 +189,7 @@
     </div>
     </div>
     <div style="margin: 48px 0;">
-    <%= image_tag "tipee.png", 
+    <%= image_tag "tipee.png", loading: "lazy", 
       alt: "Omniscient Design x Tipeee", 
       style: "width: 80%; height: auto; border-radius: 6px;" %>
     </div>

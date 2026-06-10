@@ -4,7 +4,8 @@ class DailyReferenceMailer < ApplicationMailer
     @reference = reference
 
     if @reference.reference_images.any? && @reference.reference_images.first.file.attached?
-      attachments[@reference.reference_images.first.file.filename.to_s] = @reference.reference_images.first.file.download
+      attachments[@reference.reference_images.first.file.filename.to_s] =
+        @reference.reference_images.first.file.download
     end
 
     mail(to: @user.email, subject: "La réf du jour : #{@reference.nom_reference}")
@@ -12,6 +13,6 @@ class DailyReferenceMailer < ApplicationMailer
 
   def admin_stock_alert(admin_email)
     @admin_email = admin_email
-    mail(to: @admin_email, subject: "⚠️ PLUS DE RÉFÉRENCES DISPONIBLES - Omniscient Design")
+    mail(to: @admin_email, subject: '⚠️ PLUS DE RÉFÉRENCES DISPONIBLES - Omniscient Design')
   end
 end

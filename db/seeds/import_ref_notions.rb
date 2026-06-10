@@ -29,7 +29,7 @@ CSV.foreach(csv_path, headers: true) do |row|
 
   # Trouver la référence
   reference = Reference.find_by(nom_reference: ref_name)
-  
+
   if reference.nil?
     stats[:ref_not_found] += 1
     errors << "Référence introuvable : \"#{ref_name}\""
@@ -37,8 +37,8 @@ CSV.foreach(csv_path, headers: true) do |row|
   end
 
   # Parser les notions
-  notion_names = (notions_string || "").split(',').map(&:strip).reject(&:blank?)
-  
+  notion_names = (notions_string || '').split(',').map(&:strip).reject(&:blank?)
+
   notions_to_add = []
   notion_names.each do |n_name|
     notion = Notion.find_by(name: n_name)

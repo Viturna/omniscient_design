@@ -5,21 +5,21 @@ puts "🚀 Lancement de la génération des quiz par domaine (Questions par quiz
 
 Domaine.all.each do |domaine|
   print "👉 Génération pour le domaine '#{domaine.domaine}'... "
-  
+
   begin
     params = {
       title: "Quiz : #{domaine.domaine}",
       domaine_id: domaine.id,
       count: count
     }
-    
+
     # Utilisation du service Admin que nous avons déjà optimisé
     quiz = Admin::QuizGeneratorService.new(params).call
-    
+
     puts "✅ Succès ! Quiz ID: #{quiz.id}"
-  rescue => e
+  rescue StandardError => e
     puts "❌ Erreur : #{e.message}"
   end
 end
 
-puts "✨ Terminé ! Tes quiz sont disponibles dans le Hub."
+puts '✨ Terminé ! Tes quiz sont disponibles dans le Hub.'

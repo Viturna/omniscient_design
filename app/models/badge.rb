@@ -4,22 +4,22 @@ class Badge < ApplicationRecord
 
   # Catégories
   enum :category, {
-    special: "special",         # Omniscient User, Early Adopter, Noctambule...
-    donor: "donor",             # Donateur
-    contributor: "contributor", # Contributeur (Refs)
-    ambassador: "ambassador",   # Ambassadeur (Parrainage)
-    investigator: "investigator", # Investigateur (Feedback/Bugs)
-    gamer: "gamer",
-    competitor: "competitor"
+    special: 'special',         # Omniscient User, Early Adopter, Noctambule...
+    donor: 'donor',             # Donateur
+    contributor: 'contributor', # Contributeur (Refs)
+    ambassador: 'ambassador',   # Ambassadeur (Parrainage)
+    investigator: 'investigator', # Investigateur (Feedback/Bugs)
+    gamer: 'gamer',
+    competitor: 'competitor'
   }
 
   # Niveaux
-  enum :level, { 
-    standard: "standard",
-    bronze: "bronze", 
-    silver: "silver", 
-    gold: "gold",
-    platinum: "platinum"
+  enum :level, {
+    standard: 'standard',
+    bronze: 'bronze',
+    silver: 'silver',
+    gold: 'gold',
+    platinum: 'platinum'
   }
 
   validates :name, presence: true, uniqueness: true

@@ -2,7 +2,7 @@ class Admin::QuizzesController < ApplicationController
   layout 'admin'
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  before_action :set_quiz, only: [:edit, :update, :destroy]
+  before_action :set_quiz, only: %i[edit update destroy]
 
   def index
     @current_page = 'quizzes'
@@ -41,7 +41,7 @@ class Admin::QuizzesController < ApplicationController
   def auto_generate
     @quiz = Admin::QuizGeneratorService.new(auto_generate_params).call
     redirect_to admin_quizzes_path, notice: "Le quiz '#{@quiz.title}' a été généré avec succès.", status: :see_other
-  rescue => e
+  rescue StandardError => e
     redirect_to admin_quizzes_path, alert: "Erreur lors de la génération : #{e.message}", status: :see_other
   end
 
@@ -54,7 +54,7 @@ class Admin::QuizzesController < ApplicationController
     @quiz = Quiz.new(quiz_params)
     @quiz.quiz_type = 'static'
     if @quiz.save
-      redirect_to admin_quizzes_path, notice: "Quiz créé avec succès."
+      redirect_to admin_quizzes_path, notice: 'Quiz créé avec succès.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -66,7 +66,7 @@ class Admin::QuizzesController < ApplicationController
 
   def update
     if @quiz.update(quiz_params)
-      redirect_to admin_quizzes_path, notice: "Quiz mis à jour."
+      redirect_to admin_quizzes_path, notice: 'Quiz mis à jour.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -74,13 +74,13 @@ class Admin::QuizzesController < ApplicationController
 
   def destroy
     @quiz.destroy
-    redirect_to admin_quizzes_path, notice: "Quiz supprimé."
+    redirect_to admin_quizzes_path, notice: 'Quiz supprimé.'
   end
 
   def toggle_archive
     @quiz = Quiz.find(params[:id])
     @quiz.update!(archived: !@quiz.archived)
-    status_msg = @quiz.archived? ? "archivé" : "désarchivé"
+    status_msg = @quiz.archived? ? 'archivé' : 'désarchivé'
     redirect_to admin_quizzes_path, notice: "Le quiz a été #{status_msg} avec succès."
   end
 
@@ -95,7 +95,7 @@ class Admin::QuizzesController < ApplicationController
       :title, :domaine_id, :estimated_time, :archived,
       quiz_questions_attributes: [
         :id, :content, :reference_id, :order, :_destroy,
-        quiz_answers_attributes: [:id, :content, :is_correct, :_destroy]
+        { quiz_answers_attributes: %i[id content is_correct _destroy] }
       ]
     )
   end
@@ -105,8 +105,8 @@ class Admin::QuizzesController < ApplicationController
   end
 
   def authenticate_admin!
-    unless current_user&.admin?
-      redirect_to root_path, alert: "Accès interdit."
-    end
+    return if current_user&.admin?
+
+    redirect_to root_path, alert: 'Accès interdit.'
   end
 end

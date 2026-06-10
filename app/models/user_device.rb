@@ -2,5 +2,5 @@ class UserDevice < ApplicationRecord
   belongs_to :user
 
   validates :token, presence: true
-  validates :token, uniqueness: { scope: :user_id } 
+  validates :token, uniqueness: { scope: :user_id }
 end

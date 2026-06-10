@@ -1,1 +1,1 @@
-json.array! @designers, partial: "designers/designer", as: :designer
+json.array! @designers, partial: 'designers/designer', as: :designer

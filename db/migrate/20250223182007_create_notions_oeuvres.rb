@@ -5,7 +5,7 @@ class CreateNotionsreferences < ActiveRecord::Migration[7.1]
       t.references :notion, null: false, foreign_key: true
     end
 
-    add_index :notions_references, [:reference_id, :notion_id], unique: true
-    add_index :notions_references, [:notion_id, :reference_id], unique: true
+    add_index :notions_references, %i[reference_id notion_id], unique: true
+    add_index :notions_references, %i[notion_id reference_id], unique: true
   end
 end

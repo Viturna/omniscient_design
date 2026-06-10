@@ -9,7 +9,7 @@ class SetDailyReferencePushDefaultToTrue < ActiveRecord::Migration[8.1]
 
   def down
     change_column_default :users, :daily_reference_push, from: true, to: false
-    # On ne revient pas en arrière pour les données existantes pour éviter d'écraser 
+    # On ne revient pas en arrière pour les données existantes pour éviter d'écraser
     # les choix volontaires des utilisateurs s'ils ont déjà rechangé.
   end
 end

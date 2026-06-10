@@ -7,52 +7,52 @@ class GamificationService
 
   # "Omniscient User" : Se créer un compte
   def check_omniscient_user
-    assign_badge(name: "Omniscient User", category: "special")
+    assign_badge(name: 'Omniscient User', category: 'special')
   end
 
   # "Early Adopter" : Faire partie des 100 premiers comptes
   def check_early_adopter
-    if @user.id <= 100
-      assign_badge(name: "Early Adopter", category: "special")
-    end
+    return unless @user.id <= 100
+
+    assign_badge(name: 'Early Adopter', category: 'special')
   end
 
   # "Community Member" : S'abonner aux réseaux
   # À appeler quand l'user clique sur un lien social
   def check_community_member
-    assign_badge(name: "Community Member", category: "special")
+    assign_badge(name: 'Community Member', category: 'special')
   end
 
   # "Dans les moindres détails" : Bouton caché
   def check_detail_finder
-    assign_badge(name: "Dans les moindres détails", category: "special")
+    assign_badge(name: 'Dans les moindres détails', category: 'special')
   end
 
   # "Noctambule" : Connecté entre 00h et 5h
   def check_noctambule
-  return if @user.badges.exists?(name: "Noctambule")
-  
-  heure_actuelle = Time.current.in_time_zone("Europe/Paris").hour
+    return if @user.badges.exists?(name: 'Noctambule')
 
-  if heure_actuelle >= 0 && heure_actuelle < 5
-    assign_badge(name: "Noctambule", category: "special")
+    heure_actuelle = Time.current.in_time_zone('Europe/Paris').hour
+
+    return unless heure_actuelle >= 0 && heure_actuelle < 5
+
+    assign_badge(name: 'Noctambule', category: 'special')
   end
-end
 
   # "Multi support" : Avoir l'app (Utilisation de UserDevice)
   def check_multi_support
-    if @user.user_devices.any?
-      assign_badge(name: "Multi support", category: "special")
-    end
+    return unless @user.user_devices.any?
+
+    assign_badge(name: 'Multi support', category: 'special')
   end
 
   # "Omniscient Supporter" : Clic sur le lien de notation
   def check_omniscient_supporter
-    badge = Badge.find_or_create_by!(name: "Omniscient Supporter") do |b|
+    badge = Badge.find_or_create_by!(name: 'Omniscient Supporter') do |b|
       b.category = :special
       b.level = :standard
       b.description = "Merci d'avoir noté l'application sur les stores !"
-      b.image_name = "omniscient_supporter.png"
+      b.image_name = 'omniscient_supporter.png'
     end
     give_badge(badge)
   end
@@ -63,12 +63,12 @@ end
       b.category = :special
       b.level = :standard
       b.description = "Un an d'ancienneté sur la plateforme. Un vrai pilier !"
-      b.image_name = "l_aaaancien.png"
+      b.image_name = 'l_aaaancien.png'
     end
 
-    if @user.created_at <= 1.year.ago
-      give_badge(badge)
-    end
+    return unless @user.created_at <= 1.year.ago
+
+    give_badge(badge)
   end
 
   # --- 2. BADGES À NIVEAUX ---
@@ -77,14 +77,14 @@ end
   # amount en euros
   def check_donor(amount_total)
     # Badge Spécial "Donateur" (Peu importe le montant)
-    assign_badge(name: "Donateur", category: "special") if amount_total > 0
+    assign_badge(name: 'Donateur', category: 'special') if amount_total > 0
 
     # Niveaux
-    assign_badge_by_level("donor", amount_total, {
-      5 => "bronze",
-      20 => "silver",
-      50 => "gold"
-    })
+    assign_badge_by_level('donor', amount_total, {
+                            5 => 'bronze',
+                            20 => 'silver',
+                            50 => 'gold'
+                          })
   end
 
   # "Contributeur" : Basé sur les références validées (Table Suivi)
@@ -92,48 +92,48 @@ end
     # On compte les references + designers + studios validés (ou juste references selon ton choix)
     # Ici j'utilise le compteur global du modèle Suivi s'il existe
     count = @user.suivis.first&.nb_references_validees || 0
-    
+
     # Si tu veux compter manuellement :
     # count = @user.references.where(validation: true).count
 
-    assign_badge_by_level("contributor", count, {
-      1 => "bronze",
-      10 => "silver",
-      20 => "gold"
-    })
+    assign_badge_by_level('contributor', count, {
+                            1 => 'bronze',
+                            10 => 'silver',
+                            20 => 'gold'
+                          })
   end
 
   # "Ambassadeur" : Parrainages (Referral)
   def check_ambassador
     count = @user.referrals_as_referrer.count # Ou count des rewards claimed
 
-    assign_badge_by_level("ambassador", count, {
-      3 => "bronze",
-      10 => "silver",
-      20 => "gold"
-    })
+    assign_badge_by_level('ambassador', count, {
+                            3 => 'bronze',
+                            10 => 'silver',
+                            20 => 'gold'
+                          })
   end
 
   # "Investigateur" : Feedbacks + Bug Reports
   def check_investigator
     count = @user.feedbacks.count + @user.bug_reports.count
 
-    assign_badge_by_level("investigator", count, {
-      1 => "bronze",
-      5 => "silver",
-      10 => "gold"
-    })
+    assign_badge_by_level('investigator', count, {
+                            1 => 'bronze',
+                            5 => 'silver',
+                            10 => 'gold'
+                          })
   end
 
   # "Gamer" : Points aux quiz
   def check_gamer
     points = @user.quiz_points || 0
 
-    assign_badge_by_level("gamer", points, {
-      500 => "bronze",
-      1000 => "silver",
-      2500 => "gold"
-    })
+    assign_badge_by_level('gamer', points, {
+                            500 => 'bronze',
+                            1000 => 'silver',
+                            2500 => 'gold'
+                          })
   end
 
   # "Compétiteur" : Top 1, Top 2, Top 3 du classement général
@@ -144,21 +144,20 @@ end
     rank = User.where('quiz_points > ?', points).count + 1
 
     if rank <= 3
-      badge = Badge.find_by(category: "competitor", level: "bronze")
+      badge = Badge.find_by(category: 'competitor', level: 'bronze')
       give_badge(badge) if badge
     end
 
     if rank <= 2
-      badge = Badge.find_by(category: "competitor", level: "silver")
+      badge = Badge.find_by(category: 'competitor', level: 'silver')
       give_badge(badge) if badge
     end
 
-    if rank <= 1
-      badge = Badge.find_by(category: "competitor", level: "gold")
-      give_badge(badge) if badge
-    end
+    return unless rank <= 1
+
+    badge = Badge.find_by(category: 'competitor', level: 'gold')
+    give_badge(badge) if badge
   end
-
 
   private
 
@@ -173,7 +172,7 @@ end
   # Méthode intelligente pour les niveaux
   def assign_badge_by_level(category, user_score, thresholds)
     # thresholds = { 1 => "bronze", 10 => "silver" }
-    
+
     thresholds.each do |score_needed, level|
       if user_score >= score_needed
         badge = Badge.find_by(category: category, level: level)
@@ -183,28 +182,29 @@ end
   end
 
   def give_badge(badge)
-    unless @user.badges.include?(badge)
-      UserBadge.create(user: @user, badge: badge)
-      
-      Notification.create(
-        user: @user,
-        title: "Nouveau Badge !",
-        message: "Félicitations ! Tu as débloqué le badge : #{badge.name}",
-        link: "/mes-badges",
-        status: :unread
-      )
-    end
+    return if @user.badges.include?(badge)
+
+    UserBadge.create(user: @user, badge: badge)
+
+    Notification.create(
+      user: @user,
+      title: 'Nouveau Badge !',
+      message: "Félicitations ! Tu as débloqué le badge : #{badge.name}",
+      link: '/mes-badges',
+      status: :unread
+    )
   end
+
   def self.manual_assign(user, badge)
     return false if user.badges.include?(badge)
 
     UserBadge.create(user: user, badge: badge)
-    
+
     Notification.create(
       user: user,
-      title: "Badge Spécial Reçu !",
+      title: 'Badge Spécial Reçu !',
       message: "L'équipe t'a décerné le badge : #{badge.name}",
-      link: "/mes-badges",
+      link: '/mes-badges',
       status: :unread
     )
     true

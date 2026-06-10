@@ -1,5 +1,5 @@
-<% content_for :title, "Rechercher des références et des designers - Omniscient Design" %>
-<% content_for :description, "La page de recherche permet de trouver efficacement et rapidement la référence que tu cherches. Trie les références par domaine, année ou encore pays !" %>
+<% set_meta_tags title: "Recherche de Références Design | Omniscient Design" %>
+<% set_meta_tags description: "Trouve la référence parfaite pour tes projets en design. Trie par domaine, année ou pays pour enrichir tes analyses et planches de recherche." %>
 <section class="top-bar-search">
   <%= form_with url: search_path, method: :get, local: true do |form| %>
     <div class="autocomplete" data-controller="autocomplete" data-autocomplete-url-value="<%= search_autocomplete_path %>">

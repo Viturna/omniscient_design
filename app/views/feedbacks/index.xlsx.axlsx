@@ -1,8 +1,10 @@
 wb = xlsx_package.workbook
-wb.add_worksheet(name: "Feedbacks") do |sheet|
-  sheet.add_row ["User Email", I18n.t('feedback.questions.question_1'), I18n.t('feedback.questions.question_2'), I18n.t('feedback.questions.question_3'), I18n.t('feedback.questions.question_4'), I18n.t('feedback.questions.question_5'), I18n.t('feedback.questions.question_6'), I18n.t('feedback.questions.question_7'), I18n.t('feedback.questions.question_8'), I18n.t('feedback.questions.question_9'), I18n.t('feedback.questions.question_10'), I18n.t('feedback.questions.question_11'), I18n.t('feedback.questions.question_12')]
+wb.add_worksheet(name: 'Feedbacks') do |sheet|
+  sheet.add_row ['User Email', I18n.t('feedback.questions.question_1'), I18n.t('feedback.questions.question_2'),
+                 I18n.t('feedback.questions.question_3'), I18n.t('feedback.questions.question_4'), I18n.t('feedback.questions.question_5'), I18n.t('feedback.questions.question_6'), I18n.t('feedback.questions.question_7'), I18n.t('feedback.questions.question_8'), I18n.t('feedback.questions.question_9'), I18n.t('feedback.questions.question_10'), I18n.t('feedback.questions.question_11'), I18n.t('feedback.questions.question_12')]
   @feedbacks.each do |feedback|
     user_email = feedback.user.email if feedback.user.present?
-    sheet.add_row [user_email, feedback.question_1, feedback.question_2, feedback.question_3, feedback.question_4, feedback.question_5, feedback.question_6, feedback.question_7, feedback.question_8, feedback.question_9, feedback.question_10, feedback.question_11, feedback.question_12]
+    sheet.add_row [user_email, feedback.question_1, feedback.question_2, feedback.question_3, feedback.question_4,
+                   feedback.question_5, feedback.question_6, feedback.question_7, feedback.question_8, feedback.question_9, feedback.question_10, feedback.question_11, feedback.question_12]
   end
 end

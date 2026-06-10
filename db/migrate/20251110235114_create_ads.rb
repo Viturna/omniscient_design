@@ -4,7 +4,7 @@ class CreateAds < ActiveRecord::Migration[7.0]
       t.string :title
       t.text :description
       t.string :link
-      t.string :bg_color, default: "#202020" # Une couleur par défaut
+      t.string :bg_color, default: '#202020' # Une couleur par défaut
       t.boolean :active, default: true       # Active par défaut à la création
       t.date :start_date
       t.date :end_date

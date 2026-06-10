@@ -22,6 +22,6 @@ class RenameOeuvresToReferences < ActiveRecord::Migration[8.1]
     rename_column :designers_references, :oeuvre_id, :reference_id
     rename_column :lists_references, :oeuvre_id, :reference_id
     rename_column :notions_references, :oeuvre_id, :reference_id
-      # rejected_references n'avait pas de colonne oeuvre_id, pas besoin de renommer
+    # rejected_references n'avait pas de colonne oeuvre_id, pas besoin de renommer
   end
 end

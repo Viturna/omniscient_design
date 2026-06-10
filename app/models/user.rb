@@ -2,11 +2,10 @@ require 'mailjet'
 class User < ApplicationRecord
   before_create :generate_referral_code
 
-
   # Devise
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable,
-         :omniauthable, omniauth_providers: [:google_oauth2, :apple]
+         :omniauthable, omniauth_providers: %i[google_oauth2 apple]
 
   # Attributs
   attribute :banned, :boolean, default: false
@@ -14,7 +13,7 @@ class User < ApplicationRecord
   # Validations Mot de passe
   validates :password, format: {
     with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}\z/,
-    message: "doit contenir au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial"
+    message: 'doit contenir au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial'
   }, if: :password_required?
 
   # Constantes
@@ -58,16 +57,18 @@ class User < ApplicationRecord
   ]
 
   # Validations Champs
-  validates :study_level, inclusion: { in: STUDY_LEVELS, message: "n'est pas valide" }, if: -> { statut == 'etudiant' && study_level.present? }
+  validates :study_level, inclusion: { in: STUDY_LEVELS, message: "n'est pas valide" }, if: lambda {
+    statut == 'etudiant' && study_level.present?
+  }
   validates :rgpd_consent, acceptance: true
   validates :pseudo, presence: true, uniqueness: { message: I18n.t('user.pseudo_taken') }
   validates :firstname, presence: true
-  validates :statut, inclusion: { in: STATUTS, message: I18n.t('user.invalid_statut', value: "%{value}") }
+  validates :statut, inclusion: { in: STATUTS, message: I18n.t('user.invalid_statut', value: '%{value}') }
   validates :email, uniqueness: { case_sensitive: false }
   validate :no_ban_words_in_names
 
   # --- ASSOCIATIONS (Toutes nettoyées avec dependent: :destroy) ---
-  
+
   belongs_to :etablissement, optional: true
 
   # Visites
@@ -79,14 +80,14 @@ class User < ApplicationRecord
   has_many :referrals_as_referee, class_name: 'Referral', foreign_key: 'referee_id', dependent: :destroy
   has_many :referred_users, through: :referrals_as_referrer, source: :referee
 
-  belongs_to :country, optional: true 
+  belongs_to :country, optional: true
   has_one_attached :profile_image
 
   # Contributions & Feedback
   has_many :bug_reports, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
   has_many :suivis, dependent: :destroy
-  
+
   # Listes
   has_many :lists, dependent: :destroy
   has_many :list_editors, dependent: :destroy
@@ -106,8 +107,8 @@ class User < ApplicationRecord
 
   # Système
   has_many :user_devices, dependent: :destroy
-  
-  has_many :notifications, dependent: :destroy 
+
+  has_many :notifications, dependent: :destroy
   has_many :sent_notifications, class_name: 'Notification', foreign_key: 'admin_id', dependent: :nullify
 
   # Gamification
@@ -137,11 +138,12 @@ class User < ApplicationRecord
 
   def password_required?
     return false if provider.present?
+
     super
   end
 
   def certified?
-    self.certified
+    certified
   end
 
   def admin?
@@ -156,12 +158,14 @@ class User < ApplicationRecord
     "#{firstname} #{lastname}".strip
   end
 
- def subscribe_to_newsletter
-    NewsletterJob.perform_later(self.id)
+  def subscribe_to_newsletter
+    NewsletterJob.perform_later(id)
   end
+
   def sync_newsletter_status
-    NewsletterJob.perform_later(self.id)
+    NewsletterJob.perform_later(id)
   end
+
   private
 
   def generate_referral_code
@@ -185,14 +189,13 @@ class User < ApplicationRecord
       porn porno pornographie negre negro salearabe xxx
     ].map { |w| Regexp.escape(w) }
 
-    fields = { "prénom" => firstname, "nom" => lastname, "pseudo" => pseudo }
+    fields = { 'prénom' => firstname, 'nom' => lastname, 'pseudo' => pseudo }
     pattern = /\b(#{ban_words.join('|')})\b/i
 
     fields.each do |field_name, value|
       next if value.blank?
-      if value =~ pattern
-        errors.add(:base, I18n.t('user.forbidden_word', field: field_name))
-      end
+
+      errors.add(:base, I18n.t('user.forbidden_word', field: field_name)) if value =~ pattern
     end
   end
 end

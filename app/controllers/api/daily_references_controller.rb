@@ -4,28 +4,27 @@ class Api::DailyReferencesController < ApplicationController
 
   def show
     daily_ref = DailyReference.for_today || DailyReference.order(date: :desc).first
-    
+
     if daily_ref.nil?
-      render json: { error: "Aucune référence du jour disponible" }, status: :not_found
+      render json: { error: 'Aucune référence du jour disponible' }, status: :not_found
       return
     end
 
     reference = daily_ref.reference
     image = reference.reference_images.first
     image_url = if image&.file&.attached?
-      # On génère une version JPEG (support garanti par UIImage) redimensionnée (pour éviter les crashs OOM du Widget)
-      variant = image.file.variant(resize_to_limit: [500, 500], format: :jpeg).processed
-      request.base_url + Rails.application.routes.url_helpers.rails_representation_path(variant, only_path: true)
-    else
-      nil
-    end
+                  # On génère une version JPEG (support garanti par UIImage) redimensionnée (pour éviter les crashs OOM du Widget)
+                  variant = image.file.variant(resize_to_limit: [500, 500], format: :jpeg).processed
+                  request.base_url + Rails.application.routes.url_helpers.rails_representation_path(variant,
+                                                                                                    only_path: true)
+                end
 
     render json: {
       id: reference.id,
       name: reference.nom_reference,
       designers: reference.designers.map(&:nom_designer).join(', '),
       year: reference.date_reference&.to_s,
-      description: reference.presentation_generale || reference.notions.first&.definition || "",
+      description: reference.presentation_generale || reference.notions.first&.definition || '',
       image_url: image_url,
       url: request.base_url + "/references/#{reference.slug}"
     }

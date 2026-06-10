@@ -8,10 +8,10 @@ class Notion < ApplicationRecord
   validates :theme, presence: true
 
   # --- SCOPES (Utilisés dans la vue) ---
-  
+
   # Tri par défaut : par nom
   scope :ordered, -> { order(:name) }
-  
+
   # Filtre pour récupérer les notions d'un thème précis
   scope :by_theme, ->(theme_name) { where(theme: theme_name) }
 

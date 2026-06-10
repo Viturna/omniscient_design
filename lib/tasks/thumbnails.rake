@@ -1,7 +1,7 @@
 require 'mini_magick'
 
 namespace :images do
-  desc "Generate thumbnails for reference and designer images"
+  desc 'Generate thumbnails for reference and designer images'
   task generate_thumbs: :environment do
     # === CONFIG ===
     size = 300

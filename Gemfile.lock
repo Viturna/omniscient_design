@@ -282,6 +282,8 @@ GEM
       yajl-ruby
     marcel (1.1.0)
     matrix (0.4.3)
+    meta-tags (2.23.0)
+      actionpack (>= 6.0.0)
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
@@ -592,6 +594,7 @@ DEPENDENCIES
   jbuilder
   kaminari
   mailjet
+  meta-tags (~> 2.23)
   net-ssh (~> 7.2)
   nokogiri (>= 1.18.8)
   omniauth-apple

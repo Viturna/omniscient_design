@@ -310,7 +310,7 @@
                 </div>
                 <% if image_form.object.persisted? && image_form.object.file.attached? %>
                   <div class="image-preview-existing">
-                    <%= image_tag image_form.object.file, class: "image-preview-img" %>
+                    <%= image_tag image_form.object.file, loading: "lazy", class: "image-preview-img" %>
                     <div class="image-delete-overlay">
                       <%= image_form.check_box :_destroy %>
                       <%= image_form.label :_destroy, "×", class: "delete-image-btn", title: "Supprimer" %>

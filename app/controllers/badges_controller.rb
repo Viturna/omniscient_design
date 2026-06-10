@@ -3,11 +3,11 @@ class BadgesController < ApplicationController
 
   def index
     @current_page = 'profil'
-    
+
     GamificationService.new(current_user).check_seniority
-    
+
     @badges = Badge.all
-    
+
     @my_badge_ids = current_user.badge_ids
 
     @special_badges = @badges.select { |b| b.special? }
@@ -16,7 +16,7 @@ class BadgesController < ApplicationController
 
   def rate_app
     GamificationService.new(current_user).check_omniscient_supporter
-    head :ok 
+    head :ok
   end
 
   def community

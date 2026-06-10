@@ -16,14 +16,12 @@ class Admin::QuizGeneratorService
 
     # Récupérer des références du domaine (ou toutes si pas de domaine)
     references = if @domaine
-      @domaine.references.where(validation: true).order("RANDOM()").limit(@count)
-    else
-      Reference.where(validation: true).order("RANDOM()").limit(@count)
-    end
+                   @domaine.references.where(validation: true).order('RANDOM()').limit(@count)
+                 else
+                   Reference.where(validation: true).order('RANDOM()').limit(@count)
+                 end
 
-    if references.empty?
-      raise "Aucune référence validée trouvée pour ce domaine. Impossible de générer le quiz."
-    end
+    raise 'Aucune référence validée trouvée pour ce domaine. Impossible de générer le quiz.' if references.empty?
 
     references.each do |ref|
       available_types = []
@@ -31,10 +29,10 @@ class Admin::QuizGeneratorService
       # Priorité aux designers : si un designer est présent, on augmente ses chances
       # (on l'ajoute deux fois dans la liste pour doubler sa probabilité)
       available_types << :designer if ref.designers.any?
-      available_types << :designer if ref.designers.any? 
-      
+      available_types << :designer if ref.designers.any?
+
       available_types << :date if ref.date_reference.present?
-      
+
       has_image = ref.reference_images.any? && ref.reference_images.first.file.attached?
       if has_image
         available_types << :name_from_image
@@ -45,7 +43,7 @@ class Admin::QuizGeneratorService
         available_types << :notion_from_ref
         available_types << :ref_from_notion
       end
-      
+
       type = available_types.sample
       next if type.nil?
 
@@ -58,7 +56,7 @@ class Admin::QuizGeneratorService
         )
         wrong_pool = wrong_designers_pool(exclude_ids: ref.designer_ids).limit(3)
         wrong_pool.each { |d| question.quiz_answers.build(content: d.nom_designer, is_correct: false) }
-        
+
       when :date
         correct_answer = ref.date_reference.to_s
         question = quiz.quiz_questions.build(
@@ -70,9 +68,7 @@ class Admin::QuizGeneratorService
         wrong_years = []
         offsets.each do |offset|
           year = ref.date_reference + offset
-          if year <= current_year && year != ref.date_reference && !wrong_years.include?(year)
-            wrong_years << year
-          end
+          wrong_years << year if year <= current_year && year != ref.date_reference && !wrong_years.include?(year)
           break if wrong_years.size >= 3
         end
         wrong_years.each { |y| question.quiz_answers.build(content: y.to_s, is_correct: false) }
@@ -80,7 +76,7 @@ class Admin::QuizGeneratorService
       when :name_from_image
         correct_answer = ref.nom_reference
         question = quiz.quiz_questions.build(
-          content: "Quel est le nom de cette référence ?",
+          content: 'Quel est le nom de cette référence ?',
           reference_id: ref.id
         )
         wrong_pool = wrong_references_pool(exclude_id: ref.id).limit(3)
@@ -94,8 +90,8 @@ class Admin::QuizGeneratorService
         )
         # Distracteurs : autres références avec images, du même domaine si possible
         wrong_pool = wrong_references_pool(exclude_id: ref.id)
-                          .where(id: ReferenceImage.select(:reference_id))
-                          .limit(3)
+                     .where(id: ReferenceImage.select(:reference_id))
+                     .limit(3)
         wrong_pool.each { |r| question.quiz_answers.build(content: "reference_image:#{r.id}", is_correct: false) }
 
       when :notion_from_ref
@@ -105,7 +101,7 @@ class Admin::QuizGeneratorService
           content: "Quelle notion est principalement associée à la référence : '#{ref.nom_reference}' ?",
           reference_id: ref.id
         )
-        wrong_pool = Notion.where.not(id: ref.notion_ids).order("RANDOM()").limit(3)
+        wrong_pool = Notion.where.not(id: ref.notion_ids).order('RANDOM()').limit(3)
         wrong_pool.each { |n| question.quiz_answers.build(content: n.name, is_correct: false) }
 
       when :ref_from_notion
@@ -116,10 +112,8 @@ class Admin::QuizGeneratorService
           reference_id: ref.id
         )
         wrong_refs = Reference.where.not(id: Reference.joins(:notions).where(notions: { id: notion.id }).pluck(:id)).where(validation: true)
-        if wrong_refs.count < 3
-          wrong_refs = Reference.where.not(id: ref.id).where(validation: true)
-        end
-        wrong_pool = wrong_refs.order("RANDOM()").limit(3)
+        wrong_refs = Reference.where.not(id: ref.id).where(validation: true) if wrong_refs.count < 3
+        wrong_pool = wrong_refs.order('RANDOM()').limit(3)
         wrong_pool.each { |r| question.quiz_answers.build(content: r.nom_reference, is_correct: false) }
       end
 
@@ -127,16 +121,14 @@ class Admin::QuizGeneratorService
       question.quiz_answers.build(content: correct_answer, is_correct: true) if question
 
       # Compléter à 4 réponses si nécessaire
-      if question && question.quiz_answers.size < 4
-        (4 - question.quiz_answers.size).times do
-          question.quiz_answers.build(content: "Autre option", is_correct: false)
-        end
+      next unless question && question.quiz_answers.size < 4
+
+      (4 - question.quiz_answers.size).times do
+        question.quiz_answers.build(content: 'Autre option', is_correct: false)
       end
     end
 
-    if quiz.quiz_questions.empty?
-      raise "Impossible de générer des questions valables avec les données actuelles."
-    end
+    raise 'Impossible de générer des questions valables avec les données actuelles.' if quiz.quiz_questions.empty?
 
     quiz.save!
     quiz
@@ -153,7 +145,7 @@ class Admin::QuizGeneratorService
       domain_pool = pool.joins(:domaines).where(domaines: { id: @domaine.id })
       pool = domain_pool if domain_pool.limit(3).count >= 3
     end
-    pool.order("RANDOM()")
+    pool.order('RANDOM()')
   end
 
   def wrong_designers_pool(exclude_ids:)
@@ -162,15 +154,15 @@ class Admin::QuizGeneratorService
       domain_pool = pool.joins(:domaines).where(domaines: { id: @domaine.id })
       pool = domain_pool if domain_pool.limit(3).count >= 3
     end
-    pool.order("RANDOM()")
+    pool.order('RANDOM()')
   end
 
   def get_image_url(reference)
     image = reference.reference_images.first
     return nil unless image&.file&.attached?
-    
+
     Rails.application.routes.url_helpers.rails_blob_url(image.file, only_path: true)
-  rescue
+  rescue StandardError
     nil
   end
 end

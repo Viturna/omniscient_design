@@ -1,12 +1,12 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: [:google_oauth2, :apple, :failure]
+  skip_before_action :verify_authenticity_token, only: %i[google_oauth2 apple failure]
 
   def google_oauth2
-    handle_auth "Google"
+    handle_auth 'Google'
   end
 
   def apple
-    handle_auth "Apple"
+    handle_auth 'Apple'
   end
 
   def failure
@@ -32,25 +32,23 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         end
         redirect_to edit_user_registration_path
       end
-    else
-      if @user&.persisted?
-
-        if !@user.confirmed?
-          @user.skip_confirmation!
-          @user.save!
-        end
-
-        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
-        sign_in_and_redirect @user, event: :authentication
-      else
-        session['devise.omniauth_data'] = auth.except('extra')
-        
-        if kind == "Apple" && session['devise.omniauth_data']['info']['email'].blank?
-           session['devise.omniauth_data']['info']['email'] = auth['uid']
-        end
-        
-        redirect_to new_user_registration_url
+    elsif @user&.persisted?
+      unless @user.confirmed?
+        @user.skip_confirmation!
+        @user.save!
       end
+
+      flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
+      sign_in_and_redirect @user, event: :authentication
+
+    else
+      session['devise.omniauth_data'] = auth.except('extra')
+
+      if kind == 'Apple' && session['devise.omniauth_data']['info']['email'].blank?
+        session['devise.omniauth_data']['info']['email'] = auth['uid']
+      end
+
+      redirect_to new_user_registration_url
     end
   end
 end

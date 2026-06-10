@@ -1,1 +1,1 @@
-json.array! @references, partial: "references/reference", as: :reference
+json.array! @references, partial: 'references/reference', as: :reference

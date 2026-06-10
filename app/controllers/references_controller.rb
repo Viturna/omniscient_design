@@ -11,7 +11,7 @@ class ReferencesController < ApplicationController
   AD_FIRST_POSITION_RANGE = 3..5
 
   def index
-    references = Reference.where(validation: true).includes(:domaines, :designers, :studios, reference_images: :file_attachment).limit(10).order("RANDOM()")
+    references = Reference.where(validation: true).preload(:domaines, :designers, :studios, reference_images: :file_attachment).limit(10).order("RANDOM()")
     @current_page = 'accueil'
     @lists = user_signed_in? ? current_user.lists : []
 
@@ -50,7 +50,7 @@ class ReferencesController < ApplicationController
     loaded_ids = params[:loaded_ids].split(',').map(&:to_i) if params[:loaded_ids]
 
     @references = Reference.where(validation: true)
-                     .includes(:domaines, :designers, :studios, reference_images: :file_attachment)
+                     .preload(:domaines, :designers, :studios, reference_images: :file_attachment)
                      .where.not(id: loaded_ids)
                      .order("RANDOM()")
                      .limit(limit)
@@ -112,7 +112,7 @@ class ReferencesController < ApplicationController
                        .where(domaines: { id: @domaines.ids })
                        .where(validation: true)
                        .where.not(id: @reference.id)
-                       .includes(:domaines, :designers, :studios, reference_images: :file_attachment)
+                       .preload(:domaines, :designers, :studios, reference_images: :file_attachment)
                        .order("RANDOM()")
                        .limit(5)
   end

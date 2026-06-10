@@ -98,7 +98,7 @@
         <div class="slider-dots">
           <% reference.reference_images.each_with_index do |reference_image, index| %>
             <button class="slider-dot <%= 'active' if index == 0 %>" 
-                  data-action="click->slider#switchSlide" 
+                  data-action="click- aria-label="Diapositive">slider#switchSlide" 
               data-slider-index-value="<%= index %>" 
               data-slider-target="dot"></button>
           <% end %>
@@ -108,7 +108,7 @@
       <% if reference.validation %>
         <div class="flex-back-btn">
           <button
-            id="back-btn"
+            id="back-btn" aria-label="Retour"
             data-controller="back" 
             data-back-fallback-url-value="https://omniscientdesign.fr/references" 
             data-action="click->back#handleClick">
@@ -119,7 +119,7 @@
             </div>
           </button>
           <%= link_to references_path do %>
-            <button id="home-btn" data-no-popup>
+            <button id="home-btn" aria-label="Accueil" data-no-popup>
               <div class="circle-back">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_3261_197)">
@@ -550,7 +550,7 @@
                      style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 20;">
                     <% @reference.reference_images.count.times do |index| %>
                       <button class="slider-dot <%= 'active' if index == 0 %>" 
-                            data-action="click->slider#switchSlide" 
+                            data-action="click- aria-label="Diapositive">slider#switchSlide" 
                         data-slider-index-value="<%= index %>" 
                         data-slider-target="dot"
                         aria-label="Aller à l'image <%= index + 1 %>"></button>

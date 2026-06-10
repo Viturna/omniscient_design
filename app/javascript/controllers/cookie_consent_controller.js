@@ -6,15 +6,9 @@ export default class extends Controller {
     connect() {
         const consent = localStorage.getItem("cookie-consent")
 
-        if (!consent) {
-            // Première visite → on affiche la bannière
-            this.bannerTarget.style.display = "block"
-        } else if (consent === "accepted") {
+        if (consent === "accepted") {
             // Déjà accepté → on active GA
             this.enableCookies()
-        } else {
-            // Déjà refusé → on ne montre pas la bannière
-            this.bannerTarget.style.display = "none"
         }
     }
 

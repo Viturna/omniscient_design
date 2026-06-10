@@ -90,7 +90,7 @@
         <div class="slider-dots">
           <% designer.designer_images.each_with_index do |designer_image, index| %>
             <button class="slider-dot <%= 'active' if index == 0 %>" 
-                    data-action="click->slider#switchSlide" 
+                    data-action="click- aria-label="Diapositive">slider#switchSlide" 
               data-slider-index-value="<%= index %>" 
               data-slider-target="dot"></button>
           <% end %>
@@ -98,7 +98,7 @@
       <% end %>
       <% if designer.validation %>
         <div class="flex-back-btn">
-          <button id="back-btn"
+          <button id="back-btn" aria-label="Retour"
                   data-controller="back" 
                   data-back-fallback-url-value="https://omniscientdesign.fr/designers" 
                   data-action="click->back#handleClick" 
@@ -108,7 +108,7 @@
             </div>
           </button>
           <%= link_to designers_path do %>
-            <button id="home-btn" data-no-popup>
+            <button id="home-btn" aria-label="Accueil" data-no-popup>
               <div class="circle-back">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_3261_197)"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C24.8307 0 32 7.16933 32 16C32 24.8307 24.8307 32 16 32C7.16933 32 0 24.8307 0 16C0 7.16933 7.16933 0 16 0ZM17.968 19.94C19.2853 19.4 20.3107 18.3253 20.7893 16.9853L24 8L15.104 11.1827C13.7627 11.6627 12.6893 12.6907 12.1493 14.008L8.06267 24L17.968 19.94ZM17.8053 14.2253C18.54 14.96 18.54 16.1533 17.8053 16.8867C17.0707 17.6213 15.8787 17.6213 15.144 16.8867C14.4093 16.1533 14.4093 14.96 15.144 14.2253C15.8787 13.4907 17.0707 13.4907 17.8053 14.2253Z" fill="white"/></g></svg>
               </div>

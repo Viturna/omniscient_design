@@ -5,6 +5,10 @@ export default class extends Controller {
 
   connect() {
     this.initRecaptcha()
+    this.loadScriptOnInteraction = this.loadScript.bind(this)
+    this.element.addEventListener('mouseenter', this.loadScriptOnInteraction, { once: true })
+    this.element.addEventListener('focusin', this.loadScriptOnInteraction, { once: true })
+    this.element.addEventListener('touchstart', this.loadScriptOnInteraction, { once: true })
   }
 
   initRecaptcha() {
@@ -23,10 +27,20 @@ export default class extends Controller {
     this.element.addEventListener("submit", this.submitHandler)
   }
 
+  loadScript() {
+    if (window.grecaptcha || document.querySelector('script[src*="recaptcha/api.js"]')) return;
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${this.siteKey}`;
+    document.head.appendChild(script);
+  }
+
   disconnect() {
     if (this.submitHandler) {
       this.element.removeEventListener("submit", this.submitHandler)
     }
+    this.element.removeEventListener('mouseenter', this.loadScriptOnInteraction)
+    this.element.removeEventListener('focusin', this.loadScriptOnInteraction)
+    this.element.removeEventListener('touchstart', this.loadScriptOnInteraction)
   }
 
   handleSubmit(event) {
@@ -38,17 +52,35 @@ export default class extends Controller {
     event.stopImmediatePropagation() // Important pour bloquer d'autres scripts potentiels
 
     if (typeof grecaptcha === "undefined") {
-      console.error("reCAPTCHA n'est pas chargé.")
-      // Fallback : on soumet sans token si reCAPTCHA ne charge pas (risque de spam, mais ne bloque pas l'user)
-      this.element.submit()
+      console.warn("reCAPTCHA pas encore chargé, attente...")
+      this.loadScript()
+      
+      const checkInterval = setInterval(() => {
+        if (typeof grecaptcha !== "undefined") {
+          clearInterval(checkInterval)
+          this.executeRecaptcha()
+        }
+      }, 100)
+      
+      // Fallback au bout de 3 secondes si reCAPTCHA ne se charge jamais
+      setTimeout(() => {
+        if (typeof grecaptcha === "undefined") {
+          clearInterval(checkInterval)
+          console.error("reCAPTCHA n'a pas pu être chargé (timeout).")
+          this.element.submit()
+        }
+      }, 3000)
       return
     }
 
+    this.executeRecaptcha()
+  }
+
+  executeRecaptcha() {
     grecaptcha.ready(() => {
       grecaptcha.execute(this.siteKey, { action: 'submit' }).then((token) => {
         this.tokenTarget.value = token
         // On relance la soumission maintenant que le token est là
-        // Utiliser requestSubmit() si possible pour déclencher les validations natives, sinon submit()
         if (typeof this.element.requestSubmit === 'function') {
           this.element.requestSubmit()
         } else {

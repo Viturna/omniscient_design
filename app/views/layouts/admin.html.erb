@@ -137,7 +137,7 @@
     <div class="menu-overlay" onclick="toggleAdminMenu()"></div>
     <header class="admin-header-container">
       <div class="header-desktop" id="adminSidebar" data-lenis-prevent="true">
-        <button class="close-menu-btn" onclick="toggleAdminMenu()">
+        <button class="close-menu-btn" aria-label="Fermer le menu" onclick="toggleAdminMenu()">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -338,13 +338,18 @@
         }
       }
     </script>
-    <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner" style="display:none;">
+    <div id="cookie-consent-banner" data-controller="cookie-consent" data-cookie-consent-target="banner">
       <div>
         <p><%= t('cookies.banner_text') %></p>
         <button data-action="click->cookie-consent#accept"><%= t('cookies.accept') %></button>
         <button data-action="click->cookie-consent#decline"><%= t('cookies.decline') %></button>
       </div>
     </div>
+    <script>
+      if (localStorage.getItem("cookie-consent")) {
+        document.getElementById("cookie-consent-banner").style.display = "none";
+      }
+    </script>
     <% if notice.present? %>
       <div class="alert" data-controller="alert">
         <p><%= notice %></p>

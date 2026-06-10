@@ -119,7 +119,7 @@
             <div class="card-slider-dots" style="z-index: 20; pointer-events: auto;">
               <% images.each_with_index do |image, index| %>
                 <button class="card-slider-dot <%= 'active' if index == 0 %>" 
-                    data-action="click->slider#switchSlide" 
+                    data-action="click- aria-label="Diapositive">slider#switchSlide" 
                   data-slider-index-value="<%= index %>" 
                   data-slider-target="dot"
                   aria-label="Aller à l'image <%= index + 1 %>"></button>

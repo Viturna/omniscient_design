@@ -99,7 +99,7 @@ class NotificationsController < ApplicationController
                   end
 
     target_path ||= root_path
-    redirect_to target_path
+    redirect_to target_path, allow_other_host: true
   end
 
   def destroy

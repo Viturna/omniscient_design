@@ -20,6 +20,9 @@ class Admin::DashboardController < ApplicationController
     @users_daily_email = User.where(daily_reference_email: true).count
     @total_daily_notif_users = User.where('daily_reference_push = ? OR daily_reference_email = ?', true, true).count
 
+    # --- Tip Stats ---
+    @total_tip_clicks = TipClick.count
+
     # --- Graphique : Nouvelles Inscriptions (User) ---
     @period = params[:period] || '30d'
     end_date = Date.today

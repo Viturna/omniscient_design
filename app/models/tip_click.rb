@@ -1,0 +1,2 @@
+class TipClick < ApplicationRecord
+end

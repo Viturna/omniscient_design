@@ -920,7 +920,7 @@ fr:
     last_30_days: "30 derniers jours"
     previous: "Auparavant"
     none: "Aucune notification."
-    new_reference: "Une nouvelle œuvre est à valider : %{name}"
+    new_reference: "Une nouvelle référence est à valider : %{name}"
     reference_validated: "La référence %{name} a été validée. Encore un grand merci pour ta contribution."
     reference_rejected: "Ta référence %{name} a été rejetée. (Tu peux consulter la raison sur ton profil)"
     no_user_for_rejection: "La référence %{reference_id} n'a pas d'utilisateur associé pour la notification de rejet."
@@ -985,6 +985,10 @@ fr:
     enrichissement: "A enrichi ton apprentissage en ajoutant cette référence le"
     validation: "a validé la référence"
     decouvrir_autres: "Découvrir d'autres références"
+    update:
+      success: "La référence a été mise à jour avec succès."
+    validate:
+      success: "La référence a été validée avec succès."
   admin:
     users:
       index:

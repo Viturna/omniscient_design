@@ -1,0 +1,108 @@
+#tip-tab-container {
+  position: absolute;
+  top: 116px; 
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  background-color: #D54758;
+  border-radius: 0 50px 50px 0;
+  cursor: grab;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  user-select: none;
+  touch-action: pan-y;
+  
+  /* Initial closed state: translate left so only 82px is visible */
+  transform: translateX(calc(-100% + 76px));
+}
+
+#tip-tab-container.expanded {
+  transform: translateX(0);
+}
+
+#tip-tab-container.animate-pulse {
+  animation: tip-wiggle 3s infinite ease-in-out;
+}
+
+@keyframes tip-wiggle {
+  0%, 90%, 100% {
+    transform: translateX(calc(-100% + 76px));
+  }
+  92% {
+    transform: translateX(calc(-100% + 86px));
+  }
+  94% {
+    transform: translateX(calc(-100% + 83px));
+  }
+  96% {
+    transform: translateX(calc(-100% + 91px));
+  }
+  98% {
+    transform: translateX(calc(-100% + 76px));
+  }
+}
+
+#tip-tab-container:active {
+  cursor: grabbing;
+}
+
+.tip-tab-content {
+  display: flex;
+  align-items: center;
+  padding: 26px 20px 26px 20px;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.tip-text {
+  color: white;
+  font-family: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  font-size: 16px;
+}
+
+#tip-tab-container.expanded.animate-pulse {
+  animation: none;
+}
+
+.tip-icon {
+  flex-shrink: 0;
+  display: flex;
+}
+
+@media screen and (max-width: 768px) {
+  #tip-tab-container {
+    top: 50%;
+    left: auto;
+    right: 0;
+    border-radius: 50px 0 0 50px;
+    transform: translateY(-50%) translateX(calc(100% - 76px));
+  }
+
+  .tip-tab-content {
+    flex-direction: row-reverse;
+  }
+
+  #tip-tab-container.expanded {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  @keyframes tip-wiggle {
+    0%, 90%, 100% {
+      transform: translateY(-50%) translateX(calc(100% - 76px));
+    }
+    92% {
+      transform: translateY(-50%) translateX(calc(100% - 84px));
+    }
+    94% {
+      transform: translateY(-50%) translateX(calc(100% - 85px));
+    }
+    96% {
+      transform: translateY(-50%) translateX(calc(100% - 95px));
+    }
+    98% {
+      transform: translateY(-50%) translateX(calc(100% - 76px));
+    }
+  }
+}

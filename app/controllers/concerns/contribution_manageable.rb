@@ -56,12 +56,14 @@ module ContributionManageable
   end
 
   def get_record_name(record)
-    if record.respond_to?(:nom_designer)
-      record.nom_designer
-    elsif record.respond_to?(:nom_reference)
+    if record.class.name == 'Reference'
       record.nom_reference
-    else
+    elsif record.class.name == 'Designer'
+      record.nom_designer
+    elsif record.respond_to?(:nom)
       record.nom
+    else
+      "Contribution"
     end
   end
 

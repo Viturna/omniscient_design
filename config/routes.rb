@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     end
     # Tes routes publiques
     resources :feedbacks, only: %i[new create index destroy]
+    resources :tip_clicks, only: [:create]
     resources :users, only: %i[index show] do
       collection do
         get :export_newsletter

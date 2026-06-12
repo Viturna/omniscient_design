@@ -28,7 +28,7 @@
 </section>
 <section class="grid-1">
   <h2><%= t('bug_report.help_title') %></h2>
-  <%= form_with(model: @bug_report, local: true, data: { turbo: false }) do |form| %>
+  <%= form_with(model: @bug_report, local: true, data: { turbo: false }, html: { onsubmit: "const btn = this.querySelector('input[type=submit]'); btn.disabled = true; btn.value = '#{t('bug_report.submitting', default: 'Envoi en cours...')}';" }) do |form| %>
     <% if @bug_report.errors.any? %>
       <div id="error_explanation">
         <h2>
@@ -59,7 +59,7 @@
         <%= form.text_field :url, value: params[:url], placeholder: t('bug_report.placeholder_url') %>
       </div>
       <div class="actions">
-        <%= form.submit t('bug_report.submit_button'), class: "button large dark" %>
+        <%= form.submit t('bug_report.submit_button'), class: "button large dark", data: { disable_with: t('bug_report.submitting', default: "Envoi en cours...") } %>
       </div>
     </div>
   <% end %>

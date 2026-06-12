@@ -154,6 +154,9 @@ application.register("tabs-search", TabsSearchController)
 import TimelineController from "./timeline_controller"
 application.register("timeline", TimelineController)
 
+import TipTabController from "./tip_tab_controller"
+application.register("tip-tab", TipTabController)
+
 import ToggleSingleFieldController from "./toggle_single_field_controller"
 application.register("toggle-single-field", ToggleSingleFieldController)
 
@@ -162,4 +165,3 @@ application.register("validation-overlay", ValidationOverlayController)
 
 import YearValidatorController from "./year_validator_controller"
 application.register("year-validator", YearValidatorController)
-

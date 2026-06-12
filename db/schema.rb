@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 20_260_610_093_118) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_225112) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -565,6 +565,11 @@ ActiveRecord::Schema[8.1].define(version: 20_260_610_093_118) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_suivis_on_user_id"
+  end
+
+  create_table "tip_clicks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_badges", force: :cascade do |t|

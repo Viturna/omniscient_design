@@ -162,7 +162,8 @@
               </td>
               <td>
                 <% if reference.validated_by_user_id.present? %>
-                  <%= User.find(reference.validated_by_user_id).email %>
+                  <% val_user = User.find_by(id: reference.validated_by_user_id) %>
+                  <%= val_user.present? ? val_user.email : "Utilisateur supprimé" %>
                 <% else %>
                   Utilisateur inconnu
                 <% end %>
@@ -281,7 +282,8 @@
               </td>
               <td>
                 <% if designer.validated_by_user_id.present? %>
-                  <%= User.find(designer.validated_by_user_id).email %>
+                  <% val_user = User.find_by(id: designer.validated_by_user_id) %>
+                  <%= val_user.present? ? val_user.email : "Utilisateur supprimé" %>
                 <% else %>
                   Utilisateur inconnu
                 <% end %>
@@ -398,7 +400,8 @@
               </td>
               <td>
                 <% if studio.validated_by_user_id.present? %>
-                  <%= User.find(studio.validated_by_user_id).email %>
+                  <% val_user = User.find_by(id: studio.validated_by_user_id) %>
+                  <%= val_user.present? ? val_user.email : "Utilisateur supprimé" %>
                 <% else %>
                   Utilisateur inconnu
                 <% end %>

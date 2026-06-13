@@ -16,12 +16,12 @@ export default class extends Controller {
     this.visibleWidth = 82 // Matches the CSS calc(-100% + 82px)
   }
 
-  get isRightSide() {
+  get isMobile() {
     return window.innerWidth <= 768;
   }
 
   setTransform(x) {
-    if (this.isRightSide) {
+    if (this.isMobile) {
       this.element.style.transform = `translateY(-50%) translateX(${x}px)`
     } else {
       this.element.style.transform = `translateX(${x}px)`
@@ -36,7 +36,7 @@ export default class extends Controller {
     this.startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX
     
     let hiddenWidth = this.element.offsetWidth - this.visibleWidth
-    this.closedTranslate = this.isRightSide ? hiddenWidth : -hiddenWidth
+    this.closedTranslate = -hiddenWidth
     this.startTranslate = this.isOpen ? 0 : this.closedTranslate
     
     this.element.style.transition = 'none'
@@ -55,16 +55,9 @@ export default class extends Controller {
 
     let newTranslate = this.startTranslate + deltaX
     
-    if (this.isRightSide) {
-      // Bloque si on tire plus loin que l'ouverture (0)
-      if (newTranslate < 0) {
-        newTranslate = 0
-      }
-    } else {
-      // Bloque si on tire plus loin que l'ouverture (0)
-      if (newTranslate > 0) {
-        newTranslate = 0
-      }
+    // Bloque si on tire plus loin que l'ouverture (0)
+    if (newTranslate > 0) {
+      newTranslate = 0
     }
 
     this.setTransform(newTranslate)
@@ -79,32 +72,19 @@ export default class extends Controller {
     let deltaX = clientX - this.startX
     let newTranslate = this.startTranslate + deltaX
 
-    if (this.isRightSide) {
-      if (newTranslate > this.closedTranslate + 30) {
-        this.setTransform(this.closedTranslate + 150)
-        setTimeout(() => { this.close() }, 400)
-        return
-      }
-      let midPoint = this.closedTranslate / 2
-      if (newTranslate < midPoint) {
-        this.openTab()
-      } else {
-        this.closeTab()
-      }
-    } else {
-      if (newTranslate < this.closedTranslate - 30) {
-        this.setTransform(this.closedTranslate - 150)
-        setTimeout(() => { this.close() }, 400)
-        return
-      }
-      let midPoint = this.closedTranslate / 2
-      if (newTranslate > midPoint) {
-        this.openTab()
-      } else {
-        this.closeTab()
-      }
+    if (newTranslate < this.closedTranslate - 30) {
+      this.setTransform(this.closedTranslate - 150)
+      setTimeout(() => { this.close() }, 400)
+      return
     }
     
+    let midPoint = this.closedTranslate / 2
+    if (newTranslate > midPoint) {
+      this.openTab()
+    } else {
+      this.closeTab()
+    }
+
     setTimeout(() => { this.hasDragged = false }, 50)
   }
 

@@ -175,6 +175,14 @@
       <%end%>
       <%# --- INFO HEADER (Domaines, Dates) --- %>
       <div class="info-card-first-content">
+        <% @domaines.each do |domaine| %>
+          <%= link_to search_path(:tab => "references", :domaine => domaine.id) do %>
+            <div class="info-card-dark info-header-show" data-no-popup>
+              <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
+              <span><%= domaine.domaine %></span>
+            </div>
+          <% end %>
+        <% end %>
         <%= link_to search_path(:tab => "frise", :start_year => reference.date_reference, :end_year => reference.date_reference) do %>
           <p class="info-card-dark info-header-show" data-no-popup>
             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -185,14 +193,6 @@
             <%= reference.date_reference %>
           </p>
         <%end%>
-        <% @domaines.each do |domaine| %>
-          <%= link_to search_path(:tab => "references", :domaine => domaine.id) do %>
-            <div class="info-card-dark info-header-show" data-no-popup>
-              <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
-              <span><%= domaine.domaine %></span>
-            </div>
-          <% end %>
-        <% end %>
       </div>
       <div class="header-top">
         <div>
@@ -205,6 +205,14 @@
           <p class="title-card"><%= reference.nom_reference %></p>
         </div>
         <div class="flex-info">
+          <% @domaines.each do |domaine| %>
+            <%= link_to search_path(:tab => "references", :domaine => domaine.id) do %>
+              <div class="info-card" data-no-popup>
+                <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
+                <%= domaine.domaine %>
+              </div>
+            <% end %>
+          <% end %>
           <%= link_to search_path(:tab => "frise", :start_year => reference.date_reference, :end_year => reference.date_reference) do %>
             <div class="info-card" data-no-popup>
               <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -215,14 +223,6 @@
               <%= reference.date_reference %>
             </div>
           <%end%>
-          <% @domaines.each do |domaine| %>
-            <%= link_to search_path(:tab => "references", :domaine => domaine.id) do %>
-              <div class="info-card" data-no-popup>
-                <div class="small-circle" style="background-color: <%= domaine.couleur %>;"></div>
-                <%= domaine.domaine %>
-              </div>
-            <% end %>
-          <% end %>
         </div>
       </div>
     </div>

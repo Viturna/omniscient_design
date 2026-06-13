@@ -70,15 +70,8 @@
 
 @media screen and (max-width: 768px) {
   #tip-tab-container {
-    top: 50%;
-    left: auto;
-    right: 0;
-    border-radius: 50px 0 0 50px;
-    transform: translateY(-50%) translateX(calc(100% - 76px));
-  }
-
-  .tip-tab-content {
-    flex-direction: row-reverse;
+    top: 17dvh;
+    transform: translateY(-50%) translateX(calc(-100% + 76px));
   }
 
   #tip-tab-container.expanded {
@@ -87,16 +80,16 @@
 
   @keyframes tip-wiggle {
     0%, 80%, 100% {
-      transform: translateY(-50%) translateX(calc(100% - 76px));
+      transform: translateY(-50%) translateX(calc(-100% + 76px));
     }
     86% {
-      transform: translateY(-50%) translateX(calc(100% - 86px));
+      transform: translateY(-50%) translateX(calc(-100% + 86px));
     }
     92% {
-      transform: translateY(-50%) translateX(calc(100% - 74px));
+      transform: translateY(-50%) translateX(calc(-100% + 74px));
     }
     96% {
-      transform: translateY(-50%) translateX(calc(100% - 77px));
+      transform: translateY(-50%) translateX(calc(-100% + 77px));
     }
   }
 }

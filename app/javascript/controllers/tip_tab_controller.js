@@ -56,12 +56,14 @@ export default class extends Controller {
     let newTranslate = this.startTranslate + deltaX
     
     if (this.isRightSide) {
+      // Bloque si on tire plus loin que l'ouverture (0)
       if (newTranslate < 0) {
-        newTranslate = newTranslate * 0.2
+        newTranslate = 0
       }
     } else {
+      // Bloque si on tire plus loin que l'ouverture (0)
       if (newTranslate > 0) {
-        newTranslate = newTranslate * 0.2
+        newTranslate = 0
       }
     }
 

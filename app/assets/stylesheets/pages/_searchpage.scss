@@ -222,7 +222,6 @@
   display: flex !important;
   flex-direction: column !important;
   gap: 12px !important;
-  max-height: 230px !important;
   padding: 16px !important;
 }
 
@@ -302,6 +301,7 @@
   padding: 12px 24px !important;
   background-color: #f7f7f7 !important;
   border-radius: 5px !important;
+  flex-shrink: 0 !important;
 }
 
 .select2-container--default

@@ -39,7 +39,13 @@
     <div class="badges-section">
       <h2><%= t('badges.index.unique_badges') %></h2>
       <div class="badges-grid">
-        <% @special_badges.each do |badge| %>
+        <% 
+          priority_badges = ["Omniscient User", "Early Adopter", "Pionnier"]
+          sorted_special_badges = @special_badges.sort_by do |b|
+            priority_badges.index(b.name) || 99
+          end
+        %>
+        <% sorted_special_badges.each do |badge| %>
           <% unlocked = @my_badge_ids.include?(badge.id) %>
           <% next if (badge.name == "Early Adopter" || badge.name == "Pionnier") && !unlocked %>
           <% if badge.name == "Omniscient Supporter" && !unlocked %>

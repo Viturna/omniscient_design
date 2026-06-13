@@ -314,6 +314,7 @@
 
   .quiz-left-pane {
     width: 40%;
+        gap : 24px;
     background: #202020;
     color: #FFF;
     padding: 40px;
@@ -416,10 +417,12 @@
 
   .quiz-right-pane {
     flex: 1;
+    gap : 24px;
     padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow-y: auto;
 
     .pane-header {
       display: flex;

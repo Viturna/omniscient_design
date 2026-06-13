@@ -25,86 +25,93 @@ class PushNotificationService
       return
     end
 
-    # Lancement en arrière-plan pour ne pas bloquer la requête
+    # On pré-calcule le unread_count avant de quitter le thread principal pour éviter 
+    # des requêtes DB instables dans le thread en arrière-plan.
+    unread_count = @user.notifications.unread.count
+
+    # Lancement en arrière-plan avec Rails.application.executor.wrap 
+    # pour garantir la connexion DB et le contexte Rails complet
     Thread.new do
-      begin
-        access_token = get_access_token
-        next unless access_token
+      Rails.application.executor.wrap do
+        begin
+          access_token = get_access_token
+          next unless access_token
 
-        uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
+          uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
 
-        # Prépare la connexion HTTP une seule fois pour tous les tokens (meilleure perf)
-        Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-          # Config SSL Dev
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
+          # Prépare la connexion HTTP une seule fois pour tous les tokens (meilleure perf)
+          Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+            # Config SSL Dev
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
-          tokens.each do |device_token|
-            # Construction du payload
-            title_content = @notification.title.presence || 'Omniscient Design'
-            # (Note: unread_count is evaluated in the background thread now, so it's fresh)
-            unread_count = @user.notifications.unread.count
-            
-            body = {
-          message: {
-            token: device_token,
-            notification: { title: title_content, body: @notification.message },
-            data: {
-              notifiable_id: @notification.notifiable_id.to_s,
-              notifiable_type: @notification.notifiable_type.to_s,
-              notification_id: @notification.id.to_s,
-              link: full_url(@notification.link),
-              url: full_url(@notification.link),
-              click_action: full_url(@notification.link),
-              path: @notification.link.to_s,
-              target_url: full_url(@notification.link)
-            },
-            apns: {
-              payload: {
-                aps: {
-                  sound: 'default',
-                  badge: unread_count,
-                  "mutable-content": 1,
-                  link: full_url(@notification.link),
-                  url: full_url(@notification.link),
-                  path: @notification.link.to_s,
-                  target_url: full_url(@notification.link)
-                },
-                link: full_url(@notification.link),
-                url: full_url(@notification.link),
-                path: @notification.link.to_s,
-                target_url: full_url(@notification.link)
+            tokens.each do |device_token|
+              # Construction du payload
+              title_content = @notification.title.presence || 'Omniscient Design'
+              
+              body = {
+                message: {
+                  token: device_token,
+                  notification: { title: title_content, body: @notification.message },
+                  data: {
+                    notifiable_id: @notification.notifiable_id.to_s,
+                    notifiable_type: @notification.notifiable_type.to_s,
+                    notification_id: @notification.id.to_s,
+                    link: full_url(@notification.link),
+                    url: full_url(@notification.link),
+                    click_action: full_url(@notification.link),
+                    path: @notification.link.to_s,
+                    target_url: full_url(@notification.link)
+                  },
+                  apns: {
+                    payload: {
+                      aps: {
+                        sound: 'default',
+                        badge: unread_count,
+                        "mutable-content": 1,
+                        link: full_url(@notification.link),
+                        url: full_url(@notification.link),
+                        path: @notification.link.to_s,
+                        target_url: full_url(@notification.link)
+                      },
+                      link: full_url(@notification.link),
+                      url: full_url(@notification.link),
+                      path: @notification.link.to_s,
+                      target_url: full_url(@notification.link)
+                    }
+                  },
+                  android: {
+                    notification: {
+                      sound: 'default',
+                      default_sound: true
+                    }
+                  },
+                  webpush: { fcm_options: { link: full_url(@notification.link) } }
+                }
               }
-            },
-            android: {
-              notification: {
-                sound: 'default',
-                default_sound: true
-              }
-            },
-            webpush: { fcm_options: { link: full_url(@notification.link) } }
-          }
-        }
 
-        request = Net::HTTP::Post.new(uri)
-        request['Authorization'] = "Bearer #{access_token}"
-        request['Content-Type'] = 'application/json'
-        request.body = body.to_json
+              request = Net::HTTP::Post.new(uri)
+              request['Authorization'] = "Bearer #{access_token}"
+              request['Content-Type'] = 'application/json'
+              request.body = body.to_json
 
-        response = http.request(request)
+              response = http.request(request)
 
-        # Gestion des erreurs Google (404/410 = Token invalide)
-        if %w[404 410].include?(response.code)
-          Rails.logger.warn '🗑️ [PushService] Token périmé détecté, suppression...'
-          UserDevice.where(token: device_token).destroy_all
-        elsif response.code != '200'
-          Rails.logger.error "⚠️ [PushService] Erreur Google (#{response.code}) : #{response.body}"
+              # Gestion des erreurs Google (404/410 = Token invalide)
+              if %w[404 410].include?(response.code)
+                Rails.logger.warn '🗑️ [PushService] Token périmé détecté, suppression...'
+                UserDevice.where(token: device_token).destroy_all
+              elsif response.code != '200'
+                Rails.logger.error "⚠️ [PushService] Erreur Google (#{response.code}) : #{response.body}"
+              else
+                Rails.logger.info "✅ [PushService] Notification envoyée avec succès au token #{device_token.first(10)}..."
+              end
+            rescue StandardError => e
+              Rails.logger.error "🔴 [PushService] Crash sur token #{device_token.first(10)} : #{e.message}"
+            end
+          end
+        rescue StandardError => e
+          Rails.logger.error "🔴 [PushService] Crash dans le Thread global : #{e.message}"
         end
-      rescue StandardError => e
-        Rails.logger.error "🔴 [PushService] Crash sur token #{device_token.first(10)} : #{e.message}"
-      end
-    end
-      rescue StandardError => e
-        Rails.logger.error "🔴 [PushService] Crash dans le Thread global : #{e.message}"
       end
     end
   end

@@ -16,8 +16,13 @@
     <% 
        total_badges_count = @badges.count
        early_adopter = @badges.find { |b| b.name == "Early Adopter" }
+       pionnier = @badges.find { |b| b.name == "Pionnier" }
        
        if early_adopter && !@my_badge_ids.include?(early_adopter.id)
+         total_badges_count -= 1
+       end
+
+       if pionnier && !@my_badge_ids.include?(pionnier.id)
          total_badges_count -= 1
        end
     %>
@@ -36,7 +41,7 @@
       <div class="badges-grid">
         <% @special_badges.each do |badge| %>
           <% unlocked = @my_badge_ids.include?(badge.id) %>
-          <% next if badge.name == "Early Adopter" && !unlocked %>
+          <% next if (badge.name == "Early Adopter" || badge.name == "Pionnier") && !unlocked %>
           <% if badge.name == "Omniscient Supporter" && !unlocked %>
             <%
               user_agent_lc = request.user_agent.to_s.downcase

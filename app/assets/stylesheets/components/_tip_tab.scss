@@ -21,24 +21,21 @@
 }
 
 #tip-tab-container.animate-pulse {
-  animation: tip-wiggle 3s infinite ease-in-out;
+  animation: tip-wiggle 4s infinite ease-in-out;
 }
 
 @keyframes tip-wiggle {
-  0%, 90%, 100% {
+  0%, 80%, 100% {
     transform: translateX(calc(-100% + 76px));
   }
-  92% {
+  86% {
     transform: translateX(calc(-100% + 86px));
   }
-  94% {
-    transform: translateX(calc(-100% + 83px));
+  92% {
+    transform: translateX(calc(-100% + 74px));
   }
   96% {
-    transform: translateX(calc(-100% + 91px));
-  }
-  98% {
-    transform: translateX(calc(-100% + 76px));
+    transform: translateX(calc(-100% + 77px));
   }
 }
 
@@ -89,20 +86,17 @@
   }
 
   @keyframes tip-wiggle {
-    0%, 90%, 100% {
+    0%, 80%, 100% {
       transform: translateY(-50%) translateX(calc(100% - 76px));
+    }
+    86% {
+      transform: translateY(-50%) translateX(calc(100% - 86px));
     }
     92% {
-      transform: translateY(-50%) translateX(calc(100% - 84px));
-    }
-    94% {
-      transform: translateY(-50%) translateX(calc(100% - 85px));
+      transform: translateY(-50%) translateX(calc(100% - 74px));
     }
     96% {
-      transform: translateY(-50%) translateX(calc(100% - 95px));
-    }
-    98% {
-      transform: translateY(-50%) translateX(calc(100% - 76px));
+      transform: translateY(-50%) translateX(calc(100% - 77px));
     }
   }
 }

@@ -17,6 +17,13 @@ class GamificationService
     assign_badge(name: 'Early Adopter', category: 'special')
   end
 
+  # "Pionnier" : Faire partie des 1000 premiers comptes
+  def check_early_adopter_2
+    return unless @user.id <= 1000
+
+    assign_badge(name: 'Pionnier', category: 'special')
+  end
+
   # "Community Member" : S'abonner aux réseaux
   # À appeler quand l'user clique sur un lien social
   def check_community_member

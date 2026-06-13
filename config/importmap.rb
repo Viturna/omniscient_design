@@ -16,3 +16,4 @@ pin 'lenis', to: 'https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm'
 
 pin '@rails/actioncable/src', to: '@rails--actioncable--src.js'
 pin 'sortablejs', to: 'https://ga.jspm.io/npm:sortablejs@1.15.2/modular/sortable.esm.js'
+pin "trix" # @2.1.19

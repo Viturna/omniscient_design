@@ -225,22 +225,22 @@
           <h1 class="title-card"><%= designer.nom_designer %></h1>
         </div>
         <h2 class="title-description-reference">Présentation générale</h2>
-        <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.presentation_generale) %></p>
+        <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(designer.presentation_generale) %></div>
         <% if designer.formation_et_influences.present? %>
           <h2 class="title-description-reference">Formation et influences</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.formation_et_influences) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(designer.formation_et_influences) %></div>
         <% end %>
         <% if designer.style_ou_philosophie.present? %>
           <h2 class="title-description-reference">Style ou philosophie</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.style_ou_philosophie) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(designer.style_ou_philosophie) %></div>
         <% end %>
         <% if designer.creations_majeures.present? %>
           <h2 class="title-description-reference">Créations majeures</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.creations_majeures) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(designer.creations_majeures) %></div>
         <% end %>
         <% if designer.heritage_et_impact.present? %>
           <h2 class="title-description-reference">Héritage et impact</h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(designer.heritage_et_impact) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(designer.heritage_et_impact) %></div>
         <% end %>
         <h2 class="title-description-reference">Sources</h2>
         <% if designer.source.present? %>

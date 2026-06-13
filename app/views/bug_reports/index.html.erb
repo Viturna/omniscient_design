@@ -245,8 +245,20 @@
                     <% if bug.url.present? %>
                       <div style="font-weight:600; margin-bottom:4px; margin-top:12px; font-size:13px;">URL concernée :</div>
                       <div class="bug-url">
-                        <%= link_to bug.url, bug.url, target: "_blank", style: "color:#1565C0; text-decoration:none;" %>
+                        <%= link_to bug.url, bug.url, target: "_blank", style: "color:#1565C0; text-decoration:none; word-break:break-all;" %>
                       </div>
+                      <% begin %>
+                        <% uri = URI.parse(bug.url) %>
+                        <% if uri && uri.query %>
+                          <% q_num = CGI.parse(uri.query)["question"].first %>
+                          <% if q_num.present? %>
+                            <div style="margin-top: 4px; font-size: 13px; color: #E65100; font-weight: 500;">
+                              ↳ Question N°<%= q_num %> du quiz
+                            </div>
+                          <% end %>
+                        <% end %>
+                      <% rescue URI::InvalidURIError %>
+                      <% end %>
                     <% end %>
                     <div class="bug-actions">
                       <%= link_to 'Supprimer ce signalement', bug_report_path(bug), 

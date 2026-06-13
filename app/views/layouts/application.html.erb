@@ -8,6 +8,7 @@
     <%= csp_meta_tag %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <%= display_meta_tags site: 'Omniscient Design' %>
     <meta name="recaptcha-site-key" content="<%= ENV['RECAPTCHA_SITE_KEY'] || Rails.application.credentials.dig(:recaptcha, :site_key) %>">
     <%= render 'application/favicon' %>

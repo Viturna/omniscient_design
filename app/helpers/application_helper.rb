@@ -100,6 +100,12 @@ module ApplicationHelper
   def linkify_designer_names_and_references(text)
     return '' if text.blank?
 
+    # On sécurise le HTML généré par Trix avant de remplacer les mots-clés
+    # On autorise les balises classiques générées par Trix
+    allowed_tags = %w[strong em b i u a ul ol li br p div blockquote del h1 h2 h3 h4 h5 h6 pre code span]
+    allowed_attrs = %w[href target class style id]
+    text = sanitize(text, tags: allowed_tags, attributes: allowed_attrs)
+
     lists = Rails.cache.fetch('linkify_keywords_list', expires_in: 12.hours) do
       {
         designers: Designer.where(validation: true)

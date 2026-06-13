@@ -305,22 +305,22 @@
           </div>
         <% end %>
         <h2 class="title-description-reference"><%= t('studios.show.general_presentation', default: "Présentation générale") %></h2>
-        <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.presentation_generale) %></p>
+        <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(studio.presentation_generale) %></div>
         <% if studio.formation_et_influences.present? %>
           <h2 class="title-description-reference"><%= t('studios.show.education_influences', default: "Formation et influences") %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.formation_et_influences) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(studio.formation_et_influences) %></div>
         <% end %>
         <% if studio.style_ou_philosophie.present? %>
           <h2 class="title-description-reference"><%= t('studios.show.style_philosophy', default: "Style ou philosophie") %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.style_ou_philosophie) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(studio.style_ou_philosophie) %></div>
         <% end %>
         <% if studio.creations_majeures.present? %>
           <h2 class="title-description-reference"><%= t('studios.show.major_creations', default: "Créations majeures") %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.creations_majeures) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(studio.creations_majeures) %></div>
         <% end %>
         <% if studio.heritage_et_impact.present? %>
           <h2 class="title-description-reference"><%= t('studios.show.heritage_impact', default: "Héritage et impact") %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(studio.heritage_et_impact) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(studio.heritage_et_impact) %></div>
         <% end %>
         <h2 class="title-description-reference"><%= t('studios.show.sources', default: "Sources") %></h2>
         <% if studio.source.present? %>

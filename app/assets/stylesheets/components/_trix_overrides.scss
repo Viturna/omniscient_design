@@ -1,0 +1,177 @@
+@import "../abstracts/variables";
+
+/* --------------------------------------------------------------------------
+ * TRIX EDITOR OVERRIDES
+ * -------------------------------------------------------------------------- */
+
+
+
+/* 1. Correction de la barre d'outils (Annuler flex-direction: column) */
+.flex-form trix-toolbar div {
+  display: block;
+}
+
+.flex-form trix-toolbar .trix-button-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.flex-form trix-toolbar .trix-button-group {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid #e9e9e9;
+  border-radius: 5px;
+  background-color: #e9e9e9; /* Sera visible comme séparateur via le gap */
+  gap: 2px;
+  margin-bottom: 0;
+  overflow: hidden; /* S'assure que le fond blanc ne dépasse pas des bords arrondis */
+}
+
+/* Boutons de la barre d'outils : fond blanc pour voir les icônes noires */
+.flex-form trix-toolbar .trix-button.trix-button--icon {
+  background-color: #fff !important; /* <-- Fond blanc essentiel pour les icônes Trix */
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 34px !important;
+  width: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+  cursor: pointer !important;
+}
+
+/* Les icônes Trix s'ajustent mieux dans un petit bouton si on réduit un peu la taille de pseudo-element */
+.flex-form trix-toolbar .trix-button.trix-button--icon::before {
+  transform: scale(0.85);
+}
+
+.flex-form trix-toolbar .trix-button.trix-active {
+  background-color: #f5f5f5 !important; /* Un gris très clair quand le bouton est actif (ex: Gras activé) */
+}
+
+/* Rétablir le style pour la prévisualisation (le reset CSS écrasait le gras/italique) */
+trix-editor b, trix-editor strong, .trix-content b, .trix-content strong {
+  font-weight: bold !important;
+}
+
+trix-editor i, trix-editor em, .trix-content i, .trix-content em {
+  font-style: italic !important;
+}
+
+trix-editor ul, .trix-content ul {
+  list-style-type: disc !important;
+  padding-left: 20px !important;
+}
+
+trix-editor ol, .trix-content ol {
+  list-style-type: decimal !important;
+  padding-left: 20px !important;
+}
+
+trix-editor blockquote, .trix-content blockquote {
+  border-left: 4px solid #e9e9e9 !important;
+  padding-left: 15px !important;
+  color: #777 !important;
+  margin-left: 0 !important;
+}
+
+/* Style de l'éditeur */
+trix-editor {
+  background-color: #fff; /* Fond blanc comme les autres textareas ou transparent si demandé, on force blanc pour voir le texte si le DA l'exige, mais laissons $secondary-color-dark géré en bas */
+  color: #202020;
+  border: 2px solid #e9e9e9;
+  border-radius: 5px;
+  padding: 25px;
+  min-height: 150px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-top: -16px; /* Compense le gap global de la .flex-form pour coller l'éditeur à la barre d'outils */
+}
+
+/* Empêcher la règle globale ".flex-form div { display: flex; flex-direction: column; }" de casser l'affichage interne de Trix */
+.flex-form trix-editor div {
+  display: block;
+}
+
+/* Mode sombre */
+body.dark-mode {
+  trix-editor {
+    background-color: $secondary-color-dark;
+    color: $primary-color-dark;
+    border-color: #333;
+  }
+
+  .flex-form trix-toolbar .trix-button-group {
+    border-color: #333;
+    background-color: #333; /* Le séparateur (gap) sera sombre */
+  }
+
+  /* Boutons blancs avec icônes noires */
+  .flex-form trix-toolbar .trix-button.trix-button--icon {
+    background-color: #fff !important; 
+  }
+
+  .flex-form trix-toolbar .trix-button.trix-active {
+    background-color: #ddd !important;
+  }
+
+  /* On supprime le filtre invert(1) pour que les icônes restent noires sur fond blanc */
+  .flex-form trix-toolbar .trix-button::before {
+    filter: none !important;
+  }
+
+  trix-editor blockquote, .trix-content blockquote {
+    border-left-color: #555 !important;
+    color: #ccc !important;
+  }
+}
+
+// Ajuste la largeur en mode mobile
+@media screen and (min-width: 601px) and (max-width: 768px) {
+  trix-editor {
+    width: calc(100% - 36px);
+  }
+}
+
+@media screen and (min-width: 376px) and (max-width: 600px) {
+  trix-editor {
+    width: calc(100% - 36px);
+  }
+}
+
+@media screen and (max-width: 375px) {
+  trix-editor {
+    width: calc(100% - 36px);
+  }
+}
+
+/* Masquer les boutons non demandés de manière absolue */
+body .flex-form trix-toolbar .trix-button[data-trix-attribute="href"],
+body .flex-form trix-toolbar .trix-button[data-trix-action="link"],
+body .flex-form trix-toolbar .trix-button[data-trix-attribute="strike"],
+body .flex-form trix-toolbar .trix-button[data-trix-attribute="heading1"],
+body .flex-form trix-toolbar .trix-button[data-trix-attribute="code"],
+body .flex-form trix-toolbar .trix-button[data-trix-attribute="number"],
+body .flex-form trix-toolbar .trix-button[data-trix-action="decreaseNestingLevel"],
+body .flex-form trix-toolbar .trix-button[data-trix-action="increaseNestingLevel"],
+body .flex-form trix-toolbar .trix-button.trix-button--icon-strike,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-link,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-heading-1,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-code,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-number-list,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-decrease-nesting-level,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-increase-nesting-level,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-undo,
+body .flex-form trix-toolbar .trix-button.trix-button--icon-redo,
+body .flex-form trix-toolbar .trix-button-group--file-tools,
+body .flex-form trix-toolbar .trix-button-group--history-tools,
+body .flex-form trix-toolbar .trix-dialogs {
+  display: none !important;
+}

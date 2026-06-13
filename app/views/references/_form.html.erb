@@ -197,7 +197,10 @@
       <div class="flex-form">
         <div>
           <%= form.label :presentation_generale, t('add_reference.steps.3.presentation_generale') %>
-          <%= form.text_area :presentation_generale, placeholder: t('add_reference.steps.3.presentation_generale_placeholder') %>
+          <div style="gap:8px;">
+            <%= form.hidden_field :presentation_generale, id: "reference_presentation_generale" %>
+            <trix-editor input="reference_presentation_generale" placeholder="<%= t('add_reference.steps.3.presentation_generale_placeholder') %>"></trix-editor>
+          </div>
         </div>
         <div class="flex-button">
           <% [
@@ -214,11 +217,11 @@
                     data-action="click->toggle-single-field#reveal">
                 + <%= t("add_reference.steps.3.#{field}") %>
               </button>
-              <div data-toggle-single-field-target="container" style="display: none;">
+              <div data-toggle-single-field-target="container" style="gap: 8px;">
                 <%= form.label field, t("add_reference.steps.3.#{field}") %>
-                <%= form.text_area field, 
-                  placeholder: t("add_reference.steps.3.#{field}_placeholder"),
-                  data: { toggle_single_field_target: "input" } %>
+                <%= form.hidden_field field, id: "reference_#{field}" %>
+                <trix-editor input="<%= "reference_#{field}" %>" 
+                  placeholder="<%= t("add_reference.steps.3.#{field}_placeholder") %>"></trix-editor>
               </div>
             </div>
           <% end %>

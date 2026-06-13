@@ -49,7 +49,7 @@ export default class extends Controller {
 
     // Sinon, on empêche la soumission et on lance reCAPTCHA
     event.preventDefault()
-    event.stopImmediatePropagation() // Important pour bloquer d'autres scripts potentiels
+    event.stopImmediatePropagation()
 
     if (typeof grecaptcha === "undefined") {
       console.warn("reCAPTCHA pas encore chargé, attente...")
@@ -67,6 +67,7 @@ export default class extends Controller {
         if (typeof grecaptcha === "undefined") {
           clearInterval(checkInterval)
           console.error("reCAPTCHA n'a pas pu être chargé (timeout).")
+          this.forceTrixSync()
           this.element.submit()
         }
       }, 3000)
@@ -77,20 +78,58 @@ export default class extends Controller {
   }
 
   executeRecaptcha() {
+    let hasExecuted = false;
+    
+    const fallbackTimeout = setTimeout(() => {
+      if (!hasExecuted) {
+        console.warn("reCAPTCHA a mis trop de temps, soumission forcée !");
+        hasExecuted = true;
+        this.forceTrixSync();
+        this.element.submit();
+      }
+    }, 4000);
+
     grecaptcha.ready(() => {
       grecaptcha.execute(this.siteKey, { action: 'submit' }).then((token) => {
-        this.tokenTarget.value = token
-        // On relance la soumission maintenant que le token est là
-        if (typeof this.element.requestSubmit === 'function') {
-          this.element.requestSubmit()
-        } else {
-          this.element.submit()
-        }
+        if (hasExecuted) return;
+        hasExecuted = true;
+        clearTimeout(fallbackTimeout);
+
+        this.tokenTarget.value = token;
+        
+        // Forcer la synchro Trix AVANT de soumettre
+        this.forceTrixSync();
+
+        // Utiliser submit() directement car le token est déjà en place
+        // requestSubmit() déclencherait un nouveau event "submit" → boucle infinie
+        this.element.submit();
       }, (error) => {
+        if (hasExecuted) return;
+        hasExecuted = true;
+        clearTimeout(fallbackTimeout);
+
         console.error("Erreur reCAPTCHA execution:", error)
-        // En cas d'erreur, on essaie quand même de soumettre
+        this.forceTrixSync();
         this.element.submit()
       })
     })
+  }
+
+  forceTrixSync() {
+    this.element.querySelectorAll('trix-editor').forEach(editor => {
+      const inputId = editor.getAttribute('input');
+      if (!inputId) return;
+      
+      const inputElement = document.getElementById(inputId);
+      if (!inputElement) return;
+
+      // editor.value lit depuis le hidden input (qui peut être vide si Trix
+      // n'a jamais synchro car il était dans display:none).
+      // editor.innerHTML contient le VRAI contenu tapé par l'utilisateur.
+      const content = editor.innerHTML;
+      if (content && content.trim() !== "") {
+        inputElement.value = content;
+      }
+    });
   }
 }

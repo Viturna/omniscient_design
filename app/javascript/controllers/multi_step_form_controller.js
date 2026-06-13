@@ -19,6 +19,20 @@ export default class extends Controller {
         this.showCurrentStep();
         this.checkRulesCheckbox();
         this.bindHeaderBack();
+        this.bindRealtimeValidation();
+    }
+
+    bindRealtimeValidation() {
+        // Validation en temps réel lorsqu'on quitte un champ
+        this.element.querySelectorAll("input, select, textarea").forEach(input => {
+            if (input.type === "hidden" || input.type === "submit" || input.type === "button") return;
+            
+            input.addEventListener("blur", () => {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                }
+            });
+        });
     }
 
     disconnect() {
@@ -68,6 +82,9 @@ export default class extends Controller {
 
                 this.trackStepView(index + 1);
                 this.updateHeaderTitle(el);
+
+                // Réinitialiser les éditeurs Trix qui étaient cachés
+                this.reinitTrixEditors(el);
             } else {
                 el.style.display = "none";
             }
@@ -77,6 +94,30 @@ export default class extends Controller {
         this.updateProgress();
         this.hideError();
         window.scrollTo(0, 0);
+    }
+
+    reinitTrixEditors(stepEl) {
+        stepEl.querySelectorAll('trix-editor').forEach(editor => {
+            const inputId = editor.getAttribute('input');
+            if (!inputId) return;
+            
+            const hiddenInput = document.getElementById(inputId);
+            if (!hiddenInput) return;
+
+            // Forcer la synchro: innerHTML = le vrai contenu tapé
+            const content = editor.innerHTML;
+            if (content && content.trim() !== "") {
+                hiddenInput.value = content;
+            }
+            
+            // Écouter les changements futurs pour garder la synchro
+            if (!editor.hasAttribute('data-synced')) {
+                editor.setAttribute('data-synced', 'true');
+                editor.addEventListener('trix-change', () => {
+                    hiddenInput.value = editor.innerHTML;
+                });
+            }
+        });
     }
 
     updateHeaderTitle(currentStepEl) {
@@ -165,6 +206,11 @@ export default class extends Controller {
         let isValid = true;
 
         for (const input of inputs) {
+            // Ignore hidden inputs, disabled inputs, and Trix toolbar inputs
+            if (input.type === "hidden" || input.disabled || input.closest('trix-toolbar')) {
+                continue;
+            }
+
             if (!input.checkValidity()) {
                 isValid = false;
                 input.reportValidity();

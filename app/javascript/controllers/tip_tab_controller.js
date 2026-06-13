@@ -4,6 +4,11 @@ export default class extends Controller {
   static targets = ["tab", "text", "icon"]
 
   connect() {
+    if (sessionStorage.getItem('tipClicked')) {
+      this.element.style.display = "none"
+      return
+    }
+
     this.startX = 0
     this.isDragging = false
     this.hasDragged = false
@@ -24,6 +29,8 @@ export default class extends Controller {
   }
 
   dragStart(e) {
+    if (sessionStorage.getItem('tipClicked')) return
+    
     this.isDragging = true
     this.hasDragged = false
     this.startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX
@@ -37,7 +44,7 @@ export default class extends Controller {
   }
 
   dragMove(e) {
-    if (!this.isDragging) return
+    if (!this.isDragging || sessionStorage.getItem('tipClicked')) return
     
     let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX
     let deltaX = clientX - this.startX
@@ -62,7 +69,7 @@ export default class extends Controller {
   }
 
   dragEnd(e) {
-    if (!this.isDragging) return
+    if (!this.isDragging || sessionStorage.getItem('tipClicked')) return
     this.isDragging = false
     this.element.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'
 
@@ -131,7 +138,10 @@ export default class extends Controller {
     }).catch(() => {})
 
     window.open("https://fr.tipeee.com/le-site-omniscient-design", "_blank")
-    this.element.style.transform = ''
+    
+    // Hide the tab for the current session
+    sessionStorage.setItem('tipClicked', 'true')
+    this.close()
   }
 
   close(e) {

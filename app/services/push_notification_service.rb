@@ -25,21 +25,26 @@ class PushNotificationService
       return
     end
 
-    access_token = get_access_token
-    return unless access_token
+    # Lancement en arrière-plan pour ne pas bloquer la requête
+    Thread.new do
+      begin
+        access_token = get_access_token
+        next unless access_token
 
-    uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
+        uri = URI("https://fcm.googleapis.com/v1/projects/#{PROJECT_ID}/messages:send")
 
-    # Prépare la connexion HTTP une seule fois pour tous les tokens (meilleure perf)
-    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-      # Config SSL Dev
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
+        # Prépare la connexion HTTP une seule fois pour tous les tokens (meilleure perf)
+        Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+          # Config SSL Dev
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
 
-      tokens.each do |device_token|
-        # Construction du payload
-        title_content = @notification.title.presence || 'Omniscient Design'
-        unread_count = @user.notifications.unread.count
-        body = {
+          tokens.each do |device_token|
+            # Construction du payload
+            title_content = @notification.title.presence || 'Omniscient Design'
+            # (Note: unread_count is evaluated in the background thread now, so it's fresh)
+            unread_count = @user.notifications.unread.count
+            
+            body = {
           message: {
             token: device_token,
             notification: { title: title_content, body: @notification.message },
@@ -96,6 +101,10 @@ class PushNotificationService
         end
       rescue StandardError => e
         Rails.logger.error "🔴 [PushService] Crash sur token #{device_token.first(10)} : #{e.message}"
+      end
+    end
+      rescue StandardError => e
+        Rails.logger.error "🔴 [PushService] Crash dans le Thread global : #{e.message}"
       end
     end
   end

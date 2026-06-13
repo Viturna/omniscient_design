@@ -5,6 +5,7 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "jquery_provider"
 import "select2"
+import "trix"
 import Lenis from "lenis"
 window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
 // ------------------------
@@ -80,3 +81,41 @@ function initLenis() {
 }
 
 document.addEventListener("turbo:load", initLenis)
+document.addEventListener("trix-initialize", function(event) {
+  if (event.target.toolbarElement) {
+    const dialogInputs = event.target.toolbarElement.querySelectorAll("input[required]");
+    dialogInputs.forEach(input => input.removeAttribute("required"));
+  }
+});
+
+// SÉCURITÉ TRIX : synchro forcée du contenu vers le hidden input à chaque changement
+document.addEventListener("trix-change", function(event) {
+  const editor = event.target;
+  const inputId = editor.getAttribute("input");
+  if (inputId) {
+    const hiddenInput = document.getElementById(inputId);
+    if (hiddenInput) {
+      // innerHTML = le vrai contenu tapé, editor.value = lit le hidden input (circulaire)
+      hiddenInput.value = editor.innerHTML;
+    }
+  }
+});
+
+// SÉCURITÉ TRIX : synchro finale avant soumission du formulaire
+document.addEventListener("submit", function(event) {
+  const form = event.target;
+  if (!form || form.tagName !== "FORM") return;
+  
+  form.querySelectorAll("trix-editor").forEach(function(editor) {
+    const inputId = editor.getAttribute("input");
+    if (inputId) {
+      const hiddenInput = document.getElementById(inputId);
+      if (hiddenInput) {
+        const content = editor.innerHTML;
+        if (content && content.trim() !== "") {
+          hiddenInput.value = content;
+        }
+      }
+    }
+  });
+});

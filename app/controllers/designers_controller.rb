@@ -143,7 +143,7 @@ class DesignersController < ApplicationController
 
     image_url = @designer.designer_images.first&.file&.attached? ? view_context.url_for(@designer.designer_images.first.file) : nil
     set_meta_tags(
-      title: "#{@designer.prenom} #{@designer.nom}".strip + " : Biographie et réalisations",
+      title: "#{@designer.prenom} #{@designer.nom}".strip + " - Biographie et réalisations",
       description: view_context.truncate(@designer.presentation_generale, length: 160),
       og: { image: image_url },
       twitter: { image: image_url }

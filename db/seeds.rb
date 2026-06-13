@@ -106,6 +106,7 @@ require 'uri'
 #   # --- SPÉCIAUX ---
 #   { name: "Omniscient User", category: "special", level: "standard", description: "Bienvenue dans l'aventure ! Tu as créé ton compte.", filename: "omniscient_user.png" },
 #   { name: "Early Adopter", category: "special", description: "Tu fais partie des 100 premiers membres historiques.", filename: "early_adopter.png" },
+#   { name: "Pionnier", category: "special", description: "Tu fais partie des 1000 premiers membres historiques.", filename: "early_adopter_2.png" },
 #   { name: "Donateur", category: "special", level: "standard", description: "Merci pour ton soutien financier au projet.", filename: "donateur.png" },
 #   { name: "Community Member", category: "special", level: "standard", description: "Tu suis l'actualité du design sur tous nos réseaux.", filename: "community.png" },
 #   { name: "Dans les moindres détails", category: "special", description: "Tu as trouvé le secret caché !", filename: "details.png" },

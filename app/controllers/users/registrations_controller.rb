@@ -40,6 +40,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       service = GamificationService.new(resource)
       service.check_omniscient_user
       service.check_early_adopter
+      service.check_early_adopter_2
 
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up

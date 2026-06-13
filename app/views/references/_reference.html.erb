@@ -269,26 +269,26 @@
           <p><%= t('references.no_notion') %></p>
         <% end %>
         <h2 class="title-description-reference"><%= t('references.presentation_generale') %></h2>
-        <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.presentation_generale.presence) %></p>
+        <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(reference.presentation_generale.presence) %></div>
         <% if reference.contexte_historique.present? %>
           <h2 class="title-description-reference"><%= t('references.contexte_historique') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.contexte_historique) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(reference.contexte_historique) %></div>
         <% end %>
         <% if reference.materiaux_et_innovations_techniques.present? %>
           <h2 class="title-description-reference"><%= t('references.materiaux_innovations') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.materiaux_et_innovations_techniques) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(reference.materiaux_et_innovations_techniques) %></div>
         <% end %>
         <% if reference.concept_et_inspiration.present? %>
           <h2 class="title-description-reference"><%= t('references.concept_inspiration') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.concept_et_inspiration) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(reference.concept_et_inspiration) %></div>
         <% end %>
         <% if reference.dimension_esthetique.present? %>
           <h2 class="title-description-reference"><%= t('references.dimension_esthetique') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.dimension_esthetique) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(reference.dimension_esthetique) %></div>
         <% end %>
         <% if reference.impact_et_message.present? %>
           <h2 class="title-description-reference"><%= t('references.impact_message') %></h2>
-          <p class="text-description-reference"><%= linkify_designer_names_and_references(reference.impact_et_message) %></p>
+          <div class="text-description-reference trix-content"><%= linkify_designer_names_and_references(reference.impact_et_message) %></div>
         <% end %>
         <h2 class="title-description-reference"><%= t('references.sources') %></h2>
         <% if reference.source.present? %>

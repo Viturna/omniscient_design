@@ -21,7 +21,7 @@ class StudiosController < ApplicationController
 
     image_url = @studio.studio_images.first&.file&.attached? ? view_context.url_for(@studio.studio_images.first.file) : nil
     set_meta_tags(
-      title: "#{@studio.nom} : Histoire et créations du studio",
+      title: "#{@studio.nom} - Histoire et créations du studio",
       description: view_context.truncate(@studio.presentation_generale, length: 160),
       og: { image: image_url },
       twitter: { image: image_url }

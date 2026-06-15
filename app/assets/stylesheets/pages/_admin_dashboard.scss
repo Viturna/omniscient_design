@@ -13,8 +13,8 @@
   /* --- HEADER --- */
   .users-dash-header {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 40px;
     flex-wrap: wrap; /* Permet le passage à la ligne */
     gap: 20px;

@@ -6,7 +6,6 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-
 <div class="users-dash-wrapper">
   <div class="users-dash-header">
     <div style="display: flex; align-items: center; gap: 20px;">
@@ -15,12 +14,20 @@
       <% end %>
       <h1 class="users-dash-title"><%= t('admin.users.index.title') %></h1>
     </div>
-    <div class="users-dash-period-selector">
-      <%= link_to "7J", users_path(period: '7d'), class: "period-btn #{@period == '7d' ? 'active' : ''}" %>
-      <%= link_to "30J", users_path(period: '30d'), class: "period-btn #{@period == '30d' ? 'active' : ''}" %>
-      <%= link_to "60J", users_path(period: '60d'), class: "period-btn #{@period == '60d' ? 'active' : ''}" %>
-      <%= link_to "90J", users_path(period: '90d'), class: "period-btn #{@period == '90d' ? 'active' : ''}" %>
-      <%= link_to "12M", users_path(period: '12m'), class: "period-btn #{@period == '12m' ? 'active' : ''}" %>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex:1;">
+      <%= form_with url: users_path, method: :get, local: true, class: "custom-period-form", style: "display: flex; gap: 4px; align-items: center; background: #fff; border: 1px solid #e0e0e0; border-radius: 50px; padding: 4px 4px 4px 12px;" do |f| %>
+        <%= f.date_field :start_date, value: params[:start_date], style: "border: none; background: transparent; font-size: 14px; color: #666; font-weight: 500; outline: none; width: 120px; font-family: inherit;" %>
+        <span style="font-size: 14px; color: #aaa; font-weight: 500;">-</span>
+        <%= f.date_field :end_date, value: params[:end_date], style: "border: none; background: transparent; font-size: 14px; color: #666; font-weight: 500; outline: none; width: 120px; font-family: inherit;" %>
+        <%= f.submit "Valider", class: "period-btn #{@period == 'custom' ? 'active' : ''}", style: "padding: 6px 16px; margin-left: 4px;" %>
+      <% end %>
+      <div class="users-dash-period-selector">
+        <%= link_to "7J", users_path(period: '7d'), class: "period-btn #{@period == '7d' ? 'active' : ''}" %>
+        <%= link_to "30J", users_path(period: '30d'), class: "period-btn #{@period == '30d' ? 'active' : ''}" %>
+        <%= link_to "60J", users_path(period: '60d'), class: "period-btn #{@period == '60d' ? 'active' : ''}" %>
+        <%= link_to "90J", users_path(period: '90d'), class: "period-btn #{@period == '90d' ? 'active' : ''}" %>
+        <%= link_to "12M", users_path(period: '12m'), class: "period-btn #{@period == '12m' ? 'active' : ''}" %>
+      </div>
     </div>
   </div>
   <div class="users-dash-kpi-grid">
@@ -80,6 +87,7 @@
       <div class="chart-tabs">
         <div class="chart-tab active" onclick="switchChart('signups', this)"><%= t('admin.users.index.signups') %></div>
         <div class="chart-tab" onclick="switchChart('visits', this)"><%= t('admin.users.index.visits') %></div>
+        <div class="chart-tab" onclick="switchChart('acquisition', this)"><%= t('admin.users.index.acquisition') %></div>
       </div>
     </div>
     <div id="chart-signups" class="chart-container active">
@@ -87,6 +95,9 @@
     </div>
     <div id="chart-visits" class="chart-container">
       <%= area_chart @chart_visits, height: "300px", colors: ["#4CAF50"], library: { scales: { x: { grid: { display: false } }, y: { grid: { borderDash: [5, 5] } } } } %>
+    </div>
+    <div id="chart-acquisition" class="chart-container">
+      <%= line_chart @chart_acquisition, height: "300px", library: { scales: { x: { grid: { display: false } }, y: { grid: { borderDash: [5, 5] } } } } %>
     </div>
   </div>
   <div class="users-dash-secondary-grid">

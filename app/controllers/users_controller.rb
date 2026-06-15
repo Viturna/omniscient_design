@@ -10,23 +10,48 @@ class UsersController < ApplicationController
     # --- 1. Gestion de la Période (Filtre Temporel) ---
     @period = params[:period] || '30d'
 
-    # Configuration des plages de dates selon le bouton cliqué
-    case @period
-    when '7d'
-      range = 7.days.ago.to_date..Date.today
-      date_format = '%d/%m'
-    when '60d'
-      range = 60.days.ago.to_date..Date.today
-      date_format = '%d/%m'
-    when '90d'
-      range = 90.days.ago.to_date..Date.today
-      date_format = '%d/%m'
-    when '12m'
-      range = 12.months.ago.to_date..Date.today
-      date_format = '%b %Y'
-    else # '30d' par défaut
-      range = 30.days.ago.to_date..Date.today
-      date_format = '%d/%m'
+    if params[:start_date].present? && params[:end_date].present?
+      @period = 'custom'
+      begin
+        start_d = Date.parse(params[:start_date])
+        end_d = Date.parse(params[:end_date])
+        range = start_d..end_d
+        if (end_d - start_d) > 90
+          date_format = '%b %Y'
+          @group_by = :month
+        else
+          date_format = '%d/%m'
+          @group_by = :day
+        end
+      rescue ArgumentError
+        range = 30.days.ago.to_date..Date.today
+        date_format = '%d/%m'
+        @group_by = :day
+      end
+    else
+      # Configuration des plages de dates selon le bouton cliqué
+      case @period
+      when '7d'
+        range = 7.days.ago.to_date..Date.today
+        date_format = '%d/%m'
+        @group_by = :day
+      when '60d'
+        range = 60.days.ago.to_date..Date.today
+        date_format = '%d/%m'
+        @group_by = :day
+      when '90d'
+        range = 90.days.ago.to_date..Date.today
+        date_format = '%d/%m'
+        @group_by = :day
+      when '12m'
+        range = 12.months.ago.to_date..Date.today
+        date_format = '%b %Y'
+        @group_by = :month
+      else # '30d' par défaut
+        range = 30.days.ago.to_date..Date.today
+        date_format = '%d/%m'
+        @group_by = :day
+      end
     end
 
     # --- 2. Données pour les Graphiques Principaux ---
@@ -35,9 +60,9 @@ class UsersController < ApplicationController
     users_data = User.where(created_at: range.first.beginning_of_day..range.last.end_of_day)
                      .pluck(:created_at)
 
-    if @period == '12m'
+    if @group_by == :month
       grouped_users = users_data.group_by { |d| d.beginning_of_month.to_date }
-      timeline = range.map { |d| d.beginning_of_month }.uniq
+      timeline = (range.first..range.last).map { |d| d.beginning_of_month.to_date }.uniq
     else
       grouped_users = users_data.group_by { |d| d.to_date }
       timeline = range.to_a
@@ -51,13 +76,30 @@ class UsersController < ApplicationController
                             .count
 
     @chart_visits = timeline.map do |date|
-      val = if @period == '12m'
+      val = if @group_by == :month
               # Somme des visites du mois
               DailyVisit.where(visited_on: date.beginning_of_month..date.end_of_month).count
             else
               visits_data[date] || 0
             end
       [date.strftime(date_format), val]
+    end
+
+    # Graphique 3 : Évolution des Acquisitions
+    acq_data = User.where(created_at: range.first.beginning_of_day..range.last.end_of_day)
+                   .where.not(how_did_you_hear: [nil, ""])
+                   .pluck(:created_at, :how_did_you_hear)
+    
+    @chart_acquisition = acq_data.group_by(&:last).map do |source, items|
+      if @group_by == :month
+        grouped = items.map(&:first).group_by { |d| d.beginning_of_month.to_date }
+      else
+        grouped = items.map(&:first).group_by { |d| d.to_date }
+      end
+      data = timeline.map do |date|
+        [date.strftime(date_format), grouped[date]&.count || 0]
+      end
+      { name: source, data: data }
     end
 
     @newsletter_count = User.where(newsletter: true).count

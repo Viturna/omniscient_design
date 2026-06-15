@@ -224,11 +224,12 @@
                 </span>
               </td>
               <td>
-                <%= form_with url: update_status_bug_report_path(bug), method: :patch, local: true do %>
+                <%= form_with url: update_status_bug_report_path(bug), method: :patch, local: true, id: "form_bug_#{bug.id}" do %>
+                  <input type="hidden" name="custom_message" id="custom_message_<%= bug.id %>">
                   <%= select_tag :status,
                       options_for_select(BugReport.statuses.keys.map { |k| [I18n.t("enums.bug_report.status.#{k}", default: k.humanize), k] }, bug.status),
                       class: 'status-select',
-                      onchange: 'this.form.submit()' %>
+                      onchange: "handleStatusChange(this, #{bug.id}, '#{bug.status}')" %>
                 <% end %>
               </td>
               <td style="text-align:center;">
@@ -302,4 +303,51 @@
       e.stopPropagation();
     });
   });
+
+  // Custom Message Popup Logic
+  let currentBugFormId = null;
+  let currentSelectElement = null;
+  let previousStatus = null;
+
+  function handleStatusChange(selectElement, bugId, oldStatus) {
+    if (selectElement.value === 'corrige') {
+      currentBugFormId = `form_bug_${bugId}`;
+      currentSelectElement = selectElement;
+      previousStatus = oldStatus;
+      document.getElementById('customMessageInput').value = '';
+      document.getElementById('customMessagePopup').style.display = 'flex';
+    } else {
+      selectElement.form.submit();
+    }
+  }
+
+  function cancelCustomMessage() {
+    document.getElementById('customMessagePopup').style.display = 'none';
+    if (currentSelectElement) {
+      currentSelectElement.value = previousStatus; // revert to previous selection
+    }
+    currentBugFormId = null;
+    currentSelectElement = null;
+  }
+
+  function submitCustomMessage() {
+    const msg = document.getElementById('customMessageInput').value;
+    if (currentBugFormId) {
+      document.getElementById(`custom_message_${currentBugFormId.replace('form_bug_', '')}`).value = msg;
+      document.getElementById(currentBugFormId).submit();
+    }
+  }
 </script>
+
+<!-- Popup HTML -->
+<div id="customMessagePopup" class="popup" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+  <div class="popup-content" style="background-color: #fff; padding: 24px; border-radius: 12px; width: 400px; max-width: 90%;">
+    <h3 style="margin-top: 0; font-size: 20px; font-weight: 600; color: #202020;">Message de correction</h3>
+    <p style="font-size: 14px; color: #666; margin-bottom: 16px;">Saisis un message personnalisé pour notifier l'utilisateur que son bug a été corrigé (optionnel).</p>
+    <textarea id="customMessageInput" style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; font-family: inherit; font-size: 14px; resize: vertical;" rows="4" placeholder="Ex: Merci pour ton retour, nous venons de corriger ce problème !"></textarea>
+    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+      <button type="button" style="background-color: #f0f0f0; color: #202020; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 500; cursor: pointer;" onclick="cancelCustomMessage()">Annuler</button>
+      <button type="button" style="background-color: #202020; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 500; cursor: pointer;" onclick="submitCustomMessage()">Valider & Envoyer</button>
+    </div>
+  </div>
+</div>

@@ -71,13 +71,15 @@ class BugReportsController < ApplicationController
   end
 
   def update_status
-    # On convertit le paramètre en integer si l'enum est stocké en integer,
-    # ou on passe la string si c'est stocké en string.
-    # Rails gère souvent ça tout seul, mais attention aux conversions.
     new_status = params[:status]
+    custom_message = params[:custom_message]
 
     if @bug_report.update(status: new_status)
-      notify_user_of_status_update(@bug_report)
+      if new_status == 'corrige' && custom_message.present?
+        notify_user_custom_message(@bug_report, custom_message)
+      else
+        notify_user_of_status_update(@bug_report)
+      end
       redirect_to bug_reports_path, notice: I18n.t('bug_report.update_status.success')
     else
       redirect_to bug_reports_path, alert: I18n.t('bug_report.update_status.error')
@@ -106,10 +108,20 @@ class BugReportsController < ApplicationController
                      default: "Nouveau bug signalé par #{user_name}.")
 
     User.where(role: 'admin').each do |user|
-      Notification.create(user_id: user.id, notifiable: bug_report, title: title, message: message, status: :unread)
+      Notification.create(user_id: user.id, notifiable: nil, link: bug_reports_path, title: title, message: message, status: :unread)
     end
   rescue StandardError => e
     Rails.logger.error "ERREUR notify_admins_of_new_bug: #{e.message}"
+  end
+
+  def notify_user_custom_message(bug_report, custom_message)
+    return unless bug_report.user.present?
+    return if bug_report.user == current_user && current_user.admin?
+
+    title = 'Suivi de ton signalement'
+    Notification.create(user: bug_report.user, notifiable: nil, link: nil, title: title, message: custom_message, status: :unread)
+  rescue StandardError => e
+    Rails.logger.error "ERREUR notify_user_custom_message: #{e.message}"
   end
 
   def notify_user_of_status_update(bug_report)
@@ -117,13 +129,19 @@ class BugReportsController < ApplicationController
     return if bug_report.user == current_user && current_user.admin?
 
     title = 'Suivi de ton signalement'
-    # Traduction propre du statut
     status_key = bug_report.status
     status_text = I18n.t("enums.bug_report.status.#{status_key}", default: status_key.humanize)
 
-    message = "Ton rapport est passé au statut : #{status_text}"
+    message = case status_key
+              when 'en_cours'
+                "Bonne nouvelle ! Nous sommes actuellement en train de traiter ton signalement. Merci pour ta patience"
+              when 'corrige'
+                "Merci pour ton aide ! Ton signalement a été traité et le problème est maintenant résolu ✨"
+              else
+                "Ton signalement a bien été pris en compte"
+              end
 
-    Notification.create(user: bug_report.user, notifiable: bug_report, title: title, message: message, status: :unread)
+    Notification.create(user: bug_report.user, notifiable: nil, link: nil, title: title, message: message, status: :unread)
   rescue StandardError => e
     Rails.logger.error "ERREUR notify_user_of_status_update: #{e.message}"
   end

@@ -10,7 +10,7 @@ class Studio < ApplicationRecord
 
   has_many :studio_images, -> { order(position: :asc) }, dependent: :destroy
   accepts_nested_attributes_for :studio_images, allow_destroy: true,
-                                                reject_if: proc { |attributes| attributes['file'].blank? },
+                                                reject_if: proc { |attributes| attributes['file'].blank? && attributes['id'].blank? },
                                                 limit: 3
 
   has_many :studios_domaines, dependent: :destroy

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["input", "container"]
+    static targets = ["input", "container", "existingWrapper", "destroyCheckbox"]
 
     preview(event) {
         const input = this.inputTarget
@@ -11,7 +11,14 @@ export default class extends Controller {
         container.innerHTML = ""
 
         if (!file) {
+            if (this.hasExistingWrapperTarget && !this.isDestroyed) {
+                this.existingWrapperTarget.style.display = ""
+            }
             return
+        }
+
+        if (this.hasExistingWrapperTarget) {
+            this.existingWrapperTarget.style.display = "none"
         }
 
         const reader = new FileReader()
@@ -51,5 +58,26 @@ export default class extends Controller {
 
         this.inputTarget.value = null
         this.containerTarget.innerHTML = ""
+        
+        if (this.hasExistingWrapperTarget && !this.isDestroyed) {
+            this.existingWrapperTarget.style.display = ""
+        }
+    }
+
+    markForDestruction(event) {
+        event.preventDefault()
+        
+        if (this.hasDestroyCheckboxTarget) {
+            this.destroyCheckboxTarget.checked = true
+        }
+        
+        if (this.hasExistingWrapperTarget) {
+            this.existingWrapperTarget.style.display = "none"
+        }
+        
+        this.inputTarget.value = null
+        this.containerTarget.innerHTML = ""
+        
+        this.isDestroyed = true
     }
 }

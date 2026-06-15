@@ -6,7 +6,7 @@ class Reference < ApplicationRecord
   has_many :quiz_questions, dependent: :nullify
   has_many :daily_references, dependent: :destroy
   accepts_nested_attributes_for :reference_images, allow_destroy: true,
-                                                   reject_if: proc { |attributes| attributes['file'].blank? },
+                                                   reject_if: proc { |attributes| attributes['file'].blank? && attributes['id'].blank? },
                                                    limit: 3
   friendly_id :nom_reference, use: :slugged
 

@@ -213,6 +213,20 @@
           } 
         } %>
       </div>
+      <div class="field" data-registration-target="studentField"
+              style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
+        <%= f.label :study_level, "Niveau d'étude" %>
+        <%= f.select :study_level,
+          User::STUDY_LEVELS,
+          { include_blank: "Sélectionne ton niveau scolaire" },
+          { 
+            class: "form-control",
+            data: { 
+              controller: "select2",
+              select2_placeholder_value: "Sélectionne ton niveau scolaire"
+            }
+          } %>
+      </div>
       <div class="field">
         <%= f.label t('edit_profile.password') %>
         <i>(<%= t('edit_profile.password_hint') %>)</i>

@@ -84,14 +84,24 @@ input[type="search"]::-webkit-search-cancel-button {
 /* --- La "poignée" pour glisser --- */
 .image-drag-handle {
   cursor: move; /* Indique qu'on peut glisser */
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   color: #777;
   background: #f4f4f4;
-  border-radius: 4px;
-  padding: 0.25rem 0;
+  border-radius: 6px;
+  padding: 8px 12px;
   font-size: 0.9rem;
+  font-weight: 500;
   border: 1px solid #eee;
   user-select: none; /* Empêche de sélectionner le texte */
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.image-drag-handle:hover {
+  background: #e9e9e9;
+  color: #333;
 }
 
 /* --- Prévisualisation d'image existante --- */
@@ -130,6 +140,7 @@ input[type="search"]::-webkit-search-cancel-button {
   font-weight: bold;
   font-size: 1.25rem;
   color: #e61818;
+  border: none;
   cursor: pointer;
   line-height: 1;
 }

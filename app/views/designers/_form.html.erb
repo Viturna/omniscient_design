@@ -238,15 +238,23 @@
                  data-controller="image-preview" 
                  data-sortable-target="item">
                 <%= image_form.hidden_field :position, data: { 'sortable-target': 'positionInput' } %>
-                <div class="image-drag-handle">
-                  ⬍ Glisser (Position <%= image_form.object.position || 'N/A' %>)
+                <div class="image-drag-handle" title="Glisser pour réorganiser">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="5 9 2 12 5 15"></polyline>
+                    <polyline points="9 5 12 2 15 5"></polyline>
+                    <polyline points="19 9 22 12 19 15"></polyline>
+                    <polyline points="9 19 12 22 15 19"></polyline>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                  </svg>
+                  <span>Position <span data-sortable-target="positionLabel"><%= image_form.object.position || image_form.index + 1 %></span></span>
                 </div>
-                <% if image_form.object.persisted? && image_form.object.file.attached? %>
-                  <div class="image-preview-existing">
+                <% if image_form.object.persisted? && image_form.object.file.attached? && image_form.object.file.attachment&.persisted? %>
+                  <div class="image-preview-existing" data-image-preview-target="existingWrapper">
                     <%= image_tag image_form.object.file.variant(:thumb), loading: "lazy", class: "image-preview-img" %>
                     <div class="image-delete-overlay">
-                      <%= image_form.check_box :_destroy %>
-                      <%= image_form.label :_destroy, "×", class: "delete-image-btn", title: "Supprimer" %>
+                      <button type="button" class="delete-image-btn" title="Supprimer" data-action="click->image-preview#markForDestruction">×</button>
+                      <%= image_form.check_box :_destroy, data: { image_preview_target: "destroyCheckbox" }, style: "display:none;" %>
                     </div>
                   </div>
                   <div>

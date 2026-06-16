@@ -508,6 +508,23 @@
                     </tr>
                   <% end %>
                 </tbody>
+                <tfoot>
+                  <tr style="background: #fafafa; border-top: 2px solid #eee;">
+                    <td style="font-weight: 600; padding: 12px 8px; color: #666;">Moyenne Globale</td>
+                    <td style="text-align: center; color: #202020; font-weight: 600;"><%= @average_cohort_size %></td>
+                    <% 4.times do |i| %>
+                      <% val = @cohort_avg_final[i] %>
+                      <td style="text-align: center; padding: 12px 8px;">
+                        <% if val %>
+                          <% badge_class = val > 40 ? 'badge-green' : (val > 15 ? 'badge-blue' : 'badge-red') %>
+                          <span class="badge <%= badge_class %>"><%= val %>%</span>
+                        <% else %>
+                          <span style="color: #ccc;">-</span>
+                        <% end %>
+                      </td>
+                    <% end %>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>

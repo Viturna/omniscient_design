@@ -67,6 +67,8 @@ class Admin::DashboardController < ApplicationController
 
     # --- Rétention par Cohorte ---
     @cohorts = {}
+    @cohort_averages = { 0 => [], 1 => [], 2 => [], 3 => [] }
+
     6.downto(0) do |i|
       month_start = i.months.ago.beginning_of_month
       month_end = i.months.ago.end_of_month
@@ -87,7 +89,9 @@ class Admin::DashboardController < ApplicationController
                                  .where(visited_on: target_month_start..target_month_end)
                                  .distinct.count(:user_id)
         
-        retention << ((active_users.to_f / cohort_size) * 100).round(1)
+        ret_val = ((active_users.to_f / cohort_size) * 100).round(1)
+        retention << ret_val
+        @cohort_averages[month_offset] << ret_val
       end
       
       @cohorts[month_start.strftime("%B %Y")] = {
@@ -95,6 +99,15 @@ class Admin::DashboardController < ApplicationController
         retention: retention
       }
     end
+
+    @cohort_avg_final = []
+    0.upto(3) do |i|
+      vals = @cohort_averages[i]
+      @cohort_avg_final << (vals.any? ? (vals.sum / vals.size).round(1) : nil)
+    end
+    
+    total_inscrits = @cohorts.values.sum { |data| data[:size] }
+    @average_cohort_size = @cohorts.any? ? (total_inscrits.to_f / @cohorts.size).round : 0
 
     # --- Efficacité du Parrainage ---
     total_users_last_30d = User.where('created_at >= ?', thirty_days_ago).count

@@ -41,7 +41,13 @@ class NotificationsController < ApplicationController
     count = 0
 
     # 2. Définition des cibles
-    targets = if params[:select_all] == 'all' || params[:user_id] == 'all'
+    targets = if params[:status].present? && params[:status] != 'all'
+                users = User.where('LOWER(statut) = ?', params[:status].downcase)
+                if params[:status].downcase == 'etudiant' && params[:study_level].present? && params[:study_level] != 'all'
+                  users = users.where(study_level: params[:study_level])
+                end
+                users
+              elsif params[:select_all] == 'all' || params[:user_id] == 'all'
                 User.all
               elsif params[:user_ids].present?
                 User.where(id: params[:user_ids].reject(&:blank?))

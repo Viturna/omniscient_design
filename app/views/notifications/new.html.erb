@@ -224,6 +224,34 @@
               Envoyer à tous les utilisateurs
             </label>
           </div>
+          
+          <div style="margin-bottom: 16px;">
+            <label class="form-label" style="font-size: 13px; color: #666; text-transform: none; margin-bottom: 8px;">Ou cibler par statut professionnel :</label>
+            <%= select_tag 'status', 
+                options_for_select([
+                  ["-- Tous les statuts (Ou utiliser la sélection manuelle) --", "all"], 
+                  ["Étudiant", "etudiant"], 
+                  ["Enseignant", "enseignant"], 
+                  ["Entreprise", "entreprise"], 
+                  ["Artiste", "artiste"], 
+                  ["Autre", "autre"]
+                ]), 
+                class: "form-control",
+                style: "padding: 10px; font-size: 14px; background-color: #fff;",
+                onchange: "document.getElementById('study-level-container').style.display = (this.value === 'etudiant') ? 'block' : 'none';"
+            %>
+          </div>
+
+          <div id="study-level-container" style="display: none; margin-bottom: 16px; margin-left: 20px; border-left: 2px solid #e0e0e0; padding-left: 15px;">
+            <label class="form-label" style="font-size: 13px; color: #666; text-transform: none; margin-bottom: 8px;">Préciser l'année scolaire (Optionnel) :</label>
+            <%= select_tag 'study_level', 
+                options_for_select([["-- Toutes les années --", "all"]] + User::STUDY_LEVELS.map { |lvl| [lvl, lvl] }), 
+                class: "form-control",
+                style: "padding: 10px; font-size: 14px; background-color: #fff;"
+            %>
+          </div>
+
+          <label class="form-label" style="font-size: 13px; color: #666; text-transform: none; margin-bottom: 8px;">Ou sélection manuelle :</label>
           <%= select_tag 'user_ids[]', 
               options_from_collection_for_select(@users, :id, ->(u) { "#{u.email} (ID: #{u.id})" }), 
               { 

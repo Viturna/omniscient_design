@@ -55,10 +55,12 @@ export default class extends Controller {
   submit(event) {
     const isAllSelected = this.checkboxTarget.checked
     const selectedUsers = $(this.selectTarget).val()
+    const statusSelect = document.getElementById('status')
+    const isStatusSelected = statusSelect && statusSelect.value !== 'all'
 
-    if (!isAllSelected && (!selectedUsers || selectedUsers.length === 0)) {
+    if (!isAllSelected && (!selectedUsers || selectedUsers.length === 0) && !isStatusSelected) {
       event.preventDefault()
-      alert("Sélectionne au moins un utilisateur ou coche 'Tous les Utilisateurs'.")
+      alert("Sélectionne au moins un utilisateur, coche 'Tous les Utilisateurs', ou choisis un statut.")
     }
 
   }

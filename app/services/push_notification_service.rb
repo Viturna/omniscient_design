@@ -29,10 +29,10 @@ class PushNotificationService
     # des requêtes DB instables dans le thread en arrière-plan.
     unread_count = @user.notifications.unread.count
 
-    # Lancement en arrière-plan avec Rails.application.executor.wrap 
-    # pour garantir la connexion DB et le contexte Rails complet
+    # Lancement en arrière-plan avec with_connection
+    # pour garantir la connexion DB.
     Thread.new do
-      Rails.application.executor.wrap do
+      ActiveRecord::Base.connection_pool.with_connection do
         begin
           access_token = get_access_token
           next unless access_token

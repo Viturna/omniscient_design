@@ -1,6 +1,5 @@
 <% set_meta_tags title: "Annales et Sujets d'Examen (AMD / CCDMA) | Omniscient Design" %>
 <% set_meta_tags description: "Télécharge les sujets officiels des années précédentes. Indispensable pour s'entraîner en conditions réelles et bien cibler les attentes." %>
-
 <style>
   /* Fix pour position: sticky qui peut être cassé par des parents avec overflow: hidden */
   html, body {
@@ -16,11 +15,11 @@
     gap: 5vw;
     align-items: start; /* Empêche les éléments de s'étirer en hauteur */
   }
-  
+
   .ressources-main {
     width: 100%;
   }
-  
+
   .ressources-sidebar {
     position: -webkit-sticky;
     position: sticky;
@@ -31,25 +30,25 @@
     border-radius: 16px;
     z-index: 10;
   }
-  
+
   .year-section {
     margin-bottom: 64px;
   }
-  
+
   .year-title {
     font-size: 22px;
     font-weight: 400;
     margin-bottom: 32px;
     color: #202020;
   }
-  
+
   .flex-buttons-ressource {
     display: flex;
     gap: 12px;
     margin-bottom: 16px;
     align-items: center;
   }
-  
+
   .button-ressource {
     width: fit-content;
     display: flex;
@@ -64,7 +63,7 @@
     opacity: 0.7;
     margin-left: 4px;
   }
-  
+
   .preview-btn {
     background: #F0F0F0;
     color: #202020;
@@ -82,7 +81,7 @@
     background: #E0E0E0;
     transform: translateY(-2px);
   }
-  
+
   .button-ressource svg, .preview-btn svg {
     width: 24px;
     height: 24px;
@@ -94,16 +93,16 @@
     font-size: 22px;
     color: #FFF;
   }
-  
+
   .sommaire-list {
     list-style: none;
     padding: 0;
   }
-  
+
   .sommaire-list li {
     margin-bottom: 20px;
   }
-  
+
   .sommaire-list a {
     color: #FFF;
     text-decoration: none;
@@ -116,7 +115,7 @@
   .sommaire-list a span {
     font-weight: 500;
   }
-  
+
   .sommaire-list li.active a {
     transform: translateX(12px);
     font-weight: 600;
@@ -213,7 +212,6 @@
     opacity: 0.7;
   }
 </style>
-
 <section class="top-header">
   <%= link_to training_path, class: "back-link" do %>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -224,24 +222,34 @@
   <h1>Ressources officielles</h1>
   <p class="subtitle">Retrouve les sujets du bac officiels de 2021 à aujourd'hui et télécharge-les pour les consulter.</p>
 </section>
-
 <div class="grid-1 ressources-container">
   <div class="ressources-main">
-    
     <div class="btn-all-subjects">
-      <%= link_to asset_path('ressources/sujet-bac-2021-2025.zip'), class: "button dark button-ressource", download: "sujets-bac-design-2021-2025.zip" do %>
+      <%= link_to asset_path('ressources/sujet-bac-2021-2026.zip'), class: "button dark button-ressource", download: "sujets-bac-design-2021-2025.zip" do %>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-        Télécharger tous les sujets <span class="file-size">(27.8 Mo)</span>
+        Télécharger tous les sujets <span class="file-size">(27 Mo)</span>
       <% end %>
     </div>
-
+    <%# Section 2026 %>
+    <section class="year-section" id="year-2026">
+      <h2 class="year-title">Sujets BAC 2026</h2>
+      <div class="flex-buttons-ressource">
+        <%= link_to asset_path('ressources/AMD_juin_2026.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_juin_2026.pdf" do %>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
+          Télécharger "Sujet AMD 2026" <span class="file-size">(543 Ko)</span>
+        <% end %>
+        <%= link_to asset_path('ressources/AMD_juin_2026.pdf'), class: "preview-btn", target: "_blank" do %>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
+        <% end %>
+      </div>
+    </section>
     <%# Section 2025 %>
     <section class="year-section" id="year-2025">
       <h2 class="year-title">Sujets BAC 2025</h2>
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/CCDMA_juin_2025.pdf'), class: "button dark button-ressource", target: "_blank", download: "CCDMA_juin_2025.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet CCDMA" <span class="file-size">(4.2 Mo)</span>
+          Télécharger "Sujet CCDMA 2025" <span class="file-size">(4.2 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/CCDMA_juin_2025.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
@@ -250,21 +258,20 @@
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/AMD_juin_2025.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_juin_2025.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet AMD" <span class="file-size">(3.0 Mo)</span>
+          Télécharger "Sujet AMD 2025" <span class="file-size">(3.0 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/AMD_juin_2025.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
         <% end %>
       </div>
     </section>
-
     <%# Section 2024 %>
     <section class="year-section" id="year-2024">
       <h2 class="year-title">Sujets BAC 2024</h2>
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/CCDMA_juin_2024.pdf'), class: "button dark button-ressource", target: "_blank", download: "CCDMA_juin_2024.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet CCDMA" <span class="file-size">(530 Ko)</span>
+          Télécharger "Sujet CCDMA 2024" <span class="file-size">(530 Ko)</span>
         <% end %>
         <%= link_to asset_path('ressources/CCDMA_juin_2024.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
@@ -273,21 +280,20 @@
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/AMD_juin_2024.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_juin_2024.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet AMD" <span class="file-size">(188 Ko)</span>
+          Télécharger "Sujet AMD 2024" <span class="file-size">(188 Ko)</span>
         <% end %>
         <%= link_to asset_path('ressources/AMD_juin_2024.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
         <% end %>
       </div>
     </section>
-
     <%# Section 2023 %>
     <section class="year-section" id="year-2023">
       <h2 class="year-title">Sujets BAC 2023</h2>
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/CCDMA_mars_2023.pdf'), class: "button dark button-ressource", target: "_blank", download: "CCDMA_mars_2023.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet CCDMA" <span class="file-size">(3.1 Mo)</span>
+          Télécharger "Sujet CCDMA 2023" <span class="file-size">(3.1 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/CCDMA_mars_2023.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
@@ -296,21 +302,20 @@
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/AMD_mars_2023.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_mars_2023.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet AMD" <span class="file-size">(586 Ko)</span>
+          Télécharger "Sujet AMD 2023" <span class="file-size">(586 Ko)</span>
         <% end %>
         <%= link_to asset_path('ressources/AMD_mars_2023.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
         <% end %>
       </div>
     </section>
-
     <%# Section 2022 %>
     <section class="year-section" id="year-2022">
       <h2 class="year-title">Sujets BAC 2022</h2>
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/CCDMA_mai_2022.pdf'), class: "button dark button-ressource", target: "_blank", download: "CCDMA_mai_2022.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet CCDMA" <span class="file-size">(486 Ko)</span>
+          Télécharger "Sujet CCDMA 2022" <span class="file-size">(486 Ko)</span>
         <% end %>
         <%= link_to asset_path('ressources/CCDMA_mai_2022.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
@@ -319,23 +324,21 @@
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/AMD_mai_2022.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_mai_2022.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet AMD" <span class="file-size">(3.7 Mo)</span>
+          Télécharger "Sujet AMD 2022" <span class="file-size">(3.7 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/AMD_mai_2022.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
         <% end %>
       </div>
     </section>
-
     <%# Section 2021 %>
     <section class="year-section" id="year-2021">
       <h2 class="year-title">Sujets BAC 2021</h2>
-      
       <p class="session-label">Session de Juin</p>
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/CCDMA_juin_2021.pdf'), class: "button dark button-ressource", target: "_blank", download: "CCDMA_juin_2021.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet CCDMA" <span class="file-size">(1.2 Mo)</span>
+          Télécharger "Sujet CCDMA 2021" <span class="file-size">(1.2 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/CCDMA_juin_2021.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
@@ -344,18 +347,17 @@
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/AMD_juin_2021.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_juin_2021.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet AMD" <span class="file-size">(4.0 Mo)</span>
+          Télécharger "Sujet AMD 2021" <span class="file-size">(4.0 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/AMD_juin_2021.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
         <% end %>
       </div>
-      
       <p class="session-label">Session de Mars</p>
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/CCDMA_mars_2021.pdf'), class: "button dark button-ressource", target: "_blank", download: "CCDMA_mars_2021.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet CCDMA" <span class="file-size">(2.4 Mo)</span>
+          Télécharger "Sujet CCDMA 2021" <span class="file-size">(2.4 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/CCDMA_mars_2021.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
@@ -364,19 +366,18 @@
       <div class="flex-buttons-ressource">
         <%= link_to asset_path('ressources/AMD_mars_2021.pdf'), class: "button dark button-ressource", target: "_blank", download: "AMD_mars_2021.pdf" do %>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.55L11 12.15V4H13V12.15L15.6 9.55L17 11L12 16ZM6 20C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V15H6V18H18V15H20V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H6Z" fill="currentColor"/></svg>
-          Télécharger "Sujet AMD" <span class="file-size">(4.9 Mo)</span>
+          Télécharger "Sujet AMD 2021" <span class="file-size">(4.9 Mo)</span>
         <% end %>
         <%= link_to asset_path('ressources/AMD_mars_2021.pdf'), class: "preview-btn", target: "_blank" do %>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.9972 6.66699C10.5598 6.66699 5.6745 10.791 2.85984 15.311C2.73184 15.523 2.6665 15.7617 2.6665 16.0003C2.6665 16.239 2.7305 16.4777 2.8585 16.6897C5.6745 21.2097 10.5598 25.3337 15.9972 25.3337C21.5212 25.3337 26.3918 21.2137 29.1492 16.6763C29.2718 16.4683 29.3332 16.2337 29.3332 16.0003C29.3332 15.767 29.2718 15.5323 29.1492 15.3243C26.3918 10.787 21.5212 6.66699 15.9972 6.66699ZM15.9998 10.667C18.9438 10.667 21.3332 13.0563 21.3332 16.0003C21.3332 18.9443 18.9438 21.3337 15.9998 21.3337C13.0558 21.3337 10.6665 18.9443 10.6665 16.0003C10.6665 13.0563 13.0558 10.667 15.9998 10.667ZM15.9998 12.667C17.8398 12.667 19.3332 14.1603 19.3332 16.0003C19.3332 17.8403 17.8398 19.3337 15.9998 19.3337C14.1598 19.3337 12.6665 17.8403 12.6665 16.0003C12.6665 14.1603 14.1598 12.667 15.9998 12.667Z" fill="#202020"/></svg>
         <% end %>
       </div>
     </section>
-
   </div>
-  
   <aside class="ressources-sidebar">
     <p class="sommaire-title">Sommaire</p>
     <ul class="sommaire-list">
+      <li><a href="#year-2026">Sujets BAC <span>2026</span></a></li>
       <li><a href="#year-2025">Sujets BAC <span>2025</span></a></li>
       <li><a href="#year-2024">Sujets BAC <span>2024</span></a></li>
       <li><a href="#year-2023">Sujets BAC <span>2023</span></a></li>

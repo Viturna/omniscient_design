@@ -157,11 +157,12 @@ class Admin::DashboardController < ApplicationController
     @total_sent = all_campaign_notifications.count
     @total_read = all_campaign_notifications.where(status: :read).count
     @total_clicks = all_campaign_notifications.where.not(clicked_at: nil).count
+    @total_mobile_sent = all_campaign_notifications.joins(user: :user_devices).distinct.count(:id)
     @ctr = @total_sent > 0 ? (@total_clicks.to_f / @total_sent * 100).round(2) : 0
 
     # Liste des notifications paginée
     @campaign_notifications = all_campaign_notifications
-                              .includes(:user)
+                              .includes(user: :user_devices)
                               .order('clicked_at DESC NULLS LAST, created_at DESC')
                               .page(params[:page]).per(25)
   end

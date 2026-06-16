@@ -15,8 +15,9 @@ class NotificationsController < ApplicationController
     @notification = Notification.new
 
     @campaigns = Notification.where('admin_id IS NOT NULL OR title = ?', 'La réf du jour')
-                             .group(:title, :message, :link, :admin_id)
-                             .select('MIN(id) as id, title, message, link, admin_id, COUNT(*) as total_sent, COUNT(CASE WHEN status = 1 THEN 1 END) as total_read, COUNT(clicked_at) as total_clicks, MIN(created_at) as sent_at')
+                             .left_joins(user: :user_devices)
+                             .group('notifications.title, notifications.message, notifications.link, notifications.admin_id')
+                             .select('MIN(notifications.id) as id, notifications.title, notifications.message, notifications.link, notifications.admin_id, COUNT(DISTINCT notifications.id) as total_sent, COUNT(DISTINCT CASE WHEN notifications.status = 1 THEN notifications.id END) as total_read, COUNT(DISTINCT CASE WHEN notifications.clicked_at IS NOT NULL THEN notifications.id END) as total_clicks, MIN(notifications.created_at) as sent_at, COUNT(DISTINCT CASE WHEN user_devices.id IS NOT NULL THEN notifications.id END) as total_mobile_sent')
                              .order('sent_at DESC')
                              .page(params[:page]).per(10)
   end

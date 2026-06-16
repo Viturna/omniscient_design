@@ -1,5 +1,5 @@
 namespace :quizzes do
-  desc 'Génère les nouveaux quiz pour la semaine (15, 10, 5) et archive les anciens'
+  desc 'Génère les nouveaux quiz pour la semaine (25, 15, 10, 5) et archive les anciens'
   task generate_weekly: :environment do
     puts '🚀 Début de la génération hebdomadaire des quiz...'
 
@@ -12,7 +12,7 @@ namespace :quizzes do
     puts "📦 #{count} quiz archivés (plus de 14 jours)."
 
     # 2. Générer les nouveaux quiz
-    [15, 10, 5].each do |q_count|
+    [25, 15, 10, 5].each do |q_count|
       puts "👉 Génération des quiz de #{q_count} questions..."
       Domaine.find_each do |domaine|
         quiz = Admin::QuizGeneratorService.new(

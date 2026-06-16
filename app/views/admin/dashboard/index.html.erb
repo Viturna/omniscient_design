@@ -546,6 +546,135 @@
       </div>
     </div>
   </div>
+
+  <!-- NOUVELLE SECTION: Engagement & Rétention -->
+  <div class="dash-card" style="margin-top: 40px; padding: 32px;">
+    <h2 class="dashboard-title" style="font-size: 24px; margin-bottom: 8px;">Engagement & Rétention</h2>
+    <p style="color: #666; font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+      <strong>DAU / MAU :</strong> Ratio entre les utilisateurs actifs chaque jour (DAU) et les actifs mensuels (MAU). Un ratio > 20% est excellent.<br>
+      <strong>Cohorte :</strong> Suit l'évolution d'un groupe d'utilisateurs inscrits le même mois. Cela montre si les utilisateurs reviennent 1, 2 ou 3 mois après leur inscription.
+    </p>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr 2fr; gap: 32px;">
+      <!-- DAU / MAU -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="mini-stat-card" style="background: #E3F2FD; color: #0D47A1;">
+          <h3 style="color: #0D47A1;"><%= @dau_mau_ratio %>%</h3>
+          <p style="color: #1976D2; font-weight: 500;">Ratio DAU / MAU</p>
+        </div>
+        <div class="mini-stat-card">
+          <h3><%= @average_dau %></h3>
+          <p>Visiteurs Uniques (DAU Moyen)</p>
+        </div>
+        <div class="mini-stat-card">
+          <h3><%= @mau %></h3>
+          <p>Utilisateurs Actifs Mensuels (MAU)</p>
+        </div>
+      </div>
+
+      <!-- Cohortes -->
+      <div class="users-dash-table-container" style="margin-bottom: 0;">
+        <div style="padding: 16px 24px; background: #fff; border-bottom: 1px solid #f0f0f0;">
+          <h3 class="secondary-title" style="margin: 0;">Rétention par Cohorte (Mois d'inscription)</h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="users-dash-table">
+            <thead>
+              <tr>
+                <th>Cohorte</th>
+                <th style="text-align: center;">Inscrits</th>
+                <th style="text-align: center;">Mois 0</th>
+                <th style="text-align: center;">Mois 1</th>
+                <th style="text-align: center;">Mois 2</th>
+                <th style="text-align: center;">Mois 3</th>
+              </tr>
+            </thead>
+          <tbody>
+            <% @cohorts.each do |month, data| %>
+              <tr>
+                <td style="font-weight: 500;"><%= month %></td>
+                <td style="text-align: center;"><%= data[:size] %></td>
+                <% 4.times do |i| %>
+                  <% val = data[:retention][i] %>
+                  <td style="text-align: center;">
+                    <% if val %>
+                      <% badge_class = val > 40 ? 'badge-green' : (val > 15 ? 'badge-blue' : 'badge-red') %>
+                      <span class="badge <%= badge_class %>"><%= val %>%</span>
+                    <% else %>
+                      <span style="color: #ccc;">-</span>
+                    <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOUVELLE SECTION: Viralité & Parrainage -->
+  <div class="dash-card" style="margin-top: 40px; margin-bottom: 40px; padding: 32px;">
+    <h2 class="dashboard-title" style="font-size: 24px; margin-bottom: 8px;">Viralité & Parrainage</h2>
+    <p style="color: #666; font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+      <strong>Taux de Viralité :</strong> Proportion des inscriptions totales des 30 derniers jours qui ont été générées via un lien de parrainage.
+    </p>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr 2fr; gap: 32px;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="mini-stat-card" style="background: #F3E5F5; color: #4A148C;">
+          <h3 style="color: #4A148C;"><%= @referral_efficiency %>%</h3>
+          <p style="color: #7B1FA2; font-weight: 500;">Taux de Viralité (30j)</p>
+        </div>
+      </div>
+
+      <div class="users-dash-table-container" style="margin-bottom: 0;">
+        <div style="padding: 16px 24px; background: #fff; border-bottom: 1px solid #f0f0f0;">
+          <h3 class="secondary-title" style="margin: 0;">Top 5 Ambassadeurs</h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="users-dash-table">
+            <thead>
+              <tr>
+                <th>Parrain</th>
+                <th style="text-align: right;">Filleuls invités</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @top_referrers_data.any? %>
+                <% @top_referrers_data.each do |ref| %>
+                  <tr>
+                    <td>
+                      <% if ref[:user] %>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                          <div class="users-dash-avatar" style="width: 36px; height: 36px;">
+                            <%= ref[:user].firstname&.first&.upcase || ref[:user].pseudo&.first&.upcase || "?" %>
+                          </div>
+                          <div>
+                            <div style="color: #202020; font-weight: 500;"><%= ref[:user].firstname.present? ? "#{ref[:user].firstname} #{ref[:user].lastname}" : ref[:user].pseudo %></div>
+                            <div style="font-size: 12px; color: #999;">ID: <%= ref[:user].id %></div>
+                          </div>
+                        </div>
+                      <% else %>
+                        Utilisateur inconnu
+                      <% end %>
+                    </td>
+                    <td style="text-align: right; font-weight: 600; color: #1E88E5; font-size: 16px;"><%= ref[:count] %></td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="2" style="padding: 24px; text-align: center; color: #999;">Aucun parrainage enregistré.</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script>
   function updateChart(period) {

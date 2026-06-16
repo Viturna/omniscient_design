@@ -52,6 +52,61 @@ class Admin::DashboardController < ApplicationController
         [date.strftime('%d/%m'), grouped_data[date]&.count || 0]
       end
     end
+
+    # --- DAU / MAU ---
+    thirty_days_ago = 30.days.ago.beginning_of_day
+    daily_visits_count = DailyVisit.where('visited_on >= ?', thirty_days_ago)
+                                   .group('visited_on')
+                                   .count('DISTINCT user_id')
+    total_dau = daily_visits_count.values.sum
+    days_with_visits = daily_visits_count.values.size
+    @average_dau = days_with_visits > 0 ? (total_dau.to_f / days_with_visits).round : 0
+
+    @mau = DailyVisit.where('visited_on >= ?', thirty_days_ago).distinct.count(:user_id)
+    @dau_mau_ratio = @mau > 0 ? ((@average_dau.to_f / @mau) * 100).round(1) : 0
+
+    # --- Rétention par Cohorte ---
+    @cohorts = {}
+    6.downto(0) do |i|
+      month_start = i.months.ago.beginning_of_month
+      month_end = i.months.ago.end_of_month
+      
+      users_in_cohort = User.where(created_at: month_start..month_end).pluck(:id)
+      cohort_size = users_in_cohort.size
+      
+      next if cohort_size == 0
+      
+      retention = []
+      0.upto(3) do |month_offset|
+        target_month_start = (month_start + month_offset.months).beginning_of_month
+        target_month_end = (month_start + month_offset.months).end_of_month
+        
+        break if target_month_start > Date.today.end_of_month
+
+        active_users = DailyVisit.where(user_id: users_in_cohort)
+                                 .where(visited_on: target_month_start..target_month_end)
+                                 .distinct.count(:user_id)
+        
+        retention << ((active_users.to_f / cohort_size) * 100).round(1)
+      end
+      
+      @cohorts[month_start.strftime("%B %Y")] = {
+        size: cohort_size,
+        retention: retention
+      }
+    end
+
+    # --- Efficacité du Parrainage ---
+    total_users_last_30d = User.where('created_at >= ?', thirty_days_ago).count
+    total_referrals_last_30d = Referral.where('created_at >= ?', thirty_days_ago).count
+    @referral_efficiency = total_users_last_30d > 0 ? ((total_referrals_last_30d.to_f / total_users_last_30d) * 100).round(1) : 0
+
+    # On utilise :referrals_made si la relation existe, sinon on suppose que le modèle Referral a referrer_id
+    # Vérifions si `referrals_made` existe sur User. 
+    # Pour ne pas casser on va utiliser Referral.group(:referrer_id)
+    top_referrer_ids = Referral.group(:referrer_id).order('COUNT(id) DESC').limit(5).count
+    @top_referrers = User.where(id: top_referrer_ids.keys).index_by(&:id)
+    @top_referrers_data = top_referrer_ids.map { |id, count| { user: @top_referrers[id], count: count } }.compact
   end
 
   def suivi_references

@@ -17,7 +17,7 @@
   .nav-tab { padding: 10px 20px; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; background: #eee; }
   .nav-tab.active { background: #202020; color: #fff; }
 
-  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }
   .kpi-card { background: #fff; padding: 24px; border-radius: 16px; border: 1px solid #f0f0f0; }
   .kpi-label { color: #888; font-size: 14px; text-transform: uppercase; margin-bottom: 8px; display: block; }
   .kpi-value { font-size: 32px; font-weight: 600; }
@@ -55,31 +55,61 @@
       <span class="kpi-value"><%= @avg_score&.round(1) || 0 %> pts</span>
     </div>
     <div class="kpi-card">
-      <span class="kpi-label">Quiz Populaires</span>
-      <span class="kpi-value"><%= Quiz.where(quiz_type: 'static').count %> actifs</span>
+      <span class="kpi-label">Quiz Actifs</span>
+      <span class="kpi-value"><%= Quiz.where(quiz_type: 'static', archived: false).count %></span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Taux de Complétion</span>
+      <span class="kpi-value" style="color: #009688;"><%= @completion_rate %>%</span>
     </div>
   </div>
 
-  <div class="stats-table-container">
-    <table class="stats-table">
-      <thead>
-        <tr>
-          <th>Quiz</th>
-          <th>Domaine</th>
-          <th>Nombre de sessions</th>
-          <th>Score Moyen</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @quizzes_stats.each do |quiz| %>
-          <tr>
-            <td><strong><%= quiz.title %></strong></td>
-            <td><%= quiz.domaine&.domaine || "Général" %></td>
-            <td><%= quiz.submissions_count %></td>
-            <td><%= quiz.average_score&.round(1) %> pts</td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 40px;">
+    <div>
+      <h2 style="font-size: 20px; font-weight: 500; margin-bottom: 20px;">Top Quiz</h2>
+      <div class="stats-table-container">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Quiz</th>
+              <th>Domaine</th>
+              <th>Sessions</th>
+              <th>Score Moyen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @quizzes_stats.limit(10).each do |quiz| %>
+              <tr>
+                <td><strong><%= quiz.title %></strong></td>
+                <td><%= quiz.domaine&.domaine || "Général" %></td>
+                <td><%= quiz.submissions_count %></td>
+                <td><%= quiz.average_score&.round(1) %> pts</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <h2 style="font-size: 20px; font-weight: 500; margin-bottom: 20px;">Top Domaines</h2>
+      <div class="stats-table-container">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Domaine</th>
+              <th>Sessions Totales</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @top_domaines.each do |domaine| %>
+              <tr>
+                <td><strong><%= domaine.domaine %></strong></td>
+                <td style="color: #1E88E5; font-weight: 600;"><%= domaine.submissions_count %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
 </div>

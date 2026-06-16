@@ -15,6 +15,16 @@ class Admin::QuizzesController < ApplicationController
     @current_page = 'quizzes'
     @total_submissions = QuizSubmission.count
     @avg_score = QuizSubmission.average(:score)
+
+    completed_count = QuizSubmission.where(status: 'completed').count
+    @completion_rate = @total_submissions > 0 ? (completed_count.to_f / @total_submissions * 100).round(1) : 0
+
+    @top_domaines = Domaine.joins(quizzes: :quiz_submissions)
+                           .select('domaines.*, COUNT(quiz_submissions.id) as submissions_count')
+                           .group('domaines.id')
+                           .order('submissions_count DESC')
+                           .limit(5)
+
     @quizzes_stats = Quiz.where(quiz_type: 'static')
                          .joins(:quiz_submissions)
                          .select('quizzes.*, COUNT(quiz_submissions.id) as submissions_count, AVG(quiz_submissions.score) as average_score')

@@ -14,12 +14,12 @@
       <% end %>
       <h1 class="users-dash-title"><%= t('admin.users.index.title') %></h1>
     </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex:1;">
-      <%= form_with url: users_path, method: :get, local: true, class: "custom-period-form", style: "display: flex; gap: 4px; align-items: center; background: #fff; border: 1px solid #e0e0e0; border-radius: 50px; padding: 4px 4px 4px 12px;" do |f| %>
-        <%= f.date_field :start_date, value: params[:start_date], style: "border: none; background: transparent; font-size: 14px; color: #666; font-weight: 500; outline: none; width: 120px; font-family: inherit;" %>
-        <span style="font-size: 14px; color: #aaa; font-weight: 500;">-</span>
-        <%= f.date_field :end_date, value: params[:end_date], style: "border: none; background: transparent; font-size: 14px; color: #666; font-weight: 500; outline: none; width: 120px; font-family: inherit;" %>
-        <%= f.submit "Valider", class: "period-btn #{@period == 'custom' ? 'active' : ''}", style: "padding: 6px 16px; margin-left: 4px;" %>
+    <div class="users-dash-header-actions">
+      <%= form_with url: users_path, method: :get, local: true, class: "custom-period-form" do |f| %>
+        <%= f.date_field :start_date, value: params[:start_date], class: "period-date-input" %>
+        <span class="period-separator">-</span>
+        <%= f.date_field :end_date, value: params[:end_date], class: "period-date-input" %>
+        <%= f.submit "Valider", class: "period-btn #{@period == 'custom' ? 'active' : ''} period-submit-btn" %>
       <% end %>
       <div class="users-dash-period-selector">
         <%= link_to "7J", users_path(period: '7d'), class: "period-btn #{@period == '7d' ? 'active' : ''}" %>

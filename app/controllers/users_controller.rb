@@ -242,7 +242,7 @@ class UsersController < ApplicationController
     else
       flash[:alert] = I18n.t('user.certified_failure', default: 'Une erreur est survenue lors de la certification.')
     end
-    redirect_to user_path(@user)
+    redirect_to user_path(user)
   end
 
   def uncertify
@@ -255,7 +255,7 @@ class UsersController < ApplicationController
       flash[:alert] =
         I18n.t('user.uncertified_failure', default: 'Une erreur est survenue lors du retrait de la certification.')
     end
-    redirect_to user_path(@user)
+    redirect_to user_path(user)
   end
 
   def admin_resend_confirmation

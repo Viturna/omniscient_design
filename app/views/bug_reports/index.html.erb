@@ -262,9 +262,9 @@
                       <% end %>
                     <% end %>
                     <div class="bug-actions">
-                      <%= link_to 'Supprimer ce signalement', bug_report_path(bug), 
-                          data: { turbo_method: :delete, turbo_confirm: 'Es-tu sûr de vouloir supprimer ce rapport ?' }, 
-                          class: 'btn-delete' %>
+                      <%= button_to 'Supprimer ce signalement', bug_report_path(bug), 
+                          method: :delete, form: { data: { turbo_confirm: 'Es-tu sûr de vouloir supprimer ce rapport ?' } }, 
+                          class: 'btn-delete', style: "background: none; border: none; font-family: inherit; cursor: pointer;" %>
                     </div>
                   </div>
                 </details>

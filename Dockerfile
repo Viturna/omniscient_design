@@ -18,7 +18,7 @@ RUN bundle install
 COPY . .
 
 # Installer les dépendances JS et précompiler les assets
-RUN yarn install
+RUN yarn install --ignore-engines
 RUN SECRET_KEY_BASE=dummy RAILS_ENV=production bundle exec rails assets:precompile
 
 # Créer le dossier tmp/pids pour Puma

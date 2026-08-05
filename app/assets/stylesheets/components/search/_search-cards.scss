@@ -1,0 +1,162 @@
+.card-designer,
+.card-reference {
+  background-repeat: no-repeat;
+  width: 10vw;
+  height: 280px;
+  border-radius: 10px;
+  display: flex;
+  align-items: end;
+  position: relative;
+  padding: 20px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.card-designer::after,
+.card-reference::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+
+.title-card-designer,
+.title-card-reference {
+  font-size: 100%;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-top: 8px;
+  color: var(--color-white);
+}
+
+.card-designer .country-card-designer,
+.domaine-card-reference {
+  font-size: 14px;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+
+.inner-card-designer,
+.inner-card-reference {
+  position: relative;
+  z-index: 1;
+}
+
+
+@media screen and (max-width: 425px) {
+
+  .card-category {
+    width: 43vw;
+    height: auto;
+    padding: 20px 0;
+    gap: 16px;
+
+    img {
+      width: 40%;
+    }
+  }
+
+  .card-designer,
+  .card-reference {
+    width: calc(40vw - 20px);
+    height: 240px;
+    padding: 15px;
+  }}
+
+
+@media screen and (min-width: 426px) and (max-width: 600px) {
+
+  .card-category {
+    width: 40vw;
+    height: auto;
+    padding: 20px 0;
+    gap: 16px;
+
+    img {
+      width: 40%;
+    }
+  }
+
+  .card-designer,
+  .card-reference {
+    width: calc(38vw - 20px);
+    height: 240px;
+    padding: 15px;
+  }}
+
+
+@media screen and (min-width: 601px) and (max-width: 768px) {
+
+  .card-category {
+    width: 27vw;
+    height: auto;
+    padding: 20px 0;
+    gap: 16px;
+
+    img {
+      width: 40%;
+    }
+  }
+
+  .card-designer,
+  .card-reference {
+    width: calc(38vw - 20px);
+    height: 240px;
+    padding: 15px;
+  }}
+
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+
+  .card-category {
+    width: 26vw;
+    height: auto;
+    padding: 20px 0;
+    gap: 16px;
+
+    img {
+      width: 70px;
+    }
+  }
+
+  .card-designer,
+  .card-reference {
+    width: calc(24vw - 20px);
+    height: 240px;
+    padding: 15px;
+  }}
+
+
+@media screen and (min-width: 1025px) and (max-width: 1280px) {
+
+  .card-category {
+    width: 24vw;
+    height: auto;
+    padding: 20px 0;
+    gap: 16px;
+
+    img {
+      width: 70px;
+    }
+  }
+
+  .card-designer,
+  .card-reference {
+    width: calc(24vw - 36px);
+    height: 260px;
+    padding: 15px;
+  }}
+
+
+@media screen and (min-width: 1700px) {
+  .card-designer,
+  .card-reference {
+    width: 9vw;
+  }}

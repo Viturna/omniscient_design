@@ -24,7 +24,9 @@ export default class extends Controller {
       placeholder: this.placeholderValue || "Sélectionner...",
       allowClear: true,
       language: "fr",
-      minimumResultsForSearch: this.element.dataset.select2MinimumResultsForSearchValue === "Infinity" ? Infinity : 0
+      minimumResultsForSearch: this.element.dataset.select2MinimumResultsForSearchValue === "Infinity" ? Infinity : 0,
+      templateResult: this.formatState.bind(this),
+      templateSelection: this.formatState.bind(this)
     }
 
     $(this.element).select2(options)
@@ -49,5 +51,26 @@ export default class extends Controller {
         searchField.setAttribute('aria-label', ariaLabel);
       }
     });
+  }
+
+  formatState(state) {
+    if (!state.id) {
+      return state.text;
+    }
+    
+    const element = state.element;
+    const color = element ? element.getAttribute('data-color') : null;
+    
+    if (!color) {
+      return state.text;
+    }
+    
+    const $state = $(
+      `<span class="select2-item-with-color">
+         <span class="select2-item-text">${state.text}</span>
+         <span class="select2-color-circle" style="background-color: ${color};"></span>
+       </span>`
+    );
+    return $state;
   }
 }

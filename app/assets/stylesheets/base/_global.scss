@@ -1,3 +1,5 @@
+@use "abstracts/variables";
+
 html.lenis,
 html.lenis body {
   height: auto;
@@ -124,7 +126,7 @@ main {
   position: relative;
 
   h1 {
-    color: $secondary-color;
+    color: variables.$secondary-color;
   }
 }
 
@@ -145,15 +147,15 @@ main {
 }
 
 body {
-  background-color: $background-color;
+  background-color: variables.$background-color;
 }
 
 body.light-mode {
-  background-color: $background-color;
+  background-color: variables.$background-color;
 }
 
 body.dark-mode {
-  background-color: $background-color-dark;
+  background-color: variables.$background-color-dark;
 }
 
 // Cookies
@@ -169,8 +171,8 @@ body.dark-mode {
 }
 
 #cookie-consent-banner button {
-  background-color: $primary-color;
-  color: $secondary-color;
+  background-color: variables.$primary-color;
+  color: variables.$secondary-color;
   padding: 5px 10px;
   border: none;
   margin: 5px;

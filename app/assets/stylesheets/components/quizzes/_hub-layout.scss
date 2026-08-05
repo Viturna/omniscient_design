@@ -1,0 +1,195 @@
+
+.quizzes-hub {
+  background-color: #F9F9F9;
+  min-height: 100vh;
+
+  .top-header {
+    .header-navigation-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 40px;
+
+      .back-link {
+        margin-bottom: 0; // Override if needed
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .points-pill {
+          background: #FFF;
+          color: #202020;
+          padding: 10px 20px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-weight: 500;
+        }
+
+        .leaderboard-icon-btn {
+          background: #FFF;
+          color: #202020;
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          
+          &:hover {
+            background: #202020;
+            color: #FFF;
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+
+    .search-container {
+      margin-top: 40px;
+      max-width: 600px;
+
+      .search-input-wrapper {
+        background: #FFF;
+        border-radius: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+
+        svg { 
+          flex-shrink: 0;
+          width: 18px;
+          height: 18px;
+        }
+
+        input {
+          border: none !important;
+          background: transparent !important;
+          padding: 0px 12px;
+          width: 100%;
+          outline: none !important;
+          font-size: 16px;
+          color: #202020;
+          box-shadow: none !important;
+          appearance: none;
+          -webkit-appearance: none;
+        }
+      }
+    }
+
+    .feedback-quiz-btn {
+      margin-top: 24px;
+      width: fit-content;
+      text-decoration: none;
+    }
+  }
+
+
+
+  .quiz-section {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    padding-left: 6vw;
+    padding-right: 6vw;
+
+    .section-header {
+      margin-bottom: 32px;
+      h2 { font-size: 28px; margin-bottom: 12px; font-weight: 500; }
+      p { color: #52525D; line-height: 1.5; max-width: 800px; }
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: 1fr; /* Mobile: 1 colonne */
+      gap: 16px;
+      padding-bottom: 20px;
+
+      @media (min-width: 600px) {
+        grid-template-columns: repeat(2, 1fr); /* Tablet: 2 colonnes */
+      }
+
+      @media (min-width: 900px) {
+        grid-template-columns: repeat(3, 1fr); /* PC: 3 colonnes dès 900px */
+      }
+    }
+  }
+}
+
+  .quizzes-hub {
+    .top-header {
+      .header-main-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 40px;
+        .header-daily-side { width: 100%; max-width: 500px; }
+      }
+    }
+  }
+
+  .quizzes-hub {
+    .top-header {
+      padding: calc(env(safe-area-inset-top) + 64px) 5vw 56px;
+      h1 { font-size: 32px; }
+      .search-container { width: 100%; margin-top: 30px; }
+    }
+    
+    .quiz-section {
+      margin-bottom: 40px;
+      .section-header h2 { font-size: 24px; }
+    }
+  }
+.quizzes-hub.hub-view {
+  .top-header.dark-header {
+    background-color: #202020;
+    color: #FFF;
+    padding-top: calc(env(safe-area-inset-top) + 96px);
+    padding-bottom: 72px;
+    padding-left: 10vw;
+    padding-right: 10vw;
+    margin-bottom: 0;
+
+    .back-link svg path {
+      fill: #FFF;
+    }
+
+    .points-pill {
+      background: #FFF;
+      color: #202020;
+    }
+
+    h1, .subtitle, .subtitle-top {
+      color: #FFF;
+    }
+    .subtitle {
+      opacity: 0.8;
+    }
+
+    .feedback-quiz-btn {
+      background: #FFF;
+      color: #202020;
+      border: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      border-radius: 8px;
+      transition: opacity 0.2s;
+      
+      &:hover {
+        opacity: 0.9;
+        color: #202020;
+      }
+    }
+  }
+
+  .quiz-sections {
+    padding-top: 60px;
+    background-color: #F9F9F9;
+  }
+}

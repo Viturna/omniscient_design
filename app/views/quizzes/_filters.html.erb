@@ -7,7 +7,7 @@
     <div class="filter-wrapper <%= 'active' if params[:domaine_id].present? %>">
       <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
       <%= f.select :domaine_id, 
-                   Domaine.all.map { |d| [d.domaine, d.id] }, 
+                   Domaine.all.map { |d| [d.domaine, d.id, { 'data-color' => d.couleur }] }, 
                    { include_blank: "Domaine", selected: params[:domaine_id] }, 
                    { class: "hub-filter-select", onchange: "this.form.submit()" } %>
       <svg class="icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>

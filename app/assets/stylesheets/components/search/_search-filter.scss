@@ -1,0 +1,128 @@
+/* ==========================================================================
+   SEARCH FILTER COMPONENT
+   ========================================================================== */
+
+.search-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px 16px;
+  position: relative;
+
+  @media screen and (max-width: 480px) {
+    gap: 16px;
+  }
+
+  @media screen and (min-width: 481px) and (max-width: 768px) {
+    gap: 24px;
+  }
+}
+
+.search-filter {
+  width: 16vw;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
+
+  @media screen and (min-width: 481px) and (max-width: 768px) {
+    width: calc(50% - 12px);
+  }
+
+  @media screen and (min-width: 769px) and (max-width: 1024px) {
+    width: 30% !important;
+  }
+}
+
+/* Base style for labels */
+.search-filter__label {
+  font-size: 14px;
+  color: var(--color-gray-700, #666);
+  font-weight: 500;
+}
+
+/* Select2 overrides inside the search filter */
+.search-filter__select {
+  display: flex !important;
+}
+
+.search-filter .select2 {
+  height: 55px !important;
+  display: flex !important;
+}
+
+.search-filter-box {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  select {
+    width: fit-content;
+    height: fit-content;
+    
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+      /* Specific select styling for tablet if needed */
+    }
+  }
+}
+
+.search-filter-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  background-color: var(--color-gray-200);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-gray-300);
+  }
+}
+
+/* --- Extraits de _searchpage.scss --- */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.selection {
+  width: 100%;
+}
+
+.dropdown.active .dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.date-filter {
+  border-radius: 5px;
+  padding: 8px;
+  width: 100%;
+  border: 2px solid var(--color-gray-200);
+}
+
+
+@media screen and (max-width: 425px) {
+
+  .dropdown-menu {
+    width: 80%;
+  }
+
+  .dropdown-menu {
+    width: 80%;
+  }
+
+
+  .dropdown-menu {
+    width: 80%;
+  }}

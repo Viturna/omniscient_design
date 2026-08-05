@@ -1,0 +1,28 @@
+/* Cart Summary Items */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.cart-title {
+  font-weight: 600;
+  color: #111827;
+  font-size: 1.1rem;
+}
+
+.cart-price {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.cart-total {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+}

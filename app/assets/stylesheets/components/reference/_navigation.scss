@@ -1,0 +1,95 @@
+.naviguation {
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #fff;
+  gap: 24px;
+}
+
+.naviguation-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.naviguation-title {
+  color: #fff;
+}
+
+.next-card {
+  margin-left: 20vw;
+}
+
+.flex-back-btn {
+  display: flex;
+  position: absolute;
+  z-index: 100;
+  top: 50px;
+  left: 5vw;
+  gap: 16px;
+}
+
+.button-circle {
+  gap: 16px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+
+  &:hover {
+    .circle {
+      background-color: #3c3c3c;
+    }
+    p {
+      color: #3c3c3c;
+    }
+  }
+  &:active {
+    .circle {
+      background-color: #1b1b1b;
+    }
+    p {
+      color: #1b1b1b;
+    }
+  }
+}
+
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+
+  .next-card {
+    margin-left: 5vw;
+  }
+
+  .button-circle {
+    gap: 16px;
+  }}
+
+
+@media screen and (min-width: 426px) and (max-width: 600px) {
+
+  .next-card {
+    margin-left: 5vw;
+  }
+
+  .button-circle {
+    gap: 16px;
+  }}
+
+
+@media screen and (max-width: 425px) {
+
+  .next-card {
+    margin-left: 5vw;
+  }
+
+  .button-circle {
+    gap: 16px;
+  }}

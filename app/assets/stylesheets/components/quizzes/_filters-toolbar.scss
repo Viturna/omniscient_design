@@ -1,0 +1,104 @@
+.hub-filters-toolbar {
+  background: transparent;
+  padding: 0;
+  margin: 32px 0 32px 0;
+  position: relative;
+  z-index: 10;
+  width: auto;
+
+  .hub-filters-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .filter-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    svg.icon-left {
+      position: absolute;
+      left: 12px;
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+      stroke: #52525D;
+      z-index: 2;
+    }
+
+    svg.icon-chevron {
+      position: absolute;
+      right: 12px;
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+      stroke: #52525D;
+      z-index: 2;
+      transition: transform 0.2s;
+    }
+
+    .hub-filter-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: #FFF;
+      border: 1px solid #EAEAEA;
+      border-radius: 8px;
+      padding: 10px 36px 10px 36px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #52525D;
+      cursor: pointer;
+      min-width: 130px;
+      outline: none;
+      transition: all 0.2s;
+      position: relative;
+      z-index: 1;
+
+      &:hover {
+        border-color: #CCC;
+      }
+    }
+
+    &.active {
+      .hub-filter-select {
+        background: #202020;
+        color: #FFF;
+        border-color: #202020;
+      }
+      svg.icon-left, svg.icon-chevron {
+        stroke: #FFF;
+      }
+      svg.icon-chevron {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .hub-filter-reset {
+    color: #999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    background: #F9F9F9;
+    border: 1px solid #EAEAEA;
+
+    &:hover {
+      color: #E53935;
+      background: #FFF5F5;
+      border-color: #FFCDD2;
+    }
+  }
+}
+
+  .hub-filters-toolbar {
+    width: auto;
+    margin: 20px 0vw;
+    padding: 12px;
+    .hub-filters-form { gap: 12px; }
+    .filter-item { flex: 1; min-width: 140px; }
+  }

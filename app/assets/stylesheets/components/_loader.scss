@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 /* --- LE LOADER --- */
 #loading {
@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: $background-color;
+  background-color: variables.$background-color;
   user-select: none;
 
   /* Transitions douces */
@@ -31,7 +31,7 @@
 
 .loader-bg {
   padding: 24px;
-  background-color: $background-color;
+  background-color: variables.$background-color;
   border-radius: 50%;
 }
 

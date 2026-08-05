@@ -1,4 +1,4 @@
-@import "../abstracts/variables";
+@use "../abstracts/variables";
 
 /* --------------------------------------------------------------------------
  * TRIX EDITOR OVERRIDES
@@ -103,8 +103,8 @@ trix-editor {
 /* Mode sombre */
 body.dark-mode {
   trix-editor {
-    background-color: $secondary-color-dark;
-    color: $primary-color-dark;
+    background-color: variables.$secondary-color-dark;
+    color: variables.$primary-color-dark;
     border-color: #333;
   }
 

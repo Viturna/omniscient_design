@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .logo-log {
   margin-left: 32px;
@@ -19,16 +19,16 @@
 }
 
 .box-log h1 {
-  color: $secondary-color;
+  color: variables.$secondary-color;
   margin-top: 180px;
 }
 
 .box-log p {
-  color: $secondary-color;
+  color: variables.$secondary-color;
 }
 
 .box-log p a {
-  color: $secondary-color;
+  color: variables.$secondary-color;
   text-decoration: underline;
   font-weight: 500;
 }
@@ -57,7 +57,7 @@
 .sign-up-in {
   font-weight: 300;
   line-height: 130%;
-  color: $secondary-color;
+  color: variables.$secondary-color;
   text-align: center;
 
   &:hover {
@@ -112,7 +112,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  fill: $primary-color;
+  fill: variables.$primary-color;
 }
 
 .rgpd {
@@ -124,7 +124,7 @@
 }
 
 .rgpd a {
-  color: $secondary-color;
+  color: variables.$secondary-color;
   font-weight: 500;
 }
 

@@ -1,8 +1,8 @@
-@import 'abstracts/variables';
+@use 'abstracts/variables';
 
 .title-avantage {
   font-size: 24px;
-  color: $primary-color;
+  color: variables.$primary-color;
   font-weight: 500;
 }
 
@@ -35,7 +35,7 @@
 
 .and {
   text-transform: uppercase;
-  color: $primary-color;
+  color: variables.$primary-color;
   font-weight: 600;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .title-code {
-  color: $primary-color;
+  color: variables.$primary-color;
   font-weight: 500;
 }
 

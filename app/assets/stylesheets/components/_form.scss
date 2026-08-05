@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 label {
   font-size: 16px;
 }
@@ -18,7 +18,7 @@ input.search-top-bar {
 }
 
 input.search-top-bar::placeholder {
-  color: $primary-color;
+  color: variables.$primary-color;
 }
 
 input[type="search"] {
@@ -309,7 +309,7 @@ select {
 }
 
 textarea {
-  color: $primary-color;
+  color: variables.$primary-color;
   border: none;
   stroke: none;
   padding: 25px;
@@ -331,7 +331,7 @@ textarea {
 .flex-form label {
   font-size: 16px;
   font-weight: 500;
-  color: $secondary-color;
+  color: variables.$secondary-color;
 }
 
 .source-input {
@@ -455,8 +455,8 @@ textarea {
 }
 
 input.search-top-bar {
-  background-color: $secondary-color;
-  color: $primary-color;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
 }
 
 input[type="text"],
@@ -464,24 +464,24 @@ input[type="date"],
 input[type="email"],
 input[type="password"],
 .select2-container .select2-selection__placeholder {
-  background-color: $secondary-color !important;
-  color: $primary-color !important;
+  background-color: variables.$secondary-color !important;
+  color: variables.$primary-color !important;
 }
 
 input::placeholder,
 select::placeholder,
 textarea::placeholder {
-  color: $text-color;
+  color: variables.$text-color;
 }
 
 select {
-  background-color: $secondary-color;
-  color: $primary-color;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
 }
 
 textarea {
-  background-color: $secondary-color;
-  color: $text-color;
+  background-color: variables.$secondary-color;
+  color: variables.$text-color;
 }
 .rules-add-hr {
   margin: 24px 0;
@@ -504,7 +504,7 @@ textarea {
   }
 }
 .form-step p {
-  color: $secondary-color;
+  color: variables.$secondary-color;
 }
 .form-step ul li {
   margin: 16px 0;
@@ -516,9 +516,9 @@ textarea {
 }
 body.dark-mode {
   input.search-top-bar {
-    background-color: $secondary-color-dark;
-    color: $primary-color-dark;
-    border-color: $background-color-dark;
+    background-color: variables.$secondary-color-dark;
+    color: variables.$primary-color-dark;
+    border-color: variables.$background-color-dark;
   }
 
   input[type="text"],
@@ -526,26 +526,26 @@ body.dark-mode {
   input[type="email"],
   input[type="password"],
   .select2-container .select2-selection__placeholder {
-    background-color: $secondary-color-dark !important;
-    color: $primary-color-dark !important;
-    border-color: $background-color-dark;
+    background-color: variables.$secondary-color-dark !important;
+    color: variables.$primary-color-dark !important;
+    border-color: variables.$background-color-dark;
   }
 
   input::placeholder,
   select::placeholder,
   textarea::placeholder {
-    color: $text-color-dark;
+    color: variables.$text-color-dark;
   }
 
   select {
-    background-color: $secondary-color-dark;
-    color: $primary-color-dark;
-    border-color: $background-color-dark;
+    background-color: variables.$secondary-color-dark;
+    color: variables.$primary-color-dark;
+    border-color: variables.$background-color-dark;
   }
 
   textarea {
-    background-color: $secondary-color-dark;
-    border-color: $background-color-dark;
+    background-color: variables.$secondary-color-dark;
+    border-color: variables.$background-color-dark;
   }
 }
 

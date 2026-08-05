@@ -1,4 +1,4 @@
-@import 'abstracts/variables';
+@use 'abstracts/variables';
 
 .nav-link-profil {
  width: calc(100% - 40px);
@@ -95,15 +95,15 @@
 
 
 .nav-link-profil {
-  background-color: $secondary-color;
-  color: $primary-color;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
 }
 
 body.dark-mode .nav-link-profil {
-  background-color: $primary-color;
-  color: $secondary-color;
+  background-color: variables.$primary-color;
+  color: variables.$secondary-color;
 
   svg path {
-    fill: $secondary-color;
+    fill: variables.$secondary-color;
   }
 }

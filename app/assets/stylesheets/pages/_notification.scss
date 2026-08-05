@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .notifications {
   margin: 32px 0;
@@ -18,7 +18,7 @@ a.notification-item {
   display: flex;
   justify-content: space-between;
   padding: 20px 25px;
-  color: $primary-color;
+  color: variables.$primary-color;
   transition: background-color 0.2s ease, transform 0.1s ease;
   box-sizing: border-box;
   border: 1px solid transparent;
@@ -33,7 +33,7 @@ a.notification-item {
 
   &.unread {
     background-color: #f9f9ff;
-    border-left: 4px solid $primary-color;
+    border-left: 4px solid variables.$primary-color;
   }
 }
 
@@ -47,12 +47,12 @@ a.notification-item {
     font-weight: 600;
     font-size: 16px;
     margin: 0;
-    color: $primary-color;
+    color: variables.$primary-color;
   }
 
   .notification-message {
     font-size: 14px;
-    color: $text-color;
+    color: variables.$text-color;
     margin: 0;
     line-height: 1.4;
   }

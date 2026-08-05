@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .bg-img-card {
   position: absolute;
@@ -339,28 +339,28 @@
 }
 
 .subtitle-card {
-  color: $primary-color;
+  color: variables.$primary-color;
 
   a {
-    color: $primary-color;
+    color: variables.$primary-color;
   }
 }
 
 .description-card {
-  color: $text-color;
+  color: variables.$text-color;
 }
 
 body.dark-mode {
   .subtitle-card {
-    color: $primary-color-dark;
+    color: variables.$primary-color-dark;
 
     a {
-      color: $primary-color-dark;
+      color: variables.$primary-color-dark;
     }
   }
 
   .description-card {
-    color: $text-color-dark;
+    color: variables.$text-color-dark;
   }
 }
 

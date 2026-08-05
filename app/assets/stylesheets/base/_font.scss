@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 @font-face {
   font-family: "IBM Plex Sans";
@@ -91,15 +91,15 @@ p {
 h1,
 h2,
 h3 {
-  color: $primary-color;
+  color: variables.$primary-color;
 }
 
 p {
-  color: $text-color;
+  color: variables.$text-color;
 }
 
 .black {
-  color: $primary-color !important;
+  color: variables.$primary-color !important;
 }
 
 .italic {
@@ -109,15 +109,15 @@ body.dark-mode {
   h1,
   h2,
   h3 {
-    color: $primary-color-dark;
+    color: variables.$primary-color-dark;
   }
 
   p {
-    color: $text-color-dark;
+    color: variables.$text-color-dark;
   }
 
   .black {
-    color: $primary-color-dark;
+    color: variables.$primary-color-dark;
   }
 }
 

@@ -1,0 +1,430 @@
+@use "abstracts/variables";
+
+.body-show {
+  padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------------------------------------------------- */
+/* --- SLIDER PRINCIPAL (HEADER-SHOW) --- */
+/* ---------------------------------------------------- */
+/* ---------------------------------------------------- */
+/* --- SLIDER DANS LA MODALE (IMAGE-SLIDER-CONTAINER) --- */
+/* ---------------------------------------------------- */
+/* Conteneur de chaque slide dans la modale */
+/* 🔑 CORRECTION CLÉ : Afficher UNIQUEMENT la slide active */
+/* --- Navigation et Dots (Styles partagés/génériques) --- */
+
+/* Points de pagination */
+// ----------
+
+.header-top.show-header-top {
+  opacity: 1;
+}
+
+.hidden {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.hidden.hidden {
+  opacity: 0;
+}
+
+.margin-text-header {
+  margin-top: 44dvh;
+}
+
+.content-show {
+  margin-top: 20px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: margin-top 0.6s ease-in-out;
+}
+
+.hidden {
+  display: none;
+}
+
+.header-top p,
+.header-top a {
+  color: variables.$secondary-color;
+}
+
+.header-top.show-header-top {
+  display: flex;
+  width: calc(100% - 10vw);
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.small-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 1s ease;
+}
+
+.button-circle p {
+  color: variables.$primary-color;
+  font-size: 20px;
+}
+
+.reference-card-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+#copyLink {
+  background: none;
+  border: none;
+}
+
+// Contributor
+.box-contributor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20vw;
+}
+
+.contributor {
+  font-size: 22px;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-align: center;
+  color: variables.$primary-color;
+}
+
+.flag {
+  vertical-align: middle;
+}
+
+//Validation
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 800;
+}
+
+.naviguation-buttons .button {
+  text-align: center;
+  /* Optional: we can make buttons full width on small screens below */
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1300px) {
+}
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+  .body-show {
+    padding-bottom: 50px;
+  }
+  .content-show {
+    margin-top: 50px;
+  }
+  .margin-text-header {
+    margin-top: 350px;
+  }
+
+  .date-header {
+    position: absolute;
+    bottom: 50px;
+    left: 5vw;
+  }
+
+  .domaine-header {
+    position: absolute;
+    bottom: 50px;
+    right: 5vw;
+  }
+  .flex-info {
+    margin-top: 16px;
+    gap: 16px;
+  }
+  .info-card-dark svg {
+    scale: 0.8;
+  }
+
+  .small-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+  .flex-actions {
+    margin-top: 32px;
+    gap: 32px;
+  }
+  .button-circle p {
+    font-size: 18px;
+  }
+  .reference-designer {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .reference-title {
+    font-size: 26px;
+    margin: 5px 0;
+  }
+  // Contributor
+  .flex-contributor {
+    gap: 32px;
+  }
+
+  .box-contributor {
+    width: 40vw;
+  }
+
+  .contributor {
+    font-size: 19px;
+  }
+}
+
+@media screen and (min-width: 426px) and (max-width: 600px) {
+  .flex-back-btn,
+  .flex-right-btn {
+    top: var(--safe-area-top-android, env(safe-area-inset-top, 24px));
+  }
+  .body-show {
+    padding-bottom: 50px;
+  }
+  .content-show {
+    margin-top: 50px;
+  }
+  .margin-text-header {
+    margin-top: 350px;
+  }
+  .header-top.show-header-top {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+  .flex-info {
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-right: 5vw;
+  }
+  .info-card-dark svg {
+    scale: 0.8;
+  }
+
+  .small-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+  .flex-actions {
+    margin-top: 32px;
+    gap: 32px;
+    flex-direction: column;
+  }
+  .button-circle p {
+    font-size: 18px;
+  }
+  .reference-designer {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .reference-title {
+    font-size: 24px;
+    margin: 5px 0;
+  }
+  // Contributor
+  .flex-contributor {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .vertical-divider {
+    display: none;
+  }
+
+  .box-contributor {
+    width: 70vw;
+  }
+
+  .contributor {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .flex-back-btn,
+  .flex-right-btn {
+    top: Max(
+      var(--safe-area-top-android, 0px),
+      env(safe-area-inset-top, 0px),
+      24px
+    );
+    gap: 0px;
+  }
+  .body-show {
+    padding-bottom: 50px;
+  }
+  .content-show {
+    margin-top: 50px;
+  }
+  .margin-text-header {
+    margin-top: 350px;
+  }
+  .header-top.show-header-top {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+  .flex-info {
+    margin-top: 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-right: 24px;
+  }
+  .info-card-dark svg {
+    scale: 0.7;
+  }
+
+  .small-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+  .flex-actions {
+    margin-top: 32px;
+    gap: 32px;
+    flex-direction: column;
+  }
+  .button-circle p {
+    font-size: 18px;
+  }
+  .reference-designer {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .reference-title {
+    font-size: 24px;
+    margin: 5px 0;
+  }
+  // Contributor
+  .flex-contributor {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .box-contributor {
+    width: 80vw;
+  }
+
+  .vertical-divider {
+    display: none;
+  }
+
+  .contributor {
+    font-size: 18px;
+  }
+}
+
+body.dark-mode {
+  .notion-container {
+    background-color: variables.$secondary-color-dark;
+    color: variables.$primary-color-dark;
+  }
+
+  .contributor {
+    color: variables.$primary-color-dark;
+  }
+
+  .pagination span,
+  .pagination a {
+    color: variables.$primary-color-dark;
+  }
+}
+
+#closeImageModal {
+  color: #fff;
+  position: absolute;
+  right: 2.5vw;
+  top: 24px;
+  z-index: 999;
+  cursor: pointer;
+  font-size: 48px;
+}
+
+// Images modal
+
+#imageModal {
+  display: none;
+  position: fixed;
+  z-index: 998;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+
+  align-items: center;
+  justify-content: center;
+}
+
+#imageModal.show {
+  display: flex;
+}
+
+#closeImageModal:hover {
+  color: #bbb;
+}
+
+.modal-content-image {
+  overflow: hidden;
+
+  /* Responsive */
+  max-width: 90vw;
+  max-height: 90vh;
+
+  display: flex;
+  gap: 32px;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* L'image elle-même */
+#modalImage {
+  width: auto;
+  height: auto;
+  max-width: 100%; /* S'adapte au conteneur */
+  max-height: 80vh; /* Garde de la place pour le crédit */
+  display: block;
+}
+
+/* 4. Le fond blanc pour le crédit */
+.modal-image-credit {
+  background-color: #fff;
+  padding: 12px 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+// ALERT MAINTENANCE
+

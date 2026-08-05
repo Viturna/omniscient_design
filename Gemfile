@@ -70,7 +70,7 @@ gem 'requestjs-rails'
 gem 'responsive_image_tag'
 gem 'ruby-vips'
 gem 'rubyzip', '~> 2.3.0'
-gem 'sass-rails'
+gem 'cssbundling-rails'
 gem 'sendgrid-ruby'
 gem 'sitemap_generator'
 gem 'terser'
@@ -100,3 +100,5 @@ gem 'googleauth'
 gem 'mailjet'
 
 gem "meta-tags", "~> 2.23"
+
+gem "stripe", "~> 19.4"

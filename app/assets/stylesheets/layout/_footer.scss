@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .mobile-only {
   display: none !important;
@@ -16,7 +16,7 @@
   position: relative;
 
   a {
-    color: $secondary-color;
+    color: variables.$secondary-color;
     text-decoration: none;
     font-size: 18px;
 
@@ -31,7 +31,7 @@
 // TOP
 // =========================
 .footer-top {
-  background: $primary-color;
+  background: variables.$primary-color;
   margin-left: 350px;
   width: calc(100% - 12vw - 350px);
   display: flex;
@@ -55,12 +55,12 @@
   .tagline {
     font-size: 18px;
     margin-bottom: 24px;
-    color: $secondary-color;
+    color: variables.$secondary-color;
   }
 }
 
 .footer-title {
-  color: $secondary-color;
+  color: variables.$secondary-color;
   margin-bottom: 28px;
   font-size: 22px;
   font-weight: 600;
@@ -84,7 +84,7 @@
   position: absolute;
   right: 4vw;
   top: 332px;
-  color: $primary-color !important;
+  color: variables.$primary-color !important;
   text-decoration: underline;
 }
 
@@ -111,12 +111,12 @@
 
     a {
       font-size: 18px;
-      color: $secondary-color;
+      color: variables.$secondary-color;
     }
   }
 
   p {
-    color: $secondary-color;
+    color: variables.$secondary-color;
     font-size: 18px;
     font-weight: 400;
   }

@@ -1,0 +1,51 @@
+@use "abstracts/variables";
+
+.share-options {
+  padding: 0 16px;
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.share-button {
+  background: variables.$primary-color;
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.share-button svg {
+  fill: variables.$secondary-color;
+}
+
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+
+  .share-options {
+    margin-top: 32px;
+    gap: 15px;
+  }}
+
+
+@media screen and (min-width: 426px) and (max-width: 600px) {
+
+  .share-options {
+    margin-top: 32px;
+    gap: 15px;
+  }}
+
+
+@media screen and (max-width: 425px) {
+
+  .share-options {
+    margin-top: 32px;
+    gap: 15px;
+  }}

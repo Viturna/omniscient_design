@@ -1,15 +1,15 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 /* SECTION HERO */
 .od-hero {
   width: 100%;
-  background-color: $primary-color;
+  background-color: variables.$primary-color;
 
   .od-badge-references {
-    border: 2.5px solid $secondary-color;
-    background-color: $secondary-color;
+    border: 2.5px solid variables.$secondary-color;
+    background-color: variables.$secondary-color;
     border-radius: 999px;
-    color: $primary-color;
+    color: variables.$primary-color;
     padding: 10px 16px;
     display: flex;
     align-items: center;
@@ -81,7 +81,7 @@
 
     .od-btn-primary {
       background-color: #fff;
-      color: $primary-color;
+      color: variables.$primary-color;
       padding: 0.75rem 2rem;
       border-radius: 9999px;
       font-weight: 600;
@@ -129,17 +129,17 @@
     align-items: center;
     gap: 0.5rem;
     padding: 12px 24px;
-    background-color: $secondary-color;
+    background-color: variables.$secondary-color;
     border-radius: 9999px;
     font-size: 17px;
     font-weight: 500;
     text-decoration: none;
-    color: $primary-color;
+    color: variables.$primary-color;
     transition: background 0.3s;
 
     &:hover {
-      background-color: $primary-color;
-      color: $secondary-color;
+      background-color: variables.$primary-color;
+      color: variables.$secondary-color;
     }
 
     .od-tag-color {
@@ -158,7 +158,7 @@
     padding: 0;
     margin: 16px 0;
     font-size: 32px;
-    color: $primary-color;
+    color: variables.$primary-color;
   }
 
   p {
@@ -202,7 +202,7 @@
         text-transform: uppercase;
         font-size: 14px;
         letter-spacing: 1px;
-        color: $primary-color;
+        color: variables.$primary-color;
         font-weight: 600;
         margin-bottom: 8px;
       }
@@ -246,19 +246,19 @@
 .od-pres-number {
   font-size: 40px;
   font-weight: 600;
-  color: $primary-color;
+  color: variables.$primary-color;
   margin: 0;
 }
 .od-pres-text-stat {
   margin-top: 4px;
   font-size: 16px;
   font-weight: 600;
-  color: $primary-color;
+  color: variables.$primary-color;
 }
 /* SECTION CITATION */
 .od-quote-section {
   margin-top: 96px;
-  background-color: $primary-color;
+  background-color: variables.$primary-color;
   padding: 8rem 8vw;
   display: flex;
   align-items: center;
@@ -276,7 +276,7 @@
 .od-quote-static {
   font-size: 32px;
   font-weight: 600; /* Semibold */
-  color: $secondary-color;
+  color: variables.$secondary-color;
   margin: 0;
   white-space: nowrap;
 
@@ -343,7 +343,7 @@
   h2 {
     font-size: 32px;
     width: 35vw;
-    color: $primary-color;
+    color: variables.$primary-color;
     text-align: center;
   }
 
@@ -367,14 +367,14 @@
 
 .section-pres-dark {
   padding: 96px 8vw;
-  background-color: $primary-color;
+  background-color: variables.$primary-color;
   h2 {
     font-size: 32px;
   }
   h2,
   p,
   a {
-    color: $secondary-color;
+    color: variables.$secondary-color;
   }
 }
 
@@ -480,7 +480,7 @@
   h2 {
     font-size: 32px;
     font-weight: 600;
-    color: $primary-color;
+    color: variables.$primary-color;
     margin: 0 0 16px 0;
 
     @media (max-width: 768px) {
@@ -491,7 +491,7 @@
   p {
     font-size: 16px;
     line-height: 1.5;
-    color: $primary-color;
+    color: variables.$primary-color;
     margin: 0 0 32px 0;
     max-width: 380px;
 
@@ -526,7 +526,7 @@
   list-style: none;
   font-size: 18px;
   font-weight: 600;
-  color: $primary-color;
+  color: variables.$primary-color;
   cursor: pointer;
   user-select: none;
   outline: none;
@@ -538,7 +538,7 @@
 
   .faq-icon {
     flex-shrink: 0;
-    color: $primary-color;
+    color: variables.$primary-color;
     transition: transform 0.2s ease;
   }
 }
@@ -553,7 +553,7 @@ details[open] {
   margin-top: 16px;
   font-size: 16px;
   line-height: 1.5;
-  color: $primary-color;
+  color: variables.$primary-color;
 
   p {
     margin: 0;

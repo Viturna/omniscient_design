@@ -1,0 +1,138 @@
+@use "abstracts/variables";
+
+.timeline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  position: relative;
+  gap: 54px;
+  height: 200px;
+  margin: 48px 0;
+}
+
+.timeline::after {
+  content: "";
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  height: 4px;
+  background: variables.$primary-color;
+  z-index: 0;
+  background: #000;
+}
+
+.timeline::after {
+  width: var(--line-width, 100%);
+}
+
+.timeline-item {
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  min-width: 50px;
+  flex-shrink: 0;
+  z-index: 1; /* les points passent au-dessus de la ligne */
+}
+
+.year {
+  color: variables.$primary-color;
+}
+
+.references {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.references-container {
+  max-height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.references-container::-webkit-scrollbar {
+  display: none;
+}
+
+.hidden-references {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.references-counter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.references-counter::-webkit-scrollbar {
+  display: none;
+}
+
+.references-counter .hidden-references {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.references-counter .hidden-references::-webkit-scrollbar {
+  display: none;
+}
+
+.reference {
+  width: 35px;
+  height: 35px;
+  background-color: variables.$primary-color;
+  border-radius: 50%;
+  cursor: pointer;
+  background-size: cover;
+  -webkit-user-drag: none;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.reference:hover,
+.circle-with-number:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.reference.empty {
+  width: 15px;
+  height: 15px;
+  background-color: variables.$primary-color;
+  border-radius: 50%;
+}
+
+.reference.empty:hover {
+  cursor: auto;
+  opacity: 1;
+}
+
+.reference-frise {
+  margin-top: 32px;
+}
+
+.circle-with-number {
+  font-weight: 500;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  flex-shrink: 0;
+}

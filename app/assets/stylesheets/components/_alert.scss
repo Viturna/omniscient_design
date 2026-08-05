@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 /* Alert */
 
 .alert {
@@ -13,8 +13,8 @@
   width: 60vw;
   top: 100px;
   padding: 20px;
-  background-color: $primary-color;
-  color: $secondary-color;
+  background-color: variables.$primary-color;
+  color: variables.$secondary-color;
   opacity: 1;
   transition: opacity 0.6s;
   border-radius: 10px;
@@ -25,7 +25,7 @@
 }
 .closebtn {
   margin-left: 15px;
-  color: $secondary-color;
+  color: variables.$secondary-color;
   font-weight: bold;
   font-size: 22px;
   line-height: 20px;
@@ -52,7 +52,7 @@
 .progress-bar {
   width: 0;
   height: 100%;
-  background-color: $primary-color;
+  background-color: variables.$primary-color;
   transition: width 0.1s;
   border-radius: 0px 0px 10px 10px;
 }

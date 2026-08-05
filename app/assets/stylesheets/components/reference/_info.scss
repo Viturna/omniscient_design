@@ -1,0 +1,161 @@
+@use "abstracts/variables";
+
+.info-card {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 12px 25px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: variables.$secondary-color;
+    color: variables.$primary-color;
+    opacity: 0.9;
+    & svg path {
+      fill: variables.$primary-color;
+    }
+  }
+}
+
+.info-card-dark {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(32, 32, 32, 0.4);
+  color: variables.$secondary-color;
+  padding: 12px 25px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 20px;
+  z-index: 99;
+  &:hover {
+    cursor: pointer;
+    background-color: #3c3c3c;
+    color: variables.$secondary-color;
+    & svg path {
+      fill: variables.$secondary-color;
+    }
+  }
+  &:active {
+    background-color: #1b1b1b;
+  }
+}
+
+.info-card-first-content {
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 24px;
+  gap: 24px;
+  position: absolute;
+  bottom: 50px;
+  left: 5vw;
+  z-index: 2;
+}
+
+.notion-container {
+  border-radius: 20px;
+  width: fit-content;
+  padding: 12px 20px;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
+  font-weight: 400;
+  font-size: 14px;
+
+  &.theme-trigger:hover {
+    background-color: #3c3c3c !important;
+  }
+}
+
+.notions-flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flex-info {
+  margin-top: 16px;
+  display: flex;
+  gap: 24px;
+}
+
+.flex-contributor {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.flex-actions {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 32px;
+
+  .circle {
+    z-index: -1;
+  }
+}
+
+.horizontal-scroll-section {
+  overflow: hidden;
+  width: 100%;
+}
+
+.horizontal-wrapper {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth; /* backup si JS désactivé */
+  padding-right: 24px;
+}
+
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+
+  .info-card-dark {
+    padding: 12px 20px;
+    font-size: 17px;
+  }}
+
+
+@media screen and (min-width: 426px) and (max-width: 600px) {
+
+  .info-card {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .info-card-dark {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .horizontal-scroll-section {
+    margin-right: 28px;
+  }}
+
+
+@media screen and (max-width: 425px) {
+
+  .info-card {
+    width: fit-content;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .info-card-dark {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .horizontal-scroll-section {
+    margin-right: 24px;
+  }}

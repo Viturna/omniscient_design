@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .popup {
   display: none;
@@ -16,7 +16,7 @@
 
 .popup-content {
   margin-top: 10dvh;
-  background-color: $secondary-color;
+  background-color: variables.$secondary-color;
   border-radius: 10px;
   z-index: 1000;
   width: 700px;
@@ -32,7 +32,7 @@
   border-radius: 10px 10px 0 0;
   height: 80px;
   width: 90%;
-  background-color: $background-color;
+  background-color: variables.$background-color;
   position: relative;
   display: flex;
   align-items: center;
@@ -58,14 +58,14 @@
 }
 
 .title-popup {
-  color: $primary-color;
+  color: variables.$primary-color;
   font-weight: 500;
   font-size: 24px;
   margin: 32px 0;
 }
 
 .subtitle-popup {
-  color: $primary-color;
+  color: variables.$primary-color;
   font-weight: 500;
   font-size: 20px;
   margin: 16px 0;
@@ -74,7 +74,7 @@
 .popup-link-add {
   padding: 0;
   font-size: 18px;
-  color: $primary-color;
+  color: variables.$primary-color;
   text-decoration: underline;
 }
 
@@ -160,7 +160,7 @@
   margin-left: auto;
   margin-right: auto;
   justify-content: space-between;
-  border-bottom: 2px solid $primary-color;
+  border-bottom: 2px solid variables.$primary-color;
 }
 
 .box-list-left {
@@ -177,7 +177,7 @@
   }
 
   path {
-    fill: $primary-color;
+    fill: variables.$primary-color;
   }
 }
 
@@ -255,36 +255,36 @@
 
 body.dark-mode {
   .title-popup {
-    color: $primary-color-dark;
+    color: variables.$primary-color-dark;
   }
 
   .popup-link-add {
-    color: $primary-color-dark;
+    color: variables.$primary-color-dark;
   }
 
   .subtitle-popup {
-    color: $primary-color-dark;
+    color: variables.$primary-color-dark;
   }
 
   .top-popup {
-    background-color: $background-color-dark;
+    background-color: variables.$background-color-dark;
   }
 
   .popup-content {
-    background-color: $secondary-color-dark;
+    background-color: variables.$secondary-color-dark;
   }
 
   .box-list {
-    border-bottom: 2px solid $primary-color-dark;
+    border-bottom: 2px solid variables.$primary-color-dark;
   }
 
   .box-list svg path {
-    fill: $primary-color-dark;
+    fill: variables.$primary-color-dark;
   }
 
   .close-popup {
     path {
-      fill: $primary-color-dark;
+      fill: variables.$primary-color-dark;
     }
   }
 }

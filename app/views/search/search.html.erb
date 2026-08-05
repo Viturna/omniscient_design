@@ -90,15 +90,15 @@
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "references", data: { tabs_search_target: "tabInput" } %>
     <h2><%= t('search.filters') %></h2>
-    <div class="filters">
-      <div class="filter" data-tabs-search-target="domainFilter">
-        <label for="domainFilter"><%= t('search.domain') %></label>
+    <div class="search-filters">
+      <div class="search-filter" data-tabs-search-target="domainFilter">
+        <label class="search-filter__label" for="domainFilter"><%= t('search.domain') %></label>
         <%= form.select :domaine, 
-              Domaine.all.map { |d| [d.domaine, d.id] }, 
+              Domaine.all.map { |d| [d.domaine, d.id, { 'data-color' => d.couleur }] }, 
               { include_blank: false, selected: params[:domaine] }, 
               { 
                 multiple: true, 
-                class: "form-control",
+                class: "form-control search-filter__select",
                 data: {
                   controller: "select2",
                   select2_placeholder_value: t('search.domain'),
@@ -106,8 +106,8 @@
                 }
               } %>
       </div>
-      <div class="filter" data-tabs-search-target="notionsFilter" data-controller="mega-menu">
-        <label><%= t('search.notions') %></label>
+      <div class="search-filter" data-tabs-search-target="notionsFilter" data-controller="mega-menu">
+        <label class="search-filter__label"><%= t('search.notions') %></label>
         <button type="button" 
                 class="mega-menu-btn <%= 'has-selection' if params[:notions].present? %>" 
                 data-mega-menu-target="button" 
@@ -202,14 +202,14 @@
           </div>
         </div>
       </div>
-      <div class="filter" data-tabs-search-target="countryFilter">
-        <label for="paysFilter"><%= t('search.country') %></label>
+      <div class="search-filter" data-tabs-search-target="countryFilter">
+        <label class="search-filter__label" for="paysFilter"><%= t('search.country') %></label>
         <%= form.select :country, 
               @countries.all.map { |p| [p.country, p.id] }, 
               { include_blank: t('search.choose_country'), selected: params[:country] }, 
               { 
                 multiple: true, 
-                class: "form-control",
+                class: "form-control search-filter__select",
                 data: {
                   controller: "select2",
                   select2_placeholder_value: t('search.choose_country'),
@@ -217,8 +217,8 @@
                 }
               } %>
       </div>
-      <div class="filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
-        <label for="dateFilter"><%= t('search.dates') %></label>
+      <div class="search-filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
+        <label class="search-filter__label" for="dateFilter"><%= t('search.dates') %></label>
         <div class="dropdown">
           <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
             <%= t('search.select_period') %>
@@ -249,11 +249,11 @@
           </div>
         </div>
       </div>
-      <div class="filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">
-        <label for="sort"><%= t('search.sort_by') %></label>
+      <div class="search-filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">
+        <label class="search-filter__label" for="sort"><%= t('search.sort_by') %></label>
         <select name="sort" 
                 id="sortSelect" 
-                class="form-control" 
+                class="form-control search-filter__select" 
                 data-tabs-search-target="sortSelect"
                 data-controller="select2"
                 data-action="change->tabs-search#update"

@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .button {
   display: block;
@@ -32,8 +32,8 @@
   color: #fff;
 }
 .button.dashed:hover {
-  background-color: $secondary-color;
-  color: $primary-color;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
 }
 
 // Add Element
@@ -56,7 +56,7 @@
 .arrow-button {
   width: 80px;
   height: 80px;
-  background-color: $primary-color;
+  background-color: variables.$primary-color;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -75,7 +75,7 @@
 
 // Circle
 .circle {
-  background-color: $primary-color;
+  background-color: variables.$primary-color;
   width: 75px;
   height: 75px;
   border-radius: 50%;
@@ -119,7 +119,7 @@
   justify-content: center;
   top: -10px;
   background-color: #fff;
-  color: $primary-color;
+  color: variables.$primary-color;
   border-radius: 50%;
   font-size: 12px;
   width: 30px;
@@ -384,11 +384,11 @@
 }
 
 .button {
-  color: $primary-color;
-  background-color: $secondary-color;
+  color: variables.$primary-color;
+  background-color: variables.$secondary-color;
 
   &:hover {
-    background-color: $background-color;
+    background-color: variables.$background-color;
   }
 
   &:active {
@@ -397,8 +397,8 @@
 }
 
 .dark {
-  background-color: $primary-color;
-  color: $secondary-color;
+  background-color: variables.$primary-color;
+  color: variables.$secondary-color;
 
   &:hover {
     background-color: #3c3c3c;
@@ -410,22 +410,22 @@
 }
 
 .button-add {
-  background-color: $secondary-color;
-  color: $primary-color;
+  background-color: variables.$secondary-color;
+  color: variables.$primary-color;
 }
 
 body.dark-mode {
   .button-add {
-    background-color: $secondary-color-dark;
-    color: $primary-color-dark;
+    background-color: variables.$secondary-color-dark;
+    color: variables.$primary-color-dark;
   }
 
   .button {
-    color: $primary-color-dark;
-    background-color: $secondary-color-dark;
+    color: variables.$primary-color-dark;
+    background-color: variables.$secondary-color-dark;
 
     &:hover {
-      background-color: $background-color-dark;
+      background-color: variables.$background-color-dark;
     }
   }
 

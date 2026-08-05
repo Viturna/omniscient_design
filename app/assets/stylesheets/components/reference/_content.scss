@@ -1,0 +1,90 @@
+@use "abstracts/variables";
+
+.text-show {
+  width: 60vw;
+  max-width: 1000px;
+  margin-top: 82dvh;
+  transition: margin-top 0.6s ease;
+}
+
+.text-show.small-height {
+  margin-top: 48dvh;
+}
+
+.title-description-reference {
+  margin-top: 48px;
+  font-size: 24px;
+}
+
+.text-description-reference {
+  margin-top: 16px;
+  overflow-wrap: break-word;
+}
+
+.text-contributor {
+  margin-top: 8px;
+  line-height: 130%;
+  color: variables.$text-color;
+  text-align: center;
+}
+
+.vertical-divider {
+  width: 3px;
+  height: 40px;
+  background-color: variables.$primary-color;
+}
+
+
+@media screen and (min-width: 1025px) and (max-width: 1300px) {
+  .text-show {
+    width: 70vw;
+  }}
+
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+
+  .text-show {
+    width: 80vw;
+    margin-top: 68dvh;
+  }
+
+  .title-description-reference {
+    font-size: 22px;
+  }
+
+  .text-contributor {
+    font-size: 17px;
+  }}
+
+
+@media screen and (min-width: 426px) and (max-width: 600px) {
+
+  .text-show {
+    width: 85vw;
+    margin-top: 70dvh;
+  }
+
+  .title-description-reference {
+    font-size: 20px;
+  }
+
+  .text-contributor {
+    font-size: 16px;
+  }}
+
+
+@media screen and (max-width: 425px) {
+
+  .text-show {
+    width: 90vw;
+    margin-top: 70dvh;
+  }
+
+  .title-description-reference {
+    font-size: 20px;
+    margin-top: 24px;
+  }
+
+  .text-contributor {
+    font-size: 16px;
+  }}

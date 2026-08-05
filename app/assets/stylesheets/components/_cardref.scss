@@ -1,4 +1,4 @@
-@import "abstracts/variables";
+@use "abstracts/variables";
 
 .card-ref {
   overflow: hidden;
@@ -204,12 +204,12 @@
 }
 
 .card-title {
-  color: $secondary-color;
+  color: variables.$secondary-color;
 }
 
 body.dark-mode {
   .card-title {
-    color: $secondary-color-dark;
+    color: variables.$secondary-color-dark;
   }
 }
 

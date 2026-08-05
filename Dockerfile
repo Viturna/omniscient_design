@@ -2,10 +2,11 @@ FROM ruby:3.3.4
 
 WORKDIR /app
 
-# Dépendances système (nodejs, npm pour yarn, libvips, postgresql-client)
-RUN apt-get update -qq && apt-get install -y \
+# Dépendances système
+RUN apt-get update -qq && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y \
     nodejs \
-    npm \
     postgresql-client \
     libvips \
     && npm install -g yarn
@@ -18,7 +19,7 @@ RUN bundle install
 COPY . .
 
 # Installer les dépendances JS et précompiler les assets
-RUN yarn install --ignore-engines
+RUN yarn install
 RUN SECRET_KEY_BASE=dummy RAILS_ENV=production bundle exec rails assets:precompile
 
 # Créer le dossier tmp/pids pour Puma

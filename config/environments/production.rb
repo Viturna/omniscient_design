@@ -30,7 +30,7 @@ Rails.application.configure do
   }
 
   # Compress CSS using a preprocessor.
-  config.assets.css_compressor = :sass
+  # config.assets.css_compressor = :sass
 
   # Do not fall back to assets pipeline if a precompiled asset is missed.
   config.assets.compile = true
@@ -79,7 +79,7 @@ Rails.application.configure do
 
   config.assets.digest = true # Générer des hachages pour les assets
   config.assets.js_compressor = :terser # Compresser les fichiers JS
-  config.assets.css_compressor = :sass # Compresser les fichiers CSS
+  # config.assets.css_compressor = :sass # Compresser les fichiers CSS
 
   config.public_file_server.headers = {
     'Cache-Control' => "public, max-age=#{1.year.to_i}",

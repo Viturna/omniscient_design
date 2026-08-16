@@ -55,7 +55,7 @@ ENV RAILS_ENV="production" \
 # Installer uniquement les dépendances systèmes strictes requises pour lancer l'app
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    postgresql-client libvips curl tzdata && \
+    postgresql-client libvips curl tzdata nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 # Créer un utilisateur non-root pour la sécurité

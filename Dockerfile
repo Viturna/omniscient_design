@@ -36,7 +36,7 @@ COPY . .
 # Nettoyage immédiat des dossiers inutiles (node_modules, caches) pour gagner de la place
 RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile && \
     bundle exec bootsnap precompile --gemfile app/ lib/ && \
-    rm -rf node_modules tmp/cache app/assets vendor/assets
+    rm -rf node_modules tmp/cache
 
 # === STAGE 2: Final Runner ===
 # Utilisation de l'image "slim" ultra-légère pour le runtime final

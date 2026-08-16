@@ -1,0 +1,42 @@
+# <%= @reference.nom_reference %>
+
+<% if @reference.designers.any? %>
+**Designers** : <%= @reference.designers.map { |d| "#{d.prenom} #{d.nom}".strip }.join(', ') %>
+<% end %>
+<% if @reference.studios.any? %>
+**Studios** : <%= @reference.studios.map(&:nom).join(', ') %>
+<% end %>
+<% if @reference.date_reference.present? %>
+**Date** : <%= @reference.date_reference.year %>
+<% end %>
+<% if @reference.domaines.any? %>
+**Domaines** : <%= @reference.domaines.map(&:domaine).join(', ') %>
+<% end %>
+
+## Présentation générale
+<%= strip_tags(@reference.presentation_generale) %>
+
+<% if @reference.contexte_historique.present? %>
+## Contexte Historique
+<%= strip_tags(@reference.contexte_historique) %>
+<% end %>
+
+<% if @reference.materiaux_et_innovations_techniques.present? %>
+## Matériaux et innovations techniques
+<%= strip_tags(@reference.materiaux_et_innovations_techniques) %>
+<% end %>
+
+<% if @reference.concept_et_inspiration.present? %>
+## Concept et inspiration
+<%= strip_tags(@reference.concept_et_inspiration) %>
+<% end %>
+
+<% if @reference.dimension_esthetique.present? %>
+## Dimension esthétique
+<%= strip_tags(@reference.dimension_esthetique) %>
+<% end %>
+
+<% if @reference.impact_et_message.present? %>
+## Impact et message
+<%= strip_tags(@reference.impact_et_message) %>
+<% end %>

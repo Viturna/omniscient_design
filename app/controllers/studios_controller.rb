@@ -32,6 +32,11 @@ class StudiosController < ApplicationController
                         else
                           []
                         end
+
+    respond_to do |format|
+      format.html
+      format.md
+    end
   end
 
   def new

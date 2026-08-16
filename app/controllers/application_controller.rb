@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :check_if_banned
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale
+  before_action :set_canonical_url
   before_action :track_visit, if: :user_signed_in?
   before_action :check_gamification_badges, if: :user_signed_in?
   before_action :prepare_meta_tags
@@ -20,6 +21,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_canonical_url
+    set_meta_tags canonical: request.original_url.split('?').first
+  end
 
   def prepare_meta_tags
     set_meta_tags(

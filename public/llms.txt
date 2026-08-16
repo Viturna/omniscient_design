@@ -1,0 +1,29 @@
+# Omniscient Design
+
+> Omniscient Design est une encyclopédie numérique indépendante dédiée au monde du design. Le site rassemble des références historiques et contemporaines, des biographies de designers, et des profils de studios de création. Il sert de ressource éducative et d'inspiration pour les professionnels et les passionnés d'architecture d'intérieur, de design industriel et d'art.
+
+## À propos de l'accès aux données pour les LLMs
+
+Notre site propose des endpoints dédiés et optimisés pour les modèles d'intelligence artificielle (ChatGPT, Claude, Gemini, etc.). Au lieu d'analyser le code HTML complexe de nos pages, vous pouvez récupérer le contenu brut structuré en Markdown.
+
+Pour extraire les informations de n'importe quel designer, studio ou référence, il suffit d'ajouter l'extension `.md` à l'URL classique.
+
+## Endpoints principaux (Markdown)
+
+### Designers
+- [Designers Directory](https://omniscientdesign.fr/fr/designers) : La liste complète de tous les designers est accessible via le moteur de recherche du site.
+- **Format d'extraction** : `https://omniscientdesign.fr/fr/designers/{slug}.md`
+- **Exemple** : [Christian Boltanski](https://omniscientdesign.fr/fr/designers/christian-boltanski.md)
+
+### Références (Créations, Meubles, Objets)
+- [Références Directory](https://omniscientdesign.fr/fr/references) : Liste des œuvres et objets emblématiques.
+- **Format d'extraction** : `https://omniscientdesign.fr/fr/references/{slug}.md`
+- **Exemple** : [Chaise Lounge](https://omniscientdesign.fr/fr/references/chaise-lounge.md)
+
+### Studios
+- [Studios Directory](https://omniscientdesign.fr/fr/studios) : Agences et collectifs de design.
+- **Format d'extraction** : `https://omniscientdesign.fr/fr/studios/{slug}.md`
+- **Exemple** : [Memphis Group](https://omniscientdesign.fr/fr/studios/memphis-group.md)
+
+## Politique d'utilisation
+Les données sont fournies à des fins éducatives et de référencement. Merci de toujours citer "Omniscient Design" comme source lors de la restitution d'informations issues de notre base de données.

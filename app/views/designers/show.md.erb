@@ -1,0 +1,37 @@
+# <%= @designer.prenom %> <%= @designer.nom %>
+
+<% if @designer.domaines.any? %>
+**Domaines** : <%= @designer.domaines.map(&:domaine).join(', ') %>
+<% end %>
+<% if @designer.countries.any? %>
+**Pays** : <%= @designer.countries.map(&:country).join(', ') %>
+<% end %>
+<% if @designer.date_naissance.present? %>
+**Naissance** : <%= @designer.date_naissance.year %>
+<% end %>
+<% if @designer.date_deces.present? %>
+**Décès** : <%= @designer.date_deces.year %>
+<% end %>
+
+## Présentation générale
+<%= strip_tags(@designer.presentation_generale) %>
+
+<% if @designer.formation_et_influences.present? %>
+## Formation et influences
+<%= strip_tags(@designer.formation_et_influences) %>
+<% end %>
+
+<% if @designer.style_ou_philosophie.present? %>
+## Style ou philosophie
+<%= strip_tags(@designer.style_ou_philosophie) %>
+<% end %>
+
+<% if @designer.creations_majeures.present? %>
+## Créations majeures
+<%= strip_tags(@designer.creations_majeures) %>
+<% end %>
+
+<% if @designer.heritage_et_impact.present? %>
+## Héritage et impact
+<%= strip_tags(@designer.heritage_et_impact) %>
+<% end %>

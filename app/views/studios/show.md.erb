@@ -1,0 +1,37 @@
+# <%= @studio.nom %>
+
+<% if @studio.domaines.any? %>
+**Domaines** : <%= @studio.domaines.map(&:domaine).join(', ') %>
+<% end %>
+<% if @studio.pays.present? %>
+**Pays** : <%= @studio.pays %>
+<% end %>
+<% if @studio.date_creation.present? %>
+**Création** : <%= @studio.date_creation.year %>
+<% end %>
+<% if @studio.date_fin.present? %>
+**Fin** : <%= @studio.date_fin.year %>
+<% end %>
+
+## Présentation générale
+<%= strip_tags(@studio.presentation_generale) %>
+
+<% if @studio.historique_et_evolution.present? %>
+## Historique et évolution
+<%= strip_tags(@studio.historique_et_evolution) %>
+<% end %>
+
+<% if @studio.philosophie_et_approche.present? %>
+## Philosophie et approche
+<%= strip_tags(@studio.philosophie_et_approche) %>
+<% end %>
+
+<% if @studio.projets_emblematiques.present? %>
+## Projets emblématiques
+<%= strip_tags(@studio.projets_emblematiques) %>
+<% end %>
+
+<% if @studio.impact_et_heritage.present? %>
+## Impact et héritage
+<%= strip_tags(@studio.impact_et_heritage) %>
+<% end %>

@@ -22,20 +22,19 @@ ENV RAILS_ENV="production" \
 
 # Installer les gems
 COPY Gemfile Gemfile.lock ./
-# Limite l'utilisation du CPU en forçant la compilation sur 1 seul thread
-RUN MAKEFLAGS="-j 1" bundle install -j 1 && \
+RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-# Installer les dépendances JS avec une concurrence réseau réduite
+# Installer les dépendances JS
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --network-concurrency 1
+RUN yarn install --frozen-lockfile
 
 # Copier le code source de l'application
 COPY . .
 
 # Précompiler les assets (CSS/JS) et bootsnap
 # Nettoyage immédiat des dossiers inutiles (node_modules, caches) pour gagner de la place
-RUN NODE_OPTIONS="--max_old_space_size=512" SECRET_KEY_BASE=dummy bundle exec rails assets:precompile && \
+RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile && \
     bundle exec bootsnap precompile --gemfile app/ lib/ && \
     rm -rf node_modules tmp/cache app/assets vendor/assets
 

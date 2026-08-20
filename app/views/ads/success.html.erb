@@ -1,0 +1,11 @@
+<section class="top-header" style="text-align: center; padding: 60px 20px;">
+  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 20px auto; display: block;">
+    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" fill="#D54758"/>
+  </svg>
+  <h1 style="color: #202020; margin-bottom: 16px;">Demande envoyée !</h1>
+  <p style="color: #52525D; font-size: 1.1rem; max-width: 600px; margin: 0 auto 32px auto;">
+    Merci pour votre demande. Votre publicité <strong><%= @ad.title %></strong> est désormais en attente de validation manuelle par notre équipe. 
+    Vous serez averti(e) par email une fois celle-ci en ligne.
+  </p>
+  <%= link_to "Retour à l'accueil", root_path, class: "button dark button-kit", style: "background-color: #D54758; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;" %>
+</section>

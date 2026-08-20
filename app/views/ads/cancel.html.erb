@@ -1,0 +1,12 @@
+<section class="top-header" style="text-align: center; padding: 60px 20px;">
+  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 20px auto; display: block;">
+    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="#D54758"/>
+  </svg>
+  <h1 style="color: #202020; margin-bottom: 16px;">Paiement annulé</h1>
+  <p style="color: #52525D; font-size: 1.1rem; max-width: 600px; margin: 0 auto 32px auto;">
+    Vous avez annulé le processus de paiement. Votre publicité <strong><%= @ad.title %></strong> n'a pas été soumise. 
+    Vous pouvez réessayer à tout moment.
+  </p>
+  <%= link_to "Réessayer", new_ad_path, class: "button dark button-kit", style: "background-color: #D54758; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-right: 12px;" %>
+  <%= link_to "Retour à l'accueil", root_path, style: "color: #52525D; text-decoration: underline;" %>
+</section>

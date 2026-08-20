@@ -54,7 +54,7 @@ export default class extends Controller {
         const q = url.searchParams.get("q")
         url.search = ""
         if (q) url.searchParams.set("q", q)
-        
+
         url.searchParams.set("tab", tabName)
         url.searchParams.set("page", "1")
 

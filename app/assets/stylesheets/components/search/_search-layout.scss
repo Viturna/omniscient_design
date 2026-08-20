@@ -51,8 +51,6 @@
     row-gap: 16px;
     padding: 24px 0;
   }
-  .top-bar-search {
-    padding-top: var(--safe-area-top-android, env(safe-area-inset-top, 0px));
 }
 
 @media screen and (min-width: 426px) and (max-width: 600px) {
@@ -104,5 +102,4 @@
 
 
 @media screen and (min-width: 1700px) {
-}
 }

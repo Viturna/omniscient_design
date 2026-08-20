@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["step", "prevButton", "rulesCheckbox", "rulesNextBtn", "nameInput", "surnameInput", "errorMessage", "progressBar", "progressText", "stepTitle"]
+    static targets = ["step", "prevButton", "rulesCheckbox", "rulesNextBtn", "nameInput", "surnameInput", "errorMessage", "progressBar", "progressText", "stepTitle", "stepIndicator", "summaryPrice", "summaryTotal", "summaryPackName"]
 
     static values = {
         editMode: Boolean,
@@ -90,10 +90,37 @@ export default class extends Controller {
             }
         });
 
+        // Mise à jour du stepper UI premium s'il existe
+        if (this.hasStepIndicatorTarget) {
+            this.stepIndicatorTargets.forEach((indicator, index) => {
+                indicator.classList.remove("active", "completed");
+                if (index < this.currentStepIndex) {
+                    indicator.classList.add("completed");
+                } else if (index === this.currentStepIndex) {
+                    indicator.classList.add("active");
+                }
+            });
+        }
+
         this.updateButtons();
         this.updateProgress();
         this.hideError();
         window.scrollTo(0, 0);
+    }
+
+    updateSummary(event) {
+        if (this.hasSummaryPriceTarget && this.hasSummaryTotalTarget) {
+            const radio = event.target;
+            const priceStr = radio.dataset.price;
+            const packName = radio.dataset.name;
+            
+            this.summaryPriceTarget.textContent = priceStr + "€";
+            this.summaryTotalTarget.textContent = priceStr + "€";
+            
+            if (this.hasSummaryPackNameTarget) {
+                this.summaryPackNameTarget.textContent = packName;
+            }
+        }
     }
 
     reinitTrixEditors(stepEl) {

@@ -160,3 +160,61 @@
   .card-reference {
     width: 9vw;
   }}
+
+// Display Modes
+.list-mode {
+  flex-direction: column !important;
+  row-gap: 16px !important;
+
+  .card-designer,
+  .card-reference {
+    width: 100% !important;
+    height: 120px !important;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 32px;
+  }
+
+  .inner-card-designer,
+  .inner-card-reference {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    width: 100%;
+  }
+
+  .title-card-designer,
+  .title-card-reference {
+    margin-top: 0;
+    font-size: 24px;
+  }
+
+  .country-card-designer,
+  .domaine-card-reference {
+    font-size: 16px;
+    min-width: 150px;
+  }
+}
+
+.small-grid-mode {
+  column-gap: 1vw !important;
+  row-gap: 16px !important;
+
+  .card-designer,
+  .card-reference {
+    width: calc(10vw * 0.7) !important;
+    height: 200px !important;
+    padding: 12px;
+  }
+
+  .title-card-designer,
+  .title-card-reference {
+    font-size: 80%;
+  }
+
+  .country-card-designer,
+  .domaine-card-reference {
+    font-size: 12px;
+  }
+}
+

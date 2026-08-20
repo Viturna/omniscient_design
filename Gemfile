@@ -100,5 +100,3 @@ gem 'googleauth'
 gem 'mailjet'
 
 gem "meta-tags", "~> 2.23"
-
-gem "stripe", "~> 19.4"

@@ -89,188 +89,239 @@
   </div>
   <%= form_with url: search_path, method: :get, local: true, id: "filterForm", data: { turbo: false } do |form| %>
     <%= form.hidden_field :tab, id: "activeTab", value: params[:tab] || "references", data: { tabs_search_target: "tabInput" } %>
-    <h2><%= t('search.filters') %></h2>
-    <div class="search-filters">
-      <div class="search-filter" data-tabs-search-target="domainFilter">
-        <label class="search-filter__label" for="domainFilter"><%= t('search.domain') %></label>
-        <%= form.select :domaine, 
-              Domaine.all.map { |d| [d.domaine, d.id, { 'data-color' => d.couleur }] }, 
-              { include_blank: false, selected: params[:domaine] }, 
-              { 
-                multiple: true, 
-                class: "form-control search-filter__select",
-                data: {
-                  controller: "select2",
-                  select2_placeholder_value: t('search.domain'),
-                  action: "change->tabs-search#update"
-                }
-              } %>
-      </div>
-      <div class="search-filter" data-tabs-search-target="notionsFilter" data-controller="mega-menu">
-        <label class="search-filter__label"><%= t('search.notions') %></label>
-        <button type="button" 
-                class="mega-menu-btn <%= 'has-selection' if params[:notions].present? %>" 
-                data-mega-menu-target="button" 
-                data-action="click->mega-menu#toggle">
-          <span data-mega-menu-target="label">
-            <% if params[:notions].present? %>
-              <%= params[:notions].size %> notion<%= 's' if params[:notions].size > 1 %>
-            <% else %>
-              <%= t('search.choose_notions') %>
-            <% end %>
-          </span>
-          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="mega-menu-content" data-mega-menu-target="content">
-          <button type="button" class="mega-menu-close" data-action="click->mega-menu#toggle" aria-label="Fermer">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+    <h3 class="search-filters-title">Filtres</h3>
+    <div class="search-filters-header">
+      <div class="search-filters-group">
+        <div class="search-filter filter-btn <%= 'active' if params[:domaine].present? %>" data-controller="dropdown" data-tabs-search-target="domainFilter">
+          <div class="dropdown">
+            <button type="button" class="dropdown-toggle mega-menu-btn <%= 'has-selection' if params[:domaine].present? %>" data-dropdown-target="toggle">
+              <div class="filter-btn-content">
+                <div class="filter-btn-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                </div>
+                <span class="filter-btn-text">
+                  <% if params[:domaine].present? %>
+                    <%= params[:domaine].size %> domaine<%= 's' if params[:domaine].size > 1 %>
+                  <% else %>
+                    <%= t('search.domain', default: 'Domaine(s)') %>
+                  <% end %>
+                </span>
+              </div>
+              <svg class="filter-btn-chevron-svg" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="dropdown-menu" data-dropdown-target="menu">
+              <div class="domain-dropdown-menu-list">
+                <% Domaine.all.each do |d| %>
+                  <% is_checked = params[:domaine]&.include?(d.id.to_s) %>
+                  <label class="domain-choice-pill <%= 'selected' if is_checked %>">
+                    <input type="checkbox" name="domaine[]" value="<%= d.id %>" <%= 'checked' if is_checked %> class="hidden-checkbox" onchange="this.parentElement.classList.toggle('selected', this.checked)">
+                    <span class="domain-text"><%= d.domaine %></span>
+                    <span class="domain-color-circle" style="background-color: <%= d.couleur %>;"></span>
+                  </label>
+                <% end %>
+              </div>
+              <button type="button" class="button dark" data-action="click->tabs-search#update" style="margin-top: 16px; width: 100%;">
+                <%= t('search.apply', default: 'Appliquer') %>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="search-filter filter-btn <%= 'active' if params[:notions].present? %>" data-tabs-search-target="notionsFilter" data-controller="mega-menu">
+          <button type="button" 
+                  class="mega-menu-btn <%= 'has-selection' if params[:notions].present? %>" 
+                  data-mega-menu-target="button" 
+                  data-action="click->mega-menu#toggle">
+            <div class="filter-btn-content">
+              <div class="filter-btn-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              </div>
+              <span data-mega-menu-target="label" class="filter-btn-text">
+                <% if params[:notions].present? %>
+                  <%= params[:notions].size %> notion<%= 's' if params[:notions].size > 1 %>
+                <% else %>
+                  <%= t('search.notions', default: 'Notion(s)') %>
+                <% end %>
+              </span>
+            </div>
+            <svg class="filter-btn-chevron-svg" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <!-- Barre de recherche rapide -->
-          <div class="mega-menu-search-wrapper">
-            <input type="text" 
+          <div class="mega-menu-content" data-mega-menu-target="content">
+            <button type="button" class="mega-menu-close" data-action="click->mega-menu#toggle" aria-label="Fermer">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <!-- Barre de recherche rapide -->
+            <div class="mega-menu-search-wrapper">
+              <input type="text" 
                    class="mega-menu-search-input" 
                    placeholder="Rechercher une notion..." 
                    data-action="input->mega-menu#search">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="search-icon">
-              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-
-          <div class="mega-menu-themes-view" data-mega-menu-target="themesView">
-            <div class="theme-cards-grid">
-              <% Notion.unique_themes.each do |theme| %>
-                <div class="theme-card" data-action="click->mega-menu#selectTheme" data-theme-name="<%= theme %>">
-                  <span class="theme-card-title"><%= theme %></span>
-                  <div class="arrow-theme-card">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M16 3C13.4288 3 10.9154 3.76244 8.77759 5.1909C6.63975 6.61935 4.97351 8.64968 3.98957 11.0251C3.00563 13.4006 2.74819 16.0144 3.2498 18.5362C3.75141 21.0579 4.98953 23.3743 6.80762 25.1924C8.6257 27.0105 10.9421 28.2486 13.4638 28.7502C15.9856 29.2518 18.5995 28.9944 20.9749 28.0104C23.3503 27.0265 25.3807 25.3603 26.8091 23.2224C28.2376 21.0846 29 18.5712 29 16C28.9964 12.5533 27.6256 9.24882 25.1884 6.81163C22.7512 4.37445 19.4467 3.00364 16 3ZM16 27C13.8244 27 11.6977 26.3549 9.88873 25.1462C8.07979 23.9375 6.66989 22.2195 5.83733 20.2095C5.00477 18.1995 4.78693 15.9878 5.21137 13.854C5.63581 11.7202 6.68345 9.7602 8.22183 8.22183C9.76021 6.68345 11.7202 5.6358 13.854 5.21136C15.9878 4.78692 18.1995 5.00476 20.2095 5.83733C22.2195 6.66989 23.9375 8.07979 25.1462 9.88873C26.3549 11.6977 27 13.8244 27 16C26.9967 18.9164 25.8367 21.7123 23.7745 23.7745C21.7123 25.8367 18.9164 26.9967 16 27ZM21.7075 15.2925C21.8005 15.3854 21.8742 15.4957 21.9246 15.6171C21.9749 15.7385 22.0008 15.8686 22.0008 16C22.0008 16.1314 21.9749 16.2615 21.9246 16.3829C21.8742 16.5043 21.8005 16.6146 21.7075 16.7075L17.7075 20.7075C17.5199 20.8951 17.2654 21.0006 17 21.0006C16.7346 21.0006 16.4801 20.8951 16.2925 20.7075C16.1049 20.5199 15.9994 20.2654 15.9994 20C15.9994 19.7346 16.1049 19.4801 16.2925 19.2925L18.5863 17H11C10.7348 17 10.4804 16.8946 10.2929 16.7071C10.1054 16.5196 10 16.2652 10 16C10 15.7348 10.1054 15.4804 10.2929 15.2929C10.4804 15.1054 10.7348 15 11 15H18.5863L16.2925 12.7075C16.1049 12.5199 15.9994 12.2654 15.9994 12C15.9994 11.7346 16.1049 11.4801 16.2925 11.2925C16.4801 11.1049 16.7346 10.9994 17 10.9994C17.2654 10.9994 17.5199 11.1049 17.7075 11.2925L21.7075 15.2925Z" fill="#202020"/>
-                    </svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="search-icon">
+                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="mega-menu-themes-view" data-mega-menu-target="themesView">
+              <div class="theme-cards-grid">
+                <% Notion.unique_themes.each do |theme| %>
+                  <div class="theme-card" data-action="click->mega-menu#selectTheme" data-theme-name="<%= theme %>">
+                    <span class="theme-card-title"><%= theme %></span>
+                    <div class="arrow-theme-card">
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 3C13.4288 3 10.9154 3.76244 8.77759 5.1909C6.63975 6.61935 4.97351 8.64968 3.98957 11.0251C3.00563 13.4006 2.74819 16.0144 3.2498 18.5362C3.75141 21.0579 4.98953 23.3743 6.80762 25.1924C8.6257 27.0105 10.9421 28.2486 13.4638 28.7502C15.9856 29.2518 18.5995 28.9944 20.9749 28.0104C23.3503 27.0265 25.3807 25.3603 26.8091 23.2224C28.2376 21.0846 29 18.5712 29 16C28.9964 12.5533 27.6256 9.24882 25.1884 6.81163C22.7512 4.37445 19.4467 3.00364 16 3ZM16 27C13.8244 27 11.6977 26.3549 9.88873 25.1462C8.07979 23.9375 6.66989 22.2195 5.83733 20.2095C5.00477 18.1995 4.78693 15.9878 5.21137 13.854C5.63581 11.7202 6.68345 9.7602 8.22183 8.22183C9.76021 6.68345 11.7202 5.6358 13.854 5.21136C15.9878 4.78692 18.1995 5.00476 20.2095 5.83733C22.2195 6.66989 23.9375 8.07979 25.1462 9.88873C26.3549 11.6977 27 13.8244 27 16C26.9967 18.9164 25.8367 21.7123 23.7745 23.7745C21.7123 25.8367 18.9164 26.9967 16 27ZM21.7075 15.2925C21.8005 15.3854 21.8742 15.4957 21.9246 15.6171C21.9749 15.7385 22.0008 15.8686 22.0008 16C22.0008 16.1314 21.9749 16.2615 21.9246 16.3829C21.8742 16.5043 21.8005 16.6146 21.7075 16.7075L17.7075 20.7075C17.5199 20.8951 17.2654 21.0006 17 21.0006C16.7346 21.0006 16.4801 20.8951 16.2925 20.7075C16.1049 20.5199 15.9994 20.2654 15.9994 20C15.9994 19.7346 16.1049 19.4801 16.2925 19.2925L18.5863 17H11C10.7348 17 10.4804 16.8946 10.2929 16.7071C10.1054 16.5196 10 16.2652 10 16C10 15.7348 10.1054 15.4804 10.2929 15.2929C10.4804 15.1054 10.7348 15 11 15H18.5863L16.2925 12.7075C16.1049 12.5199 15.9994 12.2654 15.9994 12C15.9994 11.7346 16.1049 11.4801 16.2925 11.2925C16.4801 11.1049 16.7346 10.9994 17 10.9994C17.2654 10.9994 17.5199 11.1049 17.7075 11.2925L21.7075 15.2925Z" fill="#202020"/>
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             </div>
-          </div>
-          <div class="mega-menu-notions-view" data-mega-menu-target="notionsView" style="display: none;">
-            <div class="mega-menu-header">
-              <button type="button" class="mega-menu-back-btn" data-action="click->mega-menu#backToThemes">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle;">
-                  <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Retour
-              </button>
-              <h4 class="mega-menu-selected-theme-title" data-mega-menu-target="selectedThemeTitle"></h4>
-            </div>
-            <div class="mega-menu-grid">
-              <% Notion.unique_themes.each do |theme| %>
-                <div class="mega-menu-column" data-mega-menu-target="themeColumn" data-theme-name="<%= theme %>" style="display: none;">
-                  <div class="mega-menu-items open">
-                    <% Notion.by_theme(theme).ordered.each do |notion| %>
-                      <label class="mega-menu-item">
-                        <input type="checkbox" 
+            <div class="mega-menu-notions-view" data-mega-menu-target="notionsView" style="display: none;">
+              <div class="mega-menu-header">
+                <button type="button" class="mega-menu-back-btn" data-action="click->mega-menu#backToThemes">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Retour
+                </button>
+                <h4 class="mega-menu-selected-theme-title" data-mega-menu-target="selectedThemeTitle"></h4>
+              </div>
+              <div class="mega-menu-grid">
+                <% Notion.unique_themes.each do |theme| %>
+                  <div class="mega-menu-column" data-mega-menu-target="themeColumn" data-theme-name="<%= theme %>" style="display: none;">
+                    <div class="mega-menu-items open">
+                      <% Notion.by_theme(theme).ordered.each do |notion| %>
+                        <label class="mega-menu-item">
+                          <input type="checkbox" 
                                name="notions[]" 
                                value="<%= notion.id %>" 
                                <%= "checked" if params[:notions]&.include?(notion.id.to_s) %>
                                data-action="change->mega-menu#updateLabel">
-                        <span><%= notion.name %></span>
-                      </label>
-                    <% end %>
+                          <span><%= notion.name %></span>
+                        </label>
+                      <% end %>
+                    </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             </div>
-          </div>
-          <div class="mega-menu-search-view" data-mega-menu-target="searchView" style="display: none;">
-            <div class="mega-menu-header">
-              <h4 class="mega-menu-selected-theme-title">Résultats de recherche</h4>
+            <div class="mega-menu-search-view" data-mega-menu-target="searchView" style="display: none;">
+              <div class="mega-menu-header">
+                <h4 class="mega-menu-selected-theme-title">Résultats de recherche</h4>
+              </div>
+              <div class="mega-menu-search-results" data-mega-menu-target="searchResults">
+                <!-- Les notions filtrées apparaîtront ici -->
+              </div>
             </div>
-            <div class="mega-menu-search-results" data-mega-menu-target="searchResults">
-              <!-- Les notions filtrées apparaîtront ici -->
+            <div class="mega-menu-footer">
+              <button type="button" class="btn-clear-selection" data-action="click->mega-menu#clear">
+                Effacer
+              </button>
+              <button type="button" class="btn-confirm-filter" data-action="click->tabs-search#update">
+                <%= t('search.apply_filter') %>
+              </button>
             </div>
-          </div>
-
-          <div class="mega-menu-footer">
-            <button type="button" class="btn-clear-selection" data-action="click->mega-menu#clear">
-              Effacer
-            </button>
-            <button type="button" class="btn-confirm-filter" data-action="click->tabs-search#update">
-              <%= t('search.apply_filter') %>
-            </button>
           </div>
         </div>
-      </div>
-      <div class="search-filter" data-tabs-search-target="countryFilter">
-        <label class="search-filter__label" for="paysFilter"><%= t('search.country') %></label>
-        <%= form.select :country, 
-              @countries.all.map { |p| [p.country, p.id] }, 
-              { include_blank: t('search.choose_country'), selected: params[:country] }, 
-              { 
-                multiple: true, 
-                class: "form-control search-filter__select",
-                data: {
-                  controller: "select2",
-                  select2_placeholder_value: t('search.choose_country'),
-                  action: "change->tabs-search#update"
-                }
-              } %>
-      </div>
-      <div class="search-filter" data-controller="dropdown" data-tabs-search-target="dateFilter">
-        <label class="search-filter__label" for="dateFilter"><%= t('search.dates') %></label>
-        <div class="dropdown">
-          <button type="button" class="dropdown-toggle" data-dropdown-target="toggle">
-            <%= t('search.select_period') %>
-          </button>
-          <div class="dropdown-menu" data-dropdown-target="menu">
-            <div>
-              <label for="startDate"><%= t('search.from') %></label>
-              <%= form.number_field :start_year,
+        <div class="search-filter filter-btn <%= 'active' if params[:start_year].present? || params[:end_year].present? %>" data-controller="dropdown" data-tabs-search-target="dateFilter">
+          <div class="dropdown">
+            <button type="button" class="dropdown-toggle mega-menu-btn" data-dropdown-target="toggle">
+              <div class="filter-btn-content">
+                <div class="filter-btn-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+                <span class="filter-btn-text">
+                  <% if params[:start_year].present? || params[:end_year].present? %>
+                    <%= [params[:start_year], params[:end_year]].reject(&:blank?).join(' - ') %>
+                  <% else %>
+                    <%= t('search.dates', default: 'Date(s)') %>
+                  <% end %>
+                </span>
+              </div>
+              <svg class="filter-btn-chevron-svg" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="dropdown-menu" data-dropdown-target="menu">
+              <div>
+                <label for="startDate"><%= t('search.from') %></label>
+                <%= form.number_field :start_year,
                 value: params[:start_year],
                 class: "date-filter",
                 id: "startDate",
                 placeholder: t('search.start_year') %>
-            </div>
-            <div>
-              <label for="endDate"><%= t('search.to') %></label>
-              <%= form.number_field :end_year,
+              </div>
+              <div>
+                <label for="endDate"><%= t('search.to') %></label>
+                <%= form.number_field :end_year,
                 value: params[:end_year],
                 class: "date-filter",
                 id: "endDate",
                 placeholder: t('search.end_year') %>
-            </div>
-            <button type="button" 
+              </div>
+              <button type="button" 
               id="applyDateFilter" 
               class="button dark"
               data-action="click->tabs-search#update">
-              <%= t('search.apply') %>
+                <%= t('search.apply') %>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="search-filter filter-btn <%= 'active' if params[:country].present? %>" data-controller="dropdown" data-tabs-search-target="countryFilter">
+          <div class="dropdown">
+            <button type="button" class="dropdown-toggle mega-menu-btn <%= 'has-selection' if params[:country].present? %>" data-dropdown-target="toggle">
+              <div class="filter-btn-content">
+                <div class="filter-btn-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <span class="filter-btn-text">
+                  <% if params[:country].present? %>
+                    <%= params[:country].size %> pays
+                  <% else %>
+                    <%= t('search.country', default: 'Pays') %>
+                  <% end %>
+                </span>
+              </div>
+              <svg class="filter-btn-chevron-svg" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
+            <div class="dropdown-menu" data-dropdown-target="menu">
+              <div class="domain-dropdown-menu-list">
+                <% @countries.all.each do |p| %>
+                  <% is_checked = params[:country]&.include?(p.id.to_s) %>
+                  <label class="domain-choice-pill <%= 'selected' if is_checked %>">
+                    <input type="checkbox" name="country[]" value="<%= p.id %>" <%= 'checked' if is_checked %> class="hidden-checkbox" onchange="this.parentElement.classList.toggle('selected', this.checked)">
+                    <span class="domain-text"><%= p.country %></span>
+                    <span class="country-flag-emoji"><%= country_flag_emoji(p.country) %></span>
+                  </label>
+                <% end %>
+              </div>
+              <button type="button" class="button dark" data-action="click->tabs-search#update" style="margin-top: 16px; width: 100%;">
+                <%= t('search.apply', default: 'Appliquer') %>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="search-filter" id="sortFilterContainer" data-tabs-search-target="sortFilter">
-        <label class="search-filter__label" for="sort"><%= t('search.sort_by') %></label>
-        <select name="sort" 
-                id="sortSelect" 
-                class="form-control search-filter__select" 
-                data-tabs-search-target="sortSelect"
-                data-controller="select2"
-                data-action="change->tabs-search#update"
-          data-select2-minimum-results-for-search-value="Infinity">
-          <% if params[:tab] == 'references' %>
-            <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
-              <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
-                <option value="reference_asc" <%= 'selected' if params[:sort] == 'reference_asc' %>><%= t('search.reference_old_new') %></option>
-                  <option value="reference_desc" <%= 'selected' if params[:sort] == 'reference_desc' %>><%= t('search.reference_new_old') %></option>
-                  <% else %>
-                    <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
-                      <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
-                        <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>><%= t('search.birth_old_new') %></option>
-                          <option value="naissance_desc" <%= 'selected' if params[:sort] == 'naissance_desc' %>><%= t('search.birth_new_old') %></option>
-                          <% end %>
-                        </select>
-                      </div>
+    </div>
+    <!-- /search-filters-header -->
+    <div class="search-filter sort-select-container" id="sortFilterContainer" data-tabs-search-target="sortFilter" style="display:none;">
+      <select name="sort" 
+            id="sortSelect" 
+            class="form-control search-filter__select" 
+            data-tabs-search-target="sortSelect"
+            data-controller="select2"
+            data-action="change->tabs-search#update"
+        data-select2-minimum-results-for-search-value="Infinity">
+        <% if params[:tab] == 'references' %>
+          <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
+            <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
+              <option value="reference_asc" <%= 'selected' if params[:sort] == 'reference_asc' %>><%= t('search.reference_old_new') %></option>
+                <option value="reference_desc" <%= 'selected' if params[:sort] == 'reference_desc' %>><%= t('search.reference_new_old') %></option>
+                <% else %>
+                  <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
+                    <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
+                      <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>><%= t('search.birth_old_new') %></option>
+                        <option value="naissance_desc" <%= 'selected' if params[:sort] == 'naissance_desc' %>><%= t('search.birth_new_old') %></option>
+                        <% end %>
+                      </select>
                     </div>
                   <% end %>
                   <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
@@ -310,42 +361,29 @@
                         <% designers_by_year = @designers.group_by { |d| d.date_naissance.to_i } %>
                         <% studios_by_year = @studios.group_by { |s| s.date_creation.to_i } %>
                         <div data-controller="sub-tabs">
-                          <div class="tabs sub-tabs" style="margin-bottom: 20px;">
-                            <button class="tab active" data-sub-tabs-target="tab" data-sub-tab="references" data-action="click->sub-tabs#switch">
-                              <%= t('global.references') %>
-                            </button>
-                            <button class="tab" data-sub-tabs-target="tab" data-sub-tab="designers" data-action="click->sub-tabs#switch">
-                              <%= t('global.designers') %>
-                            </button>
-                            <button class="tab" data-sub-tabs-target="tab" data-sub-tab="studios" data-action="click->sub-tabs#switch">
-                              Studios
-                            </button>
-                          </div>
-
-                          <div data-sub-tabs-target="content" data-sub-tab="references">
-                            <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
-                              <% @timeline_years.each do |year| %>
-                                <% references_year = references_by_year[year] || [] %>
-                                <% if references_year.any? %>
-                                  <div class="timeline-item">
-                                    <div class="references">
-                                      <div class="references-container">
-                                        <% if references_year.size > 1 %>
-                                          <div class="references-counter" data-controller="references-counter">
-                                            <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= references_year.size %></span>
-                                            <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
-                                              <% references_year.each do |reference| %>
-                                                <%= link_to reference, class: "reference-point", data: { turbo_frame: "_top" } do %>
-                                                  <% if reference.reference_images.first&.file&.attached? %>
-                                                    <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
-                                                  <% else %>
-                                                    <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-color: #D9D9D9;"></div>
-                                                  <% end %>
-                                                <% end %>
-                                              <% end %>
-                                            </div>
-                                          </div>
-                                        <% else %>
+                      <div class="tabs sub-tabs" style="margin-bottom: 20px;">
+                        <button class="tab active" data-sub-tabs-target="tab" data-sub-tab="references" data-action="click->sub-tabs#switch">
+                          <%= t('global.references') %>
+                        </button>
+                        <button class="tab" data-sub-tabs-target="tab" data-sub-tab="designers" data-action="click->sub-tabs#switch">
+                          <%= t('global.designers') %>
+                        </button>
+                        <button class="tab" data-sub-tabs-target="tab" data-sub-tab="studios" data-action="click->sub-tabs#switch">
+                          Studios
+                        </button>
+                      </div>
+                      <div data-sub-tabs-target="content" data-sub-tab="references">
+                        <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                          <% @timeline_years.each do |year| %>
+                            <% references_year = references_by_year[year] || [] %>
+                            <% if references_year.any? %>
+                              <div class="timeline-item">
+                                <div class="references">
+                                  <div class="references-container">
+                                    <% if references_year.size > 1 %>
+                                      <div class="references-counter" data-controller="references-counter">
+                                        <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= references_year.size %></span>
+                                        <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
                                           <% references_year.each do |reference| %>
                                             <%= link_to reference, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                               <% if reference.reference_images.first&.file&.attached? %>
@@ -355,41 +393,40 @@
                                               <% end %>
                                             <% end %>
                                           <% end %>
-                                        <% end %>
+                                        </div>
                                       </div>
-                                      <div class="reference empty"></div>
-                                      <div class="year"><%= year %></div>
-                                    </div>
+                                    <% else %>
+                                      <% references_year.each do |reference| %>
+                                        <%= link_to reference, class: "reference-point", data: { turbo_frame: "_top" } do %>
+                                          <% if reference.reference_images.first&.file&.attached? %>
+                                            <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-image: url('<%= url_for(reference.reference_images.first.file.variant(:thumb))  %>');"></div>
+                                          <% else %>
+                                            <div class="reference" title="<%= reference.nom_reference %>" data-year="<%= reference.date_reference %>" style="background-color: #D9D9D9;"></div>
+                                          <% end %>
+                                        <% end %>
+                                      <% end %>
+                                    <% end %>
                                   </div>
-                                <% end %>
-                              <% end %>
-                            </div>
-                          </div>
-
-                          <div data-sub-tabs-target="content" data-sub-tab="designers" style="display: none;">
-                            <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
-                              <% @timeline_years.each do |year| %>
-                                <% designers_year = designers_by_year[year] || [] %>
-                                <% if designers_year.any? %>
-                                  <div class="timeline-item">
-                                    <div class="references">
-                                      <div class="references-container">
-                                        <% if designers_year.size > 1 %>
-                                          <div class="references-counter" data-controller="references-counter">
-                                            <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= designers_year.size %></span>
-                                            <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
-                                              <% designers_year.each do |designer| %>
-                                                <%= link_to designer, class: "reference-point", data: { turbo_frame: "_top" } do %>
-                                                  <% if designer.designer_images.first&.file&.attached? %>
-                                                    <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
-                                                  <% else %>
-                                                    <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
-                                                  <% end %>
-                                                <% end %>
-                                              <% end %>
-                                            </div>
-                                          </div>
-                                        <% else %>
+                                  <div class="reference empty"></div>
+                                  <div class="year"><%= year %></div>
+                                </div>
+                              </div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                      <div data-sub-tabs-target="content" data-sub-tab="designers" style="display: none;">
+                        <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                          <% @timeline_years.each do |year| %>
+                            <% designers_year = designers_by_year[year] || [] %>
+                            <% if designers_year.any? %>
+                              <div class="timeline-item">
+                                <div class="references">
+                                  <div class="references-container">
+                                    <% if designers_year.size > 1 %>
+                                      <div class="references-counter" data-controller="references-counter">
+                                        <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= designers_year.size %></span>
+                                        <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
                                           <% designers_year.each do |designer| %>
                                             <%= link_to designer, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                               <% if designer.designer_images.first&.file&.attached? %>
@@ -399,41 +436,40 @@
                                               <% end %>
                                             <% end %>
                                           <% end %>
-                                        <% end %>
+                                        </div>
                                       </div>
-                                      <div class="reference empty"></div>
-                                      <div class="year"><%= year %></div>
-                                    </div>
+                                    <% else %>
+                                      <% designers_year.each do |designer| %>
+                                        <%= link_to designer, class: "reference-point", data: { turbo_frame: "_top" } do %>
+                                          <% if designer.designer_images.first&.file&.attached? %>
+                                            <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-image: url('<%= url_for(designer.designer_images.first.file.variant(:thumb))  %>');"></div>
+                                          <% else %>
+                                            <div class="reference" title="<%= designer.nom_designer %>" data-year="<%= designer.date_naissance %>" style="background-color: #D9D9D9;"></div>
+                                          <% end %>
+                                        <% end %>
+                                      <% end %>
+                                    <% end %>
                                   </div>
-                                <% end %>
-                              <% end %>
-                            </div>
-                          </div>
-
-                          <div data-sub-tabs-target="content" data-sub-tab="studios" style="display: none;">
-                            <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
-                              <% @timeline_years.each do |year| %>
-                                <% studios_year = studios_by_year[year] || [] %>
-                                <% if studios_year.any? %>
-                                  <div class="timeline-item">
-                                    <div class="references">
-                                      <div class="references-container">
-                                        <% if studios_year.size > 1 %>
-                                          <div class="references-counter" data-controller="references-counter">
-                                            <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= studios_year.size %></span>
-                                            <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
-                                              <% studios_year.each do |studio| %>
-                                                <%= link_to studio, class: "reference-point", data: { turbo_frame: "_top" } do %>
-                                                  <% if studio.studio_images.first&.file&.attached? %>
-                                                    <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
-                                                  <% else %>
-                                                    <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
-                                                  <% end %>
-                                                <% end %>
-                                              <% end %>
-                                            </div>
-                                          </div>
-                                        <% else %>
+                                  <div class="reference empty"></div>
+                                  <div class="year"><%= year %></div>
+                                </div>
+                              </div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                      <div data-sub-tabs-target="content" data-sub-tab="studios" style="display: none;">
+                        <div class="timeline" data-tabs-search-target="timeline" data-controller="timeline">
+                          <% @timeline_years.each do |year| %>
+                            <% studios_year = studios_by_year[year] || [] %>
+                            <% if studios_year.any? %>
+                              <div class="timeline-item">
+                                <div class="references">
+                                  <div class="references-container">
+                                    <% if studios_year.size > 1 %>
+                                      <div class="references-counter" data-controller="references-counter">
+                                        <span class="circle-with-number" data-action="click->references-counter#toggle">+<%= studios_year.size %></span>
+                                        <div class="hidden-references" data-references-counter-target="hiddenReferences" style="display: none;">
                                           <% studios_year.each do |studio| %>
                                             <%= link_to studio, class: "reference-point", data: { turbo_frame: "_top" } do %>
                                               <% if studio.studio_images.first&.file&.attached? %>
@@ -443,22 +479,34 @@
                                               <% end %>
                                             <% end %>
                                           <% end %>
-                                        <% end %>
+                                        </div>
                                       </div>
-                                      <div class="reference empty"></div>
-                                      <div class="year"><%= year %></div>
-                                    </div>
+                                    <% else %>
+                                      <% studios_year.each do |studio| %>
+                                        <%= link_to studio, class: "reference-point", data: { turbo_frame: "_top" } do %>
+                                          <% if studio.studio_images.first&.file&.attached? %>
+                                            <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-image: url('<%= url_for(studio.studio_images.first.file.variant(:thumb))  %>');"></div>
+                                          <% else %>
+                                            <div class="reference" title="<%= studio.nom %>" data-year="<%= studio.date_creation %>" style="background-color: #D9D9D9;"></div>
+                                          <% end %>
+                                        <% end %>
+                                      <% end %>
+                                    <% end %>
                                   </div>
-                                <% end %>
-                              <% end %>
-                            </div>
-                          </div>
+                                  <div class="reference empty"></div>
+                                  <div class="year"><%= year %></div>
+                                </div>
+                              </div>
+                            <% end %>
+                          <% end %>
                         </div>
+                      </div>
+                    </div>
                   <% else %>
                     <div style="text-align: center; padding: 40px; color: #666; width: 100%;">
                       Chargement de la frise chronologique...
                     </div>
                   <% end %>
-                  </turbo-frame>
-                  </div>
-                </section>
+                </turbo-frame>
+              </div>
+            </section>

@@ -1,0 +1,156 @@
+<% set_meta_tags title: "Sponsoriser Omniscient Design" %>
+<section class="top-header">
+  <%= link_to root_path do %>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.632 6.94488C12.632 6.94488 6.63067 12.9516 4.29333 15.2902C4.09733 15.4849 4 15.7409 4 15.9969C4 16.2529 4.09733 16.5089 4.29333 16.7035C6.62933 19.0422 12.6293 25.0462 12.6293 25.0462C12.8227 25.2395 13.0773 25.3355 13.332 25.3355C13.5867 25.3342 13.8427 25.2369 14.0387 25.0409C14.4293 24.6502 14.4307 24.0196 14.044 23.6316L7.40933 16.9969H26.9987C27.5507 16.9969 27.9987 16.5489 27.9987 15.9969C27.9987 15.4449 27.5507 14.9969 26.9987 14.9969H7.40933L14.0467 8.35822C14.432 7.97288 14.4293 7.34355 14.0387 6.95288C13.8427 6.75688 13.5867 6.65822 13.332 6.65822C13.0773 6.65688 12.8253 6.75288 12.632 6.94488Z" fill="white"/>
+    </svg>
+  <% end %>
+  <p class="subtitle-top">Mise en avant</p>
+  <h1>Créer votre publicité</h1>
+</section>
+
+<div data-controller="multi-step-form"
+     style="margin-top: 40px; margin-bottom: 80px;">
+
+  <!-- Stepper Indicator (Top) -->
+  <div class="premium-stepper">
+    <div class="step-item active" data-multi-step-form-target="stepIndicator">
+      <div class="step-circle">1</div>
+      <span>Détails</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item" data-multi-step-form-target="stepIndicator">
+      <div class="step-circle">2</div>
+      <span>Pack</span>
+    </div>
+  </div>
+
+  <div class="premium-ad-layout">
+    
+    <!-- Left Column: Form Content -->
+    <div class="premium-card">
+      
+      <% if @ad.errors.any? %>
+        <div style="background: #FEF2F2; color: #991B1B; padding: 16px; border-radius: 8px; margin-bottom: 24px; border: 1px solid #F87171;">
+          <strong>Des erreurs empêchent la validation :</strong>
+          <ul style="margin-top: 8px; padding-left: 20px;">
+            <% @ad.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with(model: @ad, url: ads_path, local: true, html: { multipart: true }) do |f| %>
+
+        <!-- ETAPE 1 : CONTENU -->
+        <div data-multi-step-form-target="step">
+          <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; color: #111827;">Détails de l'annonce</h2>
+          
+          <div style="margin-bottom: 20px;">
+            <%= f.label :title, "Titre de l'annonce", class: "premium-label" %>
+            <%= f.text_field :title, required: true, class: "premium-input" %>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <%= f.label :description, "Description courte (optionnel)", class: "premium-label" %>
+            <%= f.text_area :description, class: "premium-input", style: "height: 100px; resize: none;" %>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <%= f.label :link, "Lien de destination (URL)", class: "premium-label" %>
+            <%= f.url_field :link, required: true, class: "premium-input", placeholder: "https://..." %>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <%= f.label :email, "Votre adresse email (pour le reçu)", class: "premium-label" %>
+            <%= f.email_field :email, required: true, class: "premium-input" %>
+          </div>
+
+          <div style="margin-bottom: 32px;">
+            <%= f.label :image, "Bannière (PNG/JPG/WEBP, max 5 Mo)", class: "premium-label" %>
+            <div style="border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; text-align: center; background: #F9FAFB;">
+              <%= f.file_field :image, required: true, accept: "image/png,image/jpeg,image/webp", style: "width: 100%; color: #6B7280;" %>
+            </div>
+          </div>
+          
+          <div style="display: flex; justify-content: flex-end;">
+            <button type="button" data-action="click->multi-step-form#next" class="btn-premium">Continuer vers les packs</button>
+          </div>
+        </div>
+
+        <!-- ETAPE 2 : PACK -->
+        <div data-multi-step-form-target="step" style="display: none;">
+          <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; color: #111827;">Choisissez votre pack</h2>
+          
+          <div style="margin-bottom: 32px;">
+            <% Ad::PACKS.each_with_index do |(key, pack), index| %>
+              <% is_checked = (key == 'standard') %>
+              <%= radio_button_tag "ad[pack]", key, is_checked, 
+                  id: "pack_#{key}", 
+                  class: "pack-radio",
+                  required: true, 
+                  data: { 
+                    action: "change->multi-step-form#updateSummary", 
+                    price: (pack[:price_cents] / 100).to_s,
+                    name: pack[:name]
+                  } %>
+              
+              <label for="pack_<%= key %>" class="pack-option">
+                <div style="flex-grow: 1;">
+                  <strong style="display: block; color: #111827; font-size: 1.2rem; margin-bottom: 4px;"><%= pack[:name] %></strong>
+                  <span style="color: #6B7280; font-size: 0.95rem;">Visibilité augmentée : +<%= pack[:weight] %> poids d'affichage</span>
+                </div>
+                <div style="font-weight: 800; font-size: 1.3rem; color: #111827; margin-right: 24px;">
+                  <%= pack[:price_cents] / 100 %>€
+                </div>
+              </label>
+            <% end %>
+          </div>
+
+          <div style="display: flex; gap: 16px;">
+            <button type="button" data-action="click->multi-step-form#prev" class="btn-premium-outline">Retour</button>
+            <%= f.submit "Créer ma publicité", class: "btn-premium", style: "width: 70%;" %>
+          </div>
+        </div>
+
+      <% end %>
+    </div>
+
+    <!-- Right Column: Order Summary (Cart) -->
+    <div class="premium-sidebar">
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 24px;">Résumé de la commande</h3>
+      
+      <div class="cart-item">
+        <div>
+          <div class="cart-title" data-multi-step-form-target="summaryPackName">Standard</div>
+          <div style="color: #6B7280; font-size: 0.9rem; margin-top: 4px;">Campagne de publicité</div>
+        </div>
+        <div class="cart-price" data-multi-step-form-target="summaryPrice">
+          <%= Ad::PACKS['standard'][:price_cents] / 100 %>€
+        </div>
+      </div>
+      
+      <div style="margin-top: 24px; padding-top: 24px; border-top: 2px dashed #E5E7EB;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="color: #6B7280; font-weight: 500;">Sous-total</span>
+          <span style="font-weight: 600;" data-multi-step-form-target="summaryPrice"><%= Ad::PACKS['standard'][:price_cents] / 100 %>€</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <span style="color: #6B7280; font-weight: 500;">Taxes</span>
+          <span style="font-weight: 600;">Incluses</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 1.2rem; font-weight: 700; color: #111827;">Total</span>
+          <span class="cart-total" data-multi-step-form-target="summaryTotal"><%= Ad::PACKS['standard'][:price_cents] / 100 %>€</span>
+        </div>
+      </div>
+      
+      <div style="margin-top: 32px; background: rgba(79, 70, 229, 0.05); padding: 16px; border-radius: 8px; display: flex; gap: 12px; align-items: flex-start;">
+        <svg style="color: #4F46E5; flex-shrink: 0;" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      </div>
+    </div>
+    
+  </div>
+</div>

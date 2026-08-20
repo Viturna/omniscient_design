@@ -175,7 +175,7 @@ export default class extends Controller {
                 this.labelTarget.innerText = `${count} notion${count > 1 ? 's' : ''}`;
                 this.buttonTarget.classList.add('has-selection');
             } else {
-                this.labelTarget.innerText = "Choisir des notions";
+                this.labelTarget.innerText = "Notions";
                 this.buttonTarget.classList.remove('has-selection');
             }
         }

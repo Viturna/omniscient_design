@@ -2,54 +2,197 @@
    SEARCH FILTER COMPONENT
    ========================================================================== */
 
-.search-filters {
+.search-filters-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--color-gray-900, #202020);
+}
+
+.search-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.search-filters-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 48px 16px;
-  position: relative;
-
-  @media screen and (max-width: 480px) {
-    gap: 16px;
-  }
-
-  @media screen and (min-width: 481px) and (max-width: 768px) {
-    gap: 24px;
-  }
+  gap: 16px;
+  align-items: center;
 }
 
 .search-filter {
-  width: 16vw;
+  position: relative;
+  min-width: 160px;
+}
+
+/* Reset for custom dropdowns and mega menu */
+.mega-menu-btn, .dropdown-toggle.mega-menu-btn {
+  height: 44px;
+  border: 1px solid #E5E5E5 !important;
+  border-radius: 8px !important;
+  background-color: white !important;
+  padding: 0 16px !important;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  @media screen and (max-width: 480px) {
-    width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333 !important;
+  cursor: pointer;
+  
+  .filter-btn-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-
-  @media screen and (min-width: 481px) and (max-width: 768px) {
-    width: calc(50% - 12px);
+  
+  .filter-btn-icon, .filter-btn-chevron-svg {
+    color: #666;
+    display: flex;
   }
-
-  @media screen and (min-width: 769px) and (max-width: 1024px) {
-    width: 30% !important;
+  
+  &.has-selection, .search-filter.active & {
+    background-color: #202020 !important;
+    border-color: #202020 !important;
+    color: white !important;
+    
+    .filter-btn-icon, .filter-btn-chevron-svg { color: white; }
   }
 }
 
-/* Base style for labels */
-.search-filter__label {
+/* Styling select2 containers */
+.filter-btn {
+  > .filter-btn-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+    display: flex;
+    color: #666;
+  }
+  
+  > .filter-btn-chevron {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+    display: flex;
+    color: #666;
+  }
+  
+  .select2-container {
+    width: 100% !important;
+    min-width: 160px;
+  }
+
+  .select2-container .select2-selection--multiple {
+    height: 44px !important;
+    min-height: 44px !important;
+    padding-left: 42px !important;
+    padding-right: 36px !important;
+    border: 1px solid #E5E5E5 !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    cursor: pointer;
+    
+    .select2-selection__rendered {
+      padding: 0 !important;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .select2-search__field {
+      margin-top: 0 !important;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      &::placeholder {
+        color: #333;
+        font-weight: 500;
+      }
+    }
+  }
+
+  /* When Select2 is focused or opened, we hide the default chevron since it rotates etc., or just let it be. But we use custom chevron. */
+  .select2-selection__arrow { display: none !important; }
+
+  &.active {
+    .filter-btn-icon, .filter-btn-chevron { color: white; }
+    .select2-container .select2-selection--multiple {
+      background-color: #202020 !important;
+      border-color: #202020 !important;
+    }
+    .select2-selection__choice__display { color: white !important; }
+    .select2-search__field {
+      color: white !important;
+      &::placeholder { color: white !important; }
+    }
+  }
+}
+
+/* Display Mode Controls */
+.display-mode-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.display-mode-label {
   font-size: 14px;
-  color: var(--color-gray-700, #666);
-  font-weight: 500;
+  color: #666;
+}
+
+.display-mode-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.display-mode-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &.active, &:hover {
+    background: #202020;
+    border-color: #202020;
+    color: white;
+  }
+}
+
+/* Base style for labels hidden but kept for accessibility */
+.search-filter__label {
+  display: none;
 }
 
 /* Select2 overrides inside the search filter */
 .search-filter__select {
-  display: flex !important;
-}
-
-.search-filter .select2 {
-  height: 55px !important;
   display: flex !important;
 }
 
@@ -63,9 +206,52 @@
   select {
     width: fit-content;
     height: fit-content;
+  }
+}
+
+.sort-select-container {
+  margin-bottom: 24px;
+  
+  .select2-container {
+    width: 200px !important;
+    min-width: unset;
+  }
+
+  .select2-selection--single {
+    height: 44px !important;
+    border: 1px solid #E5E5E5 !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 16px !important;
+    padding-right: 32px !important;
+    position: relative;
     
-    @media screen and (min-width: 769px) and (max-width: 1024px) {
-      /* Specific select styling for tablet if needed */
+    .select2-selection__rendered {
+      padding: 0 !important;
+      color: #333 !important;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: normal !important;
+    }
+
+    .select2-selection__arrow {
+      height: 44px !important;
+      right: 12px !important;
+      width: 20px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      b {
+        border-color: #666 transparent transparent transparent !important;
+        border-width: 5px 4px 0 4px !important;
+        margin: 0 !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+      }
     }
   }
 }
@@ -102,6 +288,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 100;
+  min-width: 250px;
+  font-weight: 500;
 }
 
 .date-filter {
@@ -111,18 +309,77 @@
   border: 2px solid var(--color-gray-200);
 }
 
+@media screen and (max-width: 768px) {
+  .search-filters-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .display-mode-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
 
 @media screen and (max-width: 425px) {
-
   .dropdown-menu {
-    width: 80%;
+    width: 100%;
+  }
+}
+
+/* Domain Dropdown specific styling */
+.domain-dropdown-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.domain-choice-pill {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background-color: #F7F7F7;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 !important;
+
+  .domain-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
   }
 
-  .dropdown-menu {
-    width: 80%;
+  .domain-color-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
+  .country-flag-emoji {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
 
-  .dropdown-menu {
-    width: 80%;
-  }}
+  .hidden-checkbox {
+    display: none !important;
+  }
+
+  &.selected {
+    background-color: #202020;
+    
+    .domain-text {
+      color: white;
+    }
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

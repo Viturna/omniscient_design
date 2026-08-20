@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_13_091300) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_20_092016) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -48,11 +48,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_13_091300) do
     t.integer "clicks_count", default: 0
     t.datetime "created_at", null: false
     t.text "description"
+    t.integer "duration_days"
+    t.string "email"
     t.date "end_date"
     t.integer "impressions_count", default: 0
     t.string "link"
     t.boolean "logged_out_only", default: false, null: false
+    t.integer "price_paid"
     t.date "start_date"
+    t.string "status", default: "pending"
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "weight", default: 1, null: false

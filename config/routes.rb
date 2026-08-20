@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   }
   # ---- ADMIN ----
   namespace :admin do
-    resources :ads
+    resources :ads do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
     resources :quizzes do
       collection do
         get :stats
@@ -203,6 +208,12 @@ Rails.application.routes.draw do
     get 'secret/legal_found', to: 'pages#secret_badge', as: :secret_badge
 
     # ADS
+    resources :ads, only: %i[new create] do
+      member do
+        get :success
+        get :cancel
+      end
+    end
     get '/go/:id', to: 'ads#click', as: :partner_click
     get '/pixel/:id/view', to: 'ads#impression', as: :partner_impression
 

@@ -5,11 +5,11 @@
   z-index: 900;
   top: 0;
   width: calc(100vw - 350px - 20vw);
-  height: 100px;
+  height: calc(100px + env(safe-area-inset-top, 0px));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10vw;
+  padding: env(safe-area-inset-top, 0px) 10vw 0;
 }
 
 .top-bar-flex {
@@ -90,7 +90,8 @@
 @media screen and (min-width: 426px) and (max-width: 1024px) {
   .top-bar-search {
     width: 84vw;
-    padding: 0 8vw;
+    padding: env(safe-area-inset-top, 0px) 8vw 0 8vw;
+    height: calc(100px + env(safe-area-inset-top, 0px));
   }
 
   .autocomplete-items {
@@ -109,8 +110,8 @@
 @media screen and (min-width: 0px) and (max-width: 425px) {
   .top-bar-search {
     width: 90vw;
-    padding: 0 5vw;
-    height: 90px;
+    padding: env(safe-area-inset-top, 0px) 5vw 0 5vw;
+    height: calc(90px + env(safe-area-inset-top, 0px));
   }
 
   .autocomplete-items {

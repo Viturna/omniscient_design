@@ -183,13 +183,27 @@
               <div class="ad-info">
                 <span class="ad-title"><%= ad.title %></span>
                 <%= link_to ad.link, ad.link, target: "_blank", class: "ad-link" %>
+                <% if ad.email.present? %>
+                  <span style="font-size: 11px; color: #888; margin-top: 4px;">📧 <%= ad.email %></span>
+                <% end %>
               </div>
             </td>
             <td>
-              <% if ad.currently_running? %>
-                <span class="badge badge-active">Actif</span>
+              <% case ad.status %>
+              <% when 'approved' %>
+                <% if ad.currently_running? %>
+                  <span class="badge badge-active">Actif</span>
+                <% else %>
+                  <span class="badge badge-inactive">Expiré / Inactif</span>
+                <% end %>
+              <% when 'pending_validation' %>
+                <span class="badge" style="background: #FFF3E0; color: #E65100;">À Valider</span>
+              <% when 'pending' %>
+                <span class="badge badge-inactive">En attente paiement</span>
+              <% when 'rejected' %>
+                <span class="badge" style="background: #FFEBEE; color: #C62828;">Refusé</span>
               <% else %>
-                <span class="badge badge-inactive">Inactif</span>
+                <span class="badge badge-inactive"><%= ad.status %></span>
               <% end %>
             </td>
             <td>
@@ -212,6 +226,9 @@
             </td>
             <td>
               <div style="font-size: 13px; color: #666;">
+                <% if ad.duration_days.present? && ad.price_paid.present? %>
+                  <strong style="color: #202020;"><%= ad.duration_days %> jours</strong> (<%= ad.price_paid / 100 %>€)<br>
+                <% end %>
                 <% if ad.start_date.present? %>
                   Du <%= ad.start_date.strftime('%d/%m/%y') %><br>
                   <% if ad.end_date.present? %>
@@ -226,11 +243,20 @@
             </td>
             <td>
               <div class="actions-cell">
+                <% if ad.status == 'pending_validation' %>
+                  <%= button_to approve_admin_ad_path(ad), method: :patch, class: "action-btn", style: "width: auto; padding: 0 10px; background: #E8F5E9; color: #2E7D32; border-color: #C8E6C9;", title: "Valider" do %>
+                    ✓
+                  <% end %>
+                  <%= button_to reject_admin_ad_path(ad), method: :patch, data: { turbo_confirm: "Confirmer le refus ?" }, class: "action-btn", style: "width: auto; padding: 0 10px; background: #FFEBEE; color: #C62828; border-color: #FFCDD2;", title: "Refuser" do %>
+                    ✕
+                  <% end %>
+                <% end %>
                 <%= link_to edit_admin_ad_path(ad), class: "action-btn", title: "Modifier" do %>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                 <% end %>
-                <%= link_to admin_ad_path(ad), 
-                      data: { turbo_method: :delete, turbo_confirm: "Es-tu sûr de vouloir supprimer cette publicité ?" },
+                <%= button_to admin_ad_path(ad), 
+                      method: :delete,
+                      data: { turbo_confirm: "Es-tu sûr de vouloir supprimer cette publicité ?" },
                       class: "action-btn delete", title: "Supprimer" do %>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                 <% end %>

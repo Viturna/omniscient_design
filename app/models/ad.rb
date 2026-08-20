@@ -1,4 +1,11 @@
 class Ad < ApplicationRecord
+  # --- 0. CONSTANTES ---
+  PACKS = {
+    'standard' => { name: 'Pack Semaine (7 jours)', days: 7, weight: 1, price_cents: 2900 },
+    'month' => { name: 'Pack Mois (30 jours)', days: 30, weight: 1, price_cents: 9900 },
+    'premium' => { name: 'Pack Premium (30 jours - Affichage x3)', days: 30, weight: 3, price_cents: 14900 }
+  }.freeze
+
   # --- 1. CONFIGURATION ---
   has_one_attached :image
   has_one_attached :image_mobile
@@ -21,11 +28,22 @@ class Ad < ApplicationRecord
   # Validation du Poids (1 par défaut)
   validates :weight, numericality: { greater_than_or_equal_to: 1 }, presence: true
 
+  # Email validation for visitors
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+
+  enum :status, {
+    pending: 'pending',
+    pending_validation: 'pending_validation',
+    approved: 'approved',
+    rejected: 'rejected',
+    completed: 'completed'
+  }
+
   # --- 3. SCOPES ---
 
   # Pubs actives (statut + dates)
   scope :currently_active, lambda {
-    where(active: true)
+    where(active: true, status: 'approved')
       .where('start_date IS NULL OR start_date <= ?', Date.current)
       .where('end_date IS NULL OR end_date >= ?', Date.current)
   }

@@ -2,7 +2,7 @@ class Admin::AdsController < ApplicationController
   layout 'admin'
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  before_action :set_ad, only: %i[show edit update destroy]
+  before_action :set_ad, only: %i[show edit update destroy approve reject]
 
   def index
     @current_page = 'ads'
@@ -38,6 +38,21 @@ class Admin::AdsController < ApplicationController
   def destroy
     @ad.destroy
     redirect_to admin_ads_path, notice: 'Publicité supprimée.'
+  end
+
+  def approve
+    @ad.update(
+      status: 'approved',
+      active: true,
+      start_date: Date.current,
+      end_date: Date.current + @ad.duration_days.days
+    )
+    redirect_to admin_ads_path, notice: 'Publicité validée ! Elle est désormais active.'
+  end
+
+  def reject
+    @ad.update(status: 'rejected', active: false)
+    redirect_to admin_ads_path, notice: 'Publicité refusée.'
   end
 
   private

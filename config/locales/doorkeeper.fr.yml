@@ -1,0 +1,36 @@
+fr:
+  doorkeeper:
+    errors:
+      messages:
+        access_denied: Le propriétaire de la ressource ou le serveur d'autorisation a refusé la requête.
+        credential_flow_not_configured: Le flux des identifiants a échoué.
+        invalid_client: L'authentification du client a échoué.
+        invalid_code_challenge_method: La méthode de défi du code (code_challenge_method) doit être S256.
+        invalid_grant: Le consentement d'autorisation accordé est invalide ou a expiré.
+        invalid_redirect_uri: L'URI de redirection incluse n'est pas valide.
+        invalid_request:
+          missing_param: 'Paramètre requis manquant : %{value}.'
+          not_support_pkce: Ce client ne prend pas en charge PKCE.
+          unknown: La requête manque d'un paramètre requis ou est mal formée.
+        invalid_resource_owner: L'identifiant de ressource fourni n'est pas valide.
+        invalid_scope: La portée demandée est invalide, inconnue ou mal formée.
+        invalid_token:
+          expired: Le jeton d'accès a expiré.
+          revoked: Le jeton d'accès a été révoqué.
+          unknown: Le jeton d'accès est invalide.
+        server_error: Le serveur a rencontré une condition inattendue.
+        temporarily_unavailable: Le serveur est actuellement incapable de traiter la requête.
+        unauthorized_client: Le client n'est pas autorisé.
+        unsupported_grant_type: Le type de consentement n'est pas pris en charge.
+        unsupported_response_type: Le serveur ne prend pas en charge ce type.
+
+    authorizations:
+      new:
+        title: Autorisation requise
+        prompt: L'application %{client_name} demande l'accès à votre compte.
+        able_to: Cette application pourra
+      show:
+        title: Copiez ce code d'autorisation et collez-le dans l'application.
+      buttons:
+        authorize: Autoriser
+        deny: Refuser

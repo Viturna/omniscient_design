@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  namespace :api do
+    get '/me', to: 'users#me'
+  end
+
+  use_doorkeeper
   devise_for :users, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }

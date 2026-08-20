@@ -15,36 +15,46 @@ export default class extends Controller {
 
     connect() {
         this.updateLabel()
+        
         this.clickOutsideHandler = (e) => {
             if (!this.element.contains(e.target)) {
-                this.contentTarget.classList.remove('active')
-                this.buttonTarget.classList.remove('active')
+                if (this.hasContentTarget) this.contentTarget.classList.remove('active')
+                if (this.hasButtonTarget) this.buttonTarget.classList.remove('active')
                 document.body.style.overflow = '';
-                // Optionnel : tu peux décommenter la ligne ci-dessous si tu veux que 
-                // le menu revienne toujours aux thèmes quand on le ferme.
-                // this.backToThemes()
             }
         }
         document.addEventListener('click', this.clickOutsideHandler)
+
+        this.element.querySelectorAll('.mega-menu-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.closest('.mega-menu-item').classList.toggle('is-checked', checkbox.checked);
+        });
+        
+        this.handleOtherDropdownOpen = this.handleOtherDropdownOpen.bind(this)
+        window.addEventListener("dropdown:open", this.handleOtherDropdownOpen)
     }
 
     disconnect() {
         document.removeEventListener('click', this.clickOutsideHandler)
+        window.removeEventListener("dropdown:open", this.handleOtherDropdownOpen)
     }
 
-    connect() {
-        this.updateLabel();
-        this.element.querySelectorAll('.mega-menu-item input[type="checkbox"]').forEach(checkbox => {
-            checkbox.closest('.mega-menu-item').classList.toggle('is-checked', checkbox.checked);
-        });
+    handleOtherDropdownOpen(event) {
+        if (event.detail.currentDropdown !== this.element && this.hasContentTarget) {
+            this.contentTarget.classList.remove('active')
+            if (this.hasButtonTarget) this.buttonTarget.classList.remove('active')
+            document.body.style.overflow = '';
+        }
     }
 
     toggle(event) {
         event.preventDefault()
-        const isActive = this.contentTarget.classList.toggle('active')
-        this.buttonTarget.classList.toggle('active')
+        
+        const isOpening = !this.contentTarget.classList.contains('active')
 
-        if (isActive) {
+        if (isOpening) {
+            window.dispatchEvent(new CustomEvent("dropdown:open", { detail: { currentDropdown: this.element } }))
+            this.contentTarget.classList.add('active')
+            this.buttonTarget.classList.add('active')
             document.body.style.overflow = 'hidden';
 
             setTimeout(() => {
@@ -52,6 +62,8 @@ export default class extends Controller {
                 if (searchInput) searchInput.focus();
             }, 100);
         } else {
+            this.contentTarget.classList.remove('active')
+            this.buttonTarget.classList.remove('active')
             document.body.style.overflow = '';
             this.showThemes();
         }

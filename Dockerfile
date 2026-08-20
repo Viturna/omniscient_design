@@ -72,4 +72,4 @@ RUN mkdir -p tmp/pids tmp/cache log
 
 EXPOSE 3000
 
-CMD ["bash", "-c", "bundle exec puma -C config/puma.rb"]
+CMD ["bash", "-c", "bundle exec rails db:migrate && bundle exec puma -C config/puma.rb"]

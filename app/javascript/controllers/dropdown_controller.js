@@ -34,7 +34,10 @@ export default class extends Controller {
 
     handleOtherDropdownOpen(event) {
         if (event.detail.currentDropdown !== this.element && this.hasMenuTarget) {
-            this.menuTarget.classList.remove("active")
+            if (this.menuTarget.classList.contains("active")) {
+                this.menuTarget.classList.remove("active")
+                document.body.style.overflow = ''
+            }
         }
     }
 
@@ -44,14 +47,23 @@ export default class extends Controller {
         if (!this.menuTarget.classList.contains("active")) {
             window.dispatchEvent(new CustomEvent("dropdown:open", { detail: { currentDropdown: this.element } }))
             this.menuTarget.classList.add("active")
+            
+            // Si on est sur mobile, on bloque le scroll de la page
+            if (window.innerWidth <= 768) {
+                document.body.style.overflow = 'hidden'
+            }
         } else {
             this.menuTarget.classList.remove("active")
+            document.body.style.overflow = ''
         }
     }
 
     closeOnOutsideClick = (event) => {
         if (!this.element.contains(event.target) && this.hasMenuTarget) {
-            this.menuTarget.classList.remove("active")
+            if (this.menuTarget.classList.contains("active")) {
+                this.menuTarget.classList.remove("active")
+                document.body.style.overflow = ''
+            }
         }
     }
 

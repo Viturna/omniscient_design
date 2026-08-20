@@ -31,6 +31,7 @@ class Ad < ApplicationRecord
   # Email validation for visitors
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
+  attribute :status, :string
   enum :status, {
     pending: 'pending',
     pending_validation: 'pending_validation',

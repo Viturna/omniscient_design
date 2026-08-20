@@ -4,7 +4,7 @@ export default class extends Controller {
     static targets = [
         "tab", "tabContent", "tabInput",
         "notionsFilter", "countryFilter", "domainFilter", "dateFilter",
-        "sortFilter", "sortSelect"
+        "sortFilter", "sortSelect", "sortSelectDisplay"
     ]
 
     static values = {
@@ -112,15 +112,37 @@ export default class extends Controller {
         }
 
         if (this.hasSortSelectTarget) {
-            const currentSort = new URLSearchParams(window.location.search).get("sort") || this.sortSelectTarget.value
+            const currentSort = new URLSearchParams(window.location.search).get("sort") || ""
             this.sortSelectTarget.innerHTML = ""
+            let currentText = "Trier par"
+            
             options.forEach(opt => {
-                const option = document.createElement("option")
-                option.value = opt.value
-                option.textContent = opt.text
-                if (opt.value === currentSort) option.selected = true
-                this.sortSelectTarget.appendChild(option)
+                const isSelected = (opt.value === currentSort)
+                if (isSelected) currentText = opt.text
+                
+                const label = document.createElement("label")
+                label.className = `domain-choice-pill ${isSelected ? 'selected' : ''}`
+                
+                const input = document.createElement("input")
+                input.type = "radio"
+                input.name = "sort"
+                input.value = opt.value
+                input.className = "hidden-checkbox"
+                if (isSelected) input.checked = true
+                input.dataset.action = "change->tabs-search#update"
+                
+                const span = document.createElement("span")
+                span.className = "domain-text"
+                span.textContent = opt.text
+                
+                label.appendChild(input)
+                label.appendChild(span)
+                this.sortSelectTarget.appendChild(label)
             })
+            
+            if (this.hasSortSelectDisplayTarget) {
+                this.sortSelectDisplayTarget.textContent = currentText
+            }
         }
     }
 

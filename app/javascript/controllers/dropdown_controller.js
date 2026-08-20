@@ -13,6 +13,9 @@ export default class extends Controller {
         if (applyBtn) {
             applyBtn.addEventListener("click", this.applyDateFilter)
         }
+        
+        this.handleOtherDropdownOpen = this.handleOtherDropdownOpen.bind(this)
+        window.addEventListener("dropdown:open", this.handleOtherDropdownOpen)
     }
 
     disconnect() {
@@ -25,15 +28,29 @@ export default class extends Controller {
         if (applyBtn) {
             applyBtn.removeEventListener("click", this.applyDateFilter)
         }
+        
+        window.removeEventListener("dropdown:open", this.handleOtherDropdownOpen)
+    }
+
+    handleOtherDropdownOpen(event) {
+        if (event.detail.currentDropdown !== this.element && this.hasMenuTarget) {
+            this.menuTarget.classList.remove("active")
+        }
     }
 
     toggle = (event) => {
         event.stopPropagation()
-        this.menuTarget.classList.toggle("active")
+        
+        if (!this.menuTarget.classList.contains("active")) {
+            window.dispatchEvent(new CustomEvent("dropdown:open", { detail: { currentDropdown: this.element } }))
+            this.menuTarget.classList.add("active")
+        } else {
+            this.menuTarget.classList.remove("active")
+        }
     }
 
     closeOnOutsideClick = (event) => {
-        if (!this.element.contains(event.target)) {
+        if (!this.element.contains(event.target) && this.hasMenuTarget) {
             this.menuTarget.classList.remove("active")
         }
     }

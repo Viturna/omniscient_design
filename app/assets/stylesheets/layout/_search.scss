@@ -1,6 +1,7 @@
 @use "abstracts/variables";
 
 .top-bar-search {
+  box-sizing: border-box;
   position: fixed;
   z-index: 900;
   top: 0;

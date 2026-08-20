@@ -302,27 +302,29 @@
       </div>
     </div>
     <!-- /search-filters-header -->
-    <div class="search-filter sort-select-container" id="sortFilterContainer" data-tabs-search-target="sortFilter" style="display:none;">
-      <select name="sort" 
-            id="sortSelect" 
-            class="form-control search-filter__select" 
-            data-tabs-search-target="sortSelect"
-            data-controller="select2"
-            data-action="change->tabs-search#update"
-        data-select2-minimum-results-for-search-value="Infinity">
-        <% if params[:tab] == 'references' %>
-          <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
-            <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
-              <option value="reference_asc" <%= 'selected' if params[:sort] == 'reference_asc' %>><%= t('search.reference_old_new') %></option>
-                <option value="reference_desc" <%= 'selected' if params[:sort] == 'reference_desc' %>><%= t('search.reference_new_old') %></option>
-                <% else %>
-                  <option value="nom_asc" <%= 'selected' if params[:sort] == 'nom_asc' %>><%= t('search.name_asc') %></option>
-                    <option value="nom_desc" <%= 'selected' if params[:sort] == 'nom_desc' %>><%= t('search.name_desc') %></option>
-                      <option value="naissance_asc" <%= 'selected' if params[:sort] == 'naissance_asc' %>><%= t('search.birth_old_new') %></option>
-                        <option value="naissance_desc" <%= 'selected' if params[:sort] == 'naissance_desc' %>><%= t('search.birth_new_old') %></option>
-                        <% end %>
-                      </select>
-                    </div>
+    <div class="search-filter filter-btn <%= 'active' if params[:sort].present? %>" data-controller="dropdown" id="sortFilterContainer" data-tabs-search-target="sortFilter" style="display:none; margin-bottom: 24px;">
+      <div class="dropdown">
+        <button type="button" class="dropdown-toggle mega-menu-btn <%= 'has-selection' if params[:sort].present? %>" data-dropdown-target="toggle">
+          <div class="filter-btn-content">
+            <div class="filter-btn-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </div>
+            <span class="filter-btn-text" data-tabs-search-target="sortSelectDisplay">
+              Trier par
+            </span>
+          </div>
+          <svg class="filter-btn-chevron-svg" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dropdown-menu" data-dropdown-target="menu">
+          <div class="domain-dropdown-menu-list" data-tabs-search-target="sortSelect">
+            <!-- Options injectées par JS -->
+          </div>
+        </div>
+      </div>
+    </div>
                   <% end %>
                   <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
                     <div id="references-container" class="flex-container">

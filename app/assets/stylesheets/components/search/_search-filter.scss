@@ -400,3 +400,9 @@
     opacity: 0.9;
   }
 }
+
+body.dropdown-open {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  touch-action: none;
+}

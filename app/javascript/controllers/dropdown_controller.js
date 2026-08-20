@@ -36,7 +36,7 @@ export default class extends Controller {
         if (event.detail.currentDropdown !== this.element && this.hasMenuTarget) {
             if (this.menuTarget.classList.contains("active")) {
                 this.menuTarget.classList.remove("active")
-                document.body.style.overflow = ''
+                document.body.classList.remove("dropdown-open")
             }
         }
     }
@@ -47,14 +47,10 @@ export default class extends Controller {
         if (!this.menuTarget.classList.contains("active")) {
             window.dispatchEvent(new CustomEvent("dropdown:open", { detail: { currentDropdown: this.element } }))
             this.menuTarget.classList.add("active")
-            
-            // Si on est sur mobile, on bloque le scroll de la page
-            if (window.innerWidth <= 768) {
-                document.body.style.overflow = 'hidden'
-            }
+            document.body.classList.add("dropdown-open")
         } else {
             this.menuTarget.classList.remove("active")
-            document.body.style.overflow = ''
+            document.body.classList.remove("dropdown-open")
         }
     }
 
@@ -62,7 +58,7 @@ export default class extends Controller {
         if (!this.element.contains(event.target) && this.hasMenuTarget) {
             if (this.menuTarget.classList.contains("active")) {
                 this.menuTarget.classList.remove("active")
-                document.body.style.overflow = ''
+                document.body.classList.remove("dropdown-open")
             }
         }
     }

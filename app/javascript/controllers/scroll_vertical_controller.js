@@ -140,6 +140,9 @@ export default class extends Controller {
     }
 
     handleWheel(event) {
+        if (event.target.closest(".dropdown-menu") || event.target.closest(".mega-menu-content") || event.target.closest(".autocomplete-items")) {
+            return
+        }
         event.preventDefault()
         if (this.isScrolling) return
         const deltaY = event.deltaY
@@ -153,6 +156,9 @@ export default class extends Controller {
     }
 
     handleTouchMove(event) {
+        if (event.target.closest(".dropdown-menu") || event.target.closest(".mega-menu-content") || event.target.closest(".autocomplete-items")) {
+            return
+        }
         if (event.cancelable) event.preventDefault()
     }
 

@@ -3,6 +3,7 @@
    ========================================================================== */
 
 .suggestions-box {
+  display: none;
   border: 2px solid var(--color-gray-200);
   max-height: 400px;
   overflow-y: auto;

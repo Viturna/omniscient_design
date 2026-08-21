@@ -37,6 +37,7 @@ export default class extends Controller {
             if (this.menuTarget.classList.contains("active")) {
                 this.menuTarget.classList.remove("active")
                 document.body.classList.remove("dropdown-open")
+                document.documentElement.classList.remove("dropdown-open")
             }
         }
     }
@@ -48,9 +49,11 @@ export default class extends Controller {
             window.dispatchEvent(new CustomEvent("dropdown:open", { detail: { currentDropdown: this.element } }))
             this.menuTarget.classList.add("active")
             document.body.classList.add("dropdown-open")
+            document.documentElement.classList.add("dropdown-open")
         } else {
             this.menuTarget.classList.remove("active")
             document.body.classList.remove("dropdown-open")
+            document.documentElement.classList.remove("dropdown-open")
         }
     }
 
@@ -59,6 +62,7 @@ export default class extends Controller {
             if (this.menuTarget.classList.contains("active")) {
                 this.menuTarget.classList.remove("active")
                 document.body.classList.remove("dropdown-open")
+                document.documentElement.classList.remove("dropdown-open")
             }
         }
     }

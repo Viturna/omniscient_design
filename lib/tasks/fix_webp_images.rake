@@ -1,7 +1,7 @@
 namespace :images do
   desc "Strip ICC profiles from all existing WebP images to fix iOS WebKit crash (err=-50)"
   task fix_webp_icc_profiles: :environment do
-    require 'mini_magick'
+    require 'image_processing/vips'
 
     # Modèles concernés
     models = [DesignerImage, StudioImage, ReferenceImage]
@@ -18,19 +18,16 @@ namespace :images do
 
         begin
           blob.open(tmpdir: Rails.root.join('tmp')) do |temp_file|
-            img = MiniMagick::Image.new(temp_file.path)
-            
-            # On applique le strip pour retirer les profils corrompus
-            img.combine_options do |c|
-              c.strip
-            end
+            # On utilise Vips au lieu de MiniMagick car imagemagick n'est pas dans ton Dockerfile
+            webp_tempfile = ImageProcessing::Vips
+              .source(temp_file.path)
+              .saver(strip: true)
+              .call
 
             # On génère un nouveau nom et fichier
             random_name = SecureRandom.hex(10)
             filename = "#{random_name}.webp"
             
-            webp_tempfile = Tempfile.new([random_name, '.webp'], Rails.root.join('tmp'))
-            img.write(webp_tempfile.path)
 
             folder = model_class.name.underscore.split('_').first.pluralize # designer -> designers
             

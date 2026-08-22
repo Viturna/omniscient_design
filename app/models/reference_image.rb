@@ -26,30 +26,21 @@ class ReferenceImage < ApplicationRecord
   end
 
   def process_image_to_webp
-    require 'mini_magick'
-
-    max_dimensions = '2000x2000>'
-    compression_quality = '80'
+    require 'image_processing/vips'
 
     reload
-
     original_blob = file.blob
 
     original_blob.open(tmpdir: Rails.root.join('tmp')) do |file|
-      img = MiniMagick::Image.new(file.path)
-
-      img.format 'webp'
-      img.combine_options do |c|
-        c.resize max_dimensions
-        c.quality compression_quality
-        c.strip
-      end
+      webp_tempfile = ImageProcessing::Vips
+        .source(file.path)
+        .resize_to_limit(2000, 2000)
+        .convert('webp')
+        .saver(Q: 80, strip: true)
+        .call
 
       random_name = SecureRandom.hex(10)
       filename = "#{random_name}.webp"
-
-      webp_tempfile = Tempfile.new([filename, '.webp'], Rails.root.join('tmp'))
-      img.write(webp_tempfile.path)
 
       new_blob = ActiveStorage::Blob.create_and_upload!(
         io: webp_tempfile,

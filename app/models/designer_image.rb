@@ -4,7 +4,8 @@ class DesignerImage < ApplicationRecord
   has_one_attached :file do |attachable|
     attachable.variant :thumb,
                        resize_to_fill: [400, 400],
-                       format: :webp
+                       format: :webp,
+                       saver: { strip: true }
   end
 
   validates :file,
@@ -42,6 +43,7 @@ class DesignerImage < ApplicationRecord
       img.combine_options do |c|
         c.resize max_dimensions
         c.quality compression_quality
+        c.strip
       end
 
       # ✅ Nom aléatoire + extension webp

@@ -49,8 +49,14 @@
     <script>
       if (navigator.userAgent.indexOf('Turbo Native') !== -1) {
         document.documentElement.style.setProperty('--native-bottom', '0px');
+        document.documentElement.classList.add('is-native-app');
       }
     </script>
+    <style>
+      .is-native-app main {
+        padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
+      }
+    </style>
     <script>
       window.loaderWebmPath = "<%= asset_path('loader.webm') %>";
       window.loaderMp4Path = "<%= asset_path('loader.mp4') %>";

@@ -1,0 +1,14 @@
+<% set_meta_tags title: "Erreur d'autorisation | Omniscient Design" %>
+<div class="log" style="color:#FFF;">
+  <section class="box-log">
+    <div class="form" style="text-align: center;">
+      <h1 style="margin-top:0;">Erreur d'autorisation</h1>
+      <p style="color: #ff6b6b; margin-top: 24px; font-weight: 500;">
+        <%= @error.description %>
+      </p>
+      <div style="margin-top: 32px;">
+        <%= link_to "Retour à l'accueil", root_path, class: "button dark" %>
+      </div>
+    </div>
+  </section>
+</div>

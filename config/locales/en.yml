@@ -178,7 +178,7 @@ en:
         content: "We implement technical and organizational measures to ensure security and confidentiality of your personal data, preventing loss, misuse, alteration, or unauthorized access."
       9:
         title: "Hosting Provider Policy"
-        content: 'Our hosting provider has its own privacy policy regarding the use of your data: <a href="https://www.hostinger.fr/politique-de-confidentialite" class="black underline"> target="_blank">https://www.hostinger.fr/politique-de-confidentialite</a>'
+        content: 'Our hosting provider has its own privacy policy regarding the use of your data, which you can consult at any time <a href="https://www.hetzner.com/legal/privacy-policy" class="black underline" target="_blank">https://www.hetzner.com/legal/privacy-policy</a>.'
       10:
         title: "Changes to Privacy Policy"
         content: "We reserve the right to modify this privacy policy at any time. Changes take effect upon posting on this page. We recommend checking this page regularly."

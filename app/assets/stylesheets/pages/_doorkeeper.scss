@@ -1,0 +1,522 @@
+@use "abstracts/variables";
+
+/* ================================
+   DOORKEEPER — ADMIN LAYOUT
+   ================================ */
+
+.dk-admin-layout {
+  min-height: 100vh;
+  background-color: var(--color-gray-100);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Nav */
+.dk-admin-nav {
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-200);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dk-admin-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dk-admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-black);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+
+  svg {
+    color: var(--color-black);
+    opacity: 0.8;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.dk-admin-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dk-admin-nav-link {
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-black);
+  }
+
+  &.active {
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+  }
+}
+
+/* Main content */
+.dk-admin-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* Flash */
+.dk-flash-notice {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+
+/* ================================
+   PAGE HEADER
+   ================================ */
+
+.dk-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dk-page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-black);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.dk-page-header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ================================
+   CARDS GRID
+   ================================ */
+
+.dk-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.dk-app-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border-color: var(--color-gray-300);
+  }
+}
+
+.dk-app-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dk-app-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: var(--color-gray-900);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dk-app-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dk-app-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-black);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.dk-app-date {
+  font-size: 13px;
+  color: var(--color-gray-600);
+}
+
+.dk-app-confidential-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  width: fit-content;
+
+  &.confidential {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
+  &.public {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-200);
+  }
+}
+
+.dk-app-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dk-app-redirect {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+}
+
+.dk-app-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-600);
+}
+
+.dk-app-code {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 6px;
+  padding: 6px 12px;
+  word-break: break-all;
+  max-width: 100%;
+}
+
+.dk-app-card-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-gray-200);
+  margin-top: 4px;
+}
+
+/* ================================
+   BOUTONS DOORKEEPER
+   ================================ */
+
+.dk-btn-new {
+  font-size: 14px !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+}
+
+.dk-btn-sm {
+  font-size: 13px !important;
+  padding: 8px 18px !important;
+  min-height: unset !important;
+  height: auto !important;
+  border-radius: 6px !important;
+}
+
+.dk-btn-danger {
+  background-color: transparent !important;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca !important;
+
+  &:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+  }
+}
+
+/* ================================
+   EMPTY STATE
+   ================================ */
+
+.dk-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 32px;
+  text-align: center;
+  color: var(--color-gray-600);
+
+  svg {
+    color: var(--color-gray-300);
+  }
+
+  p {
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+/* ================================
+   SHOW PAGE
+   ================================ */
+
+.dk-show-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 720px;
+}
+
+.dk-show-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dk-info-block {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dk-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dk-info-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-600);
+}
+
+.dk-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-black);
+  margin: 0 0 4px;
+}
+
+.dk-secret-hashed,
+.dk-not-defined {
+  color: var(--color-gray-600);
+  font-style: italic;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.dk-uris-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dk-uri-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dk-uri-code {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ================================
+   FORM
+   ================================ */
+
+.dk-form-wrapper {
+  max-width: 680px;
+}
+
+.dk-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dk-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dk-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.dk-input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--color-gray-200);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-gray-800);
+  }
+
+  &::placeholder {
+    color: var(--color-gray-600);
+  }
+
+  &.dk-input-error {
+    border-color: #fca5a5;
+  }
+}
+
+.dk-textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.dk-field-hint {
+  font-size: 13px;
+  color: var(--color-gray-600);
+  line-height: 1.5;
+}
+
+.dk-field-checkbox {
+  gap: 12px;
+}
+
+.dk-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dk-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.dk-checkbox-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+.dk-alert {
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+
+  &.dk-alert-error {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+  }
+}
+
+.dk-form-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-top: 8px;
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media screen and (max-width: 768px) {
+  .dk-admin-nav-inner {
+    padding: 0 16px;
+  }
+
+  .dk-admin-main {
+    padding: 32px 16px 60px;
+  }
+
+  .dk-apps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dk-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dk-uri-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dk-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

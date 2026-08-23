@@ -1,24 +1,34 @@
-<header class="page-header">
-  <h1><%= t('doorkeeper.authorized_applications.index.title') %></h1>
-</header>
+<div class="dk-page-header">
+  <h1 class="dk-page-title"><%= t('doorkeeper.authorized_applications.index.title') %></h1>
+</div>
 
-<main role="main">
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th><%= t('doorkeeper.authorized_applications.index.application') %></th>
-      <th><%= t('doorkeeper.authorized_applications.index.created_at') %></th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
+<% if @applications.any? %>
+  <div class="dk-apps-grid">
     <% @applications.each do |application| %>
-      <tr>
-        <td><%= application.name %></td>
-        <td><%= application.created_at.strftime(t('doorkeeper.authorized_applications.index.date_format')) %></td>
-        <td><%= render 'delete_form', application: application %></td>
-      </tr>
+      <div class="dk-app-card">
+        <div class="dk-app-card-header">
+          <div class="dk-app-icon">
+            <%= application.name.first.upcase %>
+          </div>
+          <div class="dk-app-card-info">
+            <span class="dk-app-name"><%= application.name %></span>
+            <span class="dk-app-date">
+              <%= t('doorkeeper.authorized_applications.index.created_at') %> :
+              <%= application.created_at.strftime(t('doorkeeper.authorized_applications.index.date_format')) %>
+            </span>
+          </div>
+        </div>
+        <div class="dk-app-card-actions">
+          <%= render 'delete_form', application: application %>
+        </div>
+      </div>
     <% end %>
-    </tbody>
-  </table>
-</main>
+  </div>
+<% else %>
+  <div class="dk-empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p>Aucune application autorisée pour le moment.</p>
+  </div>
+<% end %>

@@ -24,13 +24,94 @@ fr:
         unsupported_grant_type: Le type de consentement n'est pas pris en charge.
         unsupported_response_type: Le serveur ne prend pas en charge ce type.
 
+    applications:
+      confirmations:
+        destroy: 'Êtes-vous sûr ?'
+      buttons:
+        edit: 'Modifier'
+        destroy: 'Supprimer'
+        submit: 'Enregistrer'
+        cancel: 'Annuler'
+        authorize: 'Autoriser'
+      form:
+        error: 'Oups ! Vérifiez les erreurs dans le formulaire.'
+      help:
+        confidential: "L'application sera utilisée dans un contexte où le secret client peut rester confidentiel. Les apps mobiles natives et les SPA sont considérées comme non-confidentielles."
+        redirect_uri: 'Une URI par ligne'
+        blank_redirect_uri: "Laissez vide si votre fournisseur utilise Client Credentials, Resource Owner Password Credentials ou tout autre type de grant ne nécessitant pas d'URI de redirection."
+        scopes: 'Séparez les scopes par des espaces. Laissez vide pour utiliser les scopes par défaut.'
+      edit:
+        title: "Modifier l'application"
+      index:
+        title: 'Vos applications OAuth'
+        new: 'Nouvelle application'
+        name: 'Nom'
+        callback_url: 'URL de callback'
+        confidential: 'Confidentielle ?'
+        actions: 'Actions'
+        confidentiality:
+          'yes': 'Oui'
+          'no': 'Non'
+      new:
+        title: 'Nouvelle application'
+      show:
+        title: 'Application : %{name}'
+        application_id: 'UID :'
+        secret: 'Secret :'
+        secret_hashed: 'Secret hashé'
+        scopes: 'Scopes :'
+        confidential: 'Confidentielle :'
+        callback_urls: 'URLs de callback :'
+        actions: 'Actions'
+        not_defined: 'Non défini'
+
     authorizations:
       new:
         title: Autorisation requise
-        prompt: L'application %{client_name} demande l'accès à votre compte.
+        prompt: "L'application %{client_name} demande l'accès à votre compte."
         able_to: Cette application pourra
       show:
-        title: Copiez ce code d'autorisation et collez-le dans l'application.
+        title: "Copiez ce code d'autorisation et collez-le dans l'application."
+      error:
+        title: "Une erreur s'est produite"
+      form_post:
+        title: 'Soumettre ce formulaire'
       buttons:
         authorize: Autoriser
         deny: Refuser
+
+    authorized_applications:
+      confirmations:
+        revoke: 'Êtes-vous sûr ?'
+      buttons:
+        revoke: 'Révoquer'
+      index:
+        title: 'Applications autorisées'
+        application: 'Application'
+        created_at: 'Autorisée le'
+        date_format: '%d/%m/%Y à %H:%M'
+
+    pre_authorization:
+      status: 'Pré-autorisation'
+
+    flash:
+      applications:
+        create:
+          notice: 'Application créée avec succès.'
+        destroy:
+          notice: 'Application supprimée.'
+        update:
+          notice: 'Application mise à jour.'
+      authorized_applications:
+        destroy:
+          notice: 'Application révoquée.'
+
+    layouts:
+      admin:
+        title: 'OAuth — Omniscient Design'
+        nav:
+          oauth2_provider: 'OAuth2'
+          applications: 'Applications'
+          home: 'Accueil'
+      application:
+        title: 'Autorisation OAuth requise'

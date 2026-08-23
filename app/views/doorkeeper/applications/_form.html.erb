@@ -1,59 +1,49 @@
-<%= form_for application, url: doorkeeper_submit_path(application), as: :doorkeeper_application, html: { role: 'form' } do |f| %>
-  <% if application.errors.any? %>
-    <div class="alert alert-danger" data-alert><p><%= t('doorkeeper.applications.form.error') %></p></div>
-  <% end %>
+<div class="dk-page-header">
+  <h1 class="dk-page-title"><%= t('.title') %></h1>
+</div>
 
-  <div class="form-group row">
-    <%= f.label :name, class: 'col-sm-2 col-form-label font-weight-bold' %>
-    <div class="col-sm-10">
-      <%= f.text_field :name, class: "form-control #{ 'is-invalid' if application.errors[:name].present? }", required: true %>
+<div class="dk-form-wrapper">
+  <%= form_for application, url: doorkeeper_submit_path(application), as: :doorkeeper_application, html: { role: 'form', class: 'dk-form' } do |f| %>
+    <% if application.errors.any? %>
+      <div class="dk-alert dk-alert-error">
+        <%= t('doorkeeper.applications.form.error') %>
+      </div>
+    <% end %>
+
+    <div class="dk-field">
+      <%= f.label :name, class: 'dk-label' %>
+      <%= f.text_field :name, class: "dk-input #{'dk-input-error' if application.errors[:name].present?}", required: true, placeholder: "Mon application" %>
       <%= doorkeeper_errors_for application, :name %>
     </div>
-  </div>
 
-  <div class="form-group row">
-    <%= f.label :redirect_uri, class: 'col-sm-2 col-form-label font-weight-bold' %>
-    <div class="col-sm-10">
-      <%= f.text_area :redirect_uri, class: "form-control #{ 'is-invalid' if application.errors[:redirect_uri].present? }" %>
+    <div class="dk-field">
+      <%= f.label :redirect_uri, class: 'dk-label' %>
+      <%= f.text_area :redirect_uri, class: "dk-input dk-textarea #{'dk-input-error' if application.errors[:redirect_uri].present?}", placeholder: "https://monapp.com/callback" %>
       <%= doorkeeper_errors_for application, :redirect_uri %>
-      <span class="form-text text-secondary">
-        <%= t('doorkeeper.applications.help.redirect_uri') %>
-      </span>
-
+      <span class="dk-field-hint"><%= t('doorkeeper.applications.help.redirect_uri') %></span>
       <% if Doorkeeper.configuration.allow_blank_redirect_uri?(application) %>
-        <span class="form-text text-secondary">
-          <%= t('doorkeeper.applications.help.blank_redirect_uri') %>
-        </span>
+        <span class="dk-field-hint"><%= t('doorkeeper.applications.help.blank_redirect_uri') %></span>
       <% end %>
     </div>
-  </div>
 
-  <div class="form-group row">
-    <%= f.label :confidential, class: 'col-sm-2 form-check-label font-weight-bold' %>
-    <div class="col-sm-10">
-      <%= f.check_box :confidential, class: "checkbox #{ 'is-invalid' if application.errors[:confidential].present? }" %>
-      <%= doorkeeper_errors_for application, :confidential %>
-      <span class="form-text text-secondary">
-        <%= t('doorkeeper.applications.help.confidential') %>
-      </span>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <%= f.label :scopes, class: 'col-sm-2 col-form-label font-weight-bold' %>
-    <div class="col-sm-10">
-      <%= f.text_field :scopes, class: "form-control #{ 'has-error' if application.errors[:scopes].present? }" %>
+    <div class="dk-field">
+      <%= f.label :scopes, class: 'dk-label' %>
+      <%= f.text_field :scopes, class: "dk-input #{'dk-input-error' if application.errors[:scopes].present?}", placeholder: "read write" %>
       <%= doorkeeper_errors_for application, :scopes %>
-      <span class="form-text text-secondary">
-        <%= t('doorkeeper.applications.help.scopes') %>
-      </span>
+      <span class="dk-field-hint"><%= t('doorkeeper.applications.help.scopes') %></span>
     </div>
-  </div>
 
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <%= f.submit t('doorkeeper.applications.buttons.submit'), class: 'btn btn-primary' %>
-      <%= link_to t('doorkeeper.applications.buttons.cancel'), oauth_applications_path, class: 'btn btn-secondary' %>
+    <div class="dk-field dk-field-checkbox">
+      <div class="dk-checkbox-wrapper">
+        <%= f.check_box :confidential, class: 'dk-checkbox' %>
+        <%= f.label :confidential, class: 'dk-checkbox-label' %>
+      </div>
+      <span class="dk-field-hint"><%= t('doorkeeper.applications.help.confidential') %></span>
     </div>
-  </div>
-<% end %>
+
+    <div class="dk-form-actions">
+      <%= f.submit t('doorkeeper.applications.buttons.submit'), class: 'button dark' %>
+      <%= link_to t('doorkeeper.applications.buttons.cancel'), oauth_applications_path, class: 'button' %>
+    </div>
+  <% end %>
+</div>

@@ -8,7 +8,7 @@
       </p>
       <% if @pre_auth.scopes.count > 0 %>
         <div id="oauth-permissions" style="background: rgba(255,255,255,0.09); padding: 15px; border-radius: 8px; margin-bottom: 24px; text-align: left;">
-          <p style="font-weight: 600; margin-bottom: 10px;">Cette application pourra :</p>
+          <p style="font-weight: 600; margin-bottom: 10px;">Cette application récupère :</p>
           <ul style="list-style: disc; padding-left: 20px; color: rgba(255,255,255,0.8);">
             <% @pre_auth.scopes.each do |scope| %>
               <li><%= t scope, scope: [:doorkeeper, :scopes] %></li>

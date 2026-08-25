@@ -1,15 +1,13 @@
 <% set_meta_tags title: "Autoriser l'application | Omniscient Design" %>
-<div class="log" style="color:#FFF;">
+<div class="log">
   <section class="box-log">
     <div class="form">
       <h1 style="margin-top:0;">Autoriser <%= @pre_auth.client.name %></h1>
-      
       <p style="text-align: center; margin-bottom: 24px; color: rgba(255,255,255,0.8);">
         L'application <strong style="color: #FFF;"><%= @pre_auth.client.name %></strong> souhaite se connecter à votre compte Omniscient Design.
       </p>
-
       <% if @pre_auth.scopes.count > 0 %>
-        <div id="oauth-permissions" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 24px; text-align: left;">
+        <div id="oauth-permissions" style="background: rgba(255,255,255,0.09); padding: 15px; border-radius: 8px; margin-bottom: 24px; text-align: left;">
           <p style="font-weight: 600; margin-bottom: 10px;">Cette application pourra :</p>
           <ul style="list-style: disc; padding-left: 20px; color: rgba(255,255,255,0.8);">
             <% @pre_auth.scopes.each do |scope| %>
@@ -18,7 +16,6 @@
           </ul>
         </div>
       <% end %>
-
       <div class="actions" style="display: flex; gap: 16px; margin-top: 16px;">
         <%= form_tag oauth_authorization_path, method: :delete, style: "flex: 1;" do %>
           <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
@@ -29,9 +26,8 @@
           <%= hidden_field_tag :scope, @pre_auth.scope, id: nil %>
           <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil %>
           <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
-          <%= submit_tag "Refuser", class: "button", style: "width: 100%; background: transparent; border: 1.5px solid #FFF; color: #FFF; border-radius: 50px;" %>
+          <%= submit_tag "Refuser", class: "button", style: "opacity:0.9;" %>
         <% end %>
-
         <%= form_tag oauth_authorization_path, method: :post, style: "flex: 1;" do %>
           <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
           <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
@@ -41,7 +37,7 @@
           <%= hidden_field_tag :scope, @pre_auth.scope, id: nil %>
           <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil %>
           <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
-          <%= submit_tag "Autoriser", class: "button dark", style: "width: 100%;" %>
+          <%= submit_tag "Autoriser", class: "button", style: "width: 100%;" %>
         <% end %>
       </div>
     </div>

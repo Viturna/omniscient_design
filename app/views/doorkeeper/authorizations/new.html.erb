@@ -17,7 +17,7 @@
         </div>
       <% end %>
       <div class="actions" style="display: flex; gap: 16px; margin-top: 16px;">
-        <%= form_tag oauth_authorization_path, method: :delete, style: "flex: 1;" do %>
+        <%= form_tag oauth_authorization_path, method: :delete, data: { turbo: "false" }, style: "flex: 1;" do %>
           <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
           <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
           <%= hidden_field_tag :state, @pre_auth.state, id: nil %>
@@ -28,7 +28,7 @@
           <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
           <%= submit_tag "Refuser", class: "button", style: "opacity:0.9;" %>
         <% end %>
-        <%= form_tag oauth_authorization_path, method: :post, style: "flex: 1;" do %>
+        <%= form_tag oauth_authorization_path, method: :post, data: { turbo: "false" }, style: "flex: 1;" do %>
           <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
           <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
           <%= hidden_field_tag :state, @pre_auth.state, id: nil %>

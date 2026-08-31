@@ -5,7 +5,7 @@ class AddPionnierBadge < ActiveRecord::Migration[8.1]
       b.level = 'standard'
       b.threshold = 0
       b.description = 'Tu fais partie des 1000 premiers membres historiques.'
-      b.image_name = 'early_adopter_2.png'
+      b.image_name = 'early_adopter_2.webp'
     end
 
     # Attribuer rétroactivement aux 1000 premiers utilisateurs

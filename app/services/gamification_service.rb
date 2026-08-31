@@ -59,7 +59,7 @@ class GamificationService
       b.category = :special
       b.level = :standard
       b.description = "Merci d'avoir noté l'application sur les stores !"
-      b.image_name = 'omniscient_supporter.png'
+      b.image_name = 'omniscient_supporter.webp'
     end
     give_badge(badge)
   end
@@ -70,12 +70,32 @@ class GamificationService
       b.category = :special
       b.level = :standard
       b.description = "Un an d'ancienneté sur la plateforme. Un vrai pilier !"
-      b.image_name = 'l_aaaancien.png'
+      b.image_name = 'l_aaaancien.webp'
     end
 
     return unless @user.created_at <= 1.year.ago
 
     give_badge(badge)
+  end
+
+  # "Artchiv'eur" : Connexion OAuth depuis Artchiv'
+  def check_artchiveur(application_name: nil)
+    # Vérifie soit via le nom de l'app passé en paramètre,
+    # soit en cherchant si l'user a un token actif depuis une app Artchiv'
+    is_artchiv = if application_name.present?
+                   application_name.downcase.include?('artchiv')
+                 else
+                   Doorkeeper::AccessToken
+                     .joins("INNER JOIN oauth_applications ON oauth_applications.id = oauth_access_tokens.application_id")
+                     .where("LOWER(oauth_applications.name) LIKE ?", '%artchiv%')
+                     .where(resource_owner_id: @user.id)
+                     .where(revoked_at: nil)
+                     .exists?
+                 end
+
+    return unless is_artchiv
+
+    assign_badge(name: "Artchiv'eur", category: 'special')
   end
 
   # --- 2. BADGES À NIVEAUX ---

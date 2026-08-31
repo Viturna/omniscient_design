@@ -243,7 +243,7 @@
             </td>
             <td>
               <div class="actions-cell">
-                <% if ad.status == 'pending_validation' %>
+                <% if ['pending_validation', 'pending'].include?(ad.status) %>
                   <%= button_to approve_admin_ad_path(ad), method: :patch, class: "action-btn", style: "width: auto; padding: 0 10px; background: #E8F5E9; color: #2E7D32; border-color: #C8E6C9;", title: "Valider" do %>
                     ✓
                   <% end %>

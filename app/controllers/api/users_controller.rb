@@ -5,6 +5,10 @@ module Api
     def me
       user = User.find(doorkeeper_token.resource_owner_id)
       
+      # Vérifier et attribuer le badge Artchiv'eur si la requête provient d'Artchiv
+      app_name = doorkeeper_token.application&.name.to_s
+      GamificationService.new(user).check_artchiveur(application_name: app_name)
+
       avatar_url = user.respond_to?(:avatar) && user.avatar.attached? ? rails_blob_url(user.avatar) : nil
 
       render json: {

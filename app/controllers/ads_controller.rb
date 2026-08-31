@@ -19,7 +19,7 @@ class AdsController < ApplicationController
     @ad.weight = pack[:weight]
     @ad.duration_days = pack[:days]
     @ad.price_paid = pack[:price_cents]
-    @ad.status = 'pending'
+    @ad.status = 'pending_validation'
     @ad.active = false
 
     if @ad.save

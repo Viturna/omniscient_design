@@ -5,6 +5,7 @@ class BadgesController < ApplicationController
     @current_page = 'profil'
 
     GamificationService.new(current_user).check_seniority
+    GamificationService.new(current_user).check_artchiveur
 
     @badges = Badge.all
 

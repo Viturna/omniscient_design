@@ -78,16 +78,23 @@ class GamificationService
     give_badge(badge)
   end
 
-  # "Artchiv'eur" : Connexion OAuth depuis Artchiv'
+  # "Artchiv'eur" : Connexion OAuth depuis Artchiv' (ou Archiv)
   def check_artchiveur(application_name: nil)
     # Vérifie soit via le nom de l'app passé en paramètre,
-    # soit en cherchant si l'user a un token actif depuis une app Artchiv'
+    # soit en cherchant si l'user a un token ou grant actif depuis une app Archiv / Artchiv
     is_artchiv = if application_name.present?
-                   application_name.downcase.include?('artchiv')
+                   app_name = application_name.to_s.downcase
+                   app_name.include?('artchiv') || app_name.include?('archiv')
                  else
                    Doorkeeper::AccessToken
                      .joins("INNER JOIN oauth_applications ON oauth_applications.id = oauth_access_tokens.application_id")
-                     .where("LOWER(oauth_applications.name) LIKE ?", '%artchiv%')
+                     .where("LOWER(oauth_applications.name) LIKE ? OR LOWER(oauth_applications.name) LIKE ?", '%artchiv%', '%archiv%')
+                     .where(resource_owner_id: @user.id)
+                     .where(revoked_at: nil)
+                     .exists? ||
+                   Doorkeeper::AccessGrant
+                     .joins("INNER JOIN oauth_applications ON oauth_applications.id = oauth_access_grants.application_id")
+                     .where("LOWER(oauth_applications.name) LIKE ? OR LOWER(oauth_applications.name) LIKE ?", '%artchiv%', '%archiv%')
                      .where(resource_owner_id: @user.id)
                      .where(revoked_at: nil)
                      .exists?
@@ -95,7 +102,15 @@ class GamificationService
 
     return unless is_artchiv
 
-    assign_badge(name: "Artchiv'eur", category: 'special')
+    # Auto-création du badge s'il n'existe pas encore en DB (ex: migration non jouée en prod)
+    badge = Badge.find_or_create_by!(name: "Artchiv'eur") do |b|
+      b.category = :special
+      b.level = :standard
+      b.description = "Ton compte Omniscient Design est connecté à Artchiv'."
+      b.image_name = 'archiveur.webp'
+    end
+
+    give_badge(badge)
   end
 
   # --- 2. BADGES À NIVEAUX ---

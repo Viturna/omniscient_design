@@ -85,7 +85,7 @@
     <hr>
     <h2>Visuels</h2>
     <div class="field">
-      <%= form.label :image, "Visuel Desktop (Image ou Vidéo - max 25 Mo)" %>
+      <%= form.label :image, "Visuel principal (Image ou Vidéo - max 25 Mo)" %>
       <%= form.file_field :image, class: "form-control", accept: "image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" %>
       <% if ad.image.attached? && ad.persisted? %>
         <div class="image-preview">

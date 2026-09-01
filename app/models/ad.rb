@@ -144,7 +144,7 @@ class Ad < ApplicationRecord
     content_type = attachment.blob.content_type.to_s
 
     if content_type.start_with?('video/')
-      process_video_to_webm(attachment, folder_name)
+      process_video(attachment, folder_name)
     else
       process_image_to_webp(attachment, folder_name)
     end
@@ -152,45 +152,38 @@ class Ad < ApplicationRecord
     Rails.logger.error("ERREUR TRAITEMENT pour Ad ID #{id} (#{attachment_name}): #{e.message}\n#{e.backtrace&.first(5)&.join("\n")}")
   end
 
-  def process_video_to_webm(attachment, folder_name)
+  def process_video(attachment, folder_name)
     original_blob = attachment.blob
 
     original_blob.open(tmpdir: Rails.root.join('tmp')) do |file|
       random_name = SecureRandom.hex(10)
-      filename = "#{random_name}.webm"
-      output_tempfile = Tempfile.new([random_name, '.webm'], Rails.root.join('tmp'))
+      filename = "#{random_name}.mp4"
+      output_tempfile = Tempfile.new([random_name, '.mp4'], Rails.root.join('tmp'))
       output_path = output_tempfile.path
       output_tempfile.close # Closed so ffmpeg can write cleanly
 
-      # Optimisation vidéo adaptée pour une carte (max 800px, sans audio, VP9 ultra léger)
+      # Compression H.264 universelle (100% compatible iOS Safari, Chrome, Firefox, Android, Desktop)
+      # - scale max 800px
+      # - yuv420p (obligatoire pour lecture iOS)
+      # - profile main / level 3.1
+      # - movflags +faststart pour démarrage instantané
+      # - -an pour supprimer l'audio
       cmd = [
         'ffmpeg', '-y',
         '-i', file.path,
         '-vf', "scale='min(800,iw)':-2",
-        '-c:v', 'libvpx-vp9',
-        '-crf', '34',
-        '-b:v', '600k',
-        '-deadline', 'good',
-        '-cpu-used', '2',
+        '-c:v', 'libx264',
+        '-profile:v', 'main',
+        '-level', '3.1',
+        '-pix_fmt', 'yuv420p',
+        '-crf', '26',
+        '-preset', 'fast',
+        '-movflags', '+faststart',
         '-an',
         output_path
       ]
 
-      success = system(*cmd)
-      unless success && File.exist?(output_path) && File.size(output_path).positive?
-        # Fallback codec libvpx si vp9 non disponible ou échec
-        fallback_cmd = [
-          'ffmpeg', '-y',
-          '-i', file.path,
-          '-vf', "scale='min(800,iw)':-2",
-          '-c:v', 'libvpx',
-          '-crf', '10',
-          '-b:v', '600k',
-          '-an',
-          output_path
-        ]
-        system(*fallback_cmd)
-      end
+      system(*cmd)
 
       return unless File.exist?(output_path) && File.size(output_path).positive?
 
@@ -198,7 +191,7 @@ class Ad < ApplicationRecord
         new_blob = ActiveStorage::Blob.create_and_upload!(
           io: io,
           filename: filename,
-          content_type: 'video/webm',
+          content_type: 'video/mp4',
           key: "#{folder_name}/#{filename}"
         )
 

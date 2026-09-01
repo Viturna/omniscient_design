@@ -23,15 +23,14 @@
   <div class="bg-card" style="background-color: #52525D; <%= style_bg %>">
     <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
       <% if is_video || is_mobile_video %>
+        <% video_url = desktop_url || mobile_url %>
         <video class="card-slider-blurred-bg" 
                autoplay loop muted playsinline webkit-playsinline preload="auto"
                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; filter: blur(20px); transform: scale(1.1);">
           <% if mobile_url.present? && mobile_url != desktop_url %>
-            <source src="<%= mobile_url %>" media="(max-width: 760px)" type="video/webm">
+            <source src="<%= mobile_url %>" media="(max-width: 760px)">
           <% end %>
-          <% if desktop_url.present? %>
-            <source src="<%= desktop_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %> type="video/webm">
-          <% end %>
+          <source src="<%= video_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %>>
         </video>
       <% elsif desktop_url.present? %>
         <img src="<%= desktop_url %>" loading="lazy" class="card-slider-blurred-bg" alt="" data-slider-target="background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
@@ -41,15 +40,14 @@
 
       <div class="card-slider-slides">
         <% if is_video || is_mobile_video %>
+          <% video_url = desktop_url || mobile_url %>
           <video class="card-slide-image active" 
                  autoplay loop muted playsinline webkit-playsinline preload="auto"
                  data-slider-target="slide">
             <% if mobile_url.present? && mobile_url != desktop_url %>
-              <source src="<%= mobile_url %>" media="(max-width: 760px)" type="video/webm">
+              <source src="<%= mobile_url %>" media="(max-width: 760px)">
             <% end %>
-            <% if desktop_url.present? %>
-              <source src="<%= desktop_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %> type="video/webm">
-            <% end %>
+            <source src="<%= video_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %>>
           </video>
         <% else %>
           <picture>

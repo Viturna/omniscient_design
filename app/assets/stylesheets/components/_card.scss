@@ -287,18 +287,25 @@
 
   .card {
     padding-top: calc(75px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
     height: 100dvh;
     box-sizing: border-box;
     width: 90vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .card .subtitle-card {
-    margin-top: 16px;
+    margin-top: 8px;
   }
 
   .bg-card {
     width: 90vw;
-    height: calc(100dvh - 280px - var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    max-height: calc(100dvh - 210px - var(--safe-area-top-android, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px));
   }
 
   .bg-card .date-main {
@@ -318,17 +325,19 @@
   }
 
   .title-card {
-    font-size: 26px;
+    font-size: 24px;
+    margin: 4px 0 0 0;
   }
 
   .subtitle-card {
-    font-size: 16px;
-    margin-top: 16px;
+    font-size: 15px;
+    margin: 6px 0 0 0;
   }
 
   .container-text-card {
-    padding: 0px;
+    padding: 8px 0 0 0;
     width: 100%;
+    flex-shrink: 0;
   }
 
   .title-description-card {

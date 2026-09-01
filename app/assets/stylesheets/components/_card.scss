@@ -286,14 +286,14 @@
   }
 
   .card {
-    padding-top: calc(75px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    padding-top: calc(72px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
+    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
     height: 100dvh;
     box-sizing: border-box;
     width: 90vw;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .card .subtitle-card {
@@ -303,9 +303,8 @@
   .bg-card {
     width: 90vw;
     flex: 1 1 auto;
-    min-height: 0;
-    height: auto;
-    max-height: calc(100dvh - 210px - var(--safe-area-top-android, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px));
+    min-height: 180px;
+    height: 100%;
   }
 
   .bg-card .date-main {
@@ -335,7 +334,7 @@
   }
 
   .container-text-card {
-    padding: 8px 0 0 0;
+    padding: 10px 0 4px 0;
     width: 100%;
     flex-shrink: 0;
   }

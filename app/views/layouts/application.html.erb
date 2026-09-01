@@ -51,6 +51,9 @@
         document.documentElement.style.setProperty('--native-bottom', '0px');
         document.documentElement.classList.add('is-native-app');
       }
+      if (/Android/i.test(navigator.userAgent)) {
+        document.documentElement.classList.add('is-android');
+      }
     </script>
     <style>
       .is-native-app main {

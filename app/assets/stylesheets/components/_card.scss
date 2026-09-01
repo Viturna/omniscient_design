@@ -347,6 +347,17 @@
   }
 }
 
+.is-android {
+  .card {
+    padding-top: calc(72px + var(--safe-area-top-android, 0px));
+    padding-bottom: 24px;
+  }
+
+  .bg-card {
+    height: calc(100dvh - 180px - var(--safe-area-top-android, 0px));
+  }
+}
+
 .subtitle-card {
   color: variables.$primary-color;
 

@@ -128,6 +128,6 @@
         <p class="subtitle-card">Studio</p>
         <h2 class="title-card"><%= card.nom %></h2>
         <%# Attention: souvent 'nom' pour studio, pas 'nom_reference' %>
-        <p class="description-card description-card-home"><%= card.presentation_generale %></p>
+        <p class="description-card description-card-home"><%= strip_tags(card.presentation_generale) %></p>
       </div>
     </div>

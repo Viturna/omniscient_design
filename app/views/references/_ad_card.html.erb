@@ -1,42 +1,85 @@
 <% return unless local_assigns.key?(:ad) && ad.present? %>
 <% ad_id = ad.is_a?(Hash) ? ad[:id] : ad.id %>
-<%= link_to partner_click_path(ad_id), target: "_blank", class: "partner-card-link" do %>
-  <img src="<%= partner_impression_path(ad_id) %>" style="display:none;" alt="" aria-hidden="true" loading="eager">
-  <div class="card partner-card">
-    <div class="bg-card" style="background-color: #52525D;">
-      <div class="bg-img-card card-slider-wrapper" 
-           data-controller="slider" 
-           data-slider-update-background-value="true">
-        <div class="card-slider-blurred-bg" data-slider-target="background"></div>
-        <div class="card-slider-slides">
+<% 
+  is_hash = ad.is_a?(Hash)
+  desktop_url = is_hash ? ad[:image_desktop_url] : (ad.image.attached? ? url_for(ad.image) : nil)
+  mobile_url = is_hash ? ad[:image_mobile_url] : (ad.image_mobile.attached? ? url_for(ad.image_mobile) : desktop_url)
+  is_video = is_hash ? (desktop_url.to_s.include?('.webm') || desktop_url.to_s.include?('.mp4')) : ad.video?
+  is_mobile_video = is_hash ? (mobile_url.to_s.include?('.webm') || mobile_url.to_s.include?('.mp4')) : (ad.image_mobile.attached? ? ad.mobile_video? : is_video)
+  title = is_hash ? ad[:title] : ad.title
+  style_bg = "position: relative; z-index: 2; pointer-events: none;"
+%>
+
+<div class="card partner-card" 
+     data-id="<%= ad_id %>"
+     data-controller="slider ad-impression" 
+     data-ad-impression-url-value="<%= partner_impression_path(ad_id) %>"
+     data-slider-update-background-value="true"
+     style="position: relative;">
+  <%= link_to partner_click_path(ad_id), target: "_blank", class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
+    <span style="display:none;"><%= title %></span>
+  <% end %>
+
+  <div class="bg-card" style="background-color: #52525D; <%= style_bg %>">
+    <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
+      <% if is_video || is_mobile_video %>
+        <video class="card-slider-blurred-bg" 
+               autoplay loop muted playsinline webkit-playsinline preload="auto"
+               style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; filter: blur(20px); transform: scale(1.1);">
+          <% if mobile_url.present? && mobile_url != desktop_url %>
+            <source src="<%= mobile_url %>" media="(max-width: 760px)" type="video/webm">
+          <% end %>
+          <% if desktop_url.present? %>
+            <source src="<%= desktop_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %> type="video/webm">
+          <% end %>
+        </video>
+      <% elsif desktop_url.present? %>
+        <img src="<%= desktop_url %>" loading="lazy" class="card-slider-blurred-bg" alt="" data-slider-target="background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+      <% else %>
+        <div class="card-slider-blurred-bg" data-slider-target="background" style="background-color: #52525D; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
+      <% end %>
+
+      <div class="card-slider-slides">
+        <% if is_video || is_mobile_video %>
+          <video class="card-slide-image active" 
+                 autoplay loop muted playsinline webkit-playsinline preload="auto"
+                 data-slider-target="slide">
+            <% if mobile_url.present? && mobile_url != desktop_url %>
+              <source src="<%= mobile_url %>" media="(max-width: 760px)" type="video/webm">
+            <% end %>
+            <% if desktop_url.present? %>
+              <source src="<%= desktop_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %> type="video/webm">
+            <% end %>
+          </video>
+        <% else %>
           <picture>
-            <source media="(max-width: 760px)" 
-                    srcset="<%= ad.is_a?(Hash) ? ad[:image_mobile_url] : (ad.image_mobile.attached? ? url_for(ad.image_mobile) : url_for(ad.image)) %>">
-            <source media="(min-width: 761px)" 
-                    srcset="<%= ad.is_a?(Hash) ? ad[:image_desktop_url] : url_for(ad.image) %>">
-            <img src="<%= ad.is_a?(Hash) ? ad[:image_desktop_url] : url_for(ad.image) %>" 
+            <source media="(max-width: 760px)" srcset="<%= mobile_url %>">
+            <source media="(min-width: 761px)" srcset="<%= desktop_url %>">
+            <img src="<%= desktop_url %>" 
                  class="card-slide-image active" 
                  data-slider-target="slide"
-                 alt="<%= ad.is_a?(Hash) ? ad[:title] : ad.title %>" />
+                 alt="<%= title %>" />
           </picture>
+        <% end %>
+      </div>
+
+      <div class="flex-info-card partners" style="position: relative; z-index: 5;">
+        <div class="info-card-dark" style="pointer-events: auto;">
+          <div class="small-circle" style="background-color: #FFF;"></div>
+          Sponsorisé
         </div>
-        <div class="flex-info-card partners">
-          <div class="info-card-dark">
-            <div class="small-circle" style="background-color: #FFF;"></div>
-            Sponsorisé
-          </div>
-          <div class="info-card" style="background-color: #FFF; color: #202020;">
-            En savoir plus →
-          </div>
+        <div class="info-card" style="background-color: #FFF; color: #202020; pointer-events: auto;">
+          En savoir plus →
         </div>
       </div>
     </div>
-    <div class="container-text-card">
-      <p class="subtitle-card">
-        Sponsorisé
-      </p>
-      <h2 class="title-card"><%= ad.is_a?(Hash) ? ad[:title] : ad.title %></h2>
-      <p class="description-card description-card-home"><%= ad.is_a?(Hash) ? ad[:description] : (ad.respond_to?(:description) ? ad.description : "") %></p>
-    </div>
   </div>
-<% end %>
+
+  <div class="container-text-card">
+    <p class="subtitle-card">
+      Sponsorisé
+    </p>
+    <h2 class="title-card"><%= title %></h2>
+    <p class="description-card description-card-home"><%= is_hash ? ad[:description] : (ad.respond_to?(:description) ? ad.description : "") %></p>
+  </div>
+</div>

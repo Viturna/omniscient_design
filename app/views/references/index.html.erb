@@ -107,7 +107,7 @@
          data-scroll-vertical-target="trigger"
          data-offset="<%= @items.count { |i| i.is_a?(Reference) } %>"
          data-loaded-ids="<%= @items.select { |i| i.is_a?(Reference) }.map(&:id).join(',') %>"
-         data-ad-index="0" 
+         data-ad-index="<%= @ad_index %>" 
          data-items-until-next-ad="<%= @items_until_next_ad %>"
          data-ads-order="<%= @ads_order_string %>">
     </div>

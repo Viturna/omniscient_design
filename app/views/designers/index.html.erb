@@ -114,7 +114,7 @@
          data-offset="<%= @items.count { |i| i.is_a?(Designer) || i.is_a?(Studio) } %>"
          data-loaded-designer-ids="<%= @items.select { |i| i.is_a?(Designer) }.map(&:id).join(',') %>"
          data-loaded-studio-ids="<%= @items.select { |i| i.is_a?(Studio) }.map(&:id).join(',') %>"
-         data-ad-index="0"
+         data-ad-index="<%= @ad_index %>"
          data-items-until-next-ad="<%= @items_until_next_ad %>"
          data-ads-order="<%= @ads_order_string %>">
     </div>

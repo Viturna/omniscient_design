@@ -174,9 +174,13 @@
           <tr>
             <td style="width: 80px;">
               <% if ad.image.attached? %>
-                <%= image_tag ad.image.variant(resize_to_limit: [100, 100]), class: "ad-preview-img" %>
+                <% if ad.video? %>
+                  <video src="<%= url_for(ad.image) %>" class="ad-preview-img" muted loop autoplay playsinline></video>
+                <% else %>
+                  <%= image_tag ad.image.variant(resize_to_limit: [100, 100]), class: "ad-preview-img" %>
+                <% end %>
               <% else %>
-                <div class="ad-preview-img" style="display:flex;align-items:center;justify-content:center;color:#ccc;">No img</div>
+                <div class="ad-preview-img" style="display:flex;align-items:center;justify-content:center;color:#ccc;">No visual</div>
               <% end %>
             </td>
             <td>

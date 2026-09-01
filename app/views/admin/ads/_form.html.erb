@@ -85,26 +85,38 @@
     <hr>
     <h2>Visuels</h2>
     <div class="field">
-      <%= form.label :image, "Image Desktop (principale)" %>
-      <%= form.file_field :image, class: "form-control" %>
+      <%= form.label :image, "Visuel Desktop (Image ou Vidéo - max 25 Mo)" %>
+      <%= form.file_field :image, class: "form-control", accept: "image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" %>
       <% if ad.image.attached? && ad.persisted? %>
         <div class="image-preview">
-          <p style="margin: 0 0 5px 0; font-size:12px; font-weight:600;">Actuelle :</p>
-          <%= image_tag ad.image.variant(resize_to_limit: [300, 300]) %>
+          <p style="margin: 0 0 5px 0; font-size:12px; font-weight:600;">Actuel :</p>
+          <% if ad.video? %>
+            <video controls playsinline preload="metadata" style="max-width: 300px; max-height: 300px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px;">
+              <source src="<%= url_for(ad.image) %>" type="<%= ad.image.blob.content_type %>">
+            </video>
+          <% else %>
+            <%= image_tag ad.image.variant(resize_to_limit: [300, 300]) %>
+          <% end %>
         </div>
       <% end %>
     </div>
     <div class="field">
-      <%= form.label :image_mobile, "Image Mobile (optionnelle)" %>
+      <%= form.label :image_mobile, "Visuel Mobile (optionnel - Image ou Vidéo)" %>
       <i style="font-size:12px; color:#666;">Optimisé pour les écrans < 760px.</i>
-          <%= form.file_field :image_mobile, class: "form-control" %>
-          <% if ad.image_mobile.attached? && ad.persisted? %>
-            <div class="image-preview">
-              <p style="margin: 0 0 5px 0; font-size:12px; font-weight:600;">Actuelle :</p>
-              <%= image_tag ad.image_mobile.variant(resize_to_limit: [300, 300]) %>
-            </div>
+      <%= form.file_field :image_mobile, class: "form-control", accept: "image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" %>
+      <% if ad.image_mobile.attached? && ad.persisted? %>
+        <div class="image-preview">
+          <p style="margin: 0 0 5px 0; font-size:12px; font-weight:600;">Actuel :</p>
+          <% if ad.mobile_video? %>
+            <video controls playsinline preload="metadata" style="max-width: 300px; max-height: 300px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px;">
+              <source src="<%= url_for(ad.image_mobile) %>" type="<%= ad.image_mobile.blob.content_type %>">
+            </video>
+          <% else %>
+            <%= image_tag ad.image_mobile.variant(resize_to_limit: [300, 300]) %>
           <% end %>
         </div>
+      <% end %>
+    </div>
         <hr>
         <h2>Programmation (Optionnel)</h2>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">

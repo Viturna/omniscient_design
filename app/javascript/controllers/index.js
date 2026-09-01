@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import AdImpressionController from "./ad_impression_controller"
+application.register("ad-impression", AdImpressionController)
+
 import AdminNotificationController from "./admin_notification_controller"
 application.register("admin-notification", AdminNotificationController)
 
@@ -85,6 +88,9 @@ application.register("password-strength", PasswordStrengthController)
 import PopupController from "./popup_controller"
 application.register("popup", PopupController)
 
+import PreventScrollController from "./prevent_scroll_controller"
+application.register("prevent-scroll", PreventScrollController)
+
 import ProgressFormController from "./progress_form_controller"
 application.register("progress-form", ProgressFormController)
 
@@ -141,7 +147,6 @@ application.register("sources", SourcesController)
 
 import StarRatingController from "./star_rating_controller"
 application.register("star-rating", StarRatingController)
-
 
 import SubTabsController from "./sub_tabs_controller"
 application.register("sub-tabs", SubTabsController)

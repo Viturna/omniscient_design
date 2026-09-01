@@ -41,11 +41,18 @@ class Admin::AdsController < ApplicationController
   end
 
   def approve
+    start_date = @ad.start_date || Date.current
+    end_date = if @ad.duration_days.present?
+                 start_date + @ad.duration_days.days
+               else
+                 @ad.end_date
+               end
+
     @ad.update(
       status: 'approved',
       active: true,
-      start_date: Date.current,
-      end_date: Date.current + @ad.duration_days.days
+      start_date: start_date,
+      end_date: end_date
     )
     redirect_to admin_ads_path, notice: 'Publicité validée ! Elle est désormais active.'
   end
@@ -62,7 +69,7 @@ class Admin::AdsController < ApplicationController
   end
 
   def ad_params
-    params.require(:ad).permit(:title, :description, :link, :active, :start_date, :end_date, :image, :image_mobile)
+    params.require(:ad).permit(:title, :description, :link, :weight, :logged_out_only, :active, :start_date, :end_date, :image, :image_mobile)
   end
 
   def authenticate_admin!

@@ -25,18 +25,11 @@ class DesignersController < ApplicationController
     raw_items = (designers + studios).shuffle
 
     @current_page = 'accueil'
-    # 1. On récupère les pubs actives et pertinentes pour l'utilisateur
-    candidate_ads = Ad.currently_active.includes(image_attachment: :blob,
-                                                 image_mobile_attachment: :blob).relevant_for(current_user)
-
-    # 2. Tri pondéré (les pubs avec un gros poids sortent plus souvent au début)
-    ads = candidate_ads.sort_by { |ad| -1 * (rand * ad.weight) }
-
-    # 3. On sauvegarde l'ordre pour le "load more"
+    ads = Ad.weighted_queue_for(current_user, 30)
     @ads_order_string = ads.map(&:id).join(',')
 
     @items = []
-    ad_index = 0
+    @ad_index = 0
     @items_until_next_ad = rand(AD_FIRST_POSITION_RANGE)
 
     if user_signed_in?
@@ -52,8 +45,8 @@ class DesignersController < ApplicationController
       @items_until_next_ad -= 1
       next unless @items_until_next_ad == 0 && ads.present?
 
-      @items << ads[ad_index % ads.length]
-      ad_index += 1
+      @items << ads[@ad_index % ads.length]
+      @ad_index += 1
       @items_until_next_ad = rand(AD_FREQUENCY_RANGE)
     end
   end

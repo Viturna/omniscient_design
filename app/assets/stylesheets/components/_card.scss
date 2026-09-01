@@ -347,7 +347,7 @@
   }
 }
 
-.is-android {
+.is-android-app {
   .card {
     padding-top: calc(72px + var(--safe-area-top-android, 0px));
     padding-bottom: 24px;
@@ -355,6 +355,17 @@
 
   .bg-card {
     height: calc(100dvh - 180px - var(--safe-area-top-android, 0px));
+  }
+}
+
+.is-android-browser {
+  .card {
+    padding-top: calc(75px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bg-card {
+    height: calc(100dvh - 240px - var(--safe-area-top-android, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px));
   }
 }
 

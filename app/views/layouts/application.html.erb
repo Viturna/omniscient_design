@@ -47,12 +47,19 @@
       </script>
     <% end %>
     <script>
-      if (navigator.userAgent.indexOf('Turbo Native') !== -1) {
+      var isNative = navigator.userAgent.indexOf('Turbo Native') !== -1;
+      var isAndroid = /Android/i.test(navigator.userAgent);
+
+      if (isNative) {
         document.documentElement.style.setProperty('--native-bottom', '0px');
         document.documentElement.classList.add('is-native-app');
-      }
-      if (/Android/i.test(navigator.userAgent)) {
-        document.documentElement.classList.add('is-android');
+        if (isAndroid) {
+          document.documentElement.classList.add('is-android-app');
+        } else {
+          document.documentElement.classList.add('is-ios-app');
+        }
+      } else if (isAndroid) {
+        document.documentElement.classList.add('is-android-browser');
       }
     </script>
     <style>

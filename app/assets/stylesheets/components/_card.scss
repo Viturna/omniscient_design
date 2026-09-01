@@ -217,14 +217,13 @@
   .bg-card {
     transform: rotate(0deg);
     width: 90vw;
-    flex: 1 1 auto;
-    min-height: 180px;
-    height: 100%;
+    height: calc(100dvh - 240px - var(--safe-area-top-android, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px));
+    min-height: 250px;
   }
 
   .card {
-    padding-top: calc(72px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
-    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    padding-top: calc(75px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
     height: 100dvh;
     box-sizing: border-box;
     width: 90vw;
@@ -234,7 +233,7 @@
   }
 
   .card .subtitle-card {
-    margin-top: 8px;
+    margin-top: 12px;
   }
 
   .bg-card .date-main {
@@ -264,9 +263,8 @@
   }
 
   .container-text-card {
-    padding: 10px 0 4px 0;
+    padding: 12px 0 0 0;
     width: 100%;
-    flex-shrink: 0;
   }
 
   .title-description-card {
@@ -290,14 +288,13 @@
   .bg-card {
     transform: rotate(0deg);
     width: 90vw;
-    flex: 1 1 auto;
-    min-height: 180px;
-    height: 100%;
+    height: calc(100dvh - 230px - var(--safe-area-top-android, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px));
+    min-height: 220px;
   }
 
   .card {
-    padding-top: calc(72px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
-    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    padding-top: calc(75px + var(--safe-area-top-android, env(safe-area-inset-top, 0px)));
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
     height: 100dvh;
     box-sizing: border-box;
     width: 90vw;
@@ -307,7 +304,7 @@
   }
 
   .card .subtitle-card {
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   .bg-card .date-main {
@@ -337,9 +334,8 @@
   }
 
   .container-text-card {
-    padding: 10px 0 4px 0;
+    padding: 10px 0 0 0;
     width: 100%;
-    flex-shrink: 0;
   }
 
   .title-description-card {
@@ -348,12 +344,6 @@
 
   .description-card {
     display: none;
-  }
-}
-
-.is-native-app {
-  .card {
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

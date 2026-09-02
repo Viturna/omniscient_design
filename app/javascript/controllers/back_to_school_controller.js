@@ -44,9 +44,7 @@ export default class extends Controller {
 
   openModalFromBanner(event) {
     if (event) event.preventDefault()
-    if (this.hasModalTarget) {
-      this.modalTarget.style.display = "flex"
-    }
+    this.showModal()
   }
 
   backgroundClick(event) {

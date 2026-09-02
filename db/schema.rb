@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_204040) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_02_172701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -666,6 +666,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_204040) do
     t.string "role"
     t.string "statut"
     t.string "study_level"
+    t.datetime "study_level_updated_at"
     t.integer "total_quiz_points", default: 0
     t.string "uid"
     t.string "unconfirmed_email"

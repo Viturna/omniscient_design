@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   layout 'admin', only: %i[index show]
   before_action :set_user, only: %i[ban unban]
+  before_action :authenticate_user!, only: %i[update_study_level]
   before_action :check_admin_role,
                 only: %i[index certify uncertify admin_resend_confirmation ban unban export_newsletter]
 
@@ -299,6 +300,23 @@ class UsersController < ApplicationController
     end
 
     send_data csv_data, filename: "newsletter_users_#{Date.today}.csv", type: 'text/csv'
+  end
+
+  def update_study_level
+    # Si l'utilisateur clique sur "Mon niveau n'a pas changé"
+    if params[:no_change] == 'true'
+      current_user.update_column(:study_level_updated_at, Time.current)
+      redirect_back fallback_location: root_path, notice: t('back_to_school.confirmed_notice', default: 'Merci ! Ton niveau d\'étude pour cette rentrée a bien été confirmé.')
+      return
+    end
+
+    study_level = params[:user]&.[](:study_level)
+    if study_level.present? && User::STUDY_LEVELS.include?(study_level)
+      current_user.update(study_level: study_level, study_level_updated_at: Time.current)
+      redirect_back fallback_location: root_path, notice: t('back_to_school.success_notice', default: 'Bonne rentrée ! Ton niveau d\'étude a été mis à jour avec succès.')
+    else
+      redirect_back fallback_location: root_path, alert: t('back_to_school.invalid_level', default: 'Veuillez sélectionner un niveau d\'étude valide.')
+    end
   end
 
   private

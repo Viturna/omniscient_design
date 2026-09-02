@@ -25,6 +25,9 @@ application.register("avatar-upload", AvatarUploadController)
 import BackController from "./back_controller"
 application.register("back", BackController)
 
+import BackToSchoolController from "./back_to_school_controller"
+application.register("back-to-school", BackToSchoolController)
+
 import CookieConsentController from "./cookie_consent_controller"
 application.register("cookie-consent", CookieConsentController)
 

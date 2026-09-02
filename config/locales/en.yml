@@ -7,6 +7,21 @@ en:
     banner_text: "We use cookies to improve your experience. Do you accept the use of cookies?"
     accept: "Accept"
     decline: "Decline"
+  back_to_school:
+    banner_title: "Back to school!"
+    banner_desc: "Don't forget to update your study level."
+    current_level: "Current level: %{level}"
+    update_button: "Update my level"
+    modal_title: "Happy Back to School! 🎓"
+    modal_desc: "For this new school year, please update your study level to receive personalized recommendations and content."
+    select_label: "Your study level for this year:"
+    select_prompt: "Select your study level"
+    submit_button: "Confirm my level"
+    no_change_button: "My level hasn't changed (%{level})"
+    later_button: "Later"
+    success_notice: "Happy back to school! Your study level has been updated successfully."
+    confirmed_notice: "Thank you! Your study level for this school year has been confirmed."
+    invalid_level: "Please select a valid study level."
   loader:
     unsupported_browser: "Your browser does not support the video."
   global:

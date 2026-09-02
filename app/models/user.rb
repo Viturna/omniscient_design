@@ -162,11 +162,24 @@ class User < ApplicationRecord
     NewsletterJob.perform_later(id)
   end
 
+  before_save :touch_study_level_updated_at, if: :will_save_change_to_study_level?
+
+  def needs_back_to_school_update?
+    return false unless statut == 'etudiant'
+    return false unless created_at.present? && created_at < Time.zone.parse('2026-09-01 00:00:00')
+
+    study_level_updated_at.blank? || study_level_updated_at < Time.zone.parse('2026-09-01 00:00:00')
+  end
+
   def sync_newsletter_status
     NewsletterJob.perform_later(id)
   end
 
   private
+
+  def touch_study_level_updated_at
+    self.study_level_updated_at = Time.current
+  end
 
   def generate_referral_code
     self.referral_code = loop do

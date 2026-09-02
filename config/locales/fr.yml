@@ -7,6 +7,21 @@ fr:
     banner_text: "Nous utilisons des cookies pour améliorer ton expérience. Acceptes-tu l'utilisation des cookies ?"
     accept: "Accepter"
     decline: "Refuser"
+  back_to_school:
+    banner_title: "C'est la rentrée !"
+    banner_desc: "Pense à actualiser ton niveau d'études."
+    current_level: "Niveau actuel : %{level}"
+    update_button: "Mettre à jour mon niveau"
+    modal_title: "Bonne rentrée ! 🎓"
+    modal_desc: "Pour cette nouvelle année scolaire, actualise ton niveau d'études afin de recevoir des recommandations et contenus personnalisés."
+    select_label: "Ton niveau pour cette année :"
+    select_prompt: "Sélectionne ton niveau scolaire"
+    submit_button: "Valider mon niveau"
+    no_change_button: "Mon niveau n'a pas changé (%{level})"
+    later_button: "Plus tard"
+    success_notice: "Bonne rentrée ! Ton niveau d'étude a été mis à jour avec succès."
+    confirmed_notice: "Merci ! Ton niveau d'étude pour cette rentrée a bien été confirmé."
+    invalid_level: "Veuillez sélectionner un niveau d'étude valide."
   loader:
     unsupported_browser: "Ton navigateur ne supporte pas la vidéo."
   global:

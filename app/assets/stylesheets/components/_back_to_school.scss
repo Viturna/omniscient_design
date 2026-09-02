@@ -1,0 +1,247 @@
+@use "abstracts/variables";
+
+/* Bannière de rentrée scolaire */
+.bts-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: variables.$primary-color;
+  color: variables.$secondary-color;
+  padding: 12px 28px;
+  position: fixed;
+  top: 0;
+  left: 350px;
+  right: 0;
+  width: auto;
+  z-index: 950;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  animation: slideDownBanner 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .bts-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+
+    .bts-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .bts-text {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: #ffffff;
+
+      strong {
+        font-weight: 600;
+        margin-right: 4px;
+        color: #ffffff;
+      }
+
+      .bts-current-level {
+        opacity: 0.8;
+        font-size: 0.85rem;
+        display: inline-block;
+        margin-left: 6px;
+      }
+    }
+  }
+
+  .bts-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .bts-btn-update {
+      background-color: variables.$secondary-color;
+      color: variables.$primary-color;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+/* Modale de rentrée basée sur les classes .popup du site */
+.bts-popup-card {
+  max-width: 580px;
+
+  .bts-modal-header {
+    margin-top: 24px;
+    margin-bottom: 28px;
+
+    .title-popup {
+      font-size: 26px;
+      font-weight: 500;
+      margin: 0 0 14px 0;
+    }
+
+    .subtitle {
+      width: 100%;
+      font-size: 15px;
+      color: variables.$text-color;
+      line-height: 1.45;
+      margin: 0;
+    }
+  }
+
+  .field {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-size: 16px;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: variables.$primary-color;
+    }
+
+    .select2-container {
+      width: 100% !important;
+    }
+  }
+
+  .bts-modal-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+
+    .button {
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      display: block;
+      margin: 0;
+    }
+
+    .bts-btn-same-level {
+      background-color: transparent;      
+      color: variables.$text-color;
+      font-weight: 500;
+      padding: 12px 16px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    a.underline {
+      color: variables.$text-color;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 4px;
+      padding: 4px;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes slideDownBanner {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Dark mode */
+body.dark-mode {
+  .bts-banner {
+    background-color: variables.$secondary-color-dark;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .bts-text {
+      color: variables.$text-color-dark;
+
+      strong {
+        color: #ffffff;
+      }
+    }
+
+    .bts-btn-update {
+      background-color: #ffffff;
+      color: #202020;
+    }
+  }
+
+  .bts-popup-card {
+    .bts-modal-header {
+      .subtitle {
+        color: variables.$text-color-dark;
+      }
+    }
+
+    .field label {
+      color: variables.$primary-color-dark;
+    }
+
+    .bts-modal-footer {
+      a.underline {
+        color: variables.$text-color-dark;
+      }
+    }
+  }
+}
+
+/* Responsive Mobile */
+@media screen and (max-width: 1024px) {
+  .bts-banner {
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .bts-banner {
+    left: 0;
+    right: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    padding: 14px 16px;
+
+    .bts-banner-content {
+      gap: 10px;
+
+      .bts-text {
+        font-size: 0.85rem;
+      }
+    }
+
+    .bts-banner-actions {
+      justify-content: flex-end;
+
+      .bts-btn-update {
+        width: 100%;
+        text-align: center;
+        padding: 8px 12px;
+      }
+    }
+  }
+}

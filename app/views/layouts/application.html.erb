@@ -122,6 +122,12 @@
       <% end %>
     <% end %>
     <% main_show = (controller_name == 'references' || controller_name == 'designers' || controller_name == 'studios') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
+    <% if user_signed_in? && current_user.needs_back_to_school_update? %>
+      <div data-controller="back-to-school">
+        <%= render 'shared/back_to_school_modal' %>
+        <%= render 'shared/back_to_school_banner' %>
+      </div>
+    <% end %>
     <main class="<%= 'main-show' if main_show %>">
       <% unless native_app? %>
         <div id="loading" data-loading-target="loading">

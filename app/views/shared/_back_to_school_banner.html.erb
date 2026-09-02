@@ -1,0 +1,17 @@
+<div class="bts-banner" data-back-to-school-target="banner" style="display: none;">
+  <div class="bts-banner-content">
+    <div class="bts-icon">🎓</div>
+    <div class="bts-text">
+      <strong><%= t('back_to_school.banner_title', default: "C'est la rentrée !") %></strong>
+      <span><%= t('back_to_school.banner_desc', default: "Pense à actualiser ton niveau d'études.") %></span>
+      <% if current_user.study_level.present? %>
+        <span class="bts-current-level">(<%= t('back_to_school.current_level', level: current_user.study_level, default: "Niveau actuel : %{level}") %>)</span>
+      <% end %>
+    </div>
+  </div>
+  <div class="bts-banner-actions">
+    <button type="button" class="bts-btn-update" data-action="click->back-to-school#openModalFromBanner">
+      <%= t('back_to_school.update_button', default: "Mettre à jour mon niveau") %>
+    </button>
+  </div>
+</div>

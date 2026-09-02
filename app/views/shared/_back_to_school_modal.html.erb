@@ -36,8 +36,32 @@
                        } %>
         </div>
 
+        <div class="field">
+          <label style="margin-bottom: 8px; display: block; font-weight: 500;">
+            <%= t('back_to_school.establishment_label', default: "Ton établissement scolaire :") %>
+          </label>
+          <%= f.collection_select "user[etablissement_id]", 
+                                  Etablissement.order(:city), 
+                                  :id, 
+                                  :all_info, 
+                                  { 
+                                    include_blank: t('back_to_school.no_establishment_option', default: "Aucun établissement / Établissement manquant"),
+                                    selected: current_user.etablissement_id 
+                                  }, 
+                                  { 
+                                    class: "form-control",
+                                    data: { 
+                                      controller: "select2",
+                                      select2_placeholder_value: t('back_to_school.establishment_placeholder', default: "Rechercher ou laisser vide...")
+                                    }
+                                  } %>
+          <small style="margin-top: 6px; display: block; font-size: 0.8rem; color: #888888;">
+            <%= t('back_to_school.establishment_help', default: "Optionnel. Si ton établissement ne figure pas dans la liste ou si tu souhaites le retirer, sélectionne « Aucun établissement ».") %>
+          </small>
+        </div>
+
         <div class="bts-modal-footer">
-          <%= f.submit t('back_to_school.submit_button', default: "Valider mon niveau"), class: "button large dark" %>
+          <%= f.submit t('back_to_school.submit_button', default: "Valider mes informations"), class: "button large dark" %>
           
           <% if current_user.study_level.present? %>
             <%= button_tag type: :submit, 

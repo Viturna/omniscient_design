@@ -306,14 +306,22 @@ class UsersController < ApplicationController
     # Si l'utilisateur clique sur "Mon niveau n'a pas changé"
     if params[:no_change] == 'true'
       current_user.update_column(:study_level_updated_at, Time.current)
-      redirect_back fallback_location: root_path, notice: t('back_to_school.confirmed_notice', default: 'Merci ! Ton niveau d\'étude pour cette rentrée a bien été confirmé.')
+      redirect_back fallback_location: root_path, notice: t('back_to_school.confirmed_notice', default: 'Merci ! Tes informations pour cette rentrée ont bien été confirmées.')
       return
     end
 
     study_level = params[:user]&.[](:study_level)
+    etablissement_id = params[:user]&.[](:etablissement_id)
+
     if study_level.present? && User::STUDY_LEVELS.include?(study_level)
-      current_user.update(study_level: study_level, study_level_updated_at: Time.current)
-      redirect_back fallback_location: root_path, notice: t('back_to_school.success_notice', default: 'Bonne rentrée ! Ton niveau d\'étude a été mis à jour avec succès.')
+      update_attrs = { 
+        study_level: study_level, 
+        study_level_updated_at: Time.current,
+        etablissement_id: etablissement_id.presence
+      }
+
+      current_user.update(update_attrs)
+      redirect_back fallback_location: root_path, notice: t('back_to_school.success_notice', default: 'Bonne rentrée ! Tes informations scolaires ont été mises à jour avec succès.')
     else
       redirect_back fallback_location: root_path, alert: t('back_to_school.invalid_level', default: 'Veuillez sélectionner un niveau d\'étude valide.')
     end

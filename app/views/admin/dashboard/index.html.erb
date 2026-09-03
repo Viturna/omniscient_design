@@ -622,6 +622,24 @@
             <p>Clics sur la languette "tip!"</p>
           </div>
         </div>
+        <h3 class="section-label" style="margin-top: 20px;">Rentrée Scolaire 2026 🎓</h3>
+        <div class="mini-stats-grid">
+          <div class="mini-stat-card green">
+            <h3><%= @students_updated_back_to_school %> / <%= @students_eligible_for_back_to_school %></h3>
+            <p>Étudiants mis à jour</p>
+          </div>
+          <div class="mini-stat-card" style="background: #E8F5E9; color: #2E7D32;">
+            <h3 style="color: #2E7D32;"><%= @back_to_school_update_rate %>%</h3>
+            <p style="color: #388E3C; font-weight: 500;">Taux de mise à jour</p>
+          </div>
+          <div class="mini-stat-card" style="grid-column: span 2;">
+            <div class="icon-small">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            </div>
+            <h3><%= @students_pending_back_to_school %></h3>
+            <p>Étudiants restant à actualiser</p>
+          </div>
+        </div>
       </div>
     </div>
     <!-- NOUVELLE SECTION: Viralité & Parrainage -->

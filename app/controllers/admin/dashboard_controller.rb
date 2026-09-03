@@ -23,6 +23,17 @@ class Admin::DashboardController < ApplicationController
     # --- Tip Stats ---
     @total_tip_clicks = TipClick.count
 
+    # --- Rentrée Scolaire 2026 ---
+    @school_year_start = Date.new(2026, 9, 1).beginning_of_day
+    @students_eligible_for_back_to_school = User.where(statut: 'etudiant').where('created_at < ?', @school_year_start).count
+    @students_updated_back_to_school = User.where(statut: 'etudiant')
+                                           .where('created_at < ?', @school_year_start)
+                                           .where('study_level_updated_at >= ?', @school_year_start)
+                                           .count
+    @students_pending_back_to_school = @students_eligible_for_back_to_school - @students_updated_back_to_school
+    @back_to_school_update_rate = @students_eligible_for_back_to_school > 0 ? ((@students_updated_back_to_school.to_f / @students_eligible_for_back_to_school) * 100).round(1) : 0
+    @total_students_updated_study_level = User.where('study_level_updated_at >= ?', @school_year_start).count
+
     # --- Graphique : Nouvelles Inscriptions (User) ---
     @period = params[:period] || '30d'
     end_date = Date.today

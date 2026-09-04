@@ -1,9 +1,19 @@
 <%= link_to studio do %>
-  <% if studio.studio_images.first&.file&.attached? %>
-    <div class="card-designer" style="background: url('<%= url_for(studio.studio_images.first.file.variant(:thumb)) %>'); background-size: cover; background-position: center center;">
-    <% else %>
-      <div class="card-designer" style="background: #F3F3F3;">
-      <% end %>
+  <%
+    thumb_url = nil
+    if studio.studio_images.first&.file&.attached?
+      begin
+        thumb_url = url_for(studio.studio_images.first.file.variant(:thumb))
+      rescue StandardError => e
+        thumb_url = nil
+      end
+    end
+  %>
+  <% if thumb_url.present? %>
+    <div class="card-designer" style="background: url('<%= thumb_url %>'); background-size: cover; background-position: center center;">
+  <% else %>
+    <div class="card-designer" style="background: #F3F3F3;">
+  <% end %>
       <div class="inner-card-designer">
         <% if studio.respond_to?(:countries) %>
           <% studio.countries.each do |country| %>

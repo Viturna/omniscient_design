@@ -324,8 +324,12 @@
   <% end %>
   <div id="references" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab].blank? || params[:tab] == 'references' ? 'display:block;' : 'display:none;' %>">
     <div id="references-container" class="flex-container">
-      <% @references.each do |reference| %>
-        <%= render 'references/reference_card', reference: reference %>
+      <% inject_search_ads(@references, @ads).each do |item| %>
+        <% if item.is_a?(Hash) && item[:_is_ad] %>
+          <%= render 'search/ad_search_card', ad: item[:ad] %>
+        <% else %>
+          <%= render 'references/reference_card', reference: item %>
+        <% end %>
       <% end %>
     </div>
     <% unless params[:tab] == "frise" %>
@@ -334,8 +338,12 @@
   </div>
   <div id="studios" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'studios' ? 'display:block;' : 'display:none;' %>">
     <div id="studios-container" class="flex-container">
-      <% @studios.each do |studio| %>
-        <%= render 'studios/studio_card', studio: studio %>
+      <% inject_search_ads(@studios, @ads).each do |item| %>
+        <% if item.is_a?(Hash) && item[:_is_ad] %>
+          <%= render 'search/ad_search_card', ad: item[:ad] %>
+        <% else %>
+          <%= render 'studios/studio_card', studio: item %>
+        <% end %>
       <% end %>
     </div>
     <% unless params[:tab] == "frise" %>
@@ -344,8 +352,12 @@
   </div>
   <div id="designers" class="content-tab" data-tabs-search-target="tabContent" style="<%= params[:tab] == 'designers' ? 'display:block;' : 'display:none;' %>">
     <div id="designers-container" class="flex-container">
-      <% @designers.each do |designer| %>
-        <%= render 'designers/designer_card', designer: designer %>
+      <% inject_search_ads(@designers, @ads).each do |item| %>
+        <% if item.is_a?(Hash) && item[:_is_ad] %>
+          <%= render 'search/ad_search_card', ad: item[:ad] %>
+        <% else %>
+          <%= render 'designers/designer_card', designer: item %>
+        <% end %>
       <% end %>
     </div>
     <% unless params[:tab] == "frise" %>

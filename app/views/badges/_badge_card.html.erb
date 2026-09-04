@@ -15,5 +15,22 @@
   <div class="badge-details">
     <h3 class="badge-title"><%= badge.name %></h3>
     <p class="badge-desc"><%= badge.description %></p>
+
+    <% progress_data = local_assigns[:progress] || (defined?(@gamification_service) && @gamification_service ? @gamification_service.progress_for_badge(badge) : nil) %>
+    <% if progress_data.present? %>
+      <div class="badge-card-progress">
+        <div class="badge-card-progress-track">
+          <div class="badge-card-progress-fill" style="width: <%= unlocked ? 100 : progress_data[:percentage] %>%;"></div>
+        </div>
+        <div class="badge-card-progress-meta">
+          <% if unlocked %>
+            <span class="badge-progress-status unlocked-status">Débloqué</span>
+          <% else %>
+            <span class="badge-progress-label"><%= progress_data[:label] %></span>
+            <span class="badge-progress-percent"><%= progress_data[:percentage] %>%</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

@@ -28,6 +28,9 @@ application.register("back", BackController)
 import BackToSchoolController from "./back_to_school_controller"
 application.register("back-to-school", BackToSchoolController)
 
+import BadgeToastController from "./badge_toast_controller"
+application.register("badge-toast", BadgeToastController)
+
 import CookieConsentController from "./cookie_consent_controller"
 application.register("cookie-consent", CookieConsentController)
 

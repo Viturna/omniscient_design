@@ -116,6 +116,7 @@
         </div>
       <% end %>
     <% end %>
+    <%= render 'shared/badge_toast' if user_signed_in? %>
     <% unless native_app? %>
       <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[references designers studios]) && action_name == 'show') %>
         <%= render 'layouts/header' %>

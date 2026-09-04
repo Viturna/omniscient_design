@@ -1,0 +1,49 @@
+<% return unless local_assigns.key?(:ad) && ad.present? %>
+<% ad_id = ad.is_a?(Hash) ? ad[:id] : ad.id %>
+<% 
+  is_hash = ad.is_a?(Hash)
+  desktop_url = is_hash ? ad[:image_desktop_url] : (ad.image.attached? ? url_for(ad.image) : nil)
+  mobile_url = is_hash ? ad[:image_mobile_url] : (ad.image_mobile.attached? ? url_for(ad.image_mobile) : desktop_url)
+  is_video = is_hash ? (desktop_url.to_s.include?('.webm') || desktop_url.to_s.include?('.mp4')) : ad.video?
+  is_mobile_video = is_hash ? (mobile_url.to_s.include?('.webm') || mobile_url.to_s.include?('.mp4')) : (ad.image_mobile.attached? ? ad.mobile_video? : is_video)
+  title = is_hash ? ad[:title] : ad.title
+  description = is_hash ? ad[:description] : (ad.respond_to?(:description) ? ad.description : "")
+  bg_url = desktop_url.presence || mobile_url
+%>
+
+<div class="quiz-card quiz-ad-card" 
+     data-id="<%= ad_id %>"
+     data-controller="ad-impression" 
+     data-ad-impression-url-value="<%= partner_impression_path(ad_id) %>">
+  <div class="card-image" style="position: relative; overflow: hidden; border-radius: 12px;">
+    <% if is_video || is_mobile_video %>
+      <video autoplay loop muted playsinline webkit-playsinline preload="auto"
+             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+        <% if mobile_url.present? && mobile_url != desktop_url %>
+          <source src="<%= mobile_url %>" media="(max-width: 760px)">
+        <% end %>
+        <source src="<%= desktop_url.presence || mobile_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %>>
+      </video>
+    <% elsif bg_url.present? %>
+      <img src="<%= bg_url %>" alt="<%= title %>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+    <% else %>
+      <div class="placeholder-img" style="background: #52525D; width: 100%; height: 100%; border-radius: 12px;"></div>
+    <% end %>
+  </div>
+  
+  <div class="card-content">
+    <div class="card-badges">
+      <span class="badge status" style="display: flex; align-items: center; gap: 6px; background: #202020; color: #FFF;">
+        <span style="background-color: #FFF; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span>
+        Sponsorisé
+      </span>
+      <span class="badge domaine" style="background-color: rgba(0, 0, 0, 0.05); color: #52525D;">
+        Partenaire
+      </span>
+    </div>
+
+    <h3 style="margin-bottom: 8px;"><%= title %></h3>
+
+    <%= link_to "En savoir plus →", partner_click_path(ad_id), target: "_blank", class: "button dark w-full", style: "margin-top: auto;" %>
+  </div>
+</div>

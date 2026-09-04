@@ -300,6 +300,21 @@ export default class extends Controller {
       if (data.status === "success") {
         if (this.hasTotalPointsTarget) this.totalPointsTarget.textContent = `${data.total_points} pts`
         this.showResultModal()
+
+        // Déclencher le toast de célébration de badge ou de progression
+        if (data.new_badges && data.new_badges.length > 0) {
+          setTimeout(() => {
+            data.new_badges.forEach((badge, i) => {
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent("badge:unlocked", { detail: badge }))
+              }, i * 1500)
+            })
+          }, 800)
+        } else if (data.badge_progress) {
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent("badge:progress", { detail: data.badge_progress }))
+          }, 1200)
+        }
       }
     })
     .catch(error => {

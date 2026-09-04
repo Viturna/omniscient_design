@@ -297,6 +297,8 @@ class SearchController < ApplicationController
       @designers = @designers.reorder(Arel.sql('designers.date_naissance DESC'))
     end
 
+    @ads = Ad.weighted_queue_for(current_user, 15)
+
     respond_to do |format|
       format.html
       format.turbo_stream

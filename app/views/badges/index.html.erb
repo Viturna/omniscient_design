@@ -48,11 +48,12 @@
         <% sorted_special_badges.each do |badge| %>
           <% unlocked = @my_badge_ids.include?(badge.id) %>
           <% next if (badge.name == "Early Adopter" || badge.name == "Pionnier") && !unlocked %>
+          <% progress = @gamification_service&.progress_for_badge(badge) %>
           <% if badge.name == "Omniscient Supporter" && !unlocked %>
             <%
               user_agent_lc = request.user_agent.to_s.downcase
               ios_app_id = "6754964970"
-              android_package = "com.thomasriq.omniscientdesign"
+              android_package = "com.thomasriq"
               if user_agent_lc.include?('ipad') || user_agent_lc.include?('iphone') || user_agent_lc.include?('ipod')
                 store_url = "https://apps.apple.com/app/id#{ios_app_id}?action=write-review"
               elsif user_agent_lc.include?('android')
@@ -63,11 +64,11 @@
             %>
             <div data-controller="rating" data-rating-url-value="<%= rate_app_badge_path %>">
               <%= link_to store_url, target: "_blank", data: { action: "click->rating#trigger" }, style: "text-decoration: none; color: inherit; cursor: pointer; display: block;" do %>
-                <%= render partial: "badge_card", locals: { badge: badge, unlocked: false } %>
+                <%= render partial: "badge_card", locals: { badge: badge, unlocked: false, progress: progress } %>
               <% end %>
             </div>
           <% else %>
-            <%= render partial: "badge_card", locals: { badge: badge, unlocked: unlocked } %>
+            <%= render partial: "badge_card", locals: { badge: badge, unlocked: unlocked, progress: progress } %>
           <% end %>
         <% end %>
       </div>
@@ -78,7 +79,9 @@
       <h2><%= t("badges.categories.#{category}", default: category.humanize) %></h2>
       <div class="badges-grid">
         <% badges.sort_by { |b| ['bronze', 'silver', 'gold', 'platinum'].index(b.level) || 99 }.each do |badge| %>
-          <%= render partial: "badge_card", locals: { badge: badge, unlocked: @my_badge_ids.include?(badge.id) } %>
+          <% unlocked = @my_badge_ids.include?(badge.id) %>
+          <% progress = @gamification_service&.progress_for_badge(badge) %>
+          <%= render partial: "badge_card", locals: { badge: badge, unlocked: unlocked, progress: progress } %>
         <% end %>
       </div>
     </div>

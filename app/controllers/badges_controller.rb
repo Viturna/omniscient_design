@@ -4,12 +4,14 @@ class BadgesController < ApplicationController
   def index
     @current_page = 'profil'
 
-    GamificationService.new(current_user).check_seniority
-    GamificationService.new(current_user).check_artchiveur
+    @gamification_service = GamificationService.new(current_user)
+    @gamification_service.check_seniority
+    @gamification_service.check_artchiveur
 
     @badges = Badge.all
 
     @my_badge_ids = current_user.badge_ids
+    session[:last_seen_badges_count] = @my_badge_ids.count
 
     @special_badges = @badges.select { |b| b.special? }
     @level_badges = @badges.reject { |b| b.special? }.group_by(&:category)

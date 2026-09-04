@@ -1,0 +1,63 @@
+<% return unless local_assigns.key?(:ad) && ad.present? %>
+<% ad_id = ad.is_a?(Hash) ? ad[:id] : ad.id %>
+<% 
+  is_hash = ad.is_a?(Hash)
+  desktop_url = is_hash ? ad[:image_desktop_url] : (ad.image.attached? ? url_for(ad.image) : nil)
+  mobile_url = is_hash ? ad[:image_mobile_url] : (ad.image_mobile.attached? ? url_for(ad.image_mobile) : desktop_url)
+  is_video = is_hash ? (desktop_url.to_s.include?('.webm') || desktop_url.to_s.include?('.mp4')) : ad.video?
+  is_mobile_video = is_hash ? (mobile_url.to_s.include?('.webm') || mobile_url.to_s.include?('.mp4')) : (ad.image_mobile.attached? ? ad.mobile_video? : is_video)
+  title = is_hash ? ad[:title] : ad.title
+  bg_url = desktop_url.presence || mobile_url
+%>
+<%= link_to partner_click_path(ad_id), target: "_blank", style: "text-decoration: none; color: inherit;" do %>
+  <% if is_video || is_mobile_video %>
+    <div class="card-reference search-ad-card" 
+         data-id="<%= ad_id %>"
+         data-controller="ad-impression" 
+         data-ad-impression-url-value="<%= partner_impression_path(ad_id) %>"
+         style="position: relative; overflow: hidden;">
+      <video autoplay loop muted playsinline webkit-playsinline preload="auto"
+             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+        <% if mobile_url.present? && mobile_url != desktop_url %>
+          <source src="<%= mobile_url %>" media="(max-width: 760px)">
+        <% end %>
+        <source src="<%= desktop_url.presence || mobile_url %>" <%= 'media="(min-width: 761px)"'.html_safe if mobile_url.present? && mobile_url != desktop_url %>>
+      </video>
+      <div class="inner-card-reference">
+        <p class="domaine-card-reference" style="display: flex; align-items: center; gap: 6px;">
+          <span style="background-color: #FFF; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span>
+          Sponsorisé
+        </p>
+        <p class="title-card-reference"><%= title %></p>
+      </div>
+    </div>
+  <% elsif bg_url.present? %>
+    <div class="card-reference search-ad-card" 
+         data-id="<%= ad_id %>"
+         data-controller="ad-impression" 
+         data-ad-impression-url-value="<%= partner_impression_path(ad_id) %>"
+         style="background: url('<%= bg_url %>'); background-size: cover; background-position: center center;">
+      <div class="inner-card-reference">
+        <p class="domaine-card-reference" style="display: flex; align-items: center; gap: 6px;">
+          <span style="background-color: #FFF; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span>
+          Sponsorisé
+        </p>
+        <p class="title-card-reference"><%= title %></p>
+      </div>
+    </div>
+  <% else %>
+    <div class="card-reference search-ad-card" 
+         data-id="<%= ad_id %>"
+         data-controller="ad-impression" 
+         data-ad-impression-url-value="<%= partner_impression_path(ad_id) %>"
+         style="background: #52525D;">
+      <div class="inner-card-reference">
+        <p class="domaine-card-reference" style="display: flex; align-items: center; gap: 6px;">
+          <span style="background-color: #FFF; width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span>
+          Sponsorisé
+        </p>
+        <p class="title-card-reference"><%= title %></p>
+      </div>
+    </div>
+  <% end %>
+<% end %>

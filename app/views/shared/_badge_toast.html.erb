@@ -1,0 +1,50 @@
+<div id="badge-toast-container" 
+     class="badge-toast-container hidden" 
+     data-controller="badge-toast"
+     data-badge-toast-target="container">
+  
+  <div class="badge-toast" data-badge-toast-target="toast">
+    <button type="button" class="toast-close" data-action="click->badge-toast#close" aria-label="Fermer">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <div class="toast-visual">
+      <img src="<%= asset_path('badges/default.webp') %>" 
+           alt="Badge" 
+           class="toast-badge-img" 
+           data-badge-toast-target="image">
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-meta">
+        <span class="toast-tag" data-badge-toast-target="tag">Nouveau badge</span>
+      </div>
+      
+      <h4 class="toast-title" data-badge-toast-target="title">Nom du badge</h4>
+      <p class="toast-desc" data-badge-toast-target="desc">Description du badge</p>
+
+      <div class="toast-progress-section hidden" data-badge-toast-target="progressSection">
+        <div class="toast-progress-track">
+          <div class="toast-progress-fill" data-badge-toast-target="progressBar" style="width: 0%;"></div>
+        </div>
+        <div class="toast-progress-meta">
+          <span><span data-badge-toast-target="progressCurrent">0</span> / <span data-badge-toast-target="progressTarget">100</span> pts</span>
+          <span class="progress-remaining" data-badge-toast-target="progressRemaining">50 pts restants</span>
+        </div>
+      </div>
+
+      <div class="toast-footer">
+        <a href="/mes-badges" class="toast-link" data-badge-toast-target="link">
+          <span>Voir mes badges</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

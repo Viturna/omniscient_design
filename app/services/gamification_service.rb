@@ -167,7 +167,6 @@ class GamificationService
                           })
   end
 
-  # "Gamer" : Points aux quiz
   def check_gamer
     points = @user.quiz_points || 0
 
@@ -176,6 +175,127 @@ class GamificationService
                             1000 => 'silver',
                             2500 => 'gold'
                           })
+  end
+
+  # Retourne la valeur brute actuelle de l'utilisateur pour une catégorie
+  def current_stat_for(category)
+    case category.to_s
+    when 'gamer'
+      @user.quiz_points || 0
+    when 'contributor'
+      @user.suivis.first&.nb_references_validees || 0
+    when 'ambassador'
+      @user.referrals_as_referrer.count
+    when 'investigator'
+      @user.feedbacks.count + @user.bug_reports.count
+    when 'donor'
+      0
+    when 'competitor'
+      points = @user.quiz_points || 0
+      return 0 if points <= 0
+      User.where('quiz_points > ?', points).count + 1
+    else
+      0
+    end
+  end
+
+  # Retourne les informations de progression détaillées pour un badge précis
+  def progress_for_badge(badge)
+    return nil if badge.special? || badge.donor? || badge.threshold.to_i <= 0
+
+    unit = case badge.category.to_s
+           when 'gamer' then 'pts'
+           when 'contributor' then 'contrib.'
+           when 'ambassador' then 'filleuls'
+           when 'investigator' then 'retours'
+           when 'competitor' then 'rang'
+           else ''
+           end
+
+    target = badge.threshold.to_i
+
+    if badge.competitor?
+      current_rank = current_stat_for('competitor')
+      if current_rank > 0 && current_rank <= target
+        {
+          current: current_rank,
+          target: target,
+          percentage: 100,
+          unit: unit,
+          label: "Top #{target} atteint (#Rank #{current_rank})"
+        }
+      else
+        {
+          current: current_rank,
+          target: target,
+          percentage: 0,
+          unit: unit,
+          label: current_rank > 0 ? "Actuellement Top #{current_rank}" : "Pas encore classé"
+        }
+      end
+    else
+      current = current_stat_for(badge.category)
+      percentage = [((current.to_f / target) * 100).round, 100].min
+
+      {
+        current: current,
+        target: target,
+        percentage: percentage,
+        unit: unit,
+        label: "#{current} / #{target} #{unit}".strip
+      }
+    end
+  end
+
+  # Retourne les informations de progression vers le prochain palier pour une catégorie
+  def next_badge_progress(category = 'gamer')
+    case category.to_s
+    when 'gamer'
+      points = @user.quiz_points || 0
+      thresholds = [
+        { points: 500, level: 'bronze', name: 'Gamer Bronze' },
+        { points: 1000, level: 'silver', name: 'Gamer Argent' },
+        { points: 2500, level: 'gold', name: 'Gamer Or' }
+      ]
+
+      next_step = thresholds.find { |t| points < t[:points] }
+      return nil unless next_step
+
+      badge = Badge.find_by(category: 'gamer', level: next_step[:level])
+      prev_points = thresholds.take_while { |t| points >= t[:points] }.last&.[](:points) || 0
+
+      {
+        badge: badge,
+        badge_name: badge&.name || next_step[:name],
+        current: points,
+        target: next_step[:points],
+        remaining: next_step[:points] - points,
+        percentage: [((points - prev_points).to_f / (next_step[:points] - prev_points) * 100).round, 99].min,
+        image_name: badge&.image_name || 'gamer_bronze.webp'
+      }
+    when 'contributor'
+      count = @user.suivis.first&.nb_references_validees || 0
+      thresholds = [
+        { count: 1, level: 'bronze' },
+        { count: 10, level: 'silver' },
+        { count: 20, level: 'gold' }
+      ]
+      next_step = thresholds.find { |t| count < t[:count] }
+      return nil unless next_step
+
+      badge = Badge.find_by(category: 'contributor', level: next_step[:level])
+      {
+        badge: badge,
+        badge_name: badge&.name || "Contributeur #{next_step[:level].capitalize}",
+        current: count,
+        target: next_step[:count],
+        remaining: next_step[:count] - count,
+        percentage: [(count.to_f / next_step[:count] * 100).round, 99].min,
+        image_name: badge&.image_name || 'contributeur_bronze.webp'
+      }
+    else
+      nil
+    end
   end
 
   # "Compétiteur" : Top 1, Top 2, Top 3 du classement général
@@ -214,19 +334,25 @@ class GamificationService
   # Méthode intelligente pour les niveaux
   def assign_badge_by_level(category, user_score, thresholds)
     # thresholds = { 1 => "bronze", 10 => "silver" }
+    awarded_badges = []
 
     thresholds.each do |score_needed, level|
       if user_score >= score_needed
         badge = Badge.find_by(category: category, level: level)
-        give_badge(badge) if badge
+        if badge && give_badge(badge)
+          awarded_badges << badge
+        end
       end
     end
+
+    awarded_badges
   end
 
   def give_badge(badge)
-    return if @user.badges.include?(badge)
+    return false if @user.badges.include?(badge)
 
-    UserBadge.create(user: @user, badge: badge)
+    user_badge = UserBadge.create(user: @user, badge: badge)
+    return false unless user_badge.persisted?
 
     Notification.create(
       user: @user,
@@ -235,6 +361,7 @@ class GamificationService
       link: '/mes-badges',
       status: :unread
     )
+    badge
   end
 
   def self.manual_assign(user, badge)

@@ -166,8 +166,12 @@
           </div>
           <%= render 'filters' %>
           <div class="quiz-grid">
-            <% @quizzes_a_la_une.each do |quiz| %>
-              <%= render 'quiz_card', quiz: quiz, timer_type: 'new' %>
+            <% inject_ads_into_collection(@quizzes_a_la_une, @ads, frequency_range: 5..8, first_ad_range: 3..5).each do |item| %>
+              <% if item.is_a?(Hash) && item[:_is_ad] %>
+                <%= render 'quiz_ad_card', ad: item[:ad] %>
+              <% else %>
+                <%= render 'quiz_card', quiz: item, timer_type: 'new' %>
+              <% end %>
             <% end %>
           </div>
         </section>
@@ -183,8 +187,12 @@
           </div>
           <%= render 'filters' %>
           <div class="quiz-grid">
-            <% @quizzes_normaux.each do |quiz| %>
-              <%= render 'quiz_card', quiz: quiz, timer_type: 'delete' %>
+            <% inject_ads_into_collection(@quizzes_normaux, @ads, frequency_range: 5..8, first_ad_range: 3..5).each do |item| %>
+              <% if item.is_a?(Hash) && item[:_is_ad] %>
+                <%= render 'quiz_ad_card', ad: item[:ad] %>
+              <% else %>
+                <%= render 'quiz_card', quiz: item, timer_type: 'delete' %>
+              <% end %>
             <% end %>
           </div>
         </section>
@@ -198,8 +206,12 @@
           </div>
           <%= render 'filters' %>
           <div class="quiz-grid">
-            <% @user_lists.each do |list| %>
-              <%= render 'list_quiz_card', list: list %>
+            <% inject_ads_into_collection(@user_lists, @ads, frequency_range: 5..8, first_ad_range: 3..5).each do |item| %>
+              <% if item.is_a?(Hash) && item[:_is_ad] %>
+                <%= render 'quiz_ad_card', ad: item[:ad] %>
+              <% else %>
+                <%= render 'list_quiz_card', list: item %>
+              <% end %>
             <% end %>
           </div>
         </section>

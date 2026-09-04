@@ -125,6 +125,8 @@ class QuizzesController < ApplicationController
       # Préchargement des soumissions
       @user_submissions_by_quiz = current_user.quiz_submissions.where(quiz_id: quiz_ids).index_by(&:quiz_id)
     end
+
+    @ads = Ad.weighted_queue_for(current_user, 15)
   end
 
   def leaderboard
@@ -213,6 +215,9 @@ class QuizzesController < ApplicationController
     )
 
     # Ajouter les points au profil de l'utilisateur uniquement si c'est un quiz statique
+    new_badges = []
+    badge_progress = nil
+
     if submission.quiz.quiz_type == 'static'
       already_completed = current_user.quiz_submissions.where(quiz_id: submission.quiz_id,
                                                               status: :completed).where.not(id: submission.id).exists?
@@ -222,7 +227,9 @@ class QuizzesController < ApplicationController
         current_user.increment!(:total_quiz_points, score)
 
         # Vérifier l'attribution des badges Gamer (uniquement pour les quiz officiels)
-        GamificationService.new(current_user).check_gamer
+        service = GamificationService.new(current_user)
+        new_badges = service.check_gamer
+        badge_progress = service.next_badge_progress('gamer')
       end
     end
 
@@ -230,7 +237,16 @@ class QuizzesController < ApplicationController
       status: 'success',
       total_points: current_user.total_quiz_points,
       season_points: current_user.quiz_points,
-      submission_id: submission.id
+      submission_id: submission.id,
+      new_badges: (new_badges || []).map { |b| { id: b.id, name: b.name, description: b.description, image_name: b.image_name } },
+      badge_progress: badge_progress ? {
+        name: badge_progress[:badge_name],
+        current: badge_progress[:current],
+        target: badge_progress[:target],
+        remaining: badge_progress[:remaining],
+        percentage: badge_progress[:percentage],
+        image_name: badge_progress[:image_name]
+      } : nil
     }
   end
 

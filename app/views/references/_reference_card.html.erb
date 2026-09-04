@@ -12,7 +12,7 @@
   <% if thumb_url.present? %>
     <div class="card-reference" style="background: url('<%= thumb_url %>'); background-size: cover; background-position: center center;">
   <% else %>
-    <div class="card-reference" style="background: #F3F3F3;">
+    <div class="card-reference no-image">
   <% end %>
       <div class="inner-card-reference">
         <p class="domaine-card-reference"><%= reference.domaines.map(&:domaine).join(', ') %></p>

@@ -12,7 +12,7 @@
   <% if thumb_url.present? %>
     <div class="card-designer" style="background: url('<%= thumb_url %>'); background-size: cover; background-position: center center;">
   <% else %>
-    <div class="card-designer" style="background: #F3F3F3;">
+    <div class="card-designer no-image">
   <% end %>
       <div class="inner-card-designer">
         <% designer.countries.each do |country| %>

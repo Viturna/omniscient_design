@@ -38,6 +38,26 @@
   border-radius: 10px;
 }
 
+.card-designer.no-image,
+.card-reference.no-image {
+  background-color: #242424 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  &::after {
+    background-color: transparent;
+  }
+
+  .title-card-designer,
+  .title-card-reference {
+    color: #FFFFFF;
+  }
+
+  .country-card-designer,
+  .domaine-card-reference {
+    color: #888888;
+  }
+}
+
 .title-card-designer,
 .title-card-reference {
   font-size: 100%;

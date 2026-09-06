@@ -197,35 +197,45 @@
                 registration_target: "statutSelect" 
              } } %>
       </div>
-      <div class="field" data-registration-target="establishmentField" 
-              style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
-        <%= f.label :etablissement_id, t('edit_profile.institution') %>
-        <%= f.collection_select :etablissement_id,
-        Etablissement.order(:city),
-        :id,
-        :all_info,
-        { prompt: t('edit_profile.choose_institution') },
-        { 
-          class: 'form-control',
-          data: { 
-            controller: "select2", 
-            select2_placeholder_value: "Rechercher un établissement..."
-          } 
-        } %>
-      </div>
-      <div class="field" data-registration-target="studentField"
-              style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
-        <%= f.label :study_level, "Niveau d'étude" %>
-        <%= f.select :study_level,
-          User::STUDY_LEVELS,
-          { include_blank: "Sélectionne ton niveau scolaire" },
+      <div data-controller="dynamic-study-levels"
+           data-dynamic-study-levels-study-levels-by-country-value="<%= User::STUDY_LEVELS_BY_COUNTRY.to_json %>"
+           data-dynamic-study-levels-all-levels-value="<%= User::STUDY_LEVELS.to_json %>"
+           data-dynamic-study-levels-establishment-countries-value="<%= etablissement_country_mapping.to_json %>"
+           data-dynamic-study-levels-current-level-value="<%= resource.study_level %>">
+        
+        <div class="field" data-registration-target="establishmentField" 
+                style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
+          <%= f.label :etablissement_id, t('edit_profile.institution') %>
+          <%= f.collection_select :etablissement_id,
+          Etablissement.order(:city),
+          :id,
+          :all_info,
+          { prompt: t('edit_profile.choose_institution') },
           { 
-            class: "form-control",
+            class: 'form-control',
             data: { 
-              controller: "select2",
-              select2_placeholder_value: "Sélectionne ton niveau scolaire"
-            }
+              controller: "select2", 
+              select2_placeholder_value: "Rechercher un établissement...",
+              action: "change->dynamic-study-levels#onEstablishmentChange",
+              dynamic_study_levels_target: "establishmentSelect"
+            } 
           } %>
+        </div>
+        <div class="field" data-registration-target="studentField"
+                style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
+          <%= f.label :study_level, "Niveau d'étude" %>
+          <%= f.select :study_level,
+            User::STUDY_LEVELS,
+            { include_blank: "Sélectionne ton niveau scolaire" },
+            { 
+              class: "form-control",
+              data: { 
+                controller: "select2",
+                select2_placeholder_value: "Sélectionne ton niveau scolaire",
+                dynamic_study_levels_target: "studyLevelSelect"
+              }
+            } %>
+        </div>
       </div>
       <div class="field">
         <%= f.label t('edit_profile.password') %>

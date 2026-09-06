@@ -3,6 +3,16 @@ class Etablissement < ApplicationRecord
 
   has_many :users
 
+  def country_code
+    if uai&.start_with?('BE_') || academy == 'Belgique'
+      'BE'
+    elsif uai&.start_with?('CH_') || academy == 'Suisse'
+      'CH'
+    else
+      'FR'
+    end
+  end
+
   def all_info
     name_with_status = [
       name,

@@ -43,6 +43,9 @@ application.register("device-sync", DeviceSyncController)
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
 
+import DynamicStudyLevelsController from "./dynamic_study_levels_controller"
+application.register("dynamic-study-levels", DynamicStudyLevelsController)
+
 import ImageModalSliderController from "./image_modal_slider_controller"
 application.register("image-modal-slider", ImageModalSliderController)
 

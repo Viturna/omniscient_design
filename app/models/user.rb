@@ -19,7 +19,7 @@ class User < ApplicationRecord
   # Constantes
   STATUTS = %w[etudiant enseignant entreprise artiste autre]
 
-  STUDY_LEVELS = [
+  STUDY_LEVELS_FR = [
     'Seconde Générale/Techno (Hors STD2A)',
     'Seconde Professionnelle',
     'Première Générale',
@@ -54,7 +54,77 @@ class User < ApplicationRecord
     'Mastère Spécialisé (Bac+6)',
     'Doctorat',
     'Autre'
-  ]
+  ].freeze
+
+  STUDY_LEVELS_BE = [
+    # Secondaire inférieur / Début du degré supérieur
+    '3ème Secondaire Générale',
+    '3ème Secondaire Technique / Professionnelle',
+    '4ème Secondaire Générale',
+    '4ème Secondaire Technique (Hors Arts)',
+    '4ème Secondaire Artistique',
+    '4ème Secondaire Professionnelle',
+    # 2e et 3e degrés du secondaire
+    '5ème Secondaire Générale',
+    '5ème Secondaire Technique (Hors Arts)',
+    '5ème Secondaire Artistique (Transition / Qualification)',
+    '5ème Secondaire Professionnelle',
+    '6ème Secondaire Générale (CESS)',
+    '6ème Secondaire Technique (Hors Arts - CESS)',
+    '6ème Secondaire Artistique (CESS)',
+    '6ème Secondaire Professionnelle (CESS)',
+    '7ème Secondaire Professionnelle / Complémentaire',
+    # Enseignement supérieur (Hautes Écoles, ESA, Universités)
+    'Bachelier 1 (Haute École / ESA / Université)',
+    'Bachelier 2 (Haute École / ESA / Université)',
+    'Bachelier 3 (Haute École / ESA / Université)',
+    'Master 1 (Université / École / ESA)',
+    'Master 2 (Université / École / ESA)',
+    'Master de Spécialisation / Post-Master',
+    'Doctorat',
+    'Autre'
+  ].freeze
+
+  STUDY_LEVELS_CH = [
+    # Secondaire II (Gymnase / Collège / Lycée - Maturité gymnasiale)
+    '1ère année Gymnase / Collège / Lycée (Générale)',
+    '1ère année Gymnase / Collège / Lycée (Option Arts visuels)',
+    '2ème année Gymnase / Collège / Lycée (Générale)',
+    '2ème année Gymnase / Collège / Lycée (Option Arts visuels)',
+    '3ème année Gymnase / Collège / Lycée (Générale - Maturité)',
+    '3ème année Gymnase / Collège / Lycée (Option Arts visuels - Maturité)',
+    '4ème année Gymnase / Collège / Lycée (Maturité cantonale)',
+    # Formation professionnelle / Écoles de culture générale (CFC, MP, MS)
+    '1ère année CFC / Apprentissage',
+    '1ère année CFC Design / Arts appliqués',
+    '2ème année CFC / Apprentissage',
+    '2ème année CFC Design / Arts appliqués',
+    '3ème année CFC / Apprentissage',
+    '3ème année CFC Design / Arts appliqués',
+    '4ème année CFC Design / Arts appliqués',
+    'Maturité Professionnelle (MP)',
+    'Maturité Spécialisée (Hors Arts)',
+    'Maturité Spécialisée Arts Visuels (MSAV)',
+    'Année Propédeutique / Passerelle Art & Design',
+    # Tertiaire / Enseignement supérieur (HES, HEU, Universités, ES)
+    'Bachelor 1 (HES / Université / HEP)',
+    'Bachelor 2 (HES / Université / HEP)',
+    'Bachelor 3 (HES / Université / HEP)',
+    'Master 1 (HES / Université / HEP)',
+    'Master 2 (HES / Université / HEP)',
+    'Diplôme Supérieur ES (École Supérieure)',
+    'MAS / EMBA / Post-grade',
+    'Doctorat (EPF / Université)',
+    'Autre'
+  ].freeze
+
+  STUDY_LEVELS_BY_COUNTRY = {
+    'FR' => STUDY_LEVELS_FR,
+    'BE' => STUDY_LEVELS_BE,
+    'CH' => STUDY_LEVELS_CH
+  }.freeze
+
+  STUDY_LEVELS = (STUDY_LEVELS_FR + STUDY_LEVELS_BE + STUDY_LEVELS_CH).uniq.freeze
 
   # Validations Champs
   validates :study_level, inclusion: { in: STUDY_LEVELS, message: "n'est pas valide" }, if: lambda {

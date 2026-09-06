@@ -19,45 +19,55 @@
       </div>
 
       <%= form_with(url: update_study_level_users_path, method: :patch, local: true, data: { turbo: false }) do |f| %>
-        <div class="field">
-          <label style="margin-bottom: 8px; display: block; font-weight: 500;">
-            <%= t('back_to_school.select_label', default: "Ton niveau pour cette année :") %>
-          </label>
-          <%= f.select "user[study_level]", 
-                       options_for_select(User::STUDY_LEVELS, current_user.study_level), 
-                       { prompt: t('back_to_school.select_prompt', default: "Rechercher un niveau scolaire...") }, 
-                       { 
-                         required: true, 
-                         class: "form-control",
-                         data: { 
-                           controller: "select2",
-                           select2_placeholder_value: "Rechercher un niveau scolaire..."
-                         }
-                       } %>
-        </div>
+        <div data-controller="dynamic-study-levels"
+             data-dynamic-study-levels-study-levels-by-country-value="<%= User::STUDY_LEVELS_BY_COUNTRY.to_json %>"
+             data-dynamic-study-levels-all-levels-value="<%= User::STUDY_LEVELS.to_json %>"
+             data-dynamic-study-levels-establishment-countries-value="<%= etablissement_country_mapping.to_json %>"
+             data-dynamic-study-levels-current-level-value="<%= current_user.study_level %>">
+          
+          <div class="field">
+            <label style="margin-bottom: 8px; display: block; font-weight: 500;">
+              <%= t('back_to_school.establishment_label', default: "Ton établissement scolaire :") %>
+            </label>
+            <%= f.collection_select "user[etablissement_id]", 
+                                    Etablissement.order(:city), 
+                                    :id, 
+                                    :all_info, 
+                                    { 
+                                      include_blank: t('back_to_school.no_establishment_option', default: "Aucun établissement / Établissement manquant"),
+                                      selected: current_user.etablissement_id 
+                                    }, 
+                                    { 
+                                      class: "form-control",
+                                      data: { 
+                                        controller: "select2",
+                                        select2_placeholder_value: t('back_to_school.establishment_placeholder', default: "Rechercher ou laisser vide..."),
+                                        action: "change->dynamic-study-levels#onEstablishmentChange",
+                                        dynamic_study_levels_target: "establishmentSelect"
+                                      }
+                                    } %>
+            <small style="margin-top: 6px; display: block; font-size: 0.8rem; color: #888888;">
+              <%= t('back_to_school.establishment_help', default: "Optionnel. Si ton établissement ne figure pas dans la liste ou si tu souhaites le retirer, sélectionne « Aucun établissement ».") %>
+            </small>
+          </div>
 
-        <div class="field">
-          <label style="margin-bottom: 8px; display: block; font-weight: 500;">
-            <%= t('back_to_school.establishment_label', default: "Ton établissement scolaire :") %>
-          </label>
-          <%= f.collection_select "user[etablissement_id]", 
-                                  Etablissement.order(:city), 
-                                  :id, 
-                                  :all_info, 
-                                  { 
-                                    include_blank: t('back_to_school.no_establishment_option', default: "Aucun établissement / Établissement manquant"),
-                                    selected: current_user.etablissement_id 
-                                  }, 
-                                  { 
-                                    class: "form-control",
-                                    data: { 
-                                      controller: "select2",
-                                      select2_placeholder_value: t('back_to_school.establishment_placeholder', default: "Rechercher ou laisser vide...")
-                                    }
-                                  } %>
-          <small style="margin-top: 6px; display: block; font-size: 0.8rem; color: #888888;">
-            <%= t('back_to_school.establishment_help', default: "Optionnel. Si ton établissement ne figure pas dans la liste ou si tu souhaites le retirer, sélectionne « Aucun établissement ».") %>
-          </small>
+          <div class="field">
+            <label style="margin-bottom: 8px; display: block; font-weight: 500;">
+              <%= t('back_to_school.select_label', default: "Ton niveau pour cette année :") %>
+            </label>
+            <%= f.select "user[study_level]", 
+                         options_for_select(User::STUDY_LEVELS, current_user.study_level), 
+                         { prompt: t('back_to_school.select_prompt', default: "Rechercher un niveau scolaire...") }, 
+                         { 
+                           required: true, 
+                           class: "form-control",
+                           data: { 
+                             controller: "select2",
+                             select2_placeholder_value: "Rechercher un niveau scolaire...",
+                             dynamic_study_levels_target: "studyLevelSelect"
+                           }
+                         } %>
+          </div>
         </div>
 
         <div class="bts-modal-footer">

@@ -185,4 +185,16 @@ module ApplicationHelper
   def current_theme
     cookies&.[](:theme).presence || 'system'
   end
+
+  def etablissement_country_mapping
+    @etablissement_country_mapping ||= Etablissement.pluck(:id, :uai, :academy).each_with_object({}) do |(id, uai, academy), hash|
+      hash[id.to_s] = if uai&.start_with?('BE_') || academy == 'Belgique'
+                        'BE'
+                      elsif uai&.start_with?('CH_') || academy == 'Suisse'
+                        'CH'
+                      else
+                        'FR'
+                      end
+    end
+  end
 end

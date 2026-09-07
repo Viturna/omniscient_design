@@ -123,6 +123,8 @@
         <%= f.text_field :query, value: params[:query], placeholder: "Rechercher par nom, email..." %>
       </div>
       <%= f.select :statut, options_for_select([["Tous les statuts", ""], "etudiant", "enseignant", "entreprise", "artiste", "autre"], params[:statut]), {}, { class: "users-dash-select", onchange: "this.form.submit()" } %>
+      <%= f.select :platform, options_for_select([["Toutes plateformes", ""], ["📱 App Mobile", "app"], ["💻 Web uniquement", "web"]], params[:platform]), {}, { class: "users-dash-select", onchange: "this.form.submit()" } %>
+      <%= f.select :etablissement_id, options_for_select([["Tous les établissements", ""]] + @etablissements_for_filter.map { |e| [e.name, e.id] }, params[:etablissement_id]), {}, { class: "users-dash-select", style: "max-width: 250px;", onchange: "this.form.submit()" } %>
       <%= f.select :visits, options_for_select([
             ["Toutes les visites", ""],
             ["Jamais connecté", "0"],
@@ -141,7 +143,7 @@
             ["Visites (Plus actifs)", "visites_desc"],
             ["Visites (Moins actifs)", "visites_asc"]
           ], params[:sort]), {}, { class: "users-dash-select", onchange: "this.form.submit()" } %>
-      <% if params[:query].present? || params[:statut].present? || params[:role].present? || params[:sort].present? || params[:visits].present? %>
+      <% if params[:query].present? || params[:statut].present? || params[:platform].present? || params[:role].present? || params[:etablissement_id].present? || params[:sort].present? || params[:visits].present? %>
         <%= link_to "Effacer", users_path(period: @period), style: "font-weight: 500; color: #666; font-size: 14px; white-space: nowrap;" %>
       <% end %>
     <% end %>
@@ -159,6 +161,8 @@
                 period: @period,
                 query: params[:query],
                 statut: params[:statut],
+                platform: params[:platform],
+                etablissement_id: params[:etablissement_id],
                 role: params[:role],
                 sort: column,
                 direction: next_direction
@@ -170,6 +174,7 @@
           <tr>
             <th><%= sort_header("utilisateur", "Utilisateur") %></th>
             <th><%= sort_header("statut", "Statut") %></th>
+            <th>Plateforme</th>
             <th><%= sort_header("study_level", "Niveau d'études") %></th>
             <th><%= sort_header("etablissement", "Établissement") %></th>
             <th>Source</th>
@@ -185,7 +190,10 @@
                 <div style="display:flex; align-items:center;">
                   <div class="users-dash-avatar">
                     <% if user.profile_image.present? %>
-                      <%= image_tag user.profile_image, alt: user.firstname %>
+                      <%= image_tag user.profile_image, 
+                            alt: user.firstname,
+                            onerror: "this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" %>
+                      <span style="display: none;"><%= user.firstname&.first %></span>
                     <% else %>
                       <%= user.firstname&.first %>
                     <% end %>
@@ -202,6 +210,19 @@
                 </span>
                 <% if user.admin? %>
                   <span class="badge badge-dark">Admin</span>
+                <% end %>
+              </td>
+              <td>
+                <% if user.user_devices.any? %>
+                  <span class="badge" style="background: #F3E5F5; color: #7B1FA2; display: inline-flex; align-items: center; gap: 4px;" title="Connecté sur l'application mobile">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+                    App
+                  </span>
+                <% else %>
+                  <span class="badge" style="background: #F5F5F5; color: #666; display: inline-flex; align-items: center; gap: 4px;" title="Utilise uniquement le site web">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
+                    Web
+                  </span>
                 <% end %>
               </td>
               <td><%= user.study_level.presence || "-" %></td>

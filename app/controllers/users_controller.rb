@@ -125,6 +125,21 @@ class UsersController < ApplicationController
     end
     @users = @users.where(statut: params[:statut]) if params[:statut].present?
     @users = @users.where(role: params[:role]) if params[:role].present?
+    @users = @users.where(etablissement_id: params[:etablissement_id]) if params[:etablissement_id].present?
+
+    # Filtre par plateforme (App Mobile / Web)
+    if params[:platform].present?
+      app_user_ids = UserDevice.select(:user_id).distinct
+      case params[:platform]
+      when 'app'
+        @users = @users.where(id: app_user_ids)
+      when 'web'
+        @users = @users.where.not(id: app_user_ids)
+      end
+    end
+
+    # Options pour le filtre par établissement (établissements rattachés à au moins un utilisateur)
+    @etablissements_for_filter = Etablissement.joins(:users).distinct.order(:name)
 
     # Filtre par tranche de visites
     if params[:visits].present?
@@ -189,13 +204,14 @@ class UsersController < ApplicationController
       @users = @users.order(created_at: :desc)
     end
 
-    @paginated_users = @users.includes(:etablissement, profile_image_attachment: :blob).page(params[:page]).per(20)
+    @paginated_users = @users.includes(:etablissement, :user_devices, profile_image_attachment: :blob).page(params[:page]).per(20)
     @users_for_map = @users.includes(:etablissement).where.not(etablissement_id: nil)
   end
 
   def show
     @current_page = 'users'
-    @user = User.find(params[:id])
+    @user = User.includes(:user_devices).find(params[:id])
+    @user_devices = @user.user_devices.order(updated_at: :desc)
 
     @total_visits = @user.daily_visits.count
     @last_visit = @user.daily_visits.order(visited_on: :desc).first&.visited_on

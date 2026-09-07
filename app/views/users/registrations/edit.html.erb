@@ -127,7 +127,8 @@
             <%= image_tag (has_avatar ? resource.profile_image.variant(resize_to_fill: [150, 150]) : ""), 
                   data: { avatar_upload_target: "previewImg" }, 
                   class: "avatar-image", 
-                  style: has_avatar ? "" : "display: none;" %>
+                  style: has_avatar ? "" : "display: none;",
+                  onerror: "this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='block';}" %>
             
             <%= image_tag "profil.png", data: { avatar_upload_target: "placeholder" }, class: "avatar-image", style: has_avatar ? "display: none;" : "" %>
             

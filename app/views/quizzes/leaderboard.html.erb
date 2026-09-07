@@ -89,8 +89,8 @@
               <div class="leaderboard-row <%= 'current-user-row' if user == current_user %>">
                 <div class="rank-cell">#<%= @users.offset_value + index + 1 %></div>
                 <div class="user-cell">
-                  <% if user.profile_image.attached? %>
-                    <%= image_tag user.profile_image.variant(resize_to_fill: [80, 80]), 
+                  <% if user.profile_image.present? %>
+                    <%= image_tag user.profile_image, 
                           loading: "lazy", 
                           class: "avatar", 
                           alt: user.pseudo,

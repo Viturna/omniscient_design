@@ -159,7 +159,15 @@ export default class extends Controller {
         if (event.target.closest(".dropdown-menu") || event.target.closest(".mega-menu-content") || event.target.closest(".autocomplete-items")) {
             return
         }
-        if (event.cancelable) event.preventDefault()
+        const currentY = event.touches[0].clientY
+        const currentX = event.touches[0].clientX
+        const deltaY = Math.abs(currentY - this.touchStartY)
+        const deltaX = Math.abs(currentX - this.touchStartX)
+
+        // Ne bloquer le comportement par défaut que si l'utilisateur fait un geste de swipe/scroll
+        if ((deltaY > 10 || deltaX > 10) && event.cancelable) {
+            event.preventDefault()
+        }
     }
 
     handleTouchEnd(event) {

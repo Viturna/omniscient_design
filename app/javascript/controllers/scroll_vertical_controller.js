@@ -16,13 +16,16 @@ export default class extends Controller {
         this.handleTouchStart = this.handleTouchStart.bind(this)
         this.handleTouchMove = this.handleTouchMove.bind(this)
         this.handleTouchEnd = this.handleTouchEnd.bind(this)
+        this.handleCardClick = this.handleCardClick.bind(this)
 
         this.element.addEventListener("wheel", this.handleWheel, { passive: false })
         document.addEventListener("keydown", this.handleKeydown)
         this.element.addEventListener("touchstart", this.handleTouchStart, { passive: true })
         this.element.addEventListener("touchmove", this.handleTouchMove, { passive: false })
         this.element.addEventListener("touchend", this.handleTouchEnd, { passive: true })
+        this.element.addEventListener("click", this.handleCardClick)
 
+        this.restoreScrollPosition()
         setTimeout(() => this.checkAndFillScreen(), 200)
     }
 
@@ -32,6 +35,44 @@ export default class extends Controller {
         this.element.removeEventListener("touchstart", this.handleTouchStart)
         this.element.removeEventListener("touchmove", this.handleTouchMove)
         this.element.removeEventListener("touchend", this.handleTouchEnd)
+        this.element.removeEventListener("click", this.handleCardClick)
+    }
+
+    getStorageKey() {
+        return window.location.pathname.includes("designers") ? "omniscient_last_designer_id" : "omniscient_last_reference_id"
+    }
+
+    handleCardClick(event) {
+        const link = event.target.closest("a")
+        if (link) {
+            const card = link.closest(".card, .partner-card, .entity-wrapper")
+            if (card && card.dataset.id) {
+                sessionStorage.setItem(this.getStorageKey(), card.dataset.id)
+            }
+        }
+    }
+
+    restoreScrollPosition() {
+        const savedId = sessionStorage.getItem(this.getStorageKey())
+        if (!savedId) return
+
+        // Tentative immédiate ou après court délai pour s'assurer du rendu
+        const restore = () => {
+            let targetCard = null
+            if (window.location.pathname.includes("designers")) {
+                const wrapper = this.element.querySelector(`.entity-wrapper[data-id="${savedId}"]`)
+                targetCard = wrapper ? wrapper.querySelector(".card") : this.element.querySelector(`.card[data-id="${savedId}"]`)
+            } else {
+                targetCard = this.element.querySelector(`.card[data-id="${savedId}"]`)
+            }
+
+            if (targetCard) {
+                targetCard.scrollIntoView({ behavior: "instant", block: "start" })
+            }
+        }
+
+        restore()
+        setTimeout(restore, 100)
     }
 
     scrollUp(event) {
@@ -229,6 +270,10 @@ export default class extends Controller {
         const targetCard = cards[targetIndex]
         if (targetCard) {
             targetCard.scrollIntoView({ behavior: "smooth", block: "start" })
+            const cardId = targetCard.dataset.id || targetCard.closest(".entity-wrapper")?.dataset?.id
+            if (cardId) {
+                sessionStorage.setItem(this.getStorageKey(), cardId)
+            }
         }
     }
 }

@@ -19,9 +19,9 @@ export default class extends Controller {
 
         this.element.addEventListener("wheel", this.handleWheel, { passive: false })
         document.addEventListener("keydown", this.handleKeydown)
-        this.element.addEventListener("touchstart", this.handleTouchStart, { passive: false })
+        this.element.addEventListener("touchstart", this.handleTouchStart, { passive: true })
         this.element.addEventListener("touchmove", this.handleTouchMove, { passive: false })
-        this.element.addEventListener("touchend", this.handleTouchEnd)
+        this.element.addEventListener("touchend", this.handleTouchEnd, { passive: true })
 
         setTimeout(() => this.checkAndFillScreen(), 200)
     }

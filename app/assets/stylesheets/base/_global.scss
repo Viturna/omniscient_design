@@ -106,14 +106,17 @@ main {
   main {
     margin-left: 0;
     width: auto;
+    padding-bottom: 80px;
+  }
+
+  /* When on home or designers card slider, main must not have bottom padding that breaks 100dvh snap view */
+  body[data-controller-name="references"][data-action-name="index"] main,
+  body[data-controller-name="designers"][data-action-name="index"] main {
+    padding-bottom: 0 !important;
   }
 
   .subtitle {
     width: fit-content;
-  }
-
-  main {
-    padding-bottom: 80px;
   }
 }
 

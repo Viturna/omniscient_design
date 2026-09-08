@@ -64,6 +64,34 @@
   background-color: white !important;
   overflow: hidden !important;
   z-index: 10005 !important;
+
+  .select2-search--dropdown {
+    padding: 8px 12px !important;
+
+    .select2-search__field {
+      width: 100% !important;
+      padding: 10px 14px !important;
+      border: 1.5px solid var(--color-gray-200, #E5E5E5) !important;
+      border-radius: 8px !important;
+      font-size: 16px !important; /* Empeche le zoom automatique iOS sur mobile (<16px zoom sur input focus) */
+      font-family: inherit !important;
+      outline: none !important;
+      box-sizing: border-box !important;
+      color: variables.$text-color;
+      background-color: var(--color-white, #fff);
+
+      &:focus {
+        border-color: variables.$primary-color !important;
+      }
+    }
+  }
+}
+
+/* Ensure all select2 search inputs have at least 16px font size on mobile to prevent iOS zoom */
+.select2-search__field,
+.select2-search--dropdown .select2-search__field,
+.select2-container .select2-search--inline .select2-search__field {
+  font-size: 16px !important;
 }
 
 /* Options List */
@@ -177,6 +205,16 @@ body.dark-mode {
     }
   }
   
+  .select2-dropdown .select2-search--dropdown .select2-search__field {
+    background-color: variables.$background-color-dark !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: variables.$text-color-dark !important;
+
+    &:focus {
+      border-color: variables.$primary-color-dark !important;
+    }
+  }
+
   .select2-search__field {
     color: variables.$text-color-dark !important;
   }

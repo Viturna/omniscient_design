@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "previewImg", "placeholder", "removeInput"]
+  static targets = ["input", "previewImg", "placeholder", "removeInput", "signedId"]
 
   triggerInput() {
     this.inputTarget.click()
@@ -25,6 +25,10 @@ export default class extends Controller {
       if (this.hasRemoveInputTarget) {
         this.removeInputTarget.value = "0"
       }
+
+      if (this.hasSignedIdTarget) {
+        this.signedIdTarget.value = ""
+      }
       
       const deleteBtn = this.element.querySelector('.button.delete')
       if (deleteBtn) {
@@ -39,6 +43,10 @@ export default class extends Controller {
     
     if (this.hasRemoveInputTarget) {
       this.removeInputTarget.value = "1"
+    }
+
+    if (this.hasSignedIdTarget) {
+      this.signedIdTarget.value = ""
     }
     
     this.inputTarget.value = ""

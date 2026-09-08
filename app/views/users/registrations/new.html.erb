@@ -44,11 +44,18 @@
         <%= f.hidden_field :provider %>
         <%= f.hidden_field :uid %>
         <% if resource.errors.any? %>
-          <div id="error_explanation">
-            <p style="color:red;"><%= pluralize(resource.errors.count, "erreur") %> empêchent cette inscription :</p>
-            <ul>
+          <div class="registration-error-box">
+            <div class="registration-error-header">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="10" r="9" stroke="#FFF" stroke-width="2"/>
+                <path d="M10 6V11" stroke="#FFF" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="10" cy="14" r="1" fill="#FFF"/>
+              </svg>
+              <span><%= pluralize(resource.errors.count, "erreur") %> <%= resource.errors.count > 1 ? "empêchent" : "empêche" %> ton inscription :</span>
+            </div>
+            <ul class="registration-error-list">
               <% resource.errors.full_messages.each do |message| %>
-                <li style="color:red;"><%= message %></li>
+                <li><%= message %></li>
               <% end %>
             </ul>
           </div>
@@ -127,12 +134,12 @@
         <div class="field input-flex">
           <p class="title-boxlog"><%= t('devise.registration.additional_info') %></p>
         </div>
-           <div class="field input-flex avatar-upload-field" data-controller="avatar-upload">
+        <div class="field input-flex avatar-upload-field" data-controller="avatar-upload">
           <%= f.label :profile_image, "Photo de profil <span style='font-size: 0.85em; opacity: 0.7; font-weight: 400;'>#{t('devise.registration.optional')}</span>".html_safe %>
           
           <div class="avatar-upload-container">
             <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
-              <% has_avatar = resource.persisted? && resource.profile_image.attached? %>
+              <% has_avatar = resource.profile_image.attached? && resource.profile_image.blob.present? %>
               <%= image_tag (has_avatar ? resource.profile_image.variant(resize_to_fill: [150, 150]) : ""), 
                     data: { avatar_upload_target: "previewImg" }, 
                     class: "avatar-image", 
@@ -149,11 +156,16 @@
             
             <div class="avatar-actions">
               <button type="button" class="button" data-action="click->avatar-upload#triggerInput">Sélectionner une photo</button>
-              <button type="button" class="button delete" data-action="click->avatar-upload#remove" style="<%= resource.profile_image.attached? ? '' : 'display: none;' %>">Supprimer la photo</button>
+              <button type="button" class="button delete" data-action="click->avatar-upload#remove" style="<%= has_avatar ? '' : 'display: none;' %>">Supprimer la photo</button>
             </div>
           </div>
           
           <%= f.file_field :profile_image, class: "hidden-file-input", accept: "image/*", data: { avatar_upload_target: "input", action: "change->avatar-upload#preview" }, style: "display: none;" %>
+          <% if has_avatar %>
+            <%= hidden_field_tag "user[profile_image]", resource.profile_image.blob.signed_id, data: { avatar_upload_target: "signedId" } %>
+          <% else %>
+            <%= hidden_field_tag "user[profile_image]", "", data: { avatar_upload_target: "signedId" } %>
+          <% end %>
           <%= f.hidden_field :remove_profile_image, value: 0, data: { avatar_upload_target: "removeInput" } %>
         </div>
         <div class="form-row">

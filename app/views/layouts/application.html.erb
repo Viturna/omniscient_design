@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <meta name="apple-itunes-app" content="app-id=6737278275, app-argument=https://omniscientdesign.fr">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= javascript_importmap_tags %>
@@ -65,6 +66,10 @@
     <style>
       .is-native-app main {
         padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
+      }
+      .is-native-app body[data-controller-name="references"][data-action-name="index"] main,
+      .is-native-app body[data-controller-name="designers"][data-action-name="index"] main {
+        padding-bottom: 0 !important;
       }
     </style>
     <script>

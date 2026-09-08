@@ -53,6 +53,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
 
     else
+      # Si une photo a été uploadée lors d'un échec de validation, on persiste le blob pour la garder en mémoire
+      uploaded_image = params.dig(:user, :profile_image)
+      if uploaded_image.respond_to?(:tempfile) && uploaded_image.tempfile.present?
+        begin
+          blob = ActiveStorage::Blob.create_and_upload!(
+            io: uploaded_image.tempfile,
+            filename: uploaded_image.original_filename,
+            content_type: uploaded_image.content_type
+          )
+          resource.profile_image = blob.signed_id
+        rescue StandardError => e
+          Rails.logger.error "Erreur lors de la sauvegarde temporaire de l'image de profil : #{e.message}"
+        end
+      end
+
       clean_up_passwords resource
       set_minimum_password_length
 

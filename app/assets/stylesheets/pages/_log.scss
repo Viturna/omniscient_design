@@ -54,6 +54,46 @@
   flex-direction: column;
 }
 
+/* Registration & Form Errors Box */
+.registration-error-box {
+  background-color: rgba(230, 24, 24, 0.7);
+  border: 1.5px solid #E61818;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.registration-error-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #FFF;
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 10px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.registration-error-list {
+  margin: 0;
+  padding-left: 24px;
+  list-style-type: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+}
+
 .sign-up-in {
   font-weight: 300;
   line-height: 130%;

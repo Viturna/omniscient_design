@@ -11,8 +11,10 @@
   transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   user-select: none;
   touch-action: pan-y;
+  max-width: 90vw;
+  box-sizing: border-box;
   
-  /* Initial closed state: translate left so only 82px is visible */
+  /* Initial closed state: translate left so only 76px is visible */
   transform: translateX(calc(-100% + 76px));
 }
 
@@ -49,6 +51,7 @@
   padding: 26px 20px 26px 20px;
   gap: 14px;
   text-decoration: none;
+  box-sizing: border-box;
 }
 
 .tip-text {

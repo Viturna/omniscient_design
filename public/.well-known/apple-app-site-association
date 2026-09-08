@@ -1,0 +1,33 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "B5A99K7WV5.com.thomasriq.omniscientdesign",
+        "paths": [
+          "/fr/users/confirmation*",
+          "/en/users/confirmation*",
+          "/users/confirmation*",
+          "/fr/references/*",
+          "/en/references/*",
+          "/references/*",
+          "/fr/designers/*",
+          "/en/designers/*",
+          "/designers/*",
+          "/fr/studios/*",
+          "/en/studios/*",
+          "/studios/*",
+          "/fr/lists/*",
+          "/en/lists/*",
+          "/lists/*",
+          "*"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "B5A99K7WV5.com.thomasriq.omniscientdesign"
+    ]
+  }
+}

@@ -10,13 +10,13 @@
 <%# --------- Couleur de fond --------- %>
   <% if card.domaines.any? %>
     <% if card.domaines.size == 1 %>
-      <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>; pointer-events: none;">
+      <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>; position: relative; z-index: 2; pointer-events: none;">
     <% else %>
       <% colors = card.domaines.map(&:couleur).join(', ') %>
-      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); pointer-events: none;">
+      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); position: relative; z-index: 2; pointer-events: none;">
     <% end %>
   <% else %>
-    <div class="bg-card" style="background-color: #ccc; pointer-events: none;">
+    <div class="bg-card" style="background-color: #ccc; position: relative; z-index: 2; pointer-events: none;">
   <% end %>
     <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
       <% if images.any? %>

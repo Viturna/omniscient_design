@@ -6,20 +6,16 @@
      data-controller="slider" 
      data-slider-update-background-value="true"
      style="position: relative;">
-  <%= link_to reference_path(card.slug), class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
-    <span style="display:none;">Voir la référence</span>
-  <% end %>
-  <% style_bg = "position: relative; z-index: 2; pointer-events: none;" %>
-  <%# --------- Couleur de fond --------- %>
+<%# --------- Couleur de fond --------- %>
   <% if card.domaines.any? %>
     <% if card.domaines.size == 1 %>
-      <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>; <%= style_bg %>">
+      <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>;">
     <% else %>
       <% colors = card.domaines.map(&:couleur).join(', ') %>
-      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); <%= style_bg %>">
+      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>);">
     <% end %>
   <% else %>
-    <div class="bg-card" style="background-color: #ccc; <%= style_bg %>">
+    <div class="bg-card" style="background-color: #ccc;">
   <% end %>
     <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
       <% if images.any? %>
@@ -37,6 +33,9 @@
         </div>
       <% end %>
       <div class="card-slider-slides">
+        <%= link_to reference_path(card.slug), class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
+          <span style="display:none;">Voir la référence</span>
+        <% end %>
         <% if images.any? %>
           <% images.each_with_index do |image, index| %>
             <%# Création des variantes explicites %>

@@ -1,13 +1,14 @@
 .card-designer,
 .card-reference {
   background-repeat: no-repeat;
-  width: 10vw;
+  width: 100%;
   height: 280px;
   border-radius: 10px;
   display: flex;
   align-items: end;
   position: relative;
   padding: 20px;
+  box-sizing: border-box;
 
   &:hover {
     opacity: 0.8;
@@ -16,6 +17,7 @@
 
 .search-ad-card {
   transition: opacity 0.2s ease;
+  width: 100%;
 
   &:hover {
     opacity: 0.9;
@@ -79,130 +81,34 @@
 .inner-card-reference {
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
-
-@media screen and (max-width: 425px) {
-
-  .card-category {
-    width: 43vw;
-    height: auto;
-    padding: 20px 0;
-    gap: 16px;
-
-    img {
-      width: 40%;
-    }
-  }
-
+@media screen and (max-width: 600px) {
   .card-designer,
   .card-reference {
-    width: calc(40vw - 20px);
-    height: 240px;
-    padding: 15px;
+    height: 220px;
+    padding: 14px;
   }
 }
 
-
-@media screen and (min-width: 426px) and (max-width: 600px) {
-
-  .card-category {
-    width: 40vw;
-    height: auto;
-    padding: 20px 0;
-    gap: 16px;
-
-    img {
-      width: 40%;
-    }
-  }
-
+@media screen and (min-width: 601px) and (max-width: 1024px) {
   .card-designer,
   .card-reference {
-    width: calc(38vw - 20px);
-    height: 240px;
-    padding: 15px;
-  }
-}
-
-
-@media screen and (min-width: 601px) and (max-width: 768px) {
-
-  .card-category {
-    width: 27vw;
-    height: auto;
-    padding: 20px 0;
-    gap: 16px;
-
-    img {
-      width: 40%;
-    }
-  }
-
-  .card-designer,
-  .card-reference {
-    width: calc(38vw - 20px);
-    height: 240px;
-    padding: 15px;
-  }
-}
-
-
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-
-  .card-category {
-    width: 26vw;
-    height: auto;
-    padding: 20px 0;
-    gap: 16px;
-
-    img {
-      width: 70px;
-    }
-  }
-
-  .card-designer,
-  .card-reference {
-    width: calc(24vw - 20px);
-    height: 240px;
-    padding: 15px;
-  }
-}
-
-
-@media screen and (min-width: 1025px) and (max-width: 1280px) {
-
-  .card-category {
-    width: 24vw;
-    height: auto;
-    padding: 20px 0;
-    gap: 16px;
-
-    img {
-      width: 70px;
-    }
-  }
-
-  .card-designer,
-  .card-reference {
-    width: calc(24vw - 36px);
-    height: 260px;
-    padding: 15px;
-  }
-}
-
-
-@media screen and (min-width: 1700px) {
-  .card-designer,
-  .card-reference {
-    width: 9vw;
+    height: 250px;
+    padding: 16px;
   }
 }
 
 // Display Modes
 .list-mode {
+  display: flex !important;
   flex-direction: column !important;
   row-gap: 16px !important;
+
+  > a {
+    width: 100%;
+  }
 
   .card-designer,
   .card-reference {
@@ -235,13 +141,12 @@
 }
 
 .small-grid-mode {
-  column-gap: 1vw !important;
-  row-gap: 16px !important;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap: 12px !important;
 
   .card-designer,
   .card-reference {
-    width: calc(10vw * 0.7) !important;
-    height: 200px !important;
+    height: 190px !important;
     padding: 12px;
   }
 

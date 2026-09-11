@@ -256,7 +256,6 @@
 
   // BACK
   .circle-back {
-    top: 40px;
     width: 65px;
     height: 65px;
 
@@ -267,7 +266,6 @@
 
   //SAVE
   .circle-save {
-    top: 40px;
     width: 65px;
     height: 65px;
   }
@@ -306,7 +304,6 @@
 
   // BACK
   .circle-back {
-    top: 35px;
     width: 65px;
     height: 65px;
 
@@ -317,7 +314,6 @@
 
   //SAVE
   .circle-save {
-    top: 35px;
     width: 65px;
     height: 65px;
   }
@@ -331,7 +327,7 @@
 
 @media screen and (max-width: 375px) {
   .flex-right-btn {
-    gap: 4px;
+    gap: 8px;
   }
 
   .button {
@@ -341,8 +337,8 @@
   }
 
   .circle {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
 
     svg {
       scale: 0.8;
@@ -360,9 +356,8 @@
 
   // BACK
   .circle-back {
-    top: 25px;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
 
     svg {
       scale: 0.8;
@@ -371,9 +366,8 @@
 
   //SAVE
   .circle-save {
-    top: 25px;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
   }
 
   //ADD

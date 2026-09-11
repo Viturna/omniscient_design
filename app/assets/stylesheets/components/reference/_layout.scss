@@ -276,7 +276,10 @@
       env(safe-area-inset-top, 0px),
       24px
     );
-    gap: 0px;
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
   .body-show {
     padding-bottom: 50px;

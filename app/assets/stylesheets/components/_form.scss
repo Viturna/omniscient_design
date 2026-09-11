@@ -290,7 +290,8 @@ select {
 /* Forcer la hauteur du champ */
 .select2-container .select2-selection--single {
   padding-left: 25px !important;
-  height: 55px !important;
+  height: 70px !important;
+  min-height: 70px !important;
   /* Fixe la hauteur */
   line-height: 70px !important;
   /* Centre verticalement le texte */
@@ -298,6 +299,7 @@ select {
   /* Assure un alignement flexible */
   align-items: center !important;
   /* Aligne verticalement le contenu */
+  border-radius: 5px !important;
 }
 
 .select2-container .select2-results__option {
@@ -397,6 +399,13 @@ textarea {
     }
   }
 
+  .select2-container .select2-selection--single {
+    height: 60px !important;
+    min-height: 60px !important;
+    line-height: 60px !important;
+    padding-left: 15px !important;
+  }
+
   textarea {
     padding: 0 15px;
     width: calc(100% - 36px);
@@ -433,6 +442,13 @@ textarea {
     &::placeholder {
       font-size: 14px;
     }
+  }
+
+  .select2-container .select2-selection--single {
+    height: 55px !important;
+    min-height: 55px !important;
+    line-height: 55px !important;
+    padding-left: 15px !important;
   }
 
   textarea {

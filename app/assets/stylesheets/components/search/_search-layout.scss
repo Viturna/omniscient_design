@@ -22,21 +22,22 @@
 
 .flex-category,
 .flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
-  column-gap: 1.5vw;
-  row-gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
   padding: 32px 0;
-  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+
+  > a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+  }
 }
 
-
-
-/* Affichage du dropdown actif */
-/* Champ d'entrée de date */
-// Filter frise
+// Responsive Grid Breakpoints
 @media screen and (max-width: 425px) {
   .filter {
     width: 100% !important;
@@ -48,14 +49,13 @@
 
   .flex-category,
   .flex-container {
-    row-gap: 16px;
-    padding: 24px 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 20px 0;
   }
 }
 
 @media screen and (min-width: 426px) and (max-width: 600px) {
-  // Tabs
-  // filtres
   .filters {
     flex-direction: column;
   }
@@ -69,37 +69,35 @@
 
   .flex-category,
   .flex-container {
-    row-gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
     padding: 24px 0;
   }
 }
 
 @media screen and (min-width: 601px) and (max-width: 768px) {
-  // Tabs
-  // filtres
   .flex-category,
   .flex-container {
-    row-gap: 16px;
-    padding: 24px 0;
-  }
-}
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .flex-category,
-  .flex-container {
-    row-gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     padding: 24px 0;
   }
 }
 
-@media screen and (min-width: 1025px) and (max-width: 1280px) {
+@media screen and (min-width: 769px) and (max-width: 1100px) {
   .flex-category,
   .flex-container {
-    column-gap: 16px;
-    row-gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px;
     padding: 24px 0;
   }
 }
 
-
-@media screen and (min-width: 1700px) {
+@media screen and (min-width: 1101px) {
+  .flex-category,
+  .flex-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 32px 0;
+  }
 }

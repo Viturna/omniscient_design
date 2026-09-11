@@ -1,12 +1,16 @@
 <% if resource.errors.any? %>
-  <div id="error_explanation" data-turbo-cache="false">
-    <h2>
-      <%= I18n.t("errors.messages.not_saved",
-                 count: resource.errors.count,
-                 resource: resource.class.model_name.human.downcase)
-       %>
-    </h2>
-    <ul>
+  <% default_header = "#{pluralize(resource.errors.count, 'erreur')} #{resource.errors.count > 1 ? 'empêchent' : 'empêche'} la poursuite de l'opération :" %>
+  <% header_text = local_assigns[:message] || default_header %>
+  <div class="registration-error-box" id="error_explanation" data-turbo-cache="false">
+    <div class="registration-error-header">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="9" stroke="#FFF" stroke-width="2"/>
+        <path d="M10 6V11" stroke="#FFF" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="10" cy="14" r="1" fill="#FFF"/>
+      </svg>
+      <span><%= header_text %></span>
+    </div>
+    <ul class="registration-error-list">
       <% resource.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>

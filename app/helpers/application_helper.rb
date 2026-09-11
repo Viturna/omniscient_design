@@ -197,4 +197,16 @@ module ApplicationHelper
                       end
     end
   end
+
+  def country_to_code_mapping
+    @country_to_code_mapping ||= Country.pluck(:id, :country).each_with_object({}) do |(id, name), hash|
+      code = case name
+             when 'France' then 'FR'
+             when 'Suisse' then 'CH'
+             when 'Belgique' then 'BE'
+             else 'OTHER'
+             end
+      hash[id.to_s] = code
+    end
+  end
 end

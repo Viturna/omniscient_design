@@ -7,66 +7,209 @@
     color: #FFF;
   }
 
-  hr{
+  hr {
     margin-top: 32px;
     width: 100%;
-    border: 1px solid #202020
+    border: 1px solid #202020;
   }
-  .delete{
-    background-color: rgba(230, 24,24,0.15);
+
+  .delete {
+    background-color: rgba(230, 24, 24, 0.15);
     color: #E61818;
   }
-  .delete:hover{
-    background-color: rgba(230, 24,24,0.35);
+
+  .delete:hover {
+    background-color: rgba(230, 24, 24, 0.35);
   }
-  .delete-account{
+
+  .delete-account {
     margin-top: 32px;
     width: 100%;
   }
 
-  body.dark-mode hr{
+  body.dark-mode hr {
     border: 1px solid #FFF;
   }
 
-  .modal-overlay {
+  /* Modale suppression de compte */
+  .delete-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10000;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
-  .modal-content {
+  .delete-modal-box {
     background-color: #fff;
-    padding: 32px;
+    color: #202020;
+    padding: 32px 28px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
   }
 
-  .modal-content p {
-    margin-bottom: 24px;
+  .delete-modal-box h3 {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    color: #202020;
   }
 
-  .modal-content textarea {
-    width: calc(100% - 24px);
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+  .delete-modal-box p {
+    font-size: 14.5px;
+    color: #555;
+    margin: 0 0 20px 0;
+    line-height: 1.45;
+  }
+
+  .delete-modal-box textarea {
+    width: 100%;
+    min-height: 95px;
+    padding: 12px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
     resize: vertical;
+    box-sizing: border-box;
     margin-bottom: 24px;
+    color: #202020;
+    background-color: #fafafa;
   }
 
-  .modal-actions {
+  .delete-modal-box textarea:focus {
+    outline: none;
+    border-color: #202020;
+    background-color: #fff;
+  }
+
+  .delete-modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 16px;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .delete-modal-actions .button,
+  .delete-modal-actions button,
+  .delete-modal-actions input[type="submit"] {
+    flex: 1 1 0% !important;
+    height: 46px !important;
+    padding: 0 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    min-height: unset !important;
+    cursor: pointer !important;
+    line-height: normal !important;
+    white-space: nowrap !important;
+    aspect-ratio: auto !important;
+  }
+
+  body.dark-mode .delete-modal-box {
+    background-color: #1e1e1e;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  body.dark-mode .delete-modal-box h3 {
+    color: #fff;
+  }
+
+  body.dark-mode .delete-modal-box p {
+    color: #aaa;
+  }
+
+  body.dark-mode .delete-modal-box textarea {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #fff;
+  }
+
+  body.dark-mode .delete-modal-box textarea:focus {
+    border-color: #fff;
+    background-color: #333;
+  }
+
+  .delete-reason-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .delete-chip {
+    background-color: #f2f2f2;
+    border: 1px solid #e2e2e2;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #202020;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .delete-chip:hover {
+    background-color: #e5e5e5;
+  }
+
+  .delete-chip.active {
+    background-color: #202020;
+    color: #fff;
+    border-color: #202020;
+  }
+
+  body.dark-mode .delete-chip {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #eee;
+  }
+
+  body.dark-mode .delete-chip:hover {
+    background-color: #383838;
+  }
+
+  body.dark-mode .delete-chip.active {
+    background-color: #fff;
+    color: #202020;
+    border-color: #fff;
+  }
+
+  @media (max-width: 480px) {
+    .delete-modal-box {
+      padding: 24px 18px;
+    }
+
+    .delete-modal-actions {
+      flex-direction: column-reverse;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .delete-modal-actions .button {
+      width: 100% !important;
+    }
   }
 </style>
 <section class="top-default-page">
@@ -110,17 +253,13 @@
       </div>
     <% end %>
   </div>
-
   <h2><%= t('edit_profile.public_profile') %></h2>
   <p class="desc-profil"><%= t('edit_profile.public_desc') %></p>
-  
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true, data: { turbo: false } }) do |f| %>
     <div class="flex-form" style="margin-top: 32px;" data-controller="registration" data-registration-triggers-value='["etudiant", "enseignant"]'>
       <%= render "users/shared/error_messages", resource: resource %>
-      
       <div class="field avatar-upload-field" data-controller="avatar-upload">
         <%= f.label :profile_image, "Photo de profil" %>
-        
         <div class="avatar-upload-container">
           <div class="avatar-circle" data-action="click->avatar-upload#triggerInput" data-avatar-upload-target="circle" title="Modifier la photo">
             <% has_avatar = resource.profile_image.attached? %>
@@ -129,26 +268,21 @@
                   class: "avatar-image", 
                   style: has_avatar ? "" : "display: none;",
                   onerror: "this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='block';}" %>
-            
             <%= image_tag "profil.png", data: { avatar_upload_target: "placeholder" }, class: "avatar-image", style: has_avatar ? "display: none;" : "" %>
-            
             <div class="avatar-overlay">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
               </svg>
             </div>
           </div>
-          
           <div class="avatar-actions">
             <button type="button" class="button" data-action="click->avatar-upload#triggerInput">Changer de photo</button>
             <button type="button" class="button delete" data-action="click->avatar-upload#remove" style="<%= resource.profile_image.attached? ? '' : 'display: none;' %>">Supprimer la photo</button>
           </div>
         </div>
-        
         <%= f.file_field :profile_image, class: "hidden-file-input", accept: "image/*", data: { avatar_upload_target: "input", action: "change->avatar-upload#preview" }, style: "display: none;" %>
         <%= f.hidden_field :remove_profile_image, value: 0, data: { avatar_upload_target: "removeInput" } %>
       </div>
-
       <div class="field">
         <%= f.label t('edit_profile.first_name') %>
         <%= f.text_field :firstname, autocomplete: "firstname", placeholder: "Prénom" %>
@@ -164,7 +298,6 @@
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
-      
       <div class="field">
         <%= f.label :country_id, "Pays" %>
         <%= f.collection_select :country_id,
@@ -176,7 +309,9 @@
               class: "form-control", 
               data: { 
                 controller: "select2",
-                select2_placeholder_value: "Sélectionne ton pays"
+                select2_placeholder_value: "Sélectionne ton pays",
+                action: "change->dynamic-study-levels#onCountryChange",
+                dynamic_study_levels_target: "countrySelect"
               } 
             } %>
       </div>
@@ -194,6 +329,8 @@
             { class: "role-select form-control",
               required: true,
               data: { 
+                controller: "select2",
+                select2_placeholder_value: "Sélectionne ton statut",
                 action: "change->registration#toggleEstablishment",
                 registration_target: "statutSelect" 
              } } %>
@@ -202,8 +339,9 @@
            data-dynamic-study-levels-study-levels-by-country-value="<%= User::STUDY_LEVELS_BY_COUNTRY.to_json %>"
            data-dynamic-study-levels-all-levels-value="<%= User::STUDY_LEVELS.to_json %>"
            data-dynamic-study-levels-establishment-countries-value="<%= etablissement_country_mapping.to_json %>"
-           data-dynamic-study-levels-current-level-value="<%= resource.study_level %>">
-        
+           data-dynamic-study-levels-country-mapping-value="<%= country_to_code_mapping.to_json %>"
+           data-dynamic-study-levels-current-level-value="<%= resource.study_level %>"
+           style="display: flex; flex-direction: column; gap: 16px;">
         <div class="field" data-registration-target="establishmentField" 
                 style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
           <%= f.label :etablissement_id, t('edit_profile.institution') %>
@@ -223,7 +361,7 @@
           } %>
         </div>
         <div class="field" data-registration-target="studentField"
-                style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>">
+                style="<%= resource.statut == 'etudiant' ? '' : 'display: none;' %>; padding-bottom: 16px;">
           <%= f.label :study_level, "Niveau d'étude" %>
           <%= f.select :study_level,
             User::STUDY_LEVELS,
@@ -247,7 +385,7 @@
                 id: "password-field-1", 
                 data: { "show-password-target": "passwordField" } %>
           <button type="button" data-action="click->show-password#toggle" class="toggle-password" aria-label="Afficher ou masquer le mot de passe">
-            </button>
+          </button>
         </div>
         <i>Ton mot de passe doit comporter au moins 6 caractères...</i>
       </div>
@@ -260,10 +398,9 @@
         id: "password-field-2", 
         data: { "show-password-target": "passwordField" } %>
           <button type="button" data-action="click->show-password#toggle" class="toggle-password" aria-label="Afficher ou masquer le mot de passe">
-            </button>
+          </button>
         </div>
       </div>
-      
       <% if !resource.provider.present? %>
         <hr>
         <div class="field">
@@ -275,37 +412,48 @@
         id: "password-field-3", 
         data: { "show-password-target": "passwordField" } %>
             <button type="button" data-action="click->show-password#toggle" class="toggle-password" aria-label="Afficher ou masquer le mot de passe">
-              </button>
+            </button>
           </div>
         </div>
       <%end%>
-      
       <div class="field rgpd" style="flex-direction: row; gap: 10px;">
-          <%= f.check_box :newsletter, class: "checkbox-input", id: "user_newsletter" %>
-          <%= f.label :newsletter, "Je souhaite recevoir les actualités et nouveautés d'Omniscient Design", style: "margin: 0; cursor: pointer;", for: "user_newsletter" %>
+        <%= f.check_box :newsletter, class: "checkbox-input", id: "user_newsletter" %>
+        <%= f.label :newsletter, "Je souhaite recevoir les actualités et nouveautés d'Omniscient Design", style: "margin: 0; cursor: pointer;", for: "user_newsletter" %>
       </div>
       <div class="actions">
         <%= f.submit  t('edit_profile.update_button'), class: "button large maj dark" %>
       </div>
     </div>
   <% end %>
-
   <div style="display:flex" data-controller="popup">
     <button type="button" class="button delete delete-account" data-action="click->popup#open">
       <%= t('edit_profile.delete_account') %>
     </button>
-    <div class="modal-overlay" data-popup-target="modal" data-action="click->popup#backgroundClick" style="display: none;">
-      <div class="modal-content profil">
+    <div class="delete-modal-overlay" data-popup-target="modal" data-action="click->popup#backgroundClick" style="display: none;">
+      <div class="delete-modal-box">
         <h3>Nous sommes tristes de te voir partir 😢</h3>
         <p>Pourrais-tu nous dire pourquoi tu supprimes ton compte ?</p>
         <%= form_with(url: registration_path(resource_name), method: :delete, local: true, data: { turbo: false }) do |f| %>
           <div class="field">
-            <%= f.label :delete_reason, "Raison du départ (optionnel)", style: "margin-bottom: 8px; display: block;" %>
-            <%= f.text_area :delete_reason, rows: 4, class: "form-control", placeholder: "J'ai trouvé une meilleure alternative, je ne l'utilise plus..." %>
+            <label style="margin-bottom: 8px; display: block; font-size: 14px; font-weight: 500;">
+              Raison du départ (optionnel)
+            </label>
+            <div class="delete-reason-chips">
+              <button type="button" class="delete-chip" data-action="click->popup#selectReason" data-popup-target="reasonChip" data-reason="Je ne l'utilise plus assez">Je ne l'utilise plus assez</button>
+              <button type="button" class="delete-chip" data-action="click->popup#selectReason" data-popup-target="reasonChip" data-reason="J'ai trouvé une alternative">J'ai trouvé une alternative</button>
+              <button type="button" class="delete-chip" data-action="click->popup#selectReason" data-popup-target="reasonChip" data-reason="Problème technique / bug">Problème technique / bug</button>
+              <button type="button" class="delete-chip" data-action="click->popup#selectReason" data-popup-target="reasonChip" data-reason="Autre raison">Autre raison</button>
+            </div>
+            <%= f.text_area :delete_reason, 
+                            rows: 3, 
+                            placeholder: "Précise ta raison ou partage-nous tes remarques...", 
+                            data: { popup_target: "reasonInput" } %>
           </div>
-          <div class="modal-actions">
+          <div class="delete-modal-actions">
             <button type="button" class="button dark" data-action="click->popup#close">Annuler</button>
-            <%= f.submit "Confirmer la suppression définitive", class: "button delete large" %>
+            <%= button_tag type: "submit", class: "button delete" do %>
+              Supprimer définitivement
+            <% end %>
           </div>
         <% end %>
       </div>

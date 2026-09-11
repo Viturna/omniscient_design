@@ -18,6 +18,7 @@
     <table>
       <thead>
         <tr>
+          <th>Date</th>
           <th>Utilisateur</th>
           <th><%= t('feedback.questions.question_1') %></th>
           <th><%= t('feedback.questions.question_2') %></th>
@@ -37,7 +38,11 @@
       <tbody>
         <% @feedbacks.each do |feedback| %>
           <tr>
-            <td><%= feedback.user.email %></td>
+            <td>
+              <%= feedback.created_at&.strftime("%d/%m/%Y") %>
+              <div style="font-size: 11px; color: #999;"><%= time_ago_in_words(feedback.created_at) if feedback.created_at %></div>
+            </td>
+            <td><%= feedback.user&.email %></td>
             <td><%= feedback.question_1 %></td>
             <td><%= feedback.question_2 %></td>
             <td><%= feedback.question_3 %></td>

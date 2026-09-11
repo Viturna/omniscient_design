@@ -7,7 +7,7 @@ class FeedbacksController < ApplicationController
 
   def index
     @current_page = 'feedbacks'
-    @feedbacks = Feedback.all
+    @feedbacks = Feedback.includes(:user).order(created_at: :desc)
 
     respond_to do |format|
       format.html

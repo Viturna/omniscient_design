@@ -5,6 +5,7 @@ module Admin
     layout 'admin'
 
     def new
+      @current_page = 'user_badges'
       @users = User.order(:email)
       @badges = Badge.order(:name)
 

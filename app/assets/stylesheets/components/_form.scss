@@ -6,15 +6,17 @@ label {
 
 input.search-top-bar {
   border-radius: 50px;
-  font-size: 17px;
-  padding: 5px 10px;
-  padding-left: 50px;
+  font-size: 16px;
+  padding: 5px 20px 5px 54px;
   width: 40vw;
-  height: 55px;
+  height: 60px;
   border: none;
   position: relative;
-  background: url("/assets/search-icon.svg") no-repeat left 20px center;
-  background-size: 16px 16px;
+  background-color: variables.$secondary-color;
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M23.809 21.646L17.604 15.441C18.771 13.836 19.461 11.862 19.461 9.73C19.461 4.365 15.096 0 9.73 0C4.365 0 0 4.365 0 9.73C0 15.096 4.365 19.46 9.73 19.46C11.764 19.46 13.653 18.833 15.217 17.762L21.455 24L23.809 21.646ZM2.854 9.73C2.854 5.938 5.939 2.853 9.731 2.853C13.523 2.853 16.608 5.938 16.608 9.73C16.608 13.522 13.523 16.607 9.731 16.607C5.938 16.607 2.854 13.522 2.854 9.73Z' fill='%23202020'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 20px center;
+  background-size: 18px 18px;
 }
 
 input.search-top-bar::placeholder {
@@ -217,17 +219,21 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media screen and (min-width: 426px) and (max-width: 1024px) {
   input.search-top-bar {
-    font-size: 14px;
-    height: 50px;
+    font-size: 15px;
+    height: 56px;
     width: 58vw;
+    padding-left: 50px;
+    background-position: left 18px center;
   }
 }
 
 @media screen and (min-width: 0px) and (max-width: 425px) {
   input.search-top-bar {
-    font-size: 14px;
-    height: 50px;
+    font-size: 15px;
+    height: 54px;
     width: 55vw;
+    padding-left: 48px;
+    background-position: left 16px center;
   }
 }
 
@@ -535,6 +541,7 @@ body.dark-mode {
     background-color: variables.$secondary-color-dark;
     color: variables.$primary-color-dark;
     border-color: variables.$background-color-dark;
+    background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M23.809 21.646L17.604 15.441C18.771 13.836 19.461 11.862 19.461 9.73C19.461 4.365 15.096 0 9.73 0C4.365 0 0 4.365 0 9.73C0 15.096 4.365 19.46 9.73 19.46C11.764 19.46 13.653 18.833 15.217 17.762L21.455 24L23.809 21.646ZM2.854 9.73C2.854 5.938 5.939 2.853 9.731 2.853C13.523 2.853 16.608 5.938 16.608 9.73C16.608 13.522 13.523 16.607 9.731 16.607C5.938 16.607 2.854 13.522 2.854 9.73Z' fill='%23FFFFFF'/%3E%3C/svg%3E");
   }
 
   input[type="text"],

@@ -13,10 +13,7 @@
       </div>
       <a href="omniscient://<%= request.fullpath.sub(%r{^/}, '') %>" 
          class="sab-button" 
-         id="sab-open-btn"
-         data-deep-link="omniscient://<%= request.fullpath.sub(%r{^/}, '') %>"
-         data-ios-store="https://apps.apple.com/app/id6754964970"
-         data-android-store="https://play.google.com/store/apps/details?id=com.thomasriq.omniscientdesign">
+         id="sab-open-btn">
         Ouvrir
       </a>
     </div>
@@ -42,7 +39,6 @@
       document.addEventListener('DOMContentLoaded', checkAndShowBanner);
 
       document.addEventListener('click', function(e) {
-        // Fermer la bannière
         if (e.target && (e.target.id === 'sab-close-btn' || e.target.closest('#sab-close-btn'))) {
           var banner = document.getElementById('smart-app-banner');
           if (banner) {
@@ -50,26 +46,6 @@
             document.documentElement.classList.remove('has-smart-app-banner');
             sessionStorage.setItem('dismiss_smart_app_banner', 'true');
           }
-          return;
-        }
-
-        // Clic sur le bouton Ouvrir
-        var openBtn = e.target && (e.target.id === 'sab-open-btn' || e.target.closest('#sab-open-btn'));
-        if (openBtn) {
-          e.preventDefault();
-          var deepLink = openBtn.getAttribute('data-deep-link');
-          var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-          var storeUrl = isIOS ? openBtn.getAttribute('data-ios-store') : openBtn.getAttribute('data-android-store');
-
-          var start = Date.now();
-          window.location.href = deepLink;
-
-          // Si après 1.5s l'app ne s'est pas ouverte (donc non installée), on redirige vers l'App Store / Play Store
-          setTimeout(function() {
-            if (Date.now() - start < 2000 && !document.hidden) {
-              window.location.href = storeUrl;
-            }
-          }, 1500);
         }
       });
     })();

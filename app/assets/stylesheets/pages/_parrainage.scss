@@ -1,5 +1,23 @@
 @use 'abstracts/variables';
 
+.rules-link-flex {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  cursor: pointer;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    color: variables.$text-color;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
 .title-avantage {
   font-size: 24px;
   color: variables.$primary-color;
@@ -18,7 +36,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
+
+  .picto-avantage {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
 }
 
 .box-avantage div {
@@ -31,48 +55,180 @@
 .box-avantage p {
   text-align: center;
   width: 80%;
+  margin: 0;
 }
 
 .and {
   text-transform: uppercase;
   color: variables.$primary-color;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .code {
-  margin-top: 96px;
+  margin-top: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 20px;
 }
 
 .title-code {
   color: variables.$primary-color;
   font-weight: 500;
+  margin: 0;
 }
 
 .code-input {
   display: flex;
-  align-items: center;
-  gap: 16px;
-}
+  align-items: stretch;
+  gap: 12px;
 
-.code input[type="text"] {
-  width: 220px;
-  font-size: 48px;
-  font-weight: 600;
-}
+  input[type="text"] {
+    width: 200px;
+    height: 52px;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 5px;
+    padding: 0 16px;
+    border: 1.5px solid #e9e9e9;
+    background-color: #ffffff;
+    color: variables.$primary-color;
+    letter-spacing: 0.08em;
+  }
 
-.code input[type="text"]::placeholder {
-  font-size: 16px;
-  font-weight: 400;
+  input[type="text"]::placeholder {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: normal;
+  }
+
+  .button {
+    height: 52px;
+    padding: 0 28px;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .title-filleul {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 24px;
+}
+
+.filleul {
+  margin-top: 56px;
+  padding-bottom: 64px;
+
+  .filleul-empty-text {
+    color: variables.$text-color;
+    font-size: 16px;
+    margin-top: 16px;
+  }
+}
+
+.filleul-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.filleul-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.filleul-avatar-wrapper {
+  flex-shrink: 0;
+
+  .filleul-pp,
+  .filleul-pp-placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .filleul-pp-placeholder {
+    background: #202020;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+}
+
+.filleul-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+
+  .filleul-pseudo {
+    font-size: 16px;
+    font-weight: 500;
+    color: variables.$primary-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .filleul-date {
+    font-size: 13px;
+    color: #888888;
+    font-weight: 400;
+  }
+}
+
+.filleul-intro {
+  margin-top: 8px;
+  max-width: 600px;
+}
+
+body.dark-mode {
+  .title-avantage,
+  .title-code,
+  .and {
+    color: variables.$primary-color-dark;
+  }
+
+  .box-avantage .picto-avantage {
+    path, circle {
+      stroke: variables.$primary-color-dark;
+    }
+    path[fill] {
+      fill: variables.$primary-color-dark;
+    }
+  }
+
+  .code input[type="text"] {
+    color: variables.$primary-color-dark;
+    border-color: #444;
+  }
+
+  .filleul-item {
+    border-bottom-color: #333;
+  }
+
+  .filleul-avatar-wrapper .filleul-pp-placeholder {
+    background: #ffffff;
+    color: #202020;
+  }
+
+  .filleul-details .filleul-pseudo {
+    color: variables.$primary-color-dark;
+  }
 }
 
 @media screen and (max-width: 425px) {
@@ -88,61 +244,64 @@
 
   .box-avantage {
     width: 80vw;
-    gap: 8px;
+    gap: 16px;
 
-    svg {
-      scale: 0.8;
+    .picto-avantage {
+      width: 40px;
+      height: 40px;
+    }
+
+    p {
+      width: 100%;
     }
   }
 
-
   .code {
-    margin-top: 64px;
+    margin-top: 48px;
   }
-
-
 
   .code-input {
     flex-direction: column;
-  }
+    width: 100%;
+    align-items: center;
 
-  .code input[type="text"] {
-    width: 60vw;
-  }
+    input[type="text"] {
+      width: 75vw;
+      height: 48px;
+      font-size: 18px;
+    }
 
+    .button {
+      width: 75vw;
+      height: 48px;
+    }
+  }
 }
 
-@media screen and (min-width:426px) and (max-width: 1024px) {
+@media screen and (min-width: 426px) and (max-width: 1024px) {
   .title-avantage {
     font-size: 20px;
   }
 
   .flex-avantages {
     margin-top: 48px;
-
     gap: 32px;
   }
 
   .box-avantage {
-    gap: 8px;
+    gap: 16px;
 
-    svg {
-      scale: 0.85;
+    .picto-avantage {
+      width: 44px;
+      height: 44px;
+    }
+
+    p {
+      width: 100%;
     }
   }
 
-
   .code {
-    margin-top: 64px;
+    margin-top: 48px;
   }
-
-  .box-avantage p {
-    width: 100%;
-  }
-
-  .code-input {
-    flex-direction: column;
-  }
-
-
 }

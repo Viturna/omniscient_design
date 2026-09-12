@@ -80,7 +80,7 @@ class PagesController < ApplicationController
   def parrainage
     @current_page = 'profil'
     @user = current_user
-    @referred_users = @user.referred_users
+    @referred_users = @user.referred_users.with_attached_profile_image.order('referrals.created_at DESC')
     @referred_count = @referred_users.count
   end
 

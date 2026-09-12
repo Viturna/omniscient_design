@@ -275,8 +275,8 @@ body.dark-mode {
   z-index: 11; // Au-dessus de tout
   background: rgba(0, 0, 0, 0.2);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,7 +291,6 @@ body.dark-mode {
     background: rgba(0, 0, 0, 0.4);
   }
 
-  // CORRECTION : pas de ':' et utiliser la syntaxe SCSS/CSS correcte
   &.prev {
     left: 10px;
   }
@@ -299,10 +298,26 @@ body.dark-mode {
     right: 10px;
   }
 
-  // CORRECTION : espace, pas de ':'
   svg {
     width: 12px;
+    height: auto;
     stroke: white;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 28px;
+    height: 28px;
+
+    &.prev {
+      left: 6px;
+    }
+    &.next {
+      right: 6px;
+    }
+
+    svg {
+      width: 9px;
+    }
   }
 }
 

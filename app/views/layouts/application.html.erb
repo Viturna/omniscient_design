@@ -122,11 +122,13 @@
       <% end %>
     <% end %>
     <%= render 'shared/badge_toast' if user_signed_in? %>
+    <%= render 'shared/smart_app_banner' %>
     <% unless native_app? %>
       <% unless action_name.in?(['presentation', 'sign_in']) || (controller_name.in?(%w[references designers studios]) && action_name == 'show') %>
         <%= render 'layouts/header' %>
       <% end %>
     <% end %>
+
     <% main_show = (controller_name == 'references' || controller_name == 'designers' || controller_name == 'studios') && action_name == 'show' || (controller_name == 'pages' && action_name == 'presentation') %>
     <% if user_signed_in? && current_user.needs_back_to_school_update? %>
       <div data-controller="back-to-school">

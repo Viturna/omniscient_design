@@ -5,6 +5,9 @@
       {
         "appID": "B5A99K7WV5.com.thomasriq.omniscientdesign",
         "paths": [
+          "/fr/users/password/edit*",
+          "/en/users/password/edit*",
+          "/users/password/edit*",
           "/fr/users/confirmation*",
           "/en/users/confirmation*",
           "/users/confirmation*",
@@ -31,3 +34,4 @@
     ]
   }
 }
+

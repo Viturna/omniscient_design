@@ -12,19 +12,78 @@ class Admin::EtablissementsController < ApplicationController
                             .left_joins(:users)
                             .group('etablissements.id')
                             .select('etablissements.*, COUNT(users.id) AS users_count')
-                            .order('users_count DESC, etablissements.name ASC')
 
-    # 2. Recherche (si applicable)
+    # 2. Recherche textuelle
     if params[:query].present?
       query = "%#{params[:query]}%"
       @etablissements_scope = @etablissements_scope.where(
-        "etablissements.name ILIKE ? OR
-         etablissements.uai ILIKE ? OR
-         etablissements.city ILIKE ? OR
-         etablissements.academy ILIKE ?",
-        query, query, query, query
+        "etablissements.name ILIKE :q OR
+         etablissements.uai ILIKE :q OR
+         etablissements.city ILIKE :q OR
+         etablissements.academy ILIKE :q",
+        q: query
       )
     end
+
+    # 3. Filtre Activité / Membres
+    case params[:activity]
+    when 'with_users'
+      @etablissements_scope = @etablissements_scope.having('COUNT(users.id) > 0')
+    when 'without_users'
+      @etablissements_scope = @etablissements_scope.having('COUNT(users.id) = 0')
+    end
+
+    # 4. Filtre Statut Public / Privé
+    if params[:statut].present?
+      @etablissements_scope = @etablissements_scope.where(statut_public_prive: params[:statut])
+    end
+
+    # 5. Filtre Type d'établissement
+    if params[:type_etablissement].present?
+      @etablissements_scope = @etablissements_scope.where(type_etablissement: params[:type_etablissement])
+    end
+
+    # 6. Filtre Académie
+    if params[:academy].present?
+      @etablissements_scope = @etablissements_scope.where(academy: params[:academy])
+    end
+
+    # 7. Filtre Section / Filière
+    case params[:section]
+    when 'arts'
+      @etablissements_scope = @etablissements_scope.where(section_arts: true)
+    when 'cinema'
+      @etablissements_scope = @etablissements_scope.where(section_cinema: true)
+    when 'theatre'
+      @etablissements_scope = @etablissements_scope.where(section_theatre: true)
+    when 'post_bac'
+      @etablissements_scope = @etablissements_scope.where(post_bac: true)
+    when 'pro'
+      @etablissements_scope = @etablissements_scope.where(voie_professionnelle: true)
+    when 'techno'
+      @etablissements_scope = @etablissements_scope.where(voie_technologique: true)
+    end
+
+    # 8. Tri
+    case params[:sort]
+    when 'users_count_asc'
+      @etablissements_scope = @etablissements_scope.order('users_count ASC, etablissements.name ASC')
+    when 'name_asc'
+      @etablissements_scope = @etablissements_scope.order('etablissements.name ASC')
+    when 'name_desc'
+      @etablissements_scope = @etablissements_scope.order('etablissements.name DESC')
+    when 'city_asc'
+      @etablissements_scope = @etablissements_scope.order('etablissements.city ASC, etablissements.name ASC')
+    when 'academy_asc'
+      @etablissements_scope = @etablissements_scope.order('etablissements.academy ASC, etablissements.name ASC')
+    else # 'users_count_desc' par défaut
+      @etablissements_scope = @etablissements_scope.order('users_count DESC, etablissements.name ASC')
+    end
+
+    # Listes pour les filtres dropdown
+    @statuts_for_filter = Etablissement.where.not(statut_public_prive: [nil, '']).distinct.order(:statut_public_prive).pluck(:statut_public_prive)
+    @types_for_filter = Etablissement.where.not(type_etablissement: [nil, '']).distinct.order(:type_etablissement).pluck(:type_etablissement)
+    @academies_for_filter = Etablissement.where.not(academy: [nil, '']).distinct.order(:academy).pluck(:academy)
 
     # KPIs
     @total_etablissements = Etablissement.count
@@ -33,16 +92,13 @@ class Admin::EtablissementsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        # Affichage HTML : On affiche tout, avec pagination
-        @etablissements = @etablissements_scope.page(params[:page])
+        @etablissements = @etablissements_scope.page(params[:page]).per(30)
       end
 
       format.csv do
-        # Export CSV : FILTRE SPÉCIFIQUE -> Uniquement ceux avec au moins 1 user
-        @export_etablissements = @etablissements_scope.having('COUNT(users.id) > 0')
-
+        @export_etablissements = @etablissements_scope
         send_data generate_csv(@export_etablissements),
-                  filename: "etablissements_actifs-#{Date.today}.csv"
+                  filename: "etablissements-#{Date.today}.csv"
       end
     end
   end

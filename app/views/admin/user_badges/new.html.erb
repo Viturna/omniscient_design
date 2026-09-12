@@ -1,503 +1,403 @@
 <style>
-  /* --- REPRISE DE LA DA GLOBALE --- */
-  .admin-dashboard-wrapper {
-    padding: 40px 4vw;
-    max-width: 1600px;
-    margin: 0 auto;
-    background-color: #f8f9fa;
-    min-height: 100vh;
-    font-family: 'IBM Plex Sans', sans-serif;
-    color: #202020;
-    box-sizing: border-box;
+  /* --- USER BADGES ADMIN WORKSPACE --- */
+  .badge-workspace-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 48px;
   }
 
-  /* Header */
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
+  @media (max-width: 1100px) {
+    .badge-workspace-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Badge Pill Category Indicators */
+  .badge-cat-tag {
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 40px;
-    gap: 20px;
-  }
-
-  .dashboard-title-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .dashboard-title {
-    font-size: 32px;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: 500;
-    color: #202020;
-    margin: 0;
-    line-height: 1.2;
+    text-transform: capitalize;
   }
 
-  .dashboard-subtitle {
-    font-size: 14px;
-    color: #666;
-    margin: 4px 0 0 0;
-    font-weight: 400;
-  }
+  .badge-cat-special { background: #EDE7F6; color: #512DA8; }
+  .badge-cat-donor { background: #FFF8E1; color: #F57F17; }
+  .badge-cat-contributor { background: #E3F2FD; color: #1565C0; }
+  .badge-cat-ambassador { background: #E8F5E9; color: #2E7D32; }
+  .badge-cat-investigator { background: #FCE4EC; color: #C2185B; }
+  .badge-cat-gamer { background: #FFF3E0; color: #E65100; }
+  .badge-cat-competitor { background: #E0F2F1; color: #00796B; }
 
-  .dashboard-back-link {
-    display: flex;
+  /* Level Pills */
+  .badge-level-tag {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 1px solid #eee;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-  }
-  .dashboard-back-link:hover {
-    background-color: #f0f0f0;
-    transform: translateX(-2px);
-  }
-
-  /* Card Container Centré */
-  .form-card-container {
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .dash-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-    border: 1px solid #f0f0f0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* --- STYLE DU FORMULAIRE --- */
-  .form-group {
-    margin-bottom: 24px;
-  }
-
-  .form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #202020;
-    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+  }
+  .level-standard { background: #F5F5F5; color: #666; }
+  .level-bronze { background: #EFEBE9; color: #8D6E63; }
+  .level-silver { background: #ECEFF1; color: #607D8B; }
+  .level-gold { background: #FFF9C4; color: #F57F17; }
+  .level-platinum { background: #E1F5FE; color: #0288D1; }
+
+  /* Interactive User & Badge Preview Card */
+  .assignment-card {
+    background: #FFFFFF;
+    border: 1px solid #EAEAEA;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
   }
 
-  .form-control {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 15px;
-    background: #f9f9f9;
-    color: #202020;
+  .assignment-card-title {
+    font-size: 16px;
     font-weight: 500;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
+    color: #202020;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .form-control:focus {
-    outline: none;
-    border-color: #202020;
-    background: #fff;
+  .assignment-input-group {
+    margin-bottom: 20px;
   }
 
-  /* Override Select2 pour matcher le design */
+  .assignment-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #404040;
+    margin-bottom: 8px;
+  }
+
+  /* Select2 Styling */
   .select2-container--default .select2-selection--single {
-    background-color: #f9f9f9 !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    height: 50px !important;
+    background-color: #F9F9F9 !important;
+    border: 1px solid #E5E5E5 !important;
+    border-radius: 10px !important;
+    height: 46px !important;
     display: flex !important;
     align-items: center !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .select2-container--default.select2-container--focus .select2-selection--single,
+  .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #202020 !important;
+    background-color: #FFF !important;
+    box-shadow: 0 0 0 3px rgba(32,32,32,0.08) !important;
   }
 
   .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: #202020 !important;
-    padding-left: 16px !important;
-    font-size: 15px !important;
+    padding-left: 14px !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
   }
 
   .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 48px !important;
-    right: 10px !important;
+    height: 44px !important;
+    right: 12px !important;
   }
 
-  .form-actions {
-    margin-top: 32px;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .btn-submit {
+  .badge-btn-submit {
     background-color: #202020;
-    color: #fff;
-    padding: 14px 32px;
-    border-radius: 30px;
+    color: #FFFFFF;
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 10px;
     border: none;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .btn-submit:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  /* --- STYLES POUR LA LISTE DES BADGES --- */
-  .section-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #202020;
-    margin-top: 48px;
-    margin-bottom: 20px;
-    display: block;
-  }
-
-  .users-dash-table-container {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-    border: 1px solid #f0f0f0;
-    overflow-x: auto;
-    margin-bottom: 48px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .users-dash-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    min-width: 600px;
-  }
-
-  .users-dash-table th {
-    background-color: #fafafa;
-    padding: 18px 24px;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
-    color: #666;
-    text-transform: uppercase;
-    border-bottom: 1px solid #eee;
-    white-space: nowrap;
-  }
-
-  .users-dash-table td {
-    padding: 18px 24px;
-    border-bottom: 1px solid #f5f5f5;
-    font-size: 14px;
-    font-weight: 500;
-    color: #202020;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-
-  .users-dash-table tr:hover {
-    background-color: #fcfcfc;
-  }
-
-  /* User Info */
-  .user-cell {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .user-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-    color: #666;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  .user-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .user-name {
-    font-weight: 600;
-    color: #202020;
-  }
-
-  .user-email {
-    font-size: 12px;
-    color: #888;
-  }
-
-  .badge-mini {
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-
-  .status-true {
-    background: #E8F5E9;
-    color: #2E7D32;
-  }
-
-  .actions-cell {
-    display: flex;
     gap: 8px;
-    justify-content: flex-end;
+    transition: all 0.2s ease;
   }
 
-  .action-btn {
+  .badge-btn-submit:hover {
+    background-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  .action-icon-btn {
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    border: 1px solid #eee;
-    background: #fff;
-    display: flex;
+    border: 1px solid #E5E5E5;
+    background: #FFF;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #666;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     cursor: pointer;
   }
 
-  .action-btn:hover {
-    background: #f5f5f5;
-    color: #202020;
-  }
-
-  .action-btn.delete:hover {
+  .action-icon-btn:hover {
     background: #FFEBEE;
     color: #C62828;
     border-color: #FFCDD2;
   }
-
-  /* Recherche */
-  .search-container {
-    background: #fff;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-  }
-
-  .search-form {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    max-width: 600px;
-  }
-
-  .search-input {
-    flex: 1;
-    margin-bottom: 0;
-  }
-
-  .btn-reset {
-    color: #666;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s;
-    white-space: nowrap;
-  }
-
-  .btn-reset:hover {
-    color: #202020;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .admin-dashboard-wrapper {
-      padding: 20px 16px;
-    }
-    .dash-card {
-      padding: 24px;
-    }
-    .dashboard-title {
-      font-size: 24px;
-    }
-    .btn-submit {
-      width: 100%;
-    }
-    .search-form {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .btn-reset {
-      text-align: center;
-      margin-top: 8px;
-    }
-  }
 </style>
-<div class="admin-dashboard-wrapper">
-  <div class="dashboard-header">
-    <div class="dashboard-title-group">
-      <%= link_to admin_root_path, class: "dashboard-back-link", title: "Retour" do %>
-        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+
+<div class="users-dash-wrapper">
+  <!-- Header -->
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_root_path, class: "users-dash-back-link" do %>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
       <% end %>
       <div>
-        <h1 class="dashboard-title">Gestion des Badges Membres</h1>
-        <p class="dashboard-subtitle">Attribuer ou retirer un badge spécifique (Donateur, Vainqueur...) à un membre.</p>
+        <h1 class="users-dash-title">Attribution des Badges</h1>
+        <p style="margin: 4px 0 0 0; font-size: 14px; color: #777; font-weight: 500;">Gérer, attribuer et révoquer les distinctions membres et récompenses</p>
       </div>
     </div>
   </div>
-  <div class="form-card-container">
-    <div class="dash-card">
-      <%= form_with url: admin_user_badges_path, local: true do |f| %>
-        <div class="form-group">
-          <%= f.label :user_id, "Utilisateur", class: "form-label" %>
-          <%= f.collection_select :user_id, @users, :id, :email, 
-              { prompt: "Rechercher un utilisateur par email..." }, 
-              { 
-                class: "form-control", 
-                data: { controller: "select2" }, 
-                style: "width: 100%;" 
-              } %>
+
+  <!-- KPI Grid -->
+  <div class="users-dash-kpi-grid">
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Badges Attribués</span>
+        <div class="kpi-icon bg-yellow-light">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
-        <div class="form-group">
-          <%= f.label :badge_id, "Badge à attribuer", class: "form-label" %>
-          <%= f.collection_select :badge_id, @badges, :id, :name, 
-              { prompt: "Sélectionner le badge..." }, 
-              { 
-                class: "form-control", 
-                data: { controller: "select2" }, 
-                style: "width: 100%;" 
-              } %>
+      </div>
+      <div class="kpi-value"><%= UserBadge.count %></div>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Membres Récompensés</span>
+        <div class="kpi-icon bg-green-light">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         </div>
-        <div class="form-actions">
-          <%= f.button type: "submit", class: "btn-submit" do %>
-            <span>Attribuer le Badge</span>
-            <svg style="width: 20px; height: 20px; fill: #fff; margin-left: 8px;" viewBox="0 0 24 24">
-              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-            </svg>
-          <% end %>
+      </div>
+      <div class="kpi-value"><%= UserBadge.distinct.count(:user_id) %></div>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Types de Badges Actifs</span>
+        <div class="kpi-icon bg-blue-light">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
         </div>
-      <% end %>
+      </div>
+      <div class="kpi-value"><%= @badges.count %></div>
     </div>
   </div>
 
-  <div style="max-width: 1200px; margin: 40px auto 0 auto;">
-    <h2 class="section-title">Badges Actuellement Attribués</h2>
+  <!-- Workspace Grid: Quick Assign (Left) + Search & Table (Right) -->
+  <div class="badge-workspace-grid">
+    <!-- Left Column: Attribution Form -->
+    <div class="assignment-card">
+      <h2 class="assignment-card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+        Attribuer un badge
+      </h2>
 
-    <div class="search-container">
-      <%= form_with url: new_admin_user_badge_path, method: :get, local: true, class: "search-form" do |f| %>
-        <%= f.text_field :search, value: params[:search], placeholder: "Rechercher par email, pseudo ou badge...", class: "form-control search-input" %>
-        <%= f.button type: "submit", class: "btn-submit", style: "padding: 12px 24px; font-size: 14px;" do %>
-          <span>Rechercher</span>
-        <% end %>
-        <% if params[:search].present? %>
-          <%= link_to "Réinitialiser", new_admin_user_badge_path, class: "btn-reset" %>
-        <% end %>
+      <%= form_with url: admin_user_badges_path, local: true do |f| %>
+        <div class="assignment-input-group">
+          <%= f.label :user_id, "Membre destinataire", class: "assignment-label" %>
+          <%= f.collection_select :user_id, @users, :id, ->(u) { "#{u.firstname} #{u.lastname} (#{u.email})" }, 
+              { prompt: "Rechercher par nom ou email..." }, 
+              { 
+                class: "form-control", 
+                data: { controller: "select2" }, 
+                style: "width: 100%;",
+                required: true
+              } %>
+        </div>
+
+        <div class="assignment-input-group">
+          <%= f.label :badge_id, "Badge à décerner", class: "assignment-label" %>
+          <%= f.collection_select :badge_id, @badges, :id, ->(b) { "#{b.name} — #{b.category.capitalize} (#{b.level.capitalize})" }, 
+              { prompt: "Sélectionner une distinction..." }, 
+              { 
+                class: "form-control", 
+                data: { controller: "select2" }, 
+                style: "width: 100%;",
+                required: true
+              } %>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <%= f.button type: "submit", class: "badge-btn-submit" do %>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Confirmer l'attribution</span>
+          <% end %>
+        </div>
       <% end %>
     </div>
 
-    <div class="users-dash-table-container">
-      <table class="users-dash-table">
-        <thead>
-          <%
-            def sort_header(column, label)
-              is_active = (params[:sort] == column)
-              next_direction = (is_active && params[:direction] == "asc") ? "desc" : "asc"
-              arrow = is_active ? (params[:direction] == "asc" ? " ↑" : " ↓") : ""
-              link_to new_admin_user_badge_path(
-                search: params[:search],
-                sort: column,
-                direction: next_direction
-              ), style: "text-decoration: none; color: #{is_active ? '#202020' : '#666'}; font-weight: 600;" do
-                "#{label}#{arrow}".html_safe
-              end
-            end
-          %>
-          <tr>
-            <th><%= sort_header("user", "Utilisateur") %></th>
-            <th><%= sort_header("badge", "Badge") %></th>
-            <th>Catégorie / Niveau</th>
-            <th><%= sort_header("date", "Attribué le") %></th>
-            <th style="text-align: right; padding-right: 32px;">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if @user_badges.present? %>
-            <% @user_badges.each do |ub| %>
-              <tr>
-                <td>
-                  <div class="user-cell">
-                    <div class="user-avatar">
-                      <%= (ub.user.pseudo.present? ? ub.user.pseudo[0] : ub.user.email[0]).upcase %>
+    <!-- Right Column: Search Toolbar & Table -->
+    <div>
+      <div class="users-dash-toolbar" style="margin-bottom: 24px;">
+        <%= form_with url: new_admin_user_badge_path, method: :get, local: true, class: "users-dash-filter-form" do |f| %>
+          <% has_active_filters = params[:query].present? || params[:search].present? || params[:badge_id].present? || params[:category].present? || (params[:sort].present? && params[:sort] != 'date_desc') %>
+
+          <!-- Search Row -->
+          <div class="users-dash-search-wrapper">
+            <div class="users-dash-search">
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <%= f.text_field :query, value: params[:query] || params[:search], placeholder: "Rechercher par membre, email ou badge..." %>
+            </div>
+
+            <% if has_active_filters %>
+              <%= link_to new_admin_user_badge_path, class: "btn-reset-filters", title: "Réinitialiser tous les filtres" do %>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                Effacer les filtres
+              <% end %>
+            <% end %>
+          </div>
+
+          <!-- Filter Pills Row -->
+          <div class="users-dash-filters-row">
+            <!-- Filtre Badge Spécifique -->
+            <div class="filter-pill-item filter-pill-large <%= 'active' if params[:badge_id].present? %>">
+              <div class="filter-pill-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <%= f.select :badge_id, options_for_select([["Tous les badges", ""]] + @badges.map { |b| [b.name, b.id] }, params[:badge_id]), {}, { class: "filter-pill-select", onchange: "this.form.submit()" } %>
+              <div class="filter-pill-chevron">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+
+            <!-- Filtre Catégorie de badge -->
+            <div class="filter-pill-item <%= 'active' if params[:category].present? %>">
+              <div class="filter-pill-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+              </div>
+              <%= f.select :category, options_for_select([["Toutes catégories", ""]] + Badge.categories.keys.map { |c| [c.capitalize, c] }, params[:category]), {}, { class: "filter-pill-select", onchange: "this.form.submit()" } %>
+              <div class="filter-pill-chevron">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+
+            <!-- Tri -->
+            <div class="filter-pill-item filter-pill-sort <%= 'active' if params[:sort].present? && params[:sort] != 'date_desc' %>">
+              <div class="filter-pill-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+              </div>
+              <%= f.select :sort, options_for_select([
+                    ["Date d'attribution (Plus récent)", "date_desc"],
+                    ["Date d'attribution (Plus ancien)", "date_asc"],
+                    ["Membre (A-Z)", "user_asc"],
+                    ["Membre (Z-A)", "user_desc"],
+                    ["Badge (A-Z)", "badge_asc"],
+                    ["Badge (Z-A)", "badge_desc"]
+                  ], params[:sort] || "date_desc"), {}, { class: "filter-pill-select", onchange: "this.form.submit()" } %>
+              <div class="filter-pill-chevron">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Badges Table -->
+      <div class="users-dash-table-container">
+        <table class="users-dash-table">
+          <thead>
+            <tr>
+              <th>Membre</th>
+              <th>Badge attribué</th>
+              <th>Catégorie & Niveau</th>
+              <th>Date d'obtention</th>
+              <th style="text-align: right; padding-right: 24px;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @user_badges.present? %>
+              <% @user_badges.each do |ub| %>
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div class="users-dash-avatar" style="width: 36px; height: 36px; border-radius: 50%; font-size: 13px; font-weight: 500;">
+                        <% if ub.user.profile_image.present? %>
+                          <%= image_tag ub.user.profile_image, 
+                                alt: ub.user.firstname,
+                                onerror: "this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" %>
+                          <span style="display: none;"><%= ub.user.firstname&.first || ub.user.email[0].upcase %></span>
+                        <% else %>
+                          <%= ub.user.firstname&.first || ub.user.email[0].upcase %>
+                        <% end %>
+                      </div>
+                      <div>
+                        <div style="font-weight: 500; color: #202020;">
+                          <%= link_to user_path(ub.user), style: "text-decoration: none; color: #202020;" do %>
+                            <%= ub.user.firstname.presence || ub.user.pseudo.presence || "Membre" %> <%= ub.user.lastname %>
+                          <% end %>
+                        </div>
+                        <div style="font-size: 12px; color: #888;"><%= ub.user.email %></div>
+                      </div>
                     </div>
-                    <div class="user-info">
-                      <span class="user-name"><%= ub.user.pseudo || "Sans pseudo" %></span>
-                      <span class="user-email"><%= ub.user.email %></span>
+                  </td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 18px;">🏆</span>
+                      <span style="font-weight: 500; color: #202020;"><%= ub.badge.name %></span>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 18px;">🏆</span>
-                    <span style="font-weight: 600;"><%= ub.badge.name %></span>
-                  </div>
-                </td>
-                <td>
-                  <span class="badge-mini status-true">
-                    <%= ub.badge.category %> / <%= ub.badge.level %>
-                  </span>
-                </td>
-                <td>
-                  <span style="font-size: 13px; color: #666;">
-                    Le <%= ub.created_at.strftime("%d/%m/%Y à %H:%M") %>
-                  </span>
-                </td>
-                <td>
-                  <div class="actions-cell" style="padding-right: 8px;">
+                  </td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                      <span class="badge-cat-tag badge-cat-<%= ub.badge.category %>">
+                        <%= ub.badge.category %>
+                      </span>
+                      <span class="badge-level-tag level-<%= ub.badge.level %>">
+                        <%= ub.badge.level %>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-weight: 500; color: #202020;"><%= ub.created_at.strftime("%d/%m/%Y") %></div>
+                    <div style="font-size: 11px; color: #999;"><%= time_ago_in_words(ub.created_at) %></div>
+                  </td>
+                  <td style="text-align: right; padding-right: 20px;">
                     <%= link_to admin_user_badge_path(ub), 
-                          data: { turbo_method: :delete, turbo_confirm: "Es-tu sûr de vouloir retirer le badge '#{ub.badge.name}' à #{ub.user.pseudo || ub.user.email} ?" },
-                          class: "action-btn delete", title: "Retirer le badge" do %>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                          data: { turbo_method: :delete, turbo_confirm: "Retirer le badge '#{ub.badge.name}' à #{ub.user.firstname || ub.user.pseudo || ub.user.email} ?" },
+                          class: "action-icon-btn", title: "Retirer ce badge" do %>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     <% end %>
-                  </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="5" style="text-align: center; color: #888; padding: 48px 0; font-weight: 500;">
+                  Aucun badge attribué trouvé avec ces filtres.
                 </td>
               </tr>
             <% end %>
-          <% else %>
-            <tr>
-              <td colspan="5" style="text-align: center; color: #999; padding: 40px 0;">
-                Aucun badge trouvé.
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      
-      <% if @user_badges.respond_to?(:total_pages) && @user_badges.total_pages > 1 %>
-        <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
-          <%= paginate @user_badges %>
-        </div>
-      <% end %>
+          </tbody>
+        </table>
+        
+        <% if @user_badges.respond_to?(:total_pages) && @user_badges.total_pages > 1 %>
+          <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
+            <%= paginate @user_badges %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

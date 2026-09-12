@@ -1,130 +1,359 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartkick"></script>
+
 <style>
-  /* --- STYLES GLOBAUX DASHBOARD --- */
+  /* --- STYLES GLOBAUX DASHBOARD USER PROFILE --- */
   .users-dash-wrapper {
-    padding: 40px 4vw 80px 4vw;
-    max-width: 1600px;
+    padding: 32px 4vw 80px 4vw;
+    max-width: 1560px;
     margin: 0 auto;
     background-color: #f8f9fa;
     min-height: 100vh;
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     color: #202020;
+    box-sizing: border-box;
   }
 
-  /* Header */
-  .user-profile-header {
+  /* Back button */
+  .profile-back-nav {
+    margin-bottom: 24px;
+  }
+  .btn-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4b5563;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .btn-back-link:hover {
+    background: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
+    transform: translateX(-2px);
+  }
+
+  /* Header Card */
+  .user-profile-header-card {
+    background: #ffffff;
+    border: 1px solid #eef0f3;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.02);
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 32px;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
   }
 
   .profile-main-info {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
+  }
+
+  .profile-avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
   }
 
   .profile-avatar-large {
-    width: 100px; height: 100px;
+    width: 88px;
+    height: 88px;
     border-radius: 50%;
-    background-color: #eee;
+    background-color: #f1f3f5;
     overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; font-weight: 600; color: #888;
-    border: 4px solid #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 500;
+    color: #495057;
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
-  .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-avatar-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #10b981;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2.5px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
 
   .profile-identity h1 {
-    margin: 0; font-size: 32px; font-weight: 600; color: #202020;
+    margin: 0;
+    font-size: 26px;
+    font-weight: 500;
+    color: #111827;
     line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
   }
-  .profile-identity p {
-    margin: 4px 0 0 0; font-size: 16px; color: #666;
+
+  .profile-pseudo-tag {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+
+  .profile-email-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .btn-copy-email {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .btn-copy-email:hover {
+    color: #111827;
+    background: #f3f4f6;
   }
 
   .profile-badges-list {
-    display: flex; gap: 8px; margin-top: 12px;
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
   }
 
-  /* Actions */
-  .profile-actions { display: flex; gap: 12px; }
+  /* Actions Header */
+  .profile-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
   .btn-action {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px; font-weight: 500;
+    padding: 9px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
     text-decoration: none;
-    display: inline-flex; align-items: center; gap: 8px;
-    cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
   }
-  .btn-primary { background: #202020; color: #fff; }
-  .btn-primary:hover { background: #333; }
-  .btn-outline { background: #fff; border-color: #ddd; color: #333; }
-  .btn-outline:hover { background: #f5f5f5; border-color: #ccc; }
-  .btn-danger { background: #FFEBEE; color: #D32F2F; border-color: transparent; }
-  .btn-danger:hover { background: #FFCDD2; }
+  .btn-action-primary {
+    background: #111827;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .btn-action-primary:hover {
+    background: #272f3d;
+    transform: translateY(-1px);
+  }
+
+  .btn-action-outline {
+    background: #ffffff;
+    border-color: #e5e7eb;
+    color: #374151;
+  }
+  .btn-action-outline:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #111827;
+  }
+
+  .btn-action-success {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #065f46;
+  }
+  .btn-action-success:hover {
+    background: #d1fae5;
+  }
+
+  .btn-action-danger {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+  }
+  .btn-action-danger:hover {
+    background: #fee2e2;
+  }
 
   /* Grid Layout */
   .profile-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 24px;
+    align-items: start;
+  }
+
+  /* KPI Mini */
+  .profile-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .mini-kpi {
+    background: #ffffff;
+    border: 1px solid #eef0f3;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .mini-kpi:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .mini-kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mini-kpi-lbl {
+    font-size: 11px;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .mini-kpi-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+  .mini-kpi-val {
+    font-size: 24px;
+    font-weight: 500;
+    color: #111827;
+    line-height: 1.2;
   }
 
   /* Cards */
   .dash-card {
-    background: #fff;
+    background: #ffffff;
     border-radius: 16px;
-    padding: 32px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    padding: 28px 30px;
+    border: 1px solid #eef0f3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     margin-bottom: 24px;
   }
 
-  .card-title {
-    font-size: 18px; font-weight: 600; color: #202020;
-    margin-bottom: 24px; padding-bottom: 16px;
-    border-bottom: 1px solid #f5f5f5;
-    margin-top: 0;
+  .dash-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .dash-card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #111827;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dash-card-title svg {
+    color: #6b7280;
   }
 
   /* Details Row */
   .detail-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #f9f9f9;
-  }
-  .detail-row:last-child { border-bottom: none; }
-  .detail-label { font-size: 14px; color: #888; font-weight: 500; }
-  .detail-value { font-size: 14px; color: #202020; font-weight: 500; text-align: right; }
-
-  /* KPI Mini */
-  .profile-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid #f9fafb;
     gap: 16px;
-    margin-bottom: 24px;
   }
-  .mini-kpi {
-    background: #fcfcfc;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
+  .detail-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
-  .mini-kpi-val { display: block; font-size: 24px; font-weight: 600; color: #202020; }
-  .mini-kpi-lbl { font-size: 12px; color: #888; text-transform: uppercase; font-weight: 500; }
+  .detail-label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+  .detail-value {
+    font-size: 13px;
+    color: #111827;
+    font-weight: 500;
+    text-align: right;
+    word-break: break-word;
+  }
 
-  /* --- STYLE DES BADGES GAMIFICATION --- */
+  /* Badges */
+  .badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .badge-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .badge-green { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+  .badge-gray { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+  .badge-red { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+  .badge-dark { background: #111827; color: #ffffff; }
+
+  /* Badges Gamification Grid */
   .gamification-badges-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
     gap: 16px;
     justify-items: center;
   }
@@ -135,138 +364,446 @@
     align-items: center;
     text-align: center;
     gap: 8px;
-    transition: transform 0.2s;
+    transition: transform 0.2s ease;
   }
   .gamification-badge-item:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 
   .gamification-badge-icon {
-    width: 64px;
-    height: 64px;
-    /* Remplacement par une image ou un fond */
-    background: #f0f0f0;
+    width: 60px;
+    height: 60px;
+    background: #f9fafb;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border: 2px solid #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
-
   .gamification-badge-icon img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  /* Fallback si pas d'image */
-  .gamification-badge-placeholder {
-    font-size: 24px;
-    color: #ccc;
-  }
-
   .gamification-badge-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: #444;
+    font-size: 11px;
+    font-weight: 500;
+    color: #374151;
     line-height: 1.3;
   }
 
-  /* Badges colorés (Statut/Rôle) */
-  .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-  .badge-blue { background: #E3F2FD; color: #1565C0; }
-  .badge-green { background: #E8F5E9; color: #2E7D32; }
-  .badge-gray { background: #F5F5F5; color: #666; }
-  .badge-red { background: #FFEBEE; color: #C62828; }
-
-  @media (max-width: 1024px) {
-    .profile-grid { grid-template-columns: 1fr; }
+  /* Responsive */
+  @media (max-width: 1080px) {
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+    .profile-kpi-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-  @media (max-width: 600px) {
-    .user-profile-header { flex-direction: column; gap: 24px; }
-    .profile-kpi-grid { grid-template-columns: 1fr; }
+
+  @media (max-width: 640px) {
+    .user-profile-header-card {
+      padding: 20px;
+    }
+    .profile-main-info {
+      flex-direction: column;
+      text-align: center;
+    }
+    .profile-identity h1 {
+      justify-content: center;
+    }
+    .profile-email-row {
+      justify-content: center;
+    }
+    .profile-badges-list {
+      justify-content: center;
+    }
+    .profile-actions {
+      width: 100%;
+      justify-content: center;
+    }
+    .profile-kpi-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
+
 <div class="users-dash-wrapper">
-  <div style="margin-bottom: 24px;">
-    <%= link_to users_path, class: "btn-action btn-outline", style: "width: fit-content;" do %>
-      <svg style="width:16px;height:16px;fill:#666;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      Retour à la liste
+  <!-- Navigation retour -->
+  <div class="profile-back-nav">
+    <%= link_to users_path, class: "btn-back-link" do %>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Retour à la liste des utilisateurs
     <% end %>
   </div>
-  <div class="user-profile-header">
+
+  <!-- Header Profil Utilisateur -->
+  <div class="user-profile-header-card">
     <div class="profile-main-info">
-      <div class="profile-avatar-large">
-        <% if @user.profile_image.present? %>
-          <%= image_tag @user.profile_image, 
-                alt: @user.firstname,
-                onerror: "this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" %>
-          <span style="display: none;"><%= @user.firstname&.first %></span>
-        <% else %>
-          <%= @user.firstname&.first %>
+      <div class="profile-avatar-wrapper">
+        <div class="profile-avatar-large">
+          <% if @user.profile_image.present? %>
+            <%= image_tag @user.profile_image, 
+                  alt: @user.firstname,
+                  onerror: "this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" %>
+            <span style="display: none;"><%= @user.firstname&.first %></span>
+          <% else %>
+            <%= @user.firstname&.first %>
+          <% end %>
+        </div>
+        <% if @user.certified? %>
+          <div class="profile-avatar-badge" title="Compte certifié">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          </div>
         <% end %>
       </div>
+
       <div class="profile-identity">
-        <h1><%= @user.firstname %> <%= @user.lastname %></h1>
-        <p><%= @user.email %></p>
+        <h1>
+          <%= @user.firstname %> <%= @user.lastname %>
+          <% if @user.pseudo.present? %>
+            <span class="profile-pseudo-tag">@<%= @user.pseudo %></span>
+          <% end %>
+        </h1>
+        <div class="profile-email-row">
+          <span><%= @user.email %></span>
+          <button type="button" class="btn-copy-email" title="Copier l'email" onclick="navigator.clipboard.writeText('<%= @user.email %>'); this.innerText='✓'; setTimeout(() => this.innerHTML='<svg width=\'13\' height=\'13\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><rect x=\'9\' y=\'9\' width=\'13\' height=\'13\' rx=\'2\'/><path d=\'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\'/></svg>', 1500)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
         <div class="profile-badges-list">
-          <span class="badge badge-gray"><%= @user.role || 'User' %></span>
+          <span class="badge badge-<%= @user.admin? ? 'dark' : 'gray' %>">
+            <%= @user.role.presence&.capitalize || 'User' %>
+          </span>
           <span class="badge badge-<%= @user.statut == 'Etudiant' ? 'blue' : 'green' %>">
             <%= @user.statut || "Statut inconnu" %>
           </span>
-          <% if @user.certified? %><span class="badge badge-green">Certifié</span><% end %>
-          <% if @user.banned? %><span class="badge badge-red">Banni</span><% end %>
+          <% if @user.certified? %>
+            <span class="badge badge-green">✓ Certifié</span>
+          <% end %>
+          <% if @user.banned? %>
+            <span class="badge badge-red">⛔ Banni</span>
+          <% end %>
+          <% if @user.confirmed? %>
+            <span class="badge badge-green">Email confirmé</span>
+          <% else %>
+            <span class="badge badge-red">Email non confirmé</span>
+          <% end %>
         </div>
       </div>
     </div>
+
     <% if current_user.admin? %>
       <div class="profile-actions">
         <% if @user.certified? %>
-          <%= button_to uncertify_user_path(@user), method: :patch, class: "btn-action btn-outline", title: "Retirer la certification" do %>
+          <%= button_to uncertify_user_path(@user), method: :patch, class: "btn-action btn-action-outline", title: "Retirer la certification" do %>
             Décertifier
           <% end %>
         <% else %>
-          <%= button_to certify_user_path(@user), method: :patch, class: "btn-action btn-outline", title: "Certifier le compte" do %>
-            <svg style="width:16px;height:16px;fill:#2E7D32;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Certifier
+          <%= button_to certify_user_path(@user), method: :patch, class: "btn-action btn-action-success", title: "Certifier le compte" do %>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Certifier
           <% end %>
         <% end %>
+
         <% if @user.banned? %>
-          <%= button_to unban_user_path(@user), method: :patch, class: "btn-action btn-outline", style: "color: #2E7D32; border-color: #2E7D32;" do %>
+          <%= button_to unban_user_path(@user), method: :patch, class: "btn-action btn-action-outline", style: "color: #059669; border-color: #a7f3d0;" do %>
             Débannir
           <% end %>
         <% else %>
-          <%= button_to ban_user_path(@user), method: :patch, data: { turbo_confirm: "Es-tu sûr de vouloir bannir cet utilisateur ?" }, class: "btn-action btn-danger" do %>
-            <svg style="width:16px;height:16px;fill:#D32F2F;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-1.84.62-3.54 1.66-4.93l11.27 11.27C15.54 19.38 13.84 20 12 20zm6.34-3.07L7.07 5.66C8.46 4.62 10.16 4 12 4c4.41 0 8 3.59 8 8 0 1.84-.62 3.54-1.66 4.93z"/></svg> Bannir
+          <%= button_to ban_user_path(@user), method: :patch, data: { turbo_confirm: "Es-tu sûr de vouloir bannir cet utilisateur ?" }, class: "btn-action btn-action-danger" do %>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+            </svg>
+            Bannir
           <% end %>
         <% end %>
+
         <% unless @user.confirmed? %>
-          <%= button_to admin_resend_confirmation_user_path(@user), method: :post, class: "btn-action btn-primary" do %>
+          <%= button_to admin_resend_confirmation_user_path(@user), method: :post, class: "btn-action btn-action-primary" do %>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
             Renvoyer confirmation
           <% end %>
         <% end %>
       </div>
     <% end %>
   </div>
-  <div class="profile-grid">
-    <div class="profile-left-col">
-      <div class="profile-kpi-grid">
-        <div class="mini-kpi">
-          <span class="mini-kpi-val"><%= @total_visits %></span>
-          <span class="mini-kpi-lbl">Visites Totales</span>
-        </div>
-        <div class="mini-kpi">
-          <span class="mini-kpi-val"><%= @lists_count %></span>
-          <span class="mini-kpi-lbl">Listes Créées</span>
-        </div>
-        <div class="mini-kpi">
-          <span class="mini-kpi-val"><%= pluralize((Date.today - @user.created_at.to_date).to_i, 'jour') %></span>
-          <span class="mini-kpi-lbl">Ancienneté</span>
+
+  <!-- KPI Grid -->
+  <div class="profile-kpi-grid">
+    <div class="mini-kpi">
+      <div class="mini-kpi-header">
+        <span class="mini-kpi-lbl">Visites Totales</span>
+        <div class="mini-kpi-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
         </div>
       </div>
+      <span class="mini-kpi-val"><%= @total_visits %></span>
+    </div>
+
+    <div class="mini-kpi">
+      <div class="mini-kpi-header">
+        <span class="mini-kpi-lbl">Contributions</span>
+        <div class="mini-kpi-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+        </div>
+      </div>
+      <span class="mini-kpi-val"><%= @contributions_count %></span>
+    </div>
+
+    <div class="mini-kpi">
+      <div class="mini-kpi-header">
+        <span class="mini-kpi-lbl">Listes Créées</span>
+        <div class="mini-kpi-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+      </div>
+      <span class="mini-kpi-val"><%= @lists_count %></span>
+    </div>
+
+    <div class="mini-kpi">
+      <div class="mini-kpi-header">
+        <span class="mini-kpi-lbl">Ancienneté</span>
+        <div class="mini-kpi-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+      </div>
+      <span class="mini-kpi-val"><%= pluralize((Date.today - @user.created_at.to_date).to_i, 'jour') %></span>
+    </div>
+  </div>
+
+  <!-- Layout en deux colonnes -->
+  <div class="profile-grid">
+    <!-- Colonne Gauche -->
+    <div class="profile-left-col">
+      <!-- CARTE INFORMATIONS PERSONNELLES -->
       <div class="dash-card">
-        <h3 class="card-title">Badges & Récompenses</h3>
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Informations Personnelles
+          </h3>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Identifiant</span>
+          <span class="detail-value" style="font-family: monospace; color: #6b7280;">#<%= @user.id %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Pseudo</span>
+          <span class="detail-value"><%= @user.pseudo.presence || "—" %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Prénom</span>
+          <span class="detail-value"><%= @user.firstname %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Nom</span>
+          <span class="detail-value"><%= @user.lastname %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Adresse Email</span>
+          <span class="detail-value">
+            <%= @user.email %>
+          </span>
+        </div>
+      </div>
+
+      <!-- CARTE HISTORIQUE DES CONTRIBUTIONS -->
+      <div class="dash-card">
+        <div class="contrib-header-row">
+          <div>
+            <h3 class="dash-card-title" style="margin: 0 !important; padding: 0 !important; border: none !important;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              Historique des contributions
+            </h3>
+            <span style="font-size: 13px; color: #6b7280; display: inline-block; margin-top: 2px;">
+              <%= @contributions_count %> <%= "contribution".pluralize(@contributions_count) %> au total
+            </span>
+          </div>
+          <div class="contrib-summary-stats">
+            <span class="contrib-stat-badge stat-validated">
+              <span class="stat-dot dot-validated"></span>
+              <strong><%= @contributions_validated_count %></strong> validée<%= 's' if @contributions_validated_count > 1 %>
+            </span>
+            <span class="contrib-stat-badge stat-pending">
+              <span class="stat-dot dot-pending"></span>
+              <strong><%= @contributions_pending_count %></strong> en attente
+            </span>
+            <span class="contrib-stat-badge stat-rejected">
+              <span class="stat-dot dot-rejected"></span>
+              <strong><%= @contributions_rejected_count %></strong> refusée<%= 's' if @contributions_rejected_count > 1 %>
+            </span>
+          </div>
+        </div>
+
+        <% if @contributions.any? %>
+          <!-- Filter Tabs -->
+          <div class="contrib-filter-tabs">
+            <button type="button" class="contrib-filter-btn active" data-filter="all">Tous (<%= @contributions_count %>)</button>
+            <button type="button" class="contrib-filter-btn" data-filter="reference">Références (<%= @contributions.count { |c| c[:type] == 'reference' } %>)</button>
+            <button type="button" class="contrib-filter-btn" data-filter="designer">Designers (<%= @contributions.count { |c| c[:type] == 'designer' } %>)</button>
+            <button type="button" class="contrib-filter-btn" data-filter="studio">Studios (<%= @contributions.count { |c| c[:type] == 'studio' } %>)</button>
+          </div>
+
+          <div class="contrib-table-wrapper">
+            <table class="contrib-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Nom / Titre</th>
+                  <th>Statut</th>
+                  <th>Date</th>
+                  <th>Commentaire / Motif</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @contributions.each do |c| %>
+                  <tr class="contrib-row" data-type="<%= c[:type] %>" data-status="<%= c[:status] %>">
+                    <td>
+                      <span class="contrib-type-badge contrib-type-<%= c[:type] %>">
+                        <%= c[:type_label] %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="contrib-item-name">
+                        <% if c[:record].present? %>
+                          <% if c[:type] == 'reference' %>
+                            <%= link_to c[:name], (c[:status] == 'validated' ? reference_path(c[:record]) : edit_reference_path(c[:record])), class: "contrib-name-link" %>
+                          <% elsif c[:type] == 'designer' %>
+                            <%= link_to c[:name], (c[:status] == 'validated' ? designer_path(c[:record]) : edit_designer_path(c[:record])), class: "contrib-name-link" %>
+                          <% elsif c[:type] == 'studio' %>
+                            <%= link_to c[:name], (c[:status] == 'validated' ? studio_path(c[:record]) : edit_studio_path(c[:record])), class: "contrib-name-link" %>
+                          <% else %>
+                            <%= c[:name] %>
+                          <% end %>
+                        <% else %>
+                          <span class="contrib-name-text"><%= c[:name] %></span>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="contrib-status-cell">
+                        <% if c[:status] == 'validated' %>
+                          <span class="status-pill status-pill-validated">
+                            <span class="stat-dot dot-validated"></span> Validée
+                          </span>
+                        <% elsif c[:status] == 'pending' %>
+                          <span class="status-pill status-pill-pending">
+                            <span class="stat-dot dot-pending"></span> En attente
+                          </span>
+                        <% elsif c[:status] == 'rejected' %>
+                          <span class="status-pill status-pill-rejected">
+                            <span class="stat-dot dot-rejected"></span> Refusée
+                          </span>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td class="contrib-date-cell">
+                      <%= c[:created_at]&.strftime("%d/%m/%Y") || "—" %>
+                      <small style="display:block; color:#9ca3af; font-size: 11px;"><%= c[:created_at]&.strftime("%H:%M") %></small>
+                    </td>
+                    <td>
+                      <% if c[:reason].present? %>
+                        <div class="contrib-reason-box" title="<%= c[:reason] %>">
+                          <span class="reason-icon">⚠️</span> <%= c[:reason] %>
+                        </div>
+                      <% else %>
+                        <span style="color: #d1d5db;">—</span>
+                      <% end %>
+                    </td>
+                    <td style="text-align: right;">
+                      <% if c[:record].present? %>
+                        <% if c[:status] == 'validated' %>
+                          <% if c[:type] == 'reference' %>
+                            <%= link_to "Voir", reference_path(c[:record]), class: "btn-contrib-action", target: "_blank" %>
+                          <% elsif c[:type] == 'designer' %>
+                            <%= link_to "Voir", designer_path(c[:record]), class: "btn-contrib-action", target: "_blank" %>
+                          <% elsif c[:type] == 'studio' %>
+                            <%= link_to "Voir", studio_path(c[:record]), class: "btn-contrib-action", target: "_blank" %>
+                          <% end %>
+                        <% else %>
+                          <% if c[:type] == 'reference' %>
+                            <%= link_to "Valider", edit_reference_path(c[:record]), class: "btn-contrib-action btn-contrib-pending", target: "_blank" %>
+                          <% elsif c[:type] == 'designer' %>
+                            <%= link_to "Valider", edit_designer_path(c[:record]), class: "btn-contrib-action btn-contrib-pending", target: "_blank" %>
+                          <% elsif c[:type] == 'studio' %>
+                            <%= link_to "Valider", edit_studio_path(c[:record]), class: "btn-contrib-action btn-contrib-pending", target: "_blank" %>
+                          <% end %>
+                        <% end %>
+                      <% else %>
+                        <span style="color: #d1d5db; font-size: 13px;">—</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="contrib-empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <p style="margin: 0; color: #4b5563; font-size: 14px; font-weight: 500;">Aucune contribution enregistrée</p>
+            <span style="font-size: 12px; color: #9ca3af; margin-top: 4px;">Cet utilisateur n'a pas encore proposé de références, designers ou studios.</span>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- CARTE BADGES & RÉCOMPENSES -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="7"></circle>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+            Badges & Récompenses
+          </h3>
+          <% if @badges.present? && @badges.any? %>
+            <span class="badge badge-gray"><%= @badges.size %> débloqué<%= 's' if @badges.size > 1 %></span>
+          <% end %>
+        </div>
+
         <% if @badges.present? && @badges.any? %>
           <div class="gamification-badges-grid">
             <% @badges.each do |badge| %>
@@ -285,99 +822,220 @@
             <% end %>
           </div>
         <% else %>
-          <p style="color: #999; font-style: italic; text-align: center;">Aucun badge débloqué pour le moment.</p>
+          <div style="padding: 24px 16px; text-align: center; color: #9ca3af; font-size: 13px;">
+            <p style="margin: 0;">Aucun badge débloqué pour le moment.</p>
+          </div>
         <% end %>
       </div>
+
+      <!-- CARTE ACTIVITÉ RÉCENTE -->
       <div class="dash-card">
-        <h3 class="card-title">Informations Personnelles</h3>
-        <div class="detail-row">
-          <span class="detail-label">Pseudo</span>
-          <span class="detail-value"><%= @user.pseudo.presence || "-" %></span>
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Activité récente (30 derniers jours)
+          </h3>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">Prénom</span>
-          <span class="detail-value"><%= @user.firstname %></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Nom</span>
-          <span class="detail-value"><%= @user.lastname %></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Email</span>
-          <span class="detail-value">
-            <%= @user.email %>
-            <% if @user.confirmed? %>
-              <span style="color:#2E7D32; font-size:12px;">(Confirmé)</span>
-            <% else %>
-              <span style="color:#D32F2F; font-size:12px;">(Non confirmé)</span>
-            <% end %>
-          </span>
-        </div>
-      </div>
-      <div class="dash-card">
-        <h3 class="card-title">Activité récente (30 jours)</h3>
-        <%= area_chart @user_activity, height: "200px", colors: ["#202020"], library: { scales: { x: { grid: { display: false } }, y: { display: false } } } %>
+        <%= area_chart @user_activity, height: "200px", colors: ["#111827"], library: { scales: { x: { grid: { display: false } }, y: { display: false } } } %>
       </div>
     </div>
+
+    <!-- Colonne Droite -->
     <div class="profile-right-col">
+      <!-- SITUATION -->
       <div class="dash-card">
-        <h3 class="card-title">Situation</h3>
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+            Situation
+          </h3>
+        </div>
         <div class="detail-row">
           <span class="detail-label">Statut</span>
-          <span class="detail-value"><%= @user.statut %></span>
+          <span class="detail-value"><%= @user.statut.presence || "—" %></span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Niveau d'études</span>
-          <span class="detail-value"><%= @user.study_level.presence || "-" %></span>
+          <span class="detail-value"><%= @user.study_level.presence || "—" %></span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Établissement</span>
-          <span class="detail-value"><%= @user.etablissement&.name || "-" %></span>
+          <span class="detail-value"><%= @user.etablissement&.name || "—" %></span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Pays</span>
-          <span class="detail-value"><%= @user.country&.country || "-" %></span>
+          <span class="detail-value"><%= @user.country&.country || "—" %></span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Code Postal</span>
           <span class="detail-value">
-            <%= @user.etablissement.respond_to?(:zip_code) ? @user.etablissement.zip_code : (@user.etablissement.respond_to?(:postal_code) ? @user.etablissement.postal_code : "-") %>
+            <%= @user.etablissement.respond_to?(:zip_code) ? @user.etablissement.zip_code : (@user.etablissement.respond_to?(:postal_code) ? @user.etablissement.postal_code : "—") %>
           </span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Ville</span>
-          <span class="detail-value"><%= @user.etablissement&.city || "-" %></span>
+          <span class="detail-value"><%= @user.etablissement&.city || "—" %></span>
         </div>
       </div>
+
+      <!-- QUIZ & CULTURE DESIGN -->
       <div class="dash-card">
-        <h3 class="card-title">Marketing & Système</h3>
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            Quiz & Culture Design
+          </h3>
+          <% if @completed_quizzes_count > 0 %>
+            <span class="badge badge-green"><%= @completed_quizzes_count %> terminé<%= 's' if @completed_quizzes_count > 1 %></span>
+          <% end %>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Quiz complétés</span>
+          <span class="detail-value">
+            <%= @completed_quizzes_count %>
+            <% if @completed_quizzes_count == 0 %>
+              <span style="color: #9ca3af; font-size: 12px;">(Aucun)</span>
+            <% end %>
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Score moyen</span>
+          <span class="detail-value">
+            <% if @avg_quiz_score.present? %>
+              <strong><%= @avg_quiz_score %></strong> pts
+            <% else %>
+              <span style="color: #9ca3af;">—</span>
+            <% end %>
+          </span>
+        </div>
+      </div>
+
+      <!-- PARRAINAGE & RÉSEAU -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Parrainage & Réseau
+          </h3>
+          <% if @referrals_count > 0 %>
+            <span class="badge badge-green"><%= @referrals_count %> filleul<%= 's' if @referrals_count > 1 %></span>
+          <% end %>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Filleuls parrainés</span>
+          <span class="detail-value">
+            <strong><%= @referrals_count %></strong>
+          </span>
+        </div>
+        <% if @referred_users.any? %>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; margin-bottom: 8px;">
+            <% @referred_users.limit(5).each do |referee| %>
+              <%= link_to user_path(referee), class: "badge badge-gray", style: "text-decoration: none;", title: referee.email do %>
+                👤 <%= referee.firstname %> <%= referee.lastname&.first %>.
+              <% end %>
+            <% end %>
+            <% if @referrals_count > 5 %>
+              <span class="badge badge-gray">+<%= @referrals_count - 5 %></span>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="detail-row">
+          <span class="detail-label">Parrainé par</span>
+          <span class="detail-value">
+            <% if @referrer_user.present? %>
+              <%= link_to user_path(@referrer_user), style: "color: #111827; font-weight: 500; text-decoration: underline;" do %>
+                <%= @referrer_user.firstname %> <%= @referrer_user.lastname %>
+              <% end %>
+            <% else %>
+              <span style="color: #9ca3af;">Aucun</span>
+            <% end %>
+          </span>
+        </div>
+      </div>
+
+      <!-- HABITUDES & RYTHME DE CONNEXION -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Habitudes & Connexion
+          </h3>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Jours actifs (30 derniers j.)</span>
+          <span class="detail-value">
+            <strong><%= @active_days_30d %></strong> / 30 jours
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Fréquence moyenne</span>
+          <span class="detail-value">
+            ~<strong><%= @weekly_visit_avg %></strong> visites / semaine
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Dernière visite</span>
+          <span class="detail-value">
+            <% if @last_visit %>
+              <%= @last_visit.strftime("%d/%m/%Y") %>
+              <small style="color: #6b7280; font-size: 11px;">(<%= time_ago_in_words(@last_visit) %>)</small>
+            <% else %>
+              <span style="color: #9ca3af;">Jamais</span>
+            <% end %>
+          </span>
+        </div>
+      </div>
+
+      <!-- MARKETING & SYSTÈME -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            Marketing & Système
+          </h3>
+        </div>
         <div class="detail-row">
           <span class="detail-label">Newsletter</span>
           <span class="detail-value">
             <% if @user.newsletter? %>
-              <span class="badge badge-green">Abonné</span>
+              <span class="badge badge-green">✓ Abonné</span>
             <% else %>
               <span class="badge badge-gray">Non abonné</span>
             <% end %>
           </span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Source (Via)</span>
-          <span class="detail-value"><%= @user.how_did_you_hear.presence || "-" %></span>
+          <span class="detail-label">Source d'acquisition</span>
+          <span class="detail-value"><%= @user.how_did_you_hear.presence || "—" %></span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Création du compte</span>
-          <span class="detail-value"><%= @user.created_at.strftime("%d/%m/%Y %H:%M") %></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Dernière visite</span>
-          <span class="detail-value"><%= @last_visit ? @last_visit.strftime("%d/%m/%Y") : "Jamais" %></span>
+          <span class="detail-label">Date d'inscription</span>
+          <span class="detail-value"><%= @user.created_at.strftime("%d/%m/%Y à %H:%M") %></span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Plateforme</span>
           <span class="detail-value">
             <% if @user.user_devices.any? %>
-              <span class="badge" style="background: #F3E5F5; color: #7B1FA2;">
+              <span class="badge" style="background: #F3E5F5; color: #7B1FA2; border: 1px solid #E1BEE7;">
                 📱 App Mobile (<%= @user.user_devices.count %> <%= "appareil".pluralize(@user.user_devices.count) %>)
               </span>
             <% else %>
@@ -386,24 +1044,64 @@
           </span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Relance admin</span>
-          <span class="detail-value"><%= @user.admin_relance_sent? ? "Oui" : "Non" %></span>
+          <span class="detail-label">Relance automatique</span>
+          <span class="detail-value"><%= @user.admin_relance_sent? ? "Envoyée" : "Non" %></span>
         </div>
       </div>
 
+      <!-- RETOURS COMMUNAUTÉ -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 class="dash-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Retours Communauté
+          </h3>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Bugs signalés</span>
+          <span class="detail-value">
+            <% if @bug_reports_count > 0 %>
+              <span class="badge badge-red">🐛 <%= @bug_reports_count %></span>
+            <% else %>
+              0
+            <% end %>
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Feedbacks envoyés</span>
+          <span class="detail-value">
+            <% if @feedbacks_count > 0 %>
+              <span class="badge badge-blue">💬 <%= @feedbacks_count %></span>
+            <% else %>
+              0
+            <% end %>
+          </span>
+        </div>
+      </div>
+
+      <!-- APPAREILS MOBILES -->
       <% if @user.user_devices.any? %>
         <div class="dash-card">
-          <h3 class="card-title" style="display: flex; align-items: center; justify-content: space-between;">
-            <span>📱 Appareils Mobiles</span>
-            <span class="badge" style="background: #F3E5F5; color: #7B1FA2; font-size: 11px;">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+              Appareils Mobiles
+            </h3>
+            <span class="badge" style="background: #F3E5F5; color: #7B1FA2; border: 1px solid #E1BEE7; font-size: 11px;">
               <%= @user_devices.size %> <%= "actif".pluralize(@user_devices.size) %>
             </span>
-          </h3>
+          </div>
+
           <div style="display: flex; flex-direction: column; gap: 12px;">
-            <% @user_devices.each_with_index do |device, index| %>
-              <div style="background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 14px 16px;">
+            <% @user_devices.each do |device| %>
+              <div style="background: #f9fafb; border: 1px solid #eef0f3; border-radius: 12px; padding: 14px 16px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; color: #202020;">
+                  <div style="display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px; color: #111827;">
                     <% if device.platform&.downcase == 'ios' %>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.74 1.04-1.77.92-2.8-.89.04-2 .6-2.64 1.34-.56.65-1.05 1.7-1 2.74.99.08 2.11-.54 2.72-1.28z"/></svg>
                       Apple iOS
@@ -414,20 +1112,19 @@
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
                       <%= device.platform.presence&.capitalize || "Mobile" %>
                     <% end %>
-                    <span style="font-weight: 500; color: #888; font-size: 11px;">#<%= device.id %></span>
+                    <span style="font-weight: 400; color: #9ca3af; font-size: 11px;">#<%= device.id %></span>
                   </div>
-                  <span style="font-size: 11px; color: #888;">
+                  <span style="font-size: 11px; color: #6b7280;">
                     <%= time_ago_in_words(device.updated_at) %>
                   </span>
                 </div>
-                <div style="font-size: 11px; color: #666; font-family: monospace; word-break: break-all; background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 6px 8px; margin-bottom: 6px;">
+                <div style="font-size: 11px; color: #4b5563; font-family: monospace; word-break: break-all; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px 8px; margin-bottom: 6px;">
                   <%= device.token.truncate(45) %>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #999;">
-                  <span>Enregistré le <%= device.created_at.strftime("%d/%m/%Y") %></span>
-                  <span>Dernière synchro : <%= device.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #9ca3af;">
+                  <span>Créé le <%= device.created_at.strftime("%d/%m/%Y") %></span>
+                  <span>Synchro : <%= device.updated_at.strftime("%d/%m/%Y %H:%M") %></span>
                 </div>
-              </div>
             <% end %>
           </div>
         </div>
@@ -435,3 +1132,37 @@
     </div>
   </div>
 </div>
+
+<script>
+  function setupContribFilters() {
+    const filterBtns = document.querySelectorAll(".contrib-filter-btn");
+    const rows = document.querySelectorAll(".contrib-row");
+    if (!filterBtns.length) return;
+
+    filterBtns.forEach(btn => {
+      // Avoid duplicate listener
+      btn.replaceWith(btn.cloneNode(true));
+    });
+
+    const newFilterBtns = document.querySelectorAll(".contrib-filter-btn");
+    newFilterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        newFilterBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const filter = btn.getAttribute("data-filter");
+
+        rows.forEach(row => {
+          const type = row.getAttribute("data-type");
+          if (filter === "all" || type === filter) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", setupContribFilters);
+  document.addEventListener("turbo:load", setupContribFilters);
+</script>

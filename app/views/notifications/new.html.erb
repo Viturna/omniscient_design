@@ -1,406 +1,807 @@
 <style>
-  /* --- REPRISE DE LA DA GLOBALE --- */
-  .users-dash-wrapper {
-    padding: 40px 4vw;
-    max-width: 1600px;
-    margin: 0 auto;
-    background-color: #f8f9fa;
-    min-height: 100vh;
-    font-family: 'IBM Plex Sans', sans-serif;
-    color: #202020;
-    box-sizing: border-box;
+  /* --- NOTIFICATIONS WORKSPACE STYLES --- */
+  .notif-workspace-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 48px;
   }
 
-  /* Header */
-  .users-dash-header {
+  @media (max-width: 1080px) {
+    .notif-workspace-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Segmented Target Radio Cards */
+  .target-mode-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .target-mode-option {
+    position: relative;
+    border: 1px solid #E5E5E5;
+    border-radius: 12px;
+    padding: 14px 12px;
+    cursor: pointer;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 40px;
-    gap: 20px;
+    text-align: center;
+    gap: 6px;
   }
 
-  .users-dash-title {
-    font-size: 32px;
-    font-weight: 500;
-    color: #202020;
-    margin: 0;
-    line-height: 1.2;
+  .target-mode-option:hover {
+    border-color: #202020;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
 
-  .users-dash-back-link {
+  .target-mode-option.active {
+    border-color: #202020;
+    background-color: #FAFAFA;
+    box-shadow: 0 0 0 2px #202020;
+  }
+
+  .target-mode-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .target-mode-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #F0F0F0;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 1px solid #eee;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-  }
-  .users-dash-back-link:hover {
-    background-color: #f0f0f0;
-    transform: translateX(-2px);
-  }
-
-  /* Card Container Centré */
-  .form-card-container {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .dash-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-    border: 1px solid #f0f0f0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* --- STYLE DU FORMULAIRE --- */
-  .form-group {
-    margin-bottom: 24px;
-  }
-
-  .form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
     color: #202020;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
 
-  .form-control {
+  .target-mode-option.active .target-mode-icon {
+    background: #202020;
+    color: #FFFFFF;
+  }
+
+  .target-mode-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #202020;
+  }
+
+  .target-mode-sub {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.2;
+  }
+
+  /* Form controls styled */
+  .notif-input {
     width: 100%;
-    padding: 14px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 15px;
-    background: #f9f9f9;
+    padding: 13px 16px;
+    border: 1px solid #E5E5E5;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #F9F9F9;
     color: #202020;
     font-weight: 500;
     box-sizing: border-box;
     transition: all 0.2s ease;
   }
 
-  .form-control:focus {
+  .notif-input:focus {
     outline: none;
     border-color: #202020;
-    background: #fff;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(32, 32, 32, 0.08);
   }
 
-  textarea.form-control {
-    min-height: 120px;
+  .notif-textarea {
+    min-height: 110px;
     resize: vertical;
+    line-height: 1.5;
   }
 
-  .form-help-text {
-    display: block;
-    font-size: 12px;
-    color: #888;
-    margin-top: 6px;
+  .notif-form-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #404040;
   }
 
-  /* Style Checkbox "Sélectionner tout" */
-  .checkbox-wrapper {
+  .notif-char-count {
+    font-size: 11px;
+    color: #999;
+    font-weight: 400;
+  }
+
+  /* Live Preview Phone Frame */
+  .preview-card-sticky {
+    position: sticky;
+    top: 24px;
+  }
+
+  .preview-box {
+    background: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid #EAEAEA;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    padding: 24px;
+  }
+
+  .preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+
+  .preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    background: #E8F5E9;
+    color: #2E7D32;
+  }
+
+  .phone-mockup {
+    background: #111;
+    border-radius: 28px;
+    padding: 16px 12px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .phone-screen {
+    background: #1E1E1E;
+    border-radius: 18px;
+    padding: 16px 14px;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    color: #FFF;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phone-notch {
+    width: 80px;
+    height: 14px;
+    background: #000;
+    border-radius: 0 0 10px 10px;
+    margin: -16px auto 14px auto;
+  }
+
+  .phone-notif-bubble {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 12px;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .phone-notif-app-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: #E8F5E9;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    border: 1px solid #C8E6C9;
-    cursor: pointer;
+    gap: 8px;
+    margin-bottom: 6px;
   }
 
-  .checkbox-wrapper input[type="checkbox"] {
-    accent-color: #2E7D32;
+  .phone-app-icon {
     width: 18px;
     height: 18px;
-    cursor: pointer;
+    border-radius: 4px;
+    background: #202020;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: #FFF;
   }
 
-  .checkbox-label {
-    font-weight: 600;
-    color: #2E7D32;
-    font-size: 14px;
-    cursor: pointer;
+  .phone-app-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: #CCC;
+    flex: 1;
   }
 
-  /* Override Select2 pour matcher le design */
+  .phone-notif-time {
+    font-size: 10px;
+    color: #888;
+  }
+
+  .phone-notif-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #FFF;
+    margin-bottom: 3px;
+    word-break: break-word;
+  }
+
+  .phone-notif-body {
+    font-size: 12px;
+    color: #DDD;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .web-preview-box {
+    margin-top: 18px;
+    background: #F9F9F9;
+    border: 1px solid #EAEAEA;
+    border-radius: 12px;
+    padding: 14px;
+  }
+
+  .web-preview-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+
+  .web-notif-item {
+    background: #FFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .web-notif-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1976D2;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* Modal confirm styling */
+  .modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-card {
+    background: #FFF;
+    border-radius: 20px;
+    max-width: 440px;
+    width: 100%;
+    padding: 32px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    text-align: center;
+    animation: zoomIn 0.2s ease;
+  }
+
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Select2 Tweaks */
   .select2-container--default .select2-selection--multiple {
-    background-color: #f9f9f9 !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    min-height: 50px !important;
-    padding: 4px;
+    background-color: #F9F9F9 !important;
+    border: 1px solid #E5E5E5 !important;
+    border-radius: 10px !important;
+    min-height: 48px !important;
+    padding: 4px 8px !important;
   }
 
   .select2-container--default.select2-container--focus .select2-selection--multiple {
     border-color: #202020 !important;
-    background: #fff !important;
+    background: #FFF !important;
+    box-shadow: 0 0 0 3px rgba(32, 32, 32, 0.08) !important;
   }
 
   .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: #202020 !important;
     border: 1px solid #202020 !important;
-    color: #fff !important;
-    border-radius: 4px !important;
-    padding: 2px 8px !important;
-    margin-top: 6px !important;
+    color: #FFF !important;
+    border-radius: 6px !important;
+    padding: 3px 10px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-top: 4px !important;
   }
 
   .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    color: #fff !important;
-    margin-right: 8px !important;
-  }
-
-  .form-actions {
-    margin-top: 32px;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .btn-submit {
-    background-color: #202020;
-    color: #fff;
-    padding: 14px 32px;
-    border-radius: 30px;
-    border: none;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .btn-submit:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .users-dash-wrapper { padding: 20px 16px; }
-    .dash-card { padding: 24px; }
-    .users-dash-title { font-size: 24px; }
-    .btn-submit { width: 100%; }
+    color: #FFF !important;
+    margin-right: 6px !important;
   }
 </style>
+
 <div class="users-dash-wrapper" data-controller="admin-notification">
+  <!-- Header -->
   <div class="users-dash-header">
-    <div style="display:flex; align-items:center; gap:20px;">
+    <div style="display: flex; align-items: center; gap: 20px;">
       <%= link_to admin_root_path, class: "users-dash-back-link" do %>
-        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
       <% end %>
-      <h1 class="users-dash-title">Envoyer une Notification</h1>
+      <div>
+        <h1 class="users-dash-title">Centre de Notifications</h1>
+        <p style="margin: 4px 0 0 0; font-size: 14px; color: #777; font-weight: 500;">Diffuser des annonces push mobile et web ciblées à la communauté</p>
+      </div>
     </div>
   </div>
-  <div class="form-card-container">
-    <div class="dash-card">
-      <%= form_with url: notifications_path, local: true, data: { action: "submit->admin-notification#submit" } do |form| %>
-        <div class="form-group">
-          <label class="form-label">Destinataire(s)</label>
-          <div class="checkbox-wrapper">
-            <input type="checkbox" 
-                   id="select-all-users" 
-                   name="select_all" 
-                   value="all" 
-                   data-admin-notification-target="checkbox"
-                   data-action="change->admin-notification#toggleSelection">
-            <label class="checkbox-label" for="select-all-users">
-              Envoyer à tous les utilisateurs
+
+  <!-- KPI Grid -->
+  <div class="users-dash-kpi-grid">
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Notifications Envoyées</span>
+        <div class="kpi-icon bg-blue-light">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value"><%= @total_sent_all %></div>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Portée Mobile Push</span>
+        <div class="kpi-icon bg-purple-light">
+          <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value"><%= @total_mobile_users %> <span style="font-size: 14px; color: #888; font-weight: 500;">/ <%= @total_users_count %></span></div>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Lectures Confirmées</span>
+        <div class="kpi-icon bg-green-light">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value"><%= @total_read_all %></div>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Taux d'Engagement (CTR)</span>
+        <div class="kpi-icon bg-yellow-light">
+          <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value" style="color: #2E7D32;"><%= @global_ctr %>%</div>
+    </div>
+  </div>
+
+  <!-- Main Workspace Grid: Form (Left) & Preview (Right) -->
+  <div class="notif-workspace-grid">
+    <!-- Left: Notification Composer Form -->
+    <div class="users-dash-toolbar" style="padding: 32px; margin-bottom: 0;">
+      <h2 style="font-size: 18px; font-weight: 500; color: #202020; margin: 0 0 24px 0; display: flex; align-items: center; gap: 10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        Rédiger une notification
+      </h2>
+
+      <%= form_with url: notifications_path, local: true, id: "adminNotificationForm", data: { action: "submit->admin-notification#submit" } do |form| %>
+        <!-- Destinataires / Targeting Mode -->
+        <div class="form-group" style="margin-bottom: 24px;">
+          <label class="notif-form-label">
+            <span>Ciblage des destinataires</span>
+            <span style="font-size: 12px; color: #888;">Qui recevra ce message ?</span>
+          </label>
+
+          <div class="target-mode-selector">
+            <label class="target-mode-option active" id="targetOptAll" onclick="selectTargetMode('all')">
+              <input type="radio" name="target_mode" value="all" checked>
+              <div class="target-mode-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </div>
+              <span class="target-mode-title">Tous les membres</span>
+              <span class="target-mode-sub"><%= @total_users_count %> utilisateurs</span>
+            </label>
+
+            <label class="target-mode-option" id="targetOptSegment" onclick="selectTargetMode('segment')">
+              <input type="radio" name="target_mode" value="segment">
+              <div class="target-mode-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
+              </div>
+              <span class="target-mode-title">Par statut</span>
+              <span class="target-mode-sub">Étudiants, pros...</span>
+            </label>
+
+            <label class="target-mode-option" id="targetOptCustom" onclick="selectTargetMode('custom')">
+              <input type="radio" name="target_mode" value="custom">
+              <div class="target-mode-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+              <span class="target-mode-title">Sélection sur-mesure</span>
+              <span class="target-mode-sub">Par email ou nom</span>
             </label>
           </div>
-          
-          <div style="margin-bottom: 16px;">
-            <label class="form-label" style="font-size: 13px; color: #666; text-transform: none; margin-bottom: 8px;">Ou cibler par statut professionnel :</label>
-            <%= select_tag 'status', 
-                options_for_select([
-                  ["-- Tous les statuts (Ou utiliser la sélection manuelle) --", "all"], 
-                  ["Étudiant", "etudiant"], 
-                  ["Enseignant", "enseignant"], 
-                  ["Entreprise", "entreprise"], 
-                  ["Artiste", "artiste"], 
-                  ["Autre", "autre"]
-                ]), 
-                class: "form-control",
-                style: "padding: 10px; font-size: 14px; background-color: #fff;",
-                onchange: "document.getElementById('study-level-container').style.display = (this.value === 'etudiant') ? 'block' : 'none';"
-            %>
+
+          <!-- Hidden checkbox for Stimulus/legacy controller -->
+          <input type="checkbox" id="select-all-users" name="select_all" value="all" checked style="display: none;" data-admin-notification-target="checkbox">
+
+          <!-- Section: Par statut -->
+          <div id="segmentTargetBlock" style="display: none; background: #FAFAFA; border: 1px solid #EAEAEA; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+            <div style="margin-bottom: 12px;">
+              <label class="notif-form-label">Statut professionnel</label>
+              <%= select_tag 'status', 
+                  options_for_select([
+                    ["-- Choisir un statut --", "all"], 
+                    ["Étudiant", "etudiant"], 
+                    ["Enseignant", "enseignant"], 
+                    ["Entreprise", "entreprise"], 
+                    ["Artiste", "artiste"], 
+                    ["Autre", "autre"]
+                  ]), 
+                  class: "notif-input",
+                  id: "status",
+                  onchange: "document.getElementById('study-level-container').style.display = (this.value === 'etudiant') ? 'block' : 'none';"
+              %>
+            </div>
+
+            <div id="study-level-container" style="display: none;">
+              <label class="notif-form-label">Niveau d'études (Optionnel)</label>
+              <%= select_tag 'study_level', 
+                  options_for_select([["Toutes les années", "all"]] + User::STUDY_LEVELS.map { |lvl| [lvl, lvl] }), 
+                  class: "notif-input",
+                  id: "study_level"
+              %>
+            </div>
           </div>
 
-          <div id="study-level-container" style="display: none; margin-bottom: 16px; margin-left: 20px; border-left: 2px solid #e0e0e0; padding-left: 15px;">
-            <label class="form-label" style="font-size: 13px; color: #666; text-transform: none; margin-bottom: 8px;">Préciser l'année scolaire (Optionnel) :</label>
-            <%= select_tag 'study_level', 
-                options_for_select([["-- Toutes les années --", "all"]] + User::STUDY_LEVELS.map { |lvl| [lvl, lvl] }), 
-                class: "form-control",
-                style: "padding: 10px; font-size: 14px; background-color: #fff;"
-            %>
+          <!-- Section: Sur-mesure (Select2) -->
+          <div id="customTargetBlock" style="display: none; background: #FAFAFA; border: 1px solid #EAEAEA; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+            <label class="notif-form-label">Membres destinataires</label>
+            <%= select_tag 'user_ids[]', 
+                options_from_collection_for_select(@users, :id, ->(u) { "#{u.firstname} #{u.lastname} (#{u.email})" }), 
+                { 
+                  class: "form-control user-multiselect", 
+                  multiple: true, 
+                  id: "user-select-field",
+                  style: "width: 100%;",
+                  data: { 
+                    admin_notification_target: "select",
+                    controller: "select2",
+                    placeholder: "Rechercher par prénom, nom ou email..."
+                  } 
+                } %>
           </div>
+        </div>
 
-          <label class="form-label" style="font-size: 13px; color: #666; text-transform: none; margin-bottom: 8px;">Ou sélection manuelle :</label>
-          <%= select_tag 'user_ids[]', 
-              options_from_collection_for_select(@users, :id, ->(u) { "#{u.email} (ID: #{u.id})" }), 
-              { 
-                class: "form-control user-multiselect", 
-                multiple: true, 
-                id: "user-select-field",
-                style: "width: 100%;",
-                data: { 
-                  admin_notification_target: "select",
-                  controller: "select2",
-                  placeholder: "Rechercher des utilisateurs..."
-                } 
-              } %>
+        <!-- Titre -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="notif-form-label" for="notifTitleInput">
+            <span>Titre de la notification <strong style="color: #D32F2F;">*</strong></span>
+            <span class="notif-char-count" id="titleCharCount">0 / 60</span>
+          </label>
+          <%= form.text_field :title, id: "notifTitleInput", class: "notif-input", required: true, maxlength: 80, placeholder: "Ex: ✨ Nouvelle collection de références disponible", oninput: "updatePreview()" %>
         </div>
-        <div class="form-group">
-          <%= form.label :title, "Titre de la notification", class: "form-label" %>
-          <%= form.text_field :title, class: "form-control", required: true, placeholder: "Ex: Nouvelle fonctionnalité disponible !" %>
+
+        <!-- Message -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="notif-form-label" for="notifMessageInput">
+            <span>Message <strong style="color: #D32F2F;">*</strong></span>
+            <span class="notif-char-count" id="messageCharCount">0 / 200</span>
+          </label>
+          <%= form.text_area :message, id: "notifMessageInput", rows: 4, class: "notif-input notif-textarea", required: true, maxlength: 250, placeholder: "Découvrez les 15 nouveaux projets de design graphique ajoutés cette semaine...", oninput: "updatePreview()" %>
         </div>
-        <div class="form-group">
-          <%= form.label :link, "Lien de redirection (Optionnel)", class: "form-label" %>
-          <%= form.text_field :link, class: "form-control", placeholder: "Ex: /references/123 ou https://..." %>
-          <small class="form-help-text">Si vide, la notification sera simplement informative sans clic.</small>
+
+        <!-- Lien de redirection -->
+        <div class="form-group" style="margin-bottom: 28px;">
+          <label class="notif-form-label" for="notifLinkInput">
+            <span>Lien de redirection (Optionnel)</span>
+            <span style="font-size: 11px; color: #888;">URL interne ou externe</span>
+          </label>
+          <div style="position: relative;">
+            <svg style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #888;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <%= form.text_field :link, id: "notifLinkInput", class: "notif-input", style: "padding-left: 42px;", placeholder: "Ex: /references ou https://..." %>
+          </div>
         </div>
-        <div class="form-group">
-          <%= form.label :message, "Message", class: "form-label" %>
-          <%= form.text_area :message, rows: 5, class: "form-control", required: true, placeholder: "Ton message ici..." %>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-submit" id="openNotificationPopup">
+
+        <!-- Submit Button -->
+        <div style="display: flex; justify-content: flex-end;">
+          <button type="button" class="btn-submit" id="openNotificationPopup" style="background-color: #202020; color: #fff; border-radius: 10px; padding: 14px 28px; font-weight: 500; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; transition: all 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
             <span>Envoyer la notification</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-            </svg>
           </button>
         </div>
 
-        <div id="notificationPopup" class="popup" style="display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); align-items: center; justify-content: center;">
-          <div class="popup-content" style="background-color: #fff; margin: auto; border-radius: 16px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-            <div class="top-popup" style="display: flex; justify-content: flex-end; padding: 16px;">
-              <svg class="close-popup" id="closeNotificationPopup" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
-                <path d="M19.9941 16.9964L33.3719 3.63981C33.7717 3.23995 33.9964 2.69763 33.9964 2.13215C33.9964 1.56667 33.7717 1.02435 33.3719 0.624492C32.972 0.224637 32.4297 0 31.8642 0C31.2987 0 30.7564 0.224637 30.3566 0.624492L17 14.0023L3.64343 0.624492C3.24358 0.224637 2.70125 5.02059e-07 2.13577 5.06273e-07C1.57029 5.10486e-07 1.02797 0.224637 0.628116 0.624492C0.228261 1.02435 0.00362441 1.56667 0.00362441 2.13215C0.0036244 2.69763 0.228261 3.23995 0.628116 3.63981L14.0059 16.9964L0.628116 30.3529C0.429087 30.5504 0.271115 30.7852 0.163309 31.044C0.055504 31.3027 0 31.5803 0 31.8606C0 32.1409 0.055504 32.4185 0.163309 32.6772C0.271115 32.936 0.429087 33.1709 0.628116 33.3683C0.825519 33.5673 1.06038 33.7253 1.31914 33.8331C1.5779 33.9409 1.85545 33.9964 2.13577 33.9964C2.4161 33.9964 2.69364 33.9409 2.95241 33.8331C3.21117 33.7253 3.44603 33.5673 3.64343 33.3683L17 19.9905L30.3566 33.3683C30.554 33.5673 30.7888 33.7253 31.0476 33.8331C31.3064 33.9409 31.5839 33.9964 31.8642 33.9964C32.1445 33.9964 32.4221 33.9409 32.6809 33.8331C32.9396 33.7253 33.1745 33.5673 33.3719 33.3683C33.5709 33.1709 33.7289 32.936 33.8367 32.6772C33.9445 32.4185 34 32.1409 34 31.8606C34 31.5803 33.9445 31.3027 33.8367 31.044C33.7289 30.7852 33.5709 30.5504 33.3719 30.3529L19.9941 16.9964Z" fill="#202020"/>
-              </svg>
+        <!-- Confirmation Modal -->
+        <div id="notificationPopup" class="modal-backdrop">
+          <div class="modal-card">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: #E3F2FD; color: #1565C0; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px auto;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
             </div>
-            <div style="padding: 0 32px 32px 32px; text-align: center;">
-              <h2 style="margin-bottom: 16px; font-size: 24px; font-weight: 600;">Envoyer la notification ?</h2>
-              <p style="margin-bottom: 32px; color: #52525D; font-size: 15px;">Es-tu sûr de vouloir envoyer cette notification aux utilisateurs sélectionnés ?</p>
-              <div style="display: flex; gap: 16px; justify-content: center; align-items: stretch;">
-                <button type="button" class="btn-submit" id="cancelNotificationBtn" style="background-color: #f0f0f0; color: #202020; margin: 0; padding: 12px 24px;">Annuler</button>
-                <%= form.button type: "submit", class: "btn-submit", style: "margin: 0; padding: 12px 24px;" do %>
-                  Confirmer
-                <% end %>
-              </div>
+            <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 500; color: #202020;">Confirmer l'envoi ?</h3>
+            <p style="margin: 0 0 24px 0; color: #666; font-size: 14px; line-height: 1.5;">Cette action enverra instantanément la notification push & web aux destinataires sélectionnés.</p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+              <button type="button" id="cancelNotificationBtn" style="padding: 12px 20px; border-radius: 8px; border: 1px solid #E5E5E5; background: #FFF; color: #666; font-weight: 500; cursor: pointer;">
+                Annuler
+              </button>
+              <%= form.button type: "submit", style: "padding: 12px 24px; border-radius: 8px; border: none; background: #202020; color: #FFF; font-weight: 500; cursor: pointer;" do %>
+                Confirmer l'envoi
+              <% end %>
             </div>
           </div>
         </div>
       <% end %>
     </div>
+
+    <!-- Right: Live Push & Web Notification Preview -->
+    <div class="preview-card-sticky">
+      <div class="preview-box">
+        <div class="preview-header">
+          <span style="font-size: 14px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            Aperçu en direct
+          </span>
+          <span class="preview-badge">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #2E7D32;"></span>
+            Temps réel
+          </span>
+        </div>
+
+        <!-- Phone Lockscreen Mockup -->
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            
+            <div style="text-align: center; margin-bottom: 20px; opacity: 0.9;">
+              <div style="font-size: 32px; font-weight: 300; letter-spacing: -0.5px;">9:41</div>
+              <div style="font-size: 11px; color: #AAA;"><%= l(Date.today, format: "%A %d %B").capitalize %></div>
+            </div>
+
+            <!-- Push notification bubble -->
+            <div class="phone-notif-bubble">
+              <div class="phone-notif-app-header">
+                <div class="phone-app-icon">O</div>
+                <span class="phone-app-name">OMNISCIENT</span>
+                <span class="phone-notif-time">maintenant</span>
+              </div>
+              <div class="phone-notif-title" id="previewPushTitle">Titre de la notification</div>
+              <div class="phone-notif-body" id="previewPushBody">Votre message apparaîtra ici en temps réel au fur et à mesure de votre saisie...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Web Notification Bubble -->
+        <div class="web-preview-box">
+          <div class="web-preview-title">Aperçu Cloche Web</div>
+          <div class="web-notif-item">
+            <div class="web-notif-dot"></div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 500; color: #202020; margin-bottom: 2px;" id="previewWebTitle">Titre de la notification</div>
+              <div style="font-size: 12px; color: #666; line-height: 1.4;" id="previewWebBody">Votre message apparaîtra ici en temps réel...</div>
+              <div style="font-size: 11px; color: #999; margin-top: 4px;">À l'instant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div style="margin-top: 50px;">
-    <h2 class="users-dash-title" style="margin-bottom: 24px;">Historique & Statistiques des Campagnes</h2>
-    
-    <div class="dash-card" style="padding: 0; overflow: hidden; overflow-x: auto;">
-      <table style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
+  <!-- Campaign History & Analytics Section -->
+  <div style="margin-top: 56px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h2 class="users-dash-title" style="font-size: 24px; margin: 0;">Historique & Performance des Campagnes</h2>
+        <p style="margin: 4px 0 0 0; font-size: 13px; color: #777; font-weight: 500;">Suivi des ouvertures, délivrabilité push mobile et clics</p>
+      </div>
+    </div>
+
+    <div class="users-dash-table-container">
+      <table class="users-dash-table">
         <thead>
-          <tr style="background-color: #fafafa; border-bottom: 1px solid #eee;">
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Date d'envoi</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Titre</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Message</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Destinataires</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Sur Mobile (Push)</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Lectures</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Clics</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: center;">Taux de clic (CTR)</th>
-            <th style="padding: 18px 24px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; text-align: right;">Action</th>
+          <tr>
+            <th>Date d'envoi</th>
+            <th>Notification</th>
+            <th style="text-align: center;">Destinataires</th>
+            <th style="text-align: center;">Push Mobile</th>
+            <th style="text-align: center;">Lectures</th>
+            <th style="text-align: center;">Clics</th>
+            <th style="text-align: center;">CTR</th>
+            <th style="text-align: right; padding-right: 28px;">Actions</th>
           </tr>
         </thead>
         <tbody>
           <% if @campaigns.any? %>
             <% @campaigns.each do |campaign| %>
-              <% ctr = campaign.total_sent > 0 ? (campaign.total_clicks.to_f / campaign.total_sent * 100).round(2) : 0 %>
-              <tr style="border-bottom: 1px solid #f5f5f5;" onmouseover="this.style.backgroundColor='#fcfcfc'" onmouseout="this.style.backgroundColor='transparent'">
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 500; white-space: nowrap;"><%= campaign.sent_at.strftime("%d/%m/%Y à %H:%M") %></td>
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; white-space: nowrap;"><%= campaign.title %></td>
-                <td style="padding: 18px 24px; font-size: 13px; color: #666; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<%= campaign.message %>"><%= campaign.message %></td>
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #1E88E5;"><%= campaign.total_sent %></td>
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #8E24AA;"><%= campaign.try(:total_mobile_sent) || 0 %></td>
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #009688;"><%= campaign.total_read %></td>
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 600; text-align: center; color: #FF8F00;"><%= campaign.total_clicks %></td>
-                <td style="padding: 18px 24px; font-size: 14px; font-weight: 700; text-align: center; color: #2E7D32;"><%= ctr %>%</td>
-                <td style="padding: 18px 24px; text-align: right; white-space: nowrap;">
-                  <%= link_to admin_notification_clicks_path(campaign.id), class: "btn-submit", style: "padding: 8px 16px; font-size: 12px; border-radius: 20px; text-decoration: none;" do %>
-                    Voir les détails
+              <% ctr = campaign.total_sent.to_i > 0 ? (campaign.total_clicks.to_f / campaign.total_sent.to_f * 100).round(1) : 0 %>
+              <tr>
+                <td>
+                  <div style="font-weight: 500; color: #202020;"><%= campaign.sent_at.strftime("%d/%m/%Y") %></div>
+                  <div style="font-size: 12px; color: #888;"><%= campaign.sent_at.strftime("%H:%M") %></div>
+                </td>
+                <td style="max-width: 340px;">
+                  <div style="font-weight: 500; color: #202020; margin-bottom: 2px;"><%= campaign.title %></div>
+                  <div style="font-size: 12px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<%= campaign.message %>">
+                    <%= campaign.message %>
+                  </div>
+                  <% if campaign.link.present? %>
+                    <div style="font-size: 11px; color: #1976D2; margin-top: 2px;">🔗 <%= campaign.link %></div>
+                  <% end %>
+                </td>
+                <td style="text-align: center;">
+                  <span class="badge badge-blue">
+                    <%= campaign.total_sent %>
+                  </span>
+                </td>
+                <td style="text-align: center;">
+                  <span class="badge" style="background: #F3E5F5; color: #7B1FA2; font-weight: 500;">
+                    📱 <%= campaign.try(:total_mobile_sent) || 0 %>
+                  </span>
+                </td>
+                <td style="text-align: center;">
+                  <span class="badge badge-green">
+                    <%= campaign.total_read %>
+                  </span>
+                </td>
+                <td style="text-align: center;">
+                  <span class="badge" style="background: #FFF8E1; color: #F57F17; font-weight: 500;">
+                    <%= campaign.total_clicks %>
+                  </span>
+                </td>
+                <td style="text-align: center;">
+                  <span style="font-weight: 500; color: <%= ctr > 5 ? '#2E7D32' : '#666' %>;">
+                    <%= ctr %>%
+                  </span>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <%= link_to admin_notification_clicks_path(campaign.id), class: "badge badge-blue", style: "text-decoration: none; padding: 6px 12px; display: inline-flex; align-items: center; gap: 4px;" do %>
+                    <span>Détails</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                   <% end %>
                 </td>
               </tr>
             <% end %>
           <% else %>
             <tr>
-              <td colspan="9" style="padding: 40px; text-align: center; color: #888; font-weight: 500;">
-                Aucune notification admin n'a encore été envoyée.
+              <td colspan="8" style="padding: 40px; text-align: center; color: #888; font-weight: 500;">
+                Aucune campagne de notification enregistrée.
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
-      <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
-        <%= paginate @campaigns %>
-      </div>
+      
+      <% if @campaigns.respond_to?(:total_pages) && @campaigns.total_pages > 1 %>
+        <div style="padding: 24px; display: flex; justify-content: center; border-top: 1px solid #eee;">
+          <%= paginate @campaigns %>
+        </div>
+      <% end %>
     </div>
   </div>
-
-  <script>
-    document.addEventListener("turbo:load", () => {
-      var notifModal = document.getElementById("notificationPopup");
-      var btnNotif = document.getElementById("openNotificationPopup");
-      var closeNotif = document.getElementById("closeNotificationPopup");
-      var cancelNotif = document.getElementById("cancelNotificationBtn");
-
-      if (btnNotif) {
-        btnNotif.onclick = function(e) {
-          e.preventDefault();
-          notifModal.style.display = "flex";
-        }
-      }
-
-      if (closeNotif) {
-        closeNotif.onclick = function() {
-          notifModal.style.display = "none";
-        }
-      }
-
-      if (cancelNotif) {
-        cancelNotif.onclick = function() {
-          notifModal.style.display = "none";
-        }
-      }
-
-      window.addEventListener('click', function(event) {
-        if (event.target == notifModal) {
-          notifModal.style.display = "none";
-        }
-      });
-
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && notifModal && notifModal.style.display == "flex") {
-          notifModal.style.display = "none";
-        }
-      });
-    });
-  </script>
 </div>
+
+<script>
+  // Live Preview synchronisation
+  function updatePreview() {
+    const titleVal = document.getElementById("notifTitleInput").value.trim();
+    const messageVal = document.getElementById("notifMessageInput").value.trim();
+
+    const titleDisplay = titleVal || "Titre de la notification";
+    const bodyDisplay = messageVal || "Votre message apparaîtra ici en temps réel au fur et à mesure de votre saisie...";
+
+    document.getElementById("previewPushTitle").textContent = titleDisplay;
+    document.getElementById("previewPushBody").textContent = bodyDisplay;
+    document.getElementById("previewWebTitle").textContent = titleDisplay;
+    document.getElementById("previewWebBody").textContent = messageVal || "Votre message apparaîtra ici en temps réel...";
+
+    document.getElementById("titleCharCount").textContent = `${titleVal.length} / 60`;
+    document.getElementById("messageCharCount").textContent = `${messageVal.length} / 200`;
+  }
+
+  // Target Mode Selector Switching
+  function selectTargetMode(mode) {
+    document.querySelectorAll(".target-mode-option").forEach(el => el.classList.remove("active"));
+    const allCheckbox = document.getElementById("select-all-users");
+    const segmentBlock = document.getElementById("segmentTargetBlock");
+    const customBlock = document.getElementById("customTargetBlock");
+    const userSelect = document.getElementById("user-select-field");
+    const statusSelect = document.getElementById("status");
+
+    if (mode === 'all') {
+      document.getElementById("targetOptAll").classList.add("active");
+      allCheckbox.checked = true;
+      segmentBlock.style.display = "none";
+      customBlock.style.display = "none";
+      if (statusSelect) statusSelect.value = "all";
+      if (window.$ && userSelect) $(userSelect).val(null).trigger("change");
+    } else if (mode === 'segment') {
+      document.getElementById("targetOptSegment").classList.add("active");
+      allCheckbox.checked = false;
+      segmentBlock.style.display = "block";
+      customBlock.style.display = "none";
+      if (window.$ && userSelect) $(userSelect).val(null).trigger("change");
+    } else if (mode === 'custom') {
+      document.getElementById("targetOptCustom").classList.add("active");
+      allCheckbox.checked = false;
+      segmentBlock.style.display = "none";
+      customBlock.style.display = "block";
+      if (statusSelect) statusSelect.value = "all";
+    }
+
+    if (allCheckbox) {
+      allCheckbox.dispatchEvent(new Event('change'));
+    }
+  }
+
+  // Modal handlers
+  document.addEventListener("turbo:load", () => {
+    updatePreview();
+
+    const notifModal = document.getElementById("notificationPopup");
+    const btnNotif = document.getElementById("openNotificationPopup");
+    const cancelNotif = document.getElementById("cancelNotificationBtn");
+
+    if (btnNotif) {
+      btnNotif.onclick = function(e) {
+        e.preventDefault();
+        const titleVal = document.getElementById("notifTitleInput").value.trim();
+        const messageVal = document.getElementById("notifMessageInput").value.trim();
+        if (!titleVal || !messageVal) {
+          alert("Veuillez renseigner un titre et un message.");
+          return;
+        }
+        if (notifModal) notifModal.style.display = "flex";
+      }
+    }
+
+    if (cancelNotif && notifModal) {
+      cancelNotif.onclick = function() {
+        notifModal.style.display = "none";
+      }
+    }
+
+    window.addEventListener('click', function(event) {
+      if (event.target == notifModal) {
+        notifModal.style.display = "none";
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && notifModal && notifModal.style.display == "flex") {
+        notifModal.style.display = "none";
+      }
+    });
+  });
+</script>

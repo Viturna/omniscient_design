@@ -10,16 +10,37 @@ module Admin
 
       @user_badges = UserBadge.includes(:user, :badge)
 
-      if params[:search].present?
-        query = "%#{params[:search].downcase}%"
+      query_param = params[:query].presence || params[:search].presence
+      if query_param.present?
+        query = "%#{query_param.downcase}%"
         @user_badges = @user_badges.joins(:user, :badge)
-                                   .where('LOWER(users.email) LIKE ? OR LOWER(users.pseudo) LIKE ? OR LOWER(badges.name) LIKE ?', query, query, query)
+                                   .where('LOWER(users.email) LIKE :q OR LOWER(users.pseudo) LIKE :q OR LOWER(badges.name) LIKE :q', q: query)
+      end
+
+      if params[:badge_id].present?
+        @user_badges = @user_badges.where(badge_id: params[:badge_id])
+      end
+
+      if params[:category].present?
+        @user_badges = @user_badges.joins(:badge).where(badges: { category: params[:category] })
       end
 
       sort_column = params[:sort]
       sort_direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
 
-      @user_badges = if sort_column == 'user'
+      @user_badges = if sort_column == 'user_asc'
+                       @user_badges.joins(:user).order("LOWER(COALESCE(users.pseudo, users.email)) ASC")
+                     elsif sort_column == 'user_desc'
+                       @user_badges.joins(:user).order("LOWER(COALESCE(users.pseudo, users.email)) DESC")
+                     elsif sort_column == 'badge_asc'
+                       @user_badges.joins(:badge).order("LOWER(badges.name) ASC")
+                     elsif sort_column == 'badge_desc'
+                       @user_badges.joins(:badge).order("LOWER(badges.name) DESC")
+                     elsif sort_column == 'date_asc'
+                       @user_badges.order(created_at: :asc)
+                     elsif sort_column == 'date_desc'
+                       @user_badges.order(created_at: :desc)
+                     elsif sort_column == 'user'
                        @user_badges.references(:user).order("LOWER(COALESCE(users.pseudo, users.email)) #{sort_direction}")
                      elsif sort_column == 'badge'
                        @user_badges.references(:badge).order("LOWER(badges.name) #{sort_direction}")

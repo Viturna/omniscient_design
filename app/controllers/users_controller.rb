@@ -126,6 +126,7 @@ class UsersController < ApplicationController
     @users = @users.where(statut: params[:statut]) if params[:statut].present?
     @users = @users.where(role: params[:role]) if params[:role].present?
     @users = @users.where(etablissement_id: params[:etablissement_id]) if params[:etablissement_id].present?
+    @users = @users.where(how_did_you_hear: params[:source]) if params[:source].present?
 
     # Filtre par plateforme (App Mobile / Web)
     if params[:platform].present?
@@ -138,8 +139,9 @@ class UsersController < ApplicationController
       end
     end
 
-    # Options pour le filtre par établissement (établissements rattachés à au moins un utilisateur)
+    # Options pour les filtres
     @etablissements_for_filter = Etablissement.joins(:users).distinct.order(:name)
+    @sources_for_filter = User.where.not(how_did_you_hear: [nil, '']).distinct.pluck(:how_did_you_hear).sort
 
     # Filtre par tranche de visites
     if params[:visits].present?
@@ -188,6 +190,9 @@ class UsersController < ApplicationController
       when 'study_level'
         direction = params[:direction] == 'desc' ? :desc : :asc
         @users = @users.order(study_level: direction)
+      when 'source'
+        direction = params[:direction] == 'desc' ? 'DESC' : 'ASC'
+        @users = @users.order(Arel.sql("how_did_you_hear #{direction} NULLS LAST"))
       when 'inscription'
         direction = params[:direction] == 'desc' ? :desc : :asc
         @users = @users.order(created_at: direction)
@@ -197,6 +202,12 @@ class UsersController < ApplicationController
                  .select('users.*, COALESCE(v.visits_count, 0) AS visits_count')
                  .joins('LEFT JOIN (SELECT user_id, COUNT(*) AS visits_count FROM daily_visits GROUP BY user_id) v ON v.user_id = users.id')
                  .order(Arel.sql("COALESCE(v.visits_count, 0) #{direction}"))
+      when 'badges', 'badges_asc', 'badges_desc'
+        direction = sort_param == 'badges_desc' || (sort_param == 'badges' && params[:direction] == 'desc') ? 'DESC' : 'ASC'
+        @users = @users
+                 .select('users.*, COALESCE(b.badges_count, 0) AS badges_count')
+                 .joins('LEFT JOIN (SELECT user_id, COUNT(*) AS badges_count FROM user_badges GROUP BY user_id) b ON b.user_id = users.id')
+                 .order(Arel.sql("COALESCE(b.badges_count, 0) #{direction}, users.created_at DESC"))
       else
         @users = @users.order(created_at: :desc)
       end
@@ -204,13 +215,13 @@ class UsersController < ApplicationController
       @users = @users.order(created_at: :desc)
     end
 
-    @paginated_users = @users.includes(:etablissement, :user_devices, profile_image_attachment: :blob).page(params[:page]).per(20)
+    @paginated_users = @users.includes(:etablissement, :user_devices, :user_badges, profile_image_attachment: :blob).page(params[:page]).per(20)
     @users_for_map = @users.includes(:etablissement).where.not(etablissement_id: nil)
   end
 
   def show
     @current_page = 'users'
-    @user = User.includes(:user_devices).find(params[:id])
+    @user = User.includes(:user_devices, :etablissement, :country).find(params[:id])
     @user_devices = @user.user_devices.order(updated_at: :desc)
 
     @total_visits = @user.daily_visits.count
@@ -223,6 +234,117 @@ class UsersController < ApplicationController
                                .count
 
     @badges = @user.badges if @user.respond_to?(:badges)
+
+    # --- Historique des contributions ---
+    user_refs = @user.references.map do |r|
+      {
+        id: r.id,
+        type: 'reference',
+        type_label: 'Référence',
+        name: r.nom_reference,
+        created_at: r.created_at,
+        status: r.validation ? 'validated' : 'pending',
+        reason: nil,
+        persisted: r.persisted?,
+        record: r
+      }
+    end
+
+    user_rej_refs = @user.rejected_references.map do |rr|
+      {
+        id: rr.id,
+        type: 'reference',
+        type_label: 'Référence',
+        name: rr.nom_reference,
+        created_at: rr.created_at,
+        status: 'rejected',
+        reason: rr.reason,
+        persisted: false,
+        record: nil
+      }
+    end
+
+    user_designers = @user.designers.map do |d|
+      {
+        id: d.id,
+        type: 'designer',
+        type_label: 'Designer',
+        name: d.respond_to?(:nom_designer) ? d.nom_designer : [d.prenom, d.nom].compact.join(' ').presence || 'Designer sans nom',
+        created_at: d.created_at,
+        status: d.validation ? 'validated' : 'pending',
+        reason: nil,
+        persisted: d.persisted?,
+        record: d
+      }
+    end
+
+    user_rej_designers = @user.rejected_designers.map do |rd|
+      {
+        id: rd.id,
+        type: 'designer',
+        type_label: 'Designer',
+        name: [rd.prenom, rd.nom].compact.join(' ').presence || 'Designer sans nom',
+        created_at: rd.created_at,
+        status: 'rejected',
+        reason: rd.reason,
+        persisted: false,
+        record: nil
+      }
+    end
+
+    user_studios = @user.studios.map do |s|
+      {
+        id: s.id,
+        type: 'studio',
+        type_label: 'Studio',
+        name: s.nom,
+        created_at: s.created_at,
+        status: s.validation ? 'validated' : 'pending',
+        reason: nil,
+        persisted: s.persisted?,
+        record: s
+      }
+    end
+
+    user_rej_studios = @user.rejected_studios.map do |rs|
+      {
+        id: rs.id,
+        type: 'studio',
+        type_label: 'Studio',
+        name: rs.nom,
+        created_at: rs.created_at,
+        status: 'rejected',
+        reason: rs.reason,
+        persisted: false,
+        record: nil
+      }
+    end
+
+    @contributions = (user_refs + user_rej_refs + user_designers + user_rej_designers + user_studios + user_rej_studios).sort_by { |c| c[:created_at] || Time.at(0) }.reverse
+
+    @contributions_count = @contributions.size
+    @contributions_validated_count = @contributions.count { |c| c[:status] == 'validated' }
+    @contributions_pending_count = @contributions.count { |c| c[:status] == 'pending' }
+    @contributions_rejected_count = @contributions.count { |c| c[:status] == 'rejected' }
+
+    # --- Quiz & Culture Design ---
+    completed_submissions = @user.quiz_submissions.where(status: 'completed')
+    @completed_quizzes_count = completed_submissions.count
+    @avg_quiz_score = completed_submissions.any? ? completed_submissions.average(:score)&.round(1) : nil
+
+    # --- Parrainage & Réseau ---
+    @referred_users = @user.referred_users.order(created_at: :desc)
+    @referrals_count = @referred_users.count
+    @referrer_user = @user.referral&.referrer
+
+    # --- Habitudes & Rythme de connexion ---
+    @active_days_30d = @user.daily_visits.where('visited_on >= ?', 30.days.ago.to_date).count
+    account_age_weeks = [((Date.today - @user.created_at.to_date) / 7.0).ceil, 1].max
+    @weekly_visit_avg = (@total_visits.to_f / account_age_weeks).round(1)
+
+    # --- Retours & Feedbacks Communauté ---
+    @bug_reports_count = @user.bug_reports.count
+    @feedbacks_count = @user.feedbacks.count
   end
 
   def visits

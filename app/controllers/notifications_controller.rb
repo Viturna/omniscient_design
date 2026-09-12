@@ -14,12 +14,23 @@ class NotificationsController < ApplicationController
     @users = User.all
     @notification = Notification.new
 
-    @campaigns = Notification.where('admin_id IS NOT NULL OR title = ?', 'La réf du jour')
-                             .left_joins(user: :user_devices)
-                             .group('notifications.title, notifications.message, notifications.link, notifications.admin_id')
-                             .select('MIN(notifications.id) as id, notifications.title, notifications.message, notifications.link, notifications.admin_id, COUNT(DISTINCT notifications.id) as total_sent, COUNT(DISTINCT CASE WHEN notifications.status = 1 THEN notifications.id END) as total_read, COUNT(DISTINCT CASE WHEN notifications.clicked_at IS NOT NULL THEN notifications.id END) as total_clicks, MIN(notifications.created_at) as sent_at, COUNT(DISTINCT CASE WHEN user_devices.id IS NOT NULL THEN notifications.id END) as total_mobile_sent')
-                             .order('sent_at DESC')
-                             .page(params[:page]).per(10)
+    @total_users_count = User.count
+    @total_mobile_users = UserDevice.distinct.count(:user_id)
+
+    @campaigns_scope = Notification.where('admin_id IS NOT NULL OR title = ?', 'La réf du jour')
+                                  .left_joins(user: :user_devices)
+                                  .group('notifications.title, notifications.message, notifications.link, notifications.admin_id')
+                                  .select('MIN(notifications.id) as id, notifications.title, notifications.message, notifications.link, notifications.admin_id, COUNT(DISTINCT notifications.id) as total_sent, COUNT(DISTINCT CASE WHEN notifications.status = 1 THEN notifications.id END) as total_read, COUNT(DISTINCT CASE WHEN notifications.clicked_at IS NOT NULL THEN notifications.id END) as total_clicks, MIN(notifications.created_at) as sent_at, COUNT(DISTINCT CASE WHEN user_devices.id IS NOT NULL THEN notifications.id END) as total_mobile_sent')
+                                  .order('sent_at DESC')
+
+    # Global notification KPIs
+    total_notifications = Notification.where('admin_id IS NOT NULL OR title = ?', 'La réf du jour')
+    @total_sent_all = total_notifications.count
+    @total_clicks_all = total_notifications.where.not(clicked_at: nil).count
+    @total_read_all = total_notifications.where(status: :read).count
+    @global_ctr = @total_sent_all > 0 ? ((@total_clicks_all.to_f / @total_sent_all) * 100).round(1) : 0
+
+    @campaigns = @campaigns_scope.page(params[:page]).per(10)
   end
 
   def create

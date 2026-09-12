@@ -1,0 +1,15 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.thomasriq.omniscientdesign",
+            "sha256_cert_fingerprints": [
+                "FF:AB:5B:DF:4C:BD:E4:FE:06:35:BD:9C:89:93:DD:E6:8A:E9:DE:D6:FD:21:19:16:FA:CB:FF:FF:DD:16:4B:10",
+                "52:8D:0B:A1:1E:F0:61:A5:B0:96:B8:18:47:42:AA:50:E7:C6:33:0B:7D:2C:3B:51:92:AD:17:EE:1C:F3:18:5A"
+            ]
+        }
+    }
+]

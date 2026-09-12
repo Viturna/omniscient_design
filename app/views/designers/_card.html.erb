@@ -4,22 +4,22 @@
      data-controller="slider" 
      data-slider-update-background-value="true"
      style="position: relative;">
-  <%= link_to designer_path(card.slug), class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
-    <span style="display:none;">Voir le designer</span>
-  <% end %>
 <%# --------- Couleur de fond --------- %>
   <% if card.domaines.any? %>
     <% if card.domaines.size == 1 %>
-      <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>; position: relative; z-index: 2; pointer-events: none;">
+      <div class="bg-card" style="background-color: <%= card.domaines.first.couleur %>; position: relative;">
     <% else %>
       <% colors = card.domaines.map(&:couleur).join(', ') %>
-      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); position: relative; z-index: 2; pointer-events: none;">
+      <div class="bg-card" style="background: linear-gradient(45deg, <%= colors %>); position: relative;">
     <% end %>
   <% else %>
-    <div class="bg-card" style="background-color: #ccc; position: relative; z-index: 2; pointer-events: none;">
+    <div class="bg-card" style="background-color: #ccc; position: relative;">
   <% end %>
     <%# --------- Image de fond --------- %>
     <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
+      <%= link_to designer_path(card.slug), class: "card-img-link", style: "position: absolute; inset: 0; z-index: 1; display: block;" do %>
+        <span style="display:none;"><%= card.nom_designer %></span>
+      <% end %>
       <%# --- Background Blurred Image (Pas de priorité haute) --- %>
       <% if images.any? %>
         <% bg_variant = images.first.variant(resize_to_limit: [50, 50], format: :webp) %>
@@ -33,7 +33,7 @@
         <div class="card-slider-blurred-bg" style="background-color: #e0e0e0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
       <% end %>
       <%# --- Slider Images (Optimisées) --- %>
-      <div class="card-slider-slides">
+      <div class="card-slider-slides" style="pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;">
         <% if images.any? %>
           <% images.each_with_index do |image, index| %>
             <%# Création des variantes explicites %>
@@ -63,8 +63,8 @@
           <div class="card-slide-image active" style="background-color: #eee; height: 100%; width: 100%;"></div>
         <% end %>
       </div>
-      <div class="flex-info-card" style="position: relative; z-index: 5;">
-        <div class="flex-info-card-left" style="pointer-events: auto;">
+      <div class="flex-info-card" style="position: absolute; inset: 0; width: 100%; height: 100%; box-sizing: border-box; z-index: 5; pointer-events: none;">
+        <div class="flex-info-card-left" style="pointer-events: none;">
           <div class="date-card" style="flex-direction: column; gap: 4px; display: flex;">
             <div class="info-card-dark">
               <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,17 +118,17 @@
         <% end %>
       </div>
       <% if images.count > 1 %>
-        <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Image précédente" style="z-index: 20; pointer-events: auto;">
+        <button class="card-slider-nav prev" data-action="click->slider#prev" aria-label="Image précédente" style="z-index: 50; pointer-events: auto;">
           <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18.2568 2.99023L2.83057 20.3942L18.2568 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
           </svg>
         </button>
-        <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Image suivante" style="z-index: 20; pointer-events: auto;">
+        <button class="card-slider-nav next" data-action="click->slider#next" aria-label="Image suivante" style="z-index: 50; pointer-events: auto;">
           <svg width="22" height="41" viewBox="0 0 22 41" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2.99023 2.99023L18.4165 20.3942L2.99023 37.7982" stroke="white" stroke-width="4.2362" stroke-linecap="square"/>
           </svg>
         </button>
-        <div class="card-slider-dots" style="z-index: 20; pointer-events: auto;">
+        <div class="card-slider-dots" style="z-index: 50; pointer-events: auto;">
           <% images.each_with_index do |image, index| %>
             <button class="card-slider-dot <%= 'active' if index == 0 %>" 
                           data-action="click->slider#switchSlide" 
@@ -142,11 +142,13 @@
   </div>
   <div class="container-text-card">
     <% if card.countries.present? %>
-      <p class="subtitle-card">
+      <p class="subtitle-card" style="position: relative; z-index: 50; pointer-events: auto;">
         <%= card.countries.map(&:name).join(' & ') %>
       </p>
     <% end %>
-    <h2 class="title-card"><%= card.nom_designer %></h2>
-    <p class="description-card description-card-home"><%= strip_tags(card.presentation_generale) %></p>
+    <%= link_to designer_path(card.slug), class: "card-text-link" do %>
+      <h2 class="title-card"><%= card.nom_designer %></h2>
+      <p class="description-card description-card-home"><%= strip_tags(card.presentation_generale) %></p>
+    <% end %>
   </div>
 </div>

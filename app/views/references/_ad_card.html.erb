@@ -14,14 +14,12 @@
      data-id="<%= ad_id %>"
      data-controller="slider ad-impression" 
      data-ad-impression-url-value="<%= partner_impression_path(ad_id) %>"
-     data-slider-update-background-value="true"
-     style="position: relative;">
-  <%= link_to partner_click_path(ad_id), target: "_blank", class: "card-link-overlay", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;" do %>
-    <span style="display:none;"><%= title %></span>
-  <% end %>
-
-  <div class="bg-card" style="background-color: #52525D; <%= style_bg %>">
+     data-slider-update-background-value="true">
+  <div class="bg-card" style="background-color: #52525D; position: relative;">
     <div class="bg-img-card card-slider-wrapper" style="position: relative; overflow: hidden;">
+      <%= link_to partner_click_path(ad_id), target: "_blank", class: "card-img-link", style: "position: absolute; inset: 0; z-index: 1; display: block;" do %>
+        <span style="display:none;"><%= title %></span>
+      <% end %>
       <% if is_video || is_mobile_video %>
         <% video_url = desktop_url || mobile_url %>
         <video class="card-slider-blurred-bg" 
@@ -38,7 +36,7 @@
         <div class="card-slider-blurred-bg" data-slider-target="background" style="background-color: #52525D; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
       <% end %>
 
-      <div class="card-slider-slides">
+      <div class="card-slider-slides" style="pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;">
         <% if is_video || is_mobile_video %>
           <% video_url = desktop_url || mobile_url %>
           <video class="card-slide-image active" 
@@ -61,23 +59,25 @@
         <% end %>
       </div>
 
-      <div class="flex-info-card partners" style="position: relative; z-index: 5;">
+      <div class="flex-info-card partners" style="position: absolute; inset: 0; width: 100%; height: 100%; box-sizing: border-box; z-index: 50; pointer-events: none;">
         <div class="info-card-dark" style="pointer-events: auto;">
           <div class="small-circle" style="background-color: #FFF;"></div>
           Sponsorisé
         </div>
-        <div class="info-card" style="background-color: #FFF; color: #202020; pointer-events: auto;">
+        <%= link_to partner_click_path(ad_id), target: "_blank", class: "info-card", style: "background-color: #FFF; color: #202020; text-decoration: none; pointer-events: auto; display: inline-flex; align-items: center;" do %>
           En savoir plus →
-        </div>
+        <% end %>
       </div>
     </div>
   </div>
 
   <div class="container-text-card">
-    <p class="subtitle-card">
+    <p class="subtitle-card" style="position: relative; z-index: 50; pointer-events: auto;">
       Sponsorisé
     </p>
-    <h2 class="title-card"><%= title %></h2>
-    <p class="description-card description-card-home"><%= is_hash ? ad[:description] : (ad.respond_to?(:description) ? ad.description : "") %></p>
+    <%= link_to partner_click_path(ad_id), target: "_blank", class: "card-text-link" do %>
+      <h2 class="title-card"><%= title %></h2>
+      <p class="description-card description-card-home"><%= is_hash ? ad[:description] : (ad.respond_to?(:description) ? ad.description : "") %></p>
+    <% end %>
   </div>
 </div>

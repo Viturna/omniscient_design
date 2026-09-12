@@ -84,6 +84,7 @@
   justify-content: center;
   transition: background-color 0.3s ease;
   cursor: pointer;
+  flex-shrink: 0;
 
   &:hover {
     background-color: #3c3c3c;
@@ -97,11 +98,36 @@
 //Save
 .flex-right-btn {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 16px;
   position: absolute;
   top: 50px;
   right: 5vw;
   z-index: 999;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    text-decoration: none;
+  }
+
+  .save-btn {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
+    cursor: pointer;
+  }
 }
 
 //Notif
@@ -109,6 +135,7 @@
   width: 60px;
   height: 60px;
   position: relative;
+  flex-shrink: 0;
 }
 
 .notification-counter {
@@ -145,6 +172,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s ease;
+  flex-shrink: 0;
 }
 
 .circle-back:hover,
@@ -156,6 +184,12 @@
 #home-btn {
   background: none;
   border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
@@ -237,11 +271,11 @@
   }
 
   .circle {
-    width: 65px;
-    height: 65px;
+    width: 50px;
+    height: 50px;
 
     svg {
-      scale: 0.8;
+      scale: 0.7;
     }
   }
 
@@ -256,18 +290,18 @@
 
   // BACK
   .circle-back {
-    width: 65px;
-    height: 65px;
+    width: 50px;
+    height: 50px;
 
     svg {
-      scale: 0.8;
+      scale: 0.7;
     }
   }
 
   //SAVE
   .circle-save {
-    width: 65px;
-    height: 65px;
+    width: 50px;
+    height: 50px;
   }
 
   //ADD
@@ -285,11 +319,11 @@
   }
 
   .circle {
-    width: 65px;
-    height: 65px;
+    width: 45px;
+    height: 45px;
 
     svg {
-      scale: 0.8;
+      scale: 0.7;
     }
   }
 
@@ -304,18 +338,18 @@
 
   // BACK
   .circle-back {
-    width: 65px;
-    height: 65px;
+    width: 45px;
+    height: 45px;
 
     svg {
-      scale: 0.8;
+      scale: 0.7;
     }
   }
 
   //SAVE
   .circle-save {
-    width: 65px;
-    height: 65px;
+    width: 45px;
+    height: 45px;
   }
 
   //ADD
@@ -326,8 +360,9 @@
 }
 
 @media screen and (max-width: 375px) {
+  .flex-back-btn,
   .flex-right-btn {
-    gap: 8px;
+    gap: 6px;
   }
 
   .button {
@@ -337,11 +372,11 @@
   }
 
   .circle {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
 
     svg {
-      scale: 0.8;
+      scale: 0.6;
     }
   }
 
@@ -356,18 +391,18 @@
 
   // BACK
   .circle-back {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
 
     svg {
-      scale: 0.8;
+      scale: 0.6;
     }
   }
 
   //SAVE
   .circle-save {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
   }
 
   //ADD

@@ -30,11 +30,21 @@
 
 .flex-back-btn {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   position: absolute;
   z-index: 100;
   top: 50px;
   left: 5vw;
   gap: 16px;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    text-decoration: none;
+  }
 }
 
 .button-circle {
@@ -42,6 +52,10 @@
   display: flex;
   cursor: pointer;
   align-items: center;
+
+  .circle {
+    flex-shrink: 0;
+  }
 
   &:hover {
     .circle {
@@ -74,7 +88,18 @@
 
 
 @media screen and (min-width: 426px) and (max-width: 600px) {
-
+  .flex-back-btn,
+  .flex-right-btn {
+    top: Max(
+      var(--safe-area-top-android, 0px),
+      env(safe-area-inset-top, 0px),
+      24px
+    );
+    gap: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
   .next-card {
     margin-left: 5vw;
   }
@@ -85,7 +110,18 @@
 
 
 @media screen and (max-width: 425px) {
-
+.flex-back-btn,
+  .flex-right-btn {
+    top: Max(
+      var(--safe-area-top-android, 0px),
+      env(safe-area-inset-top, 0px),
+      24px
+    );
+    gap: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
   .next-card {
     margin-left: 5vw;
   }

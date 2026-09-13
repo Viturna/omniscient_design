@@ -248,80 +248,86 @@
             img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
           }
         }
-      }
 
-      .leaderboard-pagination {
-        margin-top: 40px;
-        display: flex;
-        justify-content: center;
-
-        /* Spécificité renforcée pour écraser le color: #202020 global de pagination.css */
-        .pagination {
+        /* Pagination à l'intérieur de leaderboard-list */
+        .leaderboard-pagination {
+          margin-top: 36px;
           display: flex;
-          align-items: center;
           justify-content: center;
-          gap: 8px;
-          padding: 0;
+          width: 100%;
 
-          .first, .last {
-            display: none !important;
-          }
+          .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0;
+            margin: 0;
 
-          .page, .prev, .next {
-            a, span {
+            .first, .last, span.first, span.last, a.first, a.last {
+              display: none !important;
+            }
+
+            .page, .prev, .next {
+              display: inline-flex;
+              margin: 0 !important;
+
+              a, span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 40px;
+                height: 40px;
+                padding: 0 12px;
+                margin: 0 !important;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 8px;
+                color: rgba(255, 255, 255, 0.6) !important;
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.2s;
+                text-decoration: none !important;
+
+                &:hover {
+                  background: rgba(255, 255, 255, 0.1);
+                  color: #FFF !important;
+                }
+              }
+
+              &.disabled span {
+                opacity: 0.3;
+                pointer-events: none;
+              }
+            }
+
+            .page.gap, span.gap {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-width: 20px;
+              height: 40px;
+              padding: 0;
+              margin: 0 !important;
+              color: rgba(255, 255, 255, 0.4) !important;
+              background: transparent !important;
+              font-size: 14px;
+            }
+
+            span.current {
               display: flex;
               align-items: center;
               justify-content: center;
               min-width: 40px;
               height: 40px;
-              padding: 0 8px;
-              margin: 0;
-              background: rgba(255, 255, 255, 0.05);
+              padding: 0 12px;
+              margin: 0 !important;
+              background: #FFF !important;
               border-radius: 8px;
-              color: rgba(255, 255, 255, 0.6) !important;
+              color: #202020 !important;
               font-size: 14px;
-              font-weight: 500;
-              transition: all 0.2s;
+              font-weight: 600;
               text-decoration: none !important;
-
-              &:hover {
-                background: rgba(255, 255, 255, 0.1);
-                color: #FFF !important;
-              }
             }
-
-            &.disabled span {
-              opacity: 0.3;
-              pointer-events: none;
-            }
-          }
-
-          .page.gap, span.gap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-            height: 40px;
-            color: rgba(255, 255, 255, 0.4) !important;
-            background: transparent !important;
-            font-size: 14px;
-          }
-
-          /* Page active — Kaminari génère <span class="current"> directement dans nav */
-          span.current {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 40px;
-            height: 40px;
-            padding: 0 8px;
-            margin: 0;
-            background: #FFF !important;
-            border-radius: 8px;
-            color: #202020 !important;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none !important;
           }
         }
       }
@@ -382,41 +388,44 @@
             width: auto;
             justify-content: flex-end;
           }
-        }
 
-        .leaderboard-pagination {
-          margin-top: 24px;
-          overflow: hidden; /* empêche le dépassement du card */
+          .leaderboard-pagination {
+            margin-top: 24px;
+            overflow: hidden;
 
-          .pagination {
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 5px;
+            .pagination {
+              flex-wrap: wrap;
+              justify-content: center;
+              gap: 5px;
 
-            .page, .prev, .next {
-              a, span {
+              .first, .last, span.first, span.last, a.first, a.last {
+                display: none !important;
+              }
+
+              .page, .prev, .next {
+                a, span {
+                  min-width: 34px;
+                  height: 34px;
+                  font-size: 13px;
+                  padding: 0 6px;
+                  margin: 0 !important;
+                }
+              }
+
+              .page.gap, span.gap {
+                min-width: 18px;
+                height: 34px;
+                font-size: 13px;
+                margin: 0 !important;
+              }
+
+              span.current {
                 min-width: 34px;
                 height: 34px;
                 font-size: 13px;
                 padding: 0 6px;
+                margin: 0 !important;
               }
-            }
-
-            .first, .last {
-              display: none !important;
-            }
-
-            .page.gap, span.gap {
-              min-width: 18px;
-              height: 34px;
-              font-size: 13px;
-            }
-
-            span.current {
-              min-width: 34px;
-              height: 34px;
-              font-size: 13px;
-              padding: 0 6px;
             }
           }
         }
@@ -427,7 +436,7 @@
 
 /* Sur petits écrans mobiles (< 480px), remplacer le long texte "Précédente" / "Suivante" par des flèches compactes */
 @media (max-width: 480px) {
-  .leaderboard-container .leaderboard-content .leaderboard-card .leaderboard-pagination .pagination {
+  .leaderboard-container .leaderboard-content .leaderboard-card .leaderboard-list .leaderboard-pagination .pagination {
     flex-wrap: nowrap;
 
     .prev, .next {

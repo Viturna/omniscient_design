@@ -20,6 +20,12 @@
     text-decoration-thickness: 2px;
 }
 
+/* Cacher first/last partout */
+.pagination .first,
+.pagination .last {
+    display: none !important;
+}
+
 /* Cacher prev/next sauf sur le leaderboard */
 body:not([data-action-name="leaderboard"]) .pagination .prev,
 body:not([data-action-name="leaderboard"]) .pagination .next {

@@ -254,15 +254,17 @@
           margin-top: 36px;
           display: flex;
           justify-content: center;
+          align-items: center;
           width: 100%;
+          text-align: center;
 
           .pagination {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             padding: 0;
-            margin: 0;
+            margin: 0 auto !important;
 
             .first, .last, span.first, span.last, a.first, a.last {
               display: none !important;
@@ -273,7 +275,7 @@
               margin: 0 !important;
 
               a, span {
-                display: flex;
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 min-width: 40px;
@@ -301,7 +303,7 @@
             }
 
             .page.gap, span.gap {
-              display: flex;
+              display: inline-flex;
               align-items: center;
               justify-content: center;
               min-width: 20px;
@@ -314,7 +316,7 @@
             }
 
             span.current {
-              display: flex;
+              display: inline-flex;
               align-items: center;
               justify-content: center;
               min-width: 40px;
@@ -391,19 +393,35 @@
 
           .leaderboard-pagination {
             margin-top: 24px;
-            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            text-align: center;
 
             .pagination {
-              flex-wrap: wrap;
+              display: inline-flex;
+              flex-wrap: nowrap;
               justify-content: center;
+              align-items: center;
               gap: 5px;
+              margin: 0 auto !important;
+              padding: 0 !important;
+              width: auto;
+              max-width: 100%;
 
               .first, .last, span.first, span.last, a.first, a.last {
                 display: none !important;
               }
 
               .page, .prev, .next {
+                display: inline-flex;
+                margin: 0 !important;
+
                 a, span {
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
                   min-width: 34px;
                   height: 34px;
                   font-size: 13px;
@@ -413,13 +431,20 @@
               }
 
               .page.gap, span.gap {
-                min-width: 18px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 16px;
                 height: 34px;
                 font-size: 13px;
                 margin: 0 !important;
+                padding: 0;
               }
 
               span.current {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
                 min-width: 34px;
                 height: 34px;
                 font-size: 13px;
@@ -434,33 +459,40 @@
   }
 }
 
-/* Sur petits écrans mobiles (< 480px), remplacer le long texte "Précédente" / "Suivante" par des flèches compactes */
-@media (max-width: 480px) {
+/* Sur écrans mobiles (<= 540px), remplacer le texte "Précédente" / "Suivante" par des flèches compactes */
+@media (max-width: 540px) {
   .leaderboard-container .leaderboard-content .leaderboard-card .leaderboard-list .leaderboard-pagination .pagination {
-    flex-wrap: nowrap;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
 
     .prev, .next {
       a, span {
         font-size: 0 !important;
-        min-width: 34px;
-        width: 34px;
-        padding: 0;
-        position: relative;
+        min-width: 34px !important;
+        width: 34px !important;
+        height: 34px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
       }
     }
 
     .prev a::before, .prev span::before {
-      content: "‹";
-      font-size: 18px;
-      line-height: 1;
-      font-weight: bold;
+      content: "‹" !important;
+      font-size: 18px !important;
+      line-height: 1 !important;
+      font-weight: bold !important;
     }
 
     .next a::before, .next span::before {
-      content: "›";
-      font-size: 18px;
-      line-height: 1;
-      font-weight: bold;
+      content: "›" !important;
+      font-size: 18px !important;
+      line-height: 1 !important;
+      font-weight: bold !important;
     }
   }
 }

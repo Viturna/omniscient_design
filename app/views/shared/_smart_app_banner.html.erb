@@ -11,11 +11,11 @@
           <span class="sab-subtitle">Ouvrir dans l'application</span>
         </div>
       </div>
-      <a href="omniscient://<%= request.fullpath.sub(%r{^/}, '') %>" 
-         class="sab-button" 
-         id="sab-open-btn">
+      <button type="button" 
+              class="sab-button" 
+              id="sab-open-btn">
         Ouvrir
-      </a>
+      </button>
     </div>
   </div>
 
@@ -39,12 +39,64 @@
       document.addEventListener('DOMContentLoaded', checkAndShowBanner);
 
       document.addEventListener('click', function(e) {
+        // Fermeture du bandeau
         if (e.target && (e.target.id === 'sab-close-btn' || e.target.closest('#sab-close-btn'))) {
           var banner = document.getElementById('smart-app-banner');
           if (banner) {
             banner.style.display = 'none';
             document.documentElement.classList.remove('has-smart-app-banner');
             sessionStorage.setItem('dismiss_smart_app_banner', 'true');
+          }
+          return;
+        }
+
+        // Clic sur Ouvrir : deep link avec fallback automatique vers les stores si l'app est désinstallée
+        var openBtn = e.target && (e.target.id === 'sab-open-btn' || e.target.closest('#sab-open-btn'));
+        if (openBtn) {
+          e.preventDefault();
+          var ua = navigator.userAgent || '';
+          var isIOS = /iPhone|iPad|iPod/i.test(ua);
+          var isAndroid = /Android/i.test(ua);
+          var rawPath = "<%= j request.fullpath.sub(%r{^/}, '') %>";
+          var iosStoreUrl = "https://apps.apple.com/app/id6754964970";
+          var androidStoreUrl = "https://play.google.com/store/apps/details?id=com.thomasriq.omniscientdesign";
+
+          if (isAndroid) {
+            // Android intent : ouvre l'app ou redirige silencieusement vers Google Play
+            var intentUrl = "intent://" + rawPath + "#Intent;scheme=omniscient;package=com.thomasriq.omniscientdesign;S.browser_fallback_url=" + encodeURIComponent(androidStoreUrl) + ";end";
+            window.location.href = intentUrl;
+          } else if (isIOS) {
+            var deepLink = "omniscient://" + rawPath;
+            var hasLeftPage = false;
+
+            var onVisibility = function() {
+              if (document.hidden || document.webkitHidden) {
+                hasLeftPage = true;
+              }
+            };
+
+            var onPageHide = function() {
+              hasLeftPage = true;
+              window.removeEventListener('pagehide', onPageHide);
+              document.removeEventListener('visibilitychange', onVisibility);
+            };
+
+            window.addEventListener('pagehide', onPageHide, { once: true });
+            document.addEventListener('visibilitychange', onVisibility);
+
+            window.location.href = deepLink;
+
+            // Si après 1.5s la page est toujours active, l'app n'est pas installée -> redirection vers l'App Store
+            setTimeout(function() {
+              document.removeEventListener('visibilitychange', onVisibility);
+              window.removeEventListener('pagehide', onPageHide);
+
+              if (!hasLeftPage && !document.hidden && !document.webkitHidden) {
+                window.location.href = iosStoreUrl;
+              }
+            }, 1500);
+          } else {
+            window.location.href = iosStoreUrl;
           }
         }
       });

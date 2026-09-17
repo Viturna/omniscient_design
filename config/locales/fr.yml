@@ -506,7 +506,7 @@ fr:
       last_word_connector: ", et "
   privacy_policy:
     title: "Politique de confidentialité"
-    last_updated: "Dernière mise à jour : 26/08/2024"
+    last_updated: "Dernière mise à jour : 17/09/2026"
     introduction:
       "Cette politique de confidentialité a pour but d’informer les utilisateurs du site :\n
       \n• Sur la manière dont sont collectées leurs données personnelles. Sont considérées comme des données personnelles, toute information permettant d’identifier un utilisateur, tels que son nom, âge, adresse postale ou email, localisation, ou adresse IP (liste non exhaustive) ;
@@ -519,7 +519,7 @@ fr:
     sections:
       1:
         title: "Responsable du traitement des données"
-        content: 'Le responsable du traitement des données est : QUEMERE Edgar<br>Adresse : 49-55 rue Donissan, 33000 Bordeaux<br>Numéro de téléphone : <a href="tel:0695817727" class="black underline">>06 95 81 77 27</a><br>Email : <a href="mailto:edgarquemere2645@gmail.com" class="black underline">>edgarquemere2645@gmail.com</a>'
+        content: 'Le responsable du traitement des données est : QUEMERE Edgar<br>Adresse : 8 Rue Saint-Exupéry, 29800 Landerneau<br>Numéro de téléphone : <a href="tel:0695817727" class="black underline">>06 95 81 77 27</a><br>Email : <a href="mailto:edgarquemere2645@gmail.com" class="black underline">>edgarquemere2645@gmail.com</a>'
       2:
         title: "Données collectées"
         content:

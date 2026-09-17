@@ -132,7 +132,7 @@ en:
     validation: "Validation"
   privacy_policy:
     title: "Privacy Policy"
-    last_updated: "Last updated: 26/08/2024"
+    last_updated: "Last updated: 17/09/2026"
     introduction: "This privacy policy aims to inform the users of the website:
       \n• About how their personal data is collected. Personal data includes any information that can identify a user, such as name, age, postal or email address, location, or IP address (non-exhaustive list);
       \n• About their rights regarding this data;
@@ -144,7 +144,7 @@ en:
     sections:
       1:
         title: "Data Controller"
-        content: 'The data controller is: QUEMERE Edgar<br>Address: 49-55 rue Donissan, 33000 Bordeaux<br>Phone: 06 95 81 77 27<br>Email: <a href="mailto:edgarquemere2645@gmail.com" class="black underline">>edgarquemere2645@gmail.com</a>'
+        content: 'The data controller is: QUEMERE Edgar<br>Address:  8 Rue Saint-Exupéry, 29800 Landerneau<br>Phone: 06 95 81 77 27<br>Email: <a href="mailto:edgarquemere2645@gmail.com" class="black underline">>edgarquemere2645@gmail.com</a>'
       2:
         title: "Collected Data"
         content:

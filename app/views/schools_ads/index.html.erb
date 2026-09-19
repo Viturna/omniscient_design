@@ -704,3 +704,121 @@
                               </div>
                             </div>
                           </section>
+
+<!-- =========================================================================
+     DONNÉES STRUCTURÉES JSON-LD (SEO & RICH RESULTS GOOGLE)
+     ========================================================================= -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://omniscientdesign.fr/#organization",
+      "name": "Omniscient Design",
+      "url": "https://omniscientdesign.fr",
+      "logo": "https://omniscientdesign.fr/assets/logo.svg",
+      "description": "La plateforme de référence pour les étudiants et enseignants en Design et Arts Appliqués (STD2A)."
+    },
+    {
+      "@type": "Service",
+      "@id": "https://omniscientdesign.fr/schools-ads#service",
+      "name": "Publicité et Acquisition Étudiants en Design",
+      "provider": {
+        "@id": "https://omniscientdesign.fr/#organization"
+      },
+      "description": "Campagnes publicitaires ciblées et intégrées pour les écoles de design et d'arts appliqués.",
+      "areaServed": {
+        "@type": "Country",
+        "name": "France"
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Encart Natif",
+          "price": "200.00",
+          "priceCurrency": "EUR",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "unitText": "MONTH"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Ancrage Local",
+          "price": "400.00",
+          "priceCurrency": "EUR",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "unitText": "MONTH"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Monopole",
+          "price": "800.00",
+          "priceCurrency": "EUR",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "unitText": "MONTH"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://omniscientdesign.fr/schools-ads#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Y a-t-il une durée d’engagement minimum ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non, la flexibilité est totale. Nos offres fonctionnent sur un modèle mensuel sans engagement pour vous permettre de mesurer concrètement votre retour sur investissement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment Omniscient Design garantit que les utilisateurs sont bien des étudiants en design ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Omniscient Design est un outil de révision hautement spécialisé exclusivement pensé pour le cursus STD2A et les filières d'arts appliqués."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quels sont les modes de règlement acceptés ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Le paiement s'effectue exclusivement en ligne et de manière totalement sécurisée via la plateforme Stripe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment suivre les performances de ma campagne ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vous disposez d'un espace annonceur personnel dédié pour consulter vos statistiques en temps réel et recevez un rapport mensuel détaillé."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Les visuels sponsorisés sont-ils imposés ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non, vous créez vous-même vos textes et visuels (images statiques ou vidéos) dans le respect total de votre charte graphique."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quel est le processus de mise en ligne d'une campagne ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Après paiement, vous configurez votre campagne en autonomie, validée rapidement par notre équipe avant diffusion."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>

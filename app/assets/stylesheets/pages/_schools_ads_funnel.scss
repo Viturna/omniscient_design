@@ -1,0 +1,926 @@
+@use "abstracts/variables" as v;
+
+// ==========================================
+// FUNNEL MAIN WRAPPER (Strictly 100vh)
+// ==========================================
+.sa-funnel {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  width: 100%;
+  background-color: #FFFFFF;
+  color: v.$primary-color;
+  box-sizing: border-box;
+  font-family: inherit;
+  overflow: hidden;
+
+  // Strict typography constraint: Never bold (700/800/bold), only semibold (600) max
+  * {
+    font-weight: 500;
+  }
+  b, strong, .sa-font-semibold {
+    font-weight: 600 !important;
+  }
+
+  @media (max-width: 1024px) {
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+    flex-direction: column;
+  }
+}
+
+// ==========================================
+// LEFT PANEL (48% Width, White Background)
+// ==========================================
+.sa-funnel__left {
+  flex: 0 0 48%;
+  max-width: 48%;
+  height: 100vh;
+  background-color: #FFFFFF;
+  padding: 28px 40px 28px 40px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  // Discreet custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #E5E7EB;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 1024px) {
+    flex: 1 1 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 24px 20px 32px 20px;
+    overflow-y: visible;
+  }
+}
+
+// Brand Header
+.sa-funnel__header {
+  margin-bottom: 20px;
+}
+
+.sa-funnel__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: v.$primary-color;
+}
+
+.sa-funnel__brand-logo {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+.sa-funnel__brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sa-funnel__brand-title {
+  font-size: 16px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.sa-funnel__brand-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  line-height: 1.2;
+}
+
+// Step Header
+.sa-funnel__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sa-funnel__step-head {
+  margin-bottom: 18px;
+}
+
+.sa-funnel__title {
+  font-size: 22px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+  line-height: 1.25;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+}
+
+.sa-funnel__subtitle {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+
+// Step Panels
+.sa-funnel__panel {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  animation: saFadeIn 0.2s ease forwards;
+
+  &.sa-funnel__panel--active {
+    display: flex;
+  }
+}
+
+@keyframes saFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sa-funnel__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+// Pills / Segmented Buttons
+.sa-funnel__pills {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  &.sa-funnel__pills--wrap {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+.sa-pill {
+  padding: 7px 15px;
+  border-radius: 9999px;
+  border: 1px solid #E5E7EB;
+  background-color: #FFFFFF;
+  color: #4B5563;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+
+  &:hover {
+    border-color: #D1D5DB;
+    background-color: #F9FAFB;
+  }
+
+  &.sa-pill--active {
+    background-color: v.$primary-color;
+    color: #FFFFFF;
+    border-color: v.$primary-color;
+    font-weight: 600 !important;
+  }
+}
+
+// Upload Box
+.sa-upload-box {
+  border: 2px dashed #E5E7EB;
+  border-radius: 10px;
+  padding: 20px 16px;
+  text-align: center;
+  background-color: #FAFAFA;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+
+  &:hover,
+  &.sa-upload-box--dragover {
+    border-color: v.$primary-color;
+    background-color: #F4F6F8;
+  }
+}
+
+.sa-upload-box__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.sa-upload-box__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B7280;
+  margin-bottom: 2px;
+}
+
+.sa-upload-box__title {
+  font-size: 13px;
+  color: v.$primary-color;
+  margin: 0;
+
+  strong {
+    font-weight: 600 !important;
+  }
+}
+
+.sa-upload-box__hint {
+  font-size: 11px;
+  color: #9CA3AF;
+}
+
+.sa-upload-box__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.sa-upload-box__filename {
+  font-size: 13px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+}
+
+.sa-upload-box__change-link {
+  font-size: 11px;
+  color: #6B7280;
+  text-decoration: underline;
+}
+
+// Form Sections & Fields
+.sa-funnel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sa-funnel__section-title {
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+  margin: 0 0 2px 0;
+}
+
+.sa-funnel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sa-funnel__label {
+  font-size: 13px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+}
+
+.sa-funnel__input,
+.sa-funnel__textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 13px;
+  color: v.$primary-color;
+  background-color: #FFFFFF;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: v.$primary-color;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
+  }
+
+  &::placeholder {
+    color: #9CA3AF;
+  }
+}
+
+.sa-funnel__textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+// Step 2 Dates & Durations
+.sa-funnel__dates-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sa-funnel__date-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .sa-funnel__date-icon {
+    position: absolute;
+    left: 12px;
+    color: #9CA3AF;
+    pointer-events: none;
+  }
+
+  .sa-funnel__input--date {
+    padding-left: 38px;
+    cursor: default;
+  }
+}
+
+.sa-funnel__duration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #F3F4F6;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #4B5563;
+  margin-top: 2px;
+
+  svg {
+    color: #6B7280;
+    flex-shrink: 0;
+  }
+
+  strong {
+    color: v.$primary-color;
+    font-weight: 600 !important;
+  }
+}
+
+// Step 3 Local Anchoring
+.sa-funnel__search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .sa-funnel__search-icon {
+    position: absolute;
+    left: 12px;
+    color: #9CA3AF;
+    pointer-events: none;
+  }
+
+  .sa-funnel__input--search {
+    padding-left: 38px;
+  }
+}
+
+.sa-funnel__estimation-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 4px;
+}
+
+.sa-funnel__estimation-title {
+  font-size: 13px;
+  color: #4B5563;
+}
+
+.sa-funnel__estimation-count {
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+}
+
+// Step 4 Security Note
+.sa-funnel__security-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background-color: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #065F46;
+  line-height: 1.4;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+// ==========================================
+// RIGHT PANEL (52% Width, Dark #202020, 100vh)
+// ==========================================
+.sa-funnel__right {
+  flex: 0 0 52%;
+  max-width: 52%;
+  height: 100vh;
+  background-color: #202020;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 40px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 1024px) {
+    flex: 1 1 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 24px 20px;
+    overflow: visible;
+  }
+}
+
+.sa-funnel__right-view {
+  display: none;
+  width: 100%;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  animation: saFadeIn 0.2s ease forwards;
+  overflow: hidden;
+
+  &.sa-funnel__right-view--active {
+    display: flex;
+  }
+}
+
+// ==========================================
+// RIGHT VIEW 1: LIVE MOCKUP PREVIEW
+// ==========================================
+.sa-funnel__preview-container {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sa-funnel__preview-headline {
+  font-size: 12px;
+  font-weight: 600 !important;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 12px 0;
+  align-self: flex-start;
+}
+
+.sa-preview-frame {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s ease;
+
+  &.sa-preview-frame--mobile {
+    max-width: 270px;
+    border-radius: 20px;
+    border: 5px solid #333333;
+  }
+}
+
+.sa-preview-frame__bar {
+  background-color: #F3F4F6;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.sa-preview-frame__dots {
+  display: flex;
+  gap: 4px;
+
+  span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #D1D5DB;
+
+    &:nth-child(1) { background-color: #EF4444; }
+    &:nth-child(2) { background-color: #F59E0B; }
+    &:nth-child(3) { background-color: #10B981; }
+  }
+}
+
+.sa-preview-frame__search {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  color: #9CA3AF;
+  flex: 1;
+  margin: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sa-preview-frame__nav-icons {
+  display: flex;
+  gap: 5px;
+  font-size: 10px;
+  color: #6B7280;
+}
+
+.sa-preview-frame__body {
+  padding: 12px;
+  background-color: #FAFAFA;
+  position: relative;
+}
+
+.sa-preview-frame__media-area {
+  width: 100%;
+  height: 145px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  background-color: #1E293B;
+
+  .sa-preview-frame__img,
+  .sa-preview-frame__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.sa-preview-frame__media-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.sa-preview-frame__sponsor-badge {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 600 !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  align-self: flex-start;
+}
+
+.sa-preview-frame__cta-tag {
+  background-color: #A3F3BE;
+  color: v.$primary-color;
+  font-size: 10px;
+  font-weight: 600 !important;
+  padding: 3px 8px;
+  border-radius: 4px;
+  align-self: flex-end;
+}
+
+.sa-preview-frame__meta {
+  padding: 10px 2px 2px 2px;
+}
+
+.sa-preview-frame__kicker {
+  font-size: 9px;
+  font-weight: 600 !important;
+  color: #9CA3AF;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.sa-preview-frame__title {
+  font-size: 13px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+  line-height: 1.3;
+  margin: 0 0 4px 0;
+}
+
+.sa-preview-frame__desc {
+  font-size: 11px;
+  color: #6B7280;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.sa-preview-frame__side-arrows {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0.4;
+
+  .sa-preview-frame__arrow-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    cursor: pointer;
+  }
+}
+
+.sa-funnel__preview-subtext {
+  font-size: 11px;
+  color: #9CA3AF;
+  margin-top: 10px;
+}
+
+// ==========================================
+// RIGHT VIEW 2: INTERACTIVE CALENDAR CARD
+// ==========================================
+.sa-funnel__calendar-card {
+  width: 100%;
+  max-width: 380px;
+  background-color: #FFFFFF;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+}
+
+.sa-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sa-cal-head__title {
+  font-size: 15px;
+  font-weight: 600 !important;
+  color: v.$primary-color;
+}
+
+.sa-cal-head__nav {
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #4B5563;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: #F3F4F6;
+    color: v.$primary-color;
+  }
+}
+
+.sa-cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600 !important;
+  color: #9CA3AF;
+  margin-bottom: 8px;
+}
+
+.sa-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.sa-cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: v.$primary-color;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+
+  &:hover:not(.sa-cal-day--empty):not(.sa-cal-day--disabled) {
+    background-color: #F3F4F6;
+  }
+
+  &.sa-cal-day--empty {
+    cursor: default;
+  }
+
+  &.sa-cal-day--in-range {
+    background-color: rgba(163, 243, 190, 0.4) !important;
+    color: v.$primary-color !important;
+    border-radius: 0;
+  }
+
+  &.sa-cal-day--start {
+    background-color: v.$primary-color !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  &.sa-cal-day--end {
+    background-color: v.$primary-color !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+// ==========================================
+// RIGHT VIEW 3: VECTOR MAP OF FRANCE
+// ==========================================
+.sa-funnel__map-area {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sa-funnel-map__svg {
+  width: 100%;
+  max-width: 360px;
+  max-height: 60vh;
+  height: auto;
+
+  .sa-funnel-map__region {
+    fill: #333333;
+    stroke: #202020;
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: fill 0.2s ease, stroke 0.2s ease;
+
+    &:hover {
+      fill: #4B5563;
+    }
+
+    &.sa-funnel-map__region--active {
+      fill: #A3F3BE !important;
+    }
+  }
+}
+
+// ==========================================
+// RIGHT VIEW 4: ORDER RECAP
+// ==========================================
+.sa-funnel__recap-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: #FFFFFF;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+}
+
+.sa-funnel__recap-header {
+  border-bottom: 1px solid #E5E7EB;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600 !important;
+    color: v.$primary-color;
+    margin: 0 0 3px 0;
+  }
+
+  p {
+    font-size: 12px;
+    color: #6B7280;
+    margin: 0;
+  }
+}
+
+.sa-funnel__recap-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.sa-funnel__recap-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px dashed #F3F4F6;
+
+  .sa-funnel__recap-label {
+    color: #6B7280;
+  }
+
+  .sa-funnel__recap-val {
+    font-weight: 600 !important;
+    color: v.$primary-color;
+  }
+
+  &.sa-funnel__recap-row--total {
+    border-bottom: none;
+    padding-top: 14px;
+    margin-top: 4px;
+    border-top: 1px solid #E5E7EB;
+
+    .sa-funnel__recap-label {
+      font-size: 14px;
+      font-weight: 600 !important;
+      color: v.$primary-color;
+    }
+
+    .sa-funnel__recap-price {
+      font-size: 19px;
+      font-weight: 600 !important;
+      color: v.$primary-color;
+    }
+  }
+}
+
+// ==========================================
+// STICKY BOTTOM ACTIONS (RIGHT FOOTER)
+// ==========================================
+.sa-funnel__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.sa-funnel__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+
+  &.sa-funnel__btn--secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  &.sa-funnel__btn--primary {
+    background-color: #A3F3BE;
+    color: v.$primary-color;
+    border: none;
+    margin-left: auto;
+
+    &:hover {
+      background-color: #8EECAD;
+      transform: translateY(-1px);
+    }
+  }
+}

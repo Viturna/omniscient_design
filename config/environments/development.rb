@@ -92,15 +92,17 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   # -------------------------------------------------------
-  # CONFIGURATION NGROK & HOSTS (Le fix pour l'app mobile)
+  # CONFIGURATION NGROK & HOSTS (Le fix pour l'app mobile et sous-domaines)
   # -------------------------------------------------------
   # On vide la liste pour être sûr qu'il n'y a pas de restrictions par défaut
   config.hosts.clear
 
-  # On autorise explicitement Ngrok (regex), localhost et l'IP locale
+  # On autorise explicitement Ngrok (regex), localhost, lvh.me et l'IP locale
   config.hosts << /[a-z0-9-]+\.ngrok-free\.app/
   config.hosts << 'localhost'
   config.hosts << '127.0.0.1'
+  config.hosts << /.*\.lvh\.me/
+  config.hosts << 'lvh.me'
   # -------------------------------------------------------
 
   config.log_level = :debug

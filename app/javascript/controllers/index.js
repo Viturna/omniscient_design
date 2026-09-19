@@ -124,6 +124,9 @@ application.register("registration", RegistrationController)
 import SaveModalController from "./save_modal_controller"
 application.register("save-modal", SaveModalController)
 
+import SchoolsAdsController from "./schools_ads_controller"
+application.register("schools-ads", SchoolsAdsController)
+
 import ScrollHorizontalController from "./scroll_horizontal_controller"
 application.register("scroll-horizontal", ScrollHorizontalController)
 

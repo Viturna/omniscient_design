@@ -7,6 +7,16 @@ Rails.application.routes.draw do
   devise_for :users, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
+
+  # ---- SCHOOLS ADS SUBDOMAIN & LANDING ----
+  constraints subdomain: 'schools-ads' do
+    root to: 'schools_ads#index', as: :schools_ads_root
+    get 'creer-campagne', to: 'schools_ads#funnel', as: :schools_ads_funnel
+    post 'contact', to: 'schools_ads#contact', as: :schools_ads_contact
+  end
+  get 'schools-ads', to: 'schools_ads#index', as: :schools_ads
+  get 'schools-ads/creer-campagne', to: 'schools_ads#funnel', as: :schools_ads_direct_funnel
+  post 'schools-ads/contact', to: 'schools_ads#contact', as: :schools_ads_direct_contact
   # ---- ADMIN ----
   namespace :admin do
     resources :ads do

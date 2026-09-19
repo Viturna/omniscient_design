@@ -1,0 +1,18 @@
+<%= turbo_stream.replace "schools-ads-form-feedback" do %>
+  <div class="sa-form-alert sa-form-alert--success">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <div>
+      <strong>Demande bien envoyée !</strong>
+      <p>Merci <%= @school_name %>, notre équipe vous recontactera à l'adresse <%= @email %> sous 24h ouvrées.</p>
+    </div>
+  </div>
+<% end %>
+
+<%= turbo_stream.update "schools-ads-form-fields" do %>
+  <p class="sa-form-submitted-text">
+    Vous recevrez un devis personnalisé et les spécifications techniques par e-mail.
+  </p>
+<% end %>

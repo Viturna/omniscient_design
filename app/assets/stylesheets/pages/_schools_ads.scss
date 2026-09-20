@@ -1092,8 +1092,7 @@ $sa-accent-green-hover: #8eecad;
     }
 
     &--open {
-      border-color: $sa-accent-green;
-      box-shadow: 0 0 0 3px rgba(163, 243, 190, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
+      border-color: $sa-accent-green; 
 
       .sa-faq__icon {
         transform: rotate(180deg);
@@ -1170,7 +1169,6 @@ $sa-accent-green-hover: #8eecad;
     width: 100%;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 

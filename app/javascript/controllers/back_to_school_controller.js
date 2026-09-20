@@ -5,7 +5,6 @@ export default class extends Controller {
 
   connect() {
     const isDismissed = sessionStorage.getItem("back-to-school-modal-dismissed")
-
     if (isDismissed === "true") {
       this.showBannerOnly()
     } else {

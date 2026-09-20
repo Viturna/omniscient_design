@@ -1,5 +1,6 @@
 class Etablissement < ApplicationRecord
-  validates :name, uniqueness: { message: I18n.t('errors.messages.name_already_taken') }
+  validates :name, presence: true, uniqueness: { scope: :city, allow_blank: true, message: I18n.t('errors.messages.name_already_taken') }
+  validates :uai, uniqueness: { allow_blank: true }
 
   has_many :users
 

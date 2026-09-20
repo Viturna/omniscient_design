@@ -175,3 +175,114 @@ body .flex-form trix-toolbar .trix-button-group--history-tools,
 body .flex-form trix-toolbar .trix-dialogs {
   display: none !important;
 }
+
+/* Compteur de caractères et validation premium */
+.flex-form .trix-char-counter,
+.trix-char-counter {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 8px !important;
+  margin-bottom: 4px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-align: left !important;
+  line-height: 1 !important;
+
+  .counter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  .counter-info {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.85;
+  }
+
+  &.counter-muted {
+    color: #888888;
+    .counter-badge {
+      background: rgba(140, 140, 140, 0.12);
+      color: #777777;
+    }
+  }
+
+  &.counter-invalid {
+    color: #E61818;
+    .counter-badge {
+      background: rgba(230, 24, 24, 0.12);
+      color: #E61818;
+    }
+    .counter-info {
+      color: #E61818;
+    }
+  }
+
+  &.counter-valid {
+    color: #34A853;
+    .counter-badge {
+      background: rgba(52, 168, 83, 0.12);
+      color: #2e9649;
+    }
+    .counter-info {
+      color: #2e9649;
+    }
+  }
+}
+
+trix-editor.trix-invalid {
+  border-color: #E61818 !important;
+  box-shadow: 0 0 0 1px #E61818 !important;
+}
+
+body.dark-mode {
+  .flex-form .trix-char-counter,
+  .trix-char-counter {
+    &.counter-muted {
+      color: #aaaaaa;
+      .counter-badge {
+        background: rgba(255, 255, 255, 0.08);
+        color: #aaaaaa;
+      }
+      .counter-info {
+        color: #888888;
+      }
+    }
+
+    &.counter-invalid {
+      color: #ff5252;
+      .counter-badge {
+        background: rgba(230, 24, 24, 0.22);
+        color: #ff5252;
+      }
+      .counter-info {
+        color: #ff8585;
+      }
+    }
+
+    &.counter-valid {
+      color: #4ade80;
+      .counter-badge {
+        background: rgba(52, 168, 83, 0.22);
+        color: #4ade80;
+      }
+      .counter-info {
+        color: #86efac;
+      }
+    }
+  }
+}
+
+

@@ -65,7 +65,9 @@ class StudiosController < ApplicationController
     @studio.user = current_user
     token = params[:recaptcha_token]
 
-    if verify_recaptcha(token) && @studio.save
+    valid_content = validate_contribution_fields(@studio)
+
+    if valid_content && verify_recaptcha(token) && @studio.save
       Rails.cache.delete('linkify_keywords_list')
       update_suivi_references_emises(current_user)
       create_notification(@studio)
@@ -82,7 +84,10 @@ class StudiosController < ApplicationController
   end
 
   def update
-    if @studio.update(studio_params)
+    @studio.assign_attributes(studio_params)
+    valid_content = validate_contribution_fields(@studio)
+
+    if valid_content && @studio.save
       notify_admin_of_update(@studio) if !@studio.validation && @studio.user == current_user
       flash[:success] = I18n.t('studio.update.success', default: 'Studio mis à jour')
       redirect_to @studio

@@ -284,38 +284,6 @@ select {
   width: 100% !important;
 }
 
-.select2-container--default .select2-results__group {
-  font-weight: 600 !important; /* Semibold */
-  color: #202020 !important; /* Couleur foncée pour le contraste */
-  font-size: 14px !important; /* Taille adaptée */
-  text-transform: uppercase; /* Optionnel : pour bien distinguer du reste */
-  padding: 14px 12px 24px 12px !important; /* Espacement */
-  background-color: #f9f9f9;
-  cursor: default;
-}
-/* Forcer la hauteur du champ */
-.select2-container .select2-selection--single {
-  padding-left: 25px !important;
-  height: 70px !important;
-  min-height: 70px !important;
-  /* Fixe la hauteur */
-  line-height: 70px !important;
-  /* Centre verticalement le texte */
-  display: flex !important;
-  /* Assure un alignement flexible */
-  align-items: center !important;
-  /* Aligne verticalement le contenu */
-  border-radius: 5px !important;
-}
-
-.select2-container .select2-results__option {
-  padding: 10px !important;
-}
-
-.select2-container .select2-selection__placeholder {
-  font-size: 14px !important;
-}
-
 textarea {
   color: variables.$primary-color;
   border: none;
@@ -484,8 +452,7 @@ input.search-top-bar {
 input[type="text"],
 input[type="date"],
 input[type="email"],
-input[type="password"],
-.select2-container .select2-selection__placeholder {
+input[type="password"] {
   background-color: variables.$secondary-color !important;
   color: variables.$primary-color !important;
 }
@@ -547,8 +514,7 @@ body.dark-mode {
   input[type="text"],
   input[type="date"],
   input[type="email"],
-  input[type="password"],
-  .select2-container .select2-selection__placeholder {
+  input[type="password"] {
     background-color: variables.$secondary-color-dark !important;
     color: variables.$primary-color-dark !important;
     border-color: variables.$background-color-dark;
@@ -570,14 +536,4 @@ body.dark-mode {
     background-color: variables.$secondary-color-dark;
     border-color: variables.$background-color-dark;
   }
-}
-
-.select2-container--default
-  .select2-selection--multiple
-  .select2-selection__choice__remove {
-  background-color: #202020 !important;
-  color: #fff !important;
-  right: 0 !important;
-  left: auto !important;
-  border: none !important;
 }

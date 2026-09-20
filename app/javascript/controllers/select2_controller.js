@@ -29,6 +29,11 @@ export default class extends Controller {
       templateSelection: this.formatState.bind(this)
     }
 
+    const modalParent = $(this.element).closest('.popup, .modal, .modal-content, [role="dialog"], .bts-popup-card');
+    if (modalParent.length) {
+      options.dropdownParent = modalParent;
+    }
+
     $(this.element).select2(options)
 
     const ariaLabel = this.element.getAttribute('aria-label') || this.placeholderValue || "Sélection déroulante";

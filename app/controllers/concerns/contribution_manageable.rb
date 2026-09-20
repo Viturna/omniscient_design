@@ -3,6 +3,19 @@ module ContributionManageable
 
   private
 
+  def validate_contribution_fields(record)
+    return true if current_user&.admin?
+
+    if record.respond_to?(:presentation_generale)
+      text = ActionController::Base.helpers.strip_tags(record.presentation_generale.to_s).squish
+      if text.length < 200
+        record.errors.add(:presentation_generale, "doit contenir au moins 200 caractères (actuellement #{text.length} caractères)")
+        return false
+      end
+    end
+    true
+  end
+
   def create_author_notification(record)
     return unless record.user_id.present?
 

@@ -56,8 +56,12 @@ Rails.application.routes.draw do
   get 'frise/references', to: 'search#frise_references'
   get 'frise/references', to: 'search#frise_references' # Redirection SEO
 
+  # ---- REDIRECTION TEMPORAIRE /en ----
+  match '/en', to: redirect('/fr'), via: :all
+  match '/en/*path', to: redirect('/fr/%{path}'), via: :all
+
   # ---- LOCALISATION ----
-  scope '(:locale)', locale: /fr|en/ do
+  scope '(:locale)', locale: /fr/ do
     # Racine par défaut
     root 'references#index'
 

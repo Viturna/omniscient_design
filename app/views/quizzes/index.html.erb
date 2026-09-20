@@ -48,15 +48,63 @@
 
     <div class="quiz-sections">
       <% if @quizzes_jeux_a_la_une.any? %>
-        <section class="quiz-section" style="margin-top: 0;">
-          <div class="section-header">
-            <h2>Quiz à la une</h2>
-            <p>Une sélection de quiz pour tester tes connaissances sur les designers, les références, les notions, etc.</p>
+        <section class="quiz-section quiz-section-featured" style="margin-top: 0;" data-controller="scroll-horizontal">
+          <div class="section-header-wrapper">
+            <div class="section-header">
+              <h2>Quiz à la une</h2>
+              <p>Une sélection de quiz pour tester tes connaissances sur les designers, les références, les notions, etc.</p>
+            </div>
+            <div class="section-arrows">
+              <button class="nav-arrow" data-scroll-horizontal-target="prevBtn" data-action="click->scroll-horizontal#scrollPrev" aria-label="Quiz précédents">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="nav-arrow" data-scroll-horizontal-target="nextBtn" data-action="click->scroll-horizontal#scrollNext" aria-label="Quiz suivants">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
-          <div class="quiz-grid">
-            <% @quizzes_jeux_a_la_une.each do |quiz| %>
+          <div class="quiz-scroll-row" data-scroll-horizontal-target="track">
+            <% featured_ad = @ads.first if defined?(@ads) && @ads.present? %>
+            <% @quizzes_jeux_a_la_une.each_with_index do |quiz, idx| %>
               <%= render 'quiz_card', quiz: quiz %>
+              <% if featured_ad && idx == 2 %>
+                <%= render 'quiz_ad_card', ad: featured_ad %>
+              <% end %>
             <% end %>
+            <% if featured_ad && @quizzes_jeux_a_la_une.size <= 2 %>
+              <%= render 'quiz_ad_card', ad: featured_ad %>
+            <% end %>
+
+            <%# Card Découvrir plus / Les quiz de la semaine %>
+            <div class="quiz-card quiz-card-discover">
+              <div class="card-image">
+                <img src="<%= asset_path('bg-presentation.webp') %>" alt="Tous les quiz de la semaine" loading="lazy">
+                <div class="discover-overlay">
+                  <div class="discover-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="card-badges">
+                  <span class="badge domaine" style="background: rgba(32, 32, 32, 0.08); color: #202020;">
+                    COLLECTION
+                  </span>
+                </div>
+                <h3>Les quiz de la semaine</h3>
+                <div class="card-info" style="font-weight: 500; font-size: 14px; margin-bottom: 20px; color: #888;">
+                  <%= Quiz.active.where(quiz_type: 'static').where('created_at >= ?', 7.days.ago).count %> quiz disponibles
+                </div>
+                <%= link_to "Découvrir plus", quizzes_hub_path(category: 'this_week'), class: "button dark w-full" %>
+              </div>
+            </div>
           </div>
         </section>
       <% end %>

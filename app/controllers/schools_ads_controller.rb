@@ -70,14 +70,14 @@ class SchoolsAdsController < ApplicationController
         description: "Touchez directement les futurs talents du design et de l'art appliqué au cœur de leur outil de révision quotidien.",
         type: "website",
         url: "https://omniscientdesign.fr/schools-ads",
-        image: ActionController::Base.helpers.image_url("ads/mockup_hero.png", host: "https://omniscientdesign.fr"),
+        image: ActionController::Base.helpers.image_url("landing/image-1.jpg", host: "https://omniscientdesign.fr"),
         locale: "fr_FR"
       },
       twitter: {
         card: "summary_large_image",
         title: "Publicité & Acquisition Écoles de Design et Arts Appliqués | Omniscient Design",
         description: "Ciblez les étudiants en design et arts appliqués (STD2A) sur Omniscient Design.",
-        image: ActionController::Base.helpers.image_url("ads/mockup_hero.png", host: "https://omniscientdesign.fr")
+        image: ActionController::Base.helpers.image_url("landing/image-1.jpg", host: "https://omniscientdesign.fr")
       }
     )
   end

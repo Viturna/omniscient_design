@@ -95,8 +95,8 @@ class QuizzesController < ApplicationController
     else
       @view_mode = 'hub'
 
-      # Quiz à la une pour la page hub : Architecture, Objet, Mode avec le moins de questions
-      target_domaines = Domaine.where(domaine: %w[Architecture Objet Mode])
+      # Quiz à la une pour la page hub : domaines sauf Graphisme avec le moins de questions
+      target_domaines = Domaine.where.not('LOWER(domaine) = ?', 'graphisme').order(:id)
       recent_quizzes = Quiz.active.where(quiz_type: 'static').where('quizzes.created_at >= ?', 7.days.ago)
 
       hub_a_la_une_ids = target_domaines.map do |d|

@@ -158,7 +158,9 @@ class ReferencesController < ApplicationController
     @reference = Reference.new(reference_params)
     @reference.user = current_user
 
-    if @reference.save
+    valid_content = validate_contribution_fields(@reference)
+
+    if valid_content && @reference.save
       Rails.cache.delete('linkify_keywords_list')
       update_suivi_references_emises(current_user)
       create_notification(@reference)
@@ -174,7 +176,10 @@ class ReferencesController < ApplicationController
   end
 
   def update
-    if @reference.update(reference_params)
+    @reference.assign_attributes(reference_params)
+    valid_content = validate_contribution_fields(@reference)
+
+    if valid_content && @reference.save
       notify_admin_of_update(@reference) if !@reference.validation && @reference.user == current_user
       redirect_to @reference, notice: t('references.update.success')
     else

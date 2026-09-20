@@ -145,12 +145,33 @@
   align-items: center;
   justify-content: center;
   top: -10px;
-  background-color: #fff;
-  color: variables.$primary-color;
+  font-weight: 500;
+  background-color: #E61818;
+  color: #FFF;
   border-radius: 50%;
   font-size: 12px;
   width: 30px;
   height: 30px;
+  transform-origin: center center;
+  animation: notif-bounce 5s infinite ease-in-out;
+}
+
+@keyframes notif-bounce {
+  0%, 100%, 20% {
+    transform: scale(1);
+  }
+  4% {
+    transform: scale(1.18);
+  }
+  8% {
+    transform: scale(0.95);
+  }
+  12% {
+    transform: scale(1.06);
+  }
+  16% {
+    transform: scale(0.98);
+  }
 }
 
 .notification-badge-profil {

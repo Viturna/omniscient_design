@@ -177,7 +177,9 @@ class DesignersController < ApplicationController
     @designer.user = current_user
     token = params[:recaptcha_token]
 
-    if verify_recaptcha(token) && @designer.save
+    valid_content = validate_contribution_fields(@designer)
+
+    if valid_content && verify_recaptcha(token) && @designer.save
       Rails.cache.delete('linkify_keywords_list')
       update_suivi_references_emises(current_user)
       create_notification(@designer)
@@ -195,7 +197,10 @@ class DesignersController < ApplicationController
   end
 
   def update
-    if @designer.update(designer_params)
+    @designer.assign_attributes(designer_params)
+    valid_content = validate_contribution_fields(@designer)
+
+    if valid_content && @designer.save
       notify_admin_of_update(@designer) if !@designer.validation && @designer.user == current_user
       flash[:success] = I18n.t('designer.update.success')
       redirect_to @designer

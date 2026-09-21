@@ -31,6 +31,9 @@ application.register("back-to-school", BackToSchoolController)
 import BadgeToastController from "./badge_toast_controller"
 application.register("badge-toast", BadgeToastController)
 
+import CampaignFunnelController from "./campaign_funnel_controller"
+application.register("campaign-funnel", CampaignFunnelController)
+
 import CookieConsentController from "./cookie_consent_controller"
 application.register("cookie-consent", CookieConsentController)
 

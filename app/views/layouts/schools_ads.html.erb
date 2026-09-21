@@ -27,20 +27,20 @@
   </head>
   <body class="sa-body">
     <%= render 'shared/flash' if lookup_context.exists?('shared/flash') %>
-    <% unless action_name == 'funnel' %>
+    <% unless ['funnel', 'dashboard', 'success'].include?(action_name) %>
       <!-- Header Schools Ads -->
       <header class="sa-header">
         <div class="sa-container sa-header__container">
-          <a href="#top" class="sa-brand">
-            <%= image_tag "logo.svg", alt: "Omniscient Design", class: "sa-brand__logo" %>
+          <a href="<%= defined?(schools_ads_root_path) ? schools_ads_root_path : schools_ads_path %>" class="sa-brand">
+            <%= image_tag "logo.svg", alt: "Logo Omniscient Design", class: "sa-brand__logo" %>
             <div class="sa-brand__text">
               <span class="sa-brand__title">Omniscient Design</span>
               <span class="sa-brand__subtitle">for professionals</span>
             </div>
           </a>
           <nav class="sa-nav">
-            <%= link_to "Créer ma campagne", schools_ads_direct_funnel_path, class: "sa-nav__link sa-nav__link--underline" %>
-            <a href="https://omniscientdesign.fr/users/sign_in" class="sa-nav__link sa-nav__link--underline">Espace École</a>
+            <%= link_to "Créer ma campagne", defined?(schools_ads_funnel_path) ? schools_ads_funnel_path : schools_ads_direct_funnel_path, class: "sa-nav__link sa-nav__link--underline" %>
+            <%= link_to ((respond_to?(:user_signed_in?) && (user_signed_in? rescue false)) ? "Mon Espace Annonceur" : "Espace Annonceur"), defined?(schools_ads_dashboard_path) ? schools_ads_dashboard_path : schools_ads_direct_dashboard_path, class: "sa-nav__link sa-nav__link--underline" %>
           </nav>
         </div>
       </header>
@@ -48,7 +48,7 @@
     <main id="top" class="sa-main">
       <%= yield %>
     </main>
-    <% unless native_app? || action_name == 'funnel' %>
+    <% unless native_app? || ['funnel', 'dashboard', 'success'].include?(action_name) %>
       <% if show_footer? %>
         <!-- Footer -->
         <footer class="footer large-footer" data-loading-target="footer">

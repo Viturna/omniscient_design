@@ -1,0 +1,267 @@
+<% content_for :title, "Espace Annonceur & Campagnes | Omniscient Design" %>
+
+<div class="sa-dash">
+  <!-- Top Navigation Header -->
+  <header class="sa-dash__header">
+    <div class="sa-dash__header-left">
+      <a href="<%= sa_root_path %>" class="sa-dash__brand">
+        <%= image_tag "logo.svg", alt: "Logo Omniscient Design", class: "sa-dash__brand-logo" %>
+        <div class="sa-dash__brand-info">
+          <span class="sa-dash__brand-name">Omniscient Design</span>
+          <span class="sa-dash__brand-tag">Espace Annonceur</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="sa-dash__header-right">
+      <div class="sa-dash__user-badge">
+        <span class="sa-dash__user-avatar">
+          <%= (@user&.etablissement.presence || @user&.firstname.presence || @user&.email.presence || "PA")[0..1].to_s.upcase %>
+        </span>
+        <div class="sa-dash__user-text">
+          <span class="sa-dash__user-name"><%= @user&.etablissement.presence || @user&.firstname.presence || "Partenaire" %></span>
+          <span class="sa-dash__user-email"><%= @user&.email %></span>
+        </div>
+      </div>
+
+      <a href="<%= sa_funnel_path %>" class="sa-dash__btn-cta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Nouvelle campagne</span>
+      </a>
+
+      <%= button_to destroy_user_session_path, method: :delete, class: "sa-dash__btn-logout", title: "Déconnexion" do %>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      <% end %>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="sa-dash__main">
+    <div class="sa-dash__intro">
+      <h1 class="sa-dash__title">Tableau de bord de vos campagnes</h1>
+      <p class="sa-dash__subtitle">
+        Suivez la modération de vos annonces, vos dates de diffusion et l'impact de vos campagnes auprès des étudiants en temps réel.
+      </p>
+    </div>
+
+    <!-- Alert Modération Info -->
+    <% if @pending_ads_count.positive? %>
+      <div class="sa-dash__alert">
+        <div class="sa-dash__alert-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="sa-dash__alert-content">
+          <strong>Modération en cours :</strong> Vous avez <strong><%= @pending_ads_count %> campagne(s) en attente de vérification</strong>. Notre équipe contrôle la conformité des visuels et valide chaque annonce sous 24h ouvrées.
+        </div>
+      </div>
+    <% end %>
+
+    <!-- KPI Grid -->
+    <div class="sa-dash__kpi-grid">
+      <div class="sa-dash__kpi-card">
+        <div class="sa-dash__kpi-head">
+          <span class="sa-dash__kpi-label">Campagnes Actives</span>
+          <div class="sa-dash__kpi-icon sa-dash__kpi-icon--mint">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="sa-dash__kpi-value">
+          <%= @active_ads_count %>
+          <span class="sa-dash__kpi-sub">/ <%= @ads.count %> totale<%= "s" if @ads.count > 1 %></span>
+        </div>
+      </div>
+
+      <div class="sa-dash__kpi-card">
+        <div class="sa-dash__kpi-head">
+          <span class="sa-dash__kpi-label">Vues (Impressions)</span>
+          <div class="sa-dash__kpi-icon sa-dash__kpi-icon--blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="sa-dash__kpi-value"><%= number_with_delimiter(@total_impressions, delimiter: " ") %></div>
+      </div>
+
+      <div class="sa-dash__kpi-card">
+        <div class="sa-dash__kpi-head">
+          <span class="sa-dash__kpi-label">Clics Générés</span>
+          <div class="sa-dash__kpi-icon sa-dash__kpi-icon--purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h6v6"></path>
+              <path d="M10 14L21 3"></path>
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="sa-dash__kpi-value"><%= number_with_delimiter(@total_clicks, delimiter: " ") %></div>
+      </div>
+
+      <div class="sa-dash__kpi-card">
+        <div class="sa-dash__kpi-head">
+          <span class="sa-dash__kpi-label">Taux d'Engagement (CTR)</span>
+          <div class="sa-dash__kpi-icon sa-dash__kpi-icon--amber">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+        </div>
+        <div class="sa-dash__kpi-value"><%= @avg_ctr %> %</div>
+      </div>
+    </div>
+
+    <!-- Campaigns Section -->
+    <div class="sa-dash__section">
+      <div class="sa-dash__section-head">
+        <h2 class="sa-dash__section-title">Vos Annonces & Campagnes</h2>
+        <span class="sa-dash__count-badge"><%= @ads.count %> campagne<%= "s" if @ads.count > 1 %></span>
+      </div>
+
+      <% if @ads.any? %>
+        <div class="sa-dash__campaigns-list">
+          <% @ads.each do |ad| %>
+            <% 
+              is_active = ad.currently_running?
+              is_pending = ad.status == 'pending_validation'
+              is_rejected = ad.status == 'rejected'
+              is_future = ad.start_date.present? && ad.start_date > Date.current
+              is_expired = ad.end_date.present? && ad.end_date < Date.current
+              ctr = ad.impressions_count.to_i > 0 ? ((ad.clicks_count.to_f / ad.impressions_count) * 100).round(2) : 0
+            %>
+            <article class="sa-camp-card">
+              <!-- Visual Thumbnail -->
+              <div class="sa-camp-card__media">
+                <% if ad.image.attached? %>
+                  <% if ad.video? %>
+                    <video src="<%= url_for(ad.image) %>" class="sa-camp-card__img" muted loop autoplay playsinline></video>
+                  <% else %>
+                    <%= image_tag ad.image, class: "sa-camp-card__img", alt: ad.title %>
+                  <% end %>
+                <% else %>
+                  <div class="sa-camp-card__img sa-camp-card__img--placeholder">
+                    <span>Aucun visuel</span>
+                  </div>
+                <% end %>
+                <span class="sa-camp-card__format-tag">Sponsorisé</span>
+              </div>
+
+              <!-- Main Campaign Details -->
+              <div class="sa-camp-card__body">
+                <div class="sa-camp-card__top">
+                  <h3 class="sa-camp-card__title"><%= ad.title %></h3>
+
+                  <!-- Dynamic Status Badge -->
+                  <div class="sa-camp-card__status">
+                    <% if is_pending %>
+                      <span class="sa-status-badge sa-status-badge--pending">
+                        <span class="sa-status-dot sa-status-dot--pulse-amber"></span>
+                        En attente de validation
+                      </span>
+                    <% elsif is_rejected %>
+                      <span class="sa-status-badge sa-status-badge--rejected">
+                        <span class="sa-status-dot sa-status-dot--red"></span>
+                        Visuel non conforme
+                      </span>
+                    <% elsif is_active %>
+                      <span class="sa-status-badge sa-status-badge--active">
+                        <span class="sa-status-dot sa-status-dot--pulse-green"></span>
+                        En cours de diffusion
+                      </span>
+                    <% elsif is_future %>
+                      <span class="sa-status-badge sa-status-badge--scheduled">
+                        <span class="sa-status-dot sa-status-dot--blue"></span>
+                        Planifiée
+                      </span>
+                    <% else %>
+                      <span class="sa-status-badge sa-status-badge--expired">
+                        <span class="sa-status-dot sa-status-dot--gray"></span>
+                        Campagne terminée
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+
+                <% if ad.description.present? %>
+                  <p class="sa-camp-card__desc"><%= ad.description %></p>
+                <% end %>
+
+                <div class="sa-camp-card__meta-grid">
+                  <div class="sa-camp-card__meta-item">
+                    <span class="sa-camp-card__meta-label">Lien :</span>
+                    <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="sa-camp-card__link">
+                      <%= ad.link.truncate(38) %>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </a>
+                  </div>
+
+                  <div class="sa-camp-card__meta-item">
+                    <span class="sa-camp-card__meta-label">Période :</span>
+                    <span class="sa-camp-card__meta-value">
+                      <% if ad.start_date.present? && ad.end_date.present? %>
+                        Du <strong><%= ad.start_date.strftime("%d/%m/%Y") %></strong> au <strong><%= ad.end_date.strftime("%d/%m/%Y") %></strong>
+                        (<%= ad.duration_days.presence || ((ad.end_date - ad.start_date).to_i + 1) %> jours)
+                      <% else %>
+                        Diffusion continue
+                      <% end %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-time Stats & Actions -->
+              <div class="sa-camp-card__stats">
+                <div class="sa-camp-stat">
+                  <span class="sa-camp-stat__number"><%= number_with_delimiter(ad.impressions_count.to_i, delimiter: " ") %></span>
+                  <span class="sa-camp-stat__label">Impressions</span>
+                </div>
+                <div class="sa-camp-stat">
+                  <span class="sa-camp-stat__number"><%= number_with_delimiter(ad.clicks_count.to_i, delimiter: " ") %></span>
+                  <span class="sa-camp-stat__label">Clics</span>
+                </div>
+                <div class="sa-camp-stat">
+                  <span class="sa-camp-stat__number"><%= ctr %> %</span>
+                  <span class="sa-camp-stat__label">CTR</span>
+                </div>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="sa-dash__empty">
+          <div class="sa-dash__empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <h3 class="sa-dash__empty-title">Aucune campagne pour le moment</h3>
+          <p class="sa-dash__empty-text">
+            Mettez en avant vos formations, vos JPO ou vos concours auprès de plus de 1 000 étudiants en Arts Appliqués et Design dès aujourd'hui.
+          </p>
+          <a href="<%= sa_funnel_path %>" class="sa-dash__btn-cta">
+            Lancer ma première campagne →
+          </a>
+        </div>
+      <% end %>
+    </div>
+  </main>
+</div>

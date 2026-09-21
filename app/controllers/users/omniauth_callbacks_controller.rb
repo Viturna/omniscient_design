@@ -10,7 +10,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    redirect_to root_path
+    if native_app? || request.env['omniauth.params']&.fetch('native_app', nil) == 'true'
+      redirect_to "omniscient://auth_failure", allow_other_host: true
+    else
+      redirect_to root_path
+    end
   end
 
   private
@@ -20,6 +24,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_by(provider: auth.provider, uid: auth.uid)
 
     if user_signed_in?
+      # Cas 1 : Liaison de compte
       if @user && @user != current_user
         flash[:alert] = "Ce compte #{kind} est déjà lié à un autre utilisateur."
         redirect_to edit_user_registration_path
@@ -33,22 +38,42 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to edit_user_registration_path
       end
     elsif @user&.persisted?
+      # Cas 2 : Utilisateur existant -> Connexion
       unless @user.confirmed?
         @user.skip_confirmation!
         @user.save!
       end
 
-      flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
-      sign_in_and_redirect @user, event: :authentication
+      # 📱 Si c'est l'app iOS native : on redirige vers le custom scheme omniscient://
+      if native_app? || request.user_agent.to_s.include?('Turbo Native') || session[:is_native_app]
+        sign_in(:user, @user)
+        # Redirige ASWebAuthenticationSession vers l'app pour fermer la popup
+        redirect_to "omniscient://auth_success", allow_other_host: true
+      else
+        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
+        sign_in_and_redirect @user, event: :authentication
+      end
 
     else
+      # Cas 3 : Nouvel utilisateur
       session['devise.omniauth_data'] = auth.except('extra')
 
       if kind == 'Apple' && session['devise.omniauth_data']['info']['email'].blank?
         session['devise.omniauth_data']['info']['email'] = auth['uid']
       end
 
-      redirect_to new_user_registration_url
+      if native_app? || request.user_agent.to_s.include?('Turbo Native') || session[:is_native_app]
+        # Création automatique ou redirection vers inscription
+        user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
+        if user&.persisted?
+          sign_in(:user, user)
+          redirect_to "omniscient://auth_success", allow_other_host: true
+        else
+          redirect_to new_user_registration_url
+        end
+      else
+        redirect_to new_user_registration_url
+      end
     end
   end
 end

@@ -1,0 +1,189 @@
+<% content_for :title, "Campagne confirmée ! | Omniscient Design for professionals" %>
+
+<div class="sa-funnel sa-success-layout">
+  <!-- ================================================================= -->
+  <!-- PANNEAU GAUCHE : CONFIRMATION & RÉCAPITULATIF (FOND BLANC) -->
+  <!-- ================================================================= -->
+  <div class="sa-funnel__left">
+    <!-- Header Branding -->
+    <header class="sa-funnel__header">
+      <a href="<%= sa_root_path %>" class="sa-funnel__brand">
+        <%= image_tag "logo.svg", alt: "Logo Omniscient Design", class: "sa-funnel__brand-logo" %>
+        <div class="sa-funnel__brand-text">
+          <span class="sa-funnel__brand-title">Omniscient Design</span>
+          <span class="sa-funnel__brand-subtitle">for professionals</span>
+        </div>
+      </a>
+    </header>
+
+    <!-- Main Success Content -->
+    <div class="sa-funnel__content sa-success__content">
+      <!-- Badge de confirmation -->
+      <div class="sa-success__badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span>Paiement sécurisé validé</span>
+      </div>
+
+      <h1 class="sa-funnel__title" style="margin-top: 12px; margin-bottom: 8px;">
+        Félicitations, votre campagne est enregistrée !
+      </h1>
+      <p class="sa-funnel__subtitle" style="margin-bottom: 24px;">
+        Merci pour votre confiance. Notre équipe va vérifier et valider vos visuels sous 24h ouvrées.
+      </p>
+
+      <!-- Récapitulatif de la commande (Receipt Card) -->
+      <% if @ad.present? %>
+        <div class="sa-success-receipt">
+          <div class="sa-success-receipt__head">
+            <span class="sa-success-receipt__order-id">Commande #OD-AD-<%= @ad.id %></span>
+            <span class="sa-status-badge sa-status-badge--pending">
+              <span class="sa-status-dot sa-status-dot--pulse-amber"></span>
+              En cours de modération
+            </span>
+          </div>
+
+          <div class="sa-success-receipt__body">
+            <div class="sa-success-receipt__row">
+              <span class="sa-success-receipt__label">Titre de l'annonce</span>
+              <strong class="sa-success-receipt__val"><%= @ad.title %></strong>
+            </div>
+
+            <div class="sa-success-receipt__row">
+              <span class="sa-success-receipt__label">Période de diffusion</span>
+              <strong class="sa-success-receipt__val">
+                <% if @ad.start_date.present? && @ad.end_date.present? %>
+                  Du <%= @ad.start_date.strftime("%d/%m/%Y") %> au <%= @ad.end_date.strftime("%d/%m/%Y") %> (<%= @ad.duration_days %> jours)
+                <% else %>
+                  Permanente
+                <% end %>
+              </strong>
+            </div>
+
+            <% if @ad.link.present? %>
+              <div class="sa-success-receipt__row">
+                <span class="sa-success-receipt__label">Lien de redirection</span>
+                <span class="sa-success-receipt__val sa-success-receipt__link"><%= @ad.link.truncate(36) %></span>
+              </div>
+            <% end %>
+
+            <div class="sa-success-receipt__row sa-success-receipt__row--total">
+              <span class="sa-success-receipt__label">Montant réglé</span>
+              <strong class="sa-success-receipt__price">
+                <%= @ad.price_paid.present? ? (@ad.price_paid > 1000 ? @ad.price_paid / 100 : @ad.price_paid) : 0 %> € TTC
+              </strong>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Timeline des prochaines étapes -->
+      <div class="sa-success-steps">
+        <h3 class="sa-success-steps__title">Prochaines étapes :</h3>
+        
+        <div class="sa-success-step-item">
+          <div class="sa-success-step-item__number">1</div>
+          <div class="sa-success-step-item__text">
+            <strong>Validation sous 24h ouvrées</strong>
+            <p>Notre équipe s'assure de la lisibilité de vos visuels et de la bonne conformité de vos liens.</p>
+          </div>
+        </div>
+
+        <div class="sa-success-step-item">
+          <div class="sa-success-step-item__number">2</div>
+          <div class="sa-success-step-item__text">
+            <strong>Diffusion automatique</strong>
+            <p>Dès le début de votre période planifiée, votre annonce s'affiche auprès de l'audience ciblée.</p>
+          </div>
+        </div>
+
+        <div class="sa-success-step-item">
+          <div class="sa-success-step-item__number">3</div>
+          <div class="sa-success-step-item__text">
+            <strong>Suivi des performances en direct</strong>
+            <p>Accédez à votre espace annonceur pour suivre vos impressions, vos clics et votre taux de conversion.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions de redirection -->
+      <div class="sa-success-btn-group">
+        <%= link_to sa_dashboard_path, class: "sa-funnel__btn sa-funnel__btn--primary sa-success__primary-btn" do %>
+          <span>Accéder à mon espace annonceur →</span>
+        <% end %>
+
+        <%= link_to sa_root_path, class: "sa-funnel__btn sa-funnel__btn--secondary" do %>
+          <span>Retour à l'accueil</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- PANNEAU DROIT : APERÇU DE L'ANNONCE & CITATION (FOND SOMBRE #1A1A1A) -->
+  <!-- ================================================================= -->
+  <div class="sa-funnel__right">
+    <div class="sa-funnel__right-view sa-funnel__right-view--active">
+      <div class="sa-funnel__preview-container">
+        <h3 class="sa-funnel__preview-headline">Aperçu de votre campagne configurée</h3>
+
+        <div class="sa-preview-frame sa-preview-frame--pc">
+          <!-- Top Bar -->
+          <div class="sa-preview-frame__bar">
+            <div class="sa-preview-frame__search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <span>Rechercher une référence ou un designer</span>
+            </div>
+            <div class="sa-preview-frame__nav-icons">
+              <span class="sa-preview-frame__icon-btn">+</span>
+              <span class="sa-preview-frame__icon-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- Mockup Card Body -->
+          <div class="sa-preview-frame__body">
+            <div class="sa-preview-frame__media-area">
+              <% if @ad&.image&.attached? %>
+                <% if @ad.video? %>
+                  <video src="<%= url_for(@ad.image) %>" class="sa-preview-frame__img" autoplay loop muted playsinline></video>
+                <% else %>
+                  <%= image_tag @ad.image, alt: @ad.title, class: "sa-preview-frame__img" %>
+                <% end %>
+              <% else %>
+                <%= image_tag "ads/mockup_hero.png", alt: "Aperçu visuel", class: "sa-preview-frame__img", onerror: "this.src='/assets/landing/image-1.jpg'" %>
+              <% end %>
+              <div class="sa-preview-frame__media-overlay">
+                <span class="sa-preview-frame__sponsor-badge">● Sponsorisé</span>
+                <span class="sa-preview-frame__cta-tag">En savoir plus →</span>
+              </div>
+            </div>
+
+            <div class="sa-preview-frame__meta">
+              <span class="sa-preview-frame__kicker">SPONSORISÉ</span>
+              <h4 class="sa-preview-frame__title">
+                <%= @ad&.title.presence || "Votre annonce Omniscient Design" %>
+              </h4>
+              <p class="sa-preview-frame__desc">
+                <%= @ad&.description.presence || "Votre description apparaîtra ici auprès de l'audience des étudiants en design et arts appliqués." %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Citation Fondateurs -->
+        <div class="sa-funnel__quote-card" style="margin-top: 28px; width: 100%;">
+          <p class="sa-funnel__quote-text" style="font-size: 14px; margin-bottom: 12px;">
+            « Ravis de vous compter parmi nos partenaires ! Notre équipe vérifie vos visuels avec soin pour garantir une visibilité optimale auprès des futurs talents créatifs. »
+          </p>
+          <span class="sa-funnel__quote-author" style="font-size: 13px;">
+            Edgar &amp; Thomas, Fondateurs d'Omniscient Design
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

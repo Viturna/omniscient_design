@@ -9,13 +9,19 @@ Rails.application.routes.draw do
   }
 
   # ---- SCHOOLS ADS SUBDOMAIN & LANDING ----
-  constraints subdomain: 'schools-ads' do
+  constraints(lambda { |req| req.host.start_with?('schools-ads.') || req.subdomain.to_s.include?('schools-ads') }) do
     root to: 'schools_ads#index', as: :schools_ads_root
     get 'creer-campagne', to: 'schools_ads#funnel', as: :schools_ads_funnel
+    post 'checkout', to: 'schools_ads#checkout', as: :schools_ads_checkout
+    get 'succes', to: 'schools_ads#success', as: :schools_ads_success
+    get 'dashboard', to: 'schools_ads#dashboard', as: :schools_ads_dashboard
     post 'contact', to: 'schools_ads#contact', as: :schools_ads_contact
   end
   get 'schools-ads', to: 'schools_ads#index', as: :schools_ads
   get 'schools-ads/creer-campagne', to: 'schools_ads#funnel', as: :schools_ads_direct_funnel
+  post 'schools-ads/checkout', to: 'schools_ads#checkout', as: :schools_ads_direct_checkout
+  get 'schools-ads/succes', to: 'schools_ads#success', as: :schools_ads_direct_success
+  get 'schools-ads/dashboard', to: 'schools_ads#dashboard', as: :schools_ads_direct_dashboard
   post 'schools-ads/contact', to: 'schools_ads#contact', as: :schools_ads_direct_contact
   # ---- ADMIN ----
   namespace :admin do

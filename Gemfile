@@ -101,3 +101,4 @@ gem 'mailjet'
 
 gem "meta-tags", "~> 2.23"
 gem 'doorkeeper'
+gem 'stripe'

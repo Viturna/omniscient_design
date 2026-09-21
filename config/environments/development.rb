@@ -100,6 +100,7 @@ Rails.application.configure do
   # On autorise explicitement Ngrok (regex), localhost, lvh.me et l'IP locale
   config.hosts << /[a-z0-9-]+\.ngrok-free\.app/
   config.hosts << 'localhost'
+  config.hosts << /.*\.localhost/
   config.hosts << '127.0.0.1'
   config.hosts << /.*\.lvh\.me/
   config.hosts << 'lvh.me'

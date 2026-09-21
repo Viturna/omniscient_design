@@ -525,6 +525,9 @@ GEM
     ssrf_filter (1.5.0)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
+    stripe (19.6.2)
+      bigdecimal
+      logger
     terser (1.2.8)
       execjs (>= 0.3.0, < 3)
     thor (1.5.0)
@@ -626,6 +629,7 @@ DEPENDENCIES
   sitemap_generator
   sprockets-rails
   stimulus-rails
+  stripe
   terser
   turbo-rails
   tzinfo-data

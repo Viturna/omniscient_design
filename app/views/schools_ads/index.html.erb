@@ -447,12 +447,7 @@
                                     </div>
                                   </div>
                                   <div class="sa-pricing-card__footer">
-                                    <button type="button"
-                  class="sa-pricing-card__btn"
-                  data-action="click->schools-ads#selectPlan"
-                                      data-plan="Encart Natif - 200€/mois">
-                                      Démarrer ma campagne
-                                    </button>
+                                    <%= link_to "Démarrer ma campagne", "#{sa_funnel_path}?plan=encart_natif", class: "sa-pricing-card__btn" %>
                                   </div>
                                 </div>
                                 <!-- Pack 2 : Ancrage Local (Recommandé) -->
@@ -509,12 +504,7 @@
                                     </div>
                                   </div>
                                   <div class="sa-pricing-card__footer">
-                                    <button type="button"
-                  class="sa-pricing-card__btn"
-                  data-action="click->schools-ads#selectPlan"
-                                      data-plan="Ancrage Local - 400€/mois">
-                                      Démarrer ma campagne
-                                    </button>
+                                    <%= link_to "Démarrer ma campagne", "#{sa_funnel_path}?plan=ancrage_local", class: "sa-pricing-card__btn" %>
                                   </div>
                                 </div>
                                 <!-- Pack 3 : Monopole -->
@@ -559,12 +549,7 @@
                                     </div>
                                   </div>
                                   <div class="sa-pricing-card__footer">
-                                    <button type="button"
-                  class="sa-pricing-card__btn"
-                  data-action="click->schools-ads#selectPlan"
-                                      data-plan="Monopole - Sur devis">
-                                      Nous contacter
-                                    </button>
+                                    <%= link_to "Nous contacter", "#{sa_funnel_path}?plan=monopole", class: "sa-pricing-card__btn" %>
                                   </div>
                                 </div>
                               </div>

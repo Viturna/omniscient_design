@@ -46,13 +46,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       sign_in(:user, @user)
 
-      # 📱 Si c'est l'app iOS native (ASWebAuthenticationSession) : on redirige vers omniscient:// pour fermer la popup
-      if native_app? || request.user_agent.to_s.include?('Turbo Native') || request.user_agent.to_s.include?('iPhone')
-        redirect_to "omniscient://auth_success", allow_other_host: true
-      else
-        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
-        redirect_to after_sign_in_path_for(@user)
-      end
+      # 📱 Ferme la popup ASWebAuthenticationSession et connecte l'app
+      redirect_to "omniscient://auth_success", allow_other_host: true
 
     else
       # Cas 3 : Nouvel utilisateur
@@ -62,15 +57,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         session['devise.omniauth_data']['info']['email'] = auth['uid']
       end
 
-      if native_app? || request.user_agent.to_s.include?('Turbo Native') || session[:is_native_app]
-        # Création automatique ou redirection vers inscription
-        user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
-        if user&.persisted?
-          sign_in(:user, user)
-          redirect_to "omniscient://auth_success", allow_other_host: true
-        else
-          redirect_to new_user_registration_url
-        end
+      user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
+      if user&.persisted?
+        sign_in(:user, user)
+        redirect_to "omniscient://auth_success", allow_other_host: true
       else
         redirect_to new_user_registration_url
       end

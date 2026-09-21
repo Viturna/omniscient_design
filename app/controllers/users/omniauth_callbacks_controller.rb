@@ -44,14 +44,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.save!
       end
 
-      # 📱 Si c'est l'app iOS native : on redirige vers le custom scheme omniscient://
-      if native_app? || request.user_agent.to_s.include?('Turbo Native') || session[:is_native_app]
-        sign_in(:user, @user)
-        # Redirige ASWebAuthenticationSession vers l'app pour fermer la popup
+      sign_in(:user, @user)
+
+      # 📱 Si c'est l'app iOS native (ASWebAuthenticationSession) : on redirige vers omniscient:// pour fermer la popup
+      if native_app? || request.user_agent.to_s.include?('Turbo Native') || request.user_agent.to_s.include?('iPhone')
         redirect_to "omniscient://auth_success", allow_other_host: true
       else
         flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
-        sign_in_and_redirect @user, event: :authentication
+        redirect_to after_sign_in_path_for(@user)
       end
 
     else

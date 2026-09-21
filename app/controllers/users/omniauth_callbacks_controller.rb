@@ -46,10 +46,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.save!
       end
 
-      # Génère un jeton signé temporaire (valide 5 minutes)
       token = Rails.application.message_verifier(:mobile_auth).generate(@user.id, purpose: :mobile_login, expires_in: 5.minutes)
-
-      render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success?token=#{token}';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
+      redirect_to "omniscient://auth_success?token=#{token}", allow_other_host: true
     else
       session['devise.omniauth_data'] = auth.except('extra')
 
@@ -60,7 +58,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
       if user&.persisted?
         token = Rails.application.message_verifier(:mobile_auth).generate(user.id, purpose: :mobile_login, expires_in: 5.minutes)
-        render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success?token=#{token}';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
+        redirect_to "omniscient://auth_success?token=#{token}", allow_other_host: true
       else
         redirect_to new_user_registration_url
       end

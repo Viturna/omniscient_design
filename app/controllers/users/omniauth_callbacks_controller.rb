@@ -1,5 +1,5 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: %i[google_oauth2 apple failure]
+  skip_before_action :verify_authenticity_token, only: %i[google_oauth2 apple failure token_login]
 
   def google_oauth2
     handle_auth 'Google'
@@ -9,12 +9,22 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     handle_auth 'Apple'
   end
 
-  def failure
-    if native_request?
-      redirect_to "omniscient://auth_failure", allow_other_host: true
+  def token_login
+    token = params[:token]
+    user = User.find_by(authentication_token: token) if token.present?
+
+    if user.present?
+      # Consomme le token (usage unique)
+      user.update_column(:authentication_token, nil)
+      sign_in(:user, user)
+      redirect_to profil_path
     else
-      redirect_to root_path, alert: "Échec de l'authentification."
+      redirect_to new_user_session_path, alert: "Session expirée. Veuillez réessayer."
     end
+  end
+
+  def failure
+    render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_failure';</script></head><body><p>Échec...</p></body></html>".html_safe
   end
 
   private
@@ -31,16 +41,18 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if user_signed_in? && @user && @user != current_user
       flash[:alert] = "Ce compte #{kind} est déjà lié à un autre utilisateur."
-      redirect_to "omniscient://auth_failure", allow_other_host: true
+      render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_failure';</script></head><body></body></html>".html_safe
     elsif @user&.persisted?
       unless @user.confirmed?
         @user.skip_confirmation!
         @user.save!
       end
 
-      sign_in(:user, @user)
-      # Page HTML propre qui ordonne à iOS de fermer la popup
-      render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
+      # Génère un jeton temporaire d'usage unique
+      token = SecureRandom.hex(32)
+      @user.update_column(:authentication_token, token)
+
+      render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success?token=#{token}';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
     else
       session['devise.omniauth_data'] = auth.except('extra')
 
@@ -50,8 +62,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
       if user&.persisted?
-        sign_in(:user, user)
-        render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
+        token = SecureRandom.hex(32)
+        user.update_column(:authentication_token, token)
+        render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success?token=#{token}';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
       else
         redirect_to new_user_registration_url
       end

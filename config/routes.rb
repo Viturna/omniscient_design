@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   devise_for :users, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
+  get '/auth_token_login', to: 'users/omniauth_callbacks#token_login'
 
   # ---- SCHOOLS ADS SUBDOMAIN & LANDING ----
   constraints(lambda { |req| req.host.start_with?('schools-ads.') || req.subdomain.to_s.include?('schools-ads') }) do

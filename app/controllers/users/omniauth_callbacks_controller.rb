@@ -78,6 +78,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def native_app_request?
-    native_app? || request.user_agent.to_s.include?('Turbo Native') || session[:is_native_app] == true
+    native_app? ||
+      request.user_agent.to_s.include?('Turbo Native') ||
+      request.env['omniauth.params']&.fetch('native_app', nil) == 'true' ||
+      params[:native_app] == 'true' ||
+      session[:is_native_app] == true
   end
 end

@@ -32,7 +32,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if user_signed_in? && @user && @user != current_user
       flash[:alert] = "Ce compte #{kind} est déjà lié à un autre utilisateur."
-      redirect_to "omniscient://auth_success", allow_other_host: true
+      redirect_to(native_request? ? "omniscient://auth_failure" : edit_user_registration_path, allow_other_host: true)
     elsif @user&.persisted?
       unless @user.confirmed?
         @user.skip_confirmation!
@@ -40,7 +40,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       sign_in(:user, @user)
-      redirect_to "omniscient://auth_success", allow_other_host: true
+      if native_request?
+        redirect_to "omniscient://auth_success", allow_other_host: true
+      else
+        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
+        redirect_to after_sign_in_path_for(@user)
+      end
     else
       session['devise.omniauth_data'] = auth.except('extra')
 
@@ -51,10 +56,18 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
       if user&.persisted?
         sign_in(:user, user)
-        redirect_to "omniscient://auth_success", allow_other_host: true
+        if native_request?
+          redirect_to "omniscient://auth_success", allow_other_host: true
+        else
+          redirect_to after_sign_in_path_for(user)
+        end
       else
-        redirect_to "omniscient://auth_success", allow_other_host: true
+        redirect_to(native_request? ? "omniscient://auth_success" : new_user_registration_url, allow_other_host: true)
       end
     end
+  end
+
+  def native_request?
+    native_app? || request.user_agent.to_s.include?('Turbo Native')
   end
 end

@@ -10,10 +10,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    if native_app? || request.env['omniauth.params']&.fetch('native_app', nil) == 'true'
+    if native_request?
       redirect_to "omniscient://auth_failure", allow_other_host: true
     else
-      redirect_to root_path
+      redirect_to root_path, alert: "Échec de l'authentification."
     end
   end
 
@@ -23,11 +23,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     auth = request.env['omniauth.auth']
     email = auth.info&.email
 
-    # Recherche par provider/uid OU par email
     @user = User.find_by(provider: auth.provider, uid: auth.uid)
     if @user.nil? && email.present?
       @user = User.find_by(email: email)
-      @user.update(provider: auth.provider, uid: auth.uid) if @user
+      @user&.update(provider: auth.provider, uid: auth.uid)
     end
 
     if user_signed_in? && @user && @user != current_user
@@ -62,12 +61,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           redirect_to after_sign_in_path_for(user)
         end
       else
-        redirect_to(native_request? ? "omniscient://auth_success" : new_user_registration_url, allow_other_host: true)
+        redirect_to(native_request? ? "omniscient://auth_failure" : new_user_registration_url, allow_other_host: true)
       end
     end
   end
 
   def native_request?
-    native_app? || request.user_agent.to_s.include?('Turbo Native')
+    native_app? || request.user_agent.to_s.include?('Turbo Native') || request.env['omniauth.params']&.fetch('native_app', nil) == 'true' || params[:native_app] == 'true'
   end
 end

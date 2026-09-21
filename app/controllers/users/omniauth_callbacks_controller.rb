@@ -46,15 +46,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.save!
       end
 
-      sign_in(:user, @user)
-
-      if native_app_request?
-        token = Rails.application.message_verifier(:mobile_auth).generate(@user.id, purpose: :mobile_login, expires_in: 5.minutes)
-        redirect_to "omniscient://auth_success?token=#{token}", allow_other_host: true
-      else
-        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
-        redirect_to after_sign_in_path_for(@user)
-      end
+      flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: kind
+      sign_in_and_redirect @user, event: :authentication
     else
       session['devise.omniauth_data'] = auth.except('extra')
 
@@ -64,15 +57,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
       if user&.persisted?
-        sign_in(:user, user)
-        if native_app_request?
-          token = Rails.application.message_verifier(:mobile_auth).generate(user.id, purpose: :mobile_login, expires_in: 5.minutes)
-          redirect_to "omniscient://auth_success?token=#{token}", allow_other_host: true
-        else
-          redirect_to after_sign_in_path_for(user)
-        end
+        sign_in_and_redirect user, event: :authentication
       else
-        redirect_to(native_app_request? ? "omniscient://auth_failure" : new_user_registration_url, allow_other_host: true)
+        redirect_to new_user_registration_url
       end
     end
   end

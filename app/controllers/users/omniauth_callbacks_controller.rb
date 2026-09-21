@@ -21,36 +21,27 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def handle_auth(kind)
     auth = request.env['omniauth.auth']
-    @user = User.find_by(provider: auth.provider, uid: auth.uid)
+    email = auth.info&.email
 
-    if user_signed_in?
-      # Cas 1 : Liaison de compte
-      if @user && @user != current_user
-        flash[:alert] = "Ce compte #{kind} est déjà lié à un autre utilisateur."
-        redirect_to edit_user_registration_path
-      else
-        begin
-          current_user.update!(provider: auth.provider, uid: auth.uid)
-          flash[:notice] = "Ton compte a été lié à #{kind} avec succès."
-        rescue ActiveRecord::RecordInvalid => e
-          flash[:alert] = "Erreur lors de la liaison : #{e.record.errors.full_messages.join(', ')}"
-        end
-        redirect_to edit_user_registration_path
-      end
+    # Recherche par provider/uid OU par email
+    @user = User.find_by(provider: auth.provider, uid: auth.uid)
+    if @user.nil? && email.present?
+      @user = User.find_by(email: email)
+      @user.update(provider: auth.provider, uid: auth.uid) if @user
+    end
+
+    if user_signed_in? && @user && @user != current_user
+      flash[:alert] = "Ce compte #{kind} est déjà lié à un autre utilisateur."
+      redirect_to "omniscient://auth_success", allow_other_host: true
     elsif @user&.persisted?
-      # Cas 2 : Utilisateur existant -> Connexion
       unless @user.confirmed?
         @user.skip_confirmation!
         @user.save!
       end
 
       sign_in(:user, @user)
-
-      # 📱 Ferme la popup ASWebAuthenticationSession et connecte l'app
       redirect_to "omniscient://auth_success", allow_other_host: true
-
     else
-      # Cas 3 : Nouvel utilisateur
       session['devise.omniauth_data'] = auth.except('extra')
 
       if kind == 'Apple' && session['devise.omniauth_data']['info']['email'].blank?
@@ -62,7 +53,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         sign_in(:user, user)
         redirect_to "omniscient://auth_success", allow_other_host: true
       else
-        redirect_to new_user_registration_url
+        redirect_to "omniscient://auth_success", allow_other_host: true
       end
     end
   end

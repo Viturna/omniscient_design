@@ -11,11 +11,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def token_login
     token = params[:token]
-    user = User.find_by(authentication_token: token) if token.present?
+    user_id = Rails.application.message_verifier(:mobile_auth).verify(token, purpose: :mobile_login) rescue nil
 
-    if user.present?
-      # Consomme le token (usage unique)
-      user.update_column(:authentication_token, nil)
+    if user_id.present? && (user = User.find_by(id: user_id))
       sign_in(:user, user)
       redirect_to profil_path
     else
@@ -48,9 +46,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.save!
       end
 
-      # Génère un jeton temporaire d'usage unique
-      token = SecureRandom.hex(32)
-      @user.update_column(:authentication_token, token)
+      # Génère un jeton signé temporaire (valide 5 minutes)
+      token = Rails.application.message_verifier(:mobile_auth).generate(@user.id, purpose: :mobile_login, expires_in: 5.minutes)
 
       render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success?token=#{token}';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
     else
@@ -62,8 +59,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
       if user&.persisted?
-        token = SecureRandom.hex(32)
-        user.update_column(:authentication_token, token)
+        token = Rails.application.message_verifier(:mobile_auth).generate(user.id, purpose: :mobile_login, expires_in: 5.minutes)
         render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success?token=#{token}';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
       else
         redirect_to new_user_registration_url

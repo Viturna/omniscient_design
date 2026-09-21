@@ -39,8 +39,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       sign_in(:user, @user)
-      # Redirige vers le schéma de l'application
-      redirect_to "omniscient://auth_success", allow_other_host: true
+      # Page HTML propre qui ordonne à iOS de fermer la popup
+      render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
     else
       session['devise.omniauth_data'] = auth.except('extra')
 
@@ -51,9 +51,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       user = User.from_omniauth(auth) if User.respond_to?(:from_omniauth)
       if user&.persisted?
         sign_in(:user, user)
-        redirect_to "omniscient://auth_success", allow_other_host: true
+        render html: "<!DOCTYPE html><html><head><meta charset='utf-8'><script>window.location.href='omniscient://auth_success';</script></head><body><p>Connexion réussie...</p></body></html>".html_safe
       else
-        redirect_to "omniscient://auth_failure", allow_other_host: true
+        redirect_to new_user_registration_url
       end
     end
   end

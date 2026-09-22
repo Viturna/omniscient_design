@@ -30,7 +30,7 @@
         Ciblez et contactez directement <strong>les étudiants en Arts Appliqués (STD2A) et Design</strong> à travers la France.<br>
         Un vivier d’étudiants qualifiés à portée de main.
       </p>
-      <%= link_to "Créer ma campagne dès maintenant", schools_ads_direct_funnel_path, class: "sa-hero__cta" %>
+      <%= link_to "Créer ma campagne dès maintenant", sa_funnel_path, class: "sa-hero__cta" %>
     </div>
     <div class="sa-hero__mockup">
       <%= image_tag "ads/mockup_hero.png", alt: "Application Omniscient Design", class: "sa-hero__mockup-img" %>
@@ -316,9 +316,7 @@
                               </div>
                               <!-- CTA Button -->
                               <div class="sa-comparison__cta-container">
-                                <a href="#contact" class="sa-comparison__cta-btn">
-                                  Lancer ma campagne
-                                </a>
+                                <%= link_to "Lancer ma campagne", sa_funnel_path, class: "sa-comparison__cta-btn" %>
                               </div>
                             </div>
                           </section>

@@ -58,7 +58,8 @@ end
   %i[fr en].each do |locale|
     add presentation_path(locale: locale), priority: 0.7, changefreq: 'monthly'
     add training_path(locale: locale), priority: 0.7, changefreq: 'monthly'
-add ressources_path(locale: locale), priority: 0.7, changefreq: 'monthly'
+    add ressources_path(locale: locale), priority: 0.7, changefreq: 'monthly'
+    add schools_ads_path, priority: 0.8, changefreq: 'weekly'
 
     add add_elements_path(locale: locale), priority: 0.7, changefreq: 'monthly'
     add parrainage_path(locale: locale), priority: 0.5, changefreq: 'monthly'

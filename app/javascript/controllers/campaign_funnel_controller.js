@@ -33,11 +33,25 @@ export default class extends Controller {
     "descInput",
     "linkInput",
     "previewFrame",
+    "previewFrameAccueil",
+    "previewFrameRecherche",
+    "previewFrameQuiz",
+    "previewFormatTag",
     "previewImage",
     "previewVideo",
+    "previewImageBg",
+    "previewVideoBg",
     "previewTitle",
     "previewDesc",
+    "previewSearchImage",
+    "previewSearchVideo",
+    "previewSearchTitle",
+    "previewQuizImage",
+    "previewQuizVideo",
+    "previewQuizTitle",
+    "previewQuizDesc",
     "previewDeviceLabel",
+    "dimensionLabel",
     
     // Step 2 : Calendrier
     "startDateInput",
@@ -51,6 +65,10 @@ export default class extends Controller {
     "regionChip",
     "regionPath",
     "studentCount",
+    "mapTooltip",
+    "tooltipRegion",
+    "tooltipCount",
+    "tooltipPercent",
     
     // Step 4 : Compte & Informations
     "schoolNameInput",
@@ -72,10 +90,11 @@ export default class extends Controller {
     this.selectedFile = null
     this.selectedMobileFile = null
     
-    // Calendar state
+    // Calendar state (Forcément par mois complet)
     this.currentDate = new Date(2026, 8, 1) // Septembre 2026
-    this.rangeStart = new Date(2026, 8, 7) // 7 Septembre
-    this.rangeEnd = new Date(2026, 8, 31) // 31 Septembre
+    this.rangeStart = new Date(2026, 8, 1)  // 1er Septembre 2026
+    this.rangeEnd = new Date(2026, 8, 30)   // 30 Septembre 2026 (Fin de mois)
+    this.monthSelectionInProgress = false
 
     // Check URL parameters (e.g. ?plan=encart_natif or ?plan=monopole)
     const urlParams = new URLSearchParams(window.location.search)
@@ -96,12 +115,25 @@ export default class extends Controller {
   // 1. GESTION DES ÉTAPES (NAVIGATION & VALIDATION)
   // =========================================================================
 
+  get isEncartNatif() {
+    return this.selectedPlan === "encart_natif"
+  }
+
   nextStep() {
+    if (this.currentStep === 1 && this.selectedPlan === "monopole") {
+      this.submitMonopoleQuote()
+      return
+    }
+
     if (!this.validateCurrentStep()) {
       return
     }
 
-    if (this.currentStep < this.totalSteps) {
+    if (this.currentStep === 2 && this.isEncartNatif) {
+      // Passer directement à la création de compte (étape 4)
+      this.currentStep = 4
+      this.updateStepView()
+    } else if (this.currentStep < 4) {
       this.currentStep++
       this.updateStepView()
     } else {
@@ -110,61 +142,131 @@ export default class extends Controller {
   }
 
   prevStep() {
-    if (this.currentStep > 1) {
+    if (this.currentStep === 4 && this.isEncartNatif) {
+      // Revenir directement au calendrier (étape 2)
+      this.currentStep = 2
+      this.updateStepView()
+    } else if (this.currentStep > 1) {
       this.currentStep--
       this.updateStepView()
     }
   }
 
   validateCurrentStep() {
+    this.clearAllErrors()
+
     if (this.currentStep === 1) {
+      let isValid = true
       const title = this.hasTitleInputTarget ? this.titleInputTarget.value.trim() : ""
+      const desc = this.hasDescInputTarget ? this.descInputTarget.value.trim() : ""
       const link = this.hasLinkInputTarget ? this.linkInputTarget.value.trim() : ""
 
-      if (!title) {
-        alert("Veuillez renseigner un titre pour votre campagne.")
-        if (this.hasTitleInputTarget) this.titleInputTarget.focus()
-        return false
-      }
       if (!link) {
-        alert("Veuillez renseigner un lien de redirection.")
-        if (this.hasLinkInputTarget) this.linkInputTarget.focus()
-        return false
+        this.setFieldError(this.hasLinkInputTarget ? this.linkInputTarget : null, "Veuillez renseigner un lien de redirection.")
+        isValid = false
       }
+
+      if (!desc) {
+        this.setFieldError(this.hasDescInputTarget ? this.descInputTarget : null, "Veuillez renseigner une description pour votre campagne.")
+        isValid = false
+      }
+
+      if (!title) {
+        this.setFieldError(this.hasTitleInputTarget ? this.titleInputTarget : null, "Veuillez renseigner un titre pour votre campagne.")
+        isValid = false
+      }
+
+      return isValid
     } else if (this.currentStep === 2) {
       if (!this.rangeStart || !this.rangeEnd) {
-        alert("Veuillez sélectionner votre période de diffusion sur le calendrier.")
+        if (this.hasStartDateInputTarget) {
+          this.setFieldError(this.startDateInputTarget, "Veuillez sélectionner votre période sur le calendrier.")
+        }
         return false
       }
     } else if (this.currentStep === 4) {
+      let isValid = true
       const schoolName = this.hasSchoolNameInputTarget ? this.schoolNameInputTarget.value.trim() : ""
+      const domain = this.hasDomainInputTarget ? this.domainInputTarget.value : ""
       const email = this.hasEmailInputTarget ? this.emailInputTarget.value.trim() : ""
       const password = this.hasPasswordInputTarget ? this.passwordInputTarget.value : ""
       const confirmPassword = this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget.value : ""
 
-      if (!schoolName) {
-        alert("Veuillez renseigner le nom de votre entreprise ou école.")
-        if (this.hasSchoolNameInputTarget) this.schoolNameInputTarget.focus()
-        return false
-      }
-      if (!email || !email.includes("@")) {
-        alert("Veuillez renseigner une adresse email valide.")
-        if (this.hasEmailInputTarget) this.emailInputTarget.focus()
-        return false
-      }
-      if (password && password.length < 6) {
-        alert("Le mot de passe doit contenir au moins 6 caractères.")
-        if (this.hasPasswordInputTarget) this.passwordInputTarget.focus()
-        return false
-      }
       if (password && password !== confirmPassword) {
-        alert("Les mots de passe ne correspondent pas.")
-        if (this.hasPasswordConfirmInputTarget) this.passwordConfirmInputTarget.focus()
-        return false
+        this.setFieldError(this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget : null, "Les mots de passe ne correspondent pas.")
+        isValid = false
       }
+
+      if (password && password.length < 6) {
+        this.setFieldError(this.hasPasswordInputTarget ? this.passwordInputTarget : null, "Le mot de passe doit contenir au moins 6 caractères.")
+        isValid = false
+      }
+
+      if (!email || !email.includes("@")) {
+        this.setFieldError(this.hasEmailInputTarget ? this.emailInputTarget : null, "Veuillez renseigner une adresse email valide.")
+        isValid = false
+      }
+
+      if (!domain) {
+        this.setFieldError(this.hasDomainInputTarget ? this.domainInputTarget : null, "Veuillez choisir un domaine d'activité.")
+        isValid = false
+      }
+
+      if (!schoolName) {
+        this.setFieldError(this.hasSchoolNameInputTarget ? this.schoolNameInputTarget : null, "Veuillez renseigner le nom de votre entreprise.")
+        isValid = false
+      }
+
+      return isValid
     }
 
     return true
+  }
+
+  setFieldError(inputEl, message) {
+    if (!inputEl) return
+    inputEl.classList.add("sa-funnel__input--error")
+
+    const fieldContainer = inputEl.closest(".sa-funnel__field") || inputEl.parentElement
+    if (fieldContainer) {
+      const existingError = fieldContainer.querySelector(".sa-funnel__field-error")
+      if (existingError) existingError.remove()
+
+      if (message) {
+        const errorEl = document.createElement("span")
+        errorEl.className = "sa-funnel__field-error"
+        errorEl.textContent = message
+        fieldContainer.appendChild(errorEl)
+      }
+    }
+
+    inputEl.focus()
+    inputEl.scrollIntoView({ behavior: "smooth", block: "center" })
+
+    const clearHandler = () => {
+      this.clearFieldError(inputEl)
+      inputEl.removeEventListener("input", clearHandler)
+      inputEl.removeEventListener("change", clearHandler)
+    }
+    inputEl.addEventListener("input", clearHandler)
+    inputEl.addEventListener("change", clearHandler)
+  }
+
+  clearFieldError(inputEl) {
+    if (!inputEl) return
+    inputEl.classList.remove("sa-funnel__input--error", "sa-funnel__textarea--error", "sa-funnel__select--error")
+    const fieldContainer = inputEl.closest(".sa-funnel__field") || inputEl.parentElement
+    if (fieldContainer) {
+      const existingError = fieldContainer.querySelector(".sa-funnel__field-error")
+      if (existingError) existingError.remove()
+    }
+  }
+
+  clearAllErrors() {
+    this.element.querySelectorAll(".sa-funnel__input--error, .sa-funnel__textarea--error, .sa-funnel__select--error").forEach(el => {
+      el.classList.remove("sa-funnel__input--error", "sa-funnel__textarea--error", "sa-funnel__select--error")
+    })
+    this.element.querySelectorAll(".sa-funnel__field-error").forEach(el => el.remove())
   }
 
   updateStepView() {
@@ -175,33 +277,37 @@ export default class extends Controller {
     })
 
     // 2. Update Header Titles & CTA Text
+    const isEncart = this.isEncartNatif
+    const totalCount = isEncart ? 3 : 4
+    const displayStepNum = (this.currentStep === 4 && isEncart) ? 3 : this.currentStep
+
     const stepConfig = {
       1: {
-        badge: "Étape 1/4 : Visuels",
+        badge: `Étape 1/${totalCount} : Visuels`,
         subtitle: "Configuration des visuels de votre campagne",
         nextText: "Calendrier de diffusion →",
         showPrev: false
       },
       2: {
-        badge: "Étape 2/4 : Calendrier de diffusion",
+        badge: `Étape 2/${totalCount} : Calendrier de diffusion`,
         subtitle: "Configuration de la période de votre campagne",
-        nextText: "Encrage local →",
+        nextText: isEncart ? "Création du compte →" : "Ancrage local →",
         showPrev: true,
         prevText: "← Modifier les visuels"
       },
       3: {
-        badge: "Étape 3/4 : Configurer l’encrage local",
+        badge: `Étape 3/4 : Configurer l’ancrage local`,
         subtitle: "Région que vous souhaitez cibler",
         nextText: "Création du compte →",
         showPrev: true,
         prevText: "← Calendrier de diffusion"
       },
       4: {
-        badge: "Étape 4/4 : Création du compte",
+        badge: `Étape ${displayStepNum}/${totalCount} : Création du compte`,
         subtitle: "Configuration de votre compte professionnel",
         nextText: "Paiement sécurisé →",
         showPrev: true,
-        prevText: "← Encrage local"
+        prevText: isEncart ? "← Calendrier de diffusion" : "← Ancrage local"
       }
     }
 
@@ -209,7 +315,13 @@ export default class extends Controller {
     
     if (this.hasStepBadgeTarget) this.stepBadgeTarget.textContent = currentConf.badge
     if (this.hasStepSubtitleTarget) this.stepSubtitleTarget.textContent = currentConf.subtitle
-    if (this.hasNextBtnTextTarget) this.nextBtnTextTarget.textContent = currentConf.nextText
+    if (this.hasNextBtnTextTarget) {
+      if (this.currentStep === 1 && this.selectedPlan === "monopole") {
+        this.nextBtnTextTarget.textContent = "Demander un devis →"
+      } else {
+        this.nextBtnTextTarget.textContent = currentConf.nextText
+      }
+    }
 
     if (this.hasPrevBtnTarget) {
       this.prevBtnTarget.style.display = currentConf.showPrev ? "inline-flex" : "none"
@@ -242,28 +354,44 @@ export default class extends Controller {
   setPlan(plan) {
     this.selectedPlan = plan
 
-    if (this.hasPlanCardTargets) {
-      this.planCardTargets.forEach(card => {
-        const cardPlan = card.dataset.plan
-        card.classList.toggle("sa-funnel-plan--active", cardPlan === plan)
-      })
-    }
+    const cards = (this.hasPlanCardTargets && this.planCardTargets.length > 0) 
+      ? this.planCardTargets 
+      : document.querySelectorAll(".sa-funnel-plan")
+
+    cards.forEach(card => {
+      const cardPlan = card.dataset.plan
+      const isCurrent = (cardPlan === plan)
+      card.classList.toggle("sa-funnel-plan--active", isCurrent)
+      if (isCurrent) {
+        card.setAttribute("aria-selected", "true")
+      } else {
+        card.removeAttribute("aria-selected")
+      }
+    })
 
     if (this.hasMonopoleBoxTarget && this.hasStandardFieldsTarget) {
       if (plan === "monopole") {
-        this.monopoleBoxTarget.style.display = "block"
+        this.monopoleBoxTarget.style.display = "flex"
         this.standardFieldsTarget.style.display = "none"
+        if (this.hasNextBtnTextTarget && this.currentStep === 1) {
+          this.nextBtnTextTarget.textContent = "Demander un devis →"
+        }
         if (this.hasNextBtnTarget) {
-          this.nextBtnTarget.style.display = "none"
+          this.nextBtnTarget.style.display = "inline-flex"
         }
       } else {
         this.monopoleBoxTarget.style.display = "none"
-        this.standardFieldsTarget.style.display = "block"
+        this.standardFieldsTarget.style.display = "flex"
+        if (this.hasNextBtnTextTarget && this.currentStep === 1) {
+          this.nextBtnTextTarget.textContent = "Calendrier de diffusion →"
+        }
         if (this.hasNextBtnTarget) {
           this.nextBtnTarget.style.display = "inline-flex"
         }
       }
     }
+
+    this.updateStepView()
   }
 
   async submitMonopoleQuote() {
@@ -272,14 +400,12 @@ export default class extends Controller {
     const message = this.hasMonopoleMessageInputTarget ? this.monopoleMessageInputTarget.value.trim() : ""
 
     if (!school) {
-      alert("Veuillez indiquer le nom de votre établissement.")
-      if (this.hasMonopoleSchoolInputTarget) this.monopoleSchoolInputTarget.focus()
+      this.markInputError(this.hasMonopoleSchoolInputTarget ? this.monopoleSchoolInputTarget : null, "Veuillez indiquer le nom de votre établissement.")
       return
     }
 
     if (!email || !email.includes("@")) {
-      alert("Veuillez indiquer une adresse email valide.")
-      if (this.hasMonopoleEmailInputTarget) this.monopoleEmailInputTarget.focus()
+      this.markInputError(this.hasMonopoleEmailInputTarget ? this.monopoleEmailInputTarget : null, "Veuillez indiquer une adresse email valide.")
       return
     }
 
@@ -300,11 +426,14 @@ export default class extends Controller {
         body: formData
       })
 
-      alert("Merci ! Votre demande de devis Monopole a bien été transmise à notre équipe. Nous vous contacterons sous 24h avec une proposition personnalisée.")
-      window.location.href = "/schools-ads"
+      setTimeout(() => {
+        window.location.href = "/schools-ads"
+      }, 1000)
     } catch (error) {
       console.error("Erreur monopole quote:", error)
-      alert("Une erreur est survenue. Veuillez réessayer ou nous contacter directement à contact@omniscientdesign.fr.")
+      if (this.hasMonopoleSchoolInputTarget) {
+        this.setFieldError(this.monopoleSchoolInputTarget, "Une erreur est survenue. Veuillez réessayer.")
+      }
     }
   }
 
@@ -314,6 +443,22 @@ export default class extends Controller {
 
     this.formatPillTargets.forEach(p => p.classList.toggle("sa-pill--active", p === pill))
     this.selectedFormat = format
+
+    // Toggle Preview Frames
+    if (this.hasPreviewFrameAccueilTarget) this.previewFrameAccueilTarget.style.display = (format === "accueil") ? "block" : "none"
+    if (this.hasPreviewFrameRechercheTarget) this.previewFrameRechercheTarget.style.display = (format === "recherche") ? "block" : "none"
+    if (this.hasPreviewFrameQuizTarget) this.previewFrameQuizTarget.style.display = (format === "quiz") ? "block" : "none"
+
+    if (this.hasPreviewFormatTagTarget) {
+      const formatNames = {
+        accueil: "Page d'accueil",
+        recherche: "Page recherche",
+        quiz: "Page Quiz"
+      }
+      this.previewFormatTagTarget.textContent = formatNames[format] || "Page d'accueil"
+    }
+
+    this.updateDimensionsHint()
   }
 
   selectDevice(event) {
@@ -323,14 +468,22 @@ export default class extends Controller {
     this.devicePillTargets.forEach(p => p.classList.toggle("sa-pill--active", p === pill))
     this.selectedDevice = device
 
-    if (this.hasPreviewFrameTarget) {
-      this.previewFrameTarget.classList.toggle("sa-preview-frame--mobile", device === "mobile")
-      this.previewFrameTarget.classList.toggle("sa-preview-frame--pc", device === "pc")
-    }
+    const frames = [
+      this.hasPreviewFrameAccueilTarget ? this.previewFrameAccueilTarget : null,
+      this.hasPreviewFrameRechercheTarget ? this.previewFrameRechercheTarget : null,
+      this.hasPreviewFrameQuizTarget ? this.previewFrameQuizTarget : null
+    ].filter(Boolean)
+
+    frames.forEach(frame => {
+      frame.classList.toggle("sa-preview-frame--mobile", device === "mobile")
+      frame.classList.toggle("sa-preview-frame--pc", device === "pc")
+    })
 
     if (this.hasPreviewDeviceLabelTarget) {
       this.previewDeviceLabelTarget.textContent = device === "mobile" ? "Visuel sur Mobile" : "Visuel sur PC"
     }
+
+    this.updateDimensionsHint()
 
     // Update active media preview based on device if mobile file was uploaded
     if (device === "mobile" && this.selectedMobileFile) {
@@ -349,8 +502,16 @@ export default class extends Controller {
       ? this.descInputTarget.value.trim()
       : "C'est possible, simple et rapide ! Entrez directement en contact avec l'équipe d'Omniscient Design et discutons ensemble de votre projet."
 
+    // 1. Accueil
     if (this.hasPreviewTitleTarget) this.previewTitleTarget.textContent = title
     if (this.hasPreviewDescTarget) this.previewDescTarget.textContent = desc
+
+    // 2. Recherche
+    if (this.hasPreviewSearchTitleTarget) this.previewSearchTitleTarget.textContent = title
+
+    // 3. Quiz
+    if (this.hasPreviewQuizTitleTarget) this.previewQuizTitleTarget.textContent = title
+    if (this.hasPreviewQuizDescTarget) this.previewQuizDescTarget.textContent = desc
   }
 
   triggerUpload(event) {
@@ -411,33 +572,75 @@ export default class extends Controller {
     }
   }
 
+  updateDimensionsHint() {
+    if (!this.hasDimensionLabelTarget) return
+
+    const format = this.selectedFormat || "accueil"
+    const device = this.selectedDevice || "pc"
+
+    const dimensionsMap = {
+      accueil: {
+        pc: "1920x1080 px (16:9)",
+        mobile: "1080x1920 px (9:16)"
+      },
+      recherche: {
+        pc: "800x600 px (4:3)",
+        mobile: "600x800 px (3:4)"
+      },
+      quiz: {
+        pc: "1200x800 px (3:2)",
+        mobile: "800x800 px (Carré 1:1)"
+      }
+    }
+
+    const recommended = dimensionsMap[format]?.[device] || "1920x1080 px"
+    this.dimensionLabelTarget.textContent = recommended
+  }
+
   displayFileInPreview(file) {
     const isVideo = file.type.startsWith("video/")
     const isImage = file.type.startsWith("image/")
 
     if (!isImage && !isVideo) {
-      alert("Veuillez sélectionner un fichier image ou vidéo valide.")
+      if (this.hasDropzoneTarget) {
+        this.setFieldError(this.dropzoneTarget, "Format non supporté. Veuillez choisir une image ou vidéo.")
+      }
       return
     }
 
     const objectUrl = URL.createObjectURL(file)
 
+    // Set preview images/videos across all 3 formats
+    const imgTargets = [
+      this.hasPreviewImageTarget ? this.previewImageTarget : null,
+      this.hasPreviewImageBgTarget ? this.previewImageBgTarget : null,
+      this.hasPreviewSearchImageTarget ? this.previewSearchImageTarget : null,
+      this.hasPreviewQuizImageTarget ? this.previewQuizImageTarget : null
+    ].filter(Boolean)
+
+    const videoTargets = [
+      this.hasPreviewVideoTarget ? this.previewVideoTarget : null,
+      this.hasPreviewVideoBgTarget ? this.previewVideoBgTarget : null,
+      this.hasPreviewSearchVideoTarget ? this.previewSearchVideoTarget : null,
+      this.hasPreviewQuizVideoTarget ? this.previewQuizVideoTarget : null
+    ].filter(Boolean)
+
     if (isVideo) {
-      if (this.hasPreviewImageTarget) this.previewImageTarget.style.display = "none"
-      if (this.hasPreviewVideoTarget) {
-        this.previewVideoTarget.src = objectUrl
-        this.previewVideoTarget.style.display = "block"
-        this.previewVideoTarget.play().catch(() => {})
-      }
+      imgTargets.forEach(img => img.style.display = "none")
+      videoTargets.forEach(video => {
+        video.src = objectUrl
+        video.style.display = "block"
+        video.play().catch(() => {})
+      })
     } else {
-      if (this.hasPreviewVideoTarget) {
-        this.previewVideoTarget.pause()
-        this.previewVideoTarget.style.display = "none"
-      }
-      if (this.hasPreviewImageTarget) {
-        this.previewImageTarget.src = objectUrl
-        this.previewImageTarget.style.display = "block"
-      }
+      videoTargets.forEach(video => {
+        video.pause()
+        video.style.display = "none"
+      })
+      imgTargets.forEach(img => {
+        img.src = objectUrl
+        img.style.display = "block"
+      })
     }
 
     if (this.hasUploadPlaceholderTarget) this.uploadPlaceholderTarget.style.display = "none"
@@ -522,16 +725,32 @@ export default class extends Controller {
   }
 
   handleDayClick(date) {
-    if (!this.rangeStart || (this.rangeStart && this.rangeEnd)) {
-      this.rangeStart = date
-      this.rangeEnd = null
-    } else if (this.rangeStart && !this.rangeEnd) {
-      if (date < this.rangeStart) {
-        this.rangeEnd = this.rangeStart
-        this.rangeStart = date
+    const clickedMonthStart = new Date(date.getFullYear(), date.getMonth(), 1)
+    const clickedMonthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+
+    if (!this.monthSelectionInProgress) {
+      // 1er clic : sélectionne le mois entier correspondant au jour cliqué
+      this.rangeStart = clickedMonthStart
+      this.rangeEnd = clickedMonthEnd
+      this.monthSelectionInProgress = true
+      this.selectionAnchor = { year: date.getFullYear(), month: date.getMonth() }
+    } else {
+      // 2e clic : étend la période du 1er jour du mois de début au dernier jour du mois de fin
+      const y1 = this.selectionAnchor.year
+      const m1 = this.selectionAnchor.month
+      const y2 = date.getFullYear()
+      const m2 = date.getMonth()
+
+      let startYear, startMonth, endYear, endMonth
+      if (y1 < y2 || (y1 === y2 && m1 <= m2)) {
+        startYear = y1; startMonth = m1; endYear = y2; endMonth = m2
       } else {
-        this.rangeEnd = date
+        startYear = y2; startMonth = m2; endYear = y1; endMonth = m1
       }
+
+      this.rangeStart = new Date(startYear, startMonth, 1)
+      this.rangeEnd = new Date(endYear, endMonth + 1, 0)
+      this.monthSelectionInProgress = false
     }
 
     this.renderCalendar()
@@ -540,7 +759,7 @@ export default class extends Controller {
 
   updateDatesDisplay() {
     const formatDate = (d) => {
-      if (!d) return "19/01/2026"
+      if (!d) return ""
       const dd = String(d.getDate()).padStart(2, '0')
       const mm = String(d.getMonth() + 1).padStart(2, '0')
       const yyyy = d.getFullYear()
@@ -556,9 +775,10 @@ export default class extends Controller {
     }
 
     if (this.hasDurationSummaryTarget && this.rangeStart && this.rangeEnd) {
-      const diffTime = Math.abs(this.rangeEnd - this.rangeStart)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
-      this.durationSummaryTarget.textContent = `${diffDays} jours de diffusion planifiés`
+      const monthsCount = Math.max(1, (this.rangeEnd.getFullYear() - this.rangeStart.getFullYear()) * 12 + (this.rangeEnd.getMonth() - this.rangeStart.getMonth()) + 1)
+      const diffDays = Math.round((this.rangeEnd - this.rangeStart) / (1000 * 60 * 60 * 24)) + 1
+      const monthLabel = monthsCount === 1 ? "1 mois complet" : `${monthsCount} mois complets`
+      this.durationSummaryTarget.textContent = `${monthLabel} de diffusion (${diffDays} jours)`
     }
   }
 
@@ -656,6 +876,48 @@ export default class extends Controller {
     }
   }
 
+  // --- INTERACTIVE FRANCE MAP TOOLTIP ---
+  showRegionTooltip(event) {
+    const regionEl = event.currentTarget
+    const regionName = regionEl.dataset.region
+    const count = regionEl.dataset.count
+    const percent = regionEl.dataset.percent
+
+    if (this.hasMapTooltipTarget) {
+      if (this.hasTooltipRegionTarget) this.tooltipRegionTarget.textContent = regionName || ""
+      if (this.hasTooltipCountTarget) this.tooltipCountTarget.textContent = `${count || 0} étudiants`
+      if (this.hasTooltipPercentTarget) this.tooltipPercentTarget.textContent = `${percent || "0%"} de l'audience`
+
+      this.mapTooltipTarget.classList.add("sa-map-tooltip--visible")
+      this.positionTooltip(event)
+    }
+  }
+
+  moveRegionTooltip(event) {
+    if (this.hasMapTooltipTarget) {
+      this.positionTooltip(event)
+    }
+  }
+
+  hideRegionTooltip() {
+    if (this.hasMapTooltipTarget) {
+      this.mapTooltipTarget.classList.remove("sa-map-tooltip--visible")
+    }
+  }
+
+  positionTooltip(event) {
+    const tooltip = this.mapTooltipTarget
+    const wrapper = tooltip.closest(".sa-funnel__map-area") || tooltip.parentElement
+    if (!wrapper) return
+
+    const rect = wrapper.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+
+    tooltip.style.left = `${x}px`
+    tooltip.style.top = `${y}px`
+  }
+
   // =========================================================================
   // 5. ÉTAPE 4 : MOT DE PASSE & SOUMISSION CHECKOUT STRIPE
   // =========================================================================
@@ -680,7 +942,7 @@ export default class extends Controller {
       formData.append("title", this.hasTitleInputTarget ? this.titleInputTarget.value : "")
       formData.append("description", this.hasDescInputTarget ? this.descInputTarget.value : "")
       formData.append("link", this.hasLinkInputTarget ? this.linkInputTarget.value : "")
-      formData.append("format_type", this.selectedFormat)
+      formData.append("format_type", "all")
       formData.append("plan_type", this.selectedPlan || "ancrage_local")
       
       if (this.rangeStart) {
@@ -728,13 +990,17 @@ export default class extends Controller {
       if (result.success && result.checkout_url) {
         window.location.href = result.checkout_url
       } else {
-        alert(result.message || "Une erreur est survenue lors de l'initialisation du paiement.")
+        if (this.hasEmailInputTarget) {
+          this.setFieldError(this.emailInputTarget, result.message || "Une erreur est survenue lors de l'initialisation du paiement.")
+        }
         nextBtn.disabled = false
         nextBtn.innerHTML = originalText
       }
     } catch (error) {
       console.error("Erreur checkout:", error)
-      alert("Erreur de connexion au serveur de paiement. Veuillez réessayer.")
+      if (this.hasEmailInputTarget) {
+        this.setFieldError(this.emailInputTarget, "Erreur de connexion au serveur de paiement. Veuillez réessayer.")
+      }
       nextBtn.disabled = false
       nextBtn.innerHTML = originalText
     }

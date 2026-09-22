@@ -1,6 +1,6 @@
 module SchoolsAdsHelper
   def sa_on_subdomain?
-    request.subdomain.to_s.include?('schools-ads')
+    request.host.start_with?('schools-ads.') || request.subdomain.to_s.include?('schools-ads')
   end
 
   def sa_root_path

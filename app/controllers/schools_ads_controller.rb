@@ -148,23 +148,14 @@ class SchoolsAdsController < ApplicationController
 
     plan_type = params[:plan_type].presence || "ancrage_local"
 
-    # Calcul du tarif selon la formule
+    # Calcul du nombre de mois (période par mois complet)
+    months_count = [((end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1), 1].max
+
+    # Calcul du tarif forfaitaire mensuel
     price_cents = if plan_type == "encart_natif"
-      if duration_days >= 25
-        20000 # 200.00 EUR forfait mois
-      elsif duration_days >= 7
-        6000  # 60.00 EUR forfait semaine
-      else
-        [duration_days * 1000, 3000].max # 10€/jour, min 30€
-      end
+      months_count * 20000 # 200.00 EUR par mois
     else # ancrage_local
-      if duration_days >= 25
-        40000 # 400.00 EUR forfait mois
-      elsif duration_days >= 7
-        12000 # 120.00 EUR forfait semaine
-      else
-        [duration_days * 2000, 5000].max # 20€/jour, min 50€
-      end
+      months_count * 40000 # 400.00 EUR par mois
     end
 
     # Création du compte utilisateur pro si mot de passe fourni
@@ -242,7 +233,7 @@ class SchoolsAdsController < ApplicationController
             unit_amount: price_cents,
             product_data: {
               name: "Campagne Publicitaire Omniscient Design - #{school_name}",
-              description: "#{duration_days} jours de diffusion (#{format_type.capitalize}) - Région : #{region}",
+              description: "#{duration_days} jours de diffusion simultanée (Accueil, Recherche, Quiz) - Région : #{region}",
             },
           },
           quantity: 1,

@@ -8,7 +8,7 @@ module.exports = {
         './app/components/**/*.html.erb',
         './app/components/**/*.rb'
       ],
-      safelist: [/lenis/, /select2/, /dropdown/, /trix/, /delete-modal/, /modal/],
+      safelist: [/lenis/, /select2/, /dropdown/, /trix/, /delete-modal/, /modal/, /^sa-/, /^sa_/],
       defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
     })
   ]

@@ -167,6 +167,7 @@ connect() {
     if (this.currentStep === 1) {
       let isValid = true
       const title = this.hasTitleInputTarget ? this.titleInputTarget.value.trim() : ""
+      const desc = this.hasDescInputTarget ? this.descInputTarget.value.trim() : ""
       let link = this.hasLinkInputTarget ? this.linkInputTarget.value.trim() : ""
 
       if (!link) {
@@ -301,6 +302,12 @@ connect() {
     inputEl.addEventListener("input", clearHandler)
     inputEl.addEventListener("change", clearHandler)
     inputEl.addEventListener("click", clearHandler)
+  }
+
+  clearErrorOnInput(event) {
+    if (event?.currentTarget) {
+      this.clearFieldError(event.currentTarget)
+    }
   }
 
   clearFieldError(inputEl) {

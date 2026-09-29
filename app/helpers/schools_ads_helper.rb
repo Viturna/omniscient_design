@@ -23,4 +23,8 @@ module SchoolsAdsHelper
   def sa_checkout_path
     sa_on_subdomain? ? '/checkout' : '/schools-ads/checkout'
   end
+
+  def sa_contact_path
+    sa_on_subdomain? ? '/contact' : '/schools-ads/contact'
+  end
 end

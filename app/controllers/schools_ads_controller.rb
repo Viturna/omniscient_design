@@ -378,16 +378,20 @@ class SchoolsAdsController < ApplicationController
       end
 
       # Notification aux administrateurs une fois le paiement validé
-      school_name = @ad.title.presence || "Nouvel annonceur"
-      User.where(role: 'admin').each do |admin_user|
-        Notification.find_or_create_by(
-          user_id: admin_user.id,
-          link: '/admin/ads'
-        ) do |notif|
-          notif.title = "Nouvel abonnement publicitaire : #{school_name}"
-          notif.message = "#{school_name} a souscrit à une campagne récurrente (#{@ad.price_paid.to_i / 100}€ / mois)."
-          notif.status = :unread
-        end rescue nil
+      school_name = @ad.title.presence || @ad.email.presence || "Nouvel annonceur"
+      User.where(role: 'admin').find_each do |admin_user|
+        begin
+          Notification.create!(
+            user_id: admin_user.id,
+            notifiable: @ad,
+            title: "Nouvel abonnement publicitaire : #{school_name}",
+            message: "#{school_name} a souscrit à une campagne récurrente (#{@ad.price_paid.to_i / 100}€ / mois).",
+            link: '/admin/ads',
+            status: :unread
+          )
+        rescue StandardError => e
+          Rails.logger.error("Erreur Notification Admin Ads: #{e.message}")
+        end
       end
       
       # Connexion automatique de l'annonceur
@@ -442,25 +446,32 @@ class SchoolsAdsController < ApplicationController
         request_type: @message.include?('[Demande de Devis Monopole]') ? 'devis_monopole' : 'contact'
       )
 
+      # 1. Envoi d'email
       begin
         SchoolAdsMailer.contact_email(
           school_name: @school_name,
           email: @email,
           message: @message
         ).deliver_later
+      rescue StandardError => e
+        Rails.logger.error("Erreur envoi SchoolAdsMailer : #{e.message}")
+      end
 
-        notif_title = contact_record.request_type == 'devis_monopole' ? 'Nouvelle demande de devis Monopole' : 'Nouveau contact École'
-        User.where(role: 'admin').each do |admin_user|
-          Notification.create(
+      # 2. Notification aux administrateurs (in-app + push)
+      notif_title = contact_record.request_type == 'devis_monopole' ? 'Nouvelle demande de devis Monopole' : 'Nouveau contact École'
+      User.where(role: 'admin').find_each do |admin_user|
+        begin
+          Notification.create!(
             user_id: admin_user.id,
+            notifiable: contact_record,
             title: notif_title,
-            message: "#{@school_name} (#{ @email })",
+            message: "#{@school_name} (#{@email})",
             link: '/admin/school_contacts',
             status: :unread
           )
+        rescue StandardError => e
+          Rails.logger.error("Erreur notification admin contact: #{e.message}")
         end
-      rescue StandardError => e
-        Rails.logger.error("Erreur envoi SchoolAdsMailer : #{e.message}")
       end
 
       respond_to do |format|

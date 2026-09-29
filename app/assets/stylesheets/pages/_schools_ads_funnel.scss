@@ -2028,13 +2028,13 @@
   width: 100%;
   box-sizing: border-box;
   background: #FFFFFF;
-  border: 1px solid #D1D5DB;
+  border: 1px solid #E5E7EB;
   border-radius: 8px;
-  padding: 12px 14px;
-  font-size: 14px;
+  padding: 14px 16px;
+  font-size: 14.5px;
   color: #202020;
   font-family: inherit;
-  transition: all 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &::placeholder {
     color: #9CA3AF;
@@ -2043,7 +2043,7 @@
   &:focus {
     outline: none;
     border-color: #202020;
-    box-shadow: 0 0 0 3px rgba(32, 32, 32, 0.08);
+    box-shadow: 0 0 0 2px rgba(163, 243, 190, 0.6);
   }
 }
 
@@ -2062,25 +2062,27 @@
   width: 100%;
   background-color: #A3F3BE;
   color: #202020;
-  border: 1px solid #202020;
+  border: none;
   border-radius: 8px;
-  padding: 14px 20px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 2px 2px 0px #202020;
-  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   font-family: inherit;
 
   &:hover {
     background-color: #8CE8AB;
-    transform: translate(-1px, -1px);
-    box-shadow: 3px 3px 0px #202020;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(163, 243, 190, 0.45);
   }
 
   &:active {
-    transform: translate(1px, 1px);
-    box-shadow: 1px 1px 0px #202020;
+    transform: translateY(0);
+    box-shadow: none;
   }
 }
 

@@ -4,6 +4,7 @@ class SchoolsAdsController < ApplicationController
   skip_before_action :authenticate_user!, raise: false
   skip_before_action :authenticate_admin!, raise: false
   skip_before_action :verify_authenticity_token, only: [:checkout, :contact], raise: false
+  before_action :ensure_schools_ads_subdomain!
   layout 'schools_ads'
 
   def index
@@ -132,8 +133,11 @@ class SchoolsAdsController < ApplicationController
   def checkout
     begin
       title = params[:title].presence || "Campagne Partenaire"
-      description = params[:description].presence || ""
-      link = params[:link].presence || "https://omniscientdesign.fr"
+      link_param = params[:link].to_s.strip
+      if link_param.present? && !link_param.start_with?('http://', 'https://')
+        link_param = "https://#{link_param}"
+      end
+      link = link_param.presence || "https://omniscientdesign.fr"
       school_name = params[:school_name].presence || "Établissement Partenaire"
       email = params[:email].presence || "contact@ecole-partenaire.fr"
       region = params[:region].presence || "Centre-Val de Loire"
@@ -216,8 +220,7 @@ class SchoolsAdsController < ApplicationController
             password_confirmation: params[:password_confirmation],
             firstname: school_name,
             pseudo: candidate_pseudo,
-            etablissement: school_name,
-            etablissement_id: etab_record&.id,
+            etablissement: etab_record,
             statut: 'entreprise',
             role: 'user',
             rgpd_consent: true
@@ -560,5 +563,43 @@ class SchoolsAdsController < ApplicationController
     end
 
     redirect_to request.referer || schools_ads_dashboard_path
+  end
+
+  private
+
+  def ensure_schools_ads_subdomain!
+    # Vérifier si on est déjà sur le sous-domaine schools-ads
+    is_subdomain = request.host.start_with?('schools-ads.') || request.subdomain.to_s.include?('schools-ads')
+    return if is_subdomain
+
+    # Déterminer l'URL cible sur le sous-domaine
+    target_host = if request.host.include?('lvh.me')
+      "schools-ads.lvh.me"
+    elsif request.host.include?('localhost') || request.host == '127.0.0.1'
+      "schools-ads.lvh.me"
+    elsif request.host.include?('omniscientdesign.fr')
+      "schools-ads.omniscientdesign.fr"
+    else
+      "schools-ads.#{request.domain || request.host}"
+    end
+
+    # Mapper les routes du domaine principal vers le sous-domaine
+    target_path = case action_name
+    when 'funnel'
+      '/creer-campagne'
+    when 'dashboard'
+      '/dashboard'
+    when 'billing_portal'
+      '/facturation'
+    when 'success'
+      '/succes'
+    else
+      '/'
+    end
+
+    port_suffix = (request.port && ![80, 443].include?(request.port)) ? ":#{request.port}" : ""
+    query_string = request.query_string.present? ? "?#{request.query_string}" : ""
+
+    redirect_to "#{request.protocol}#{target_host}#{port_suffix}#{target_path}#{query_string}", allow_other_host: true, status: :moved_permanently
   end
 end

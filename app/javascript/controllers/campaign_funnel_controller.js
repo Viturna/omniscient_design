@@ -167,12 +167,29 @@ connect() {
     if (this.currentStep === 1) {
       let isValid = true
       const title = this.hasTitleInputTarget ? this.titleInputTarget.value.trim() : ""
-      const desc = this.hasDescInputTarget ? this.descInputTarget.value.trim() : ""
-      const link = this.hasLinkInputTarget ? this.linkInputTarget.value.trim() : ""
+      let link = this.hasLinkInputTarget ? this.linkInputTarget.value.trim() : ""
 
       if (!link) {
         this.setFieldError(this.hasLinkInputTarget ? this.linkInputTarget : null, "Veuillez renseigner un lien de redirection.")
         isValid = false
+      } else {
+        // Auto-correction : ajouter https:// si l'utilisateur a écrit "monsite.fr" ou "www.monsite.fr"
+        if (!link.startsWith("http://") && !link.startsWith("https://")) {
+          link = `https://${link}`
+          if (this.hasLinkInputTarget) this.linkInputTarget.value = link
+        }
+
+        // Validation du format d'URL
+        try {
+          const parsedUrl = new URL(link)
+          if (!parsedUrl.hostname || !parsedUrl.hostname.includes(".")) {
+            this.setFieldError(this.hasLinkInputTarget ? this.linkInputTarget : null, "Veuillez entrer une URL valide (ex : https://www.votre-ecole.fr).")
+            isValid = false
+          }
+        } catch (_) {
+          this.setFieldError(this.hasLinkInputTarget ? this.linkInputTarget : null, "Format de lien invalide (ex attendu : https://www.votre-ecole.fr).")
+          isValid = false
+        }
       }
 
       if (!desc) {
@@ -1092,6 +1109,16 @@ isSameDay(d1, d2) {
       }
       nextBtn.disabled = false
       nextBtn.innerHTML = originalText
+    }
+  }
+
+  formatLinkInput() {
+    if (!this.hasLinkInputTarget) return
+    let val = this.linkInputTarget.value.trim()
+    if (!val) return
+
+    if (!val.startsWith("http://") && !val.startsWith("https://")) {
+      this.linkInputTarget.value = `https://${val}`
     }
   }
 }

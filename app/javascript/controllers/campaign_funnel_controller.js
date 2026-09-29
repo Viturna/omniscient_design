@@ -911,45 +911,17 @@ isSameDay(d1, d2) {
       chip.classList.toggle("sa-pill--active", chip.dataset.regionKey === regionKey)
     })
 
-    // 3. Update region info & student estimation
-    const regionNames = {
-      cvl: "Centre-Val de Loire",
-      idf: "Île-de-France",
-      bre: "Bretagne",
-      naq: "Nouvelle-Aquitaine",
-      ara: "Auvergne-Rhône-Alpes",
-      pac: "PACA",
-      hdf: "Hauts-de-France",
-      nor: "Normandie",
-      ges: "Grand Est",
-      pdl: "Pays de la Loire",
-      bfc: "Bourgogne-Franche-Comté",
-      occ: "Occitanie",
-      cor: "Corse"
+    // 3. Update region info & student estimation dynamically from map data
+    const matchedPath = this.regionPathTargets.find(path => path.id === `funnel-region-${regionKey}`)
+    const dynamicRegionName = matchedPath?.dataset.region || regionKey
+    const dynamicCount = matchedPath?.dataset.count
+
+    if (this.hasRegionSearchInputTarget) {
+      this.regionSearchInputTarget.value = dynamicRegionName
     }
 
-    const studentEstimations = {
-      cvl: "120 étudiants",
-      idf: "480 étudiants",
-      bre: "190 étudiants",
-      naq: "240 étudiants",
-      ara: "310 étudiants",
-      pac: "210 étudiants",
-      hdf: "220 étudiants",
-      nor: "130 étudiants",
-      ges: "180 étudiants",
-      pdl: "195 étudiants",
-      bfc: "110 étudiants",
-      occ: "260 étudiants",
-      cor: "45 étudiants"
-    }
-
-    if (this.hasRegionSearchInputTarget && regionNames[regionKey]) {
-      this.regionSearchInputTarget.value = regionNames[regionKey]
-    }
-
-    if (this.hasStudentCountTarget && studentEstimations[regionKey]) {
-      this.studentCountTarget.textContent = studentEstimations[regionKey]
+    if (this.hasStudentCountTarget && dynamicCount) {
+      this.studentCountTarget.textContent = `${dynamicCount} étudiants`
     }
   }
 
@@ -1083,7 +1055,13 @@ isSameDay(d1, d2) {
         body: formData
       })
 
-      const result = await response.json()
+      let result
+      try {
+        result = await response.json()
+      } catch (jsonErr) {
+        console.error("Non-JSON response from server:", jsonErr)
+        result = { success: false, message: "Le serveur a retourné une réponse inattendue. Veuillez réessayer." }
+      }
 
       if (result.success && result.checkout_url) {
         window.location.href = result.checkout_url
@@ -1101,6 +1079,8 @@ isSameDay(d1, d2) {
 
         if (targetEl) {
           this.setFieldError(targetEl, result.message || "Une erreur est survenue lors de l'initialisation.")
+        } else if (this.hasEmailInputTarget) {
+          this.setFieldError(this.emailInputTarget, result.message || "Une erreur est survenue lors de l'initialisation.")
         }
         nextBtn.disabled = false
         nextBtn.innerHTML = originalText

@@ -130,118 +130,143 @@ class SchoolsAdsController < ApplicationController
   end
 
   def checkout
-    title = params[:title].presence || "Campagne Partenaire"
-    description = params[:description].presence || ""
-    link = params[:link].presence || "https://omniscientdesign.fr"
-    school_name = params[:school_name].presence || "Établissement Partenaire"
-    email = params[:email].presence || "contact@ecole-partenaire.fr"
-    region = params[:region].presence || "Centre-Val de Loire"
-    format_type = params[:format_type].presence || "accueil"
-    
-    start_date = Date.parse(params[:start_date]) rescue Date.current
-    end_date = Date.parse(params[:end_date]) rescue (start_date + 1.month)
-    end_date = start_date if end_date < start_date
-    duration_days = (end_date - start_date).to_i + 1
-
-    plan_type = params[:plan_type].presence || "ancrage_local"
-
-    # Tarif forfaitaire mensuel de l'abonnement récurrent
-    price_cents = if plan_type == "encart_natif"
-      20000 # 200.00 EUR / mois
-    else # ancrage_local
-      40000 # 400.00 EUR / mois
-    end
-
-    # Gestion sécurisée du compte utilisateur
-    if user_signed_in? && email.downcase == current_user.email.downcase
-      # L'utilisateur connecté conserve son compte actuel
-      email = current_user.email
-      school_name = current_user.etablissement&.name.presence || current_user.firstname.presence || school_name
-    else
-      # L'utilisateur souhaite utiliser un autre compte ou n'est pas connecté
-      existing_user = User.find_by(email: email.downcase)
-      if existing_user.present?
-        # L'utilisateur existe déjà : on vérifie son mot de passe pour sécuriser l'accès
-        if params[:password].blank? || !existing_user.valid_password?(params[:password])
-          return render json: {
-            success: false,
-            field: 'password',
-            message: "Un compte existe déjà avec cette adresse email (#{email}). Veuillez saisir le bon mot de passe associé pour vous identifier."
-          }, status: :unprocessable_entity
-        end
-      else
-        # Création d'un nouveau compte avec validations strictes
-        if params[:password].blank?
-          return render json: {
-            success: false,
-            field: 'password',
-            message: "Veuillez renseigner un mot de passe pour ce compte."
-          }, status: :unprocessable_entity
-        end
-
-        if params[:password] != params[:password_confirmation]
-          return render json: {
-            success: false,
-            field: 'password_confirmation',
-            message: "Les mots de passe ne correspondent pas."
-          }, status: :unprocessable_entity
-        end
-
-        user = User.new(
-          email: email.downcase,
-          password: params[:password],
-          password_confirmation: params[:password_confirmation],
-          firstname: school_name,
-          etablissement: school_name,
-          statut: 'organisme',
-          role: 'user'
-        )
-        user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
-
-        unless user.save
-          error_msg = user.errors.full_messages.to_sentence
-          return render json: {
-            success: false,
-            field: user.errors.key?(:password) ? 'password' : 'email',
-            message: error_msg
-          }, status: :unprocessable_entity
-        end
-      end
-    end
-
-    # Création de l'annonce Ad (Inactive / En attente de paiement)
-    ad = Ad.new(
-      title: title,
-      description: description,
-      link: link,
-      email: email,
-      start_date: start_date,
-      end_date: end_date,
-      duration_days: duration_days,
-      price_paid: price_cents,
-      status: 'pending',
-      active: false,
-      weight: 1
-    )
-
-    if params[:image].present?
-      ad.image.attach(params[:image])
-    end
-    if params[:image_mobile].present?
-      ad.image_mobile.attach(params[:image_mobile])
-    end
-
-    unless ad.image.attached?
-      placeholder_path = Rails.root.join('app', 'assets', 'images', 'landing', 'image-1.jpg')
-      if File.exist?(placeholder_path)
-        ad.image.attach(io: File.open(placeholder_path), filename: 'default_ad.jpg', content_type: 'image/jpeg')
-      end
-    end
-
-    ad.save(validate: false)
-
-    # Session Stripe Checkout en mode ABONNEMENT RÉCURRENT (mensuel)
     begin
+      title = params[:title].presence || "Campagne Partenaire"
+      description = params[:description].presence || ""
+      link = params[:link].presence || "https://omniscientdesign.fr"
+      school_name = params[:school_name].presence || "Établissement Partenaire"
+      email = params[:email].presence || "contact@ecole-partenaire.fr"
+      region = params[:region].presence || "Centre-Val de Loire"
+      format_type = params[:format_type].presence || "accueil"
+      
+      start_date = Date.parse(params[:start_date]) rescue Date.current
+      end_date = Date.parse(params[:end_date]) rescue (start_date + 1.month)
+      end_date = start_date if end_date < start_date
+      duration_days = (end_date - start_date).to_i + 1
+
+      plan_type = params[:plan_type].presence || "ancrage_local"
+
+      # Tarif forfaitaire mensuel de l'abonnement récurrent
+      price_cents = if plan_type == "encart_natif"
+        20000 # 200.00 EUR / mois
+      else # ancrage_local
+        40000 # 400.00 EUR / mois
+      end
+
+      # Gestion sécurisée du compte utilisateur
+      if user_signed_in? && email.downcase == current_user.email.downcase
+        # L'utilisateur connecté conserve son compte actuel
+        email = current_user.email
+        school_name = current_user.etablissement&.name.presence || current_user.firstname.presence || school_name
+      else
+        # L'utilisateur souhaite utiliser un autre compte ou n'est pas connecté
+        existing_user = User.find_by(email: email.downcase)
+        if existing_user.present?
+          # L'utilisateur existe déjà : on vérifie son mot de passe pour sécuriser l'accès
+          if params[:password].blank? || !existing_user.valid_password?(params[:password])
+            return render json: {
+              success: false,
+              field: 'password',
+              message: "Un compte existe déjà avec cette adresse email (#{email}). Veuillez saisir le bon mot de passe associé pour vous identifier."
+            }, status: :unprocessable_entity
+          end
+        else
+          # Création d'un nouveau compte avec validations strictes
+          if params[:password].blank?
+            return render json: {
+              success: false,
+              field: 'password',
+              message: "Veuillez renseigner un mot de passe pour ce compte."
+            }, status: :unprocessable_entity
+          end
+
+          if params[:password] != params[:password_confirmation]
+            return render json: {
+              success: false,
+              field: 'password_confirmation',
+              message: "Les mots de passe ne correspondent pas."
+            }, status: :unprocessable_entity
+          end
+
+          # Vérification du format du mot de passe (6+ cars, majuscule, minuscule, chiffre, caractère spécial)
+          password_pattern = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}\z/
+          unless params[:password] =~ password_pattern
+            return render json: {
+              success: false,
+              field: 'password',
+              message: "Le mot de passe doit contenir au moins 6 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial."
+            }, status: :unprocessable_entity
+          end
+
+          # Génération d'un pseudo unique basé sur le nom de l'école/entreprise ou le mail
+          base_pseudo = school_name.parameterize.underscore.presence || email.split('@').first.parameterize.underscore
+          candidate_pseudo = base_pseudo
+          counter = 1
+          while User.exists?(pseudo: candidate_pseudo)
+            candidate_pseudo = "#{base_pseudo}_#{counter}"
+            counter += 1
+          end
+
+          # Recherche de l'établissement si existant
+          etab_record = Etablissement.where("LOWER(name) = ?", school_name.strip.downcase).first
+
+          user = User.new(
+            email: email.downcase,
+            password: params[:password],
+            password_confirmation: params[:password_confirmation],
+            firstname: school_name,
+            pseudo: candidate_pseudo,
+            etablissement: school_name,
+            etablissement_id: etab_record&.id,
+            statut: 'entreprise',
+            role: 'user',
+            rgpd_consent: true
+          )
+          user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
+
+          unless user.save
+            error_msg = user.errors.full_messages.to_sentence
+            return render json: {
+              success: false,
+              field: user.errors.key?(:password) ? 'password' : (user.errors.key?(:email) ? 'email' : 'school_name'),
+              message: error_msg
+            }, status: :unprocessable_entity
+          end
+        end
+      end
+
+      # Création de l'annonce Ad (Inactive / En attente de paiement)
+      ad = Ad.new(
+        title: title,
+        description: description,
+        link: link,
+        email: email,
+        start_date: start_date,
+        end_date: end_date,
+        duration_days: duration_days,
+        price_paid: price_cents,
+        status: 'pending',
+        active: false,
+        weight: 1
+      )
+
+      if params[:image].present?
+        ad.image.attach(params[:image])
+      end
+      if params[:image_mobile].present?
+        ad.image_mobile.attach(params[:image_mobile])
+      end
+
+      unless ad.image.attached?
+        placeholder_path = Rails.root.join('app', 'assets', 'images', 'landing', 'image-1.jpg')
+        if File.exist?(placeholder_path)
+          ad.image.attach(io: File.open(placeholder_path), filename: 'default_ad.jpg', content_type: 'image/jpeg')
+        end
+      end
+
+      ad.save(validate: false)
+
+      # Session Stripe Checkout en mode ABONNEMENT RÉCURRENT (mensuel)
       stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
       raise "Clé Stripe non configurée (STRIPE_SECRET_KEY manquante)" if stripe_key.blank?
 
@@ -311,11 +336,11 @@ class SchoolsAdsController < ApplicationController
 
       render json: { success: true, checkout_url: session.url }
     rescue StandardError => e
-      Rails.logger.error("Stripe Checkout Error: #{e.message}")
-      ad.destroy if ad.persisted?
+      Rails.logger.error("Checkout Error: #{e.message}\n#{e.backtrace.first(5).join("\n")}")
+      ad.destroy if defined?(ad) && ad.present? && ad.persisted?
       render json: { 
         success: false, 
-        message: "Erreur lors de l'initialisation du paiement Stripe : #{e.message}"
+        message: "Erreur lors de la création de la campagne : #{e.message}"
       }, status: :unprocessable_entity
     end
   end

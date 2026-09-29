@@ -23,6 +23,7 @@ module ApplicationHelper
       { controller: 'references', actions: %w[index new edit] },
       { controller: 'designers', actions: %w[index new edit] },
       { controller: 'studios', actions: %w[index new edit] },
+      { controller: 'quizzes', actions: %w[show index] },
       { controller: 'pages',      actions: %w[add_elements] },
       { controller: 'feedbacks',  actions: %w[new] },
       { controller: 'notifications',  actions: %w[index] },

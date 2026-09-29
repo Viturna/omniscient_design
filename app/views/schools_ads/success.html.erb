@@ -122,67 +122,17 @@
   </div>
 
   <!-- ================================================================= -->
-  <!-- PANNEAU DROIT : APERÇU DE L'ANNONCE & CITATION (FOND SOMBRE #1A1A1A) -->
+  <!-- PANNEAU DROIT : CITATION DES FONDATEURS (FOND SOMBRE #1A1A1A) -->
   <!-- ================================================================= -->
-  <div class="sa-funnel__right">
-    <div class="sa-funnel__right-view sa-funnel__right-view--active">
-      <div class="sa-funnel__preview-container">
-        <h3 class="sa-funnel__preview-headline">Aperçu de votre campagne configurée</h3>
-
-        <div class="sa-preview-frame sa-preview-frame--pc">
-          <!-- Top Bar -->
-          <div class="sa-preview-frame__bar">
-            <div class="sa-preview-frame__search">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <span>Rechercher une référence ou un designer</span>
-            </div>
-            <div class="sa-preview-frame__nav-icons">
-              <span class="sa-preview-frame__icon-btn">+</span>
-              <span class="sa-preview-frame__icon-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-              </span>
-            </div>
-          </div>
-
-          <!-- Mockup Card Body -->
-          <div class="sa-preview-frame__body">
-            <div class="sa-preview-frame__media-area">
-              <% if @ad&.image&.attached? %>
-                <% if @ad.video? %>
-                  <video src="<%= url_for(@ad.image) %>" class="sa-preview-frame__img" autoplay loop muted playsinline></video>
-                <% else %>
-                  <%= image_tag @ad.image, alt: @ad.title, class: "sa-preview-frame__img" %>
-                <% end %>
-              <% else %>
-                <%= image_tag "ads/mockup_hero.png", alt: "Aperçu visuel", class: "sa-preview-frame__img", onerror: "this.src='/assets/landing/image-1.jpg'" %>
-              <% end %>
-              <div class="sa-preview-frame__media-overlay">
-                <span class="sa-preview-frame__sponsor-badge">● Sponsorisé</span>
-                <span class="sa-preview-frame__cta-tag">En savoir plus →</span>
-              </div>
-            </div>
-
-            <div class="sa-preview-frame__meta">
-              <span class="sa-preview-frame__kicker">SPONSORISÉ</span>
-              <h4 class="sa-preview-frame__title">
-                <%= @ad&.title.presence || "Votre annonce Omniscient Design" %>
-              </h4>
-              <p class="sa-preview-frame__desc">
-                <%= @ad&.description.presence || "Votre description apparaîtra ici auprès de l'audience des étudiants en design et arts appliqués." %>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Citation Fondateurs -->
-        <div class="sa-funnel__quote-card" style="margin-top: 28px; width: 100%;">
-          <p class="sa-funnel__quote-text" style="font-size: 14px; margin-bottom: 12px;">
-            « Ravis de vous compter parmi nos partenaires ! Notre équipe vérifie vos visuels avec soin pour garantir une visibilité optimale auprès des futurs talents créatifs. »
-          </p>
-          <span class="sa-funnel__quote-author" style="font-size: 13px;">
-            Edgar &amp; Thomas, Fondateurs d'Omniscient Design
-          </span>
-        </div>
+  <div class="sa-funnel__right" style="display: flex; align-items: center; justify-content: center;">
+    <div class="sa-funnel__right-view sa-funnel__right-view--active" style="justify-content: center; align-items: center; width: 100%;">
+      <div class="sa-funnel__quote-card" style="width: 100%; max-width: 440px;">
+        <p class="sa-funnel__quote-text" style="font-size: 14.5px; line-height: 1.6; margin-bottom: 16px;">
+          « Ravis de vous compter parmi nos partenaires ! Notre équipe vérifie vos visuels avec soin pour garantir une visibilité optimale auprès des futurs talents créatifs. »
+        </p>
+        <span class="sa-funnel__quote-author" style="font-size: 13.5px;">
+          Edgar &amp; Thomas, Fondateurs d'Omniscient Design
+        </span>
       </div>
     </div>
   </div>

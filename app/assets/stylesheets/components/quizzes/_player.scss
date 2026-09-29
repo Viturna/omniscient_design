@@ -291,14 +291,16 @@
 @media (max-width: 768px) {
   .quiz-player-wrapper {
     flex-direction: column;
-    height: 100vh;
-    height: -webkit-fill-available;
-    position: fixed;
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+    position: relative !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
 
     .quiz-left-pane {
       width: 100%;
+      flex: none;
       padding: 24px;
       padding-top: calc(env(safe-area-inset-top) + 24px); /* Gère l'encoche/status bar sur mobile */
 
@@ -329,7 +331,10 @@
 
     .quiz-right-pane {
       width: 100%;
-      min-height: 60vh;
+      flex: 1 0 auto;
+      min-height: auto;
+      overflow-y: visible !important;
+      overflow-x: hidden !important;
       padding: 24px;
       padding-bottom: 120px; /* Espace pour la barre de nav du bas */
       margin-top: 10px;

@@ -1,0 +1,170 @@
+<style>
+  .contacts-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
+
+  .contacts-dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .contacts-dash-title { font-size: 32px; font-weight: 500; color: #202020; display: flex; align-items: center; gap: 16px; margin: 0; }
+  .contacts-dash-back-link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background-color: #fff; border: 1px solid #eee; transition: all 0.2s ease; flex-shrink: 0; }
+  .contacts-dash-back-link:hover { background-color: #f0f0f0; transform: translateX(-2px); }
+
+  /* KPIs */
+  .contacts-dash-kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
+  .contacts-dash-kpi-card { background: #fff; padding: 24px; border-radius: 16px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; height: 140px; min-width: 0; }
+  .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .kpi-label { font-size: 13px; font-weight: 500; color: #888; text-transform: uppercase; }
+  .kpi-value { font-size: 32px; font-weight: 600; color: #202020; margin-top: 8px; line-height: 1; }
+
+  /* Filters */
+  .contacts-filters { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-pill { padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 500; text-decoration: none; background: #fff; border: 1px solid #eee; color: #666; transition: all 0.2s; }
+  .filter-pill:hover { background: #f0f0f0; color: #202020; }
+  .filter-pill.active { background: #202020; color: #fff; border-color: #202020; }
+
+  /* Table */
+  .contacts-table-container { background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #f0f0f0; overflow-x: auto; margin-bottom: 48px; }
+  .contacts-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; }
+  .contacts-table th { background-color: #fafafa; padding: 16px 20px; text-align: left; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; border-bottom: 1px solid #eee; white-space: nowrap; }
+  .contacts-table td { padding: 18px 20px; border-bottom: 1px solid #f5f5f5; font-size: 14px; color: #202020; vertical-align: top; }
+  .contacts-table tr:hover { background-color: #fcfcfc; }
+
+  /* Type & Status Badges */
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block; }
+  .badge-quote { background: #FFF3E0; color: #E65100; border: 1px solid #FFE0B2; }
+  .badge-contact { background: #E3F2FD; color: #1565C0; border: 1px solid #BBDEFB; }
+  .badge-pending { background: #FFEBEE; color: #C62828; }
+  .badge-processed { background: #E8F5E9; color: #2E7D32; }
+
+  .contact-msg { max-width: 480px; color: #555; line-height: 1.5; font-size: 13px; white-space: pre-wrap; word-break: break-word; }
+  .contact-school { font-weight: 600; color: #202020; margin-bottom: 4px; display: block; }
+  .contact-email { color: #0070f3; text-decoration: none; font-size: 13px; }
+  .contact-email:hover { text-decoration: underline; }
+
+  .actions-cell { display: flex; gap: 8px; justify-content: flex-end; }
+  .btn-action { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #eee; background: #fff; cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-action:hover { background: #f5f5f5; color: #202020; }
+  .btn-action.toggle-processed { background: #E8F5E9; color: #2E7D32; border-color: #C8E6C9; }
+  .btn-action.toggle-processed:hover { background: #C8E6C9; }
+  .btn-action.delete { color: #C62828; border-color: #FFCDD2; background: #FFEBEE; }
+  .btn-action.delete:hover { background: #FFCDD2; }
+
+  @media (max-width: 900px) {
+    .contacts-dash-kpi-grid { grid-template-columns: 1fr; }
+    .contacts-dash-wrapper { padding: 20px 16px 60px 16px; }
+  }
+</style>
+
+<div class="contacts-dash-wrapper">
+  <div class="contacts-dash-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <%= link_to admin_ads_path, class: "contacts-dash-back-link", title: "Retour aux Ads" do %>
+        <svg style="width: 24px; height: 24px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <% end %>
+      <h1 class="contacts-dash-title">Demandes de Contact & Devis Écoles</h1>
+    </div>
+  </div>
+
+  <div class="contacts-dash-kpi-grid">
+    <div class="contacts-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Demandes en attente</span>
+      </div>
+      <div class="kpi-value" style="color: <%= @pending_count > 0 ? '#E65100' : '#2E7D32' %>;"><%= @pending_count %></div>
+    </div>
+    <div class="contacts-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Demandes de Devis (Monopole)</span>
+      </div>
+      <div class="kpi-value"><%= @quotes_count %></div>
+    </div>
+    <div class="contacts-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Prises de contact</span>
+      </div>
+      <div class="kpi-value"><%= @contacts_count %></div>
+    </div>
+  </div>
+
+  <!-- Filtres rapides -->
+  <div class="contacts-filters">
+    <%= link_to "Toutes les demandes (#{@contacts_count + @quotes_count})", admin_school_contacts_path(filter: 'all'), class: "filter-pill #{'active' if @filter == 'all'}" %>
+    <%= link_to "En attente (#{@pending_count})", admin_school_contacts_path(filter: 'pending'), class: "filter-pill #{'active' if @filter == 'pending'}" %>
+    <%= link_to "Devis Monopole (#{@quotes_count})", admin_school_contacts_path(filter: 'quotes'), class: "filter-pill #{'active' if @filter == 'quotes'}" %>
+    <%= link_to "Contacts classiques (#{@contacts_count})", admin_school_contacts_path(filter: 'contacts'), class: "filter-pill #{'active' if @filter == 'contacts'}" %>
+  </div>
+
+  <div class="contacts-table-container">
+    <% if @contacts.any? %>
+      <table class="contacts-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Établissement / Email</th>
+            <th>Message / Besoin</th>
+            <th>Statut</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @contacts.each do |contact| %>
+            <tr>
+              <td style="white-space: nowrap;">
+                <strong><%= contact.created_at.strftime('%d/%m/%Y') %></strong><br>
+                <span style="font-size: 11px; color: #888;"><%= contact.created_at.strftime('%H:%M') %> (<%= time_ago_in_words(contact.created_at) %>)</span>
+              </td>
+              <td style="white-space: nowrap;">
+                <% if contact.request_type == 'devis_monopole' %>
+                  <span class="badge badge-quote">Devis Monopole</span>
+                <% else %>
+                  <span class="badge badge-contact">Contact</span>
+                <% end %>
+              </td>
+              <td>
+                <span class="contact-school"><%= contact.school_name %></span>
+                <%= mail_to contact.email, contact.email, class: "contact-email" %>
+              </td>
+              <td>
+                <div class="contact-msg"><%= contact.message %></div>
+              </td>
+              <td style="white-space: nowrap;">
+                <% if contact.pending? %>
+                  <span class="badge badge-pending">En attente</span>
+                <% elsif contact.processed? %>
+                  <span class="badge badge-processed">Traité</span>
+                <% else %>
+                  <span class="badge" style="background: #eee; color: #666;"><%= contact.status %></span>
+                <% end %>
+              </td>
+              <td>
+                <div class="actions-cell">
+                  <%= button_to toggle_status_admin_school_contact_path(contact, filter: @filter), method: :patch, class: "btn-action #{'toggle-processed' if contact.pending?}", title: contact.pending? ? "Marquer comme traité" : "Remettre en attente" do %>
+                    <%= contact.pending? ? "✓ Traiter" : "↺ En attente" %>
+                  <% end %>
+                  <%= button_to admin_school_contact_path(contact, filter: @filter), 
+                        method: :delete, 
+                        data: { turbo_confirm: "Supprimer cette demande ?" }, 
+                        class: "btn-action delete", 
+                        title: "Supprimer" do %>
+                    ✕
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div style="padding: 60px 20px; text-align: center; color: #888;">
+        <p style="font-size: 16px; margin: 0;">Aucune demande trouvée pour ce filtre.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

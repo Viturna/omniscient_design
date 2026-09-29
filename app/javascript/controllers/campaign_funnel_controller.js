@@ -17,6 +17,8 @@ export default class extends Controller {
     // Step 1 : Formules, Visuels & Preview
     "planCard",
     "monopoleBox",
+    "monopoleForm",
+    "monopoleSuccess",
     "standardFields",
     "monopoleSchoolInput",
     "monopoleEmailInput",
@@ -52,13 +54,19 @@ export default class extends Controller {
     "previewQuizDesc",
     "previewDeviceLabel",
     "dimensionLabel",
+    "desktopStatusDot",
+    "mobileStatusDot",
+    "uploadContextLabel",
     
-    // Step 2 : Calendrier
+    // Step 2 : Calendrier & Mois
     "startDateInput",
     "endDateInput",
     "calendarMonthYear",
     "calendarDaysGrid",
     "durationSummary",
+    "selectedMonthName",
+    "selectedMonthPeriod",
+    "monthsPillsContainer",
     
     // Step 3 : Ancrage Local & Map
     "regionSearchInput",
@@ -75,41 +83,42 @@ export default class extends Controller {
     "domainInput",
     "emailInput",
     "passwordInput",
-    "passwordConfirmInput"
+    "passwordConfirmInput",
+    "cgvCheckbox"
   ]
 
-  connect() {
-    this.currentStep = 1
-    this.totalSteps = 4
-    
-    // Form data state
-    this.selectedPlan = "ancrage_local"
-    this.selectedFormat = "accueil"
-    this.selectedDevice = "pc"
-    this.selectedRegionKey = "cvl" // Centre-Val de Loire par défaut comme sur la maquette
-    this.selectedFile = null
-    this.selectedMobileFile = null
-    
-    // Calendar state (Forcément par mois complet)
-    this.currentDate = new Date(2026, 8, 1) // Septembre 2026
-    this.rangeStart = new Date(2026, 8, 1)  // 1er Septembre 2026
-    this.rangeEnd = new Date(2026, 8, 30)   // 30 Septembre 2026 (Fin de mois)
-    this.monthSelectionInProgress = false
+connect() {
+  this.currentStep = 1
+  this.totalSteps = 4
+  
+  // Form data state
+  this.selectedPlan = "ancrage_local"
+  this.selectedFormat = "accueil"
+  this.selectedDevice = "pc"
+  this.selectedRegionKey = "cvl" // Centre-Val de Loire par défaut comme sur la maquette
+  this.selectedFile = null
+  this.selectedMobileFile = null
+  
+  // Calendar state (Exactement 1 mois à partir du 1er Septembre 2026 par défaut)
+  this.currentDate = new Date(2026, 8, 1) // Septembre 2026
+  this.rangeStart = new Date(2026, 8, 1)  // 1er Septembre 2026
+  this.rangeEnd = new Date(2026, 9, 1)    // 1er Octobre 2026 (1 mois)
+  this.monthSelectionInProgress = false
 
-    // Check URL parameters (e.g. ?plan=encart_natif or ?plan=monopole)
-    const urlParams = new URLSearchParams(window.location.search)
-    const paramPlan = urlParams.get('plan')
-    if (paramPlan && ['encart_natif', 'ancrage_local', 'monopole'].includes(paramPlan)) {
-      this.selectedPlan = paramPlan
-    }
-    
-    // Initial renders
-    this.setPlan(this.selectedPlan)
-    this.updateStepView()
-    this.renderCalendar()
-    this.updateDatesDisplay()
-    this.selectRegion("cvl")
+  // Check URL parameters (e.g. ?plan=encart_natif or ?plan=monopole)
+  const urlParams = new URLSearchParams(window.location.search)
+  const paramPlan = urlParams.get("plan")
+  if (paramPlan && ["encart_natif", "ancrage_local", "monopole"].includes(paramPlan)) {
+    this.selectedPlan = paramPlan
   }
+  
+  // Initial renders
+  this.setPlan(this.selectedPlan)
+  this.updateStepView()
+  this.renderCalendar()
+  this.updateDatesDisplay()
+  this.selectRegion("cvl")
+}
 
   // =========================================================================
   // 1. GESTION DES ÉTAPES (NAVIGATION & VALIDATION)
@@ -176,6 +185,13 @@ export default class extends Controller {
         isValid = false
       }
 
+      if (!this.selectedFile) {
+        if (this.hasDropzoneTarget) {
+          this.setFieldError(this.dropzoneTarget, "Veuillez importer le visuel Desktop (PC) de votre campagne.")
+        }
+        isValid = false
+      }
+
       return isValid
     } else if (this.currentStep === 2) {
       if (!this.rangeStart || !this.rangeEnd) {
@@ -192,13 +208,21 @@ export default class extends Controller {
       const password = this.hasPasswordInputTarget ? this.passwordInputTarget.value : ""
       const confirmPassword = this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget.value : ""
 
-      if (password && password !== confirmPassword) {
-        this.setFieldError(this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget : null, "Les mots de passe ne correspondent pas.")
-        isValid = false
-      }
-
-      if (password && password.length < 6) {
-        this.setFieldError(this.hasPasswordInputTarget ? this.passwordInputTarget : null, "Le mot de passe doit contenir au moins 6 caractères.")
+      // Si un mot de passe est saisi OU si le mot de passe est requis
+      if (password) {
+        if (password !== confirmPassword) {
+          this.setFieldError(this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget : null, "Les mots de passe ne correspondent pas.")
+          isValid = false
+        } else {
+          // Validation stricte Omniscient (min 6 car., 1 maj, 1 min, 1 chiffre, 1 car. spécial)
+          const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}$/
+          if (!pwdRegex.test(password)) {
+            this.setFieldError(this.passwordInputTarget, "Le mot de passe doit comporter au moins 6 caractères, 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.")
+            isValid = false
+          }
+        }
+      } else if (this.hasPasswordInputTarget && this.passwordInputTarget.hasAttribute("required")) {
+        this.setFieldError(this.passwordInputTarget, "Veuillez renseigner un mot de passe.")
         isValid = false
       }
 
@@ -213,7 +237,12 @@ export default class extends Controller {
       }
 
       if (!schoolName) {
-        this.setFieldError(this.hasSchoolNameInputTarget ? this.schoolNameInputTarget : null, "Veuillez renseigner le nom de votre entreprise.")
+        this.setFieldError(this.hasSchoolNameInputTarget ? this.schoolNameInputTarget : null, "Veuillez renseigner le nom de votre établissement ou entreprise.")
+        isValid = false
+      }
+
+      if (this.hasCgvCheckboxTarget && !this.cgvCheckboxTarget.checked) {
+        this.setFieldError(this.cgvCheckboxTarget, "Veuillez accepter les Conditions Générales de Vente pour continuer.")
         isValid = false
       }
 
@@ -226,8 +255,11 @@ export default class extends Controller {
   setFieldError(inputEl, message) {
     if (!inputEl) return
     inputEl.classList.add("sa-funnel__input--error")
+    if (inputEl.classList.contains("sa-upload-box")) {
+      inputEl.classList.add("sa-upload-box--error")
+    }
 
-    const fieldContainer = inputEl.closest(".sa-funnel__field") || inputEl.parentElement
+    const fieldContainer = inputEl.closest(".sa-funnel__field") || inputEl.closest(".sa-funnel__form-group") || inputEl.parentElement
     if (fieldContainer) {
       const existingError = fieldContainer.querySelector(".sa-funnel__field-error")
       if (existingError) existingError.remove()
@@ -247,15 +279,17 @@ export default class extends Controller {
       this.clearFieldError(inputEl)
       inputEl.removeEventListener("input", clearHandler)
       inputEl.removeEventListener("change", clearHandler)
+      inputEl.removeEventListener("click", clearHandler)
     }
     inputEl.addEventListener("input", clearHandler)
     inputEl.addEventListener("change", clearHandler)
+    inputEl.addEventListener("click", clearHandler)
   }
 
   clearFieldError(inputEl) {
     if (!inputEl) return
-    inputEl.classList.remove("sa-funnel__input--error", "sa-funnel__textarea--error", "sa-funnel__select--error")
-    const fieldContainer = inputEl.closest(".sa-funnel__field") || inputEl.parentElement
+    inputEl.classList.remove("sa-funnel__input--error", "sa-funnel__textarea--error", "sa-funnel__select--error", "sa-upload-box--error")
+    const fieldContainer = inputEl.closest(".sa-funnel__field") || inputEl.closest(".sa-funnel__form-group") || inputEl.parentElement
     if (fieldContainer) {
       const existingError = fieldContainer.querySelector(".sa-funnel__field-error")
       if (existingError) existingError.remove()
@@ -263,8 +297,8 @@ export default class extends Controller {
   }
 
   clearAllErrors() {
-    this.element.querySelectorAll(".sa-funnel__input--error, .sa-funnel__textarea--error, .sa-funnel__select--error").forEach(el => {
-      el.classList.remove("sa-funnel__input--error", "sa-funnel__textarea--error", "sa-funnel__select--error")
+    this.element.querySelectorAll(".sa-funnel__input--error, .sa-funnel__textarea--error, .sa-funnel__select--error, .sa-upload-box--error").forEach(el => {
+      el.classList.remove("sa-funnel__input--error", "sa-funnel__textarea--error", "sa-funnel__select--error", "sa-upload-box--error")
     })
     this.element.querySelectorAll(".sa-funnel__field-error").forEach(el => el.remove())
   }
@@ -285,29 +319,29 @@ export default class extends Controller {
       1: {
         badge: `Étape 1/${totalCount} : Visuels`,
         subtitle: "Configuration des visuels de votre campagne",
-        nextText: "Calendrier de diffusion →",
+        nextText: "Calendrier de diffusion",
         showPrev: false
       },
       2: {
         badge: `Étape 2/${totalCount} : Calendrier de diffusion`,
         subtitle: "Configuration de la période de votre campagne",
-        nextText: isEncart ? "Création du compte →" : "Ancrage local →",
+        nextText: isEncart ? "Création du compte" : "Ancrage local",
         showPrev: true,
-        prevText: "← Modifier les visuels"
+        prevText: "Modifier les visuels"
       },
       3: {
         badge: `Étape 3/4 : Configurer l’ancrage local`,
         subtitle: "Région que vous souhaitez cibler",
-        nextText: "Création du compte →",
+        nextText: "Création du compte",
         showPrev: true,
-        prevText: "← Calendrier de diffusion"
+        prevText: "Calendrier de diffusion"
       },
       4: {
         badge: `Étape ${displayStepNum}/${totalCount} : Création du compte`,
         subtitle: "Configuration de votre compte professionnel",
-        nextText: "Paiement sécurisé →",
+        nextText: "Paiement sécurisé",
         showPrev: true,
-        prevText: isEncart ? "← Calendrier de diffusion" : "← Ancrage local"
+        prevText: isEncart ? "Calendrier de diffusion" : "Ancrage local"
       }
     }
 
@@ -317,7 +351,7 @@ export default class extends Controller {
     if (this.hasStepSubtitleTarget) this.stepSubtitleTarget.textContent = currentConf.subtitle
     if (this.hasNextBtnTextTarget) {
       if (this.currentStep === 1 && this.selectedPlan === "monopole") {
-        this.nextBtnTextTarget.textContent = "Demander un devis →"
+        this.nextBtnTextTarget.textContent = "Demander un devis"
       } else {
         this.nextBtnTextTarget.textContent = currentConf.nextText
       }
@@ -373,20 +407,26 @@ export default class extends Controller {
       if (plan === "monopole") {
         this.monopoleBoxTarget.style.display = "flex"
         this.standardFieldsTarget.style.display = "none"
+        if (this.hasMonopoleFormTarget) this.monopoleFormTarget.style.display = "flex"
+        if (this.hasMonopoleSuccessTarget) this.monopoleSuccessTarget.style.display = "none"
         if (this.hasNextBtnTextTarget && this.currentStep === 1) {
-          this.nextBtnTextTarget.textContent = "Demander un devis →"
+          this.nextBtnTextTarget.textContent = "Demander un devis"
         }
         if (this.hasNextBtnTarget) {
           this.nextBtnTarget.style.display = "inline-flex"
+          this.nextBtnTarget.disabled = false
+          this.nextBtnTarget.style.opacity = "1"
         }
       } else {
         this.monopoleBoxTarget.style.display = "none"
         this.standardFieldsTarget.style.display = "flex"
         if (this.hasNextBtnTextTarget && this.currentStep === 1) {
-          this.nextBtnTextTarget.textContent = "Calendrier de diffusion →"
+          this.nextBtnTextTarget.textContent = "Calendrier de diffusion"
         }
         if (this.hasNextBtnTarget) {
           this.nextBtnTarget.style.display = "inline-flex"
+          this.nextBtnTarget.disabled = false
+          this.nextBtnTarget.style.opacity = "1"
         }
       }
     }
@@ -400,13 +440,22 @@ export default class extends Controller {
     const message = this.hasMonopoleMessageInputTarget ? this.monopoleMessageInputTarget.value.trim() : ""
 
     if (!school) {
-      this.markInputError(this.hasMonopoleSchoolInputTarget ? this.monopoleSchoolInputTarget : null, "Veuillez indiquer le nom de votre établissement.")
+      this.setFieldError(this.hasMonopoleSchoolInputTarget ? this.monopoleSchoolInputTarget : null, "Veuillez indiquer le nom de votre établissement.")
       return
     }
 
     if (!email || !email.includes("@")) {
-      this.markInputError(this.hasMonopoleEmailInputTarget ? this.monopoleEmailInputTarget : null, "Veuillez indiquer une adresse email valide.")
+      this.setFieldError(this.hasMonopoleEmailInputTarget ? this.monopoleEmailInputTarget : null, "Veuillez indiquer une adresse email valide.")
       return
+    }
+
+    // Loading state on next button
+    if (this.hasNextBtnTarget) {
+      this.nextBtnTarget.disabled = true
+      this.nextBtnTarget.style.opacity = "0.7"
+      if (this.hasNextBtnTextTarget) {
+        this.nextBtnTextTarget.textContent = "Envoi en cours..."
+      }
     }
 
     try {
@@ -426,13 +475,29 @@ export default class extends Controller {
         body: formData
       })
 
-      setTimeout(() => {
-        window.location.href = "/schools-ads"
-      }, 1000)
+      if (response.ok) {
+        // Afficher le message de succès dans la boîte Monopole
+        if (this.hasMonopoleFormTarget) this.monopoleFormTarget.style.display = "none"
+        if (this.hasMonopoleSuccessTarget) this.monopoleSuccessTarget.style.display = "block"
+        
+        // Masquer le bouton d'envoi ou changer son texte
+        if (this.hasNextBtnTarget) {
+          this.nextBtnTarget.style.display = "none"
+        }
+      } else {
+        throw new Error("Erreur réseau")
+      }
     } catch (error) {
       console.error("Erreur monopole quote:", error)
+      if (this.hasNextBtnTarget) {
+        this.nextBtnTarget.disabled = false
+        this.nextBtnTarget.style.opacity = "1"
+        if (this.hasNextBtnTextTarget) {
+          this.nextBtnTextTarget.textContent = "Demander un devis"
+        }
+      }
       if (this.hasMonopoleSchoolInputTarget) {
-        this.setFieldError(this.monopoleSchoolInputTarget, "Une erreur est survenue. Veuillez réessayer.")
+        this.setFieldError(this.monopoleSchoolInputTarget, "Une erreur est survenue lors de l'envoi. Veuillez réessayer.")
       }
     }
   }
@@ -483,13 +548,39 @@ export default class extends Controller {
       this.previewDeviceLabelTarget.textContent = device === "mobile" ? "Visuel sur Mobile" : "Visuel sur PC"
     }
 
-    this.updateDimensionsHint()
+    if (this.hasUploadContextLabelTarget) {
+      this.uploadContextLabelTarget.textContent = device === "mobile" ? "Visuel Mobile" : "Visuel Desktop"
+    }
 
-    // Update active media preview based on device if mobile file was uploaded
-    if (device === "mobile" && this.selectedMobileFile) {
-      this.displayFileInPreview(this.selectedMobileFile)
-    } else if (device === "pc" && this.selectedFile) {
-      this.displayFileInPreview(this.selectedFile)
+    this.updateDimensionsHint()
+    this.updateUploadBoxState()
+
+    // Sync mock previews with corresponding file
+    const activeFile = device === "mobile" ? (this.selectedMobileFile || this.selectedFile) : this.selectedFile
+    if (activeFile) {
+      this.renderFileInMockup(activeFile)
+    }
+  }
+
+  updateUploadBoxState() {
+    const activeFile = this.selectedDevice === "mobile" ? this.selectedMobileFile : this.selectedFile
+
+    if (this.hasDesktopStatusDotTarget) {
+      this.desktopStatusDotTarget.style.display = this.selectedFile ? "inline-block" : "none"
+    }
+    if (this.hasMobileStatusDotTarget) {
+      this.mobileStatusDotTarget.style.display = this.selectedMobileFile ? "inline-block" : "none"
+    }
+
+    if (activeFile) {
+      if (this.hasUploadPlaceholderTarget) this.uploadPlaceholderTarget.style.display = "none"
+      if (this.hasUploadSuccessTarget) {
+        this.uploadSuccessTarget.style.display = "flex"
+        if (this.hasUploadFileNameTarget) this.uploadFileNameTarget.textContent = activeFile.name
+      }
+    } else {
+      if (this.hasUploadSuccessTarget) this.uploadSuccessTarget.style.display = "none"
+      if (this.hasUploadPlaceholderTarget) this.uploadPlaceholderTarget.style.display = "flex"
     }
   }
 
@@ -530,7 +621,11 @@ export default class extends Controller {
     const file = event.target.files[0]
     if (file) {
       this.selectedFile = file
-      this.displayFileInPreview(file)
+      if (this.hasDropzoneTarget) {
+        this.clearFieldError(this.dropzoneTarget)
+      }
+      this.updateUploadBoxState()
+      this.renderFileInMockup(file)
     }
   }
 
@@ -538,7 +633,11 @@ export default class extends Controller {
     const file = event.target.files[0]
     if (file) {
       this.selectedMobileFile = file
-      this.displayFileInPreview(file)
+      if (this.hasDropzoneTarget) {
+        this.clearFieldError(this.dropzoneTarget)
+      }
+      this.updateUploadBoxState()
+      this.renderFileInMockup(file)
     }
   }
 
@@ -560,6 +659,7 @@ export default class extends Controller {
     event.preventDefault()
     if (this.hasDropzoneTarget) {
       this.dropzoneTarget.classList.remove("sa-upload-box--dragover")
+      this.clearFieldError(this.dropzoneTarget)
     }
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       const file = event.dataTransfer.files[0]
@@ -568,7 +668,8 @@ export default class extends Controller {
       } else {
         this.selectedFile = file
       }
-      this.displayFileInPreview(file)
+      this.updateUploadBoxState()
+      this.renderFileInMockup(file)
     }
   }
 
@@ -597,7 +698,7 @@ export default class extends Controller {
     this.dimensionLabelTarget.textContent = recommended
   }
 
-  displayFileInPreview(file) {
+  renderFileInMockup(file) {
     const isVideo = file.type.startsWith("video/")
     const isImage = file.type.startsWith("image/")
 
@@ -642,155 +743,152 @@ export default class extends Controller {
         img.style.display = "block"
       })
     }
-
-    if (this.hasUploadPlaceholderTarget) this.uploadPlaceholderTarget.style.display = "none"
-    if (this.hasUploadSuccessTarget) {
-      this.uploadSuccessTarget.style.display = "flex"
-      if (this.hasUploadFileNameTarget) this.uploadFileNameTarget.textContent = file.name
-    }
   }
 
-  // =========================================================================
-  // 3. ÉTAPE 2 : CALENDRIER INTERACTIF & SÉLECTION DE DATES
-  // =========================================================================
 
-  prevMonth() {
-    this.currentDate.setMonth(this.currentDate.getMonth() - 1)
-    this.renderCalendar()
+
+// =========================================================================
+// 3. ÉTAPE 2 : CALENDRIER & PÉRIODE DE 1 MOIS
+// =========================================================================
+
+prevMonth() {
+  this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1)
+  this.renderCalendar()
+}
+
+nextMonth() {
+  this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1)
+  this.renderCalendar()
+}
+
+handleDayClick(date) {
+  this.rangeStart = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  // 1 mois exact : même jour le mois suivant
+  this.rangeEnd = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate())
+  
+  this.renderCalendar()
+  this.updateDatesDisplay()
+}
+
+renderCalendar() {
+  const monthNames = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  ]
+
+  const year = this.currentDate.getFullYear()
+  const month = this.currentDate.getMonth()
+
+  if (this.hasCalendarMonthYearTarget) {
+    this.calendarMonthYearTarget.textContent = `${monthNames[month]} ${year}`
   }
 
-  nextMonth() {
-    this.currentDate.setMonth(this.currentDate.getMonth() + 1)
-    this.renderCalendar()
+  if (!this.hasCalendarDaysGridTarget) return
+
+  const grid = this.calendarDaysGridTarget
+  grid.innerHTML = ""
+
+  const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7 // Lundi = 0
+  const lastDate = new Date(year, month + 1, 0).getDate()
+  const prevLastDate = new Date(year, month, 0).getDate()
+
+  // Jours du mois précédent (inactifs/gris clair)
+  for (let x = firstDayIndex; x > 0; x--) {
+    const dayNum = prevLastDate - x + 1
+    const prevDate = new Date(year, month - 1, dayNum)
+    const dayEl = document.createElement("button")
+    dayEl.type = "button"
+    dayEl.className = "sa-cal-day sa-cal-day--prev-month"
+    dayEl.textContent = dayNum
+    
+    const isInRange = this.rangeStart && this.rangeEnd && (prevDate >= this.rangeStart && prevDate <= this.rangeEnd)
+    const isStart = this.isSameDay(prevDate, this.rangeStart)
+    const isEnd = this.isSameDay(prevDate, this.rangeEnd)
+
+    if (isStart) dayEl.classList.add("sa-cal-day--start")
+    else if (isEnd) dayEl.classList.add("sa-cal-day--end")
+    else if (isInRange) dayEl.classList.add("sa-cal-day--in-range")
+
+    dayEl.addEventListener("click", () => this.handleDayClick(prevDate))
+    grid.appendChild(dayEl)
   }
 
-  renderCalendar() {
-    const monthNames = [
-      "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-      "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ]
+  // Jours du mois en cours
+  for (let i = 1; i <= lastDate; i++) {
+    const thisDayDate = new Date(year, month, i)
+    const dayEl = document.createElement("button")
+    dayEl.type = "button"
+    dayEl.className = "sa-cal-day"
+    dayEl.textContent = i
+    dayEl.dataset.date = thisDayDate.toISOString()
 
-    const year = this.currentDate.getFullYear()
-    const month = this.currentDate.getMonth()
+    const isInRange = this.rangeStart && this.rangeEnd && (thisDayDate >= this.rangeStart && thisDayDate <= this.rangeEnd)
+    const isStart = this.isSameDay(thisDayDate, this.rangeStart)
+    const isEnd = this.isSameDay(thisDayDate, this.rangeEnd)
 
-    if (this.hasCalendarMonthYearTarget) {
-      this.calendarMonthYearTarget.textContent = `${monthNames[month]} ${year}`
+    if (isStart) {
+      dayEl.classList.add("sa-cal-day--start")
+    } else if (isEnd) {
+      dayEl.classList.add("sa-cal-day--end")
+    } else if (isInRange) {
+      dayEl.classList.add("sa-cal-day--in-range")
     }
 
-    if (!this.hasCalendarDaysGridTarget) return
-
-    const grid = this.calendarDaysGridTarget
-    grid.innerHTML = ""
-
-    const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7 // Lundi = 0
-    const lastDate = new Date(year, month + 1, 0).getDate()
-    const prevLastDate = new Date(year, month, 0).getDate()
-
-    // Jours du mois précédent (inactifs/gris clair)
-    for (let x = firstDayIndex; x > 0; x--) {
-      const dayNum = prevLastDate - x + 1
-      const dayEl = document.createElement("div")
-      dayEl.className = "sa-cal-day sa-cal-day--disabled"
-      dayEl.textContent = dayNum
-      grid.appendChild(dayEl)
-    }
-
-    // Jours du mois en cours
-    for (let i = 1; i <= lastDate; i++) {
-      const thisDayDate = new Date(year, month, i)
-      const dayEl = document.createElement("button")
-      dayEl.type = "button"
-      dayEl.className = "sa-cal-day"
-      dayEl.textContent = i
-      dayEl.dataset.date = thisDayDate.toISOString()
-
-      // Highlight logic
-      if (this.rangeStart && this.rangeEnd) {
-        const isStart = this.isSameDay(thisDayDate, this.rangeStart)
-        const isEnd = this.isSameDay(thisDayDate, this.rangeEnd)
-        const isInRange = thisDayDate >= this.rangeStart && thisDayDate <= this.rangeEnd
-
-        if (isStart) {
-          dayEl.classList.add("sa-cal-day--start")
-        } else if (isInRange) {
-          dayEl.classList.add("sa-cal-day--selected")
-        }
-      } else if (this.rangeStart && this.isSameDay(thisDayDate, this.rangeStart)) {
-        dayEl.classList.add("sa-cal-day--start")
-      }
-
-      dayEl.addEventListener("click", () => this.handleDayClick(thisDayDate))
-      grid.appendChild(dayEl)
-    }
+    dayEl.addEventListener("click", () => this.handleDayClick(thisDayDate))
+    grid.appendChild(dayEl)
   }
 
-  handleDayClick(date) {
-    const clickedMonthStart = new Date(date.getFullYear(), date.getMonth(), 1)
-    const clickedMonthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+  // Compléter avec les premiers jours du mois suivant
+  const totalRendered = firstDayIndex + lastDate
+  const nextDaysNeeded = (7 - (totalRendered % 7)) % 7
+  for (let n = 1; n <= nextDaysNeeded; n++) {
+    const nextDate = new Date(year, month + 1, n)
+    const dayEl = document.createElement("button")
+    dayEl.type = "button"
+    dayEl.className = "sa-cal-day sa-cal-day--next-month"
+    dayEl.textContent = n
 
-    if (!this.monthSelectionInProgress) {
-      // 1er clic : sélectionne le mois entier correspondant au jour cliqué
-      this.rangeStart = clickedMonthStart
-      this.rangeEnd = clickedMonthEnd
-      this.monthSelectionInProgress = true
-      this.selectionAnchor = { year: date.getFullYear(), month: date.getMonth() }
-    } else {
-      // 2e clic : étend la période du 1er jour du mois de début au dernier jour du mois de fin
-      const y1 = this.selectionAnchor.year
-      const m1 = this.selectionAnchor.month
-      const y2 = date.getFullYear()
-      const m2 = date.getMonth()
+    const isInRange = this.rangeStart && this.rangeEnd && (nextDate >= this.rangeStart && nextDate <= this.rangeEnd)
+    const isStart = this.isSameDay(nextDate, this.rangeStart)
+    const isEnd = this.isSameDay(nextDate, this.rangeEnd)
 
-      let startYear, startMonth, endYear, endMonth
-      if (y1 < y2 || (y1 === y2 && m1 <= m2)) {
-        startYear = y1; startMonth = m1; endYear = y2; endMonth = m2
-      } else {
-        startYear = y2; startMonth = m2; endYear = y1; endMonth = m1
-      }
+    if (isStart) dayEl.classList.add("sa-cal-day--start")
+    else if (isEnd) dayEl.classList.add("sa-cal-day--end")
+    else if (isInRange) dayEl.classList.add("sa-cal-day--in-range")
 
-      this.rangeStart = new Date(startYear, startMonth, 1)
-      this.rangeEnd = new Date(endYear, endMonth + 1, 0)
-      this.monthSelectionInProgress = false
-    }
+    dayEl.addEventListener("click", () => this.handleDayClick(nextDate))
+    grid.appendChild(dayEl)
+  }
+}
 
-    this.renderCalendar()
-    this.updateDatesDisplay()
+updateDatesDisplay() {
+  const formatDate = (d) => {
+    if (!d) return ""
+    const dd = String(d.getDate()).padStart(2, '0')
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const yyyy = d.getFullYear()
+    return `${dd}/${mm}/${yyyy}`
   }
 
-  updateDatesDisplay() {
-    const formatDate = (d) => {
-      if (!d) return ""
-      const dd = String(d.getDate()).padStart(2, '0')
-      const mm = String(d.getMonth() + 1).padStart(2, '0')
-      const yyyy = d.getFullYear()
-      return `${dd}/${mm}/${yyyy}`
-    }
-
-    if (this.hasStartDateInputTarget && this.rangeStart) {
-      this.startDateInputTarget.value = formatDate(this.rangeStart)
-    }
-
-    if (this.hasEndDateInputTarget && this.rangeEnd) {
-      this.endDateInputTarget.value = formatDate(this.rangeEnd)
-    }
-
-    if (this.hasDurationSummaryTarget && this.rangeStart && this.rangeEnd) {
-      const monthsCount = Math.max(1, (this.rangeEnd.getFullYear() - this.rangeStart.getFullYear()) * 12 + (this.rangeEnd.getMonth() - this.rangeStart.getMonth()) + 1)
-      const diffDays = Math.round((this.rangeEnd - this.rangeStart) / (1000 * 60 * 60 * 24)) + 1
-      const monthLabel = monthsCount === 1 ? "1 mois complet" : `${monthsCount} mois complets`
-      this.durationSummaryTarget.textContent = `${monthLabel} de diffusion (${diffDays} jours)`
-    }
+  if (this.hasStartDateInputTarget && this.rangeStart) {
+    this.startDateInputTarget.value = formatDate(this.rangeStart)
   }
 
-  isSameDay(d1, d2) {
-    if (!d1 || !d2) return false
-    return d1.getFullYear() === d2.getFullYear() &&
-           d1.getMonth() === d2.getMonth() &&
-           d1.getDate() === d2.getDate()
+  if (this.hasEndDateInputTarget && this.rangeEnd) {
+    this.endDateInputTarget.value = formatDate(this.rangeEnd)
   }
+}
 
-  // =========================================================================
-  // 4. ÉTAPE 3 : ANCRAGE LOCAL & CARTE INTERACTIVE
+isSameDay(d1, d2) {
+  if (!d1 || !d2) return false
+  return d1.getFullYear() === d2.getFullYear() &&
+         d1.getMonth() === d2.getMonth() &&
+         d1.getDate() === d2.getDate()
+}
+
+// =========================================================================
+// 4. ÉTAPE 3 : ANCRAGE LOCAL & CARTE INTERACTIVE
+
   // =========================================================================
 
   selectRegion(regionKeyOrEvent) {
@@ -990,8 +1088,19 @@ export default class extends Controller {
       if (result.success && result.checkout_url) {
         window.location.href = result.checkout_url
       } else {
-        if (this.hasEmailInputTarget) {
-          this.setFieldError(this.emailInputTarget, result.message || "Une erreur est survenue lors de l'initialisation du paiement.")
+        const errorField = result.field
+        let targetEl = this.hasEmailInputTarget ? this.emailInputTarget : null
+
+        if (errorField === 'password' && this.hasPasswordInputTarget) {
+          targetEl = this.passwordInputTarget
+        } else if (errorField === 'password_confirmation' && this.hasPasswordConfirmInputTarget) {
+          targetEl = this.passwordConfirmInputTarget
+        } else if (errorField === 'school_name' && this.hasSchoolNameInputTarget) {
+          targetEl = this.schoolNameInputTarget
+        }
+
+        if (targetEl) {
+          this.setFieldError(targetEl, result.message || "Une erreur est survenue lors de l'initialisation.")
         }
         nextBtn.disabled = false
         nextBtn.innerHTML = originalText

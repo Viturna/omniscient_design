@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_02_172701) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_29_101006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -57,6 +57,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_172701) do
     t.integer "price_paid"
     t.date "start_date"
     t.string "status", default: "pending"
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "subscription_status"
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "weight", default: 1, null: false
@@ -543,6 +546,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_172701) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_rejected_studios_on_user_id"
+  end
+
+  create_table "school_contacts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.text "message"
+    t.string "request_type", default: "contact", null: false
+    t.string "school_name", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "season_histories", force: :cascade do |t|

@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     post 'checkout', to: 'schools_ads#checkout', as: :schools_ads_checkout
     get 'succes', to: 'schools_ads#success', as: :schools_ads_success
     get 'dashboard', to: 'schools_ads#dashboard', as: :schools_ads_dashboard
+    get 'facturation', to: 'schools_ads#billing_portal', as: :schools_ads_billing_portal
+    post 'cancel_subscription/:id', to: 'schools_ads#cancel_subscription', as: :schools_ads_cancel_subscription
     post 'contact', to: 'schools_ads#contact', as: :schools_ads_contact
   end
   get 'schools-ads', to: 'schools_ads#index', as: :schools_ads
@@ -23,6 +25,8 @@ Rails.application.routes.draw do
   post 'schools-ads/checkout', to: 'schools_ads#checkout', as: :schools_ads_direct_checkout
   get 'schools-ads/succes', to: 'schools_ads#success', as: :schools_ads_direct_success
   get 'schools-ads/dashboard', to: 'schools_ads#dashboard', as: :schools_ads_direct_dashboard
+  get 'schools-ads/facturation', to: 'schools_ads#billing_portal', as: :schools_ads_direct_billing_portal
+  post 'schools-ads/cancel_subscription/:id', to: 'schools_ads#cancel_subscription', as: :schools_ads_direct_cancel_subscription
   post 'schools-ads/contact', to: 'schools_ads#contact', as: :schools_ads_direct_contact
   # ---- ADMIN ----
   namespace :admin do
@@ -30,6 +34,11 @@ Rails.application.routes.draw do
       member do
         patch :approve
         patch :reject
+      end
+    end
+    resources :school_contacts, only: %i[index update destroy] do
+      member do
+        patch :toggle_status
       end
     end
     resources :quizzes do
@@ -226,6 +235,7 @@ Rails.application.routes.draw do
     get 'politiquedeconfidentialite', to: 'pages#politiquedeconfidentialite', as: 'politiquedeconfidentialite'
     get 'cookies', to: 'pages#cookies', as: 'cookies'
     get 'cgu', to: 'pages#cgu', as: 'cgu'
+    get 'cgv-ads', to: 'pages#cgv_ads', as: 'cgv_ads'
     get 'changelog', to: 'pages#changelog', as: 'changelog'
     get 'parrainage_filleul', to: 'pages#parrainage_filleul', as: 'parrainage_filleul'
     post 'parrainage_filleul', to: 'pages#parrainage_filleul'

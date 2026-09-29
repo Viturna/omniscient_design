@@ -22,7 +22,6 @@ class SchoolsAdsController < ApplicationController
     @std2a_count = User.where("study_level ILIKE ? OR study_level ILIKE ?", "%terminale%", "%std2a%").count
 
     # Données dynamiques de répartition par région pour la carte interactive
-    # Basé sur le volume total de membres et la répartition réelle des établissements par région
     region_mapping = {
       "idf" => { name: "Île-de-France", db_names: ["Ile-de-France", "Île-de-France"] },
       "ara" => { name: "Auvergne-Rhône-Alpes", db_names: ["Auvergne-Rhône-Alpes"] },
@@ -39,7 +38,6 @@ class SchoolsAdsController < ApplicationController
       "cor" => { name: "Corse", db_names: ["Corse"] }
     }
 
-    # Récupération du nombre réel d'établissements en base par région
     etablissements_by_region = Etablissement.group(:region).count
     total_etablissements_france = region_mapping.values.sum do |info|
       info[:db_names].sum { |reg| etablissements_by_region[reg].to_i }
@@ -86,7 +84,6 @@ class SchoolsAdsController < ApplicationController
   end
 
   def funnel
-    # Données dynamiques de répartition par région pour la carte interactive du funnel
     region_mapping = {
       "idf" => { name: "Île-de-France", db_names: ["Ile-de-France", "Île-de-France"] },
       "ara" => { name: "Auvergne-Rhône-Alpes", db_names: ["Auvergne-Rhône-Alpes"] },
@@ -142,26 +139,54 @@ class SchoolsAdsController < ApplicationController
     format_type = params[:format_type].presence || "accueil"
     
     start_date = Date.parse(params[:start_date]) rescue Date.current
-    end_date = Date.parse(params[:end_date]) rescue (start_date + 24.days)
+    end_date = Date.parse(params[:end_date]) rescue (start_date + 1.month)
     end_date = start_date if end_date < start_date
     duration_days = (end_date - start_date).to_i + 1
 
     plan_type = params[:plan_type].presence || "ancrage_local"
 
-    # Calcul du nombre de mois (période par mois complet)
-    months_count = [((end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1), 1].max
-
-    # Calcul du tarif forfaitaire mensuel
+    # Tarif forfaitaire mensuel de l'abonnement récurrent
     price_cents = if plan_type == "encart_natif"
-      months_count * 20000 # 200.00 EUR par mois
+      20000 # 200.00 EUR / mois
     else # ancrage_local
-      months_count * 40000 # 400.00 EUR par mois
+      40000 # 400.00 EUR / mois
     end
 
-    # Création du compte utilisateur pro si mot de passe fourni
-    if params[:password].present? && params[:password] == params[:password_confirmation]
-      user = User.find_by(email: email.downcase)
-      if user.nil?
+    # Gestion sécurisée du compte utilisateur
+    if user_signed_in? && email.downcase == current_user.email.downcase
+      # L'utilisateur connecté conserve son compte actuel
+      email = current_user.email
+      school_name = current_user.etablissement&.name.presence || current_user.firstname.presence || school_name
+    else
+      # L'utilisateur souhaite utiliser un autre compte ou n'est pas connecté
+      existing_user = User.find_by(email: email.downcase)
+      if existing_user.present?
+        # L'utilisateur existe déjà : on vérifie son mot de passe pour sécuriser l'accès
+        if params[:password].blank? || !existing_user.valid_password?(params[:password])
+          return render json: {
+            success: false,
+            field: 'password',
+            message: "Un compte existe déjà avec cette adresse email (#{email}). Veuillez saisir le bon mot de passe associé pour vous identifier."
+          }, status: :unprocessable_entity
+        end
+      else
+        # Création d'un nouveau compte avec validations strictes
+        if params[:password].blank?
+          return render json: {
+            success: false,
+            field: 'password',
+            message: "Veuillez renseigner un mot de passe pour ce compte."
+          }, status: :unprocessable_entity
+        end
+
+        if params[:password] != params[:password_confirmation]
+          return render json: {
+            success: false,
+            field: 'password_confirmation',
+            message: "Les mots de passe ne correspondent pas."
+          }, status: :unprocessable_entity
+        end
+
         user = User.new(
           email: email.downcase,
           password: params[:password],
@@ -172,11 +197,19 @@ class SchoolsAdsController < ApplicationController
           role: 'user'
         )
         user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
-        user.save
+
+        unless user.save
+          error_msg = user.errors.full_messages.to_sentence
+          return render json: {
+            success: false,
+            field: user.errors.key?(:password) ? 'password' : 'email',
+            message: error_msg
+          }, status: :unprocessable_entity
+        end
       end
     end
 
-    # Création de l'annonce Ad
+    # Création de l'annonce Ad (Inactive / En attente de paiement)
     ad = Ad.new(
       title: title,
       description: description,
@@ -186,8 +219,8 @@ class SchoolsAdsController < ApplicationController
       end_date: end_date,
       duration_days: duration_days,
       price_paid: price_cents,
-      status: 'pending_validation',
-      active: true,
+      status: 'pending',
+      active: false,
       weight: 1
     )
 
@@ -207,39 +240,57 @@ class SchoolsAdsController < ApplicationController
 
     ad.save(validate: false)
 
-    # Notification aux administrateurs
-    User.where(role: 'admin').each do |admin_user|
-      Notification.create(
-        user_id: admin_user.id,
-        title: "Nouvelle campagne publicitaire : #{school_name}",
-        message: "#{school_name} a commandé une campagne de #{duration_days} jours (#{price_cents / 100}€).",
-        link: '/admin/ads',
-        status: :unread
-      ) rescue nil
-    end
-
-    # Session Stripe Checkout
+    # Session Stripe Checkout en mode ABONNEMENT RÉCURRENT (mensuel)
     begin
       stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
       raise "Clé Stripe non configurée (STRIPE_SECRET_KEY manquante)" if stripe_key.blank?
 
       Stripe.api_key = stripe_key
 
-      session = Stripe::Checkout::Session.create({
+      # Réutiliser le customer Stripe existant pour l'email si disponible
+      existing_customer_id = Ad.where("LOWER(email) = ?", email.downcase)
+                               .where.not(stripe_customer_id: [nil, ""])
+                               .order(created_at: :desc)
+                               .pluck(:stripe_customer_id)
+                               .first
+
+      session_params = {
         payment_method_types: ['card'],
         line_items: [{
           price_data: {
             currency: 'eur',
             unit_amount: price_cents,
+            recurring: {
+              interval: 'month'
+            },
             product_data: {
-              name: "Campagne Publicitaire Omniscient Design - #{school_name}",
-              description: "#{duration_days} jours de diffusion simultanée (Accueil, Recherche, Quiz) - Région : #{region}",
+              name: "Abonnement Campagne Publicitaire - #{school_name}",
+              description: "Diffusion continue renouvelée mensuellement (Accueil, Recherche, Quiz) - Région : #{region}",
             },
           },
           quantity: 1,
         }],
-        mode: 'payment',
-        customer_email: email,
+        mode: 'subscription',
+        subscription_data: {
+          # Si un compte connecté Stripe (ex: Edgar) est configuré dans l'ENV
+          # Stripe Connect transfère automatiquement les 60% vers son compte à chaque mensualité
+          # et conserve les 40% sur la plateforme pour Thomas
+          **(if ENV['STRIPE_CONNECT_ACCOUNT_ID'].present?
+              {
+                transfer_data: {
+                  destination: ENV['STRIPE_CONNECT_ACCOUNT_ID'],
+                  amount_percent: (ENV['STRIPE_CONNECT_PERCENT'].presence || 60.0).to_f
+                }
+              }
+            else
+              {}
+            end),
+          metadata: {
+            ad_id: ad.id,
+            school_name: school_name,
+            region: region
+          }
+        },
         metadata: {
           ad_id: ad.id,
           school_name: school_name,
@@ -248,14 +299,23 @@ class SchoolsAdsController < ApplicationController
         },
         success_url: "#{request.base_url}#{request.subdomain.to_s.include?('schools-ads') ? '/succes' : '/schools-ads/succes'}?ad_id=#{ad.id}&session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "#{request.base_url}#{request.subdomain.to_s.include?('schools-ads') ? '/creer-campagne' : '/schools-ads/creer-campagne'}"
-      })
+      }
+
+      if existing_customer_id.present?
+        session_params[:customer] = existing_customer_id
+      else
+        session_params[:customer_email] = email
+      end
+
+      session = Stripe::Checkout::Session.create(session_params)
 
       render json: { success: true, checkout_url: session.url }
     rescue StandardError => e
       Rails.logger.error("Stripe Checkout Error: #{e.message}")
+      ad.destroy if ad.persisted?
       render json: { 
         success: false, 
-        message: "Erreur lors de la redirection vers Stripe : #{e.message}"
+        message: "Erreur lors de l'initialisation du paiement Stripe : #{e.message}"
       }, status: :unprocessable_entity
     end
   end
@@ -263,7 +323,43 @@ class SchoolsAdsController < ApplicationController
   def success
     @ad = Ad.find_by(id: params[:ad_id])
     if @ad.present?
-      @ad.update(status: 'pending_validation')
+      # Si on a un session_id Stripe, vérification de la session
+      if params[:session_id].present?
+        begin
+          stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
+          if stripe_key.present?
+            Stripe.api_key = stripe_key
+            stripe_session = Stripe::Checkout::Session.retrieve(params[:session_id])
+            if stripe_session.payment_status == 'paid' || stripe_session.subscription.present?
+              @ad.update(
+                status: 'pending_validation',
+                active: false,
+                stripe_subscription_id: stripe_session.subscription,
+                stripe_customer_id: stripe_session.customer,
+                subscription_status: 'active'
+              )
+            end
+          end
+        rescue StandardError => e
+          Rails.logger.error("Stripe verify session error: #{e.message}")
+          @ad.update(status: 'pending_validation', active: false)
+        end
+      else
+        @ad.update(status: 'pending_validation', active: false)
+      end
+
+      # Notification aux administrateurs une fois le paiement validé
+      school_name = @ad.title.presence || "Nouvel annonceur"
+      User.where(role: 'admin').each do |admin_user|
+        Notification.find_or_create_by(
+          user_id: admin_user.id,
+          link: '/admin/ads'
+        ) do |notif|
+          notif.title = "Nouvel abonnement publicitaire : #{school_name}"
+          notif.message = "#{school_name} a souscrit à une campagne récurrente (#{@ad.price_paid.to_i / 100}€ / mois)."
+          notif.status = :unread
+        end rescue nil
+      end
       
       # Connexion automatique de l'annonceur
       if !user_signed_in? && @ad.email.present?
@@ -288,7 +384,6 @@ class SchoolsAdsController < ApplicationController
     @user = current_user
     @ads = Ad.where("LOWER(email) = ?", @user.email.downcase).order(created_at: :desc)
     
-    # Pour les administrateurs qui testent sans annonce personnelle
     if @user.admin? && @ads.empty?
       @ads = Ad.all.order(created_at: :desc).limit(10)
     end
@@ -311,6 +406,13 @@ class SchoolsAdsController < ApplicationController
     @message = params[:message].to_s.strip
 
     if @school_name.present? && @email.present? && @message.present?
+      contact_record = SchoolContact.create(
+        school_name: @school_name,
+        email: @email,
+        message: @message,
+        request_type: @message.include?('[Demande de Devis Monopole]') ? 'devis_monopole' : 'contact'
+      )
+
       begin
         SchoolAdsMailer.contact_email(
           school_name: @school_name,
@@ -318,13 +420,13 @@ class SchoolsAdsController < ApplicationController
           message: @message
         ).deliver_later
 
-        # Création notification in-app pour les administrateurs
+        notif_title = contact_record.request_type == 'devis_monopole' ? 'Nouvelle demande de devis Monopole' : 'Nouveau contact École'
         User.where(role: 'admin').each do |admin_user|
           Notification.create(
             user_id: admin_user.id,
-            title: 'Nouvelle demande école (Schools Ads)',
-            message: "Demande reçue de #{@school_name} (#{@email})",
-            link: '/admin',
+            title: notif_title,
+            message: "#{@school_name} (#{ @email })",
+            link: '/admin/school_contacts',
             status: :unread
           )
         end
@@ -334,6 +436,7 @@ class SchoolsAdsController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream
+        format.json { render json: { success: true, message: "Votre demande de devis Monopole a bien été envoyée. Notre équipe vous recontactera sous 24h ouvrées." } }
         format.html { redirect_to request.referer || schools_ads_path, notice: "Merci pour votre message ! Notre équipe vous répondra dans les plus brefs délais." }
       end
     else
@@ -344,8 +447,93 @@ class SchoolsAdsController < ApplicationController
             html: %(<div class="sa-form-alert sa-form-alert--error">Veuillez renseigner tous les champs obligatoires.</div>)
           )
         end
+        format.json { render json: { success: false, error: "Veuillez remplir tous les champs obligatoires." }, status: :unprocessable_entity }
         format.html { redirect_to request.referer || schools_ads_path, alert: "Veuillez remplir tous les champs du formulaire." }
       end
     end
+  end
+
+  def billing_portal
+    unless user_signed_in?
+      redirect_to new_user_session_path, alert: "Veuillez vous connecter."
+      return
+    end
+
+    # Trouver le customer Stripe de l'annonce ou de l'utilisateur
+    customer_id = nil
+    if params[:ad_id].present?
+      specific_ad = Ad.find_by(id: params[:ad_id])
+      if specific_ad && (specific_ad.email.to_s.downcase == current_user.email.downcase || current_user.admin?)
+        customer_id = specific_ad.stripe_customer_id
+      end
+    end
+
+    if customer_id.blank?
+      ad_with_customer = Ad.where("LOWER(email) = ?", current_user.email.downcase)
+                           .where.not(stripe_customer_id: [nil, ""])
+                           .order(created_at: :desc)
+                           .first
+      customer_id = ad_with_customer&.stripe_customer_id
+    end
+
+    if customer_id.blank?
+      redirect_to schools_ads_dashboard_path, alert: "Aucun historique de facturation Stripe trouvé pour ce compte."
+      return
+    end
+
+    begin
+      stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
+      Stripe.api_key = stripe_key
+
+      return_url = request.subdomain.to_s.include?('schools-ads') ? "#{request.base_url}/dashboard" : "#{request.base_url}/schools-ads/dashboard"
+
+      portal_session = Stripe::BillingPortal::Session.create({
+        customer: customer_id,
+        return_url: return_url
+      })
+
+      redirect_to portal_session.url, allow_other_host: true
+    rescue StandardError => e
+      Rails.logger.error("Erreur Stripe Billing Portal: #{e.message}")
+      redirect_to schools_ads_dashboard_path, alert: "Impossible d'accéder au portail de facturation : #{e.message}"
+    end
+  end
+
+  def cancel_subscription
+    unless user_signed_in?
+      redirect_to new_user_session_path, alert: "Veuillez vous connecter."
+      return
+    end
+
+    @ad = Ad.find_by(id: params[:id])
+    if @ad.nil? || (@ad.email.to_s.downcase != current_user.email.to_s.downcase && !current_user.admin?)
+      redirect_to schools_ads_dashboard_path, alert: "Campagne introuvable ou non autorisée."
+      return
+    end
+
+    if @ad.stripe_subscription_id.present?
+      begin
+        stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
+        if stripe_key.present?
+          Stripe.api_key = stripe_key
+          # Annulation à la fin de la période en cours (cancel_at_period_end) pour laisser la diffusion payée active jusqu'au bout
+          Stripe::Subscription.update(
+            @ad.stripe_subscription_id,
+            { cancel_at_period_end: true }
+          )
+        end
+        @ad.update(subscription_status: 'canceling')
+        flash[:notice] = "Votre abonnement publicitaire a été résilié. Votre campagne restera diffusée jusqu'à la fin de la période mensuelle en cours."
+      rescue StandardError => e
+        Rails.logger.error("Erreur résiliation Stripe: #{e.message}")
+        @ad.update(subscription_status: 'canceling')
+        flash[:notice] = "Votre demande de résiliation a bien été prise en compte."
+      end
+    else
+      @ad.update(subscription_status: 'canceled', active: false)
+      flash[:notice] = "Votre campagne a bien été résiliée."
+    end
+
+    redirect_to request.referer || schools_ads_dashboard_path
   end
 end

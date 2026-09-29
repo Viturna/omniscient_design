@@ -67,9 +67,10 @@ class Ad < ApplicationRecord
 
   # --- 4. MÉTHODES PUBLIQUES ---
 
-  # Helper pour vérifier si la pub tourne
+  # Helper pour vérifier si la pub tourne effectivement (validée par l'admin et dans les dates)
   def currently_running?
     active &&
+      status == 'approved' &&
       (start_date.nil? || start_date <= Date.current) &&
       (end_date.nil? || end_date >= Date.current)
   end

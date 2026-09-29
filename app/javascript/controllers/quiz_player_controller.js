@@ -220,6 +220,8 @@ export default class extends Controller {
       this.index++
       this.renderQuestion()
       this.updateProgress()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      this.element.scrollTo({ top: 0, behavior: 'smooth' })
       
       // Reset instruction style
       this.instructionTarget.style.color = ""
@@ -234,6 +236,8 @@ export default class extends Controller {
       this.index--
       this.renderQuestion()
       this.updateProgress()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      this.element.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 

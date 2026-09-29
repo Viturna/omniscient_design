@@ -77,6 +77,10 @@ class PagesController < ApplicationController
 
   def cookies; end
 
+  def cgu; end
+
+  def cgv_ads; end
+
   def parrainage
     @current_page = 'profil'
     @user = current_user

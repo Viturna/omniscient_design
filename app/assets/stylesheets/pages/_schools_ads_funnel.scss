@@ -458,6 +458,12 @@
     border-color: #111111;
     background-color: #F4F6F8;
   }
+
+  &.sa-upload-box--error {
+    border-color: #E11D48 !important;
+    background-color: #FFF1F2 !important;
+    animation: saShake 0.3s ease;
+  }
 }
 
 .sa-upload-box__inner {
@@ -1609,15 +1615,23 @@
   justify-content: center;
   font-size: 13px;
   font-weight: 500;
-  color: #8E8E93;
+  color: #111111;
   background-color: #F6F6F6;
   border-radius: 50%;
+  border: none;
   cursor: pointer;
   transition: all 0.15s ease;
   user-select: none;
 
   &:hover:not(.sa-cal-day--empty):not(.sa-cal-day--disabled) {
     background-color: #E5E7EB;
+  }
+
+  &.sa-cal-day--prev-month,
+  &.sa-cal-day--next-month,
+  &.sa-cal-day--disabled {
+    color: #B0B0B5;
+    background-color: #FAFAFA;
   }
 
   &.sa-cal-day--empty {
@@ -1742,15 +1756,18 @@
   transition: all 0.15s ease;
   text-decoration: none;
   border: none;
+  box-shadow: none !important;
 
   // Secondary Button: White solid with black text
   &.sa-funnel__btn--secondary {
     background-color: #FFFFFF !important;
     color: #111111 !important;
+    box-shadow: none !important;
 
     &:hover {
       background-color: #F3F4F6 !important;
       transform: translateY(-1px);
+      box-shadow: none !important;
     }
   }
 
@@ -1758,10 +1775,58 @@
   &.sa-funnel__btn--primary {
     background-color: #98F5B8 !important;
     color: #111111 !important;
+    box-shadow: none !important;
 
     &:hover {
       background-color: #80ECA7 !important;
       transform: translateY(-1px);
+      box-shadow: none !important;
+    }
+  }
+}
+
+/* Monopole Success Feedback Card */
+.sa-monopole-success {
+  background: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 12px;
+  padding: 36px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #A3F3BE;
+    color: #202020;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #202020;
+    margin: 0 0 10px;
+    letter-spacing: -0.2px;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: #52525D;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 420px;
+
+    strong {
+      color: #202020;
+      font-weight: 600;
     }
   }
 }

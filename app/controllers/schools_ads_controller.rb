@@ -133,6 +133,7 @@ class SchoolsAdsController < ApplicationController
   def checkout
     begin
       title = params[:title].presence || "Campagne Partenaire"
+      description = params[:description].presence || ""
       link_param = params[:link].to_s.strip
       if link_param.present? && !link_param.start_with?('http://', 'https://')
         link_param = "https://#{link_param}"

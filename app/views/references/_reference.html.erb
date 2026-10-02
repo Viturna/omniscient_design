@@ -237,7 +237,16 @@
               <%= ("&nbsp;—&nbsp;" + safe_join(reference.studios.map { |s| link_to s.nom, studio_path(s) }, ", ")).html_safe %>
             <% end %>
           </p>
-          <h1 class="title-card"><%= reference.nom_reference %></h1>
+          <div class="title-row-show">
+            <h1 class="title-card"><%= reference.nom_reference %></h1>
+            <div class="title-views-badge" title="Nombre de vues">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span><%= format_views_count(reference.views_count) %></span>
+            </div>
+          </div>
         </div>
         <h2 class="title-description-reference"><%= t('references.notions') %></h2>
         <% if reference.notions.any? %>

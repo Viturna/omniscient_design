@@ -205,9 +205,18 @@ module ApplicationHelper
              when 'France' then 'FR'
              when 'Suisse' then 'CH'
              when 'Belgique' then 'BE'
-             else 'OTHER'
-             end
       hash[id.to_s] = code
+    end
+  end
+
+  def format_views_count(count)
+    return '0 vue' if count.blank? || count == 0
+    return '1 vue' if count == 1
+
+    if count >= 10_000
+      "#{number_to_human(count, format: '%n%u', units: { thousand: 'k', million: 'M' })} vues"
+    else
+      "#{number_with_delimiter(count, delimiter: ' ')} vues"
     end
   end
 end

@@ -134,6 +134,13 @@ class DesignersController < ApplicationController
       @lists = []
     end
 
+    session[:viewed_designers] ||= []
+    unless session[:viewed_designers].include?(@designer.id)
+      Designer.increment_counter(:views_count, @designer.id)
+      @designer.views_count += 1
+      session[:viewed_designers] << @designer.id
+    end
+
     image_url = @designer.designer_images.first&.file&.attached? ? view_context.url_for(@designer.designer_images.first.file) : nil
     set_meta_tags(
       title: "#{@designer.prenom} #{@designer.nom}".strip + " - Biographie et réalisations",

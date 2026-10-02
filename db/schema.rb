@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_29_101006) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_02_171902) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -159,6 +159,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_101006) do
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
     t.boolean "validation", default: false
+    t.integer "views_count", default: 0, null: false
     t.index ["slug"], name: "index_designers_on_slug", unique: true
     t.index ["user_id"], name: "index_designers_on_user_id"
     t.index ["validated_by_user_id"], name: "index_designers_on_validated_by_user_id"
@@ -497,6 +498,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_101006) do
     t.bigint "user_id"
     t.bigint "validated_by_user_id"
     t.boolean "validation", default: false
+    t.integer "views_count", default: 0, null: false
     t.index ["slug"], name: "index_references_on_slug", unique: true
     t.index ["user_id"], name: "index_references_on_user_id"
     t.index ["validated_by_user_id"], name: "index_references_on_validated_by_user_id"
@@ -602,6 +604,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_101006) do
     t.bigint "user_id", null: false
     t.bigint "validated_by_user_id"
     t.boolean "validation"
+    t.integer "views_count", default: 0, null: false
     t.index ["slug"], name: "index_studios_on_slug", unique: true
     t.index ["user_id"], name: "index_studios_on_user_id"
     t.index ["validated_by_user_id"], name: "index_studios_on_validated_by_user_id"

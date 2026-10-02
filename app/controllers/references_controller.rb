@@ -99,6 +99,13 @@ class ReferencesController < ApplicationController
       return
     end
 
+    session[:viewed_references] ||= []
+    unless session[:viewed_references].include?(@reference.id)
+      Reference.increment_counter(:views_count, @reference.id)
+      @reference.views_count += 1
+      session[:viewed_references] << @reference.id
+    end
+
     image_url = @reference.reference_images.first&.file&.attached? ? view_context.url_for(@reference.reference_images.first.file) : nil
     designers_names = @reference.designers.map { |d| "#{d.prenom} #{d.nom}".strip }.join(', ')
     optimized_title = designers_names.present? ? "#{@reference.nom_reference} par #{designers_names} - Référence Design" : "#{@reference.nom_reference} - Référence Design"

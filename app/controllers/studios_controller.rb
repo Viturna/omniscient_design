@@ -19,6 +19,13 @@ class StudiosController < ApplicationController
       @lists = []
     end
 
+    session[:viewed_studios] ||= []
+    unless session[:viewed_studios].include?(@studio.id)
+      Studio.increment_counter(:views_count, @studio.id)
+      @studio.views_count += 1
+      session[:viewed_studios] << @studio.id
+    end
+
     image_url = @studio.studio_images.first&.file&.attached? ? view_context.url_for(@studio.studio_images.first.file) : nil
     set_meta_tags(
       title: "#{@studio.nom} - Histoire et créations du studio",
@@ -172,15 +179,6 @@ class StudiosController < ApplicationController
 
     redirect_to root_path, alert: I18n.t('studio.access.denied', default: 'Accès refusé')
   end
-
-
-
-
-
-
-
-
-
 
   def set_studio
     @studio = Studio.includes(:countries).friendly.find(params[:slug])

@@ -205,6 +205,8 @@ module ApplicationHelper
              when 'France' then 'FR'
              when 'Suisse' then 'CH'
              when 'Belgique' then 'BE'
+             else 'OTHER'
+             end
       hash[id.to_s] = code
     end
   end

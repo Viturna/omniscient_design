@@ -19,14 +19,21 @@ class Api::DailyReferencesController < ApplicationController
                                                                                                     only_path: true)
                 end
 
+    raw_desc = reference.presentation_generale || reference.notions.first&.definition || ''
+    clean_desc = ActionController::Base.helpers.strip_tags(raw_desc.to_s)
+                                       .gsub(/<!--.*?-->/m, '')
+                                       .gsub(/\s+/, ' ')
+                                       .strip
+
     render json: {
       id: reference.id,
       name: reference.nom_reference,
       designers: reference.designers.map(&:nom_designer).join(', '),
       year: reference.date_reference&.to_s,
-      description: reference.presentation_generale || reference.notions.first&.definition || '',
+      description: clean_desc,
       image_url: image_url,
       url: request.base_url + "/references/#{reference.slug}"
     }
   end
 end
+

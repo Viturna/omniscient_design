@@ -500,34 +500,36 @@
       });
     });
 
+    // Helper to refresh controller visibility
+    function refreshSection(section) {
+      const controller = window.Stimulus?.getControllerForElementAndIdentifier(section, "load-more-table");
+      if (controller && typeof controller.updateVisibility === "function") {
+        controller.updateVisibility();
+      }
+    }
+
     // ---- Recherche et filtre ----
     document.querySelectorAll(".table-controls").forEach(control => {
       const searchInput = control.querySelector(".search-input");
       const filterUser = control.querySelector(".filter-user");
-      const table = control.nextElementSibling.querySelector("table");
-      const rows = table.querySelectorAll("tbody tr");
+      const section = control.closest("section[data-controller~='load-more-table']");
 
-      searchInput?.addEventListener("keyup", () => {
-        const query = searchInput.value.toLowerCase();
-        rows.forEach(row => {
-          row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
-        });
+      searchInput?.addEventListener("input", () => {
+        refreshSection(section);
       });
 
       filterUser?.addEventListener("change", () => {
-        const val = filterUser.value.toLowerCase();
-        rows.forEach(row => {
-          const userCell = row.cells[2]?.innerText.toLowerCase();
-          row.style.display = !val || userCell.includes(val) ? "" : "none";
-        });
+        refreshSection(section);
       });
     });
 
-    // ---- Tri ----
+    // ---- Tri Global ----
     document.querySelectorAll("th.sortable").forEach(th => {
       th.addEventListener("click", () => {
         const table = th.closest("table");
-        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        const tbody = table.querySelector("tbody");
+        const section = th.closest("section[data-controller~='load-more-table']");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
         const idx = th.cellIndex;
 
         // cycle asc → desc → asc
@@ -551,11 +553,12 @@
         rows.sort((a, b) => {
           const cellA = a.cells[idx];
           const cellB = b.cells[idx];
+          if (!cellA || !cellB) return 0;
           
           const rawA = cellA.dataset.sortValue !== undefined ? cellA.dataset.sortValue : cellA.innerText.trim();
           const rawB = cellB.dataset.sortValue !== undefined ? cellB.dataset.sortValue : cellB.innerText.trim();
 
-          // Check if both are numeric
+          // Check if both are numeric (e.g. views_count)
           const numA = Number(rawA);
           const numB = Number(rawB);
           if (!isNaN(numA) && !isNaN(numB) && rawA !== "" && rawB !== "") {
@@ -577,7 +580,11 @@
             : strB.localeCompare(strA);
         });
 
-        rows.forEach(r => table.querySelector("tbody").appendChild(r));
+        // Re-append sorted rows to tbody
+        rows.forEach(r => tbody.appendChild(r));
+
+        // Re-apply visibility pagination based on new sort order
+        refreshSection(section);
       });
     });
 

@@ -86,6 +86,7 @@
           <th class="sortable">Titre</th>
           <th class="sortable">Date d'ajout</th>
           <th class="sortable">Ajouté par</th>
+          <th class="sortable">Vues</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -102,6 +103,9 @@
                 <% else %>
                   Omniscient Design
                 <% end %>
+              </td>
+              <td data-sort-value="<%= reference.views_count %>">
+                <strong><%= format_views_count(reference.views_count) %></strong>
               </td>
               <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", reference_path(reference), class: "btn" %>
@@ -143,6 +147,7 @@
           <th class="sortable">Date d'ajout</th>
           <th class="sortable">Ajouté par</th>
           <th>Validé par</th>
+          <th class="sortable">Vues</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -167,6 +172,9 @@
                 <% else %>
                   Utilisateur inconnu
                 <% end %>
+              </td>
+              <td data-sort-value="<%= reference.views_count %>">
+                <strong><%= format_views_count(reference.views_count) %></strong>
               </td>
               <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", reference_path(reference), class: "btn" %>
@@ -206,6 +214,7 @@
           <th class="sortable">Nom</th>
           <th class="sortable">Date d'ajout</th>
           <th class="sortable">Ajouté par</th>
+          <th class="sortable">Vues</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -222,6 +231,9 @@
                 <% else %>
                   Omniscient Design
                 <% end %>
+              </td>
+              <td data-sort-value="<%= designer.views_count %>">
+                <strong><%= format_views_count(designer.views_count) %></strong>
               </td>
               <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", designer_path(designer), class: "btn" %>
@@ -263,6 +275,7 @@
           <th class="sortable">Date d'ajout</th>
           <th class="sortable">Ajouté par</th>
           <th>Validé par</th>
+          <th class="sortable">Vues</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -288,6 +301,9 @@
                   Utilisateur inconnu
                 <% end %>
               </td>
+              <td data-sort-value="<%= designer.views_count %>">
+                <strong><%= format_views_count(designer.views_count) %></strong>
+              </td>
               <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", designer_path(designer), class: "btn" %>
                 <%= link_to "Modifier", edit_designer_path(designer), class: "btn btn-orange" %>
@@ -306,6 +322,7 @@
       data-load-more-table-target="button">Voir plus de designers validés</button>
   </div>
 </section>
+<!-- ========= STUDIOS EN ATTENTE ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Studios en attente de validation</h2>
   <p>Il y a actuellement <%= @studios_count_val_false %> studios en attente de validation</p>
@@ -325,6 +342,7 @@
           <th class="sortable">Nom</th>
           <th class="sortable">Date d'ajout</th>
           <th class="sortable">Ajouté par</th>
+          <th class="sortable">Vues</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -341,6 +359,9 @@
                 <% else %>
                   Omniscient Design
                 <% end %>
+              </td>
+              <td data-sort-value="<%= studio.views_count %>">
+                <strong><%= format_views_count(studio.views_count) %></strong>
               </td>
               <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", studio_path(studio), class: "btn" %>
@@ -361,6 +382,7 @@
       data-load-more-table-target="button">Voir plus de studios</button>
   </div>
 </section>
+<!-- ========= STUDIOS VALIDÉS ========= -->
 <section class="grid-1" data-controller="load-more-table">
   <h2>Studios validés</h2>
   <p>Il y a actuellement <%= @studios_count %> studios validés</p>
@@ -381,6 +403,7 @@
           <th class="sortable">Date d'ajout</th>
           <th class="sortable">Ajouté par</th>
           <th>Validé par</th>
+          <th class="sortable">Vues</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -405,6 +428,9 @@
                 <% else %>
                   Utilisateur inconnu
                 <% end %>
+              </td>
+              <td data-sort-value="<%= studio.views_count %>">
+                <strong><%= format_views_count(studio.views_count) %></strong>
               </td>
               <td style="display: flex; flex-direction:column;">
                 <%= link_to "Voir", studio_path(studio), class: "btn" %>
@@ -498,7 +524,7 @@
     });
 
     // ---- Tri ----
-   document.querySelectorAll("th.sortable").forEach(th => {
+    document.querySelectorAll("th.sortable").forEach(th => {
       th.addEventListener("click", () => {
         const table = th.closest("table");
         const rows = Array.from(table.querySelectorAll("tbody tr"));
@@ -523,16 +549,32 @@
         }
 
         rows.sort((a, b) => {
-          const A = a.cells[idx].innerText.trim().toLowerCase();
-          const B = b.cells[idx].innerText.trim().toLowerCase();
-          const valA = !isNaN(Date.parse(A)) ? new Date(A) : A;
-          const valB = !isNaN(Date.parse(B)) ? new Date(B) : B;
-          if (valA instanceof Date && valB instanceof Date) {
-            return direction === "asc" ? valA - valB : valB - valA;
+          const cellA = a.cells[idx];
+          const cellB = b.cells[idx];
+          
+          const rawA = cellA.dataset.sortValue !== undefined ? cellA.dataset.sortValue : cellA.innerText.trim();
+          const rawB = cellB.dataset.sortValue !== undefined ? cellB.dataset.sortValue : cellB.innerText.trim();
+
+          // Check if both are numeric
+          const numA = Number(rawA);
+          const numB = Number(rawB);
+          if (!isNaN(numA) && !isNaN(numB) && rawA !== "" && rawB !== "") {
+            return direction === "asc" ? numA - numB : numB - numA;
           }
+
+          // Check if date
+          const dateA = Date.parse(rawA);
+          const dateB = Date.parse(rawB);
+          if (!isNaN(dateA) && !isNaN(dateB) && isNaN(Number(rawA))) {
+            return direction === "asc" ? new Date(dateA) - new Date(dateB) : new Date(dateB) - new Date(dateA);
+          }
+
+          // Fallback string compare
+          const strA = rawA.toLowerCase();
+          const strB = rawB.toLowerCase();
           return direction === "asc"
-            ? String(valA).localeCompare(String(valB))
-            : String(valB).localeCompare(String(valA));
+            ? strA.localeCompare(strB)
+            : strB.localeCompare(strA);
         });
 
         rows.forEach(r => table.querySelector("tbody").appendChild(r));

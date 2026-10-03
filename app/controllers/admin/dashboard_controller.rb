@@ -131,6 +131,11 @@ class Admin::DashboardController < ApplicationController
     top_referrer_ids = Referral.group(:referrer_id).order('COUNT(id) DESC').limit(5).count
     @top_referrers = User.where(id: top_referrer_ids.keys).index_by(&:id)
     @top_referrers_data = top_referrer_ids.map { |id, count| { user: @top_referrers[id], count: count } }.compact
+
+    # --- Top Vues (Fiches les plus consultées) ---
+    @top_viewed_references = Reference.where(validation: true).order(views_count: :desc).limit(5)
+    @top_viewed_designers = Designer.where(validation: true).order(views_count: :desc).limit(5)
+    @top_viewed_studios = Studio.where(validation: true).order(views_count: :desc).limit(5)
   end
 
   def suivi_references

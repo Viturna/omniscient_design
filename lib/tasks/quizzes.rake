@@ -60,5 +60,22 @@ namespace :quizzes do
     # 3. Réinitialiser
     User.update_all(quiz_points: 0)
     puts '✅ Points de saison réinitialisés pour tous les utilisateurs.'
+
+    # 4. Notifier tous les utilisateurs de la nouvelle saison
+    notification_title = "La nouvelle saison des quiz a commencé !"
+    notification_content = "Prends la tête du classement en révisant ta culture design ✨"
+    quiz_link = "/jeux"
+
+    users_count = 0
+    User.find_each do |user|
+      Notification.create(
+        user: user,
+        title: notification_title,
+        message: notification_content,
+        link: quiz_link
+      )
+      users_count += 1
+    end
+    puts "📢 Notifications de nouvelle saison envoyées à #{users_count} utilisateurs."
   end
 end

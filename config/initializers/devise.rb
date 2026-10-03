@@ -273,7 +273,15 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
     prompt: 'select_account',
-    provider_ignores_state: true
+    provider_ignores_state: true,
+    setup: lambda { |env|
+      req = Rack::Request.new(env)
+      is_native = req.params['native_app'] == 'true' || req.user_agent.to_s.include?('Turbo Native') || env['rack.session']&.[](:is_native_app) == true
+      if is_native
+        env['rack.session'][:is_native_app] = true if env['rack.session']
+        env['omniauth.strategy'].options[:state] = "native_app=true&#{SecureRandom.hex(16)}"
+      end
+    }
   }
   config.omniauth :apple,
                   ENV['APPLE_CLIENT_ID'], # Le Service ID (ex: com.omniscientdesign.service)

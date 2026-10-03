@@ -42,10 +42,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user&.update(provider: auth.provider, uid: auth.uid)
     end
 
-    if user_signed_in? && @user && @user != current_user
+    if !native_app_request? && user_signed_in? && @user && @user != current_user
       flash[:alert] = "Ce compte #{kind} est déjà lié à un autre utilisateur."
-      redirect_to(native_app_request? ? "omniscient://auth_failure" : edit_user_registration_path, allow_other_host: true)
+      redirect_to edit_user_registration_path, allow_other_host: true
     elsif @user&.persisted?
+
       unless @user.confirmed?
         @user.skip_confirmation!
         @user.save!
@@ -74,10 +75,15 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           sign_in_and_redirect user, event: :authentication
         end
       else
-        redirect_to new_user_registration_url
+        if native_app_request?
+          redirect_to "omniscient://auth_register", allow_other_host: true
+        else
+          redirect_to new_user_registration_url
+        end
       end
     end
   end
+
 
   def native_app_request?
     native_app? ||

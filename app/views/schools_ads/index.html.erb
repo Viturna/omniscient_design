@@ -17,6 +17,12 @@
           </div>
           <div class="sa-badge-item" data-schools-ads-target="badgeItem">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="sa-hero__badge-icon">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>
+            <span>5 000+ Visiteurs uniques (Google Analytics)</span>
+          </div>
+          <div class="sa-badge-item" data-schools-ads-target="badgeItem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="sa-hero__badge-icon">
               <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11ZM8 11C9.66 11 10.99 9.66 10.99 8C10.99 6.34 9.66 5 8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11ZM8 13C5.67 13 1 14.17 1 16.5V19H15V16.5C15 14.17 10.33 13 8 13ZM16 13C15.71 13 15.38 13.02 15.03 13.05C16.19 13.89 17 15.02 17 16.5V19H23V16.5C23 14.17 18.33 13 16 13Z"/>
             </svg>
             <span><%= @teachers_count.presence || 36 %> enseignants utilisent la plateforme</span>
@@ -162,7 +168,7 @@
                                 <h2 class="sa-audience__title">Radiographie de l’audience</h2>
                                 <p class="sa-audience__subtitle">Metrics prise depuis la sortie d’Omniscient Design, en septembre 2025.</p>
                                 <div class="sa-audience__stats-grid">
-                                  <!-- Stat 1 -->
+                                  <!-- Stat 1 : Membres créés / Inscrits -->
                                   <div class="sa-audience__stat-card">
                                     <div class="sa-audience__stat-icon-wrap">
                                       <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -171,22 +177,34 @@
                                     </div>
                                     <div class="sa-audience__stat-text">
                                       <span class="sa-audience__stat-number"><%= number_with_delimiter(@active_members_count, delimiter: " ") %>+</span>
-                                      <span class="sa-audience__stat-label">Membres</span>
+                                      <span class="sa-audience__stat-label">Comptes créés</span>
                                     </div>
                                   </div>
-                                  <!-- Stat 2 -->
+                                  <!-- Stat 2 : Visiteurs GA -->
                                   <div class="sa-audience__stat-card">
                                     <div class="sa-audience__stat-icon-wrap">
-                                      <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M28.4375 17.875C32.474 17.875 35.75 21.151 35.75 25.1875C35.75 29.224 32.474 32.5 28.4375 32.5C24.401 32.5 21.125 29.224 21.125 25.1875C21.125 21.151 24.401 17.875 28.4375 17.875ZM19.7503 29.2484C19.6658 29.25 19.5813 29.25 19.4968 29.25C12.87 29.25 6.916 24.2239 3.484 18.7151C3.328 18.4568 3.25 18.1659 3.25 17.875C3.25 17.5841 3.32962 17.2932 3.48562 17.0349C6.916 11.5261 12.87 6.5 19.4968 6.5C26.2291 6.5 32.1652 11.5212 35.5257 17.0511C35.6752 17.3046 35.75 17.5906 35.75 17.875C35.75 18.1594 35.6752 18.4454 35.5257 18.6989L35.5128 18.72C33.7594 16.8025 31.2374 15.6 28.4375 15.6C27.495 15.6 26.5834 15.7365 25.7221 15.99C24.9129 13.3201 22.4315 11.375 19.5 11.375C15.912 11.375 13 14.287 13 17.875C13 21.255 15.5854 24.037 18.8857 24.3458C18.863 24.6236 18.85 24.9031 18.85 25.1875C18.85 26.6386 19.1734 28.015 19.7503 29.2484ZM24.7406 25.961L27.0839 28.0491C27.2382 28.1872 27.4332 28.2555 27.625 28.2555C27.846 28.2555 28.0654 28.1661 28.2263 27.9922L32.1929 23.6551C32.3359 23.4991 32.4057 23.3025 32.4057 23.1091C32.4057 22.6639 32.0466 22.2983 31.5932 22.2983C31.3722 22.2983 31.1529 22.3876 30.992 22.5615L27.5665 26.3055L25.8229 24.752C25.6669 24.6139 25.4751 24.5456 25.2817 24.5456C24.8316 24.5456 24.4692 24.9096 24.4692 25.3565C24.4692 25.5791 24.5603 25.8001 24.7406 25.961ZM19.4155 21.9359C17.212 21.892 15.4375 20.0899 15.4375 17.875C15.4375 15.6325 17.2575 13.8125 19.5 13.8125C21.4386 13.8125 23.062 15.1726 23.465 16.9894C21.6076 18.1204 20.1646 19.8624 19.4155 21.9359Z" fill="white"/>
+                                      <svg width="39" height="39" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                                       </svg>
                                     </div>
                                     <div class="sa-audience__stat-text">
-                                      <span class="sa-audience__stat-number"><%= number_with_delimiter(@impressions_count, delimiter: " ") %>+</span>
-                                      <span class="sa-audience__stat-label">Impressions en 6 mois</span>
+                                      <span class="sa-audience__stat-number">5 000+</span>
+                                      <span class="sa-audience__stat-label">Visiteurs uniques (GA)</span>
                                     </div>
                                   </div>
-                                  <!-- Stat 3 -->
+                                  <!-- Stat 3 : Temps d'engagement -->
+                                  <div class="sa-audience__stat-card">
+                                    <div class="sa-audience__stat-icon-wrap">
+                                      <svg width="39" height="39" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                                      </svg>
+                                    </div>
+                                    <div class="sa-audience__stat-text">
+                                      <span class="sa-audience__stat-number">10m 28s</span>
+                                      <span class="sa-audience__stat-label">Engagement moyen</span>
+                                    </div>
+                                  </div>
+                                  <!-- Stat 4 : Terminales STD2A -->
                                   <div class="sa-audience__stat-card">
                                     <div class="sa-audience__stat-icon-wrap">
                                       <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -198,7 +216,19 @@
                                       <span class="sa-audience__stat-label">Terminales STD2A</span>
                                     </div>
                                   </div>
-                                  <!-- Stat 4 -->
+                                  <!-- Stat 5 : Pages & Événements vus -->
+                                  <div class="sa-audience__stat-card">
+                                    <div class="sa-audience__stat-icon-wrap">
+                                      <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M28.4375 17.875C32.474 17.875 35.75 21.151 35.75 25.1875C35.75 29.224 32.474 32.5 28.4375 32.5C24.401 32.5 21.125 29.224 21.125 25.1875C21.125 21.151 24.401 17.875 28.4375 17.875ZM19.7503 29.2484C19.6658 29.25 19.5813 29.25 19.4968 29.25C12.87 29.25 6.916 24.2239 3.484 18.7151C3.328 18.4568 3.25 18.1659 3.25 17.875C3.25 17.5841 3.32962 17.2932 3.48562 17.0349C6.916 11.5261 12.87 6.5 19.4968 6.5C26.2291 6.5 32.1652 11.5212 35.5257 17.0511C35.6752 17.3046 35.75 17.5906 35.75 17.875C35.75 18.1594 35.6752 18.4454 35.5257 18.6989L35.5128 18.72C33.7594 16.8025 31.2374 15.6 28.4375 15.6C27.495 15.6 26.5834 15.7365 25.7221 15.99C24.9129 13.3201 22.4315 11.375 19.5 11.375C15.912 11.375 13 14.287 13 17.875C13 21.255 15.5854 24.037 18.8857 24.3458C18.863 24.6236 18.85 24.9031 18.85 25.1875C18.85 26.6386 19.1734 28.015 19.7503 29.2484ZM24.7406 25.961L27.0839 28.0491C27.2382 28.1872 27.4332 28.2555 27.625 28.2555C27.846 28.2555 28.0654 28.1661 28.2263 27.9922L32.1929 23.6551C32.3359 23.4991 32.4057 23.3025 32.4057 23.1091C32.4057 22.6639 32.0466 22.2983 31.5932 22.2983C31.3722 22.2983 31.1529 22.3876 30.992 22.5615L27.5665 26.3055L25.8229 24.752C25.6669 24.6139 25.4751 24.5456 25.2817 24.5456C24.8316 24.5456 24.4692 24.9096 24.4692 25.3565C24.4692 25.5791 24.5603 25.8001 24.7406 25.961ZM19.4155 21.9359C17.212 21.892 15.4375 20.0899 15.4375 17.875C15.4375 15.6325 17.2575 13.8125 19.5 13.8125C21.4386 13.8125 23.062 15.1726 23.465 16.9894C21.6076 18.1204 20.1646 19.8624 19.4155 21.9359Z" fill="white"/>
+                                      </svg>
+                                    </div>
+                                    <div class="sa-audience__stat-text">
+                                      <span class="sa-audience__stat-number">224 000+</span>
+                                      <span class="sa-audience__stat-label">Pages &amp; événements vus</span>
+                                    </div>
+                                  </div>
+                                  <!-- Stat 6 : CTR Moyen -->
                                   <div class="sa-audience__stat-card">
                                     <div class="sa-audience__stat-icon-wrap">
                                       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,7 +239,7 @@
                                     </div>
                                     <div class="sa-audience__stat-text">
                                       <span class="sa-audience__stat-number">1,5 / 3,3 %</span>
-                                      <span class="sa-audience__stat-label">CTR moyen</span>
+                                      <span class="sa-audience__stat-label">CTR moyen par pub</span>
                                     </div>
                                   </div>
                                 </div>

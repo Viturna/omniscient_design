@@ -17,7 +17,12 @@ class ApplicationController < ActionController::Base
   helper_method :native_app?
 
   def native_app?
-    request.user_agent.to_s.include?('Turbo Native')
+    if request.user_agent.to_s.include?('Turbo Native') || params[:native_app] == 'true'
+      session[:is_native_app] = true
+      true
+    else
+      session[:is_native_app] == true
+    end
   end
 
   private

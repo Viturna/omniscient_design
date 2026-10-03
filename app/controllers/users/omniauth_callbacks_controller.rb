@@ -1,6 +1,11 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: %i[google_oauth2 apple failure token_login]
 
+  def passthru
+    session[:is_native_app] = true if params[:native_app] == 'true' || request.user_agent.to_s.include?('Turbo Native')
+    super
+  end
+
   def google_oauth2
     handle_auth 'Google'
   end

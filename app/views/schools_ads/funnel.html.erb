@@ -1,11 +1,5 @@
 <% content_for :title, "Créer votre campagne | Omniscient Design for professionals" %>
 
-<% 
-  # Mode maintenance / construction temporaire pour les visiteurs publics
-  is_privileged = (user_signed_in? && current_user.admin?) || params[:preview].present? || params[:test].present?
-%>
-
-<% if is_privileged %>
 <div class="sa-funnel" data-controller="campaign-funnel" data-campaign-funnel-checkout-url-value="<%= sa_checkout_path %>">
   <!-- ================================================================= -->
   <!-- PANNEAU GAUCHE : FORMULAIRES & CONFIGURATION (FOND BLANC) -->
@@ -912,103 +906,20 @@
                                     </footer>
                                   </div>
                                 </div>
-
-<% else %>
-<!-- =========================================================================
-     MODE MAINTENANCE / FINALISATION DU TUNNEL PUBLIC
-     ========================================================================= -->
-<div class="sa-maintenance-page">
-  <div class="sa-maintenance-container">
-    
-    <!-- Branding Header -->
-    <div class="sa-maintenance-header">
-      <a href="<%= sa_root_path %>" class="sa-maintenance-brand">
-        <%= image_tag "logo.svg", alt: "Logo Omniscient Design", class: "sa-maintenance-brand-logo" %>
-        <div class="sa-maintenance-brand-text">
-          <span class="sa-maintenance-brand-title">Omniscient Design</span>
-          <span class="sa-maintenance-brand-subtitle">for professionals</span>
-        </div>
-      </a>
-      <a href="<%= sa_root_path %>" class="sa-maintenance-back-link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        Retour à l'accueil
-      </a>
-    </div>
-
-    <!-- Main Card -->
-    <div class="sa-maintenance-card">
-      <div class="sa-maintenance-badge">
-        <span class="sa-maintenance-badge__dot"></span>
-        Espace Annonceur • Accès Anticipé
-      </div>
-
-      <h1 class="sa-maintenance-title">
-        La configuration de campagne en ligne arrive très bientôt
-      </h1>
-      
-      <p class="sa-maintenance-subtitle">
-        Notre régie publicitaire finalise son outil de réservation en libre-service. En attendant son ouverture complète, notre équipe configure et lance manuellement vos campagnes sous 24h.
-      </p>
-
-      <div class="sa-maintenance-highlights">
-        <div class="sa-maintenance-highlight">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span>Encart Natif (200€/mois) & Ancrage Local (400€/mois)</span>
-        </div>
-        <div class="sa-maintenance-highlight">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span>Diffusion auprès de plus de 1 000 étudiants STD2A & Design</span>
-        </div>
-      </div>
-
-      <!-- Contact Form -->
-      <div class="sa-maintenance-form-wrapper">
-        <div id="schools-ads-form-feedback"></div>
-        <%= form_with url: sa_contact_path, method: :post, local: false, class: "sa-maintenance-form", id: "schools-ads-form", data: { turbo: true } do |f| %>
-          <div id="schools-ads-form-fields" class="sa-maintenance-form__fields">
-            
-            <div class="sa-maintenance-form__row">
-              <div class="sa-maintenance-form__group">
-                <label class="sa-maintenance-form__label" for="sa_school_name">Nom de votre établissement / entreprise *</label>
-                <%= f.text_field :school_name, id: "sa_school_name", placeholder: "Ex: École de Condé, ESAG Penninghen...", required: true, class: "sa-maintenance-form__input", autocomplete: "organization" %>
-              </div>
-
-              <div class="sa-maintenance-form__group">
-                <label class="sa-maintenance-form__label" for="sa_email">Adresse email professionnelle *</label>
-                <%= f.email_field :email, id: "sa_email", placeholder: "contact@votre-ecole.fr", required: true, class: "sa-maintenance-form__input", autocomplete: "email", value: (current_user&.email) %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="sa-maintenance-form__group">
-              <label class="sa-maintenance-form__label" for="sa_message">Votre projet de campagne / période souhaitée *</label>
-              <textarea id="sa_message" name="message" placeholder="Indiquez vos dates cibles (ex: promotion de vos JPO, rentrée prochaine), votre région prioritaire ou toute question particulière..." maxlength="400" rows="4" required="required" class="sa-maintenance-form__textarea"></textarea>
-              <div class="sa-maintenance-form__hint">Notre équipe vous recontactera sous 24h ouvrées pour finaliser vos visuels et activer votre campagne.</div>
-            </div>
-
-            <div class="sa-maintenance-form__actions">
-              <%= f.submit "Transmettre ma demande de campagne", class: "sa-maintenance-form__submit" %>
-            </div>
-
           </div>
-        <% end %>
+        </div>
       </div>
-
     </div>
-
-    <!-- Trust footer notes -->
-    <div class="sa-maintenance-footer">
-      <span>Omniscient Design • Régie Publicitaire Écoles & Formations Design</span>
-    </div>
-
   </div>
 </div>
-<% end %>
+

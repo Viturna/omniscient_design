@@ -301,10 +301,9 @@ class SchoolsAdsController < ApplicationController
         }],
         mode: 'subscription',
         subscription_data: {
-          # Si un compte connecté Stripe (ex: Edgar) est configuré dans l'ENV
-          # Stripe Connect transfère automatiquement les 60% vers son compte à chaque mensualité
-          # et conserve les 40% sur la plateforme pour Thomas
-          **(if ENV['STRIPE_CONNECT_ACCOUNT_ID'].present?
+          # Si un compte connecté unique direct est configuré, Stripe fait le transfer_data.
+          # Si les deux comptes (Edgar & Thomas) sont configurés, le Webhook Stripe gère le split 60/40 automatiquement.
+          **(if ENV['STRIPE_CONNECT_ACCOUNT_ID'].present? && ENV['STRIPE_CONNECT_THOMAS_ID'].blank?
               {
                 transfer_data: {
                   destination: ENV['STRIPE_CONNECT_ACCOUNT_ID'],

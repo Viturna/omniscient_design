@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   get 'schools-ads/facturation', to: 'schools_ads#billing_portal', as: :schools_ads_direct_billing_portal
   post 'schools-ads/cancel_subscription/:id', to: 'schools_ads#cancel_subscription', as: :schools_ads_direct_cancel_subscription
   post 'schools-ads/contact', to: 'schools_ads#contact', as: :schools_ads_direct_contact
+  post 'stripe/webhook', to: 'stripe_webhooks#create'
   # ---- ADMIN ----
   namespace :admin do
     resources :ads do

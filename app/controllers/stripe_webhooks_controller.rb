@@ -1,0 +1,104 @@
+# frozen_string_literal: true
+
+class StripeWebhooksController < ActionController::API
+  def create
+    payload = request.body.read
+    sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+    endpoint_secret = ENV['STRIPE_WEBHOOK_SECRET'] || Rails.application.credentials.dig(:stripe, :webhook_secret)
+
+    event = nil
+
+    begin
+      if endpoint_secret.present?
+        event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
+      else
+        data = JSON.parse(payload, symbolize_names: true)
+        event = Stripe::Event.construct_from(data)
+      end
+    rescue JSON::ParserError => e
+      Rails.logger.error("[Stripe Webhook] Invalid payload: #{e.message}")
+      return render json: { error: 'Invalid payload' }, status: 400
+    rescue Stripe::SignatureVerificationError => e
+      Rails.logger.error("[Stripe Webhook] Invalid signature: #{e.message}")
+      return render json: { error: 'Invalid signature' }, status: 400
+    end
+
+    case event.type
+    when 'invoice.paid'
+      handle_invoice_paid(event.data.object)
+    when 'payment_intent.succeeded'
+      handle_payment_intent_succeeded(event.data.object)
+    end
+
+    render json: { success: true }
+  end
+
+  private
+
+  def handle_invoice_paid(invoice)
+    # Vérifier que ce n'est pas déjà transféré
+    return if invoice.amount_paid.to_i <= 0
+
+    amount_paid = invoice.amount_paid # En centimes (ex: 20000 pour 200€)
+    charge_id = invoice.charge
+
+    split_payment(amount_paid, charge_id, "Facture #{invoice.id} - #{invoice.customer_email}")
+  end
+
+  def handle_payment_intent_succeeded(payment_intent)
+    # Pour les paiements directs s'ils ne passent pas par une facture
+    return if payment_intent.invoice.present? # Déjà géré par invoice.paid
+
+    amount_paid = payment_intent.amount_received
+    charge_id = payment_intent.latest_charge
+
+    split_payment(amount_paid, charge_id, "Paiement #{payment_intent.id}")
+  end
+
+  def split_payment(total_amount, source_transaction, description)
+    edgar_account = ENV['STRIPE_CONNECT_EDGAR_ID'] || ENV['STRIPE_CONNECT_ACCOUNT_ID']
+    thomas_account = ENV['STRIPE_CONNECT_THOMAS_ID']
+
+    # Calcul des parts
+    edgar_percent = (ENV['STRIPE_CONNECT_EDGAR_PERCENT'].presence || 60.0).to_f / 100.0
+    thomas_percent = (ENV['STRIPE_CONNECT_THOMAS_PERCENT'].presence || 40.0).to_f / 100.0
+
+    # 1. Virement à Edgar (60%)
+    if edgar_account.present?
+      edgar_amount = (total_amount * edgar_percent).round
+      begin
+        transfer_params = {
+          amount: edgar_amount,
+          currency: 'eur',
+          destination: edgar_account,
+          description: "Part 60% Edgar - #{description}"
+        }
+        transfer_params[:source_transaction] = source_transaction if source_transaction.present?
+
+        transfer = Stripe::Transfer.create(transfer_params)
+        Rails.logger.info("[Stripe Split] Transfert réussi Edgar (#{edgar_amount / 100.0}€) : #{transfer.id}")
+      rescue StandardError => e
+        Rails.logger.error("[Stripe Split Error Edgar] #{e.message}")
+      end
+    end
+
+    # 2. Virement à Thomas (40%)
+    if thomas_account.present?
+      thomas_amount = (total_amount * thomas_percent).round
+      begin
+        transfer_params = {
+          amount: thomas_amount,
+          currency: 'eur',
+          destination: thomas_account,
+          description: "Part 40% Thomas - #{description}"
+        }
+        transfer_params[:source_transaction] = source_transaction if source_transaction.present?
+
+        transfer = Stripe::Transfer.create(transfer_params)
+        Rails.logger.info("[Stripe Split] Transfert réussi Thomas (#{thomas_amount / 100.0}€) : #{transfer.id}")
+      rescue StandardError => e
+        Rails.logger.error("[Stripe Split Error Thomas] #{e.message}")
+      end
+    end
+  end
+end

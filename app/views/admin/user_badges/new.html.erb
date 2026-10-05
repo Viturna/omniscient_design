@@ -215,7 +215,10 @@
 
         <div>
           <%= f.label :badge_id, "Badge à décerner", class: "assignment-label" %>
-          <%= f.collection_select :badge_id, @badges, :id, ->(b) { "#{b.name} — #{b.category.capitalize} (#{b.level.capitalize})" }, 
+          <%= f.collection_select :badge_id, @badges, :id, ->(b) {
+                details = [b.category&.capitalize, b.level.present? ? "(#{b.level.capitalize})" : nil].compact.join(' ')
+                details.present? ? "#{b.name} — #{details}" : b.name
+              }, 
               { prompt: "Sélectionner un badge..." }, 
               { 
                 class: "form-control", 
@@ -351,12 +354,16 @@
               </td>
               <td>
                 <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                  <span class="badge-cat-tag badge-cat-<%= ub.badge.category %>">
-                    <%= ub.badge.category %>
-                  </span>
-                  <span class="badge-level-tag level-<%= ub.badge.level %>">
-                    <%= ub.badge.level %>
-                  </span>
+                  <% if ub.badge.category.present? %>
+                    <span class="badge-cat-tag badge-cat-<%= ub.badge.category %>">
+                      <%= ub.badge.category %>
+                    </span>
+                  <% end %>
+                  <% if ub.badge.level.present? %>
+                    <span class="badge-level-tag level-<%= ub.badge.level %>">
+                      <%= ub.badge.level %>
+                    </span>
+                  <% end %>
                 </div>
               </td>
               <td>

@@ -1,141 +1,431 @@
-<% content_for :title, "Espace Annonceur & Campagnes | Omniscient Design for professionals" %>
+<% content_for :title, "Espace Annonceur & Campagnes | Omniscient Design" %>
 
-<div class="sa-dash">
-  <!-- Top Navigation Header -->
-  <header class="sa-dash__header">
-    <div class="sa-dash__header-left">
-      <a href="<%= sa_root_path %>" class="sa-dash__brand">
-        <%= image_tag "logo.svg", alt: "Logo Omniscient Design", class: "sa-dash__brand-logo" %>
-        <div class="sa-dash__brand-info">
-          <span class="sa-dash__brand-name">Omniscient Design</span>
-          <span class="sa-dash__brand-tag">for professionals</span>
-        </div>
-      </a>
-    </div>
+<style>
+  /* --- DESIGN SYSTEM OMNISCIENT DESIGN --- */
+  .users-dash-wrapper {
+    padding: 40px 4vw 80px 4vw;
+    max-width: 1440px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #202020;
+    box-sizing: border-box;
+  }
 
-    <div class="sa-dash__header-right">
-      <div class="sa-dash__user-badge">
-        <% school_display_name = @user&.etablissement&.name.presence || @user&.firstname.presence || @user&.email.presence || "Partenaire" %>
-        <span class="sa-dash__user-avatar">
-          <%= school_display_name[0..1].to_s.upcase %>
-        </span>
-        <div class="sa-dash__user-text">
-          <span class="sa-dash__user-name"><%= school_display_name %></span>
-          <span class="sa-dash__user-email"><%= @user&.email %></span>
-        </div>
-      </div>
+  .users-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
 
-      <%= link_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_billing_portal_path : schools_ads_direct_billing_portal_path), class: "sa-dash__btn-pill", title: "Gérer la facturation & télécharger mes reçus Stripe" do %>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-          <line x1="1" y1="10" x2="23" y2="10"></line>
-        </svg>
-        <span>Facturation & Reçus</span>
-      <% end %>
+  .users-dash-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #202020;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
 
-      <a href="<%= sa_funnel_path %>" class="sa-dash__btn-pill sa-dash__btn-pill--dark">
-        <span>+ Nouvelle campagne</span>
-      </a>
+  .users-dash-back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .users-dash-back-link:hover {
+    background-color: #f0f0f0;
+    border-color: #d0d0d0;
+    transform: translateX(-2px);
+  }
 
-      <%= button_to destroy_user_session_path, method: :delete, class: "sa-dash__btn-logout", title: "Déconnexion" do %>
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-          <polyline points="16 17 21 12 16 7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
-        </svg>
-      <% end %>
-    </div>
-  </header>
+  /* Boutons */
+  .btn-dash {
+    background-color: #202020;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-dash:hover {
+    background-color: #383838;
+    color: #fff;
+  }
+  .btn-dash-outline {
+    background-color: #fff;
+    color: #202020;
+    border: 1px solid #e0e0e0;
+  }
+  .btn-dash-outline:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+    color: #202020;
+  }
+  .btn-dash-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-dash-icon:hover {
+    background: #f5f5f5;
+    border-color: #202020;
+  }
 
-  <!-- Main Container -->
-  <main class="sa-dash__main">
-    <div class="sa-dash__intro">
-      <h1 class="sa-dash__title">Tableau de bord de vos campagnes</h1>
-      <p class="sa-dash__subtitle">
-        Suivez la diffusion de vos annonces, vos performances d'audience et gérez vos visuels en temps réel.
-      </p>
-    </div>
+  /* KPIs */
+  .users-dash-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .users-dash-kpi-card {
+    background: #fff;
+    padding: 22px 24px;
+    border-radius: 16px;
+    border: 1px solid #ebebeb;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 135px;
+    box-sizing: border-box;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .users-dash-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .kpi-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .kpi-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #202020;
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
 
-    <!-- Alert Modération Info -->
-    <% if @pending_ads_count.positive? %>
-      <div class="sa-dash__alert">
-        <div class="sa-dash__alert-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-        </div>
-        <div class="sa-dash__alert-content">
-          <strong>Modération en cours :</strong> Vous avez <strong><%= @pending_ads_count %> campagne(s) en cours de validation</strong> par notre équipe (délai : 24h ouvrées).
-        </div>
-      </div>
-    <% end %>
+  .bg-blue-light { background-color: #E3F2FD; color: #1565C0; }
+  .bg-green-light { background-color: #E8F5E9; color: #2E7D32; }
+  .bg-purple-light { background-color: #F3E5F5; color: #7B1FA2; }
+  .bg-orange-light { background-color: #FFF3E0; color: #E65100; }
 
-    <!-- KPI Grid -->
-    <div class="sa-dash__kpi-grid">
-      <div class="sa-dash__kpi-card">
-        <div class="sa-dash__kpi-head">
-          <span class="sa-dash__kpi-label">Campagnes Actives</span>
-          <span class="sa-dash__kpi-dot sa-dash__kpi-dot--active"></span>
-        </div>
-        <div class="sa-dash__kpi-value">
-          <%= @active_ads_count %>
-          <span class="sa-dash__kpi-sub">/ <%= @ads.count %></span>
-        </div>
-      </div>
+  /* Toolbar */
+  .users-dash-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
 
-      <div class="sa-dash__kpi-card">
-        <div class="sa-dash__kpi-head">
-          <span class="sa-dash__kpi-label">Vues (Impressions)</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-        </div>
-        <div class="sa-dash__kpi-value"><%= number_with_delimiter(@total_impressions, delimiter: " ") %></div>
-      </div>
+  /* Table */
+  .users-dash-table-container {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #ebebeb;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+  .users-dash-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+  }
+  .users-dash-table th {
+    background-color: #fafafa;
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+  .users-dash-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 13.5px;
+    color: #202020;
+    vertical-align: middle;
+  }
+  .users-dash-table tr:last-child td {
+    border-bottom: none;
+  }
+  .users-dash-table tr:hover td {
+    background-color: #fcfcfc;
+  }
 
-      <div class="sa-dash__kpi-card">
-        <div class="sa-dash__kpi-head">
-          <span class="sa-dash__kpi-label">Clics Générés</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
-            <path d="M15 3h6v6"></path>
-            <path d="M10 14L21 3"></path>
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          </svg>
-        </div>
-        <div class="sa-dash__kpi-value"><%= number_with_delimiter(@total_clicks, delimiter: " ") %></div>
-      </div>
+  /* Table Elements */
+  .ad-preview-thumb {
+    width: 72px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #f0f0f0;
+    border: 1px solid #e5e5e5;
+    display: block;
+  }
+  .ad-meta-title {
+    font-weight: 600;
+    color: #202020;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .ad-meta-desc {
+    font-size: 12px;
+    color: #666;
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 3px;
+  }
+  .ad-meta-link {
+    font-size: 12px;
+    color: #1565C0;
+    text-decoration: none;
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .ad-meta-link:hover {
+    text-decoration: underline;
+  }
 
-      <div class="sa-dash__kpi-card">
-        <div class="sa-dash__kpi-head">
-          <span class="sa-dash__kpi-label">Taux d'Engagement</span>
-          <span style="font-size: 11px; font-weight: 600; color: #888888;">CTR</span>
-        </div>
-        <div class="sa-dash__kpi-value"><%= @avg_ctr %> <span style="font-size: 18px; font-weight: 500; color: #888888;">%</span></div>
-      </div>
-    </div>
+  /* Badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-active { background: #E8F5E9; color: #2E7D32; }
+  .badge-pending { background: #FFF3E0; color: #E65100; }
+  .badge-future { background: #E3F2FD; color: #1565C0; }
+  .badge-rejected { background: #FFEBEE; color: #C62828; }
+  .badge-inactive { background: #f5f5f5; color: #888; }
 
-    <!-- Campaigns Section -->
-    <div class="sa-dash__section">
-      <div class="sa-dash__section-head">
+  /* Actions */
+  .action-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #202020;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .action-pill-btn:hover {
+    background: #f5f5f5;
+    border-color: #202020;
+  }
+  .action-pill-btn.btn-cancel:hover {
+    background: #FFEBEE;
+    color: #C62828;
+    border-color: #FFCDD2;
+  }
+
+  @media (max-width: 1024px) {
+    .users-dash-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .users-dash-wrapper { padding: 20px 16px 60px 16px; }
+    .users-dash-header { flex-direction: column; align-items: flex-start; }
+    .users-dash-kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="users-dash-wrapper">
+  <!-- Header Title & Quick Actions -->
+  <div class="users-dash-header">
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <a href="<%= sa_root_path %>" class="users-dash-back-link" title="Retour au site">
+          <svg style="width: 20px; height: 20px; fill: #202020;" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </a>
         <div>
-          <h2 class="sa-dash__section-title">Vos Annonces & Campagnes</h2>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <button type="button" class="sa-dash__btn-support" onclick="document.getElementById('sa-support-modal').style.display='flex'">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <span>Contacter l'équipe</span>
-          </button>
-          <span class="sa-dash__count-badge"><%= @ads.count %> au total</span>
+          <h1 class="users-dash-title">Espace Annonceur</h1>
+          <span style="font-size: 14px; color: #666; margin-top: 4px; display: block;">
+            <% school_display_name = @user&.etablissement&.name.presence || @user&.firstname.presence || @user&.email.presence || "Partenaire" %>
+            Compte : <strong><%= school_display_name %></strong> (<%= @user&.email %>)
+          </span>
         </div>
       </div>
 
-      <% if @ads.any? %>
-        <div class="sa-dash__campaigns-list">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <button type="button" class="btn-dash btn-dash-outline" onclick="document.getElementById('sa-support-modal').style.display='flex'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Contacter l'équipe
+        </button>
+
+        <%= link_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_billing_portal_path : schools_ads_direct_billing_portal_path), class: "btn-dash btn-dash-outline", title: "Gérer mes reçus et ma carte bancaire" do %>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          Facturation & Reçus
+        <% end %>
+
+        <%= link_to sa_funnel_path, class: "btn-dash" do %>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Nouvelle campagne
+        <% end %>
+
+        <%= button_to destroy_user_session_path, method: :delete, class: "btn-dash-icon", title: "Déconnexion" do %>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Modération Info -->
+  <% if @pending_ads_count.positive? %>
+    <div style="background-color: #FFFDF5; border: 1px solid #FDE68A; border-radius: 12px; padding: 14px 18px; margin-bottom: 28px; color: #92400E; font-size: 13.5px; display: flex; align-items: center; gap: 10px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span><strong>Validation en cours :</strong> <%= @pending_ads_count %> campagne(s) en cours de modération par notre équipe (délai : 24h ouvrées max).</span>
+    </div>
+  <% end %>
+
+  <!-- KPIs Grid -->
+  <div class="users-dash-kpi-grid">
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Campagnes Actives</span>
+        <div class="kpi-icon bg-green-light">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @active_ads_count %> <span style="font-size: 16px; color: #999; font-weight: 400;">/ <%= @ads.count %></span></span>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Vues (Impressions)</span>
+        <div class="kpi-icon bg-blue-light">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= number_with_delimiter(@total_impressions, delimiter: " ") %></span>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Clics Générés</span>
+        <div class="kpi-icon bg-purple-light">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= number_with_delimiter(@total_clicks, delimiter: " ") %></span>
+    </div>
+
+    <div class="users-dash-kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">CTR Moyen</span>
+        <div class="kpi-icon bg-orange-light">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h2v5zm0 4h-2v-2h2v2z"/></svg>
+        </div>
+      </div>
+      <span class="kpi-value"><%= @avg_ctr %>%</span>
+    </div>
+  </div>
+
+  <!-- Section Table des Campagnes -->
+  <div class="users-dash-toolbar">
+    <div style="font-size: 18px; font-weight: 600; color: #202020;">Vos Annonces & Campagnes (<%= @ads.count %>)</div>
+    <%= link_to sa_funnel_path, class: "btn-dash" do %>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      Créer une annonce
+    <% end %>
+  </div>
+
+  <div class="users-dash-table-container">
+    <% if @ads.any? %>
+      <table class="users-dash-table">
+        <thead>
+          <tr>
+            <th style="width: 80px;">Visuel</th>
+            <th>Campagne & Redirection</th>
+            <th>Statut</th>
+            <th style="text-align: center;">Vues</th>
+            <th style="text-align: center;">Clics</th>
+            <th style="text-align: center;">CTR</th>
+            <th>Période & Formule</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           <% @ads.each do |ad| %>
             <% 
               is_active = ad.currently_running?
@@ -145,202 +435,139 @@
               is_expired = ad.end_date.present? && ad.end_date < Date.current
               ctr = ad.impressions_count.to_i > 0 ? ((ad.clicks_count.to_f / ad.impressions_count) * 100).round(2) : 0
             %>
-            <article class="sa-camp-card">
-              <!-- Visual Thumbnail -->
-              <div class="sa-camp-card__media">
+            <tr>
+              <td>
                 <% if ad.image.attached? %>
                   <% if ad.video? %>
-                    <video src="<%= url_for(ad.image) %>" class="sa-camp-card__img" muted loop autoplay playsinline></video>
+                    <video src="<%= url_for(ad.image) %>" class="ad-preview-thumb" muted loop autoplay playsinline></video>
                   <% else %>
-                    <%= image_tag ad.image, class: "sa-camp-card__img", alt: ad.title %>
+                    <%= image_tag ad.image, class: "ad-preview-thumb" %>
                   <% end %>
                 <% else %>
-                  <div class="sa-camp-card__img sa-camp-card__img--placeholder">
-                    <span>Aucun visuel</span>
-                  </div>
+                  <div class="ad-preview-thumb" style="display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888;">Sans visuel</div>
                 <% end %>
-                <span class="sa-camp-card__format-tag">Sponsorisé</span>
-              </div>
+              </td>
 
-              <!-- Main Campaign Details -->
-              <div class="sa-camp-card__body">
-                <div class="sa-camp-card__top">
-                  <div>
-                    <h3 class="sa-camp-card__title"><%= ad.title %></h3>
-                    <% if ad.stripe_subscription_id.present? %>
-                      <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; color: #166534; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 2px 8px; border-radius: 9999px; margin-top: 5px;">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        Abonnement mensuel actif (<%= (ad.price_paid.to_i / 100) %>€/mois)
-                      </span>
-                    <% end %>
-                  </div>
-
-                  <!-- Dynamic Status Badge -->
-                  <div class="sa-camp-card__status">
-                    <% if is_pending %>
-                      <span class="sa-status-badge sa-status-badge--pending">
-                        <span class="sa-status-dot sa-status-dot--pulse-amber"></span>
-                        En attente de validation
-                      </span>
-                    <% elsif is_rejected %>
-                      <span class="sa-status-badge sa-status-badge--rejected">
-                        <span class="sa-status-dot sa-status-dot--red"></span>
-                        Visuel non conforme
-                      </span>
-                    <% elsif is_active %>
-                      <span class="sa-status-badge sa-status-badge--active">
-                        <span class="sa-status-dot sa-status-dot--pulse-green"></span>
-                        En cours de diffusion
-                      </span>
-                    <% elsif is_future %>
-                      <span class="sa-status-badge sa-status-badge--scheduled">
-                        <span class="sa-status-dot sa-status-dot--blue"></span>
-                        Planifiée
-                      </span>
-                    <% else %>
-                      <span class="sa-status-badge sa-status-badge--expired">
-                        <span class="sa-status-dot sa-status-dot--gray"></span>
-                        Campagne terminée
-                      </span>
-                    <% end %>
-                  </div>
+              <td>
+                <div style="display: flex; flex-direction: column;">
+                  <span class="ad-meta-title"><%= ad.title %></span>
+                  <% if ad.description.present? %>
+                    <span class="ad-meta-desc"><%= ad.description %></span>
+                  <% end %>
+                  <%= link_to ad.link, ad.link, target: "_blank", class: "ad-meta-link" %>
                 </div>
+              </td>
 
-                <% if ad.description.present? %>
-                  <p class="sa-camp-card__desc"><%= ad.description %></p>
+              <td>
+                <% if is_pending %>
+                  <span class="status-badge badge-pending">À Valider (24h)</span>
+                <% elsif is_rejected %>
+                  <span class="status-badge badge-rejected">Visuel Refusé</span>
+                <% elsif is_active %>
+                  <span class="status-badge badge-active">En diffusion</span>
+                <% elsif is_future %>
+                  <span class="status-badge badge-future">Planifiée</span>
+                <% else %>
+                  <span class="status-badge badge-inactive">Terminée</span>
                 <% end %>
+              </td>
 
-                <div class="sa-camp-card__meta-grid">
-                  <div class="sa-camp-card__meta-item">
-                    <span class="sa-camp-card__meta-label">Lien :</span>
-                    <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="sa-camp-card__link">
-                      <%= ad.link.truncate(38) %>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                    </a>
-                  </div>
+              <td style="text-align: center; font-weight: 500;">
+                <%= number_with_delimiter(ad.impressions_count.to_i, delimiter: " ") %>
+              </td>
 
-                  <div class="sa-camp-card__meta-item">
-                    <span class="sa-camp-card__meta-label">Période :</span>
-                    <span class="sa-camp-card__meta-value">
-                      <% if ad.start_date.present? && ad.end_date.present? %>
-                        Du <strong><%= ad.start_date.strftime("%d/%m/%Y") %></strong> au <strong><%= ad.end_date.strftime("%d/%m/%Y") %></strong>
-                        (<%= ad.duration_days.presence || ((ad.end_date - ad.start_date).to_i + 1) %> jours)
-                      <% else %>
-                        Diffusion continue
-                      <% end %>
-                    </span>
-                  </div>
+              <td style="text-align: center; font-weight: 600; color: #202020;">
+                <%= number_with_delimiter(ad.clicks_count.to_i, delimiter: " ") %>
+              </td>
+
+              <td style="text-align: center; font-weight: 600; color: #2E7D32;">
+                <%= ctr %>%
+              </td>
+
+              <td>
+                <div style="font-size: 12.5px; color: #555; line-height: 1.35;">
+                  <% if ad.start_date.present? && ad.end_date.present? %>
+                    Du <strong><%= ad.start_date.strftime("%d/%m/%Y") %></strong><br>au <strong><%= ad.end_date.strftime("%d/%m/%Y") %></strong>
+                  <% else %>
+                    Diffusion continue
+                  <% end %>
+                  <% if ad.stripe_subscription_id.present? %>
+                    <span style="display: block; font-size: 11px; color: #2E7D32; font-weight: 600; margin-top: 2px;">• Abonnement (<%= (ad.price_paid.to_i / 100) %>€/m)</span>
+                  <% end %>
                 </div>
+              </td>
 
-                <!-- Action de modification & Résiliation -->
-                <div style="margin-top: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <td>
+                <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
                   <button type="button" 
-                          class="sa-camp-card__btn-modify" 
+                          class="action-pill-btn" 
+                          title="Modifier le visuel ou le lien"
                           onclick="openModificationModal('<%= j(ad.title) %>', '<%= ad.id %>')">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                    <span>Modifier l'annonce</span>
+                    Modifier
                   </button>
 
                   <% if ad.stripe_customer_id.present? %>
-                    <%= link_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_billing_portal_path(ad_id: ad.id) : schools_ads_direct_billing_portal_path(ad_id: ad.id)), class: "sa-camp-card__btn-modify", title: "Facturation & reçus de cette annonce" do %>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                      <span>Reçus & Carte</span>
+                    <%= link_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_billing_portal_path(ad_id: ad.id) : schools_ads_direct_billing_portal_path(ad_id: ad.id)), class: "action-pill-btn", title: "Reçus et carte bancaire" do %>
+                      Reçus
                     <% end %>
                   <% end %>
 
                   <% if ad.stripe_subscription_id.present? && ad.subscription_status != 'canceled' && ad.subscription_status != 'canceling' %>
                     <%= button_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_cancel_subscription_path(ad) : schools_ads_direct_cancel_subscription_path(ad)),
                         method: :post,
-                        data: { turbo_confirm: "Êtes-vous sûr de vouloir résilier l'abonnement de cette campagne ? Elle restera active jusqu'à la fin du mois en cours et aucun prélèvement suivant ne sera effectué." },
-                        class: "sa-camp-card__btn-cancel-sub" do %>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                      <span>Résilier l'abonnement</span>
+                        data: { turbo_confirm: "Êtes-vous sûr de vouloir résilier cette campagne ?" },
+                        class: "action-pill-btn btn-cancel", title: "Résilier l'abonnement" do %>
+                      Résilier
                     <% end %>
                   <% elsif ad.subscription_status == 'canceling' %>
-                    <span style="font-size: 11.5px; color: #92400E; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                      Résiliation programmée (fin de période)
-                    </span>
+                    <span style="font-size: 11px; color: #E65100; font-weight: 500;">Fin de période</span>
                   <% end %>
                 </div>
-              </div>
-
-              <!-- Real-time Stats & Actions -->
-              <div class="sa-camp-card__stats">
-                <div class="sa-camp-stat">
-                  <span class="sa-camp-stat__number"><%= number_with_delimiter(ad.impressions_count.to_i, delimiter: " ") %></span>
-                  <span class="sa-camp-stat__label">Impressions</span>
-                </div>
-                <div class="sa-camp-stat">
-                  <span class="sa-camp-stat__number"><%= number_with_delimiter(ad.clicks_count.to_i, delimiter: " ") %></span>
-                  <span class="sa-camp-stat__label">Clics</span>
-                </div>
-                <div class="sa-camp-stat">
-                  <span class="sa-camp-stat__number"><%= ctr %> %</span>
-                  <span class="sa-camp-stat__label">CTR</span>
-                </div>
-              </div>
-            </article>
+              </td>
+            </tr>
           <% end %>
-        </div>
-      <% else %>
-        <!-- Empty State -->
-        <div class="sa-dash__empty">
-          <div class="sa-dash__empty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-          </div>
-          <h3 class="sa-dash__empty-title">Aucune campagne pour le moment</h3>
-          <p class="sa-dash__empty-text">
-            Mettez en avant vos formations, vos JPO ou vos concours auprès de plus de 1 000 étudiants en Arts Appliqués et Design dès aujourd'hui.
-          </p>
-          <a href="<%= sa_funnel_path %>" class="sa-dash__btn-cta">
-            Lancer ma première campagne →
-          </a>
-        </div>
-      <% end %>
-    </div>
-  </main>
+        </tbody>
+      </table>
+    <% else %>
+      <div style="padding: 60px 24px; text-align: center;">
+        <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 8px; color: #202020;">Aucune campagne active</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 20px;">Faites la promotion de votre école ou de vos formations auprès des étudiants en design.</p>
+        <%= link_to "Lancer une campagne", sa_funnel_path, class: "btn-dash", style: "display: inline-flex;" %>
+      </div>
+    <% end %>
+  </div>
 </div>
 
-<!-- ========================================================================= -->
-<!-- MODALE DE CONTACT / DEMANDE DE MODIFICATION DIRECTE -->
-<!-- ========================================================================= -->
-<div id="sa-support-modal" class="sa-modal-backdrop" style="display: none;">
-  <div class="sa-modal-box">
-    <div class="sa-modal-head">
+<!-- MODALE DE CONTACT DIRECT -->
+<div id="sa-support-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+  <div style="background: #fff; border-radius: 16px; width: 100%; max-width: 480px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); box-sizing: border-box; border: 1px solid #eee;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
       <div>
-        <h3 class="sa-modal-title" id="sa-modal-head-title">Contacter l'équipe Omniscient Design</h3>
-        <p class="sa-modal-subtitle">Une question, un besoin particulier ou une mise à jour de visuel ? Nous vous répondons sous 24h.</p>
+        <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px; color: #202020;" id="sa-modal-head-title">Contacter l'équipe Omniscient</h3>
+        <p style="font-size: 13px; color: #666; margin: 0;">Une question ou une modification de visuel ? Réponse sous 24h.</p>
       </div>
-      <button type="button" class="sa-modal-close" onclick="closeSupportModal()">✕</button>
+      <button type="button" onclick="closeSupportModal()" style="background: #f0f0f0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">✕</button>
     </div>
 
-    <%= form_with url: schools_ads_contact_path, method: :post, local: true, class: "sa-modal-form" do |f| %>
-      <div class="sa-modal-field">
-        <label class="sa-modal-label">Établissement / Entreprise</label>
-        <%= f.text_field :school_name, value: @user&.etablissement&.name.presence || @user&.firstname.presence || "Mon Établissement", class: "sa-modal-input", required: true %>
+    <%= form_with url: schools_ads_contact_path, method: :post, local: true do |f| %>
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #202020;">Établissement / Entreprise</label>
+        <%= f.text_field :school_name, value: @user&.etablissement&.name.presence || @user&.firstname.presence || "Mon Établissement", required: true, style: "width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;" %>
       </div>
 
-      <div class="sa-modal-field">
-        <label class="sa-modal-label">Votre Email</label>
-        <%= f.email_field :email, value: @user&.email, class: "sa-modal-input", required: true %>
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #202020;">Votre Email</label>
+        <%= f.email_field :email, value: @user&.email, required: true, style: "width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;" %>
       </div>
 
-      <div class="sa-modal-field">
-        <label class="sa-modal-label" id="sa-modal-msg-label">Votre message / Modifications souhaitées*</label>
-        <%= f.text_area :message, id: "sa-modal-textarea", rows: 4, placeholder: "Ex: Je souhaite mettre à jour le lien de redirection ou remplacer le visuel de ma campagne...", class: "sa-modal-textarea", required: true %>
+      <div style="margin-bottom: 18px;">
+        <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #202020;">Message / Détails de la modification*</label>
+        <%= f.text_area :message, id: "sa-modal-textarea", rows: 4, placeholder: "Précisez votre demande...", required: true, style: "width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; resize: vertical;" %>
       </div>
 
-      <div class="sa-modal-actions">
-        <button type="button" class="sa-modal-btn-cancel" onclick="closeSupportModal()">Annuler</button>
-        <%= f.submit "Envoyer ma demande →", class: "sa-modal-btn-submit" %>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="closeSupportModal()" style="background: transparent; border: none; color: #666; font-size: 13px; font-weight: 500; padding: 8px 16px; cursor: pointer;">Annuler</button>
+        <%= f.submit "Envoyer ma demande", class: "btn-dash", style: "border: none; cursor: pointer; padding: 9px 20px;" %>
       </div>
     <% end %>
   </div>
@@ -358,7 +585,6 @@
     document.getElementById('sa-support-modal').style.display = 'none';
   }
 
-  // Fermer la modale si clic en dehors
   window.addEventListener('click', function(e) {
     var modal = document.getElementById('sa-support-modal');
     if (e.target === modal) {

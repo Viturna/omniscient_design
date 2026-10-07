@@ -48,22 +48,27 @@ class StripeWebhooksController < ActionController::API
   private
 
   def handle_invoice_paid(invoice)
-    return if invoice.amount_paid.to_i <= 0
+    amount_paid = invoice[:amount_paid] || invoice.try(:amount_paid) || 0
+    return if amount_paid.to_i <= 0
 
-    amount_paid = invoice.amount_paid # En centimes (ex: 20000 pour 200€)
-    charge_id = invoice.charge
+    # Extraire l'ID de charge ou de payment_intent de manière sécurisée sans crash
+    charge_id = invoice[:charge] || invoice.try(:charge)
+    customer_email = invoice[:customer_email] || invoice.try(:customer_email) || "client"
+    invoice_id = invoice[:id] || invoice.try(:id)
 
-    split_payment(amount_paid, charge_id, "Facture #{invoice.id} - #{invoice.customer_email}")
+    split_payment(amount_paid.to_i, charge_id, "Facture #{invoice_id} - #{customer_email}")
   end
 
   def handle_payment_intent_succeeded(payment_intent)
     # Pour les paiements directs s'ils ne passent pas par une facture
-    return if payment_intent.invoice.present? # Déjà géré par invoice.paid
+    invoice_ref = payment_intent[:invoice] || payment_intent.try(:invoice)
+    return if invoice_ref.present? # Déjà géré par invoice.paid
 
-    amount_paid = payment_intent.amount_received
-    charge_id = payment_intent.latest_charge
+    amount_paid = payment_intent[:amount_received] || payment_intent.try(:amount_received) || 0
+    charge_id = payment_intent[:latest_charge] || payment_intent.try(:latest_charge)
+    pi_id = payment_intent[:id] || payment_intent.try(:id)
 
-    split_payment(amount_paid, charge_id, "Paiement #{payment_intent.id}")
+    split_payment(amount_paid.to_i, charge_id, "Paiement #{pi_id}")
   end
 
   def split_payment(total_amount, source_transaction, description)

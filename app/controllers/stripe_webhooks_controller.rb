@@ -67,8 +67,10 @@ class StripeWebhooksController < ActionController::API
   end
 
   def split_payment(total_amount, source_transaction, description)
-    edgar_account = ENV['STRIPE_CONNECT_EDGAR_ID'] || ENV['STRIPE_CONNECT_ACCOUNT_ID']
-    thomas_account = ENV['STRIPE_CONNECT_THOMAS_ID']
+    edgar_account = ENV['STRIPE_CONNECT_EDGAR_ID'].presence || ENV['STRIPE_CONNECT_ACCOUNT_ID'].presence
+    thomas_account = ENV['STRIPE_CONNECT_THOMAS_ID'].presence
+
+    Rails.logger.info("[Stripe Split] Début du split pour #{total_amount / 100.0}€ (Source: #{source_transaction || 'none'}) - Edgar: #{edgar_account} / Thomas: #{thomas_account}")
 
     # Calcul des parts
     edgar_percent = (ENV['STRIPE_CONNECT_EDGAR_PERCENT'].presence || 60.0).to_f / 100.0
@@ -88,13 +90,27 @@ class StripeWebhooksController < ActionController::API
 
         transfer = Stripe::Transfer.create(transfer_params)
         Rails.logger.info("[Stripe Split] Transfert réussi Edgar (#{edgar_amount / 100.0}€) : #{transfer.id}")
+      rescue Stripe::InvalidRequestError => e
+        # Si source_transaction n'est pas acceptée pour un abonnement ou charge non directe, réessayer sans source_transaction
+        if source_transaction.present? && e.message.include?("source_transaction")
+          begin
+            transfer_params.delete(:source_transaction)
+            transfer = Stripe::Transfer.create(transfer_params)
+            Rails.logger.info("[Stripe Split Retry] Transfert réussi Edgar sans source_transaction (#{edgar_amount / 100.0}€) : #{transfer.id}")
+          rescue StandardError => retry_err
+            Rails.logger.error("[Stripe Split Retry Error Edgar] #{retry_err.message}")
+          end
+        else
+          Rails.logger.error("[Stripe Split Error Edgar] #{e.message}")
+        end
       rescue StandardError => e
         Rails.logger.error("[Stripe Split Error Edgar] #{e.message}")
       end
     end
 
     # 2. Virement à Thomas (40%)
-    if thomas_account.present?
+    # Si le compte Stripe principal est déjà celui de Thomas, on ne transfère pas à soi-même (les fonds restants sont déjà sur le compte Thomas)
+    if thomas_account.present? && !edgar_account.present?
       thomas_amount = (total_amount * thomas_percent).round
       begin
         transfer_params = {
@@ -107,6 +123,18 @@ class StripeWebhooksController < ActionController::API
 
         transfer = Stripe::Transfer.create(transfer_params)
         Rails.logger.info("[Stripe Split] Transfert réussi Thomas (#{thomas_amount / 100.0}€) : #{transfer.id}")
+      rescue Stripe::InvalidRequestError => e
+        if source_transaction.present? && e.message.include?("source_transaction")
+          begin
+            transfer_params.delete(:source_transaction)
+            transfer = Stripe::Transfer.create(transfer_params)
+            Rails.logger.info("[Stripe Split Retry] Transfert réussi Thomas sans source_transaction (#{thomas_amount / 100.0}€) : #{transfer.id}")
+          rescue StandardError => retry_err
+            Rails.logger.error("[Stripe Split Retry Error Thomas] #{retry_err.message}")
+          end
+        else
+          Rails.logger.error("[Stripe Split Error Thomas] #{e.message}")
+        end
       rescue StandardError => e
         Rails.logger.error("[Stripe Split Error Thomas] #{e.message}")
       end

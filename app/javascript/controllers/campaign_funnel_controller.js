@@ -66,6 +66,7 @@ export default class extends Controller {
     "calendarMonthYear",
     "calendarDaysGrid",
     "durationSummary",
+    "priceSummary",
     "selectedMonthName",
     "selectedMonthPeriod",
     "monthsPillsContainer",
@@ -105,7 +106,7 @@ connect() {
   this.selectedPlan = "ancrage_local"
   this.selectedFormat = "accueil"
   this.selectedDevice = "pc"
-  this.selectedRegionKey = "cvl" // Centre-Val de Loire par défaut comme sur la maquette
+  this.selectedRegionKeys = new Set(["cvl"]) // Centre-Val de Loire sélectionné par défaut
   this.selectedFile = null
   this.selectedMobileFile = null
   
@@ -120,7 +121,10 @@ connect() {
 
   this.currentDate = new Date(minStartDate.getFullYear(), minStartDate.getMonth(), 1)
   this.rangeStart = new Date(minStartDate)
-  this.rangeEnd = new Date(minStartDate.getFullYear(), minStartDate.getMonth() + 1, minStartDate.getDate())
+  // Exactement 30 jours par défaut (du jour J au jour J+29 inclus = 30 jours)
+  const defaultEndDate = new Date(minStartDate)
+  defaultEndDate.setDate(defaultEndDate.getDate() + 29)
+  this.rangeEnd = defaultEndDate
   this.monthSelectionInProgress = false
 
   // Check URL parameters (e.g. ?plan=encart_natif or ?plan=test_2eur or ?plan=monopole)
@@ -135,7 +139,7 @@ connect() {
   this.updateStepView()
   this.renderCalendar()
   this.updateDatesDisplay()
-  this.selectRegion("cvl")
+  this.updateRegionsView()
 }
 
   // =========================================================================
@@ -232,7 +236,7 @@ connect() {
     } else if (this.currentStep === 2) {
       if (!this.rangeStart || !this.rangeEnd) {
         if (this.hasStartDateInputTarget) {
-          this.setFieldError(this.startDateInputTarget, "Veuillez sélectionner votre période sur le calendrier.")
+          this.setFieldError(this.startDateInputTarget, "Veuillez sélectionner votre date de début et de fin sur le calendrier.")
         }
         return false
       }
@@ -240,6 +244,15 @@ connect() {
       if (this.rangeStart < minDate) {
         if (this.hasStartDateInputTarget) {
           this.setFieldError(this.startDateInputTarget, "La date de début doit être au minimum dans 2 jours (délai de validation des visuels).")
+        }
+        return false
+      }
+      const startMid = new Date(this.rangeStart.getFullYear(), this.rangeStart.getMonth(), this.rangeStart.getDate())
+      const endMid = new Date(this.rangeEnd.getFullYear(), this.rangeEnd.getMonth(), this.rangeEnd.getDate())
+      const daysCount = Math.round((endMid - startMid) / (1000 * 60 * 60 * 24)) + 1
+      if (daysCount < 7) {
+        if (this.hasEndDateInputTarget) {
+          this.setFieldError(this.endDateInputTarget, "La durée minimale d'une campagne est de 7 jours.")
         }
         return false
       }
@@ -507,6 +520,7 @@ connect() {
     }
 
     this.updateStepView()
+    this.updateDatesDisplay()
   }
 
   async submitMonopoleQuote() {
@@ -806,7 +820,8 @@ connect() {
 
 
 // =========================================================================
-// 3. ÉTAPE 2 : CALENDRIER & PÉRIODE DE 1 MOIS
+// =========================================================================
+// 3. ÉTAPE 2 : CALENDRIER & PÉRIODE DE DIFFUSION SUR-MESURE
 // =========================================================================
 
 prevMonth() {
@@ -832,9 +847,20 @@ handleDayClick(date) {
   // Interdire la sélection d'une date avant J+2
   if (selectedDate < minDate) return
 
-  this.rangeStart = new Date(selectedDate)
-  // 1 mois exact : même jour le mois suivant
-  this.rangeEnd = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, selectedDate.getDate())
+  if (!this.rangeStart || (this.rangeStart && this.rangeEnd)) {
+    // 1er clic : Définir le début et réinitialiser la fin
+    this.rangeStart = new Date(selectedDate)
+    this.rangeEnd = null
+  } else if (this.rangeStart && !this.rangeEnd) {
+    // 2ème clic : Définir la fin
+    if (selectedDate < this.rangeStart) {
+      // Si la date cliquée est antérieure, elle devient le nouveau début
+      this.rangeStart = new Date(selectedDate)
+      this.rangeEnd = null
+    } else {
+      this.rangeEnd = new Date(selectedDate)
+    }
+  }
   
   this.renderCalendar()
   this.updateDatesDisplay()
@@ -865,7 +891,6 @@ renderCalendar() {
   // Jours du mois précédent (inactifs/gris clair / désactivés)
   for (let x = firstDayIndex; x > 0; x--) {
     const dayNum = prevLastDate - x + 1
-    const prevDate = new Date(year, month - 1, dayNum)
     const dayEl = document.createElement("button")
     dayEl.type = "button"
     dayEl.className = "sa-cal-day sa-cal-day--prev-month sa-cal-day--disabled"
@@ -889,9 +914,9 @@ renderCalendar() {
       dayEl.classList.add("sa-cal-day--disabled")
       dayEl.disabled = true
     } else {
-      const isInRange = this.rangeStart && this.rangeEnd && (thisDayDate >= this.rangeStart && thisDayDate <= this.rangeEnd)
       const isStart = this.isSameDay(thisDayDate, this.rangeStart)
       const isEnd = this.isSameDay(thisDayDate, this.rangeEnd)
+      const isInRange = this.rangeStart && this.rangeEnd && (thisDayDate > this.rangeStart && thisDayDate < this.rangeEnd)
 
       if (isStart) {
         dayEl.classList.add("sa-cal-day--start")
@@ -917,9 +942,9 @@ renderCalendar() {
     dayEl.className = "sa-cal-day sa-cal-day--next-month"
     dayEl.textContent = n
 
-    const isInRange = this.rangeStart && this.rangeEnd && (nextDate >= this.rangeStart && nextDate <= this.rangeEnd)
     const isStart = this.isSameDay(nextDate, this.rangeStart)
     const isEnd = this.isSameDay(nextDate, this.rangeEnd)
+    const isInRange = this.rangeStart && this.rangeEnd && (nextDate > this.rangeStart && nextDate < this.rangeEnd)
 
     if (isStart) dayEl.classList.add("sa-cal-day--start")
     else if (isEnd) dayEl.classList.add("sa-cal-day--end")
@@ -943,22 +968,99 @@ updateDatesDisplay() {
     this.startDateInputTarget.value = formatDate(this.rangeStart)
   }
 
-  if (this.hasEndDateInputTarget && this.rangeEnd) {
-    this.endDateInputTarget.value = formatDate(this.rangeEnd)
+  if (this.hasEndDateInputTarget) {
+    if (this.rangeEnd) {
+      this.endDateInputTarget.value = formatDate(this.rangeEnd)
+    } else {
+      this.endDateInputTarget.value = "Sélectionnez une date de fin..."
+    }
+  }
+
+  // Calcul du nombre de jours et prorata tarifaire
+  if (this.rangeStart) {
+    const effectiveEnd = this.rangeEnd || this.rangeStart
+    const startMidnight = new Date(this.rangeStart.getFullYear(), this.rangeStart.getMonth(), this.rangeStart.getDate())
+    const endMidnight = new Date(effectiveEnd.getFullYear(), effectiveEnd.getMonth(), effectiveEnd.getDate())
+    const diffTime = endMidnight.getTime() - startMidnight.getTime()
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1
+    const monthsApprox = (diffDays / 30.0).toFixed(1)
+
+    if (this.hasDurationSummaryTarget) {
+      if (diffDays === 30) {
+        this.durationSummaryTarget.textContent = "30 jours"
+      } else {
+        this.durationSummaryTarget.textContent = `${diffDays} jours (~${monthsApprox} mois)`
+      }
+    }
+
+    if (this.hasPriceSummaryTarget) {
+      const monthlyRate = (this.selectedPlan === "encart_natif" || this.selectedPlan === "test_2eur") ? 200 : 400
+      if (this.selectedPlan === "test_2eur") {
+        this.priceSummaryTarget.textContent = "2,00 €"
+      } else {
+        const rawPrice = (monthlyRate / 30.0) * diffDays
+        const finalPrice = rawPrice.toFixed(2).replace('.', ',')
+        this.priceSummaryTarget.textContent = `${finalPrice} €`
+      }
+    }
   }
 }
 
-isSameDay(d1, d2) {
-  if (!d1 || !d2) return false
-  return d1.getFullYear() === d2.getFullYear() &&
-         d1.getMonth() === d2.getMonth() &&
-         d1.getDate() === d2.getDate()
-}
+  isSameDay(d1, d2) {
+    if (!d1 || !d2) return false
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate()
+  }
+
+  parseFrenchDate(str) {
+    if (!str || typeof str !== "string") return null
+    const parts = str.trim().split(/[\/\-.]/)
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10)
+      const month = parseInt(parts[1], 10) - 1
+      let year = parseInt(parts[2], 10)
+      if (year < 100) year += 2000
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2020 && month >= 0 && month <= 11 && day >= 1 && day <= 31) {
+        const parsed = new Date(year, month, day)
+        if (parsed.getFullYear() === year && parsed.getMonth() === month && parsed.getDate() === day) {
+          return parsed
+        }
+      }
+    }
+    return null
+  }
+
+  handleStartDateInputChange(event) {
+    const val = event.target.value
+    const parsed = this.parseFrenchDate(val)
+    if (parsed) {
+      const minDate = this.minStartDate || this.today
+      if (parsed >= minDate) {
+        this.rangeStart = parsed
+        // Synchroniser le mois du calendrier sur la date saisie
+        this.currentDate = new Date(parsed.getFullYear(), parsed.getMonth(), 1)
+        this.renderCalendar()
+        this.updateDatesDisplay()
+      }
+    }
+  }
+
+  handleEndDateInputChange(event) {
+    const val = event.target.value
+    const parsed = this.parseFrenchDate(val)
+    if (parsed) {
+      if (!this.rangeStart || parsed >= this.rangeStart) {
+        this.rangeEnd = parsed
+        this.renderCalendar()
+        this.updateDatesDisplay()
+      }
+    }
+  }
 
 // =========================================================================
-// 4. ÉTAPE 3 : ANCRAGE LOCAL & CARTE INTERACTIVE
-
-  // =========================================================================
+// 4. ÉTAPE 3 : ANCRAGE LOCAL & CARTE INTERACTIVE (MULTI-RÉGIONS)
+// =========================================================================
 
   selectRegion(regionKeyOrEvent) {
     let regionKey = regionKeyOrEvent
@@ -967,35 +1069,72 @@ isSameDay(d1, d2) {
     }
 
     if (!regionKey) return
-    this.selectedRegionKey = regionKey
-
-    // 1. Highlight map path
-    this.regionPathTargets.forEach(path => {
-      const isSelected = path.id === `funnel-region-${regionKey}`
-      path.classList.toggle("sa-funnel-map__region--active", isSelected)
-    })
-
-    // 2. Highlight quick chip
-    this.regionChipTargets.forEach(chip => {
-      chip.classList.toggle("sa-pill--active", chip.dataset.regionKey === regionKey)
-    })
-
-    // 3. Update region info & student estimation dynamically from map data
-    const matchedPath = this.regionPathTargets.find(path => path.id === `funnel-region-${regionKey}`)
-    const dynamicRegionName = matchedPath?.dataset.region || regionKey
-    const dynamicCount = matchedPath?.dataset.count
-
-    if (this.hasRegionSearchInputTarget) {
-      this.regionSearchInputTarget.value = dynamicRegionName
+    if (!this.selectedRegionKeys) {
+      this.selectedRegionKeys = new Set()
     }
 
-    if (this.hasStudentCountTarget && dynamicCount) {
-      this.studentCountTarget.textContent = `${dynamicCount} étudiants`
+    // Toggle logic : si déjà sélectionnée, on retire (sauf si c'est la seule sélectionnée pour garder au moins 1 région)
+    if (this.selectedRegionKeys.has(regionKey)) {
+      if (this.selectedRegionKeys.size > 1) {
+        this.selectedRegionKeys.delete(regionKey)
+      }
+    } else {
+      this.selectedRegionKeys.add(regionKey)
+    }
+
+    this.updateRegionsView()
+  }
+
+  updateRegionsView() {
+    if (!this.selectedRegionKeys) {
+      this.selectedRegionKeys = new Set(["cvl"])
+    }
+
+    // 1. Highlight map paths
+    let totalEstimatedStudents = 0
+    const selectedNames = []
+
+    this.regionPathTargets.forEach(path => {
+      const pathKey = path.dataset.regionKey || path.id.replace('funnel-region-', '')
+      const isSelected = this.selectedRegionKeys.has(pathKey)
+      path.classList.toggle("sa-funnel-map__region--active", isSelected)
+
+      if (isSelected) {
+        const count = parseInt(path.dataset.count || "0", 10)
+        totalEstimatedStudents += count
+        if (path.dataset.region) {
+          selectedNames.push(path.dataset.region)
+        }
+      }
+    })
+
+    // 2. Highlight quick chips
+    this.regionChipTargets.forEach(chip => {
+      const chipKey = chip.dataset.regionKey
+      chip.classList.toggle("sa-pill--active", this.selectedRegionKeys.has(chipKey))
+    })
+
+    // 3. Update region search input text
+    if (this.hasRegionSearchInputTarget) {
+      if (selectedNames.length === 0) {
+        this.regionSearchInputTarget.value = ""
+      } else if (selectedNames.length <= 2) {
+        this.regionSearchInputTarget.value = selectedNames.join(", ")
+      } else {
+        this.regionSearchInputTarget.value = `${selectedNames.length} régions sélectionnées (${selectedNames.slice(0, 2).join(", ")}...)`
+      }
+    }
+
+    // 4. Update student count estimation box
+    if (this.hasStudentCountTarget) {
+      this.studentCountTarget.textContent = `${totalEstimatedStudents.toLocaleString("fr-FR")} étudiants`
     }
   }
 
   filterRegions(event) {
     const query = event.target.value.toLowerCase().trim()
+    if (!query) return
+
     const regionAliases = {
       idf: ["ile de france", "paris", "idf", "île-de-france"],
       bre: ["bretagne", "finistere", "rennes", "quimper"],
@@ -1004,12 +1143,20 @@ isSameDay(d1, d2) {
       ara: ["auvergne", "rhone", "alpes", "lyon", "ara"],
       pac: ["paca", "provence", "marseille", "nice", "côte d'azur"],
       hdf: ["hauts de france", "lille", "hdf"],
-      occ: ["occitanie", "toulouse", "montpellier"]
+      occ: ["occitanie", "toulouse", "montpellier"],
+      ges: ["grand est", "alsace", "lorraine", "strasbourg"],
+      pdl: ["pays de la loire", "nantes", "angers"],
+      nor: ["normandie", "rouen", "caen"],
+      bfc: ["bourgogne", "franche comte", "franche-comte", "dijon"],
+      cor: ["corse", "ajaccio", "bastia"]
     }
 
     for (const [key, aliases] of Object.entries(regionAliases)) {
       if (aliases.some(a => a.includes(query) || query.includes(a))) {
-        this.selectRegion(key)
+        if (!this.selectedRegionKeys.has(key)) {
+          this.selectedRegionKeys.add(key)
+          this.updateRegionsView()
+        }
         break
       }
     }
@@ -1091,7 +1238,23 @@ isSameDay(d1, d2) {
         formData.append("end_date", this.rangeEnd.toISOString().split('T')[0])
       }
 
-      formData.append("region", this.hasRegionSearchInputTarget ? this.regionSearchInputTarget.value : "Centre-Val de Loire")
+      // Récupérer tous les noms de régions sélectionnés (uniquement si plan ancrage local)
+      if (this.selectedPlan === "ancrage_local") {
+        const selectedRegionNames = []
+        this.regionPathTargets.forEach(path => {
+          const pathKey = path.dataset.regionKey || path.id.replace('funnel-region-', '')
+          if (this.selectedRegionKeys && this.selectedRegionKeys.has(pathKey) && path.dataset.region) {
+            selectedRegionNames.push(path.dataset.region)
+          }
+        })
+        const regionsString = selectedRegionNames.length > 0 
+          ? selectedRegionNames.join(", ") 
+          : (this.hasRegionSearchInputTarget ? this.regionSearchInputTarget.value : "Centre-Val de Loire")
+
+        formData.append("region", regionsString)
+      } else {
+        formData.append("region", "Nationale")
+      }
       formData.append("school_name", this.hasSchoolNameInputTarget ? this.schoolNameInputTarget.value : "")
       formData.append("domain", this.hasDomainInputTarget ? this.domainInputTarget.value : "")
       formData.append("email", this.hasEmailInputTarget ? this.emailInputTarget.value : "")

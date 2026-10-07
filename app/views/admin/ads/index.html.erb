@@ -241,7 +241,7 @@
             <td>
               <div style="font-size: 13px; color: #666;">
                 <% if ad.duration_days.present? && ad.price_paid.present? %>
-                  <strong style="color: #202020;"><%= ad.duration_days %> jours</strong> (<%= ad.price_paid / 100 %>€)<br>
+                  <strong style="color: #202020;"><%= ad.duration_days %> jours</strong> (<%= sprintf('%.2f', ad.price_paid.to_f / 100.0).gsub('.', ',').gsub(',00', '') %>€)<br>
                 <% end %>
                 <% if ad.start_date.present? %>
                   Du <%= ad.start_date.strftime('%d/%m/%y') %><br>
@@ -261,9 +261,13 @@
                   <%= button_to approve_admin_ad_path(ad), method: :patch, class: "action-btn", style: "width: auto; padding: 0 10px; background: #E8F5E9; color: #2E7D32; border-color: #C8E6C9;", title: "Valider" do %>
                     ✓
                   <% end %>
-                  <%= button_to reject_admin_ad_path(ad), method: :patch, data: { turbo_confirm: "Confirmer le refus ?" }, class: "action-btn", style: "width: auto; padding: 0 10px; background: #FFEBEE; color: #C62828; border-color: #FFCDD2;", title: "Refuser" do %>
+                  <button type="button" 
+                          class="action-btn" 
+                          style="width: auto; padding: 0 10px; background: #FFEBEE; color: #C62828; border-color: #FFCDD2;" 
+                          title="Refuser et rembourser"
+                          onclick="openRejectModal('<%= reject_admin_ad_path(ad) %>', '<%= j(ad.title) %>', '<%= ad.price_paid.to_i / 100 %>')">
                     ✕
-                  <% end %>
+                  </button>
                 <% end %>
                 <%= link_to edit_admin_ad_path(ad), class: "action-btn", title: "Modifier" do %>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
@@ -282,3 +286,50 @@
     </table>
   </div>
 </div>
+
+<!-- MODAL DE REFUS DE PUBLICITÉ & REMBOURSEMENT -->
+<div id="admin-reject-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+  <div style="background: #fff; border-radius: 16px; width: 100%; max-width: 480px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); box-sizing: border-box; border: 1px solid #eee;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+      <div>
+        <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px; color: #C62828;">Refuser et Rembourser la Campagne</h3>
+        <p style="font-size: 13px; color: #666; margin: 0;" id="reject-modal-subtitle">Cette action résiliera l'abonnement Stripe et remboursera l'annonceur.</p>
+      </div>
+      <button type="button" onclick="closeRejectModal()" style="background: #f0f0f0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">✕</button>
+    </div>
+
+    <%= form_with url: "", method: :patch, id: "adminRejectForm", local: true do |f| %>
+      <div style="background: #FFF8E1; border: 1px solid #FFE082; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12.5px; color: #795548;">
+        ℹ️ Le client sera intégralement remboursé via Stripe et son motif de refus sera visible sur son espace annonceur.
+      </div>
+
+      <div style="margin-bottom: 18px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #202020;">Motif du refus (visible par l'annonceur)*</label>
+        <textarea name="rejection_reason" id="rejectReasonField" rows="3" placeholder="Ex: Visuel non conforme aux dimensions recommandées / Texte illisible sur mobile..." required style="width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 13.5px; box-sizing: border-box; font-family: inherit; resize: vertical;"></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="closeRejectModal()" style="background: transparent; border: none; color: #666; font-size: 13px; font-weight: 500; padding: 8px 16px; cursor: pointer;">Annuler</button>
+        <button type="submit" style="background: #C62828; color: #fff; border: none; border-radius: 20px; font-weight: 600; font-size: 13px; padding: 9px 20px; cursor: pointer;">Confirmer le refus & Rembourser</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function openRejectModal(actionUrl, adTitle, price) {
+    const form = document.getElementById('adminRejectForm');
+    if (form) form.setAttribute('action', actionUrl);
+    const reasonField = document.getElementById('rejectReasonField');
+    if (reasonField) reasonField.value = "Visuel non conforme aux critères éditoriaux";
+    const sub = document.getElementById('reject-modal-subtitle');
+    if (sub) sub.textContent = "Campagne : « " + adTitle + " » (" + price + "€)";
+    const modal = document.getElementById('admin-reject-modal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeRejectModal() {
+    const modal = document.getElementById('admin-reject-modal');
+    if (modal) modal.style.display = 'none';
+  }
+</script>

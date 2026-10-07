@@ -244,21 +244,49 @@
     text-decoration: underline;
   }
 
-  /* Badges */
+  /* Badges & Status Cell */
   .status-badge {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 20px;
     font-size: 11.5px;
     font-weight: 600;
     white-space: nowrap;
+    width: fit-content;
   }
   .badge-active { background: #E8F5E9; color: #2E7D32; }
   .badge-pending { background: #FFF3E0; color: #E65100; }
   .badge-future { background: #E3F2FD; color: #1565C0; }
-  .badge-rejected { background: #FFEBEE; color: #C62828; }
+  .badge-rejected { background: #FDE8E8; color: #9B1C1C; }
   .badge-inactive { background: #f5f5f5; color: #888; }
+
+  .status-cell-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    max-width: 220px;
+  }
+
+  .rejection-reason-box {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 10px;
+    background: #FFF5F5;
+    border: 1px solid #FED7D7;
+    border-radius: 8px;
+    font-size: 11.5px;
+    color: #9B1C1C;
+    line-height: 1.4;
+    word-break: break-word;
+    white-space: normal;
+  }
+  .rejection-reason-label {
+    font-weight: 700;
+    margin-right: 4px;
+    color: #842029;
+  }
 
   /* Actions */
   .action-pill-btn {
@@ -416,13 +444,13 @@
         <thead>
           <tr>
             <th style="width: 80px;">Visuel</th>
-            <th>Campagne & Redirection</th>
-            <th>Statut</th>
+            <th style="min-width: 180px;">Campagne & Redirection</th>
+            <th style="min-width: 200px; width: 220px;">Statut</th>
             <th style="text-align: center;">Vues</th>
             <th style="text-align: center;">Clics</th>
             <th style="text-align: center;">CTR</th>
-            <th>Période & Formule</th>
-            <th style="text-align: right;">Actions</th>
+            <th style="min-width: 140px;">Période & Formule</th>
+            <th style="text-align: right; min-width: 160px;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -459,17 +487,24 @@
               </td>
 
               <td>
-                <% if is_pending %>
-                  <span class="status-badge badge-pending">À Valider (24h)</span>
-                <% elsif is_rejected %>
-                  <span class="status-badge badge-rejected">Visuel Refusé</span>
-                <% elsif is_active %>
-                  <span class="status-badge badge-active">En diffusion</span>
-                <% elsif is_future %>
-                  <span class="status-badge badge-future">Planifiée</span>
-                <% else %>
-                  <span class="status-badge badge-inactive">Terminée</span>
-                <% end %>
+                <div class="status-cell-wrapper">
+                  <% if is_pending %>
+                    <span class="status-badge badge-pending">À Valider (24h)</span>
+                  <% elsif is_rejected %>
+                    <span class="status-badge badge-rejected">Refusé & Remboursé</span>
+                    <% if ad.rejection_reason.present? %>
+                      <div class="rejection-reason-box">
+                        <strong class="rejection-reason-label">Motif :</strong><%= ad.rejection_reason %>
+                      </div>
+                    <% end %>
+                  <% elsif is_active %>
+                    <span class="status-badge badge-active">En diffusion</span>
+                  <% elsif is_future %>
+                    <span class="status-badge badge-future">Planifiée</span>
+                  <% else %>
+                    <span class="status-badge badge-inactive">Terminée</span>
+                  <% end %>
+                </div>
               </td>
 
               <td style="text-align: center; font-weight: 500;">
@@ -492,7 +527,9 @@
                     Diffusion continue
                   <% end %>
                   <% if ad.stripe_subscription_id.present? %>
-                    <span style="display: block; font-size: 11px; color: #2E7D32; font-weight: 600; margin-top: 2px;">• Abonnement (<%= (ad.price_paid.to_i / 100) %>€/m)</span>
+                    <span style="display: block; font-size: 11px; color: #2E7D32; font-weight: 600; margin-top: 2px;">• Abonnement (<%= sprintf('%.2f', ad.price_paid.to_f / 100.0).gsub('.', ',').gsub(',00', '') %>€/m)</span>
+                  <% elsif ad.price_paid.to_i > 0 %>
+                    <span style="display: block; font-size: 11px; color: #4F46E5; font-weight: 600; margin-top: 2px;">• Forfait One-Shot (<%= sprintf('%.2f', ad.price_paid.to_f / 100.0).gsub('.', ',').gsub(',00', '') %>€)</span>
                   <% end %>
                 </div>
               </td>
@@ -507,8 +544,8 @@
                   </button>
 
                   <% if ad.stripe_customer_id.present? %>
-                    <%= link_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_billing_portal_path(ad_id: ad.id) : schools_ads_direct_billing_portal_path(ad_id: ad.id)), class: "action-pill-btn", title: "Reçus et carte bancaire" do %>
-                      Reçus
+                    <%= link_to (request.subdomain.to_s.include?('schools-ads') ? schools_ads_billing_portal_path(ad_id: ad.id) : schools_ads_direct_billing_portal_path(ad_id: ad.id)), class: "action-pill-btn", title: "Factures & Reçus" do %>
+                      Factures
                     <% end %>
                   <% end %>
 
@@ -538,36 +575,61 @@
   </div>
 </div>
 
-<!-- MODALE DE CONTACT DIRECT -->
-<div id="sa-support-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
-  <div style="background: #fff; border-radius: 16px; width: 100%; max-width: 480px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); box-sizing: border-box; border: 1px solid #eee;">
+<!-- MODALE DE MODIFICATION / CONTACT DIRECT -->
+<div id="sa-support-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px);">
+  <div style="background: #fff; border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.18); box-sizing: border-box; border: 1px solid #eaeaea;">
+    
+    <!-- Header -->
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px; color: #202020;" id="sa-modal-head-title">Contacter l'équipe Omniscient</h3>
-        <p style="font-size: 13px; color: #666; margin: 0;">Une question ou une modification de visuel ? Réponse sous 24h.</p>
+        <h3 style="font-size: 19px; font-weight: 700; margin: 0 0 4px; color: #111; letter-spacing: -0.3px;" id="sa-modal-head-title">Modifier votre campagne</h3>
+        <p style="font-size: 13px; color: #666; margin: 0;">Transmettez votre nouveau visuel ou lien. Notre équipe l'applique sous 24h.</p>
       </div>
-      <button type="button" onclick="closeSupportModal()" style="background: #f0f0f0; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">✕</button>
+      <button type="button" onclick="closeSupportModal()" style="background: #f4f4f5; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; color: #555; transition: background 0.15s ease;">✕</button>
     </div>
 
-    <%= form_with url: schools_ads_contact_path, method: :post, local: true do |f| %>
+    <!-- Contact Direct Email Banner -->
+    <div style="background: #F4FBF7; border: 1px solid #D1F2DE; border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; color: #166534;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2AC769" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        <span>Ou par email direct : <a href="mailto:contact@omniscientdesign.fr" style="color: #15803D; font-weight: 600; text-decoration: underline;">contact@omniscientdesign.fr</a></span>
+      </div>
+    </div>
+
+    <%= form_with url: schools_ads_contact_path, method: :post, local: true, multipart: true do |f| %>
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #202020;">Établissement / Entreprise</label>
-        <%= f.text_field :school_name, value: @user&.etablissement&.name.presence || @user&.firstname.presence || "Mon Établissement", required: true, style: "width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;" %>
+        <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: #202020;">Établissement / Entreprise</label>
+        <%= f.text_field :school_name, value: @user&.etablissement&.name.presence || @user&.firstname.presence || "Mon Établissement", required: true, style: "width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 13.5px; box-sizing: border-box; background: #fafafa; font-family: inherit;" %>
       </div>
 
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #202020;">Votre Email</label>
-        <%= f.email_field :email, value: @user&.email, required: true, style: "width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;" %>
+        <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: #202020;">Votre Email</label>
+        <%= f.email_field :email, value: @user&.email, required: true, style: "width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 13.5px; box-sizing: border-box; background: #fafafa; font-family: inherit;" %>
       </div>
 
-      <div style="margin-bottom: 18px;">
-        <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #202020;">Message / Détails de la modification*</label>
-        <%= f.text_area :message, id: "sa-modal-textarea", rows: 4, placeholder: "Précisez votre demande...", required: true, style: "width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; resize: vertical;" %>
+      <!-- Upload Nouveau Visuel / Image -->
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: #202020;">Nouveau Visuel (Optionnel)</label>
+        <div style="border: 2px dashed #D4D4D8; border-radius: 12px; padding: 16px; text-align: center; background: #FAFAFA; cursor: pointer; transition: all 0.2s ease;" onclick="document.getElementById('sa-modal-file-input').click()" id="sa-modal-dropzone">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          <div style="font-size: 12.5px; font-weight: 500; color: #202020;" id="sa-modal-file-text">Cliquez pour importer une image (PNG, JPG, WebP)</div>
+          <div style="font-size: 11px; color: #A1A1AA; margin-top: 2px;">Format paysage recommandé (16:9)</div>
+          <input type="file" name="images[]" id="sa-modal-file-input" accept="image/*" multiple style="display: none;" onchange="handleModalFileSelect(this)">
+        </div>
+        <div id="sa-modal-file-preview" style="display: none; margin-top: 8px; font-size: 12px; color: #166534; font-weight: 500; align-items: center; gap: 6px;">
+          <span>✓ Fichier sélectionné :</span>
+          <span id="sa-modal-file-name" style="font-weight: 600;"></span>
+        </div>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button type="button" onclick="closeSupportModal()" style="background: transparent; border: none; color: #666; font-size: 13px; font-weight: 500; padding: 8px 16px; cursor: pointer;">Annuler</button>
-        <%= f.submit "Envoyer ma demande", class: "btn-dash", style: "border: none; cursor: pointer; padding: 9px 20px;" %>
+      <div style="margin-bottom: 22px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: #202020;">Détails de la demande*</label>
+        <%= f.text_area :message, id: "sa-modal-textarea", rows: 3, placeholder: "Précisez votre demande (ex : nouveau lien URL de redirection, consignes...)", required: true, style: "width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 13.5px; box-sizing: border-box; resize: vertical; font-family: inherit; line-height: 1.45;" %>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+        <button type="button" onclick="closeSupportModal()" style="background: transparent; border: none; color: #71717A; font-size: 13px; font-weight: 500; padding: 10px 16px; cursor: pointer;">Annuler</button>
+        <%= f.submit "Envoyer ma demande", class: "btn-dash", style: "border: none; cursor: pointer; padding: 10px 22px; font-size: 13.5px; border-radius: 30px;" %>
       </div>
     <% end %>
   </div>
@@ -575,10 +637,21 @@
 
 <script>
   function openModificationModal(adTitle, adId) {
-    document.getElementById('sa-modal-head-title').textContent = "Demande de modification d'annonce";
-    document.getElementById('sa-modal-textarea').value = "[Demande de modification pour l'annonce #" + adId + " : " + adTitle + "]\n\nBonjour, je souhaite modifier les éléments suivants pour cette campagne : ";
+    document.getElementById('sa-modal-head-title').textContent = "Modifier l'annonce #" + adId;
+    document.getElementById('sa-modal-textarea').value = "[Demande de modification pour l'annonce #" + adId + " : " + adTitle + "]\n\nBonjour, je souhaite mettre à jour les éléments suivants : ";
+    document.getElementById('sa-modal-file-input').value = "";
+    document.getElementById('sa-modal-file-preview').style.display = "none";
+    document.getElementById('sa-modal-file-text').textContent = "Cliquez pour importer une image (PNG, JPG, WebP)";
     document.getElementById('sa-support-modal').style.display = 'flex';
-    document.getElementById('sa-modal-textarea').focus();
+  }
+
+  function handleModalFileSelect(input) {
+    if (input.files && input.files.length > 0) {
+      const names = Array.from(input.files).map(f => f.name).join(', ');
+      document.getElementById('sa-modal-file-name').textContent = names;
+      document.getElementById('sa-modal-file-preview').style.display = 'flex';
+      document.getElementById('sa-modal-file-text').textContent = input.files.length + " image(s) sélectionnée(s)";
+    }
   }
 
   function closeSupportModal() {

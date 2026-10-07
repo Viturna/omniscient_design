@@ -149,18 +149,26 @@ class SchoolsAdsController < ApplicationController
       start_date = earliest_start_date if start_date < earliest_start_date
       end_date = Date.parse(params[:end_date]) rescue (start_date + 1.month)
       end_date = start_date if end_date < start_date
-      duration_days = (end_date - start_date).to_i + 1
+      duration_days = [(end_date - start_date).to_i + 1, 7].max # Minimum 7 jours de diffusion
 
       plan_type = params[:plan_type].presence || "ancrage_local"
 
-      # Tarif forfaitaire mensuel de l'abonnement récurrent
-      price_cents = case plan_type
+      # Base tarifaire mensuelle (sur base de 30 jours)
+      # 200€ / 30j pour Encart Natif, 400€ / 30j pour Ancrage Local
+      monthly_base_cents = case plan_type
       when "test_2eur"
-        200 # 2.00 EUR / mois (Mode test)
+        200 # 2.00 EUR (Mode test)
       when "encart_natif"
-        20000 # 200.00 EUR / mois
+        20000 # 200.00 EUR / 30 jours
       else # ancrage_local
-        40000 # 400.00 EUR / mois
+        40000 # 400.00 EUR / 30 jours
+      end
+
+      # Calcul proratisé au nombre exact de jours (minimum 7 jours) : (monthly_base / 30) * duration_days
+      price_cents = if plan_type == "test_2eur"
+        200
+      else
+        ((monthly_base_cents.to_f / 30.0) * duration_days).round
       end
 
       # Gestion sécurisée du compte utilisateur
@@ -244,6 +252,9 @@ class SchoolsAdsController < ApplicationController
         end
       end
 
+      # Sauvegarde de la région cible sur l'annonce
+      target_regions_val = (plan_type == "ancrage_local" ? region : "Nationale")
+
       # Création de l'annonce Ad (Inactive / En attente de paiement)
       ad = Ad.new(
         title: title,
@@ -256,7 +267,8 @@ class SchoolsAdsController < ApplicationController
         price_paid: price_cents,
         status: 'pending',
         active: false,
-        weight: 1
+        weight: 1,
+        target_regions: target_regions_val
       )
 
       if params[:image].present?
@@ -275,7 +287,7 @@ class SchoolsAdsController < ApplicationController
 
       ad.save(validate: false)
 
-      # Session Stripe Checkout en mode ABONNEMENT RÉCURRENT (mensuel)
+      # Session Stripe Checkout en mode PAIEMENT UNIQUE (One-Shot / Sans engagement)
       stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
       raise "Clé Stripe non configurée (STRIPE_SECRET_KEY manquante)" if stripe_key.blank?
 
@@ -288,31 +300,46 @@ class SchoolsAdsController < ApplicationController
                                .pluck(:stripe_customer_id)
                                .first
 
+      product_description = if plan_type == "ancrage_local"
+        "Diffusion forfaitaire du #{start_date.strftime('%d/%m/%Y')} au #{end_date.strftime('%d/%m/%Y')} (Accueil, Recherche, Quiz) - Région : #{region}"
+      else
+        "Diffusion forfaitaire du #{start_date.strftime('%d/%m/%Y')} au #{end_date.strftime('%d/%m/%Y')} (Accueil, Recherche, Quiz) - Diffusion nationale"
+      end
+
+      # Split automatique Connect vers Edgar (60%)
+      connect_dest = (ENV['STRIPE_CONNECT_EDGAR_ID'].presence || ENV['STRIPE_CONNECT_ACCOUNT_ID'].presence)
+      edgar_percent = (ENV['STRIPE_CONNECT_EDGAR_PERCENT'].presence || ENV['STRIPE_CONNECT_PERCENT'].presence || 60.0).to_f
+      transfer_amount_cents = ((price_cents * edgar_percent) / 100.0).round
+
       session_params = {
+        locale: 'fr',
         payment_method_types: ['card'],
+        customer_creation: 'always',
         line_items: [{
           price_data: {
             currency: 'eur',
             unit_amount: price_cents,
-            recurring: {
-              interval: 'month'
-            },
             product_data: {
-              name: "Abonnement Campagne Publicitaire - #{school_name}",
-              description: "Diffusion continue renouvelée mensuellement (Accueil, Recherche, Quiz) - Région : #{region}",
+              name: "Campagne Publicitaire #{school_name} (#{duration_days} jours)",
+              description: product_description,
             },
           },
           quantity: 1,
         }],
-        mode: 'subscription',
-        subscription_data: {
-          # Si un compte connecté unique direct est configuré, Stripe fait le transfer_data.
-          # Si les deux comptes (Edgar & Thomas) sont configurés, le Webhook Stripe gère le split 60/40 automatiquement.
-          **(if ENV['STRIPE_CONNECT_ACCOUNT_ID'].present? && ENV['STRIPE_CONNECT_THOMAS_ID'].blank?
+        mode: 'payment',
+        invoice_creation: {
+          enabled: true,
+          invoice_data: {
+            **(Stripe.api_key&.start_with?('sk_live_') ? { rendering_options: { template: 'inrtem_1UO22JPbCy5yliSsCbqwGcBA' } } : {}),
+            footer: "Thomas RIQUIER EI – Omniscient Design | SIRET : 97779293600014\nTVA non applicable, art. 293 B du CGI. Paiement comptant à la commande. En cas de retard de paiement, pénalités de retard au taux directeur de la BCE majoré de 10 points et indemnité forfaitaire de 40 € pour frais de recouvrement (art. L. 441-10 du Code de commerce)."
+          }
+        },
+        payment_intent_data: {
+          **(if connect_dest.present? && transfer_amount_cents.positive?
               {
                 transfer_data: {
-                  destination: ENV['STRIPE_CONNECT_ACCOUNT_ID'],
-                  amount_percent: (ENV['STRIPE_CONNECT_PERCENT'].presence || 60.0).to_f
+                  destination: connect_dest,
+                  amount: transfer_amount_cents
                 }
               }
             else
@@ -321,13 +348,14 @@ class SchoolsAdsController < ApplicationController
           metadata: {
             ad_id: ad.id,
             school_name: school_name,
-            region: region
+            region: target_regions_val,
+            duration_days: duration_days
           }
         },
         metadata: {
           ad_id: ad.id,
           school_name: school_name,
-          region: region,
+          region: target_regions_val,
           duration_days: duration_days
         },
         success_url: "#{request.base_url}#{request.subdomain.to_s.include?('schools-ads') ? '/succes' : '/schools-ads/succes'}?ad_id=#{ad.id}&session_id={CHECKOUT_SESSION_ID}",
@@ -367,9 +395,9 @@ class SchoolsAdsController < ApplicationController
               @ad.update(
                 status: 'pending_validation',
                 active: false,
-                stripe_subscription_id: stripe_session.subscription,
                 stripe_customer_id: stripe_session.customer,
-                subscription_status: 'active'
+                stripe_payment_intent_id: stripe_session.payment_intent,
+                subscription_status: 'one_time'
               )
             end
           end
@@ -388,8 +416,8 @@ class SchoolsAdsController < ApplicationController
           Notification.create!(
             user_id: admin_user.id,
             notifiable: @ad,
-            title: "Nouvel abonnement publicitaire : #{school_name}",
-            message: "#{school_name} a souscrit à une campagne récurrente (#{@ad.price_paid.to_i / 100}€ / mois).",
+            title: "Nouvelle campagne publicitaire : #{school_name}",
+            message: "#{school_name} a réservé une campagne de #{@ad.duration_days || 30} jours (#{@ad.price_paid.to_i / 100}€).",
             link: '/admin/ads',
             status: :unread
           )
@@ -443,19 +471,26 @@ class SchoolsAdsController < ApplicationController
     @message = params[:message].to_s.strip
 
     if @school_name.present? && @email.present? && @message.present?
-      contact_record = SchoolContact.create(
+      contact_record = SchoolContact.new(
         school_name: @school_name,
         email: @email,
         message: @message,
         request_type: @message.include?('[Demande de Devis Monopole]') ? 'devis_monopole' : 'contact'
       )
 
+      if params[:images].present?
+        contact_record.images.attach(params[:images])
+      end
+
+      contact_record.save
+
       # 1. Envoi d'email
       begin
         SchoolAdsMailer.contact_email(
           school_name: @school_name,
           email: @email,
-          message: @message
+          message: @message,
+          contact_record: contact_record
         ).deliver_later
       rescue StandardError => e
         Rails.logger.error("Erreur envoi SchoolAdsMailer : #{e.message}")

@@ -72,7 +72,7 @@
             <div class="sa-success-receipt__row sa-success-receipt__row--total">
               <span class="sa-success-receipt__label">Montant réglé</span>
               <strong class="sa-success-receipt__price">
-                <%= @ad.price_paid.present? ? (@ad.price_paid > 1000 ? @ad.price_paid / 100 : @ad.price_paid) : 0 %> € TTC
+                <%= sprintf('%.2f', (@ad.price_paid.to_f > 1000 ? @ad.price_paid.to_f / 100.0 : @ad.price_paid.to_f)).gsub('.', ',').gsub(',00', '') %> € TTC
               </strong>
             </div>
           </div>

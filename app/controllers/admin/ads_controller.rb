@@ -58,8 +58,65 @@ class Admin::AdsController < ApplicationController
   end
 
   def reject
-    @ad.update(status: 'rejected', active: false)
-    redirect_to admin_ads_path, notice: 'Publicité refusée.'
+    reason = params[:rejection_reason].presence || params.dig(:ad, :rejection_reason).presence
+    reason = reason.to_s.strip
+    reason = "Visuel non conforme aux critères éditoriaux" if reason.blank?
+
+    refund_message = ""
+
+    # 1. Gestion du remboursement Stripe et résiliation de l'abonnement
+    if @ad.stripe_subscription_id.present? || @ad.stripe_payment_intent_id.present?
+      begin
+        stripe_key = ENV['STRIPE_SECRET_KEY'].presence || Stripe.api_key.presence
+        if stripe_key.present?
+          Stripe.api_key = stripe_key
+
+          # A. Annuler l'abonnement immédiatement
+          if @ad.stripe_subscription_id.present?
+            begin
+              Stripe::Subscription.cancel(@ad.stripe_subscription_id)
+            rescue StandardError => sub_err
+              Rails.logger.warn("[Admin Ads Reject] Subscription cancel notice: #{sub_err.message}")
+            end
+          end
+
+          # B. Rembourser le dernier paiement (PaymentIntent / Charge / Invoice)
+          payment_intent_id = @ad.stripe_payment_intent_id
+
+          if payment_intent_id.blank? && @ad.stripe_subscription_id.present?
+            # Récupérer la dernière facture pour obtenir le charge / payment_intent
+            invoices = Stripe::Invoice.list(subscription: @ad.stripe_subscription_id, limit: 1)
+            last_invoice = invoices.data.first
+            if last_invoice&.payment_intent.present?
+              payment_intent_id = last_invoice.payment_intent
+            elsif last_invoice&.charge.present?
+              charge_id = last_invoice.charge
+            end
+          end
+
+          if payment_intent_id.present?
+            refund = Stripe::Refund.create(payment_intent: payment_intent_id, reason: 'requested_by_customer')
+            @ad.stripe_payment_intent_id = payment_intent_id
+            refund_message = " Remboursement Stripe de #{((refund.amount || @ad.price_paid.to_i) / 100.0).round(2)}€ effectué sans frais pour le client."
+          elsif defined?(charge_id) && charge_id.present?
+            refund = Stripe::Refund.create(charge: charge_id, reason: 'requested_by_customer')
+            refund_message = " Remboursement Stripe de #{((refund.amount || @ad.price_paid.to_i) / 100.0).round(2)}€ effectué sans frais pour le client."
+          end
+        end
+      rescue StandardError => e
+        Rails.logger.error("[Admin Ads Reject] Stripe refund error: #{e.message}")
+        refund_message = " (Attention : erreur lors du remboursement Stripe automatique : #{e.message})"
+      end
+    end
+
+    @ad.update(
+      status: 'rejected',
+      active: false,
+      rejection_reason: reason,
+      subscription_status: 'canceled'
+    )
+
+    redirect_to admin_ads_path, notice: "Publicité refusée. Motif : « #{reason} ».#{refund_message}"
   end
 
   private

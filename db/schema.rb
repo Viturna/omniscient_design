@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_02_171902) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_07_202811) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "unaccent"
@@ -55,11 +55,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_171902) do
     t.string "link"
     t.boolean "logged_out_only", default: false, null: false
     t.integer "price_paid"
+    t.text "rejection_reason"
     t.date "start_date"
     t.string "status", default: "pending"
     t.string "stripe_customer_id"
+    t.string "stripe_payment_intent_id"
     t.string "stripe_subscription_id"
     t.string "subscription_status"
+    t.text "target_regions"
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "weight", default: 1, null: false

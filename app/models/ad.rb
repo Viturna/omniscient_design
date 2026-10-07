@@ -83,19 +83,21 @@ class Ad < ApplicationRecord
     image_mobile.attached? && image_mobile.blob.content_type.to_s.start_with?('video/')
   end
 
-  # ALGORITHME DE SÉLECTION PONDÉRÉE INDIVIDUELLE
+  # ALGORITHME DE SÉLECTION PONDÉRÉE INDIVIDUELLE (AVEC CIBLAGE GÉOGRAPHIQUE LOCAL)
   def self.pick_weighted_random(user = nil)
     candidates = currently_active.relevant_for(user)
     return nil if candidates.empty?
 
-    total_weight = candidates.sum { |a| a.weight.to_i.positive? ? a.weight.to_i : 1 }
+    user_region = user&.etablissement&.region.presence
+
+    total_weight = candidates.sum { |a| a.effective_weight_for(user_region) }
     return candidates.first if total_weight <= 0
 
     random_point = rand(1..total_weight)
     current_weight = 0
 
     candidates.each do |ad|
-      w = ad.weight.to_i.positive? ? ad.weight.to_i : 1
+      w = ad.effective_weight_for(user_region)
       current_weight += w
       return ad if random_point <= current_weight
     end
@@ -103,13 +105,15 @@ class Ad < ApplicationRecord
     candidates.first
   end
 
-  # GÉNÉRATION D'UNE FILE D'ATTENTE PONDÉRÉE
+  # GÉNÉRATION D'UNE FILE D'ATTENTE PONDÉRÉE AVEC BOOST GÉOGRAPHIQUE
   def self.weighted_queue_for(user = nil, size = 20)
     candidates = currently_active.includes(image_attachment: :blob, image_mobile_attachment: :blob).relevant_for(user).to_a
     return [] if candidates.empty?
     return candidates if candidates.size == 1
 
-    total_weight = candidates.sum { |a| a.weight.to_i.positive? ? a.weight.to_i : 1 }
+    user_region = user&.etablissement&.region.presence
+
+    total_weight = candidates.sum { |a| a.effective_weight_for(user_region) }
     return candidates.shuffle if total_weight <= 0
 
     queue = []
@@ -118,7 +122,7 @@ class Ad < ApplicationRecord
       current_weight = 0
       chosen = candidates.first
       candidates.each do |ad|
-        w = ad.weight.to_i.positive? ? ad.weight.to_i : 1
+        w = ad.effective_weight_for(user_region)
         current_weight += w
         if random_point <= current_weight
           chosen = ad
@@ -128,6 +132,20 @@ class Ad < ApplicationRecord
       queue << chosen
     end
     queue
+  end
+
+  # Calcul du poids effectif selon la région de l'étudiant
+  def effective_weight_for(user_region = nil)
+    base_w = weight.to_i.positive? ? weight.to_i : 1
+    return base_w if user_region.blank? || target_regions.blank?
+
+    # Si l'annonce cible cette région spécifique, on lui applique un boost de visibilité x8
+    regions_list = target_regions.to_s.downcase
+    if regions_list.include?(user_region.downcase) || regions_list.include?("nationale") || regions_list.include?("all")
+      base_w * 8
+    else
+      base_w
+    end
   end
 
   # --- 5. TRAITEMENT DES FICHIERS (CALLBACKS) ---

@@ -40,7 +40,7 @@
                 <span class="sa-funnel-plan__name">Test 2€</span>
                 <div class="sa-funnel-plan__radio"><span class="sa-funnel-plan__radio-dot"></span></div>
               </div>
-              <div class="sa-funnel-plan__price">2€<small>/mois</small></div>
+              <div class="sa-funnel-plan__price">2€<small>/campagne</small></div>
               <p class="sa-funnel-plan__desc">Plan de test Stripe (2,00 €).</p>
             </button>
             <!-- Plan 1 : Encart Natif -->
@@ -53,8 +53,8 @@
                 <span class="sa-funnel-plan__name">Encart Natif</span>
                 <div class="sa-funnel-plan__radio"><span class="sa-funnel-plan__radio-dot"></span></div>
               </div>
-              <div class="sa-funnel-plan__price">200€<small>/mois</small></div>
-              <p class="sa-funnel-plan__desc">Diffusion nationale auprès de tous les étudiants.</p>
+              <div class="sa-funnel-plan__price">200€<small>/30j</small></div>
+              <p class="sa-funnel-plan__desc">Diffusion nationale sans engagement (One-Shot).</p>
             </button>
             <!-- Plan 2 : Ancrage Local (Recommandé) -->
             <button type="button" 
@@ -67,8 +67,8 @@
                 <span class="sa-funnel-plan__name">Ancrage Local</span>
                 <div class="sa-funnel-plan__radio"><span class="sa-funnel-plan__radio-dot"></span></div>
               </div>
-              <div class="sa-funnel-plan__price">400€<small>/mois</small></div>
-              <p class="sa-funnel-plan__desc">Ciblage prioritaire sur la région de votre choix.</p>
+              <div class="sa-funnel-plan__price">400€<small>/30j</small></div>
+              <p class="sa-funnel-plan__desc">Ciblage prioritaire sur la/les régions de votre choix.</p>
             </button>
             <!-- Plan 3 : Monopole -->
             <button type="button" 
@@ -192,11 +192,11 @@
         </div>
       </div>
       <!-- ============================================================= -->
-      <!-- ÉTAPE 2 : CALENDRIER DE DIFFUSION (1 MOIS COMPLET) -->
+      <!-- ÉTAPE 2 : CALENDRIER & PÉRIODE DE DIFFUSION -->
       <!-- ============================================================= -->
       <div class="sa-funnel__panel" data-campaign-funnel-target="stepPanel" data-step="2">
         <div class="sa-funnel__section">
-          <!-- Configuration des dates de campagne (Durée fixe 1 mois avec abonnement) -->
+          <!-- Configuration libre des dates de campagne -->
           <div class="sa-funnel__dates-stack">
             <div class="sa-funnel__field">
               <label class="sa-funnel__label" for="funnel_start_date">Début de la campagne*</label>
@@ -207,31 +207,57 @@
                   <line x1="8" y1="2" x2="8" y2="6"></line>
                   <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <input type="text" id="funnel_start_date" class="sa-funnel__input sa-funnel__input--date" placeholder="JJ/MM/AAAA" readonly data-campaign-funnel-target="startDateInput" value="<%= (Date.current + 2.days).strftime('%d/%m/%Y') %>">
+                <input type="text" 
+                       id="funnel_start_date" 
+                       class="sa-funnel__input sa-funnel__input--date" 
+                       placeholder="JJ/MM/AAAA" 
+                       data-campaign-funnel-target="startDateInput" 
+                       data-action="input->campaign-funnel#handleStartDateInputChange change->campaign-funnel#handleStartDateInputChange"
+                       value="<%= (Date.current + 2.days).strftime('%d/%m/%Y') %>">
               </div>
               <span class="sa-funnel__hint" style="font-size: 11.5px; color: #71717A; margin-top: 4px; display: block; line-height: 1.4;">
-                Délai de modération : réservable à partir de <strong>J+2</strong> pour permettre la validation de vos visuels par notre équipe.
+                Délai de modération : réservable à partir de <strong>J+2</strong> pour permettre la validation de vos visuels.
               </span>
             </div>
 
-            <div class="sa-funnel__field sa-funnel__field--renewal">
+            <div class="sa-funnel__field">
               <div class="sa-funnel__label-row" style="margin-bottom: 2px;">
-                <label class="sa-funnel__label" for="funnel_end_date">Prochain renouvellement</label>
-                <span class="sa-funnel__subscription-tag">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                  Abonnement mensuel
+                <label class="sa-funnel__label" for="funnel_end_date">Fin de la diffusion*</label>
+                <span class="sa-funnel__subscription-tag" style="background: rgba(46, 125, 50, 0.08); color: #2E7D32; border-color: rgba(46, 125, 50, 0.2);">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  Paiement unique (sans engagement)
                 </span>
               </div>
-              <div class="sa-funnel__date-input-wrap sa-funnel__date-input-wrap--disabled">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sa-funnel__date-icon">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              <div class="sa-funnel__date-input-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sa-funnel__date-icon">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <input type="text" id="funnel_end_date" class="sa-funnel__input sa-funnel__input--date sa-funnel__input--locked" placeholder="JJ/MM/AAAA" readonly tabindex="-1" data-campaign-funnel-target="endDateInput" value="<%= (Date.current + 2.days + 1.month).strftime('%d/%m/%Y') %>">
+                <input type="text" 
+                       id="funnel_end_date" 
+                       class="sa-funnel__input sa-funnel__input--date" 
+                       placeholder="JJ/MM/AAAA" 
+                       data-campaign-funnel-target="endDateInput" 
+                       data-action="input->campaign-funnel#handleEndDateInputChange change->campaign-funnel#handleEndDateInputChange"
+                       value="<%= (Date.current + 2.days + 29.days).strftime('%d/%m/%Y') %>">
               </div>
               <p class="sa-funnel__hint" style="font-size: 11.5px; color: #71717A; margin: 4px 0 0 0; line-height: 1.4;">
-                Calculé automatiquement (période de 30 jours). Reconduit tacitement chaque mois, résiliable à tout moment en 1 clic.
+                Modifiez les dates au clavier ou cliquez directement sur le calendrier à droite pour ajuster votre période.
               </p>
+            </div>
+
+            <!-- Récapitulatif dynamique de la durée & du tarif -->
+            <div class="sa-funnel__duration-card" style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 12px; padding: 14px 16px; margin-top: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 13px; font-weight: 600; color: #1F2937;">Durée totale sélectionnée :</span>
+                <span style="font-size: 13px; font-weight: 700; color: #111827;" data-campaign-funnel-target="durationSummary">30 jours</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12.5px; color: #6B7280;">Montant total One-Shot :</span>
+                <span style="font-size: 15px; font-weight: 700; color: #059669;" data-campaign-funnel-target="priceSummary">400,00 €</span>
+              </div>
             </div>
           </div>
         </div>
@@ -250,7 +276,7 @@
               </svg>
               <input type="text" 
                      class="sa-funnel__input sa-funnel__input--search" 
-                     placeholder="Nom de la Région" 
+                     placeholder="Ajouter ou rechercher une région..." 
                      value="Centre-Val de Loire"
                      data-campaign-funnel-target="regionSearchInput" 
                      data-action="input->campaign-funnel#filterRegions">
@@ -488,27 +514,8 @@
           <!-- Réassurance discrète & épurée -->
           <div class="sa-funnel__trust-inline" style="margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #71717A;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Paiement sécurisé via Stripe • Sans engagement, résiliable en 1 clic</span>
+            <span>Paiement sécurisé via Stripe • Forfait One-Shot (aucun prélèvement récurrent)</span>
           </div>
-
-          <% unless user_signed_in? %>
-            <!-- Séparateur OU -->
-            <div class="sa-funnel__or-divider">
-              <span>ou</span>
-            </div>
-            <!-- Bouton Google Sign-in -->
-            <div class="sa-funnel__social-auth">
-              <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, class: "sa-funnel__google-btn", style: "cursor: pointer; border: none;" do %>
-                <svg width="18" height="18" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                </svg>
-                <span>S'inscrire avec Google</span>
-              <% end %>
-            </div>
-          <% end %>
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
 class SchoolContact < ApplicationRecord
+  has_many_attached :images
+
   enum :status, { pending: 0, processed: 1, archived: 2 }
 
   validates :school_name, presence: true

@@ -306,10 +306,14 @@ class SchoolsAdsController < ApplicationController
         "Diffusion forfaitaire du #{start_date.strftime('%d/%m/%Y')} au #{end_date.strftime('%d/%m/%Y')} (Accueil, Recherche, Quiz) - Diffusion nationale"
       end
 
-      # Split automatique Connect vers Edgar (60%)
+      # Split automatique Connect vers Edgar (60% du NET après frais Stripe)
+      # Frais Stripe standard UE : 1.5% + 0.25€ (25 centimes)
+      stripe_fee_est_cents = ((price_cents * 0.015) + 25).round
+      net_estimated_cents = [price_cents - stripe_fee_est_cents, 0].max
+
       connect_dest = (ENV['STRIPE_CONNECT_EDGAR_ID'].presence || ENV['STRIPE_CONNECT_ACCOUNT_ID'].presence)
       edgar_percent = (ENV['STRIPE_CONNECT_EDGAR_PERCENT'].presence || ENV['STRIPE_CONNECT_PERCENT'].presence || 60.0).to_f
-      transfer_amount_cents = ((price_cents * edgar_percent) / 100.0).round
+      transfer_amount_cents = ((net_estimated_cents * edgar_percent) / 100.0).round
 
       session_params = {
         locale: 'fr',

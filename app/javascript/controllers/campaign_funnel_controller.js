@@ -105,10 +105,10 @@ connect() {
   this.rangeEnd = new Date(2026, 9, 1)    // 1er Octobre 2026 (1 mois)
   this.monthSelectionInProgress = false
 
-  // Check URL parameters (e.g. ?plan=encart_natif or ?plan=monopole)
+  // Check URL parameters (e.g. ?plan=encart_natif or ?plan=test_2eur or ?plan=monopole)
   const urlParams = new URLSearchParams(window.location.search)
   const paramPlan = urlParams.get("plan")
-  if (paramPlan && ["encart_natif", "ancrage_local", "monopole"].includes(paramPlan)) {
+  if (paramPlan && ["test_2eur", "encart_natif", "ancrage_local", "monopole"].includes(paramPlan)) {
     this.selectedPlan = paramPlan
   }
   
@@ -125,7 +125,7 @@ connect() {
   // =========================================================================
 
   get isEncartNatif() {
-    return this.selectedPlan === "encart_natif"
+    return this.selectedPlan === "encart_natif" || this.selectedPlan === "test_2eur"
   }
 
   nextStep() {

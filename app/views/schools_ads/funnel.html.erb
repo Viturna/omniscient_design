@@ -30,6 +30,19 @@
         <div class="sa-funnel__form-group">
           <label class="sa-funnel__label">1. Choisissez votre formule :</label>
           <div class="sa-funnel__plans-grid">
+            <!-- Plan Test : 2€ -->
+            <button type="button" 
+                    class="sa-funnel-plan" 
+                    data-campaign-funnel-target="planCard" 
+                    data-plan="test_2eur" 
+                    data-action="click->campaign-funnel#selectPlan">
+              <div class="sa-funnel-plan__top">
+                <span class="sa-funnel-plan__name">Test 2€</span>
+                <div class="sa-funnel-plan__radio"><span class="sa-funnel-plan__radio-dot"></span></div>
+              </div>
+              <div class="sa-funnel-plan__price">2€<small>/mois</small></div>
+              <p class="sa-funnel-plan__desc">Plan de test Stripe (2,00 €).</p>
+            </button>
             <!-- Plan 1 : Encart Natif -->
             <button type="button" 
                     class="sa-funnel-plan" 

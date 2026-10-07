@@ -152,7 +152,10 @@ class SchoolsAdsController < ApplicationController
       plan_type = params[:plan_type].presence || "ancrage_local"
 
       # Tarif forfaitaire mensuel de l'abonnement récurrent
-      price_cents = if plan_type == "encart_natif"
+      price_cents = case plan_type
+      when "test_2eur"
+        200 # 2.00 EUR / mois (Mode test)
+      when "encart_natif"
         20000 # 200.00 EUR / mois
       else # ancrage_local
         40000 # 400.00 EUR / mois

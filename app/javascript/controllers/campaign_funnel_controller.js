@@ -996,7 +996,7 @@ updateDatesDisplay() {
     if (this.hasPriceSummaryTarget) {
       const monthlyRate = (this.selectedPlan === "encart_natif" || this.selectedPlan === "test_2eur") ? 200 : 400
       if (this.selectedPlan === "test_2eur") {
-        this.priceSummaryTarget.textContent = "2,00 €"
+        this.priceSummaryTarget.textContent = "1,00 €"
       } else {
         const rawPrice = (monthlyRate / 30.0) * diffDays
         const finalPrice = rawPrice.toFixed(2).replace('.', ',')

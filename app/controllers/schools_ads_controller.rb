@@ -156,8 +156,8 @@ class SchoolsAdsController < ApplicationController
       # Base tarifaire mensuelle (sur base de 30 jours)
       # 200€ / 30j pour Encart Natif, 400€ / 30j pour Ancrage Local
       monthly_base_cents = case plan_type
-      when "test_2eur"
-        200 # 2.00 EUR (Mode test)
+      when "test_2eur", "test_1eur"
+        100 # 1.00 EUR (Mode test)
       when "encart_natif"
         20000 # 200.00 EUR / 30 jours
       else # ancrage_local
@@ -165,8 +165,8 @@ class SchoolsAdsController < ApplicationController
       end
 
       # Calcul proratisé au nombre exact de jours (minimum 7 jours) : (monthly_base / 30) * duration_days
-      price_cents = if plan_type == "test_2eur"
-        200
+      price_cents = if plan_type == "test_2eur" || plan_type == "test_1eur"
+        100
       else
         ((monthly_base_cents.to_f / 30.0) * duration_days).round
       end

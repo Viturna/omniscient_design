@@ -560,7 +560,7 @@
 
 .sa-funnel__label {
   font-size: 13.5px;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   color: #111111;
 }
 
@@ -581,7 +581,7 @@
     border: none !important;
     border-radius: 8px !important;
     font-size: 14px !important;
-    font-weight: 500 !important;
+    font-weight: 400 !important;
     color: #111111 !important;
     background-color: #F6F6F6 !important;
     font-family: inherit;
@@ -597,6 +597,7 @@
     &::placeholder {
       color: #8E8E93 !important;
       font-size: 13.5px !important;
+      font-weight: 400 !important;
     }
   }
 
@@ -615,7 +616,7 @@
   border: none !important;
   border-radius: 8px !important;
   font-size: 14px !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
   color: #111111 !important;
   background-color: #F6F6F6 !important;
   font-family: inherit;
@@ -631,6 +632,7 @@
   &::placeholder {
     color: #8E8E93 !important;
     font-size: 13.5px !important;
+    font-weight: 400 !important;
   }
 }
 
@@ -689,7 +691,7 @@
     border: none !important;
     border-radius: 8px !important;
     font-size: 14px !important;
-    font-weight: 500 !important;
+    font-weight: 400 !important;
     color: #111111 !important;
     background-color: #F6F6F6 !important;
     font-family: inherit;
@@ -734,6 +736,101 @@
     &:hover {
       color: #111111;
     }
+  }
+}
+
+// Connected Account Box (Step 4 When Logged In)
+.sa-funnel__connected-box {
+  background-color: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+
+.sa-funnel__connected-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sa-funnel__connected-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #111111;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sa-funnel__connected-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sa-funnel__connected-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sa-funnel__connected-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sa-funnel__connected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #ECFDF5;
+  color: #059669;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 9999px;
+
+  svg {
+    stroke-width: 2.5;
+  }
+}
+
+.sa-funnel__connected-email {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6B7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sa-funnel__logout-link {
+  background: transparent;
+  border: none;
+  font-size: 11.5px;
+  color: #71717A;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    color: #111111;
   }
 }
 
@@ -785,14 +882,29 @@
   }
 }
 
-// Step 2 Dates & Durations (Maquette Style)
-.sa-funnel__dates-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+// Step 2 Dates & Durations (Stacked Subscription Style)
+.sa-funnel__dates-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
+.sa-funnel__subscription-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #F4F4F5;
+  color: #52525B;
+  font-size: 11px;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+
+  svg {
+    color: #059669;
   }
 }
 
@@ -820,9 +932,26 @@
     cursor: default;
     background-color: #F6F6F6 !important;
     border: none !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     color: #111111 !important;
     letter-spacing: 0.01em;
+
+    &.sa-funnel__input--locked {
+      background-color: #EFEFEF !important;
+      color: #6B7280 !important;
+      cursor: not-allowed !important;
+      user-select: none !important;
+      opacity: 0.85;
+
+      &:focus {
+        outline: none !important;
+        background-color: #EFEFEF !important;
+      }
+    }
+  }
+
+  &--disabled {
+    cursor: not-allowed;
   }
 }
 
@@ -962,604 +1091,83 @@
 // ==========================================
 
 // ==========================================
-// REALISTIC MOCKUP PREVIEWS (100% FAITHFUL TO OMNISCIENT DESIGN)
+// PURE MEDIA PREVIEW (JUST THE SELECTED VISUAL)
 // ==========================================
-.sa-preview-frame {
+.sa-media-preview-container {
   width: 100%;
-  max-width: 540px;
-  background-color: #FFFFFF;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sa-media-preview-title {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin: 0 0 16px 0;
+  text-align: left;
+}
+
+.sa-media-preview-box {
+  width: 100%;
+  min-height: 280px;
+  max-height: 440px;
+  background-color: #18181B;
   border-radius: 12px;
   overflow: hidden;
-  border: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  transition: all 0.25s ease;
-
-  // PC Mode (Simulated desktop with left sidebar)
-  &--pc {
-    max-width: 540px;
-    
-    .sa-mock-sidebar {
-      display: flex;
-    }
-    .sa-mock-mobile-tabbar {
-      display: none;
-    }
-  }
-
-  // Mobile Mode (Simulated smartphone frame with bottom bar)
-  &--mobile {
-    max-width: 290px;
-    border-radius: 28px;
-    border: 7px solid #2D2D2D;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
-
-    .sa-mock-sidebar {
-      display: none;
-    }
-    .sa-mock-mobile-tabbar {
-      display: flex;
-    }
-    .sa-real-preview-topbar {
-      padding: 8px 10px;
-    }
-    .sa-real-preview-search span {
-      font-size: 9px;
-    }
-    .sa-real-bg-card {
-      width: 96%;
-      height: 140px;
-      transform: rotate(0deg) !important;
-    }
-    .sa-real-bg-img-card {
-      transform: rotate(0deg) !important;
-    }
-    .sa-real-title-card {
-      font-size: 11.5px;
-    }
-    .sa-real-description-card {
-      display: none;
-    }
-    .sa-real-search-grid,
-    .sa-real-quiz-grid {
-      grid-template-columns: 1fr;
-      padding: 8px;
-      max-height: 240px;
-      overflow-y: hidden;
-    }
-  }
-}
-
-// Browser Mockup Inner Container (Sidebar + Main)
-.sa-mock-browser {
-  display: flex;
-  width: 100%;
-  background-color: #FFFFFF;
-  min-height: 280px;
-}
-
-// Simulated Left Sidebar
-.sa-mock-sidebar {
-  flex: 0 0 105px;
-  background-color: #FFFFFF;
-  border-right: 1px solid #ECECEC;
-  padding: 12px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  user-select: none;
-}
-
-.sa-mock-logo {
   display: flex;
   align-items: center;
-  gap: 6px;
-
-  .sa-mock-logo-img {
-    width: 18px;
-    height: 18px;
-  }
-
-  .sa-mock-logo-text {
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 1.1;
-    color: #111111;
-  }
-}
-
-.sa-mock-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sa-mock-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 10px;
-  font-weight: 500;
-  color: #71717A;
-  padding: 5px 6px;
-  border-radius: 6px;
-  transition: all 0.15s ease;
-
-  svg {
-    flex-shrink: 0;
-    color: #71717A;
-  }
-
-  &--active {
-    background-color: #F4F4F5;
-    color: #111111;
-    font-weight: 600;
-
-    svg {
-      color: #111111;
-    }
-  }
-}
-
-// Main stage inside simulated desktop
-.sa-mock-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #FFFFFF;
-  overflow: hidden;
-}
-
-// Simulated Mobile Bottom Tabbar
-.sa-mock-mobile-tabbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: #FFFFFF;
-  border-top: 1px solid #ECECEC;
-  padding: 6px 4px 8px 4px;
-}
-
-.sa-mock-mobile-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-size: 8px;
-  color: #8E8E93;
-
-  svg {
-    color: #8E8E93;
-  }
-
-  &--active {
-    color: #111111;
-    font-weight: 600;
-
-    svg {
-      color: #111111;
-    }
-  }
-}
-
-// ==========================================
-// 1. MOCKUP PREVIEW : AUTHENTIC HOMEPAGE REPLICA
-// ==========================================
-.sa-real-preview-topbar {
-  background-color: #FFFFFF;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #F5F5F5;
-}
-
-.sa-real-preview-search {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background-color: #F6F6F6;
-  border-radius: 9999px;
-  padding: 5px 10px;
-  font-size: 9.5px;
-  color: #8E8E93;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sa-real-preview-icons {
-  display: flex;
-  gap: 5px;
-  margin-left: 8px;
-
-  .sa-real-circle-btn {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #1E1E1E;
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9.5px;
-    cursor: default;
-  }
-}
-
-.sa-real-preview-switch {
-  display: flex;
   justify-content: center;
-  gap: 6px;
-  padding: 6px 10px 2px 10px;
-
-  .sa-real-switch-item {
-    font-size: 9.5px;
-    font-weight: 500;
-    color: #8E8E93;
-    padding: 2px 8px;
-    border-radius: 9999px;
-
-    &--active {
-      background-color: #1E1E1E;
-      color: #FFFFFF;
-      font-weight: 600;
-    }
-  }
-}
-
-.sa-real-preview-stage {
-  padding: 12px 14px 10px 14px;
   position: relative;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-}
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
 
-.sa-real-preview-card-wrap {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-// 6deg wrapper (Copie conforme Homepage .bg-card)
-.sa-real-bg-card {
-  width: 88%;
-  height: 145px;
-  background-color: #52525D;
-  border-radius: 6px;
-  transform: rotate(5deg);
-  position: relative;
-  margin-bottom: 16px;
-  transition: transform 0.25s ease;
-}
-
-// -6deg inner wrapper with blurred backdrop (Copie conforme Homepage .bg-img-card)
-.sa-real-bg-img-card {
-  position: absolute;
-  inset: 0;
-  border-radius: 6px;
-  transform: rotate(-5deg);
-  overflow: hidden;
-  background-color: #374151;
-}
-
-.sa-real-blurred-bg,
-.sa-real-blurred-bg-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(14px);
-  transform: scale(1.15);
-  opacity: 0.85;
-}
-
-.sa-real-card-slides {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-
-  .sa-real-slide-image,
-  .sa-real-slide-video {
+  .sa-media-preview-img,
+  .sa-media-preview-video {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 440px;
+    width: auto;
+    height: auto;
     object-fit: contain;
     display: block;
   }
 }
 
-.sa-real-flex-info-card {
-  position: absolute;
-  inset: 0;
-  padding: 8px 10px;
+.sa-media-preview-empty {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.sa-real-info-card-dark {
-  background-color: #1E1E1E;
-  color: #FFFFFF;
-  font-size: 8.5px;
-  font-weight: 600;
-  padding: 3px 6px;
-  border-radius: 4px;
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #71717A;
 
-  .sa-real-small-circle {
-    width: 4px;
-    height: 4px;
-    background-color: #FFFFFF;
-    border-radius: 50%;
-  }
-}
-
-.sa-real-info-card-btn {
-  background-color: #FFFFFF;
-  color: #1E1E1E;
-  font-size: 8.5px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-
-.sa-real-container-text-card {
-  width: 100%;
-  padding: 0 4px;
-  text-align: left;
-}
-
-.sa-real-subtitle-card {
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #6B7280;
-  display: block;
-  margin-bottom: 2px;
-}
-
-.sa-real-title-card {
-  font-size: 12.5px;
-  font-weight: 600 !important;
-  color: #111111;
-  line-height: 1.25;
-  margin: 0 0 3px 0;
-}
-
-.sa-real-description-card {
-  font-size: 10px;
-  color: #6B7280;
-  line-height: 1.35;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.sa-real-arrow-nav {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-
-  .sa-real-arrow-btn {
-    width: 18px;
-    height: 18px;
-    border-radius: 3px;
-    background: #1E1E1E;
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    border: none;
-    cursor: default;
-  }
-}
-
-// ==========================================
-// 2. MOCKUP PREVIEW : FORMAT RECHERCHE STYLES
-// ==========================================
-.sa-real-search-grid {
-  padding: 10px 12px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.sa-real-search-card {
-  border-radius: 8px;
-  overflow: hidden;
-  height: 95px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-
-  &--ad {
-    border: 1.5px solid #98F5B8;
-    background-color: #1E1E1E;
-
-    .sa-real-search-card__media {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  svg {
+    margin-bottom: 12px;
+    opacity: 0.6;
   }
 
-  &-inner {
-    position: relative;
-    z-index: 2;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%);
-    padding: 6px;
-    color: #FFFFFF;
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    color: #A1A1AA;
+    margin: 0 0 6px 0;
   }
 
-  &-domain {
-    font-size: 8px;
-    text-transform: uppercase;
-    color: #98F5B8;
-    font-weight: 600;
-    margin: 0 0 2px 0;
-  }
-
-  &-title {
-    font-size: 10px;
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-// ==========================================
-// 3. MOCKUP PREVIEW : FORMAT QUIZ STYLES
-// ==========================================
-.sa-real-quiz-top {
-  padding: 10px 12px 4px 12px;
-}
-
-.sa-real-quiz-badge-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
-
-  .sa-real-quiz-tag {
-    font-size: 8.5px;
-    text-transform: uppercase;
-    color: #8E8E93;
-    font-weight: 600;
-  }
-
-  .sa-real-quiz-pts-pill {
-    background-color: #F3F4F6;
-    color: #111111;
-    font-size: 8.5px;
-    font-weight: 600;
-    padding: 2px 5px;
-    border-radius: 9999px;
-  }
-}
-
-.sa-real-quiz-head-title {
-  font-size: 12px;
-  font-weight: 600 !important;
-  color: #111111;
-  margin: 0;
-}
-
-.sa-real-quiz-grid {
-  padding: 6px 10px 10px 10px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.sa-real-quiz-card {
-  background-color: #F8F9FA;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #E5E7EB;
-
-  &--ad {
-    border: 1.5px solid #98F5B8;
-  }
-
-  .sa-real-quiz-img-wrap {
-    height: 60px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden;
-
-    .sa-real-quiz-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .sa-real-quiz-body {
-    padding: 5px 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-  }
-
-  .sa-real-quiz-badges {
-    display: flex;
-    gap: 3px;
-    margin-bottom: 2px;
-  }
-
-  .sa-real-badge-sponsor {
-    background-color: #1E1E1E;
-    color: #98F5B8;
-    font-size: 7.5px;
-    font-weight: 600;
-    padding: 2px 4px;
-    border-radius: 3px;
-  }
-
-  .sa-real-badge-partner,
-  .sa-real-badge-level {
-    background-color: #E5E7EB;
-    color: #4B5563;
-    font-size: 7.5px;
-    font-weight: 600;
-    padding: 2px 4px;
-    border-radius: 3px;
-  }
-
-  .sa-real-quiz-title {
-    font-size: 9.5px;
-    font-weight: 600;
-    color: #111111;
-    line-height: 1.2;
-    margin: 0;
-  }
-
-  .sa-real-quiz-btn {
-    margin-top: auto;
-    background-color: #1E1E1E;
-    color: #FFFFFF;
-    font-size: 8px;
-    font-weight: 600;
-    padding: 3px 5px;
-    border-radius: 3px;
-    text-align: center;
+  span {
+    font-size: 12px;
+    color: #71717A;
+    max-width: 260px;
+    line-height: 1.4;
   }
 }
 
 .sa-funnel__preview-subtext {
   font-size: 13.5px;
   font-weight: 500;
-  color: #FFFFFF;
+  color: #A1A1AA;
   margin-top: 14px;
   align-self: flex-start;
 }
@@ -1648,8 +1256,11 @@
   &.sa-cal-day--prev-month,
   &.sa-cal-day--next-month,
   &.sa-cal-day--disabled {
-    color: #B0B0B5;
-    background-color: #FAFAFA;
+    color: #C7C7CC !important;
+    background-color: #FAFAFA !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    opacity: 0.45;
   }
 
   &.sa-cal-day--empty {
@@ -1693,13 +1304,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .sa-funnel-map__svg {
   width: 100%;
-  max-width: 400px;
-  max-height: 65vh;
+  max-width: 420px;
+  max-height: 60vh;
   height: auto;
+  overflow: visible;
 
   .sa-funnel-map__region {
     fill: #FFFFFF !important; // Pure white regions on dark background
@@ -1725,14 +1339,16 @@
 .sa-funnel__quote-card {
   width: 100%;
   max-width: 440px;
-  background-color: #2A2A2A;
+  background-color: #151514;
   border-radius: 16px;
   padding: 32px 28px;
   box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
   .sa-funnel__quote-text {
     font-size: 14px;
-    line-height: 1.55;
+    font-weight: 400 !important;
+    line-height: 1.6;
     color: #E5E7EB;
     font-style: italic;
     margin: 0;
@@ -1740,9 +1356,9 @@
 
   .sa-funnel__quote-author {
     font-size: 13.5px;
-    font-weight: 600 !important;
+    font-weight: 400 !important;
     font-style: italic;
-    color: #FFFFFF;
+    color: #9CA3AF;
     margin-top: 20px;
     display: block;
   }

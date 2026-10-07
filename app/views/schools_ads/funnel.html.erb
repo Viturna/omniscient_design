@@ -1,6 +1,6 @@
 <% content_for :title, "Créer votre campagne | Omniscient Design for professionals" %>
 
-<div class="sa-funnel" data-controller="campaign-funnel" data-campaign-funnel-checkout-url-value="<%= sa_checkout_path %>">
+<div class="sa-funnel" data-controller="campaign-funnel" data-campaign-funnel-checkout-url-value="<%= sa_checkout_path %>" data-campaign-funnel-user-signed-in-value="<%= user_signed_in? %>">
   <!-- ================================================================= -->
   <!-- PANNEAU GAUCHE : FORMULAIRES & CONFIGURATION (FOND BLANC) -->
   <!-- ================================================================= -->
@@ -117,27 +117,18 @@
         </div>
         <!-- Champs standards de configuration (masqués si Monopole) -->
         <div class="sa-standard-funnel-fields" data-campaign-funnel-target="standardFields">
-          <!-- Emplacements de diffusion (Diffusion 3-en-1 obligatoire) -->
+          <!-- 2. Emplacements de diffusion (Diffusion 3-en-1 incluse) -->
           <div class="sa-funnel__form-group">
             <div class="sa-funnel__label-row">
               <label class="sa-funnel__label">2. Emplacements de diffusion :</label>
+              <span class="sa-funnel__all-inclusive-tag">Pack 3-en-1 inclus</span>
             </div>
-            <div class="sa-funnel__preview-switcher">
-              <span class="sa-funnel__switcher-label">Prévisualiser l'affichage sur :</span>
-              <div class="sa-funnel__pills">
-                <button type="button" class="sa-pill sa-pill--active" data-campaign-funnel-target="formatPill" data-format="accueil" data-action="click->campaign-funnel#selectFormat">
-                  Page d’accueil
-                </button>
-                <button type="button" class="sa-pill" data-campaign-funnel-target="formatPill" data-format="recherche" data-action="click->campaign-funnel#selectFormat">
-                  Page recherche
-                </button>
-                <button type="button" class="sa-pill" data-campaign-funnel-target="formatPill" data-format="quiz" data-action="click->campaign-funnel#selectFormat">
-                  Page Quizz
-                </button>
-              </div>
-            </div>
+            <p class="sa-funnel__placement-notice">
+              Votre campagne est automatiquement diffusée sur l'ensemble de nos 3 espaces : <strong>Page d’accueil</strong>, <strong>Page recherche</strong> et <strong>Carnet de Quiz</strong>.
+            </p>
           </div>
-          <!-- 3. Bascule Visuel PC / Mobile & Uploads distincts -->
+
+          <!-- 3. Visuels de la campagne (Desktop obligatoire + Mobile optionnel) -->
           <div class="sa-funnel__form-group">
             <div class="sa-funnel__label-row" style="margin-bottom: 8px;">
               <label class="sa-funnel__label">3. Visuels de la campagne :</label>
@@ -148,7 +139,7 @@
                 <span class="sa-pill__status-dot" data-campaign-funnel-target="desktopStatusDot" style="display:none; width: 7px; height: 7px; background-color: #059669; border-radius: 50%; margin-left: 4px;"></span>
               </button>
               <button type="button" class="sa-pill" data-campaign-funnel-target="devicePill" data-device="mobile" data-action="click->campaign-funnel#selectDevice">
-                <span>Visuel Mobile</span>
+                <span>Visuel Mobile (Optionnel)</span>
                 <span class="sa-pill__status-dot" data-campaign-funnel-target="mobileStatusDot" style="display:none; width: 7px; height: 7px; background-color: #059669; border-radius: 50%; margin-left: 4px;"></span>
               </button>
             </div>
@@ -168,7 +159,7 @@
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                   </svg>
                 </div>
-                <p class="sa-upload-box__title"><span data-campaign-funnel-target="uploadContextLabel">Visuel Desktop</span> : <strong data-campaign-funnel-target="dimensionLabel">1920x1080 px</strong></p>
+                <p class="sa-upload-box__title"><span data-campaign-funnel-target="uploadContextLabel">Visuel Desktop</span> : <strong data-campaign-funnel-target="dimensionLabel">1920x1080 px (16:9)</strong></p>
                 <span class="sa-upload-box__hint">(max 25 Mo — PNG, JPG, WEBP, MP4)</span>
               </div>
               <div class="sa-upload-box__success" data-campaign-funnel-target="uploadSuccess" style="display: none;">
@@ -205,8 +196,8 @@
       <!-- ============================================================= -->
       <div class="sa-funnel__panel" data-campaign-funnel-target="stepPanel" data-step="2">
         <div class="sa-funnel__section">
-          <!-- Configuration des dates de campagne (Durée fixe 1 mois) -->
-          <div class="sa-funnel__dates-grid">
+          <!-- Configuration des dates de campagne (Durée fixe 1 mois avec abonnement) -->
+          <div class="sa-funnel__dates-stack">
             <div class="sa-funnel__field">
               <label class="sa-funnel__label" for="funnel_start_date">Début de la campagne*</label>
               <div class="sa-funnel__date-input-wrap">
@@ -216,20 +207,31 @@
                   <line x1="8" y1="2" x2="8" y2="6"></line>
                   <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <input type="text" id="funnel_start_date" class="sa-funnel__input sa-funnel__input--date" placeholder="JJ/MM/AAAA" readonly data-campaign-funnel-target="startDateInput" value="01/09/2026">
+                <input type="text" id="funnel_start_date" class="sa-funnel__input sa-funnel__input--date" placeholder="JJ/MM/AAAA" readonly data-campaign-funnel-target="startDateInput" value="<%= (Date.current + 2.days).strftime('%d/%m/%Y') %>">
               </div>
+              <span class="sa-funnel__hint" style="font-size: 11.5px; color: #71717A; margin-top: 4px; display: block; line-height: 1.4;">
+                Délai de modération : réservable à partir de <strong>J+2</strong> pour permettre la validation de vos visuels par notre équipe.
+              </span>
             </div>
-            <div class="sa-funnel__field">
-              <label class="sa-funnel__label" for="funnel_end_date">Prochain renouvellement</label>
-              <div class="sa-funnel__date-input-wrap">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sa-funnel__date-icon">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <input type="text" id="funnel_end_date" class="sa-funnel__input sa-funnel__input--date" placeholder="JJ/MM/AAAA" readonly data-campaign-funnel-target="endDateInput" value="01/10/2026">
+
+            <div class="sa-funnel__field sa-funnel__field--renewal">
+              <div class="sa-funnel__label-row" style="margin-bottom: 2px;">
+                <label class="sa-funnel__label" for="funnel_end_date">Prochain renouvellement</label>
+                <span class="sa-funnel__subscription-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Abonnement mensuel
+                </span>
               </div>
+              <div class="sa-funnel__date-input-wrap sa-funnel__date-input-wrap--disabled">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sa-funnel__date-icon">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <input type="text" id="funnel_end_date" class="sa-funnel__input sa-funnel__input--date sa-funnel__input--locked" placeholder="JJ/MM/AAAA" readonly tabindex="-1" data-campaign-funnel-target="endDateInput" value="<%= (Date.current + 2.days + 1.month).strftime('%d/%m/%Y') %>">
+              </div>
+              <p class="sa-funnel__hint" style="font-size: 11.5px; color: #71717A; margin: 4px 0 0 0; line-height: 1.4;">
+                Calculé automatiquement (période de 30 jours). Reconduit tacitement chaque mois, résiliable à tout moment en 1 clic.
+              </p>
             </div>
           </div>
         </div>
@@ -309,414 +311,233 @@
       <!-- ============================================================= -->
       <div class="sa-funnel__panel" data-campaign-funnel-target="stepPanel" data-step="4">
         <div class="sa-funnel__section">
-          <h2 class="sa-funnel__section-title">Informations & Compte</h2>
-          <div class="sa-funnel__field">
-            <label class="sa-funnel__label" for="funnel_company">Nom de l'entreprise / Établissement*</label>
-            <% default_school_name = user_signed_in? ? (current_user.etablissement&.name.presence || current_user.firstname.presence || '') : '' %>
-            <input type="text" id="funnel_company" class="sa-funnel__input" value="<%= default_school_name %>" placeholder="Ex: École Supérieure de Design" required data-campaign-funnel-target="schoolNameInput">
-          </div>
-          <div class="sa-funnel__field">
-            <label class="sa-funnel__label" for="funnel_domain">Domaine d’activité*</label>
-            <div class="sa-funnel__select-wrap">
-              <select id="funnel_domain" class="sa-funnel__select" data-campaign-funnel-target="domainInput">
-                <option value="" disabled <%= 'selected' unless user_signed_in? %>>Choisir mon domaine d’activité</option>
-                <option value="ecole_design" <%= 'selected' if user_signed_in? %>>École de Design / Arts Appliqués</option>
-                <option value="lycee_dnmade">Lycée & DN MADE</option>
-                <option value="grande_ecole">Grande École / Université</option>
-                <option value="studio_agence">Studio & Agence de création</option>
-                <option value="evenement">Événement, Salon & Festival</option>
-                <option value="autre">Autre organisme</option>
-              </select>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sa-funnel__select-arrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <% if user_signed_in? %>
+            <!-- Utilisateur déjà connecté : Profil & Coordonnées -->
+            <div data-campaign-funnel-target="connectedUserSection">
+              <div class="sa-funnel__connected-box">
+                <div class="sa-funnel__connected-header">
+                  <div class="sa-funnel__connected-avatar">
+                    <%= current_user.firstname.presence&.first&.upcase || current_user.email.first.upcase %>
+                  </div>
+                  <div class="sa-funnel__connected-info">
+                    <div class="sa-funnel__connected-name-row">
+                      <span class="sa-funnel__connected-name"><%= current_user.firstname.presence || current_user.email.split('@').first %></span>
+                      <span class="sa-funnel__connected-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Connecté
+                      </span>
+                    </div>
+                    <span class="sa-funnel__connected-email"><%= current_user.email %></span>
+                  </div>
+                  <button type="button" class="sa-funnel__logout-link" data-action="click->campaign-funnel#switchToOtherAccount" title="Utiliser un autre compte sans quitter le formulaire">
+                    Changer de compte
+                  </button>
+                </div>
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_company">Nom de l'entreprise / Établissement*</label>
+                <% default_school_name = current_user.etablissement&.name.presence || current_user.firstname.presence || '' %>
+                <input type="text" id="funnel_company" class="sa-funnel__input" value="<%= default_school_name %>" placeholder="Ex: École Supérieure de Design" required data-campaign-funnel-target="schoolNameInput">
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_domain">Domaine d’activité*</label>
+                <div class="sa-funnel__select-wrap">
+                  <select id="funnel_domain" class="sa-funnel__select" data-campaign-funnel-target="domainInput">
+                    <option value="" disabled>Choisir mon domaine d’activité</option>
+                    <option value="ecole_design" selected>École de Design / Arts Appliqués</option>
+                    <option value="lycee_dnmade">Lycée & DN MADE</option>
+                    <option value="grande_ecole">Grande École / Université</option>
+                    <option value="studio_agence">Studio & Agence de création</option>
+                    <option value="evenement">Événement, Salon & Festival</option>
+                    <option value="autre">Autre organisme</option>
+                  </select>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sa-funnel__select-arrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_email">Mail de facturation & suivi*</label>
+                <input type="email" id="funnel_email" class="sa-funnel__input" value="<%= current_user.email %>" placeholder="contact@etablissement.fr" required data-campaign-funnel-target="emailInput">
+              </div>
+
+              <!-- Champs mot de passe cachés car session active -->
+              <input type="hidden" data-campaign-funnel-target="passwordInput" value="signed_in_pass_placeholder">
+              <input type="hidden" data-campaign-funnel-target="passwordConfirmInput" value="signed_in_pass_placeholder">
             </div>
-          </div>
-          <div class="sa-funnel__field">
-            <label class="sa-funnel__label" for="funnel_email">Mail professionnel*</label>
-            <input type="email" id="funnel_email" class="sa-funnel__input" value="<%= current_user&.email %>" placeholder="contact@etablissement.fr" required data-campaign-funnel-target="emailInput">
+
+            <!-- Formulaire alternatif pour changer de compte en conservant les données du tunnel -->
+            <div data-campaign-funnel-target="otherAccountSection" style="display: none;">
+              <div class="sa-funnel__switch-back-bar">
+                <span>Changement de compte</span>
+                <button type="button" class="sa-funnel__switch-back-btn" data-action="click->campaign-funnel#switchBackToCurrentUser">
+                  ← Revenir à mon compte (<%= current_user.email %>)
+                </button>
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_other_company">Nom de l'entreprise / Établissement*</label>
+                <input type="text" id="funnel_other_company" class="sa-funnel__input" placeholder="Ex: École Supérieure de Design" data-campaign-funnel-target="otherSchoolNameInput">
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_other_domain">Domaine d’activité*</label>
+                <div class="sa-funnel__select-wrap">
+                  <select id="funnel_other_domain" class="sa-funnel__select" data-campaign-funnel-target="otherDomainInput">
+                    <option value="" disabled selected>Choisir mon domaine d’activité</option>
+                    <option value="ecole_design">École de Design / Arts Appliqués</option>
+                    <option value="lycee_dnmade">Lycée & DN MADE</option>
+                    <option value="grande_ecole">Grande École / Université</option>
+                    <option value="studio_agence">Studio & Agence de création</option>
+                    <option value="evenement">Événement, Salon & Festival</option>
+                    <option value="autre">Autre organisme</option>
+                  </select>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sa-funnel__select-arrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <div class="sa-funnel__field">
-                  <label class="sa-funnel__label" for="funnel_password">Mot de passe<%= user_signed_in? ? ' (laisser vide si vous conservez votre compte actuel)' : '*' %></label>
-                  <div class="sa-funnel__password-wrap">
-                    <input type="password" id="funnel_password" class="sa-funnel__input" placeholder="Votre mot de passe" <%= 'required' unless user_signed_in? %> data-campaign-funnel-target="passwordInput">
-                    <button type="button" class="sa-funnel__eye-btn" data-action="click->campaign-funnel#togglePassword" data-target-input="funnel_password">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    </button>
-                  </div>
-                  <span class="sa-funnel__hint" style="display: block; font-size: 11px; color: #888; margin-top: 5px;">Au moins 6 caractères avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.</span>
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_other_email">Mail professionnel*</label>
+                <input type="email" id="funnel_other_email" class="sa-funnel__input" placeholder="contact@etablissement.fr" data-campaign-funnel-target="otherEmailInput">
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_other_password">Mot de passe*</label>
+                <div class="sa-funnel__password-wrap">
+                  <input type="password" id="funnel_other_password" class="sa-funnel__input" placeholder="Mot de passe du compte" data-campaign-funnel-target="otherPasswordInput">
+                  <button type="button" class="sa-funnel__eye-btn" data-action="click->campaign-funnel#togglePassword" data-target-input="funnel_other_password">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
                 </div>
-                <div class="sa-funnel__field">
-                  <label class="sa-funnel__label" for="funnel_password_confirm">Confirmer le mot de passe<%= user_signed_in? ? '' : '*' %></label>
-                  <div class="sa-funnel__password-wrap">
-                    <input type="password" id="funnel_password_confirm" class="sa-funnel__input" placeholder="Confirmer votre mot de passe" <%= 'required' unless user_signed_in? %> data-campaign-funnel-target="passwordConfirmInput">
-                    <button type="button" class="sa-funnel__eye-btn" data-action="click->campaign-funnel#togglePassword" data-target-input="funnel_password_confirm">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    </button>
-                  </div>
+                <span class="sa-funnel__hint" style="display: block; font-size: 11px; color: #888; margin-top: 5px;">Si le compte existe déjà, entrez son mot de passe pour vous identifier. Sinon, un compte sera créé.</span>
+              </div>
+
+              <div class="sa-funnel__field">
+                <label class="sa-funnel__label" for="funnel_other_password_confirm">Confirmer le mot de passe (si nouveau compte)</label>
+                <div class="sa-funnel__password-wrap">
+                  <input type="password" id="funnel_other_password_confirm" class="sa-funnel__input" placeholder="Confirmer le mot de passe" data-campaign-funnel-target="otherPasswordConfirmInput">
+                  <button type="button" class="sa-funnel__eye-btn" data-action="click->campaign-funnel#togglePassword" data-target-input="funnel_other_password_confirm">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
                 </div>
-                <div class="sa-funnel__field" style="margin-top: 18px;">
-                  <label class="sa-funnel__checkbox-label" style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #555; cursor: pointer; line-height: 1.4;">
-                    <input type="checkbox" id="funnel_cgv" class="sa-funnel__checkbox" required data-campaign-funnel-target="cgvCheckbox" style="margin-top: 2px; width: 16px; height: 16px; accent-color: #111; flex-shrink: 0; cursor: pointer;">
-                    <span>J'accepte les <%= link_to "Conditions Générales de Vente (CGV)", cgv_ads_path, target: "_blank", class: "black underline", style: "color: #111; font-weight: 500;" %> d'Omniscient Design pour les campagnes publicitaires.*</span>
-                  </label>
-                </div>
-                <% unless user_signed_in? %>
-                  <!-- Séparateur OU -->
-                  <div class="sa-funnel__or-divider">
-                    <span>ou</span>
-                  </div>
-                  <!-- Bouton Google Sign-in -->
-                  <div class="sa-funnel__social-auth">
-                    <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, class: "sa-funnel__google-btn", style: "cursor: pointer; border: none;" do %>
-                      <svg width="18" height="18" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                      </svg>
-                      <span>S'inscrire avec Google</span>
-                    <% end %>
-                  </div>
-                <% end %>
               </div>
             </div>
+
+          <% else %>
+            <!-- Utilisateur non connecté : Création de compte ou Connexion -->
+            <h2 class="sa-funnel__section-title">Créez votre compte professionnel</h2>
+            
+            <div class="sa-funnel__field">
+              <label class="sa-funnel__label" for="funnel_company">Nom de l'entreprise / Établissement*</label>
+              <input type="text" id="funnel_company" class="sa-funnel__input" placeholder="Ex: École Supérieure de Design" required data-campaign-funnel-target="schoolNameInput">
+            </div>
+
+            <div class="sa-funnel__field">
+              <label class="sa-funnel__label" for="funnel_domain">Domaine d’activité*</label>
+              <div class="sa-funnel__select-wrap">
+                <select id="funnel_domain" class="sa-funnel__select" data-campaign-funnel-target="domainInput">
+                  <option value="" disabled selected>Choisir mon domaine d’activité</option>
+                  <option value="ecole_design">École de Design / Arts Appliqués</option>
+                  <option value="lycee_dnmade">Lycée & DN MADE</option>
+                  <option value="grande_ecole">Grande École / Université</option>
+                  <option value="studio_agence">Studio & Agence de création</option>
+                  <option value="evenement">Événement, Salon & Festival</option>
+                  <option value="autre">Autre organisme</option>
+                </select>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sa-funnel__select-arrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+
+            <div class="sa-funnel__field">
+              <label class="sa-funnel__label" for="funnel_email">Mail professionnel*</label>
+              <input type="email" id="funnel_email" class="sa-funnel__input" placeholder="contact@etablissement.fr" required data-campaign-funnel-target="emailInput">
+            </div>
+
+            <div class="sa-funnel__field">
+              <label class="sa-funnel__label" for="funnel_password">Mot de passe*</label>
+              <div class="sa-funnel__password-wrap">
+                <input type="password" id="funnel_password" class="sa-funnel__input" placeholder="Créer votre mot de passe" required data-campaign-funnel-target="passwordInput">
+                <button type="button" class="sa-funnel__eye-btn" data-action="click->campaign-funnel#togglePassword" data-target-input="funnel_password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+              <span class="sa-funnel__hint" style="display: block; font-size: 11px; color: #888; margin-top: 5px;">Au moins 6 caractères avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.</span>
+            </div>
+
+            <div class="sa-funnel__field">
+              <label class="sa-funnel__label" for="funnel_password_confirm">Confirmer le mot de passe*</label>
+              <div class="sa-funnel__password-wrap">
+                <input type="password" id="funnel_password_confirm" class="sa-funnel__input" placeholder="Confirmer le mot de passe" required data-campaign-funnel-target="passwordConfirmInput">
+                <button type="button" class="sa-funnel__eye-btn" data-action="click->campaign-funnel#togglePassword" data-target-input="funnel_password_confirm">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="sa-funnel__field" style="margin-top: 16px;">
+            <label class="sa-funnel__checkbox-label" style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #4B5563; cursor: pointer; line-height: 1.45;">
+              <input type="checkbox" id="funnel_cgv" class="sa-funnel__checkbox" required data-campaign-funnel-target="cgvCheckbox" style="margin-top: 2px; width: 15px; height: 15px; accent-color: #111; flex-shrink: 0; cursor: pointer;">
+              <span>
+                J'accepte les <%= link_to "CGV", cgv_ads_path, target: "_blank", class: "black underline", style: "color: #111; font-weight: 500;" %>, la <%= link_to "politique de confidentialité", politiquedeconfidentialite_path, target: "_blank", class: "black underline", style: "color: #111; font-weight: 500;" %>, et demande l'exécution dès validation des visuels.*
+              </span>
+            </label>
           </div>
+
+          <!-- Réassurance discrète & épurée -->
+          <div class="sa-funnel__trust-inline" style="margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #71717A;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Paiement sécurisé via Stripe • Sans engagement, résiliable en 1 clic</span>
+          </div>
+
+          <% unless user_signed_in? %>
+            <!-- Séparateur OU -->
+            <div class="sa-funnel__or-divider">
+              <span>ou</span>
+            </div>
+            <!-- Bouton Google Sign-in -->
+            <div class="sa-funnel__social-auth">
+              <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, class: "sa-funnel__google-btn", style: "cursor: pointer; border: none;" do %>
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>S'inscrire avec Google</span>
+              <% end %>
+            </div>
+          <% end %>
         </div>
-        <!-- ================================================================= -->
-        <!-- PANNEAU DROIT : CONTEXTE INTERACTIF (FOND SOMBRE #1A1A1A) -->
-        <!-- ================================================================= -->
-        <div class="sa-funnel__right">
-          <!-- VUE DROITE : ÉTAPE 1 (PRÉVISUALISATION LIVE MOCKUP MULTI-FORMAT) -->
-          <div class="sa-funnel__right-view sa-funnel__right-view--active" data-step="1">
-            <div class="sa-funnel__preview-container">
-              <div class="sa-funnel__preview-header-bar">
-                <h3 class="sa-funnel__preview-headline">Prévisualisation en direct</h3>
-                <span class="sa-funnel__preview-format-tag" data-campaign-funnel-target="previewFormatTag">Page d'accueil</span>
+      </div>
+    </div>
+  </div>
+  <!-- ================================================================= -->
+  <!-- PANNEAU DROIT : CONTEXTE INTERACTIF (FOND SOMBRE #1A1A1A) -->
+  <!-- ================================================================= -->
+  <div class="sa-funnel__right">
+    <!-- VUE DROITE : ÉTAPE 1 (VISUEL SÉLECTIONNÉ) -->
+    <div class="sa-funnel__right-view sa-funnel__right-view--active" data-step="1">
+            <div class="sa-media-preview-container">
+              <h3 class="sa-media-preview-title">Aperçu du visuel</h3>
+              <div class="sa-media-preview-box">
+                <!-- Placeholder quand aucun média n'est uploadé -->
+                <div class="sa-media-preview-empty" data-campaign-funnel-target="previewEmptyState">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  <p>Aucun visuel sélectionné</p>
+                  <span>Importez une image ou une vidéo à gauche pour voir l'aperçu</span>
+                </div>
+
+                <!-- Aperçu Image / Vidéo -->
+                <img src="" alt="Aperçu visuel" class="sa-media-preview-img" data-campaign-funnel-target="previewImage" style="display: none;">
+                <video class="sa-media-preview-video" data-campaign-funnel-target="previewVideo" autoplay loop muted playsinline style="display: none;"></video>
               </div>
-              <!-- 1. MOCKUP PREVIEW : FORMAT ACCUEIL (Copie 100% conforme de la home Omniscient Design) -->
-              <div class="sa-preview-frame sa-preview-frame--pc sa-preview-format-accueil" data-campaign-funnel-target="previewFrameAccueil">
-                <!-- Desktop Mockup Layout: Left Sidebar + Main Content -->
-                <div class="sa-mock-browser">
-                  <!-- Simulated Left Navigation Sidebar (Copie conforme Header Desktop) -->
-                  <aside class="sa-mock-sidebar">
-                    <div class="sa-mock-logo">
-                      <img src="/assets/logo.svg" alt="" class="sa-mock-logo-img" onerror="this.style.display='none'">
-                      <span class="sa-mock-logo-text">Omniscient<br>
-                        Design</span>
-                    </div>
-                    <nav class="sa-mock-nav">
-                      <div class="sa-mock-nav-item sa-mock-nav-item--active">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z"/>
-                        </svg>
-                        <span>Explorer</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                          <path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z"/>
-                        </svg>
-                        <span>Recherche</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                          <path d="M26.433 4.5C23.5635 4.5 22.596 6.573 17.9985 6.573C13.485 6.573 12.3795 4.5 9.564 4.5C1.7505 4.5 0 20.0625 0 26.022C0 29.2395 1.2255 31.5 3.7035 31.5C8.8905 31.5 8.0925 24 14.076 24H21.921C27.9045 24 27.1065 31.5 32.2935 31.5C34.7715 31.5 36 29.241 36 26.0235C36 20.064 34.2465 4.5 26.433 4.5ZM10.5 19.5C8.0145 19.5 6 17.4855 6 15C6 12.5145 8.0145 10.5 10.5 10.5C12.9855 10.5 15 12.5145 15 15C15 17.4855 12.9855 19.5 10.5 19.5ZM25.5 10.5C26.328 10.5 27 11.1705 27 12C27 12.8295 26.328 13.5 25.5 13.5C24.672 13.5 24 12.8295 24 12C24 11.1705 24.672 10.5 25.5 10.5Z"/>
-                        </svg>
-                        <span>Entraînement</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                          <path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95ZM3.15 24C4.8888 24 6.3 25.4112 6.3 27.15C6.3 28.8888 4.8888 30.3 3.15 30.3C1.4112 30.3 0 28.8888 0 27.15C0 25.4112 1.4112 24 3.15 24ZM36 21.75C36 21.0048 35.3952 20.4 34.65 20.4H10.35C9.6048 20.4 9 21.0048 9 21.75C9 22.4952 9.6048 23.1 10.35 23.1H34.65C35.3952 23.1 36 22.4952 36 21.75ZM3.15 15C4.8888 15 6.3 16.4112 6.3 18.15C6.3 19.8888 4.8888 21.3 3.15 21.3C1.4112 21.3 0 19.8888 0 18.15C0 16.4112 1.4112 15 3.15 15Z"/>
-                        </svg>
-                        <span>Listes</span>
-                      </div>
-                    </nav>
-                  </aside>
-                  <!-- Main Stage -->
-                  <div class="sa-mock-main">
-                    <!-- Top Bar Authentique -->
-                    <div class="sa-real-preview-topbar">
-                      <div class="sa-real-preview-search">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <span>Rechercher une référence ou un designer</span>
-                      </div>
-                      <div class="sa-real-preview-icons">
-                        <div class="sa-real-circle-btn" title="Ajouter">+</div>
-                        <div class="sa-real-circle-btn" title="Notifications">
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Tabs Switcher (Références / Designers) -->
-                    <div class="sa-real-preview-switch">
-                      <span class="sa-real-switch-item sa-real-switch-item--active">Références</span>
-                      <span class="sa-real-switch-item">Designers</span>
-                    </div>
-                    <!-- Card Container (Feed exact avec rotation 6deg & -6deg) -->
-                    <div class="sa-real-preview-stage">
-                      <div class="sa-real-preview-card-wrap">
-                        <!-- Rotation 6deg wrapper -->
-                        <div class="sa-real-bg-card">
-                          <!-- Inner rotation -6deg with blurred background -->
-                          <div class="sa-real-bg-img-card">
-                            <!-- Blurred Backdrop -->
-                            <img src="/assets/ads/mockup_hero.png" alt="" class="sa-real-blurred-bg" data-campaign-funnel-target="previewImageBg" onerror="this.src='/assets/landing/image-1.jpg'">
-                            <video class="sa-real-blurred-bg-video" data-campaign-funnel-target="previewVideoBg" autoplay loop muted playsinline style="display: none;"></video>
-                            <!-- Main Centered Media -->
-                            <div class="sa-real-card-slides">
-                              <img src="/assets/ads/mockup_hero.png" alt="Aperçu visuel" class="sa-real-slide-image" data-campaign-funnel-target="previewImage" onerror="this.src='/assets/landing/image-1.jpg'">
-                              <video class="sa-real-slide-video" data-campaign-funnel-target="previewVideo" autoplay loop muted playsinline style="display: none;"></video>
-                            </div>
-                            <!-- Overlay Badges (Sponsorisé + En savoir plus) -->
-                            <div class="sa-real-flex-info-card">
-                              <div class="sa-real-info-card-dark">
-                                <span class="sa-real-small-circle"></span>
-                                Sponsorisé
-                              </div>
-                              <div class="sa-real-info-card-btn">
-                                En savoir plus →
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- Container Text Card (Bottom text) -->
-                        <div class="sa-real-container-text-card">
-                          <span class="sa-real-subtitle-card">Sponsorisé</span>
-                          <h3 class="sa-real-title-card" data-campaign-funnel-target="previewTitle">
-                            Envie d’afficher un contenu sponsorisé sur Omniscient Design ?
-                          </h3>
-                          <p class="sa-real-description-card" data-campaign-funnel-target="previewDesc">
-                            C'est possible, simple et rapide ! Entrez directement en contact avec l'équipe d'Omniscient Design et discutons ensemble de votre projet.
-                          </p>
-                        </div>
-                      </div>
-                      <!-- Authentic Navigation Vertical Arrows -->
-                      <div class="sa-real-arrow-nav">
-                        <button type="button" class="sa-real-arrow-btn" aria-label="Carte précédente">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                        </button>
-                        <button type="button" class="sa-real-arrow-btn" aria-label="Carte suivante">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Bottom Mobile Tabbar when in mobile mode -->
-                <div class="sa-mock-mobile-tabbar">
-                  <div class="sa-mock-mobile-tab sa-mock-mobile-tab--active">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z"/>
-                    </svg>
-                    <span>Explorer</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                      <path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z"/>
-                    </svg>
-                    <span>Recherche</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                      <path d="M26.433 4.5C23.5635 4.5 22.596 6.573 17.9985 6.573C13.485 6.573 12.3795 4.5 9.564 4.5C1.7505 4.5 0 20.0625 0 26.022C0 29.2395 1.2255 31.5 3.7035 31.5C8.8905 31.5 8.0925 24 14.076 24H21.921C27.9045 24 27.1065 31.5 32.2935 31.5C34.7715 31.5 36 29.241 36 26.0235C36 20.064 34.2465 4.5 26.433 4.5ZM10.5 19.5C8.0145 19.5 6 17.4855 6 15C6 12.5145 8.0145 10.5 10.5 10.5C12.9855 10.5 15 12.5145 15 15C15 17.4855 12.9855 19.5 10.5 19.5Z"/>
-                    </svg>
-                    <span>Quiz</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor">
-                      <path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95ZM3.15 24C4.8888 24 6.3 25.4112 6.3 27.15C6.3 28.8888 4.8888 30.3 3.15 30.3C1.4112 30.3 0 28.8888 0 27.15C0 25.4112 1.4112 24 3.15 24Z"/>
-                    </svg>
-                    <span>Listes</span>
-                  </div>
-                </div>
-              </div>
-              <!-- 2. MOCKUP PREVIEW : FORMAT RECHERCHE (Grille 100% conforme) -->
-              <div class="sa-preview-frame sa-preview-frame--pc sa-preview-format-recherche" data-campaign-funnel-target="previewFrameRecherche" style="display: none;">
-                <div class="sa-mock-browser">
-                  <!-- Simulated Left Navigation Sidebar -->
-                  <aside class="sa-mock-sidebar">
-                    <div class="sa-mock-logo">
-                      <img src="/assets/logo.svg" alt="" class="sa-mock-logo-img" onerror="this.style.display='none'">
-                      <span class="sa-mock-logo-text">Omniscient<br>
-                        Design</span>
-                    </div>
-                    <nav class="sa-mock-nav">
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z"/></svg>
-                        <span>Explorer</span>
-                      </div>
-                      <div class="sa-mock-nav-item sa-mock-nav-item--active">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z"/></svg>
-                        <span>Recherche</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M26.433 4.5C23.5635 4.5 22.596 6.573 17.9985 6.573C13.485 6.573 12.3795 4.5 9.564 4.5C1.7505 4.5 0 20.0625 0 26.022C0 29.2395 1.2255 31.5 3.7035 31.5C8.8905 31.5 8.0925 24 14.076 24H21.921C27.9045 24 27.1065 31.5 32.2935 31.5C34.7715 31.5 36 29.241 36 26.0235C36 20.064 34.2465 4.5 26.433 4.5Z"/></svg>
-                        <span>Entraînement</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95Z"/></svg>
-                        <span>Listes</span>
-                      </div>
-                    </nav>
-                  </aside>
-                  <div class="sa-mock-main">
-                    <div class="sa-real-preview-topbar">
-                      <div class="sa-real-preview-search">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <span>Rechercher une référence...</span>
-                      </div>
-                    </div>
-                    <div class="sa-real-preview-switch">
-                      <span class="sa-real-switch-item sa-real-switch-item--active">Références (240)</span>
-                      <span class="sa-real-switch-item">Designers (80)</span>
-                      <span class="sa-real-switch-item">Frise</span>
-                    </div>
-                    <div class="sa-real-search-grid">
-                      <!-- Carte 1 Factice -->
-                      <div class="sa-real-search-card" style="background-image: url('/assets/landing/image-2.jpg');">
-                        <div class="sa-real-search-card-inner">
-                          <p class="sa-real-search-card-domain">Architecture</p>
-                          <p class="sa-real-search-card-title">Villa Savoye</p>
-                        </div>
-                      </div>
-                      <!-- CARTE AD SPONSORISÉE RÉELLE -->
-                      <div class="sa-real-search-card sa-real-search-card--ad">
-                        <img src="/assets/ads/mockup_hero.png" alt="Aperçu visuel" class="sa-real-search-card__media" data-campaign-funnel-target="previewSearchImage" onerror="this.src='/assets/landing/image-1.jpg'">
-                        <video class="sa-real-search-card__media" data-campaign-funnel-target="previewSearchVideo" autoplay loop muted playsinline style="display: none;"></video>
-                        <div class="sa-real-search-card-inner">
-                          <p class="sa-real-search-card-domain" style="display: flex; align-items: center; gap: 4px;">
-                            <span style="width: 5px; height: 5px; background: #FFF; border-radius: 50%;"></span>
-                            Sponsorisé
-                          </p>
-                          <p class="sa-real-search-card-title" data-campaign-funnel-target="previewSearchTitle">Votre titre d'annonce</p>
-                        </div>
-                      </div>
-                      <!-- Carte 3 Factice -->
-                      <div class="sa-real-search-card" style="background-image: url('/assets/landing/image-3.jpg');">
-                        <div class="sa-real-search-card-inner">
-                          <p class="sa-real-search-card-domain">Design Produit</p>
-                          <p class="sa-real-search-card-title">Chaise Wassily</p>
-                        </div>
-                      </div>
-                      <!-- Carte 4 Factice -->
-                      <div class="sa-real-search-card" style="background-image: url('/assets/landing/image-4.jpg');">
-                        <div class="sa-real-search-card-inner">
-                          <p class="sa-real-search-card-domain">Graphisme</p>
-                          <p class="sa-real-search-card-title">Typographie Helvetica</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Bottom Mobile Tabbar when in mobile mode -->
-                <div class="sa-mock-mobile-tabbar">
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z"/></svg>
-                    <span>Explorer</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab sa-mock-mobile-tab--active">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z"/></svg>
-                    <span>Recherche</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M26.433 4.5C23.5635 4.5 22.596 6.573 17.9985 6.573C13.485 6.573 12.3795 4.5 9.564 4.5C1.7505 4.5 0 20.0625 0 26.022C0 29.2395 1.2255 31.5 3.7035 31.5C8.8905 31.5 8.0925 24 14.076 24H21.921C27.9045 24 27.1065 31.5 32.2935 31.5C34.7715 31.5 36 29.241 36 26.0235C36 20.064 34.2465 4.5 26.433 4.5Z"/></svg>
-                    <span>Quiz</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95Z"/></svg>
-                    <span>Listes</span>
-                  </div>
-                </div>
-              </div>
-              <!-- 3. MOCKUP PREVIEW : FORMAT QUIZZ (Carnet de jeux réel 100% conforme) -->
-              <div class="sa-preview-frame sa-preview-frame--pc sa-preview-format-quiz" data-campaign-funnel-target="previewFrameQuiz" style="display: none;">
-                <div class="sa-mock-browser">
-                  <!-- Simulated Left Navigation Sidebar -->
-                  <aside class="sa-mock-sidebar">
-                    <div class="sa-mock-logo">
-                      <img src="/assets/logo.svg" alt="" class="sa-mock-logo-img" onerror="this.style.display='none'">
-                      <span class="sa-mock-logo-text">Omniscient<br>
-                        Design</span>
-                    </div>
-                    <nav class="sa-mock-nav">
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z"/></svg>
-                        <span>Explorer</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z"/></svg>
-                        <span>Recherche</span>
-                      </div>
-                      <div class="sa-mock-nav-item sa-mock-nav-item--active">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M26.433 4.5C23.5635 4.5 22.596 6.573 17.9985 6.573C13.485 6.573 12.3795 4.5 9.564 4.5C1.7505 4.5 0 20.0625 0 26.022C0 29.2395 1.2255 31.5 3.7035 31.5C8.8905 31.5 8.0925 24 14.076 24H21.921C27.9045 24 27.1065 31.5 32.2935 31.5C34.7715 31.5 36 29.241 36 26.0235C36 20.064 34.2465 4.5 26.433 4.5Z"/></svg>
-                        <span>Entraînement</span>
-                      </div>
-                      <div class="sa-mock-nav-item">
-                        <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95Z"/></svg>
-                        <span>Listes</span>
-                      </div>
-                    </nav>
-                  </aside>
-                  <div class="sa-mock-main">
-                    <div class="sa-real-quiz-top">
-                      <div class="sa-real-quiz-badge-header">
-                        <span class="sa-real-quiz-tag">Le carnet de Jeux</span>
-                        <div class="sa-real-quiz-pts-pill">#1 • 250 pts</div>
-                      </div>
-                      <h3 class="sa-real-quiz-head-title">Quiz à la une</h3>
-                    </div>
-                    <div class="sa-real-quiz-grid">
-                      <!-- CARTE AD QUIZ RÉELLE -->
-                      <div class="sa-real-quiz-card sa-real-quiz-card--ad">
-                        <div class="sa-real-quiz-img-wrap">
-                          <img src="/assets/ads/mockup_hero.png" alt="Aperçu visuel" class="sa-real-quiz-img" data-campaign-funnel-target="previewQuizImage" onerror="this.src='/assets/landing/image-1.jpg'">
-                          <video class="sa-real-quiz-img" data-campaign-funnel-target="previewQuizVideo" autoplay loop muted playsinline style="display: none;"></video>
-                        </div>
-                        <div class="sa-real-quiz-body">
-                          <div class="sa-real-quiz-badges">
-                            <span class="sa-real-badge-sponsor">● Sponsorisé</span>
-                            <span class="sa-real-badge-partner">Partenaire</span>
-                          </div>
-                          <h4 class="sa-real-quiz-title" data-campaign-funnel-target="previewQuizTitle">Votre titre d'annonce</h4>
-                          <div class="sa-real-quiz-btn">En savoir plus →</div>
-                        </div>
-                      </div>
-                      <!-- CARTE QUIZ CLASSIQUE MOCK -->
-                      <div class="sa-real-quiz-card">
-                        <div class="sa-real-quiz-img-wrap" style="background-image: url('/assets/landing/image-1.jpg');"></div>
-                        <div class="sa-real-quiz-body">
-                          <div class="sa-real-quiz-badges">
-                            <span class="sa-real-badge-level">Niveau 1</span>
-                            <span class="sa-real-badge-partner">10 Questions</span>
-                          </div>
-                          <h4 class="sa-real-quiz-title">Histoire du Bauhaus & Modernisme</h4>
-                          <div class="sa-real-quiz-btn">Commencer le quiz →</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Bottom Mobile Tabbar when in mobile mode -->
-                <div class="sa-mock-mobile-tabbar">
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M18 0C27.9345 0 36 8.0655 36 18C36 27.9345 27.9345 36 18 36C8.0655 36 0 27.9345 0 18C0 8.0655 8.0655 0 18 0ZM20.214 22.4325C21.696 21.825 22.8495 20.616 23.388 19.1085L27 9L16.992 12.5805C15.483 13.1205 14.2755 14.277 13.668 15.759L9.0705 27L20.214 22.4325ZM20.031 16.0035C20.8575 16.83 20.8575 18.1725 20.031 18.9975C19.2045 19.824 17.8635 19.824 17.037 18.9975C16.2105 18.1725 16.2105 16.83 17.037 16.0035C17.8635 15.177 19.2045 15.177 20.031 16.0035Z"/></svg>
-                    <span>Explorer</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M35.7135 32.469L26.406 23.1615C28.1565 20.754 29.1915 17.793 29.1915 14.595C29.1915 6.5475 22.644 0 14.595 0C6.5475 0 0 6.5475 0 14.595C0 22.644 6.5475 29.19 14.595 29.19C17.646 29.19 20.4795 28.2495 22.8255 26.643L32.1825 36L35.7135 32.469ZM4.281 14.595C4.281 8.907 8.9085 4.2795 14.5965 4.2795C20.2845 4.2795 24.912 8.907 24.912 14.595C24.912 20.283 20.2845 24.9105 14.5965 24.9105C8.907 24.9105 4.281 20.283 4.281 14.595Z"/></svg>
-                    <span>Recherche</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab sa-mock-mobile-tab--active">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M26.433 4.5C23.5635 4.5 22.596 6.573 17.9985 6.573C13.485 6.573 12.3795 4.5 9.564 4.5C1.7505 4.5 0 20.0625 0 26.022C0 29.2395 1.2255 31.5 3.7035 31.5C8.8905 31.5 8.0925 24 14.076 24H21.921C27.9045 24 27.1065 31.5 32.2935 31.5C34.7715 31.5 36 29.241 36 26.0235C36 20.064 34.2465 4.5 26.433 4.5Z"/></svg>
-                    <span>Quiz</span>
-                  </div>
-                  <div class="sa-mock-mobile-tab">
-                    <svg width="14" height="14" viewBox="0 0 36 36" fill="currentColor"><path d="M36 28.95C36 28.2048 35.3952 27.6 34.65 27.6H10.35C9.6048 27.6 9 28.2048 9 28.95C9 29.6952 9.6048 30.3 10.35 30.3H34.65C35.3952 30.3 36 29.6952 36 28.95Z"/></svg>
-                    <span>Listes</span>
-                  </div>
-                </div>
-              </div>
-              <span class="sa-funnel__preview-subtext" data-campaign-funnel-target="previewDeviceLabel">Visuel sur PC</span>
+              <span class="sa-funnel__preview-subtext" data-campaign-funnel-target="previewDeviceLabel">Visuel Desktop (PC)</span>
             </div>
           </div>
           <!-- VUE DROITE : ÉTAPE 2 (CALENDRIER INTERACTIF) -->
@@ -753,7 +574,7 @@
                   <span class="sa-map-tooltip__percent" data-campaign-funnel-target="tooltipPercent"><%= @regions_data.dig("cvl", :percent) || "3.5%" %> de l'audience</span>
                 </div>
               </div>
-              <svg viewBox="15 -1 598 586" class="sa-funnel-map__svg" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 -5 625 600" class="sa-funnel-map__svg" xmlns="http://www.w3.org/2000/svg">
                 <g class="sa-funnel-map__regions">
                   <!-- 1. ÎLE-DE-FRANCE -->
                   <path id="funnel-region-idf"
@@ -917,22 +738,6 @@
                                         </svg>
                                       </button>
                                     </footer>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 

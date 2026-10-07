@@ -144,7 +144,9 @@ class SchoolsAdsController < ApplicationController
       region = params[:region].presence || "Centre-Val de Loire"
       format_type = params[:format_type].presence || "accueil"
       
-      start_date = Date.parse(params[:start_date]) rescue Date.current
+      earliest_start_date = Date.current + 2.days
+      start_date = Date.parse(params[:start_date]) rescue earliest_start_date
+      start_date = earliest_start_date if start_date < earliest_start_date
       end_date = Date.parse(params[:end_date]) rescue (start_date + 1.month)
       end_date = start_date if end_date < start_date
       duration_days = (end_date - start_date).to_i + 1

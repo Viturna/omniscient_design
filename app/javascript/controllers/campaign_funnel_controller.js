@@ -2,7 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = {
-    checkoutUrl: String
+    checkoutUrl: String,
+    userSignedIn: Boolean
   }
 
   static targets = [
@@ -40,6 +41,7 @@ export default class extends Controller {
     "previewFrameQuiz",
     "previewFormatTag",
     "previewImage",
+    "previewEmptyState",
     "previewVideo",
     "previewImageBg",
     "previewVideoBg",
@@ -84,12 +86,20 @@ export default class extends Controller {
     "emailInput",
     "passwordInput",
     "passwordConfirmInput",
-    "cgvCheckbox"
+    "cgvCheckbox",
+    "connectedUserSection",
+    "otherAccountSection",
+    "otherSchoolNameInput",
+    "otherDomainInput",
+    "otherEmailInput",
+    "otherPasswordInput",
+    "otherPasswordConfirmInput"
   ]
 
 connect() {
   this.currentStep = 1
   this.totalSteps = 4
+  this.useOtherAccount = false
   
   // Form data state
   this.selectedPlan = "ancrage_local"
@@ -99,10 +109,18 @@ connect() {
   this.selectedFile = null
   this.selectedMobileFile = null
   
-  // Calendar state (Exactement 1 mois à partir du 1er Septembre 2026 par défaut)
-  this.currentDate = new Date(2026, 8, 1) // Septembre 2026
-  this.rangeStart = new Date(2026, 8, 1)  // 1er Septembre 2026
-  this.rangeEnd = new Date(2026, 9, 1)    // 1er Octobre 2026 (1 mois)
+  // Calendar state (Exactement 1 mois à partir de J+2 par défaut pour délai de modération)
+  const today = new Date()
+  const todayNormalized = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  this.today = todayNormalized
+
+  const minStartDate = new Date(todayNormalized)
+  minStartDate.setDate(minStartDate.getDate() + 2)
+  this.minStartDate = minStartDate
+
+  this.currentDate = new Date(minStartDate.getFullYear(), minStartDate.getMonth(), 1)
+  this.rangeStart = new Date(minStartDate)
+  this.rangeEnd = new Date(minStartDate.getFullYear(), minStartDate.getMonth() + 1, minStartDate.getDate())
   this.monthSelectionInProgress = false
 
   // Check URL parameters (e.g. ?plan=encart_natif or ?plan=test_2eur or ?plan=monopole)
@@ -218,26 +236,52 @@ connect() {
         }
         return false
       }
+      const minDate = this.minStartDate || this.today
+      if (this.rangeStart < minDate) {
+        if (this.hasStartDateInputTarget) {
+          this.setFieldError(this.startDateInputTarget, "La date de début doit être au minimum dans 2 jours (délai de validation des visuels).")
+        }
+        return false
+      }
     } else if (this.currentStep === 4) {
       let isValid = true
-      const schoolName = this.hasSchoolNameInputTarget ? this.schoolNameInputTarget.value.trim() : ""
-      const domain = this.hasDomainInputTarget ? this.domainInputTarget.value : ""
-      const email = this.hasEmailInputTarget ? this.emailInputTarget.value.trim() : ""
-      const password = this.hasPasswordInputTarget ? this.passwordInputTarget.value : ""
-      const confirmPassword = this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget.value : ""
+      
+      const isOther = this.useOtherAccount && this.hasOtherAccountSectionTarget
+      const schoolName = isOther
+        ? (this.hasOtherSchoolNameInputTarget ? this.otherSchoolNameInputTarget.value.trim() : "")
+        : (this.hasSchoolNameInputTarget ? this.schoolNameInputTarget.value.trim() : "")
+      const domain = isOther
+        ? (this.hasOtherDomainInputTarget ? this.otherDomainInputTarget.value : "")
+        : (this.hasDomainInputTarget ? this.domainInputTarget.value : "")
+      const email = isOther
+        ? (this.hasOtherEmailInputTarget ? this.otherEmailInputTarget.value.trim() : "")
+        : (this.hasEmailInputTarget ? this.emailInputTarget.value.trim() : "")
+      const password = isOther
+        ? (this.hasOtherPasswordInputTarget ? this.otherPasswordInputTarget.value : "")
+        : (this.hasPasswordInputTarget ? this.passwordInputTarget.value : "")
+      const confirmPassword = isOther
+        ? (this.hasOtherPasswordConfirmInputTarget ? this.otherPasswordConfirmInputTarget.value : "")
+        : (this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget.value : "")
 
       // Si un mot de passe est saisi OU si le mot de passe est requis
-      if (password) {
-        if (password !== confirmPassword) {
-          this.setFieldError(this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget : null, "Les mots de passe ne correspondent pas.")
+      if (password && password !== "signed_in_pass_placeholder") {
+        if (confirmPassword && password !== confirmPassword) {
+          const target = isOther && this.hasOtherPasswordConfirmInputTarget ? this.otherPasswordConfirmInputTarget : (this.hasPasswordConfirmInputTarget ? this.passwordConfirmInputTarget : null)
+          this.setFieldError(target, "Les mots de passe ne correspondent pas.")
           isValid = false
         } else {
           // Validation stricte Omniscient (min 6 car., 1 maj, 1 min, 1 chiffre, 1 car. spécial)
           const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}$/
           if (!pwdRegex.test(password)) {
-            this.setFieldError(this.passwordInputTarget, "Le mot de passe doit comporter au moins 6 caractères, 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.")
+            const target = isOther && this.hasOtherPasswordInputTarget ? this.otherPasswordInputTarget : this.passwordInputTarget
+            this.setFieldError(target, "Le mot de passe doit comporter au moins 6 caractères, 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.")
             isValid = false
           }
+        }
+      } else if (isOther) {
+        if (!password) {
+          this.setFieldError(this.otherPasswordInputTarget, "Veuillez renseigner le mot de passe de ce compte.")
+          isValid = false
         }
       } else if (this.hasPasswordInputTarget && this.passwordInputTarget.hasAttribute("required")) {
         this.setFieldError(this.passwordInputTarget, "Veuillez renseigner un mot de passe.")
@@ -245,17 +289,20 @@ connect() {
       }
 
       if (!email || !email.includes("@")) {
-        this.setFieldError(this.hasEmailInputTarget ? this.emailInputTarget : null, "Veuillez renseigner une adresse email valide.")
+        const target = isOther && this.hasOtherEmailInputTarget ? this.otherEmailInputTarget : (this.hasEmailInputTarget ? this.emailInputTarget : null)
+        this.setFieldError(target, "Veuillez renseigner une adresse email valide.")
         isValid = false
       }
 
       if (!domain) {
-        this.setFieldError(this.hasDomainInputTarget ? this.domainInputTarget : null, "Veuillez choisir un domaine d'activité.")
+        const target = isOther && this.hasOtherDomainInputTarget ? this.otherDomainInputTarget : (this.hasDomainInputTarget ? this.domainInputTarget : null)
+        this.setFieldError(target, "Veuillez choisir un domaine d'activité.")
         isValid = false
       }
 
       if (!schoolName) {
-        this.setFieldError(this.hasSchoolNameInputTarget ? this.schoolNameInputTarget : null, "Veuillez renseigner le nom de votre établissement ou entreprise.")
+        const target = isOther && this.hasOtherSchoolNameInputTarget ? this.otherSchoolNameInputTarget : (this.hasSchoolNameInputTarget ? this.schoolNameInputTarget : null)
+        this.setFieldError(target, "Veuillez renseigner le nom de votre établissement ou entreprise.")
         isValid = false
       }
 
@@ -361,8 +408,12 @@ connect() {
         prevText: "Calendrier de diffusion"
       },
       4: {
-        badge: `Étape ${displayStepNum}/${totalCount} : Création du compte`,
-        subtitle: "Configuration de votre compte professionnel",
+        badge: this.userSignedInValue 
+          ? `Étape ${displayStepNum}/${totalCount} : Informations & Coordonnées`
+          : `Étape ${displayStepNum}/${totalCount} : Création du compte`,
+        subtitle: this.userSignedInValue
+          ? "Vérifiez vos coordonnées professionnelles"
+          : "Configuration de votre compte professionnel",
         nextText: "Paiement sécurisé",
         showPrev: true,
         prevText: isEncart ? "Calendrier de diffusion" : "Ancrage local"
@@ -581,9 +632,7 @@ connect() {
 
     // Sync mock previews with corresponding file
     const activeFile = device === "mobile" ? (this.selectedMobileFile || this.selectedFile) : this.selectedFile
-    if (activeFile) {
-      this.renderFileInMockup(activeFile)
-    }
+    this.renderFileInMockup(activeFile)
   }
 
   updateUploadBoxState() {
@@ -700,29 +749,27 @@ connect() {
   updateDimensionsHint() {
     if (!this.hasDimensionLabelTarget) return
 
-    const format = this.selectedFormat || "accueil"
     const device = this.selectedDevice || "pc"
-
     const dimensionsMap = {
-      accueil: {
-        pc: "1920x1080 px (16:9)",
-        mobile: "1080x1920 px (9:16)"
-      },
-      recherche: {
-        pc: "800x600 px (4:3)",
-        mobile: "600x800 px (3:4)"
-      },
-      quiz: {
-        pc: "1200x800 px (3:2)",
-        mobile: "800x800 px (Carré 1:1)"
-      }
+      pc: "1920x1080 px (16:9)",
+      mobile: "1080x1920 px (9:16)"
     }
 
-    const recommended = dimensionsMap[format]?.[device] || "1920x1080 px"
+    const recommended = dimensionsMap[device] || "1920x1080 px (16:9)"
     this.dimensionLabelTarget.textContent = recommended
   }
 
   renderFileInMockup(file) {
+    if (!file) {
+      if (this.hasPreviewEmptyStateTarget) this.previewEmptyStateTarget.style.display = "flex"
+      if (this.hasPreviewImageTarget) this.previewImageTarget.style.display = "none"
+      if (this.hasPreviewVideoTarget) {
+        this.previewVideoTarget.pause()
+        this.previewVideoTarget.style.display = "none"
+      }
+      return
+    }
+
     const isVideo = file.type.startsWith("video/")
     const isImage = file.type.startsWith("image/")
 
@@ -733,39 +780,26 @@ connect() {
       return
     }
 
+    if (this.hasPreviewEmptyStateTarget) this.previewEmptyStateTarget.style.display = "none"
+
     const objectUrl = URL.createObjectURL(file)
 
-    // Set preview images/videos across all 3 formats
-    const imgTargets = [
-      this.hasPreviewImageTarget ? this.previewImageTarget : null,
-      this.hasPreviewImageBgTarget ? this.previewImageBgTarget : null,
-      this.hasPreviewSearchImageTarget ? this.previewSearchImageTarget : null,
-      this.hasPreviewQuizImageTarget ? this.previewQuizImageTarget : null
-    ].filter(Boolean)
-
-    const videoTargets = [
-      this.hasPreviewVideoTarget ? this.previewVideoTarget : null,
-      this.hasPreviewVideoBgTarget ? this.previewVideoBgTarget : null,
-      this.hasPreviewSearchVideoTarget ? this.previewSearchVideoTarget : null,
-      this.hasPreviewQuizVideoTarget ? this.previewQuizVideoTarget : null
-    ].filter(Boolean)
-
     if (isVideo) {
-      imgTargets.forEach(img => img.style.display = "none")
-      videoTargets.forEach(video => {
-        video.src = objectUrl
-        video.style.display = "block"
-        video.play().catch(() => {})
-      })
+      if (this.hasPreviewImageTarget) this.previewImageTarget.style.display = "none"
+      if (this.hasPreviewVideoTarget) {
+        this.previewVideoTarget.src = objectUrl
+        this.previewVideoTarget.style.display = "block"
+        this.previewVideoTarget.play().catch(() => {})
+      }
     } else {
-      videoTargets.forEach(video => {
-        video.pause()
-        video.style.display = "none"
-      })
-      imgTargets.forEach(img => {
-        img.src = objectUrl
-        img.style.display = "block"
-      })
+      if (this.hasPreviewVideoTarget) {
+        this.previewVideoTarget.pause()
+        this.previewVideoTarget.style.display = "none"
+      }
+      if (this.hasPreviewImageTarget) {
+        this.previewImageTarget.src = objectUrl
+        this.previewImageTarget.style.display = "block"
+      }
     }
   }
 
@@ -776,6 +810,12 @@ connect() {
 // =========================================================================
 
 prevMonth() {
+  const currentMonthStart = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)
+  const todayMonthStart = new Date(this.today.getFullYear(), this.today.getMonth(), 1)
+  
+  // Ne pas reculer avant le mois en cours
+  if (currentMonthStart <= todayMonthStart) return
+
   this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1)
   this.renderCalendar()
 }
@@ -786,9 +826,15 @@ nextMonth() {
 }
 
 handleDayClick(date) {
-  this.rangeStart = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const minDate = this.minStartDate || this.today
+  
+  // Interdire la sélection d'une date avant J+2
+  if (selectedDate < minDate) return
+
+  this.rangeStart = new Date(selectedDate)
   // 1 mois exact : même jour le mois suivant
-  this.rangeEnd = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate())
+  this.rangeEnd = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, selectedDate.getDate())
   
   this.renderCalendar()
   this.updateDatesDisplay()
@@ -816,24 +862,15 @@ renderCalendar() {
   const lastDate = new Date(year, month + 1, 0).getDate()
   const prevLastDate = new Date(year, month, 0).getDate()
 
-  // Jours du mois précédent (inactifs/gris clair)
+  // Jours du mois précédent (inactifs/gris clair / désactivés)
   for (let x = firstDayIndex; x > 0; x--) {
     const dayNum = prevLastDate - x + 1
     const prevDate = new Date(year, month - 1, dayNum)
     const dayEl = document.createElement("button")
     dayEl.type = "button"
-    dayEl.className = "sa-cal-day sa-cal-day--prev-month"
+    dayEl.className = "sa-cal-day sa-cal-day--prev-month sa-cal-day--disabled"
+    dayEl.disabled = true
     dayEl.textContent = dayNum
-    
-    const isInRange = this.rangeStart && this.rangeEnd && (prevDate >= this.rangeStart && prevDate <= this.rangeEnd)
-    const isStart = this.isSameDay(prevDate, this.rangeStart)
-    const isEnd = this.isSameDay(prevDate, this.rangeEnd)
-
-    if (isStart) dayEl.classList.add("sa-cal-day--start")
-    else if (isEnd) dayEl.classList.add("sa-cal-day--end")
-    else if (isInRange) dayEl.classList.add("sa-cal-day--in-range")
-
-    dayEl.addEventListener("click", () => this.handleDayClick(prevDate))
     grid.appendChild(dayEl)
   }
 
@@ -846,19 +883,27 @@ renderCalendar() {
     dayEl.textContent = i
     dayEl.dataset.date = thisDayDate.toISOString()
 
-    const isInRange = this.rangeStart && this.rangeEnd && (thisDayDate >= this.rangeStart && thisDayDate <= this.rangeEnd)
-    const isStart = this.isSameDay(thisDayDate, this.rangeStart)
-    const isEnd = this.isSameDay(thisDayDate, this.rangeEnd)
+    const isPast = thisDayDate < (this.minStartDate || this.today)
 
-    if (isStart) {
-      dayEl.classList.add("sa-cal-day--start")
-    } else if (isEnd) {
-      dayEl.classList.add("sa-cal-day--end")
-    } else if (isInRange) {
-      dayEl.classList.add("sa-cal-day--in-range")
+    if (isPast) {
+      dayEl.classList.add("sa-cal-day--disabled")
+      dayEl.disabled = true
+    } else {
+      const isInRange = this.rangeStart && this.rangeEnd && (thisDayDate >= this.rangeStart && thisDayDate <= this.rangeEnd)
+      const isStart = this.isSameDay(thisDayDate, this.rangeStart)
+      const isEnd = this.isSameDay(thisDayDate, this.rangeEnd)
+
+      if (isStart) {
+        dayEl.classList.add("sa-cal-day--start")
+      } else if (isEnd) {
+        dayEl.classList.add("sa-cal-day--end")
+      } else if (isInRange) {
+        dayEl.classList.add("sa-cal-day--in-range")
+      }
+
+      dayEl.addEventListener("click", () => this.handleDayClick(thisDayDate))
     }
 
-    dayEl.addEventListener("click", () => this.handleDayClick(thisDayDate))
     grid.appendChild(dayEl)
   }
 

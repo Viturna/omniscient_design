@@ -6,10 +6,13 @@ class StripeWebhooksController < ActionController::API
     sig_header = request.env['HTTP_STRIPE_SIGNATURE']
     endpoint_secret = ENV['STRIPE_WEBHOOK_SECRET'] || Rails.application.credentials.dig(:stripe, :webhook_secret)
 
+    stripe_key = ENV['STRIPE_SECRET_KEY'] || Rails.application.credentials.dig(:stripe, :secret_key) || ENV['STRIPE_API_KEY']
+    Stripe.api_key = stripe_key if stripe_key.present?
+
     event = nil
 
     begin
-      if endpoint_secret.present?
+      if endpoint_secret.present? && sig_header.present?
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
       else
         data = JSON.parse(payload, symbolize_names: true)
@@ -17,17 +20,26 @@ class StripeWebhooksController < ActionController::API
       end
     rescue JSON::ParserError => e
       Rails.logger.error("[Stripe Webhook] Invalid payload: #{e.message}")
-      return render json: { error: 'Invalid payload' }, status: 400
+      return render json: { error: 'Invalid payload' }, status: :bad_request
     rescue Stripe::SignatureVerificationError => e
       Rails.logger.error("[Stripe Webhook] Invalid signature: #{e.message}")
-      return render json: { error: 'Invalid signature' }, status: 400
+      return render json: { error: 'Invalid signature' }, status: :bad_request
+    rescue StandardError => e
+      Rails.logger.error("[Stripe Webhook Error] #{e.message}")
+      return render json: { error: e.message }, status: :bad_request
     end
 
-    case event.type
-    when 'invoice.paid'
-      handle_invoice_paid(event.data.object)
-    when 'payment_intent.succeeded'
-      handle_payment_intent_succeeded(event.data.object)
+    begin
+      case event.type
+      when 'invoice.paid'
+        handle_invoice_paid(event.data.object)
+      when 'payment_intent.succeeded'
+        handle_payment_intent_succeeded(event.data.object)
+      else
+        Rails.logger.info("[Stripe Webhook] Unhandled event type: #{event.type}")
+      end
+    rescue StandardError => e
+      Rails.logger.error("[Stripe Webhook Handler Error] #{e.message}\n#{e.backtrace.first(5).join("\n")}")
     end
 
     render json: { success: true }
@@ -36,7 +48,6 @@ class StripeWebhooksController < ActionController::API
   private
 
   def handle_invoice_paid(invoice)
-    # Vérifier que ce n'est pas déjà transféré
     return if invoice.amount_paid.to_i <= 0
 
     amount_paid = invoice.amount_paid # En centimes (ex: 20000 pour 200€)

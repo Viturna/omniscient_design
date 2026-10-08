@@ -515,11 +515,11 @@ fr:
       \n• Sur les destinataires de ces données ;
       \n• Sur la politique du site en matière de cookies.
       \n\n
-      Cette politique complète les mentions légales et les Conditions Générales d’Utilisation consultables à : <a href=\"https://omniscientdesign.fr/mentionslegales\" class=\"black underline\"> target=\"_blank\">https://omniscientdesign.fr/mentionslegales</a> et <a class=\"black underline\"> href=\"https://omniscientdesign.fr/cgu\" target=\"_blank\">https://omniscientdesign.fr/cgu</a>"
+      Cette politique complète les mentions légales et les Conditions Générales d’Utilisation consultables à : <a href=\"https://omniscientdesign.fr/mentionslegales\" class=\"black underline\" target=\"_blank\">https://omniscientdesign.fr/mentionslegales</a> et <a href=\"https://omniscientdesign.fr/cgu\" class=\"black underline\" target=\"_blank\">https://omniscientdesign.fr/cgu</a>"
     sections:
       1:
-        title: "Responsable du traitement des données"
-        content: 'Le responsable du traitement des données est : QUEMERE Edgar<br>Adresse : 8 Rue Saint-Exupéry, 29800 Landerneau<br>Numéro de téléphone : <a href="tel:0695817727" class="black underline">>06 95 81 77 27</a><br>Email : <a href="mailto:edgarquemere2645@gmail.com" class="black underline">>edgarquemere2645@gmail.com</a>'
+        title: "Responsables du traitement des données"
+        content: 'Les responsables du traitement des données sont les co-éditeurs :<br><br><strong>Thomas RIQUIER</strong>, Entrepreneur Individuel (EI)<br>Adresse : 1021 Chemin de l''herbe, 82410 Saint-Étienne-de-Tulmont<br>Téléphone : <a href="tel:0789426495" class="black underline">07 89 42 64 95</a><br>Email : <a href="mailto:viturnapro@gmail.com" class="black underline">viturnapro@gmail.com</a><br><br><strong>Edgar QUEMERE</strong>, Entrepreneur Individuel (EI)<br>Adresse : 8 Rue Saint-Exupéry, 29800 Landerneau<br>Téléphone : <a href="tel:0695817727" class="black underline">06 95 81 77 27</a><br>Email : <a href="mailto:edgarquemere2645@gmail.com" class="black underline">edgarquemere2645@gmail.com</a>'
       2:
         title: "Données collectées"
         content:
@@ -566,19 +566,19 @@ fr:
           \n• Droit à la portabilité : recevoir tes données dans un format structuré et lisible.
           \n• Droit d'opposition : s'opposer pour ta situation particulière ou marketing direct.
           \n
-          \nPour exercer tes droits : <a href=\"mailto:contact@omniscientdesign.fr\" class=\"black underline\">>contact@omniscientdesign.fr</a>"
+          \nPour exercer tes droits : <a href=\"mailto:contact@omniscientdesign.fr\" class=\"black underline\">contact@omniscientdesign.fr</a>"
       8:
         title: "Sécurité des données"
         content: "Nous mettons en œuvre des mesures techniques et organisationnelles pour sécuriser tes données et éviter perte, détournement, altération ou accès non autorisé."
       9:
         title: "Politique de l’hébergeur"
-        content: 'Nuestro proveedor de alojamiento tiene su propia política de privacidad sobre el uso de sus datos, que puede consultar en cualquier momento <a href="https://www.hetzner.com/legal/privacy-policy" class="black underline" target="_blank">https://www.hetzner.com/legal/privacy-policy</a>.'
+        content: 'Notre hébergeur possède sa propre politique de confidentialité concernant l''utilisation de vos données, que vous pouvez consulter en tout temps : <a href="https://www.hetzner.com/legal/privacy-policy" class="black underline" target="_blank">https://www.hetzner.com/legal/privacy-policy</a>.'
       10:
         title: "Modifications de la politique"
         content: "Nous nous réservons le droit de modifier cette politique à tout moment. Les changements prennent effet dès leur publication sur cette page. Nous recommandons de consulter régulièrement cette page."
       11:
         title: "Contact"
-        content: 'Pour toute question concernant la politique de confidentialité : <a href="mailto:contact@omniscientdesign.fr" class="black underline">>contact@omniscientdesign.fr</a><br><br>Le respect de tes droits est notre priorité<br>Fondateurs de Omniscient Design'
+        content: 'Pour toute question concernant la politique de confidentialité : <a href="mailto:contact@omniscientdesign.fr" class="black underline">contact@omniscientdesign.fr</a><br><br>Le respect de tes droits est notre priorité.<br>Les co-fondateurs d''Omniscient Design'
   edit_profile:
     account: "Ton compte"
     public_profile: "Profil public"

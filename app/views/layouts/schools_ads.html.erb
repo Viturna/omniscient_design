@@ -124,14 +124,15 @@
           </div>
           <div class="footer-bottom">
             <p><%= t('footer.copyright', year: Time.current.year) %></p>
+            <ul class="legal">
               <li><%= link_to mentionslegales_path do %><%=t('footer.legal')%><%end%></li>
               <li><%= link_to politiquedeconfidentialite_path do %><%=t('footer.politique')%><%end%></li>
               <li><%= link_to cgu_path do %><%=t('footer.cgu')%><%end%></li>
               <li><%= link_to "CGV Annonceurs", cgv_ads_path %></li>
               <li><%= link_to cookies_path do %><%=t('footer.cookie')%><%end%></li>
             </ul>
-        </div>
-      </footer>
+          </div>
+        </footer>
     <%end%>
   <%end%>
 </body>

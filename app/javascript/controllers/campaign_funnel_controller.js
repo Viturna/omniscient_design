@@ -127,10 +127,10 @@ connect() {
   this.rangeEnd = defaultEndDate
   this.monthSelectionInProgress = false
 
-  // Check URL parameters (e.g. ?plan=encart_natif or ?plan=test_2eur or ?plan=monopole)
+  // Check URL parameters (e.g. ?plan=encart_natif or ?plan=ancrage_local or ?plan=monopole)
   const urlParams = new URLSearchParams(window.location.search)
   const paramPlan = urlParams.get("plan")
-  if (paramPlan && ["test_2eur", "encart_natif", "ancrage_local", "monopole"].includes(paramPlan)) {
+  if (paramPlan && ["encart_natif", "ancrage_local", "monopole"].includes(paramPlan)) {
     this.selectedPlan = paramPlan
   }
   
@@ -147,7 +147,7 @@ connect() {
   // =========================================================================
 
   get isEncartNatif() {
-    return this.selectedPlan === "encart_natif" || this.selectedPlan === "test_2eur"
+    return this.selectedPlan === "encart_natif"
   }
 
   nextStep() {
@@ -994,14 +994,10 @@ updateDatesDisplay() {
     }
 
     if (this.hasPriceSummaryTarget) {
-      const monthlyRate = (this.selectedPlan === "encart_natif" || this.selectedPlan === "test_2eur") ? 200 : 400
-      if (this.selectedPlan === "test_2eur") {
-        this.priceSummaryTarget.textContent = "1,00 €"
-      } else {
-        const rawPrice = (monthlyRate / 30.0) * diffDays
-        const finalPrice = rawPrice.toFixed(2).replace('.', ',')
-        this.priceSummaryTarget.textContent = `${finalPrice} €`
-      }
+      const monthlyRate = this.selectedPlan === "encart_natif" ? 200 : 400
+      const rawPrice = (monthlyRate / 30.0) * diffDays
+      const finalPrice = rawPrice.toFixed(2).replace('.', ',')
+      this.priceSummaryTarget.textContent = `${finalPrice} €`
     }
   }
 }

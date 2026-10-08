@@ -844,16 +844,21 @@ $sa-accent-green-hover: #8eecad;
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
     align-items: center;
+    max-width: 1140px;
+    margin: 0 auto;
 
     @media (max-width: 1024px) {
       grid-template-columns: repeat(2, 1fr);
+      max-width: 760px;
+      align-items: stretch;
     }
 
     @media (max-width: 640px) {
       grid-template-columns: 1fr;
+      max-width: 440px;
     }
   }
 }
@@ -877,17 +882,19 @@ $sa-accent-green-hover: #8eecad;
   &--featured {
     border: 2px solid $sa-accent-green;
     box-shadow: 0 14px 38px rgba(163, 243, 190, 0.25), 0 4px 16px rgba(0, 0, 0, 0.04);
-    margin-top: -16px;
-    margin-bottom: -16px;
     z-index: 2;
 
     &:hover {
-      transform: translateY(-20px);
+      transform: translateY(-6px);
       box-shadow: 0 20px 48px rgba(163, 243, 190, 0.35), 0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
     .sa-pricing-card__body {
-      padding: 38px 32px 28px;
+      padding: 32px 30px 24px;
+    }
+
+    .sa-pricing-card__footer {
+      padding: 0 30px 32px;
     }
   }
 
@@ -908,7 +915,7 @@ $sa-accent-green-hover: #8eecad;
   }
 
   &__body {
-    padding: 34px 30px 24px;
+    padding: 26px 26px 18px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -927,18 +934,18 @@ $sa-accent-green-hover: #8eecad;
   }
 
   &__title {
-    font-size: 26px;
+    font-size: 25px;
     font-weight: 500;
     color: variables.$primary-color;
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
     letter-spacing: -0.3px;
   }
 
   &__desc {
-    font-size: 14.5px;
+    font-size: 14px;
     color: #6B7280;
     line-height: 1.45;
-    margin: 0 0 24px 0;
+    margin: 0 0 20px 0;
     min-height: 42px;
   }
 
@@ -946,11 +953,11 @@ $sa-accent-green-hover: #8eecad;
     display: flex;
     align-items: baseline;
     gap: 4px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   &__price {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 500;
     color: variables.$primary-color;
     letter-spacing: -0.8px;
@@ -958,7 +965,7 @@ $sa-accent-green-hover: #8eecad;
   }
 
   &__period {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     color: #6B7280;
   }
@@ -966,18 +973,18 @@ $sa-accent-green-hover: #8eecad;
   &__divider {
     height: 1px;
     background-color: #E5E7EB;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   &__features {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 
     &-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       color: variables.$primary-color;
       display: block;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
   }
 
@@ -987,14 +994,14 @@ $sa-accent-green-hover: #8eecad;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 13px;
+    gap: 11px;
   }
 
   &__item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 16px;
+    font-size: 15px;
     color: #52525D;
     line-height: 1.35;
 
@@ -1024,11 +1031,15 @@ $sa-accent-green-hover: #8eecad;
   }
 
   &__footer {
-    padding: 0 30px 34px;
+    padding: 0 26px 26px;
   }
 
   &__btn {
+    display: block;
     width: 100%;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
     background-color: #202020;
     color: #FFFFFF;
     font-size: 15px;
@@ -1042,6 +1053,7 @@ $sa-accent-green-hover: #8eecad;
     &:hover {
       background-color: #333333;
       transform: translateY(-1px);
+      color: #FFFFFF;
     }
   }
 }

@@ -413,18 +413,20 @@ class SchoolsAdsController < ApplicationController
         @ad.update(status: 'pending_validation', active: false)
       end
 
-      # Notification aux administrateurs une fois le paiement validé
+      # Notification aux administrateurs une fois le paiement validé (idempotent pour éviter les doublons au rechargement de la page)
       school_name = @ad.title.presence || @ad.email.presence || "Nouvel annonceur"
       User.where(role: 'admin').find_each do |admin_user|
         begin
-          Notification.create!(
-            user_id: admin_user.id,
-            notifiable: @ad,
-            title: "Nouvelle campagne publicitaire : #{school_name}",
-            message: "#{school_name} a réservé une campagne de #{@ad.duration_days || 30} jours (#{@ad.price_paid.to_i / 100}€).",
-            link: '/admin/ads',
-            status: :unread
-          )
+          unless Notification.exists?(user_id: admin_user.id, notifiable: @ad)
+            Notification.create!(
+              user_id: admin_user.id,
+              notifiable: @ad,
+              title: "Nouvelle campagne publicitaire : #{school_name}",
+              message: "#{school_name} a réservé une campagne de #{@ad.duration_days || 30} jours (#{@ad.price_paid.to_i / 100}€).",
+              link: '/admin/ads',
+              status: :unread
+            )
+          end
         rescue StandardError => e
           Rails.logger.error("Erreur Notification Admin Ads: #{e.message}")
         end

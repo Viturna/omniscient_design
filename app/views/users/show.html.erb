@@ -486,8 +486,8 @@
           <span class="badge badge-<%= @user.admin? ? 'dark' : 'gray' %>">
             <%= @user.role.presence&.capitalize || 'User' %>
           </span>
-          <span class="badge badge-<%= @user.statut == 'Etudiant' ? 'blue' : 'green' %>">
-            <%= @user.statut || "Statut inconnu" %>
+          <span class="badge badge-<%= @user.statut.to_s.downcase == 'etudiant' ? 'blue' : 'green' %>">
+            <%= @user.statut.present? ? I18n.t("devise.registration.status_options.#{@user.statut.downcase}", default: @user.statut.capitalize) : "Statut non renseigné" %>
           </span>
           <% if @user.certified? %>
             <span class="badge badge-green">✓ Certifié</span>

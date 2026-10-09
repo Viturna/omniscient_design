@@ -44,19 +44,24 @@ class SchoolsAdsController < ApplicationController
       info[:db_names].sum { |reg| etablissements_by_region[reg].to_i }
     end
 
-    total_members = @active_members_count
+    # Données réelles de répartition par région pour la carte interactive
+    users_by_region = User.where(banned: [false, nil])
+                          .joins(:etablissement)
+                          .group('etablissements.region')
+                          .count
+
+    total_located_members = users_by_region.values.sum
 
     @regions_data = {}
     region_mapping.each do |key, info|
       reg_etab_count = info[:db_names].sum { |reg| etablissements_by_region[reg].to_i }
-      ratio = total_etablissements_france.positive? ? (reg_etab_count.to_f / total_etablissements_france) : 0.0
+      real_users_count = info[:db_names].sum { |reg| users_by_region[reg].to_i }
 
-      count = (total_members * ratio).round
-      percent = (ratio * 100).round(1)
+      percent = total_located_members.positive? ? ((real_users_count.to_f / total_located_members) * 100).round(1) : 0.0
 
       @regions_data[key] = {
         name: info[:name],
-        count: count,
+        count: real_users_count,
         percent: "#{percent}%",
         etablissements_count: reg_etab_count
       }
@@ -106,19 +111,24 @@ class SchoolsAdsController < ApplicationController
       info[:db_names].sum { |reg| etablissements_by_region[reg].to_i }
     end
 
-    total_members = User.where(banned: [false, nil]).count
+    # Données réelles de répartition par région pour la carte interactive
+    users_by_region = User.where(banned: [false, nil])
+                          .joins(:etablissement)
+                          .group('etablissements.region')
+                          .count
+
+    total_located_members = users_by_region.values.sum
 
     @regions_data = {}
     region_mapping.each do |key, info|
       reg_etab_count = info[:db_names].sum { |reg| etablissements_by_region[reg].to_i }
-      ratio = total_etablissements_france.positive? ? (reg_etab_count.to_f / total_etablissements_france) : 0.0
+      real_users_count = info[:db_names].sum { |reg| users_by_region[reg].to_i }
 
-      count = (total_members * ratio).round
-      percent = (ratio * 100).round(1)
+      percent = total_located_members.positive? ? ((real_users_count.to_f / total_located_members) * 100).round(1) : 0.0
 
       @regions_data[key] = {
         name: info[:name],
-        count: count,
+        count: real_users_count,
         percent: "#{percent}%",
         etablissements_count: reg_etab_count
       }

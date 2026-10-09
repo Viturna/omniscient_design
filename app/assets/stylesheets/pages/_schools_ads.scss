@@ -595,25 +595,16 @@ $sa-accent-green-hover: #8eecad;
     font-size: 16.5px;
     font-weight: 500;
     color: variables.$primary-color;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: block;
+    line-height: 1.25;
 
-    &--with-info {
-      cursor: default;
-    }
-  }
-
-  &__info-trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #9CA3AF;
-    transition: color 0.2s ease;
-    cursor: help;
-
-    &:hover {
-      color: #4B5563;
+    &-sub {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: #6B7280;
+      margin-top: 3px;
+      line-height: 1.3;
     }
   }
 

@@ -60,8 +60,17 @@ export default class extends Controller {
     if (!wrapper) return
 
     const rect = wrapper.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
+    const tooltipWidth = tooltip.offsetWidth || 230
+    const padding = 16
+
+    let x = event.clientX - rect.left
+    let y = event.clientY - rect.top
+
+    const minX = (tooltipWidth / 2) + padding
+    const maxX = rect.width - (tooltipWidth / 2) - padding
+
+    if (x < minX) x = minX
+    if (x > maxX) x = maxX
 
     tooltip.style.left = `${x}px`
     tooltip.style.top = `${y}px`

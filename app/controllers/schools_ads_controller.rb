@@ -113,7 +113,7 @@ class SchoolsAdsController < ApplicationController
       reg_etab_count = info[:db_names].sum { |reg| etablissements_by_region[reg].to_i }
       ratio = total_etablissements_france.positive? ? (reg_etab_count.to_f / total_etablissements_france) : 0.0
 
-      count = [(total_members * ratio).round, 45].max
+      count = (total_members * ratio).round
       percent = (ratio * 100).round(1)
 
       @regions_data[key] = {

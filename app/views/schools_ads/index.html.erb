@@ -39,7 +39,7 @@
       <%= link_to "Créer ma campagne dès maintenant", sa_funnel_path, class: "sa-hero__cta" %>
     </div>
     <div class="sa-hero__mockup">
-      <%= image_tag "ads/mockup_hero.png", alt: "Application Omniscient Design", class: "sa-hero__mockup-img" %>
+      <%= image_tag "ads/mockup_hero.webp", alt: "Application Omniscient Design", width: 785, height: 1586, loading: "eager", fetchpriority: "high", class: "sa-hero__mockup-img" %>
     </div>
   </div>
 </section>
@@ -239,7 +239,7 @@
                                     </div>
                                     <div class="sa-audience__stat-text">
                                       <span class="sa-audience__stat-number">1,5 / 3,3 %</span>
-                                      <span class="sa-audience__stat-label">CTR moyen par pub</span>
+                                      <span class="sa-audience__stat-label">CTR moyen (Taux de clics)</span>
                                     </div>
                                   </div>
                                 </div>
@@ -314,14 +314,8 @@
                                   <!-- Ligne 3 : CTR Moyen -->
                                   <div class="sa-comparison__row sa-comparison__row--zebra">
                                     <div class="sa-comparison__cell sa-comparison__cell--label">
-                                      <span class="sa-comparison__label sa-comparison__label--with-info">
-                                        CTR Moyen
-                                        <span class="sa-comparison__info-trigger" title="Taux de clics moyen constaté par rapport aux bannières web standards">
-                                          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                                          </svg>
-                                        </span>
-                                      </span>
+                                      <span class="sa-comparison__label">CTR Moyen</span>
+                                      <span class="sa-comparison__label-sub">Taux de clics sur les annonces</span>
                                     </div>
                                     <div class="sa-comparison__cell sa-comparison__cell--featured">
                                       <strong class="sa-comparison__text-strong">1,5% à 3,3% <span class="sa-comparison__text-highlight">(jusqu'à 3x supérieur)</span></strong>
@@ -415,15 +409,15 @@
                               <div class="sa-integration__preview-area">
                                 <!-- 1. Aperçu Accueil -->
                                 <div class="sa-integration__preview-card sa-integration__preview-card--active" data-schools-ads-target="previewScreen" data-format="accueil">
-                                  <%= image_tag "ads/integration_homepage.png", alt: "Intégration publicitaire sur la page d'accueil d'Omniscient Design", class: "sa-integration__preview-img" %>
+                                  <%= image_tag "ads/integration_homepage.webp", alt: "Intégration publicitaire sur la page d'accueil d'Omniscient Design", width: 1920, height: 1206, loading: "lazy", class: "sa-integration__preview-img" %>
                                 </div>
                                 <!-- 2. Aperçu Recherche -->
                                 <div class="sa-integration__preview-card" data-schools-ads-target="previewScreen" data-format="recherche">
-                                  <%= image_tag "ads/integration_search.png", alt: "Intégration publicitaire sur la page de recherche d'Omniscient Design", class: "sa-integration__preview-img" %>
+                                  <%= image_tag "ads/integration_search.webp", alt: "Intégration publicitaire sur la page de recherche d'Omniscient Design", width: 1920, height: 1206, loading: "lazy", class: "sa-integration__preview-img" %>
                                 </div>
                                 <!-- 3. Aperçu Quiz -->
                                 <div class="sa-integration__preview-card" data-schools-ads-target="previewScreen" data-format="quiz">
-                                  <%= image_tag "ads/integration_quiz.png", alt: "Intégration publicitaire dans le quiz de la semaine", class: "sa-integration__preview-img" %>
+                                  <%= image_tag "ads/integration_quiz.webp", alt: "Intégration publicitaire dans le quiz de la semaine", width: 1920, height: 1207, loading: "lazy", class: "sa-integration__preview-img" %>
                                 </div>
                               </div>
                             </div>
@@ -682,7 +676,7 @@
                               <!-- Zone Image FAQ unique (Droite) -->
                               <div class="sa-faq__preview">
                                 <div class="sa-faq__preview-container">
-                                  <%= image_tag "ads/faq.png", alt: "Aperçu de la publicité sur smartphone", class: "sa-faq__preview-img" %>
+                                  <%= image_tag "ads/faq.webp", alt: "Aperçu de la publicité sur smartphone", width: 318, height: 460, loading: "lazy", class: "sa-faq__preview-img" %>
                                 </div>
                               </div>
                             </div>

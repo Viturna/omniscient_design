@@ -54,11 +54,11 @@
         <footer class="footer large-footer" data-loading-target="footer">
           <div class="footer-top">
             <div class="footer-brand">
-              <%= link_to(root_path, class: "footer-logo") do %>
+              <%= link_to(main_site_root_url, class: "footer-logo") do %>
                 <img src="/assets/logo-white.svg" alt="Omniscient Design" class="logo" />
               <%end%>
               <p class="tagline"><%=t('footer.tagline')%></p>
-              <%= link_to t('footer.donation'), donateurs_path, class: "underline medium"%>
+              <%= link_to t('footer.donation'), main_site_url(donateurs_path), class: "underline medium"%>
               <div class="socials">
                 <a href="https://www.instagram.com/omniscientdesign_/" target="_blank" aria-label="Instagram" data-controller="social-follow" data-action="click->social-follow#claim">
                   <svg width="43" height="44" viewBox="0 0 43 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,16 +86,16 @@
             <div class="footer-nav">
               <p class="footer-title"><%=t('footer.navigation')%></p>
               <ul>
-                <li><%= link_to t('footer.landing'), presentation_path%></li>
-                <li><%= link_to t('footer.explore'), root_path%></li>
-                <li><%= link_to t('footer.search'), search_path%></li>
-                <li><%= link_to t('footer.training'), training_path%></li>
-                <li><%= link_to t('footer.list'), lists_path%></li>
-                <li><%= link_to t('footer.profile'), profil_path%></li>
-                <li><%= link_to t('footer.add'), add_elements_path%></li>
-                <li><%= link_to t('footer.login'), new_user_session_path%></li>
+                <li><%= link_to t('footer.landing'), main_site_url(presentation_path)%></li>
+                <li><%= link_to t('footer.explore'), main_site_root_url%></li>
+                <li><%= link_to t('footer.search'), main_site_url(search_path)%></li>
+                <li><%= link_to t('footer.training'), main_site_url(training_path)%></li>
+                <li><%= link_to t('footer.list'), main_site_url(lists_path)%></li>
+                <li><%= link_to t('footer.profile'), main_site_url(profil_path)%></li>
+                <li><%= link_to t('footer.add'), main_site_url(add_elements_path)%></li>
+                <li><%= link_to t('footer.login'), main_site_url(new_user_session_path)%></li>
                 <li><%= link_to "Écoles & Publicité", schools_ads_path %></li>
-                <li><%= link_to t('footer.sitemap'), plan_site_path%></li>
+                <li><%= link_to t('footer.sitemap'), main_site_url(plan_site_path)%></li>
               </ul>
             </div>
             <!-- Réseaux -->
@@ -125,11 +125,11 @@
           <div class="footer-bottom">
             <p><%= t('footer.copyright', year: Time.current.year) %></p>
             <ul class="legal">
-              <li><%= link_to mentionslegales_path do %><%=t('footer.legal')%><%end%></li>
-              <li><%= link_to politiquedeconfidentialite_path do %><%=t('footer.politique')%><%end%></li>
-              <li><%= link_to cgu_path do %><%=t('footer.cgu')%><%end%></li>
+              <li><%= link_to t('footer.legal'), main_site_url(mentionslegales_path) %></li>
+              <li><%= link_to t('footer.politique'), main_site_url(politiquedeconfidentialite_path) %></li>
+              <li><%= link_to t('footer.cgu'), main_site_url(cgu_path) %></li>
               <li><%= link_to "CGV Annonceurs", cgv_ads_path %></li>
-              <li><%= link_to cookies_path do %><%=t('footer.cookie')%><%end%></li>
+              <li><%= link_to t('footer.cookie'), main_site_url(cookies_path) %></li>
             </ul>
           </div>
         </footer>

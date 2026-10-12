@@ -90,9 +90,17 @@ class ApplicationController < ActionController::Base
     timeout = 30.minutes
     last_activity = session[:last_activity_at]
 
-    if last_activity.nil? || last_activity.to_time < timeout.ago
-      DailyVisit.create(user: current_user, visited_on: Date.current)
-    end
+    # Si la session est encore valide dans les 30 min, rien à faire
+    return if last_activity.present? && last_activity.to_time >= timeout.ago
+
+    # Sécurité supplémentaire en base : vérifie qu'une visite n'a pas déjà été enregistrée il y a moins de 30 min
+    # pour cet utilisateur (protège contre les pertes/conflits de cookies de session)
+    has_recent_visit = current_user.daily_visits
+                                   .where(visited_on: Date.current)
+                                   .where('created_at >= ?', timeout.ago)
+                                   .exists?
+
+    DailyVisit.create(user: current_user, visited_on: Date.current) unless has_recent_visit
 
     session[:last_activity_at] = Time.current
   end

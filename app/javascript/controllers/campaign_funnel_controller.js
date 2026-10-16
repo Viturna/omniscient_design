@@ -140,6 +140,9 @@ connect() {
   this.renderCalendar()
   this.updateDatesDisplay()
   this.updateRegionsView()
+
+  // Tracking Umami première étape vue
+  this.trackUmami("funnel-step-1-viewed", { plan: this.selectedPlan })
 }
 
   // =========================================================================
@@ -160,6 +163,12 @@ connect() {
       return
     }
 
+    // Tracking Umami du passage d'étape
+    this.trackUmami(`funnel-step-${this.currentStep}-completed`, {
+      plan: this.selectedPlan,
+      step: this.currentStep
+    })
+
     if (this.currentStep === 2 && this.isEncartNatif) {
       // Passer directement à la création de compte (étape 4)
       this.currentStep = 4
@@ -173,6 +182,8 @@ connect() {
   }
 
   prevStep() {
+    this.trackUmami("funnel-step-back", { from_step: this.currentStep })
+
     if (this.currentStep === 4 && this.isEncartNatif) {
       // Revenir directement au calendrier (étape 2)
       this.currentStep = 2
@@ -470,6 +481,7 @@ connect() {
   selectPlan(event) {
     const card = event.currentTarget
     const plan = card.dataset.plan
+    this.trackUmami("funnel-plan-selected", { plan: plan })
     this.setPlan(plan)
   }
 
@@ -565,6 +577,8 @@ connect() {
       })
 
       if (response.ok) {
+        this.trackUmami("funnel-monopole-quote-submitted", { school: school, email: email })
+
         // Afficher le message de succès dans la boîte Monopole
         if (this.hasMonopoleFormTarget) this.monopoleFormTarget.style.display = "none"
         if (this.hasMonopoleSuccessTarget) this.monopoleSuccessTarget.style.display = "block"
@@ -1224,6 +1238,11 @@ updateDatesDisplay() {
   }
 
   async submitCheckout() {
+    this.trackUmami("funnel-checkout-initiated", {
+      plan: this.selectedPlan,
+      format: "all"
+    })
+
     const nextBtn = this.nextBtnTarget
     const originalText = nextBtn.innerHTML
     nextBtn.disabled = true
@@ -1341,6 +1360,16 @@ updateDatesDisplay() {
 
     if (!val.startsWith("http://") && !val.startsWith("https://")) {
       this.linkInputTarget.value = `https://${val}`
+    }
+  }
+
+  trackUmami(eventName, data = {}) {
+    if (typeof window !== "undefined" && window.umami && typeof window.umami.track === "function") {
+      try {
+        window.umami.track(eventName, data)
+      } catch (e) {
+        console.warn("Umami tracking error:", e)
+      }
     }
   }
 }

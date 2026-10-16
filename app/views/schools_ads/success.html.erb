@@ -137,3 +137,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    function trackPurchase() {
+      if (window.umami) {
+        window.umami.track('campaign-purchase-success', {
+          ad_id: <%= @ad&.id || 0 %>,
+          amount: <%= (@ad&.price_paid.to_f.to_i > 1000 ? (@ad.price_paid.to_f / 100.0) : (@ad&.price_paid.to_f || 0.0)).round(2) %>,
+          duration: <%= @ad&.duration_days.to_i || 30 %>
+        });
+      }
+    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(trackPurchase, 200);
+    } else {
+      document.addEventListener('turbo:load', trackPurchase, { once: true });
+      document.addEventListener('DOMContentLoaded', trackPurchase, { once: true });
+    }
+  })();
+</script>

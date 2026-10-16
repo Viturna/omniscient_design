@@ -36,7 +36,7 @@
         Ciblez et contactez directement <strong>les étudiants en Arts Appliqués (STD2A) et Design</strong> à travers la France.<br>
         Un vivier d’étudiants qualifiés à portée de main.
       </p>
-      <%= link_to "Créer ma campagne dès maintenant", sa_funnel_path, class: "sa-hero__cta" %>
+      <%= link_to "Créer ma campagne dès maintenant", sa_funnel_path, class: "sa-hero__cta", data: { umami_event: "lp-hero-cta-click" } %>
     </div>
     <div class="sa-hero__mockup">
       <%= image_tag "ads/mockup_hero.webp", alt: "Application Omniscient Design", width: 785, height: 1586, loading: "eager", fetchpriority: "high", class: "sa-hero__mockup-img" %>
@@ -340,7 +340,7 @@
                               </div>
                               <!-- CTA Button -->
                               <div class="sa-comparison__cta-container">
-                                <%= link_to "Lancer ma campagne", sa_funnel_path, class: "sa-comparison__cta-btn" %>
+                                <%= link_to "Lancer ma campagne", sa_funnel_path, class: "sa-comparison__cta-btn", data: { umami_event: "lp-comparison-cta-click" } %>
                               </div>
                             </div>
                           </section>
@@ -470,7 +470,7 @@
                                     </div>
                                   </div>
                                   <div class="sa-pricing-card__footer">
-                                    <%= link_to "Démarrer ma campagne", "#{sa_funnel_path}?plan=encart_natif", class: "sa-pricing-card__btn" %>
+                                    <%= link_to "Démarrer ma campagne", "#{sa_funnel_path}?plan=encart_natif", class: "sa-pricing-card__btn", data: { umami_event: "lp-pricing-plan-click", umami_event_plan: "encart_natif" } %>
                                   </div>
                                 </div>
                                 <!-- Pack 2 : Ancrage Local (Recommandé) -->
@@ -527,7 +527,7 @@
                                     </div>
                                   </div>
                                   <div class="sa-pricing-card__footer">
-                                    <%= link_to "Démarrer ma campagne", "#{sa_funnel_path}?plan=ancrage_local", class: "sa-pricing-card__btn" %>
+                                    <%= link_to "Démarrer ma campagne", "#{sa_funnel_path}?plan=ancrage_local", class: "sa-pricing-card__btn", data: { umami_event: "lp-pricing-plan-click", umami_event_plan: "ancrage_local" } %>
                                   </div>
                                 </div>
                                 <!-- Pack 3 : Monopole -->
@@ -572,7 +572,7 @@
                                     </div>
                                   </div>
                                   <div class="sa-pricing-card__footer">
-                                    <%= link_to "Nous contacter", "#{sa_funnel_path}?plan=monopole", class: "sa-pricing-card__btn" %>
+                                    <%= link_to "Nous contacter", "#{sa_funnel_path}?plan=monopole", class: "sa-pricing-card__btn", data: { umami_event: "lp-pricing-plan-click", umami_event_plan: "monopole" } %>
                                   </div>
                                 </div>
                               </div>
@@ -705,7 +705,7 @@
                                       <span class="sa-contact__hint">(300 caractères max)</span>
                                     </div>
                                     <div class="sa-contact__actions">
-                                      <%= f.submit "Envoyer mon message", class: "sa-contact__submit-btn" %>
+                                      <%= f.submit "Envoyer mon message", class: "sa-contact__submit-btn", data: { umami_event: "lp-contact-submit" } %>
                                     </div>
                                   </div>
                                 <% end %>

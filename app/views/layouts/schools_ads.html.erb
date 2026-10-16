@@ -10,6 +10,7 @@
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
     <%= display_meta_tags site: 'Omniscient Design' %>
     <%= render 'application/favicon' %>
+    <script defer src="https://analytics.artchiv.fr/script.js" data-website-id="b6807f3d-d07d-4c1d-a133-f6fa0ac8d19a"></script>
     <!-- Google Tag Manager (si configuré) -->
     <% unless native_app? %>
       <script>
@@ -39,7 +40,7 @@
             </div>
           </a>
           <nav class="sa-nav">
-            <%= link_to "Créer ma campagne", defined?(schools_ads_funnel_path) ? schools_ads_funnel_path : schools_ads_direct_funnel_path, class: "sa-nav__link sa-nav__link--underline" %>
+            <%= link_to "Créer ma campagne", defined?(schools_ads_funnel_path) ? schools_ads_funnel_path : schools_ads_direct_funnel_path, class: "sa-nav__link sa-nav__link--underline", data: { umami_event: "lp-header-cta-click" } %>
             <%= link_to ((respond_to?(:user_signed_in?) && (user_signed_in? rescue false)) ? "Mon Espace Annonceur" : "Espace Annonceur"), defined?(schools_ads_dashboard_path) ? schools_ads_dashboard_path : schools_ads_direct_dashboard_path, class: "sa-nav__link sa-nav__link--underline" %>
           </nav>
         </div>

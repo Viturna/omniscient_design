@@ -30,7 +30,12 @@ class DailyReferenceService
 
     reference = @daily_ref.reference
     title = 'La réf du jour ! ☕️'
-    message = "Aujourd'hui, focus sur \"#{reference.nom_reference}\" par #{reference.designers.map(&:nom_designer).join(', ')}"
+    authors = reference.authors_display.presence
+    message = if authors
+                "Aujourd'hui, focus sur \"#{reference.nom_reference}\" par #{authors}"
+              else
+                "Aujourd'hui, focus sur \"#{reference.nom_reference}\""
+              end
     link = "/fr/references/#{reference.slug}"
 
     # Notifications Push

@@ -48,8 +48,12 @@
         <!-- Corps du mail -->
         <p style="font-size:16px; line-height:1.5; color:#52525D;">
           Aujourd'hui, nous te proposons de découvrir <strong>"<%= @reference.nom_reference %>"</strong>.
-          <% if @reference.designers.any? %>
+          <% if @reference.designers.any? && @reference.studios.any? %>
+            Une référence de <strong><%= @reference.designers.map(&:nom_designer).join(', ') %></strong> - <strong><%= @reference.studios.map(&:nom).join(', ') %></strong>.
+          <% elsif @reference.designers.any? %>
             Une référence de <strong><%= @reference.designers.map(&:nom_designer).join(', ') %></strong>.
+          <% elsif @reference.studios.any? %>
+            Une référence du studio <strong><%= @reference.studios.map(&:nom).join(', ') %></strong>.
           <% end %>
         </p>
 
@@ -117,7 +121,7 @@
 
               <!-- Copyright -->
               <p style="text-align:center; font-size:14px; color:#202020; margin:0;">
-                ©<%= Time.current.year %> Omniscient Design — Tous droits réservés
+                ©<%= Time.current.year %> Omniscient Design - Tous droits réservés
               </p>
 
             </td>

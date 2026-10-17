@@ -29,6 +29,8 @@ class Api::DailyReferencesController < ApplicationController
       id: reference.id,
       name: reference.nom_reference,
       designers: reference.designers.map(&:nom_designer).join(', '),
+      studios: reference.studios.map(&:nom).join(', '),
+      authors: reference.authors_display,
       year: reference.date_reference&.to_s,
       description: clean_desc,
       image_url: image_url,

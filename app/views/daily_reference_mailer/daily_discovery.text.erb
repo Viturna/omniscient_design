@@ -3,8 +3,12 @@ La réf du jour : <%= @reference.nom_reference %>
 Bonjour <%= @user.firstname.presence || @user.pseudo.presence || @user.email %>,
 
 Aujourd'hui, nous te proposons de découvrir "<%= @reference.nom_reference %>".
-<% if @reference.designers.any? %>
+<% if @reference.designers.any? && @reference.studios.any? %>
+Une référence de <%= @reference.designers.map(&:nom_designer).join(', ') %> - <%= @reference.studios.map(&:nom).join(', ') %>.
+<% elsif @reference.designers.any? %>
 Une référence de <%= @reference.designers.map(&:nom_designer).join(', ') %>.
+<% elsif @reference.studios.any? %>
+Une référence du studio <%= @reference.studios.map(&:nom).join(', ') %>.
 <% end %>
 
 Lien vers la référence : <%= reference_url(@reference, locale: I18n.locale) %>

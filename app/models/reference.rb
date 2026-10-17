@@ -39,4 +39,11 @@ class Reference < ApplicationRecord
   def validated?
     validation == true
   end
+
+  def authors_display
+    parts = []
+    parts << designers.map(&:nom_designer).join(', ') if designers.any?
+    parts << studios.map(&:nom).join(', ') if studios.any?
+    parts.reject(&:blank?).join(' - ')
+  end
 end
